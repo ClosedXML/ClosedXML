@@ -1269,6 +1269,10 @@ namespace ClosedXML.Excel
                 var name = definedName.Name;
                 var visible = true;
                 if (definedName.Hidden != null) visible = !BooleanValue.ToBoolean(definedName.Hidden);
+
+                var localSheetId = -1;
+                if (definedName.LocalSheetId?.HasValue ?? false) localSheetId = Convert.ToInt32(definedName.LocalSheetId.Value);
+
                 if (name == "_xlnm.Print_Area")
                 {
                     var fixedNames = validateDefinedNames(definedName.Text.Split(','));
@@ -1276,7 +1280,7 @@ namespace ClosedXML.Excel
                     {
                         if (area.Contains("["))
                         {
-                            var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == definedName.LocalSheetId + 1);
+                            var ws = Worksheets.FirstOrDefault(w => (w as XLWorksheet).SheetId == (localSheetId + 1));
                             if (ws != null)
                             {
                                 ws.PageSetup.PrintAreas.Add(area);
@@ -1298,17 +1302,16 @@ namespace ClosedXML.Excel
                 {
                     string text = definedName.Text;
 
-                    var localSheetId = definedName.LocalSheetId;
                     var comment = definedName.Comment;
-                    if (localSheetId == null)
+                    if (localSheetId == -1)
                     {
                         if (NamedRanges.All(nr => nr.Name != name))
                             (NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                     }
                     else
                     {
-                        if (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges.All(nr => nr.Name != name))
-                            (Worksheet(Int32.Parse(localSheetId) + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
+                        if (Worksheet(localSheetId + 1).NamedRanges.All(nr => nr.Name != name))
+                            (Worksheet(localSheetId + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
                     }
                 }
             }
