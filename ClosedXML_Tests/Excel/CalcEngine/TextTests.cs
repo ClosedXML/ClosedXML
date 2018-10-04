@@ -489,6 +489,26 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual("211x", actual);
         }
 
+        [TestCase("=TEXTJOIN(\",\",TRUE,A1:B2)", "A,B,D")]
+        [TestCase("=TEXTJOIN(\",\",FALSE,A1:B2)", "A,,B,D")]
+        [TestCase("=TEXTJOIN(\",\",FALSE,A1,A2,B1,B2)", "A,B,,D")]
+        [TestCase("=TEXTJOIN(\",\",FALSE,1)", "1")]
+        [TestCase("=TEXTJOIN(\",\", TRUE, A:A, B:B)", "A,B,D")]
+        public void TextJoin(string formula, string expectedOutput)
+        {
+            var wb = new XLWorkbook();
+            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Value = "A";
+            ws.Cell("A2").Value = "B";
+            ws.Cell("B1").Value = "";
+            ws.Cell("B2").Value = "D";
+
+            // Cell range removing empties
+            ws.Cell("C1").FormulaA1 = formula;
+            object a = ws.Cell("C1").Value;
+            Assert.AreEqual(expectedOutput, a.ToString());
+        }
+
         [TestCase(2020, 11, 1, 9, 23, 11, "m/d/yyyy h:mm:ss", "11/1/2020 9:23:11")]
         [TestCase(2023, 7, 14, 2, 12, 3, "m/d/yyyy h:mm:ss", "7/14/2023 2:12:03")]
         [TestCase(2025, 10, 14, 2, 48, 55, "m/d/yyyy h:mm:ss", "10/14/2025 2:48:55")]
