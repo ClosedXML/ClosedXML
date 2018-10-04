@@ -37,6 +37,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, T); // Converts its arguments to text
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
+            ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, Value); // Converts a text argument to a number
@@ -192,7 +193,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Search(List<Expression> p)
         {
-            var search = WildcardToRegex((string)p[0]);
+            var search = WildcardToRegex(p[0]);
             var text = (string)p[1];
 
             if ("" == text) throw new ArgumentException("Invalid input string.");
@@ -276,6 +277,60 @@ namespace ClosedXML.Excel.CalcEngine
                 return nf.Format(number, CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// A function to Join text https://support.office.com/en-us/article/textjoin-function-357b449a-ec91-49d0-80c3-0e8fc845691c
+        /// </summary>
+        /// <param name="p">Parameters</param>
+        /// <returns> string </returns>
+        /// <exception cref="ApplicationException">
+        /// Delimiter in first param must be a string
+        /// or
+        /// Second param must be a boolen (TRUE/FALSE)
+        /// </exception>
+        private static object TextJoin(List<Expression> p)
+        {
+            List<string> values = new List<string>();
+            var p0 = p[0].Evaluate();
+            var p1 = p[1].Evaluate();
+
+            if (!(p0 is string)) throw new ArgumentException("Delimiter in first param must be a string");
+            var delimiter = (string)p0;
+
+            if (!(p1 is bool)) throw new ArgumentException("Second param must be a boolen (TRUE/FALSE)");
+            var ignoreEmptyStrings = (bool)p1;
+
+            foreach (var param in p.Skip(2))
+            {
+                if (param is XObjectExpression)
+                {
+                    if (!(param is XObjectExpression table_array))
+                        throw new NoValueAvailableException("table_array has to be a range");
+
+                    if (!(table_array.Value is CellRangeReference range_reference))
+                        throw new NoValueAvailableException("table_array has to be a range");
+
+                    var range = range_reference.Range;
+
+                    values.AddRange(range.Cells().Select(a => a.Value.ToString()).ToList());
+                }
+                else if (param.Evaluate() is string)
+                {
+                    values.Add((string)param.Evaluate());
+                }
+                else
+                {
+                    values.Add(param.Evaluate().ToString());
+                }
+            }
+
+            if (ignoreEmptyStrings)
+            {
+                values.RemoveAll(a => a.Equals(String.Empty));
+            }
+
+            return string.Join(delimiter, values);
+        }
+
         private static object Trim(List<Expression> p)
         {
             //Should not trim non breaking space
@@ -290,7 +345,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Value(List<Expression> p)
         {
-            return double.Parse((string)p[0], NumberStyles.Any, CultureInfo.InvariantCulture);
+            return double.Parse(p[0], NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         private static object Asc(List<Expression> p)
