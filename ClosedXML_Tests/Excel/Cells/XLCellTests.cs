@@ -242,6 +242,16 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetValue_DateTime_Good()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var date = "2018-01-01";
+            bool success = ws.Cell("A1").SetValue(date).TryGetValue(out DateTime outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(new DateTime(2018, 1, 1), outValue);
+        }
+
+        [Test]
         public void TryGetValue_DateTime_BadString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -348,6 +358,69 @@ namespace ClosedXML_Tests
             Assert.IsTrue(success);
             Assert.AreEqual(5, outValue);
         }
+
+        [Test]
+        public void TryGetValue_decimal_Good()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1").SetValue("5");
+            bool success = cell.TryGetValue(out decimal outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(5, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_decimal_Good2()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1").SetValue("1.60000001869776E-06");
+            bool success = cell.TryGetValue(out decimal outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(1.60000001869776E-06, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_Hyperlink()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.Worksheets.Add("Sheet1");
+                var ws2 = wb.Worksheets.Add("Sheet2");
+
+                var targetCell = ws2.Cell("A1");
+
+                var linkCell1 = ws1.Cell("A1");
+                linkCell1.Value = "Link to IXLCell";
+                linkCell1.Hyperlink = new XLHyperlink(targetCell);
+
+                var success = linkCell1.TryGetValue(out XLHyperlink hyperlink);
+                Assert.IsTrue(success);
+                Assert.AreEqual("Sheet2!A1", hyperlink.InternalAddress);
+            }
+        }
+
+        [Test]
+        public void TryGetValue_Unicode_String()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+
+            Boolean success;
+            String outValue;
+
+            success = ws.Cell("A1")
+                .SetValue("Site_x0020_Column_x0020_Test")
+                .TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual("Site Column Test", outValue);
+
+            success = ws.Cell("A1")
+                .SetValue("Site_x005F_x0020_Column_x005F_x0020_Test")
+                .TryGetValue(out outValue);
+
+            Assert.IsTrue(success);
+            Assert.AreEqual("Site_x005F_x0020_Column_x005F_x0020_Test", outValue);
+        }
+
 
         [Test]
         public void SetCellValueToGuid()
