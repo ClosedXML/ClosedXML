@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Globalization;
 
 namespace ClosedXML.Excel
@@ -167,6 +166,7 @@ namespace ClosedXML.Excel
         IXLCell LastCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
 
         IXLCell LastCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate);
+
         /// <summary>
         ///   Determines whether this range contains the specified range (completely).
         ///   <para>For partial matches use the range.Intersects method.</para>
@@ -274,9 +274,30 @@ namespace ClosedXML.Excel
 
         Boolean IsEmpty(XLCellsUsedOptions options);
 
+        /// <summary>
+        /// Determines whether range address spans the entire column.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if is entire column; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean IsEntireColumn();
+
+        /// <summary>
+        /// Determines whether range address spans the entire row.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if is entire row; otherwise, <c>false</c>.
+        /// </returns>
+
         Boolean IsEntireRow();
 
-        Boolean IsEntireColumn();
+        /// <summary>
+        /// Determines whether the range address spans the entire worksheet.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if is entire sheet; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean IsEntireSheet();
 
         IXLPivotTable CreatePivotTable(IXLCell targetCell, String name);
 
