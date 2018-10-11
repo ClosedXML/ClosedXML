@@ -1993,7 +1993,11 @@ namespace ClosedXML.Excel
                 {
                     var maxRows = asRange.RowCount();
                     var maxColumns = asRange.ColumnCount();
-                    Worksheet.Range(_rowNumber, _columnNumber, maxRows, maxColumns).Clear();
+
+                    var lastRow = Math.Min(_rowNumber + maxRows - 1, XLHelper.MaxRowNumber);
+                    var lastColumn = Math.Min(_columnNumber + maxColumns - 1, XLHelper.MaxColumnNumber);
+
+                    Worksheet.Range(_rowNumber, _columnNumber, lastRow, lastColumn).Clear();
                 }
 
                 var minRow = asRange.RangeAddress.FirstAddress.RowNumber;
