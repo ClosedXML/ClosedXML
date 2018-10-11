@@ -455,6 +455,25 @@ namespace ClosedXML_Tests
             Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
             Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
         }
+        [Test]
+        public void SetCellValueToRange()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+
+            ws.Cell("A1").SetValue(2)
+                .CellRight().SetValue(3)
+                .CellRight().SetValue(5)
+                .CellRight().SetValue(7);
+
+            var range = ws.Range("1:1");
+
+            ws.Cell("B2").Value = range;
+
+            Assert.AreEqual(2, ws.Cell("B2").Value);
+            Assert.AreEqual(3, ws.Cell("C2").Value);
+            Assert.AreEqual(5, ws.Cell("D2").Value);
+            Assert.AreEqual(7, ws.Cell("E2").Value);
+        }
 
         [Test]
         public void ValueSetToEmptyString()
