@@ -116,11 +116,11 @@ namespace ClosedXML_Tests.Excel.DataValidations
 
                 ws.Row(2).InsertRowsAbove(1);
                 Assert.IsTrue(dv.Ranges.Single().RangeAddress.IsValid);
-                Assert.AreEqual($"A1:{XLHelper.LastCell}", dv.Ranges.Single().RangeAddress.ToString());
+                Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", dv.Ranges.Single().RangeAddress.ToString());
 
                 ws.Column(2).InsertColumnsAfter(1);
                 Assert.IsTrue(dv.Ranges.Single().RangeAddress.IsValid);
-                Assert.AreEqual($"A1:{XLHelper.LastCell}", dv.Ranges.Single().RangeAddress.ToString());
+                Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", dv.Ranges.Single().RangeAddress.ToString());
             }
         }
     }

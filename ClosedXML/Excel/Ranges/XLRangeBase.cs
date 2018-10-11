@@ -8,7 +8,6 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-
     internal abstract class XLRangeBase : XLStylizedBase, IXLRangeBase, IXLStylized
     {
         #region Fields
@@ -17,7 +16,7 @@ namespace ClosedXML.Excel
         private XLSortElements _sortColumns;
 
         #endregion Fields
-        
+
         protected IXLStyle GetStyle()
         {
             return Style;
@@ -200,6 +199,7 @@ namespace ClosedXML.Excel
                     yield return cell.Style;
             }
         }
+
         #endregion IXLStylized Members
 
         #endregion Public properties
@@ -306,7 +306,6 @@ namespace ClosedXML.Excel
             var cells = new XLCells(usedCellsOnly, options) { RangeAddress };
             return cells;
         }
-
 
         public IXLCells Cells(String cells)
         {
@@ -611,18 +610,21 @@ namespace ClosedXML.Excel
 
         public virtual Boolean IsEntireRow()
         {
-            return RangeAddress.FirstAddress.ColumnNumber == 1
-                   && RangeAddress.LastAddress.ColumnNumber == XLHelper.MaxColumnNumber;
+            return RangeAddress.IsEntireRow();
         }
 
         public virtual Boolean IsEntireColumn()
         {
-            return RangeAddress.FirstAddress.RowNumber == 1
-                   && RangeAddress.LastAddress.RowNumber == XLHelper.MaxRowNumber;
+            return RangeAddress.IsEntireColumn();
+        }
+
+        public virtual Boolean IsEntireSheet()
+        {
+            return RangeAddress.IsEntireSheet();
         }
 
         #endregion IXLRangeBase Members
-        
+
         public IXLCells Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false)
         {
             var culture = CultureInfo.CurrentCulture;
@@ -664,7 +666,6 @@ namespace ClosedXML.Excel
         {
             return FirstCellUsed(includeFormats, null);
         }
-
 
         internal XLCell FirstCellUsed(Func<IXLCell, Boolean> predicate)
         {
@@ -987,8 +988,8 @@ namespace ClosedXML.Excel
 
         public XLRange Range(IXLRangeAddress rangeAddress)
         {
-            var ws = (XLWorksheet) rangeAddress.FirstAddress.Worksheet ??
-                     (XLWorksheet) rangeAddress.LastAddress.Worksheet ??
+            var ws = (XLWorksheet)rangeAddress.FirstAddress.Worksheet ??
+                     (XLWorksheet)rangeAddress.LastAddress.Worksheet ??
                      Worksheet;
             var newFirstCellAddress = new XLAddress(ws,
                                  rangeAddress.FirstAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
@@ -1248,8 +1249,8 @@ namespace ClosedXML.Excel
             {
                 var firstColumnUsed = rangeToReturn.FirstColumn();
                 var model = firstColumnUsed.ColumnLeft();
-                        var modelFirstRow = (model as IXLRangeBase).FirstCellUsed(contentFlags);
-                        var modelLastRow = (model as IXLRangeBase).LastCellUsed(contentFlags);
+                var modelFirstRow = (model as IXLRangeBase).FirstCellUsed(contentFlags);
+                var modelLastRow = (model as IXLRangeBase).LastCellUsed(contentFlags);
                 if (modelLastRow != null)
                 {
                     Int32 firstRoReturned = modelFirstRow.Address.RowNumber
@@ -1645,7 +1646,7 @@ namespace ClosedXML.Excel
             bool destroyedByShift = newRightBoundary < newLeftBoundary;
 
             var firstAddress = (XLAddress)thisRangeAddress.FirstAddress;
-            var lastAddress =  (XLAddress)thisRangeAddress.LastAddress;
+            var lastAddress = (XLAddress)thisRangeAddress.LastAddress;
 
             if (destroyedByShift)
             {

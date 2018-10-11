@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -871,6 +872,34 @@ namespace ClosedXML.Excel
                     return row;
             }
             return null;
+        }
+
+        public override string ToString()
+        {
+            if (IsEntireSheet())
+            {
+                return Worksheet.Name;
+            }
+            else if (IsEntireRow())
+            {
+                return String.Concat(
+                    Worksheet.Name.EscapeSheetName(),
+                    '!',
+                    RangeAddress.FirstAddress.RowNumber,
+                    ':',
+                    RangeAddress.LastAddress.RowNumber);
+            }
+            else if (IsEntireColumn())
+            {
+                return String.Concat(
+                    Worksheet.Name.EscapeSheetName(),
+                    '!',
+                    RangeAddress.FirstAddress.ColumnLetter,
+                    ':',
+                    RangeAddress.LastAddress.ColumnLetter);
+            }
+            else
+                return base.ToString();
         }
     }
 }

@@ -13,6 +13,30 @@ namespace ClosedXML.Excel
         IXLAddress FirstAddress { get; }
 
         /// <summary>
+        /// Determines whether range address spans the entire column.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if is entire column; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean IsEntireColumn();
+
+        /// <summary>
+        /// Determines whether range address spans the entire row.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if is entire row; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean IsEntireRow();
+
+        /// <summary>
+        /// Determines whether the range address spans the entire worksheet.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if is entire sheet; otherwise, <c>false</c>.
+        /// </returns>
+        Boolean IsEntireSheet();
+
+        /// <summary>
         /// Gets or sets a value indicating whether this range is valid.
         /// </summary>
         /// <value>

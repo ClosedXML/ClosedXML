@@ -54,7 +54,7 @@ namespace ClosedXML_Tests.Excel.Ranges
                 .ToList();
 
             Assert.AreEqual(3, consRanges.Count);
-            Assert.AreEqual("D1:F1048576", consRanges[0].RangeAddress.ToString());
+            Assert.AreEqual("D:F", consRanges[0].RangeAddress.ToString());
             Assert.AreEqual("A5:C7", consRanges[1].RangeAddress.ToString());
             Assert.AreEqual("G5:XFD7", consRanges[2].RangeAddress.ToString());
         }
@@ -98,7 +98,7 @@ namespace ClosedXML_Tests.Excel.Ranges
             Assert.AreEqual("Sheet1!$E$10:$E$12", consRanges[4].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
             Assert.AreEqual("Sheet1!$I$10:$I$13", consRanges[5].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
 
-            Assert.AreEqual("Sheet2!$D$1:$F$1048576", consRanges[6].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
+            Assert.AreEqual("Sheet2!$D:$F", consRanges[6].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
             Assert.AreEqual("Sheet2!$A$5:$C$7", consRanges[7].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
             Assert.AreEqual("Sheet2!$G$5:$XFD$7", consRanges[8].RangeAddress.ToStringFixed(XLReferenceStyle.Default, true));
         }
