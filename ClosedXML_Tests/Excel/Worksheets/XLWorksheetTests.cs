@@ -830,5 +830,19 @@ namespace ClosedXML_Tests
                 Assert.AreEqual("#REF!A1:B2", range.RangeAddress.ToString());
             }
         }
+
+        [Test]
+        public void InvalidRowAndColumnIndices()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Row(-1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Row(XLHelper.MaxRowNumber + 1));
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Column(-1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Column(XLHelper.MaxColumnNumber + 1));
+            }
+        }
     }
 }
