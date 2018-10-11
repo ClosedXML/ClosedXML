@@ -2005,20 +2005,22 @@ namespace ClosedXML.Excel
                         ).CopyFromInternal(sourceCell as XLCell, true);
                 }
 
-                var rangesToMerge = (from mergedRange in (asRange.Worksheet).Internals.MergedRanges
-                                     where asRange.Contains(mergedRange)
-                                     let initialRo =
-                                         _rowNumber +
-                                         (mergedRange.RangeAddress.FirstAddress.RowNumber -
-                                          asRange.RangeAddress.FirstAddress.RowNumber)
-                                     let initialCo =
-                                         _columnNumber +
-                                         (mergedRange.RangeAddress.FirstAddress.ColumnNumber -
-                                          asRange.RangeAddress.FirstAddress.ColumnNumber)
-                                     select
-                                         Worksheet.Range(initialRo, initialCo, initialRo + mergedRange.RowCount() - 1,
-                                                         initialCo + mergedRange.ColumnCount() - 1)).Cast<IXLRange>().
-                    ToList();
+                var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
+                    .Where(mr => asRange.Contains(mr))
+                    .Select(mr =>
+                    {
+                        var firstRow = _rowNumber + (mr.RangeAddress.FirstAddress.RowNumber - asRange.RangeAddress.FirstAddress.RowNumber);
+                        var firstColumn = _columnNumber + (mr.RangeAddress.FirstAddress.ColumnNumber - asRange.RangeAddress.FirstAddress.ColumnNumber);
+                        return (IXLRange)Worksheet.Range
+                        (
+                            firstRow,
+                            firstColumn,
+                            firstRow + mr.RowCount() - 1,
+                            firstColumn + mr.ColumnCount() - 1
+                        );
+                    })
+                    .ToList();
+
                 rangesToMerge.ForEach(r => r.Merge(false));
 
                 CopyConditionalFormatsFrom(asRange);
