@@ -1979,13 +1979,8 @@ namespace ClosedXML.Excel
 
         private Boolean SetRange(Object rangeObject)
         {
-            var asRange = rangeObject as XLRangeBase;
-            if (asRange == null)
-            {
-                var tmp = rangeObject as XLCell;
-                if (tmp != null)
-                    asRange = tmp.AsRange();
-            }
+            var asRange = (rangeObject as XLRangeBase)
+                       ?? (rangeObject as XLCell)?.AsRange();
 
             if (asRange != null)
             {
