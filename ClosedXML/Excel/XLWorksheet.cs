@@ -1056,11 +1056,9 @@ namespace ClosedXML.Excel
         public XLColumn Column(Int32 columnNumber)
         {
             if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
-                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}",
-                                                                 XLHelper.MaxColumnNumber));
+                throw new ArgumentOutOfRangeException(nameof(columnNumber), $"Column number must be between 1 and {XLHelper.MaxColumnNumber}");
 
-            XLColumn column;
-            if (Internals.ColumnsCollection.TryGetValue(columnNumber, out column))
+            if (Internals.ColumnsCollection.TryGetValue(columnNumber, out XLColumn column))
                 return column;
             else
             {
@@ -1333,11 +1331,9 @@ namespace ClosedXML.Excel
         public XLRow Row(Int32 rowNumber, Boolean pingCells)
         {
             if (rowNumber <= 0 || rowNumber > XLHelper.MaxRowNumber)
-                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
-                                                                 XLHelper.MaxRowNumber));
+                throw new ArgumentOutOfRangeException(nameof(rowNumber), $"Row number must be between 1 and {XLHelper.MaxRowNumber}");
 
-            XLRow row;
-            if (Internals.RowsCollection.TryGetValue(rowNumber, out row))
+            if (Internals.RowsCollection.TryGetValue(rowNumber, out XLRow row))
                 return row;
             else
             {
