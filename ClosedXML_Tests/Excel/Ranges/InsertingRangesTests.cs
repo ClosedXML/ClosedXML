@@ -263,5 +263,36 @@ namespace ClosedXML_Tests
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(1048577));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(1048577));
         }
+
+        [Test]
+        public void MergedRangesConsistencyWhenInsertingRows()
+        {
+            // https://github.com/ClosedXML/ClosedXML/issues/1013
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                //create merged row
+                ws.Cell("A1").Value = "Merged Row(1) of Range (A1:F1)";
+                ws.Range("A1:F1").Row(1).Merge();
+
+                var row = ws.FirstRow();
+
+                // Add some lines and copy format & merging
+                for (var r = 1; r <= 10; r++)
+                {
+                    row.InsertRowsBelow(1);         // insert a row below row 1, as a row 2
+                    row.CopyTo(row.RowBelow());     // copy format and merging from row 1 to row 2
+
+                    var duplicates = ws.MergedRanges
+                        .GroupBy(s => s.ToString())
+                        .Where(g => g.Count() > 1)
+                        .Select(y => new { Element = y.Key, Counter = y.Count() })
+                        .ToList();
+
+                    Assert.AreEqual(0, duplicates.Count);
+                }
+            }
+        }
     }
 }

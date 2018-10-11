@@ -1283,9 +1283,14 @@ namespace ClosedXML.Excel
             try
             {
                 SuspendEvents();
-                var rangesToShift = _rangeRepository.ToList();
+
+                var rangesToShift = _rangeRepository
+                    .Where(r => r.RangeAddress.IsValid)
+                    .OrderBy(r => r.RangeAddress.FirstAddress.RowNumber * -Math.Sign(rowsShifted))
+                    .ToList();
 
                 WorksheetRangeShiftedRows(range, rowsShifted);
+
                 foreach (var storedRange in rangesToShift)
                 {
                     if (storedRange.IsEntireColumn())
@@ -1309,9 +1314,14 @@ namespace ClosedXML.Excel
             try
             {
                 SuspendEvents();
-                var rangesToShift = _rangeRepository.ToList();
+
+                var rangesToShift = _rangeRepository
+                    .Where(r => r.RangeAddress.IsValid)
+                    .OrderBy(r => r.RangeAddress.FirstAddress.ColumnNumber * -Math.Sign(columnsShifted))
+                    .ToList();
 
                 WorksheetRangeShiftedColumns(range, columnsShifted);
+
                 foreach (var storedRange in rangesToShift)
                 {
                     if (storedRange.IsEntireRow())
