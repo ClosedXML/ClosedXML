@@ -86,6 +86,7 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        [Ignore("Ignored due to #1026")]
         public void DataValidation()
         {
             TestHelper.RunTestExample<DataValidation>(@"Misc\DataValidation.xlsx");
