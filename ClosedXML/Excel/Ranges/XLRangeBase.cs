@@ -355,6 +355,18 @@ namespace ClosedXML.Excel
             }
 
             var asRange = AsRange();
+            var firstCell = FirstCell();
+            CellsUsed(XLCellsUsedOptions.All, c => c != firstCell)
+                .ForEach(c => c.Clear(XLClearOptions.All & ~XLClearOptions.NormalFormats));
+
+            asRange.Style.Alignment = firstCell.Style.Alignment;
+            asRange.Style.Border.SetInsideBorder(XLBorderStyleValues.None);
+            asRange.Style.Fill = firstCell.Style.Fill;
+            asRange.Style.Font = firstCell.Style.Font;
+            asRange.Style.IncludeQuotePrefix = firstCell.Style.IncludeQuotePrefix;
+            asRange.Style.NumberFormat = firstCell.Style.NumberFormat;
+            asRange.Style.Protection = firstCell.Style.Protection;
+
             Worksheet.Internals.MergedRanges.Add(asRange);
             return asRange;
         }
