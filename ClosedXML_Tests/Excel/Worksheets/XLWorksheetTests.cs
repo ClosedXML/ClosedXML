@@ -35,6 +35,26 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CopyColumnVisibility()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Columns(10, 20).Hide();
+            ws.CopyTo("Sheet2");
+            Assert.IsTrue(wb.Worksheet("Sheet2").Column(10).IsHidden);
+        }
+
+        [Test]
+        public void CopyRowVisibility()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Rows(2, 5).Hide();
+            ws.CopyTo("Sheet2");
+            Assert.IsTrue(wb.Worksheet("Sheet2").Row(4).IsHidden);
+        }
+
+        [Test]
         public void DeletingSheets1()
         {
             var wb = new XLWorkbook();
