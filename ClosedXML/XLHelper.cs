@@ -19,8 +19,8 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
-        internal static readonly Graphics Graphic = Graphics.FromImage(new Bitmap(200, 200));
-        internal static readonly Double DpiX = Graphic.DpiX;
+        internal static readonly Graphics Graphics = Graphics.FromImage(new Bitmap(200, 200));
+        internal static readonly Double DpiX = Graphics.DpiX;
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
