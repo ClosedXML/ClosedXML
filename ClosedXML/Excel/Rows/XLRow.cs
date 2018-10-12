@@ -52,10 +52,9 @@ namespace ClosedXML.Excel
             get
             {
                 int row = RowNumber();
-                
+
                 foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInRow(row))
                     yield return cell;
-                
             }
         }
 
@@ -409,6 +408,7 @@ namespace ClosedXML.Excel
             newRow._height = _height;
             newRow.HeightChanged = HeightChanged;
             newRow.InnerStyle = GetStyle();
+            newRow.IsHidden = IsHidden;
 
             AsRange().CopyTo(row);
 
