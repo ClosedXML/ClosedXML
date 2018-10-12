@@ -216,5 +216,146 @@ namespace ClosedXML_Tests
                 Assert.AreEqual("E8:F9", mr[3].RangeAddress.ToString());
             }
         }
+
+        [Test]
+        public void MergedCellsAcquireFirstCellStyle()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
+                ws.Cell("A2").Style.Fill.BackgroundColor = XLColor.Yellow;
+                ws.Cell("A3").Style.Fill.BackgroundColor = XLColor.Green;
+                ws.Range("A1:A3").Merge();
+
+                Assert.AreEqual(XLColor.Red, ws.Cell("A1").Style.Fill.BackgroundColor);
+                Assert.AreEqual(XLColor.Red, ws.Cell("A2").Style.Fill.BackgroundColor);
+                Assert.AreEqual(XLColor.Red, ws.Cell("A3").Style.Fill.BackgroundColor);
+            }
+        }
+
+        [Test]
+        public void MergedCellsLooseData()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Range("A1:A3").SetValue(100);
+                ws.Range("A1:A3").Merge();
+
+                Assert.AreEqual(100, ws.Cell("A1").Value);
+                Assert.AreEqual("", ws.Cell("A2").Value);
+                Assert.AreEqual("", ws.Cell("A3").Value);
+            }
+        }
+
+        [Test]
+        public void MergedCellsLooseConditionalFormats()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").AddConditionalFormat().WhenContains("1").Fill.BackgroundColor = XLColor.Red;
+                ws.Cell("A2").AddConditionalFormat().WhenContains("2").Fill.BackgroundColor = XLColor.Yellow;
+
+                ws.Range("A1:A2").Merge();
+
+                Assert.AreEqual(1, ws.ConditionalFormats.Count());
+                Assert.AreEqual("A1:A1", ws.ConditionalFormats.Single().Ranges.Single().RangeAddress.ToString());
+            }
+        }
+
+        [Test]
+        public void MergedCellsLooseDataValidation()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Cell("A1").NewDataValidation.WholeNumber.Between(1, 2);
+                ws.Cell("A2").NewDataValidation.Date.GreaterThan(new System.DateTime(2018, 1, 1));
+
+                ws.Range("A1:A2").Merge();
+
+                Assert.IsTrue(ws.Cell("A1").HasDataValidation);
+                Assert.AreEqual("1", ws.Cell("A1").DataValidation.MinValue);
+                Assert.AreEqual("2", ws.Cell("A1").DataValidation.MaxValue);
+                Assert.IsFalse(ws.Cell("A2").HasDataValidation);
+            }
+        }
+
+        [Test]
+        public void UnmergedCellsPreserveStyle()
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var range = ws.Range("B2:D4");
+                range.Style.Fill.SetBackgroundColor(XLColor.Yellow);
+                range.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thick)
+                    .Border.SetOutsideBorderColor(XLColor.DarkBlue)
+                    .Border.SetInsideBorder(XLBorderStyleValues.Thin)
+                    .Border.SetInsideBorderColor(XLColor.Pink);
+                range.Cells().ForEach(c => c.Value = c.Address.ToString());
+
+                var firstCell = ws.Cell("B2");
+                firstCell.Style.Fill.SetBackgroundColor(XLColor.Red)
+                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                    .Font.SetBold();
+
+                range.Merge();
+                range.Unmerge();
+
+                Assert.IsTrue(range.Cells().All(c => c.Style.Fill.BackgroundColor == XLColor.Red));
+                Assert.IsTrue(range.Cells().Where(c => c != firstCell).All(c => c.Value == ""));
+                Assert.AreEqual("B2", firstCell.Value);
+
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B2").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B2").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B2").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B2").Style.Border.LeftBorder);
+
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("C2").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C2").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C2").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C2").Style.Border.LeftBorder);
+
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("D2").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("D2").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D2").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D2").Style.Border.LeftBorder);
+
+
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B3").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B3").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B3").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B3").Style.Border.LeftBorder);
+
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C3").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C3").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C3").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C3").Style.Border.LeftBorder);
+
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D3").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("D3").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D3").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D3").Style.Border.LeftBorder);
+
+
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B4").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B4").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B4").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B4").Style.Border.LeftBorder);
+
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C4").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C4").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("C4").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("C4").Style.Border.LeftBorder);
+
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D4").Style.Border.TopBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("D4").Style.Border.RightBorder);
+                Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("D4").Style.Border.BottomBorder);
+                Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D4").Style.Border.LeftBorder);
+            }
+        }
     }
 }
