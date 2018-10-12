@@ -618,7 +618,7 @@ namespace ClosedXML.Excel
             return RangeAddress.IsEntireColumn();
         }
 
-        public virtual Boolean IsEntireSheet()
+        public Boolean IsEntireSheet()
         {
             return RangeAddress.IsEntireSheet();
         }
