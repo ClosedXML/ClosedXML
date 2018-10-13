@@ -866,12 +866,15 @@ namespace ClosedXML.Excel
                 definedNames.AppendChild(definedName2);
             }
 
-            foreach (var nr in NamedRanges)
+            foreach (XLNamedRange nr in NamedRanges)
             {
+                var refersTo = string.Join(",", nr.RangeList
+                    .Select(r => r.StartsWith("#REF!") ? "#REF!" : r));
+
                 var definedName = new DefinedName
                 {
                     Name = nr.Name,
-                    Text = nr.ToString()
+                    Text = refersTo
                 };
 
                 if (!nr.Visible)
