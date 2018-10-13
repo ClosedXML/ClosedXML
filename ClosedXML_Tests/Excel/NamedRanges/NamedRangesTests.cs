@@ -423,12 +423,12 @@ namespace ClosedXML_Tests.Excel
 
                     Assert.AreEqual("Named range 4", wb.NamedRanges.ElementAt(1).Name);
                     Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(1).Scope);
-                    Assert.AreEqual("#REF!$A$4:$D$4", wb.NamedRanges.ElementAt(1).RefersTo);
+                    Assert.AreEqual("#REF!", wb.NamedRanges.ElementAt(1).RefersTo);
                     Assert.IsFalse(wb.NamedRanges.ElementAt(1).Ranges.Any());
 
                     Assert.AreEqual("Named range 5", wb.NamedRanges.ElementAt(2).Name);
                     Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(2).Scope);
-                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!$A$5:$D$5", wb.NamedRanges.ElementAt(2).RefersTo);
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!", wb.NamedRanges.ElementAt(2).RefersTo);
                     Assert.AreEqual(1, wb.NamedRanges.ElementAt(2).Ranges.Count);
                     Assert.AreEqual("'Sheet 1'!A5:D5",
                         wb.NamedRanges.ElementAt(2).Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
