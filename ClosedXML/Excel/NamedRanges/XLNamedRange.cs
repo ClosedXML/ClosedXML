@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, String range, String comment = null)
             : this(namedRanges, rangeName, comment)
         {
-            RangeList.Add(range);
+            range.Split(',').ForEach(r => RangeList.Add(r));
         }
 
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
