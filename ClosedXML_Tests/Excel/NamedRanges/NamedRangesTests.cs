@@ -525,6 +525,31 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void NamedRangesFromDeletedSheetAreSavedWithoutAddress()
+        {
+            // Range address referring to the deleted sheet look like #REF!A1:B2.
+            // But workbooks with such references in named ranges Excel considers as broken files.
+            // It requires #REF!
+
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add("Sheet 1");
+                    var ws2 = wb.Worksheets.Add("Sheet 2");
+                    ws2.Range("A4:D4").AddToNamed("Test named range", XLScope.Workbook);
+                    ws2.Delete();
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual("#REF!", wb.NamedRanges.Single().RefersTo);
+                }
+            }
+        }
+
+        [Test]
         public void CanGetValidNamedRanges()
         {
             using (var wb = new XLWorkbook())
