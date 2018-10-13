@@ -436,6 +436,39 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void NamedRangeReferringToMultipleRangesCanBeSavedAndLoaded()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Sheet 1");
+
+                    wb.NamedRanges.Add("Multirange named range", new XLRanges
+                    {
+                        ws.Range("A5:D5"),
+                        ws.Range("A15:D15")
+                    });
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(1, wb.NamedRanges.Count());
+                    var nr = wb.NamedRanges.Single() as XLNamedRange;
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5,'Sheet 1'!$A$15:$D$15", nr.RefersTo);
+                    Assert.AreEqual(2, nr.Ranges.Count);
+                    Assert.AreEqual("'Sheet 1'!A5:D5", nr.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
+                    Assert.AreEqual("'Sheet 1'!A15:D15", nr.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
+                    Assert.AreEqual(2, nr.RangeList.Count);
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5", nr.RangeList.First());
+                    Assert.AreEqual("'Sheet 1'!$A$15:$D$15", nr.RangeList.Last());
+                }
+            }
+        }
+
         [Test, Ignore("Muted until shifting is fixed (see #880)")]
         public void NamedRangeBecomesInvalidOnRangeDeleting()
         {
