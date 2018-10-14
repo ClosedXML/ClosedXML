@@ -293,42 +293,54 @@ namespace ClosedXML.Excel.CalcEngine
             var p0 = p[0].Evaluate();
             var p1 = p[1].Evaluate();
 
-            if (!(p0 is string)) throw new ArgumentException("Delimiter in first param must be a string");
-            var delimiter = (string)p0;
+            var delimiter = ValueToString(p0);
 
-            if (!(p1 is bool)) throw new ArgumentException("Second param must be a boolen (TRUE/FALSE)");
-            var ignoreEmptyStrings = (bool)p1;
+            bool ignoreEmptyStrings;
+            if (p1 is bool boolP1)
+                ignoreEmptyStrings = boolP1;
+            else if (p1.IsNumber())
+            {
+                var d = Convert.ToDecimal(p1);
+                ignoreEmptyStrings = d != 0;
+            }
+            else
+                throw new CellValueException("Second param must be a boolen (TRUE/FALSE)");
 
             foreach (var param in p.Skip(2))
             {
-                if (param is XObjectExpression)
+                if (param is XObjectExpression tableArray)
                 {
-                    if (!(param is XObjectExpression table_array))
-                        throw new NoValueAvailableException("table_array has to be a range");
+                    if (!(tableArray.Value is CellRangeReference rangeReference))
+                        throw new NoValueAvailableException("tableArray has to be a range");
 
-                    if (!(table_array.Value is CellRangeReference range_reference))
-                        throw new NoValueAvailableException("table_array has to be a range");
+                    var range = rangeReference.Range;
 
-                    var range = range_reference.Range;
-
-                    values.AddRange(range.Cells().Select(a => a.Value.ToString()).ToList());
-                }
-                else if (param.Evaluate() is string)
-                {
-                    values.Add((string)param.Evaluate());
+                    values.AddRange((range as XLRange).CellValues().Cast<object>().Select(ValueToString));
                 }
                 else
                 {
-                    values.Add(param.Evaluate().ToString());
+                    values.Add(ValueToString(param.Evaluate()));
                 }
             }
 
             if (ignoreEmptyStrings)
             {
-                values.RemoveAll(a => a.Equals(String.Empty));
+                values.RemoveAll(string.IsNullOrEmpty);
             }
 
-            return string.Join(delimiter, values);
+            var retVal = string.Join(delimiter, values);
+
+            if (retVal.Length > 32767)
+                throw new CellValueException();
+
+            return retVal;
+
+            string ValueToString(object value)
+            {
+                if (value is bool boolVal)
+                    return boolVal.ToString().ToUpper();
+                return value?.ToString() ?? String.Empty;
+            }
         }
 
         private static object Trim(List<Expression> p)
