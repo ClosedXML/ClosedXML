@@ -2,8 +2,10 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace ClosedXML_Tests
 {
@@ -210,6 +212,52 @@ namespace ClosedXML_Tests
                     autoFilter.Reapply();
                     Assert.AreEqual(3, autoFilter.HiddenRows.Count());
                 }
+            }
+        }
+
+        [Test]
+        public void CanLoadAutoFilterWithThousandsSeparator()
+        {
+            var backupCulture = Thread.CurrentThread.CurrentCulture;
+
+            try
+            {
+                // Set thread culture to French, which should format numbers using a space as thousands separator
+                var culture = CultureInfo.CreateSpecificCulture("fr-FR");
+                // but use a period instead of a comma as for decimal separator
+                culture.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                Thread.CurrentThread.CurrentCulture = culture;
+
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\AutoFilter\AutoFilterWithThousandsSeparator.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheets.First();
+                    Assert.AreEqual(10000, (ws.AutoFilter as XLAutoFilter).Filters.First().Value.First().Value);
+                    Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
+
+                    ws.AutoFilter.Reapply();
+                    Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
+                }
+
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\AutoFilter\AutoFilterWithThousandsSeparator.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheets.First();
+                    Assert.AreEqual("10 000.00", (ws.AutoFilter as XLAutoFilter).Filters.First().Value.First().Value);
+
+                    var v = ws.AutoFilter.VisibleRows.Select(r => r.FirstCell().Value).ToList();
+                    Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
+
+                    ws.AutoFilter.Reapply();
+                    Assert.AreEqual(1, ws.AutoFilter.VisibleRows.Count());
+                }
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = backupCulture;
             }
         }
     }

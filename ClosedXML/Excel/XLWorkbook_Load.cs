@@ -2036,7 +2036,7 @@ namespace ClosedXML.Excel
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
                         String val = filter.Val.Value;
-                        if (!Double.TryParse(val, out Double dTest))
+                        if (!Double.TryParse(val, NumberStyles.Any, null, out Double dTest))
                         {
                             isText = true;
                             break;
@@ -2055,7 +2055,7 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            xlFilter.Value = Double.Parse(filter.Val.Value, CultureInfo.InvariantCulture);
+                            xlFilter.Value = Double.Parse(filter.Val.Value, NumberStyles.Any);
                             condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
                         }
 
