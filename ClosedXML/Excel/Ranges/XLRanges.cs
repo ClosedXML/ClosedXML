@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         /// Normally, XLRanges collection includes ranges from a single worksheet, but not necessarily.
         /// </summary>
         private readonly Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>> _indexes;
-        private IEnumerable<XLRange> Ranges => _indexes.Values.SelectMany(index => index.GetAll()).ToList();
+        private IEnumerable<XLRange> Ranges => _indexes.Values.SelectMany(index => index.GetAll());
 
 
         private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
@@ -78,9 +78,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRange> GetEnumerator()
         {
-            var retList = new List<IXLRange>();
-            retList.AddRange(Ranges.Where(r => XLHelper.IsValidRangeAddress(r.RangeAddress)).Cast<IXLRange>());
-            return retList.GetEnumerator();
+            return Ranges.Cast<IXLRange>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
