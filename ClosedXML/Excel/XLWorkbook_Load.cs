@@ -2033,10 +2033,14 @@ namespace ClosedXML.Excel
                     autoFilter.Filters.Add((int)filterColumn.ColumnId.Value + 1, filterList);
 
                     Boolean isText = false;
+
+                    var formatProvider = CultureInfo.InvariantCulture.Clone() as CultureInfo;
+                    formatProvider.NumberFormat.NumberGroupSeparator = " ";
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
                         String val = filter.Val.Value;
-                        if (!Double.TryParse(val, out Double dTest))
+                        if (!Double.TryParse(val, NumberStyles.Float | NumberStyles.AllowThousands,
+                            formatProvider, out Double dTest))
                         {
                             isText = true;
                             break;
@@ -2055,7 +2059,8 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            xlFilter.Value = Double.Parse(filter.Val.Value, CultureInfo.InvariantCulture);
+                            xlFilter.Value = Double.Parse(filter.Val.Value, NumberStyles.Float | NumberStyles.AllowThousands,
+                                formatProvider);
                             condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
                         }
 
