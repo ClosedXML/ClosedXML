@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange Add(String rangeName, String rangeAddress, String comment)
         {
-            return Add(rangeName, rangeAddress, comment, validateName: true, acceptInvalidReferences: false);
+            return Add(rangeName, rangeAddress, comment, validateName: true, validateRangeAddress: true);
         }
 
         /// <summary>
@@ -64,13 +64,16 @@ namespace ClosedXML.Excel
         /// <param name="rangeAddress">The range address.</param>
         /// <param name="comment">The comment.</param>
         /// <param name="validateName">if set to <c>true</c> validates the name.</param>
-        /// <param name="acceptInvalidReferences">if set to <c>true</c> range address will not be checked for validity. Necessary when loading files as is.</param>
+        /// <param name="validateRangeAddress">if set to <c>true</c> range address will be checked for validity.</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        /// <exception cref="System.ArgumentException">For named ranges in the workbook scope, specify the sheet name in the reference.</exception>
-        internal IXLNamedRange Add(String rangeName, String rangeAddress, String comment, Boolean validateName, Boolean acceptInvalidReferences)
+        /// <exception cref="ArgumentException">
+        /// For named ranges in the workbook scope, specify the sheet name in the reference.
+        /// </exception>
+        internal IXLNamedRange Add(String rangeName, String rangeAddress, String comment, Boolean validateName, Boolean validateRangeAddress)
         {
-            if (!acceptInvalidReferences)
+            // When loading named ranges from an existing file, we do not validate the range address or name.
+            if (validateRangeAddress)
             {
                 var match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress);
 
