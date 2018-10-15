@@ -13,23 +13,33 @@ namespace ClosedXML.Excel
         internal XLWorkbook Workbook => _namedRanges.Workbook;
 
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, String range, String comment = null)
-            : this(namedRanges, rangeName, comment)
+            : this(namedRanges, rangeName, validateName: true, range, comment)
+        {
+        }
+
+        public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
+            : this(namedRanges, rangeName, validateName: true, comment)
+        {
+            ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
+        }
+
+        internal XLNamedRange(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String range, String comment)
+            : this(namedRanges, rangeName, validateName, comment)
         {
             //TODO range.Split(',') may produce incorrect result if a worksheet name contains comma. Refactoring needed.
             range.Split(',').ForEach(r => RangeList.Add(r));
         }
 
-        public XLNamedRange(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment = null)
-            : this(namedRanges, rangeName, comment)
-        {
-            ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
-        }
-
-        private XLNamedRange(XLNamedRanges namedRanges, String rangeName, String comment)
+        internal XLNamedRange(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String comment)
         {
             _namedRanges = namedRanges ?? throw new ArgumentNullException(nameof(namedRanges));
             Visible = true;
-            Name = rangeName;
+
+            if (validateName)
+                Name = rangeName;
+            else
+                SetNameWithoutValidation(rangeName);
+
             Comment = comment;
         }
 
@@ -75,6 +85,11 @@ namespace ClosedXML.Excel
                     _namedRanges.Add(_name, this);
                 }
             }
+        }
+
+        private void SetNameWithoutValidation(string value)
+        {
+            _name = value;
         }
 
         public IXLRanges Ranges

@@ -1306,12 +1306,12 @@ namespace ClosedXML.Excel
                     if (localSheetId == -1)
                     {
                         if (NamedRanges.All(nr => nr.Name != name))
-                            (NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
+                            (NamedRanges as XLNamedRanges).Add(name, text, comment, validateName: false, acceptInvalidReferences: true).Visible = visible;
                     }
                     else
                     {
                         if (Worksheet(localSheetId + 1).NamedRanges.All(nr => nr.Name != name))
-                            (Worksheet(localSheetId + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, true).Visible = visible;
+                            (Worksheet(localSheetId + 1).NamedRanges as XLNamedRanges).Add(name, text, comment, validateName: false, acceptInvalidReferences: true).Visible = visible;
                     }
                 }
             }

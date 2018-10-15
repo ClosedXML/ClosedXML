@@ -38,7 +38,8 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\LoadImageWithoutTransform2D.xlsx",
                 @"Misc\PivotTableWithTableSource.xlsx",
                 @"Misc\TemplateWithTableSourcePivotTables.xlsx",
-                @"Misc\PrintAreaRefersToExternalWorksheet.xlsx"
+                @"Misc\PrintAreaRefersToExternalWorksheet.xlsx",
+                @"Misc\NamedRangeWithInvalidCharacter.xlsx"
             };
 
             foreach (var file in files)
