@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange Add(String rangeName, String rangeAddress, String comment)
         {
-            return Add(rangeName, rangeAddress, comment, false);
+            return Add(rangeName, rangeAddress, comment, validateName: true, acceptInvalidReferences: false);
         }
 
         /// <summary>
@@ -63,10 +63,12 @@ namespace ClosedXML.Excel
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="rangeAddress">The range address.</param>
         /// <param name="comment">The comment.</param>
+        /// <param name="validateName">if set to <c>true</c> validates the name.</param>
         /// <param name="acceptInvalidReferences">if set to <c>true</c> range address will not be checked for validity. Necessary when loading files as is.</param>
         /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         /// <exception cref="System.ArgumentException">For named ranges in the workbook scope, specify the sheet name in the reference.</exception>
-        internal IXLNamedRange Add(String rangeName, String rangeAddress, String comment, bool acceptInvalidReferences)
+        internal IXLNamedRange Add(String rangeName, String rangeAddress, String comment, Boolean validateName, Boolean acceptInvalidReferences)
         {
             if (!acceptInvalidReferences)
             {
@@ -98,7 +100,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var namedRange = new XLNamedRange(this, rangeName, rangeAddress, comment);
+            var namedRange = new XLNamedRange(this, rangeName, validateName, rangeAddress, comment);
             _namedRanges.Add(rangeName, namedRange);
             return namedRange;
         }
