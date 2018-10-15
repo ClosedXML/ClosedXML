@@ -503,6 +503,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase("=TEXTJOIN(\",\", 100, A1:B2)", "A,B,D")]
         [TestCase("=TEXTJOIN(B2, FALSE, A1:B2)", "ADDBDD")]
         [TestCase("=TEXTJOIN(\",\", FALSE, 12345.67, DATE(2018, 10, 30))", "12345.67,43403")]
+        [TestCase("=TEXTJOIN(\",\", \"0\", A1:B2)", "A,,B,D")] // Excel does not accept text argument, LibreOffice does
         public void TextJoin(string formula, string expectedOutput)
         {
             var wb = new XLWorkbook();
@@ -519,7 +520,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [TestCase("=TEXTJOIN(\",\", FALSE, D1:D32769)", "The value is too long")]
-        [TestCase("=TEXTJOIN(\",\", \"0\", A1:B2)", "The second argument is invalid")]
+        [TestCase("=TEXTJOIN(\",\", \"Invalid\", A1:B2)", "The second argument is invalid")]
         public void TextJoinWithInvalidArgumentsThrows(string formula, string explain)
         {
             var wb = new XLWorkbook();

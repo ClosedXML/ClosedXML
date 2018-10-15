@@ -289,22 +289,18 @@ namespace ClosedXML.Excel.CalcEngine
         /// </exception>
         private static object TextJoin(List<Expression> p)
         {
-            List<string> values = new List<string>();
-            var p0 = p[0].Evaluate();
-            var p1 = p[1].Evaluate();
-
-            var delimiter = ValueToString(p0);
-
+            var values = new List<string>();
+            string delimiter;
             bool ignoreEmptyStrings;
-            if (p1 is bool boolP1)
-                ignoreEmptyStrings = boolP1;
-            else if (p1.IsNumber())
+            try
             {
-                var d = Convert.ToDecimal(p1);
-                ignoreEmptyStrings = d != 0;
+                delimiter = (string) p[0];
+                ignoreEmptyStrings = (bool) p[1];
             }
-            else
-                throw new CellValueException("Second param must be a boolen (TRUE/FALSE)");
+            catch (Exception e)
+            {
+                throw new CellValueException("Failed to parse arguments", e);
+            }
 
             foreach (var param in p.Skip(2))
             {
@@ -314,18 +310,22 @@ namespace ClosedXML.Excel.CalcEngine
                         throw new NoValueAvailableException("tableArray has to be a range");
 
                     var range = rangeReference.Range;
+                    IEnumerable<string> cellValues;
+                    if (ignoreEmptyStrings)
+                        cellValues = range.CellsUsed()
+                            .Select(c => c.GetString())
+                            .Where(s => !string.IsNullOrEmpty(s));
+                    else
+                        cellValues = (range as XLRange).CellValues()
+                            .Cast<object>()
+                            .Select(o => o.ToString());
 
-                    values.AddRange((range as XLRange).CellValues().Cast<object>().Select(ValueToString));
+                    values.AddRange(cellValues);
                 }
                 else
                 {
-                    values.Add(ValueToString(param.Evaluate()));
+                    values.Add((string)param);
                 }
-            }
-
-            if (ignoreEmptyStrings)
-            {
-                values.RemoveAll(string.IsNullOrEmpty);
             }
 
             var retVal = string.Join(delimiter, values);
@@ -334,13 +334,6 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new CellValueException();
 
             return retVal;
-
-            string ValueToString(object value)
-            {
-                if (value is bool boolVal)
-                    return boolVal.ToString().ToUpper();
-                return value?.ToString() ?? String.Empty;
-            }
         }
 
         private static object Trim(List<Expression> p)
