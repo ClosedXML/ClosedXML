@@ -180,6 +180,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return dt;
             }
 
+            if (v is TimeSpan ts)
+            {
+                return new DateTime().Add(ts);
+            }
+
             // handle numbers
             if (v.IsNumber())
             {
