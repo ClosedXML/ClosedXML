@@ -866,7 +866,7 @@ namespace ClosedXML.Excel
                 definedNames.AppendChild(definedName2);
             }
 
-            foreach (XLNamedRange nr in NamedRanges)
+            foreach (var nr in NamedRanges.OfType<XLNamedRange>())
             {
                 var refersTo = string.Join(",", nr.RangeList
                     .Select(r => r.StartsWith("#REF!") ? "#REF!" : r));
