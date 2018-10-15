@@ -103,26 +103,26 @@ namespace ClosedXML.Excel.CalcEngine
             var v = x.Evaluate();
 
             // handle doubles
-            if (v is double)
+            if (v is double dbl)
             {
-                return (double)v;
+                return dbl;
             }
 
             // handle booleans
-            if (v is bool)
+            if (v is bool b)
             {
-                return (bool)v ? 1 : 0;
+                return b ? 1 : 0;
             }
 
             // handle dates
-            if (v is DateTime)
+            if (v is DateTime dt)
             {
-                return ((DateTime)v).ToOADate();
+                return dt.ToOADate();
             }
 
-            if (v is TimeSpan)
+            if (v is TimeSpan ts)
             {
-                return ((TimeSpan)v).TotalDays;
+                return ts.TotalDays;
             }
 
             // handle nulls
@@ -145,9 +145,9 @@ namespace ClosedXML.Excel.CalcEngine
             var v = x.Evaluate();
 
             // handle booleans
-            if (v is bool)
+            if (v is bool b)
             {
-                return (bool)v;
+                return b;
             }
 
             // handle nulls
@@ -157,9 +157,9 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle doubles
-            if (v is double)
+            if (v is double dbl)
             {
-                return (double)v == 0 ? false : true;
+                return dbl != 0;
             }
 
             // handle everything else
@@ -175,9 +175,9 @@ namespace ClosedXML.Excel.CalcEngine
             var v = x.Evaluate();
 
             // handle dates
-            if (v is DateTime)
+            if (v is DateTime dt)
             {
-                return (DateTime)v;
+                return dt;
             }
 
             // handle numbers
