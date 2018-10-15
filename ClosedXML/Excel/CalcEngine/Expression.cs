@@ -84,7 +84,14 @@ namespace ClosedXML.Excel.CalcEngine
                 (x as ErrorExpression).ThrowApplicableException();
 
             var v = x.Evaluate();
-            return v == null ? string.Empty : v.ToString();
+
+            if (v == null)
+                return string.Empty;
+
+            if (v is bool b)
+                return b.ToString().ToUpper();
+
+            return v.ToString();
         }
 
         public static implicit operator double(Expression x)
@@ -487,7 +494,7 @@ namespace ClosedXML.Excel.CalcEngine
         public IEnumerator GetEnumerator()
         {
             if (_value is string)
-                return new [] {(string) _value}.GetEnumerator();
+                return new[] { (string)_value }.GetEnumerator();
 
             return (_value as IEnumerable).GetEnumerator();
         }
