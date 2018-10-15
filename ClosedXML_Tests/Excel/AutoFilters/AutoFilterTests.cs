@@ -216,7 +216,7 @@ namespace ClosedXML_Tests
         [Test]
         public void CanLoadAutoFilterWithThousandsSeparator()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\AutoFilter\AutoFilterWithThousandsSeparator.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\AutoFilter\AutoFilterWithThousandsSeparator.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheets.First();
