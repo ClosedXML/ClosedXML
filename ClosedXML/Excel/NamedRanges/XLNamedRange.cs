@@ -15,6 +15,7 @@ namespace ClosedXML.Excel
         public XLNamedRange(XLNamedRanges namedRanges, String rangeName, String range, String comment = null)
             : this(namedRanges, rangeName, comment)
         {
+            //TODO range.Split(',') may produce incorrect result if a worksheet name contains comma. Refactoring needed.
             range.Split(',').ForEach(r => RangeList.Add(r));
         }
 
