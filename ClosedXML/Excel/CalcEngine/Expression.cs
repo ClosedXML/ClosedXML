@@ -163,7 +163,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle everything else
-            return (double)x == 0 ? false : true;
+            return (double)Convert.ChangeType(v, typeof(double)) != 0;
         }
 
         public static implicit operator DateTime(Expression x)
@@ -180,8 +180,8 @@ namespace ClosedXML.Excel.CalcEngine
                 return (DateTime)v;
             }
 
-            // handle doubles
-            if (v is double || v is int)
+            // handle numbers
+            if (v.IsNumber())
             {
                 return DateTime.FromOADate((double)x);
             }
