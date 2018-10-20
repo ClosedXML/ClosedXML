@@ -6,15 +6,17 @@
     <AssemblyName>ClosedXML</AssemblyName>
     <PackageId>ClosedXML</PackageId>
     <Version>0.94.0</Version>
-    <Authors>Manuel de Leon, Amir Ghezelbash, Francois Botha, Aleksei Pankratev</Authors>
+    <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
+    <Owners>Francois Botha, Aleksei Pankratev</Owners>
     <Company />
     <Product>ClosedXML</Product>
     <PackageReleaseNotes>See https://github.com/ClosedXML/ClosedXML/releases/tag/$(productVersion)</PackageReleaseNotes>
-    <Description>ClosedXML makes it easier for developers to create Excel 2007+ (.xlsx, .xlsm, etc) files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and VisualBasic.NET.</Description>
+    <Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
     <Copyright>MIT</Copyright>
     <PackageLicenseUrl>https://github.com/ClosedXML/ClosedXML/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ClosedXML/ClosedXML</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png</PackageIconUrl>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -22,6 +24,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
+    <PackageId>ClosedXML.Signed</PackageId>
     <OutputPath>bin\Release.Signed\</OutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
@@ -56,10 +59,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Excel\XLAddressLight.cs" />
   </ItemGroup>
 
   <ItemGroup>

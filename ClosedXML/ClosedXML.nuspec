@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <description>ClosedXML makes it easier for developers to create Excel 2007+ (.xlsx, .xlsm, etc) files. It provides a nice object oriented way to manipulate the files (similar to VBA) without dealing with the hassles of XML Documents. It can be used by any .NET language like C# and VisualBasic.NET.</description>
+    <description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</description>
     <licenseUrl>https://github.com/ClosedXML/ClosedXML/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/ClosedXML/ClosedXML</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

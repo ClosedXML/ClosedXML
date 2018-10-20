@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel.CalcEngine.Exceptions
 {
-    internal abstract class CalcEngineException : ArgumentException
+    public abstract class CalcEngineException : ArgumentException
     {
         protected CalcEngineException()
             : base()

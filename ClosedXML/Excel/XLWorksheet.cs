@@ -1,12 +1,12 @@
 using ClosedXML.Excel.Caching;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
+using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using ClosedXML.Excel.Ranges.Index;
 
 namespace ClosedXML.Excel
 {
@@ -31,6 +31,7 @@ namespace ClosedXML.Excel
         /// Fake address to be used everywhere the invalid address is needed.
         /// </summary>
         internal readonly XLAddress InvalidAddress;
+
         #endregion Fields
 
         #region Constructor
@@ -171,6 +172,8 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
+                if (_name == value) return;
+
                 if (String.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Worksheet names cannot be empty");
 
@@ -868,7 +871,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        IXLBaseAutoFilter IXLWorksheet.AutoFilter
+        IXLAutoFilter IXLWorksheet.AutoFilter
         {
             get { return AutoFilter; }
         }
@@ -1053,11 +1056,9 @@ namespace ClosedXML.Excel
         public XLColumn Column(Int32 columnNumber)
         {
             if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
-                throw new IndexOutOfRangeException(String.Format("Column number must be between 1 and {0}",
-                                                                 XLHelper.MaxColumnNumber));
+                throw new ArgumentOutOfRangeException(nameof(columnNumber), $"Column number must be between 1 and {XLHelper.MaxColumnNumber}");
 
-            XLColumn column;
-            if (Internals.ColumnsCollection.TryGetValue(columnNumber, out column))
+            if (Internals.ColumnsCollection.TryGetValue(columnNumber, out XLColumn column))
                 return column;
             else
             {
@@ -1217,7 +1218,6 @@ namespace ClosedXML.Excel
             int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
 
-
             foreach (var cf in ConditionalFormats.ToList())
             {
                 var cfRanges = cf.Ranges.ToList();
@@ -1281,13 +1281,23 @@ namespace ClosedXML.Excel
             try
             {
                 SuspendEvents();
-                var rangesToShift = _rangeRepository.ToList();
+
+                var rangesToShift = _rangeRepository
+                    .Where(r => r.RangeAddress.IsValid)
+                    .OrderBy(r => r.RangeAddress.FirstAddress.RowNumber * -Math.Sign(rowsShifted))
+                    .ToList();
 
                 WorksheetRangeShiftedRows(range, rowsShifted);
+
                 foreach (var storedRange in rangesToShift)
                 {
-                    if (!ReferenceEquals(range, storedRange))
-                        storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
+                    if (storedRange.IsEntireColumn())
+                        continue;
+
+                    if (ReferenceEquals(range, storedRange))
+                        continue;
+
+                    storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
                 }
                 range.WorksheetRangeShiftedRows(range, rowsShifted);
             }
@@ -1302,14 +1312,23 @@ namespace ClosedXML.Excel
             try
             {
                 SuspendEvents();
-                var rangesToShift = _rangeRepository.ToList();
+
+                var rangesToShift = _rangeRepository
+                    .Where(r => r.RangeAddress.IsValid)
+                    .OrderBy(r => r.RangeAddress.FirstAddress.ColumnNumber * -Math.Sign(columnsShifted))
+                    .ToList();
 
                 WorksheetRangeShiftedColumns(range, columnsShifted);
+
                 foreach (var storedRange in rangesToShift)
                 {
-                    var addr = storedRange.RangeAddress;
-                    if (!ReferenceEquals(range, storedRange))
-                        storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
+                    if (storedRange.IsEntireRow())
+                        continue;
+
+                    if (ReferenceEquals(range, storedRange))
+                        continue;
+
+                    storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
                 }
                 range.WorksheetRangeShiftedColumns(range, columnsShifted);
             }
@@ -1322,11 +1341,9 @@ namespace ClosedXML.Excel
         public XLRow Row(Int32 rowNumber, Boolean pingCells)
         {
             if (rowNumber <= 0 || rowNumber > XLHelper.MaxRowNumber)
-                throw new IndexOutOfRangeException(String.Format("Row number must be between 1 and {0}",
-                                                                 XLHelper.MaxRowNumber));
+                throw new ArgumentOutOfRangeException(nameof(rowNumber), $"Row number must be between 1 and {XLHelper.MaxRowNumber}");
 
-            XLRow row;
-            if (Internals.RowsCollection.TryGetValue(rowNumber, out row))
+            if (Internals.RowsCollection.TryGetValue(rowNumber, out XLRow row))
                 return row;
             else
             {
@@ -1368,7 +1385,7 @@ namespace ClosedXML.Excel
             else
                 rangeAddress = range.RangeAddress;
 
-            var table = (XLTable) _rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Table, rangeAddress));
+            var table = (XLTable)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Table, rangeAddress));
 
             if (table.Name != name)
                 table.Name = name;
@@ -1383,6 +1400,7 @@ namespace ClosedXML.Excel
 
             return table;
         }
+
         private void CheckRangeNotInTable(XLRange range)
         {
             var overlappingTables = Tables.Where(t => t.RangeUsed().Intersects(range));
@@ -1698,6 +1716,5 @@ namespace ClosedXML.Excel
         {
             _rangeRepository.Remove(new XLRangeKey(XLRangeType.Range, rangeAddress));
         }
-
     }
 }

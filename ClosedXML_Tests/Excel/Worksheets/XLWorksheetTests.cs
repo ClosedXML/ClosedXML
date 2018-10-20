@@ -35,6 +35,26 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CopyColumnVisibility()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Columns(10, 20).Hide();
+            ws.CopyTo("Sheet2");
+            Assert.IsTrue(wb.Worksheet("Sheet2").Column(10).IsHidden);
+        }
+
+        [Test]
+        public void CopyRowVisibility()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Rows(2, 5).Hide();
+            ws.CopyTo("Sheet2");
+            Assert.IsTrue(wb.Worksheet("Sheet2").Row(4).IsHidden);
+        }
+
+        [Test]
         public void DeletingSheets1()
         {
             var wb = new XLWorkbook();
@@ -683,7 +703,7 @@ namespace ClosedXML_Tests
                     Assert.AreEqual(original.Name, copy.Name);
                     Assert.AreEqual(original.Placement, copy.Placement);
                     Assert.AreEqual(original.Top, copy.Top);
-                    Assert.AreEqual(original.TopLeftCellAddress.ToString(), copy.TopLeftCellAddress.ToString());
+                    Assert.AreEqual(original.TopLeftCell.Address.ToString(), copy.TopLeftCell.Address.ToString());
                     Assert.AreEqual(original.Width, copy.Width);
                     Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
                 }
@@ -828,6 +848,20 @@ namespace ClosedXML_Tests
                 ws2.Delete();
 
                 Assert.AreEqual("#REF!A1:B2", range.RangeAddress.ToString());
+            }
+        }
+
+        [Test]
+        public void InvalidRowAndColumnIndices()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Row(-1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Row(XLHelper.MaxRowNumber + 1));
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Column(-1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => ws.Column(XLHelper.MaxColumnNumber + 1));
             }
         }
     }

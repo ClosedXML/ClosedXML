@@ -17,6 +17,7 @@ namespace ClosedXML.Excel
         /// <para>If the object is an IEnumerable, ClosedXML will copy the collection's data into a table starting from this cell.</para>
         /// <para>If the object is a range, ClosedXML will copy the range starting from this cell.</para>
         /// <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
+        /// <para>If the value starts with a single quote, ClosedXML will assume the value is a text variable and will prefix the value with a single quote in Excel too.</para>
         /// </summary>
         /// <value>
         /// The object containing the value(s) to set.
@@ -176,9 +177,9 @@ namespace ClosedXML.Excel
         /// Inserts the IEnumerable data elements and returns the range it occupies.
         /// </summary>
         /// <param name="data">The IEnumerable data.</param>
-        /// <param name="tranpose">if set to <c>true</c> the data will be transposed before inserting.</param>
+        /// <param name="transpose">if set to <c>true</c> the data will be transposed before inserting.</param>
         /// <returns></returns>
-        IXLRange InsertData(IEnumerable data, Boolean tranpose);
+        IXLRange InsertData(IEnumerable data, Boolean transpose);
 
         /// <summary>
         /// Inserts the data of a data table.

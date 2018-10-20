@@ -8,6 +8,7 @@ namespace ClosedXML.Excel
     internal class XLColumn : XLRangeBase, IXLColumn
     {
         #region Private fields
+
         private int _outlineLevel;
 
         #endregion Private fields
@@ -56,7 +57,6 @@ namespace ClosedXML.Excel
         }
 
         public Boolean Collapsed { get; set; }
-        
 
         #region IXLColumn Members
 
@@ -469,6 +469,7 @@ namespace ClosedXML.Excel
             var newColumn = (XLColumn)column;
             newColumn.Width = Width;
             newColumn.InnerStyle = InnerStyle;
+            newColumn.IsHidden = IsHidden;
 
             AsRange().CopyTo(column);
 
@@ -515,7 +516,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLColumn Members
-        
+
         public override XLRange AsRange()
         {
             return Range(1, 1, XLHelper.MaxRowNumber, 1);

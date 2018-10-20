@@ -423,15 +423,48 @@ namespace ClosedXML_Tests.Excel
 
                     Assert.AreEqual("Named range 4", wb.NamedRanges.ElementAt(1).Name);
                     Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(1).Scope);
-                    Assert.AreEqual("#REF!$A$4:$D$4", wb.NamedRanges.ElementAt(1).RefersTo);
+                    Assert.AreEqual("#REF!", wb.NamedRanges.ElementAt(1).RefersTo);
                     Assert.IsFalse(wb.NamedRanges.ElementAt(1).Ranges.Any());
 
                     Assert.AreEqual("Named range 5", wb.NamedRanges.ElementAt(2).Name);
                     Assert.AreEqual(XLNamedRangeScope.Workbook, wb.NamedRanges.ElementAt(2).Scope);
-                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!$A$5:$D$5", wb.NamedRanges.ElementAt(2).RefersTo);
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5,#REF!", wb.NamedRanges.ElementAt(2).RefersTo);
                     Assert.AreEqual(1, wb.NamedRanges.ElementAt(2).Ranges.Count);
                     Assert.AreEqual("'Sheet 1'!A5:D5",
                         wb.NamedRanges.ElementAt(2).Ranges.Single().RangeAddress.ToString(XLReferenceStyle.A1, true));
+                }
+            }
+        }
+
+        [Test]
+        public void NamedRangeReferringToMultipleRangesCanBeSavedAndLoaded()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("Sheet 1");
+
+                    wb.NamedRanges.Add("Multirange named range", new XLRanges
+                    {
+                        ws.Range("A5:D5"),
+                        ws.Range("A15:D15")
+                    });
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(1, wb.NamedRanges.Count());
+                    var nr = wb.NamedRanges.Single() as XLNamedRange;
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5,'Sheet 1'!$A$15:$D$15", nr.RefersTo);
+                    Assert.AreEqual(2, nr.Ranges.Count);
+                    Assert.AreEqual("'Sheet 1'!A5:D5", nr.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
+                    Assert.AreEqual("'Sheet 1'!A15:D15", nr.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
+                    Assert.AreEqual(2, nr.RangeList.Count);
+                    Assert.AreEqual("'Sheet 1'!$A$5:$D$5", nr.RangeList.First());
+                    Assert.AreEqual("'Sheet 1'!$A$15:$D$15", nr.RangeList.Last());
                 }
             }
         }
@@ -520,6 +553,31 @@ namespace ClosedXML_Tests.Excel
                     Assert.AreEqual("sheet2NamedRange", sheet2.NamedRanges.Single().Name);
                     Assert.AreEqual("Sheet1!A1,Sheet2!A1", sheet2.NamedRanges.Single().RefersTo);
                     Assert.AreEqual(2, sheet2.NamedRanges.Single().Ranges.Count);
+                }
+            }
+        }
+
+        [Test]
+        public void NamedRangesFromDeletedSheetAreSavedWithoutAddress()
+        {
+            // Range address referring to the deleted sheet look like #REF!A1:B2.
+            // But workbooks with such references in named ranges Excel considers as broken files.
+            // It requires #REF!
+
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add("Sheet 1");
+                    var ws2 = wb.Worksheets.Add("Sheet 2");
+                    ws2.Range("A4:D4").AddToNamed("Test named range", XLScope.Workbook);
+                    ws2.Delete();
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual("#REF!", wb.NamedRanges.Single().RefersTo);
                 }
             }
         }

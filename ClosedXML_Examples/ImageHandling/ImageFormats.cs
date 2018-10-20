@@ -18,7 +18,7 @@ namespace ClosedXML_Examples
 
                 ws = wb.Worksheets.Add("Jpg");
                 ws.AddPicture(fs, XLPictureFormat.Jpeg, "JpegImage")
-                    .MoveTo(ws.Cell(1, 1).Address);
+                    .MoveTo(ws.Cell(1, 1));
 
                 #endregion Jpeg
             }
@@ -29,7 +29,7 @@ namespace ClosedXML_Examples
 
                 ws = wb.Worksheets.Add("Png");
                 ws.AddPicture(fs, XLPictureFormat.Png, "PngImage")
-                    .MoveTo(ws.Cell(1, 1).Address);
+                    .MoveTo(ws.Cell(1, 1));
 
                 #endregion Png
 

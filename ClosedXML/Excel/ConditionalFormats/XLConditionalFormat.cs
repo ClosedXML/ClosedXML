@@ -28,10 +28,10 @@ namespace ClosedXML.Excel
                 if (ReferenceEquals(yy, null)) return false;
                 if (xx.GetType() != yy.GetType()) return false;
 
-                var xxValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
-                var yyValues = yy.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
-                var xxFormulas = x.Ranges.Any() ? xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)x.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
-                var yyFormulas = y.Ranges.Any() ? yy.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)y.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
+                var xxValues = xx.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
+                var yyValues = yy.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
+                var xxFormulas = x.Ranges.Count > 0 ? xx.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)x.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
+                var yyFormulas = y.Ranges.Count > 0 ? yy.Values.Values.Where(v => v != null && v.IsFormula).Select(f => ((XLCell)y.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)) : null;
 
                 var xStyle = xx.StyleValue;
                 var yStyle = yy.StyleValue;
@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
                 var xx = (XLConditionalFormat)obj;
                 var xStyle = (obj.Style as XLStyle).Value;
                 var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
-                if (obj.Ranges.Any())
+                if (obj.Ranges.Count > 0)
                     xValues = xValues
                     .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)));
 

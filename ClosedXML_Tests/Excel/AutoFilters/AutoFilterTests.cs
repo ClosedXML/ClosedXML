@@ -33,6 +33,7 @@ namespace ClosedXML_Tests
                     table.DataRange.FirstCell().InsertData(listOfArr);
 
                     Assert.AreEqual("A1:A5", table.AutoFilter.Range.RangeAddress.ToStringRelative());
+                    Assert.AreEqual(5, table.AutoFilter.VisibleRows.Count());
                 }
             }
         }
@@ -49,7 +50,7 @@ namespace ClosedXML_Tests
                         .CellBelow().SetValue("Carlos")
                         .CellBelow().SetValue("Dominic");
                     ws.RangeUsed().SetAutoFilter().Sort();
-                    Assert.AreEqual(ws.Cell(4, 3).GetString(), "Carlos");
+                    Assert.AreEqual("Carlos", ws.Cell(4, 3).GetString());
                 }
             }
         }
@@ -153,6 +154,61 @@ namespace ClosedXML_Tests
 
                     //Assert
                     Assert.IsTrue(ws.AutoFilter.Range.RangeAddress.IsValid);
+                }
+            }
+        }
+
+        [Test]
+        public void AutoFilterVisibleRows()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                using (var ws = wb.Worksheets.Add("Sheet1"))
+                {
+                    ws.Cell(3, 3).SetValue("Names")
+                        .CellBelow().SetValue("Manuel")
+                        .CellBelow().SetValue("Carlos")
+                        .CellBelow().SetValue("Dominic");
+
+                    var autoFilter = ws.RangeUsed()
+                        .SetAutoFilter();
+
+                    autoFilter.Column(1).AddFilter("Carlos");
+
+                    Assert.AreEqual("Carlos", ws.Cell(5, 3).GetString());
+                    Assert.AreEqual(2, autoFilter.VisibleRows.Count());
+                    Assert.AreEqual(3, autoFilter.VisibleRows.First().WorksheetRow().RowNumber());
+                    Assert.AreEqual(5, autoFilter.VisibleRows.Last().WorksheetRow().RowNumber());
+                }
+            }
+        }
+
+        [Test]
+        public void ReapplyAutoFilter()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                using (var ws = wb.Worksheets.Add("Sheet1"))
+                {
+                    ws.Cell(3, 3).SetValue("Names")
+                        .CellBelow().SetValue("Manuel")
+                        .CellBelow().SetValue("Carlos")
+                        .CellBelow().SetValue("Dominic")
+                        .CellBelow().SetValue("Jose");
+
+                    var autoFilter = ws.RangeUsed()
+                        .SetAutoFilter();
+
+                    autoFilter.Column(1).AddFilter("Carlos");
+
+                    Assert.AreEqual(3, autoFilter.HiddenRows.Count());
+
+                    // Unhide the rows so that the table is out of sync with the filter
+                    autoFilter.HiddenRows.ForEach(r => r.WorksheetRow().Unhide());
+                    Assert.False(autoFilter.HiddenRows.Any());
+
+                    autoFilter.Reapply();
+                    Assert.AreEqual(3, autoFilter.HiddenRows.Count());
                 }
             }
         }

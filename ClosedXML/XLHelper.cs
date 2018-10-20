@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
                 else if (i < 26 * 27)
                     letter = letters[i / 26 - 1] + letters[i % 26];
                 else
-                    letter = letters[i / 26 / 26 - 1] + letters[(i / 26 - 1) % 26] + letters[i % 26];
+                    letter = letters[(i - 26) / 26 / 26 - 1] + letters[(i / 26 - 1) % 26] + letters[i % 26];
                 allLetters[i] = letter;
                 letterIndexes.Add(letter, i + 1);
             }
@@ -333,9 +333,10 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            if (newName[0] != '_' && !char.IsLetter(newName[0]))
+            var allowedFirstCharacters = new[] { '_', '\\' };
+            if (!allowedFirstCharacters.Contains(newName[0]) && !char.IsLetter(newName[0]))
             {
-                message = $"The {objectType} name '{newName}' does not begin with a letter or an underscore";
+                message = $"The {objectType} name '{newName}' does not begin with a letter, an underscore or a backslash.";
                 return false;
             }
 

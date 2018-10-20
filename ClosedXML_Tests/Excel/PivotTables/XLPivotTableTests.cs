@@ -359,6 +359,328 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void SourceSheetWithWhitespace()
+        {
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    // Based on .\ClosedXML\ClosedXML_Examples\PivotTables\PivotTables.cs
+                    // But with empty column for Month
+                    var pastries = new List<Pastry>
+                    {
+                        new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
+                        new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
+                        new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
+                        new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
+                        new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
+                        new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
+                        new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
+                        new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
+                        new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
+                        new Pastry("Danish", 104, 394, -20.24, "", null),
+                        new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
+                        new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
+
+                        // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
+                        new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
+                        new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
+                        new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
+
+                        // For ContainsBlank and integer rows/columns test
+                        new Pastry("Scone", null, 255, 18.4, "", null),
+                    };
+
+                    var wb = new XLWorkbook();
+
+                    var sheet = wb.Worksheets.Add("Pastry Sales Data");
+                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    sheet.Columns().AdjustToContents();
+
+                    IXLWorksheet ptSheet;
+                    IXLPivotTable pt;
+
+                    // Add a new sheet for our pivot table
+                    ptSheet = wb.Worksheets.Add("pvt");
+
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table.AsRange());
+                    pt.ColumnLabels.Add("Name");
+                    pt.RowLabels.Add("Month");
+
+                    // The values in our table will come from the "NumberOfOrders" field
+                    // The default calculation setting is a total of each row/column
+                    pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
+                        .ShowAsPercentageFrom("Name").And("Bearclaw")
+                        .NumberFormat.Format = "0%";
+
+                    ptSheet.Columns().AdjustToContents();
+
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\SourceSheetWithWhitespace\outputfile.xlsx");
+            }
+        }
+
+        [Test]
+        public void PivotTableWithNoneTheme()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    wb.SaveAs(ms);
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
+            }
+        }
+
+        [Test]
+        public void MaintainPivotTableLabelsOrder()
+        {
+            var pastries = new List<Pastry>
+            {
+                new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
+                new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
+                new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
+                new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
+                new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
+                new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
+                new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
+                new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
+                new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
+                new Pastry("Danish", 104, 394, -20.24, "", null),
+                new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
+                new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
+
+                // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
+                new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
+                new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
+                new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
+
+                // For ContainsBlank and integer rows/columns test
+                new Pastry("Scone", null, 255, 18.4, "", null),
+            };
+
+            using (var ms = new MemoryStream())
+            {
+                // Page fields
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("PastrySalesData");
+                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    sheet.Columns().AdjustToContents();
+
+                    IXLWorksheet ptSheet;
+                    IXLPivotTable pt;
+
+                    // Add a new sheet for our pivot table
+                    ptSheet = wb.Worksheets.Add("pvt");
+
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    pt = ptSheet.PivotTables.Add("PastryPivot", ptSheet.Cell(1, 1), table);
+
+                    pt.ReportFilters.Add("Month");
+                    pt.ReportFilters.Add("Name");
+
+                    pt.RowLabels.Add("BakeDate");
+                    pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var pageFields = wb.Worksheets.SelectMany(ws => ws.PivotTables)
+                        .First()
+                        .ReportFilters
+                        .ToArray();
+
+                    Assert.AreEqual("Month", pageFields[0].SourceName);
+                    Assert.AreEqual("Name", pageFields[1].SourceName);
+                }
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                // Column labels
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("PastrySalesData");
+                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    sheet.Columns().AdjustToContents();
+
+                    IXLWorksheet ptSheet;
+                    IXLPivotTable pt;
+
+                    // Add a new sheet for our pivot table
+                    ptSheet = wb.Worksheets.Add("pvt");
+
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    pt = ptSheet.PivotTables.Add("PastryPivot", ptSheet.Cell(1, 1), table);
+
+                    pt.ColumnLabels.Add("Month");
+                    pt.ColumnLabels.Add("Name");
+
+                    pt.RowLabels.Add("BakeDate");
+                    pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var columnLabels = wb.Worksheets.SelectMany(ws => ws.PivotTables)
+                        .First()
+                        .ColumnLabels
+                        .ToArray();
+
+                    Assert.AreEqual("Month", columnLabels[0].SourceName);
+                    Assert.AreEqual("Name", columnLabels[1].SourceName);
+                }
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                // Row labels
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("PastrySalesData");
+                    // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+                    var table = sheet.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+                    sheet.Cell("F11").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    sheet.Columns().AdjustToContents();
+
+                    IXLWorksheet ptSheet;
+                    IXLPivotTable pt;
+
+                    // Add a new sheet for our pivot table
+                    ptSheet = wb.Worksheets.Add("pvt");
+
+                    // Create the pivot table, using the data from the "PastrySalesData" table
+                    pt = ptSheet.PivotTables.Add("PastryPivot", ptSheet.Cell(1, 1), table);
+
+                    pt.RowLabels.Add("Month");
+                    pt.RowLabels.Add("Name");
+                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+
+                    pt.ColumnLabels.Add("BakeDate");
+                    pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var rowLabels = wb.Worksheets.SelectMany(ws => ws.PivotTables)
+                        .First()
+                        .RowLabels
+                        .ToArray();
+
+                    Assert.AreEqual("Month", rowLabels[0].SourceName);
+                    Assert.AreEqual("Name", rowLabels[1].SourceName);
+                    Assert.AreEqual("{{Values}}", rowLabels[2].SourceName);
+                }
+            }
+        }
+
+        [Test]
+        public void MaintainPivotTableIntegrityOnMultipleSaves()
+        {
+            var pastries = new List<Pastry>
+            {
+                new Pastry("Croissant", 101, 150, 60.2, "", new DateTime(2016, 04, 21)),
+                new Pastry("Croissant", 101, 250, 50.42, "", new DateTime(2016, 05, 03)),
+                new Pastry("Croissant", 101, 134, 22.12, "", new DateTime(2016, 06, 24)),
+                new Pastry("Doughnut", 102, 250, 89.99, "", new DateTime(2017, 04, 23)),
+                new Pastry("Doughnut", 102, 225, 70, "", new DateTime(2016, 05, 24)),
+                new Pastry("Doughnut", 102, 210, 75.33, "", new DateTime(2016, 06, 02)),
+                new Pastry("Bearclaw", 103, 134, 10.24, "", new DateTime(2016, 04, 27)),
+                new Pastry("Bearclaw", 103, 184, 33.33, "", new DateTime(2016, 05, 20)),
+                new Pastry("Bearclaw", 103, 124, 25, "", new DateTime(2017, 06, 05)),
+                new Pastry("Danish", 104, 394, -20.24, "", null),
+                new Pastry("Danish", 104, 190, 60, "", new DateTime(2017, 05, 08)),
+                new Pastry("Danish", 104, 221, 24.76, "", new DateTime(2016, 06, 21)),
+
+                // Deliberately add different casings of same string to ensure pivot table doesn't duplicate it.
+                new Pastry("Scone", 105, 135, 0, "", new DateTime(2017, 04, 22)),
+                new Pastry("SconE", 105, 122, 5.19, "", new DateTime(2017, 05, 03)),
+                new Pastry("SCONE", 105, 243, 44.2, "", new DateTime(2017, 06, 14)),
+
+                // For ContainsBlank and integer rows/columns test
+                new Pastry("Scone", null, 255, 18.4, "", null),
+            };
+
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.Worksheets.Add("PastrySalesData");
+                    var table = ws.FirstCell().InsertTable(pastries, "PastrySalesData", true);
+
+                    var pvtSheet = wb.Worksheets.Add("pvt");
+                    var pvt = table.CreatePivotTable(pvtSheet.FirstCell(), "PastryPvt");
+
+                    pvt.ColumnLabels.Add("Month");
+                    pvt.RowLabels.Add("Name");
+                    pvt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+                    //Deliberately try to save twice
+                    wb.SaveAs(ms);
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.AreEqual(1, wb.Worksheets.SelectMany(ws => ws.PivotTables).Count());
+                }
+            }
+        }
+
+        [Test]
+        public void ClearPivotTableTenderedTange()
+        {
+            // https://github.com/ClosedXML/ClosedXML/pull/856
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\ClearPivotTableRenderedRangeWhenLoading\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheet("Sheet1");
+                    Assert.IsTrue(ws.Cell("B1").IsEmpty());
+                    Assert.IsTrue(ws.Cell("C2").IsEmpty());
+                    Assert.IsTrue(ws.Cell("D5").IsEmpty());
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheet("Sheet1");
+                    Assert.IsTrue(ws.Cell("B1").IsEmpty());
+                    Assert.IsTrue(ws.Cell("C2").IsEmpty());
+                    Assert.IsTrue(ws.Cell("D5").IsEmpty());
+                }
+            }
+        }
+
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {
             field.SubtotalsAtTop = !withDefaults;

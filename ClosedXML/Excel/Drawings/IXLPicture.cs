@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Drawing;
 using System.IO;
@@ -6,20 +7,7 @@ namespace ClosedXML.Excel.Drawings
 {
     public interface IXLPicture : IDisposable
     {
-        IXLAddress BottomRightCellAddress { get; }
-
-        /// <summary>
-        /// Create a copy of the picture on a different worksheet.
-        /// </summary>
-        /// <param name="targetSheet">The worksheet to which the picture will be copied.</param>
-        /// <returns>A created copy of the picture.</returns>
-        IXLPicture CopyTo(IXLWorksheet targetSheet);
-
-        /// <summary>
-        /// Create a copy of the picture on the same worksheet.
-        /// </summary>
-        /// <returns>A created copy of the picture.</returns>
-        IXLPicture Duplicate();
+        IXLCell BottomRightCell { get; }
 
         /// <summary>
         /// Type of image. The supported formats are defined by OpenXML's ImagePartType.
@@ -45,32 +33,45 @@ namespace ClosedXML.Excel.Drawings
 
         Int32 Top { get; set; }
 
-        IXLAddress TopLeftCellAddress { get; }
+        IXLCell TopLeftCell { get; }
 
         Int32 Width { get; set; }
 
         IXLWorksheet Worksheet { get; }
 
         /// <summary>
+        /// Create a copy of the picture on a different worksheet.
+        /// </summary>
+        /// <param name="targetSheet">The worksheet to which the picture will be copied.</param>
+        /// <returns>A created copy of the picture.</returns>
+        IXLPicture CopyTo(IXLWorksheet targetSheet);
+
+        /// <summary>
         /// Deletes this picture.
         /// </summary>
         void Delete();
+
+        /// <summary>
+        /// Create a copy of the picture on the same worksheet.
+        /// </summary>
+        /// <returns>A created copy of the picture.</returns>
+        IXLPicture Duplicate();
 
         Point GetOffset(XLMarkerPosition position);
 
         IXLPicture MoveTo(Int32 left, Int32 top);
 
-        IXLPicture MoveTo(IXLAddress cell);
+        IXLPicture MoveTo(IXLCell cell);
 
-        IXLPicture MoveTo(IXLAddress cell, Int32 xOffset, Int32 yOffset);
+        IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset);
 
-        IXLPicture MoveTo(IXLAddress cell, Point offset);
+        IXLPicture MoveTo(IXLCell cell, Point offset);
 
-        IXLPicture MoveTo(IXLAddress fromCell, IXLAddress toCell);
+        IXLPicture MoveTo(IXLCell fromCell, IXLCell toCell);
 
-        IXLPicture MoveTo(IXLAddress fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLAddress toCell, Int32 toCellXOffset, Int32 toCellYOffset);
+        IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset);
 
-        IXLPicture MoveTo(IXLAddress fromCell, Point fromOffset, IXLAddress toCell, Point toOffset);
+        IXLPicture MoveTo(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset);
 
         IXLPicture Scale(Double factor, Boolean relativeToOriginal = false);
 

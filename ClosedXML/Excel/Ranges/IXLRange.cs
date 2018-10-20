@@ -39,8 +39,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the specified column of the range.
         /// </summary>
-        /// <param name="columnNumber">The column number.</param>
-        /// <returns></returns>
+        /// <param name="columnNumber">1-based column number relative to the first column of this range.</param>
+        /// <returns>The relevant column</returns>
         IXLRangeColumn Column(int columnNumber);
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets a collection of the specified columns in this range.
         /// </summary>
-        /// <param name="firstColumn">The first column to return.</param>
-        /// <param name="lastColumn">The last column to return.</param>
+        /// <param name="firstColumn">The first column to return. 1-based column number relative to the first column of this range.</param>
+        /// <param name="lastColumn">The last column to return. 1-based column number relative to the first column of this range.</param>
         IXLRangeColumns Columns(int firstColumn, int lastColumn);
 
         /// <summary>
@@ -90,6 +90,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="firstColumn">The first column to return.</param>
         /// <param name="lastColumn">The last column to return.</param>
+        /// <returns>The relevant columns</returns>
         IXLRangeColumns Columns(string firstColumn, string lastColumn);
 
         /// <summary>
@@ -136,7 +137,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the specified row of the range.
         /// </summary>
-        /// <param name="row">The range row.</param>
+        /// <param name="row">1-based row number relative to the first row of this range.</param>
+        /// <returns>The relevant row</returns>
         IXLRangeRow Row(int row);
 
         IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate = null);
@@ -144,8 +146,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets a collection of the specified rows in this range.
         /// </summary>
-        /// <param name="firstRow">The first row to return.</param>
-        /// <param name="lastRow">The last row to return.</param>
+        /// <param name="firstRow">The first row to return. 1-based row number relative to the first row of this range.</param>
+        /// <param name="lastRow">The last row to return. 1-based row number relative to the first row of this range.</param>
         /// <returns></returns>
         IXLRangeRows Rows(int firstRow, int lastRow);
 

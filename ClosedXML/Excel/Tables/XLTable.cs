@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ namespace ClosedXML.Excel
     internal class XLTable : XLRange, IXLTable
     {
         #region Private fields
+
         private string _name;
         internal bool _showTotalsRow;
         internal HashSet<String> _uniqueNames;
@@ -48,7 +50,7 @@ namespace ClosedXML.Excel
 
                 if (_fieldNames == null)
                 {
-                    _fieldNames = new Dictionary<String, IXLTableField>();
+                    _fieldNames = new Dictionary<String, IXLTableField>(StringComparer.OrdinalIgnoreCase);
                     _lastRangeAddress = RangeAddress;
                     HeadersRow();
                 }
@@ -83,7 +85,8 @@ namespace ClosedXML.Excel
                         continue;
                     }
 
-                    if (String.IsNullOrWhiteSpace(name))
+                    // Be careful here. Fields names may actually be whitespace, but not empty
+                    if (String.IsNullOrEmpty(name))
                     {
                         name = GetUniqueName("Column", cellPos + 1, true);
                         cell.SetValue(name);
@@ -145,18 +148,19 @@ namespace ClosedXML.Excel
             {
                 XLRange range;
 
+                var firstDataRowNumber = 1;
+                var lastDataRowNumber = RowCount();
+
                 if (_showHeaderRow)
-                {
-                    range = _showTotalsRow
-                                ? Range(2, 1, RowCount() - 1, ColumnCount())
-                                : Range(2, 1, RowCount(), ColumnCount());
-                }
-                else
-                {
-                    range = _showTotalsRow
-                                ? Range(1, 1, RowCount() - 1, ColumnCount())
-                                : Range(1, 1, RowCount(), ColumnCount());
-                }
+                    firstDataRowNumber++;
+
+                if (_showTotalsRow)
+                    lastDataRowNumber--;
+
+                if (firstDataRowNumber > lastDataRowNumber)
+                    return null;
+
+                range = Range(firstDataRowNumber, 1, lastDataRowNumber, ColumnCount());
 
                 return new XLTableRange(range, this);
             }
@@ -176,7 +180,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public new IXLBaseAutoFilter SetAutoFilter()
+        public new IXLAutoFilter SetAutoFilter()
         {
             return AutoFilter;
         }
@@ -241,6 +245,9 @@ namespace ClosedXML.Excel
                     TotalsRow().Delete();
 
                 _showTotalsRow = value;
+
+                // Invalidate fields' columns
+                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
                 if (_showTotalsRow)
                 {
@@ -526,7 +533,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        IXLBaseAutoFilter IXLTable.AutoFilter
+        IXLAutoFilter IXLTable.AutoFilter
         {
             get { return AutoFilter; }
         }
@@ -558,7 +565,8 @@ namespace ClosedXML.Excel
             Int32 co = 1;
             foreach (IXLCell c in Row(1).Cells())
             {
-                if (String.IsNullOrWhiteSpace(((XLCell)c).InnerText))
+                // Be careful here. Fields names may actually be whitespace, but not empty
+                if (String.IsNullOrEmpty(((XLCell)c).InnerText))
                     c.Value = GetUniqueName("Column", co, true);
                 _uniqueNames.Add(c.GetString());
                 co++;
@@ -665,6 +673,9 @@ namespace ClosedXML.Excel
                 }
 
                 _showHeaderRow = value;
+
+                // Invalidate fields' columns
+                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
                 if (_showHeaderRow)
                     HeadersRow().DataType = XLDataType.Text;
@@ -822,7 +833,7 @@ namespace ClosedXML.Excel
 
         public IXLTable CopyTo(IXLWorksheet targetSheet)
         {
-            return CopyTo((XLWorksheet) targetSheet);
+            return CopyTo((XLWorksheet)targetSheet);
         }
 
         internal IXLTable CopyTo(XLWorksheet targetSheet, bool copyData = true)
@@ -839,7 +850,7 @@ namespace ClosedXML.Excel
             String tableName = Name;
             var newTable = (XLTable)targetSheet.Table(targetRange, tableName, true);
 
-            newTable.RelId = RelId;
+            newTable.RelId = null;
             newTable.EmphasizeFirstColumn = EmphasizeFirstColumn;
             newTable.EmphasizeLastColumn = EmphasizeLastColumn;
             newTable.ShowRowStripes = ShowRowStripes;
@@ -860,5 +871,162 @@ namespace ClosedXML.Excel
             }
             return newTable;
         }
+
+        #region Append and replace data
+
+        public IXLRange AppendData(IEnumerable data, Boolean propagateExtraColumns = false)
+        {
+            return AppendData(data, transpose: false, propagateExtraColumns: propagateExtraColumns);
+        }
+
+        public IXLRange AppendData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
+        {
+            var castedData = data?.Cast<object>();
+            if (!(castedData?.Any() ?? false) || data is String)
+                return null;
+
+            var numberOfNewRows = castedData.Count();
+
+            var lastRowOfOldRange = this.DataRange.LastRow();
+            lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
+            this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+
+            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(castedData, transpose);
+
+            PropagateExtraColumns(insertedRange.ColumnCount(), lastRowOfOldRange.RowNumber());
+
+            return insertedRange;
+        }
+
+        public IXLRange AppendData(DataTable dataTable, Boolean propagateExtraColumns = false)
+        {
+            return AppendData(dataTable.Rows.Cast<DataRow>(), propagateExtraColumns: propagateExtraColumns);
+        }
+
+        public IXLRange AppendData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
+        {
+            if (!(data?.Any() ?? false) || data is String)
+                return null;
+
+            var numberOfNewRows = data.Count();
+
+            if (numberOfNewRows == 0)
+                return null;
+
+            var lastRowOfOldRange = this.DataRange.LastRow();
+            lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
+            this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+
+            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(data);
+
+            PropagateExtraColumns(insertedRange.ColumnCount(), lastRowOfOldRange.RowNumber());
+
+            return insertedRange;
+        }
+
+        public IXLRange ReplaceData(IEnumerable data, Boolean propagateExtraColumns = false)
+        {
+            return ReplaceData(data, transpose: false, propagateExtraColumns: propagateExtraColumns);
+        }
+
+        public IXLRange ReplaceData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
+        {
+            var castedData = data?.Cast<object>();
+            if (!(castedData?.Any() ?? false) || data is String)
+                throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
+
+            var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
+            var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
+
+            // Resize table
+            var sizeDifference = castedData.Count() - this.DataRange.RowCount();
+            if (sizeDifference > 0)
+                this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
+            else if (sizeDifference < 0)
+            {
+                this.DataRange.Rows
+                (
+                    lastDataRowNumber + sizeDifference + 1 - firstDataRowNumber + 1,
+                    lastDataRowNumber - firstDataRowNumber + 1
+                )
+                .Delete();
+
+                // No propagation needed when reducing the number of rows
+                propagateExtraColumns = false;
+            }
+
+            if (sizeDifference != 0)
+                // Invalidate table fields' columns
+                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+
+            var replacedRange = this.DataRange.FirstCell().InsertData(castedData, transpose);
+
+            if (propagateExtraColumns)
+                PropagateExtraColumns(replacedRange.ColumnCount(), lastDataRowNumber);
+
+            return replacedRange;
+        }
+
+        public IXLRange ReplaceData(DataTable dataTable, Boolean propagateExtraColumns = false)
+        {
+            return ReplaceData(dataTable.Rows.Cast<DataRow>(), propagateExtraColumns: propagateExtraColumns);
+        }
+
+        public IXLRange ReplaceData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
+        {
+            if (!(data?.Any() ?? false) || data is String)
+                throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
+
+            var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
+            var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
+
+            // Resize table
+            var sizeDifference = data.Count() - this.DataRange.RowCount();
+            if (sizeDifference > 0)
+                this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
+            else if (sizeDifference < 0)
+            {
+                this.DataRange.Rows
+                (
+                    lastDataRowNumber + sizeDifference + 1 - firstDataRowNumber + 1,
+                    lastDataRowNumber - firstDataRowNumber + 1
+                )
+                .Delete();
+
+                // No propagation needed when reducing the number of rows
+                propagateExtraColumns = false;
+            }
+
+            if (sizeDifference != 0)
+                // Invalidate table fields' columns
+                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+
+            var replacedRange = this.DataRange.FirstCell().InsertData(data);
+
+            if (propagateExtraColumns)
+                PropagateExtraColumns(replacedRange.ColumnCount(), lastDataRowNumber);
+
+            return replacedRange;
+        }
+
+        private void PropagateExtraColumns(int numberOfNonExtraColumns, int previousLastDataRow)
+        {
+            for (var i = numberOfNonExtraColumns; i < this.Fields.Count(); i++)
+            {
+                var field = this.Field(i);
+
+                var cell = this.Worksheet.Cell(previousLastDataRow, field.Column.ColumnNumber());
+                field.Column.Cells(c => c.Address.RowNumber > previousLastDataRow)
+                    .ForEach(c =>
+                    {
+                        if (cell.HasFormula)
+                            c.FormulaR1C1 = cell.FormulaR1C1;
+                        else
+                            c.Value = cell.Value;
+                    });
+            }
+        }
+
+        #endregion Append and replace data
     }
 }

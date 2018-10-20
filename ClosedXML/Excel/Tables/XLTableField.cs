@@ -32,6 +32,36 @@ namespace ClosedXML.Excel
                 }
                 return _column;
             }
+            internal set
+            {
+                _column = value;
+            }
+        }
+
+        public IXLCells DataCells
+        {
+            get
+            {
+                return Column.Cells(c =>
+                {
+                    if (table.ShowHeaderRow && c == HeaderCell)
+                        return false;
+                    if (table.ShowTotalsRow && c == TotalsCell)
+                        return false;
+                    return true;
+                });
+            }
+        }
+
+        public IXLCell HeaderCell
+        {
+            get
+            {
+                if (!table.ShowHeaderRow)
+                    return null;
+
+                return Column.FirstCell();
+            }
         }
 
         public Int32 Index
@@ -53,6 +83,8 @@ namespace ClosedXML.Excel
             }
             set
             {
+                if (name == value) return;
+
                 if (table.ShowHeaderRow)
                     (table.HeadersRow(false).Cell(Index + 1) as XLCell).SetValue(value, false);
 
@@ -62,6 +94,17 @@ namespace ClosedXML.Excel
         }
 
         public IXLTable Table { get { return table; } }
+
+        public IXLCell TotalsCell
+        {
+            get
+            {
+                if (!table.ShowTotalsRow)
+                    return null;
+
+                return Column.LastCell();
+            }
+        }
 
         public String TotalsRowFormulaA1
         {

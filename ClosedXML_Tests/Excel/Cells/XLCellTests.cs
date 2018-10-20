@@ -109,6 +109,16 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void InsertData_with_Guids()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.FirstCell().InsertData(Enumerable.Range(1, 20).Select(i => new { Guid = Guid.NewGuid() }));
+
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(Guid.NewGuid().ToString().Length, ws.FirstCell().GetString().Length);
+        }
+
+        [Test]
         public void IsEmpty1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -232,6 +242,16 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetValue_DateTime_Good()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var date = "2018-01-01";
+            bool success = ws.Cell("A1").SetValue(date).TryGetValue(out DateTime outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(new DateTime(2018, 1, 1), outValue);
+        }
+
+        [Test]
         public void TryGetValue_DateTime_BadString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -337,6 +357,122 @@ namespace ClosedXML_Tests
             bool success = cell.TryGetValue(out sbyte outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(5, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_decimal_Good()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1").SetValue("5");
+            bool success = cell.TryGetValue(out decimal outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(5, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_decimal_Good2()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var cell = ws.Cell("A1").SetValue("1.60000001869776E-06");
+            bool success = cell.TryGetValue(out decimal outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(1.60000001869776E-06, outValue);
+        }
+
+        [Test]
+        public void TryGetValue_Hyperlink()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.Worksheets.Add("Sheet1");
+                var ws2 = wb.Worksheets.Add("Sheet2");
+
+                var targetCell = ws2.Cell("A1");
+
+                var linkCell1 = ws1.Cell("A1");
+                linkCell1.Value = "Link to IXLCell";
+                linkCell1.Hyperlink = new XLHyperlink(targetCell);
+
+                var success = linkCell1.TryGetValue(out XLHyperlink hyperlink);
+                Assert.IsTrue(success);
+                Assert.AreEqual("Sheet2!A1", hyperlink.InternalAddress);
+            }
+        }
+
+        [Test]
+        public void TryGetValue_Unicode_String()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+
+            Boolean success;
+            String outValue;
+
+            success = ws.Cell("A1")
+                .SetValue("Site_x0020_Column_x0020_Test")
+                .TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual("Site Column Test", outValue);
+
+            success = ws.Cell("A1")
+                .SetValue("Site_x005F_x0020_Column_x005F_x0020_Test")
+                .TryGetValue(out outValue);
+
+            Assert.IsTrue(success);
+            Assert.AreEqual("Site_x005F_x0020_Column_x005F_x0020_Test", outValue);
+        }
+
+
+        [Test]
+        public void SetCellValueToGuid()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var guid = Guid.NewGuid();
+            ws.FirstCell().Value = guid;
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().GetString());
+
+            guid = Guid.NewGuid();
+            ws.FirstCell().SetValue(guid);
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(guid.ToString(), ws.FirstCell().GetString());
+        }
+
+        [Test]
+        public void SetCellValueToEnum()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            var dataType = XLDataType.Number;
+            ws.FirstCell().Value = dataType;
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
+
+            dataType = XLDataType.TimeSpan;
+            ws.FirstCell().SetValue(dataType);
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
+        }
+        [Test]
+        public void SetCellValueToRange()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+
+            ws.Cell("A1").SetValue(2)
+                .CellRight().SetValue(3)
+                .CellRight().SetValue(5)
+                .CellRight().SetValue(7);
+
+            var range = ws.Range("1:1");
+
+            ws.Cell("B2").Value = range;
+
+            Assert.AreEqual(2, ws.Cell("B2").Value);
+            Assert.AreEqual(3, ws.Cell("C2").Value);
+            Assert.AreEqual(5, ws.Cell("D2").Value);
+            Assert.AreEqual(7, ws.Cell("E2").Value);
         }
 
         [Test]
@@ -791,6 +927,24 @@ namespace ClosedXML_Tests
             {
                 var _ = cell.Value;
             });
+        }
+
+        [Test]
+        public void TryGetValueFormulaEvaluation()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var A1 = ws.Cell("A1");
+                var A2 = ws.Cell("A2");
+                var A3 = ws.Cell("A3");
+                A1.FormulaA1 = "A2 + 1";
+                A2.FormulaA1 = "A1 + 1";
+
+                Assert.IsFalse(A1.TryGetValue(out String _));
+                Assert.IsFalse(A2.TryGetValue(out String _));
+                Assert.IsTrue(A3.TryGetValue(out String _));
+            }
         }
     }
 }

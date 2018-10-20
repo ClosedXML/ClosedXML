@@ -103,7 +103,7 @@ namespace ClosedXML.Excel
             Outline = true;
             Compact = true;
             InsertBlankLines = false;
-            ShowBlankItems = true;
+            ShowBlankItems = false;
             InsertPageBreaks = false;
             RepeatItemLabels = false;
             SubtotalsAtTop = true;

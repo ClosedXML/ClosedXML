@@ -106,6 +106,9 @@ namespace ClosedXML.Excel.Drawings
                 .Where(picture => picture.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
+            if (!picturesToDelete.Any())
+                throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");
+
             foreach (var picture in picturesToDelete)
             {
                 if (!string.IsNullOrEmpty(picture.RelId))
@@ -135,7 +138,7 @@ namespace ClosedXML.Excel.Drawings
             if (TryGetPicture(pictureName, out IXLPicture p))
                 return p;
 
-            throw new ArgumentException($"There isn't a picture named '{pictureName}'.");
+            throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");
         }
 
         public bool TryGetPicture(string pictureName, out IXLPicture picture)

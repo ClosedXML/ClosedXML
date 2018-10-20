@@ -112,24 +112,23 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        [TestCase("C4:F7", "C4:F7",  2, "E4:H7")] // Coincide, shift right
+        [TestCase("C4:F7", "C4:F7", 2, "E4:H7")] // Coincide, shift right
         [TestCase("C4:F7", "C4:F7", -2, "C4:D7")] // Coincide, shift left
-        [TestCase("D5:E6", "C4:F7",  2, "F5:G6")] // Inside, shift right
+        [TestCase("D5:E6", "C4:F7", 2, "F5:G6")] // Inside, shift right
         [TestCase("D5:E6", "C4:F7", -2, "C5:C6")] // Inside, shift left
-        [TestCase("B4:G7", "C4:F7",  2, "B4:I7")] // Includes, shift right
+        [TestCase("B4:G7", "C4:F7", 2, "B4:I7")] // Includes, shift right
         [TestCase("B4:G7", "C4:F7", -2, "B4:E7")] // Includes, shift left
-        [TestCase("B4:E7", "C4:F7",  2, "B4:G7")] // Intersects at left, shift right
+        [TestCase("B4:E7", "C4:F7", 2, "B4:G7")] // Intersects at left, shift right
         [TestCase("B4:E7", "C4:F7", -2, "B4:C7")] // Intersects at left, shift left
-        [TestCase("D4:G7", "C4:F7",  2, "F4:I7")] // Intersects at right, shift right
+        [TestCase("D4:G7", "C4:F7", 2, "F4:I7")] // Intersects at right, shift right
         [TestCase("D4:G7", "C4:F7", -2, "C4:E7")] // Intersects at right, shift left
-        [TestCase("A5:B6", "C4:F7",  2, "A5:B6")] // No intersection, at left, shift right
+        [TestCase("A5:B6", "C4:F7", 2, "A5:B6")] // No intersection, at left, shift right
         [TestCase("A5:B6", "C4:F7", -1, "A5:B6")] // No intersection, at left, shift left
-        [TestCase("H5:I6", "C4:F7",  2, "J5:K6")] // No intersection, at right, shift right
+        [TestCase("H5:I6", "C4:F7", 2, "J5:K6")] // No intersection, at right, shift right
         [TestCase("H5:I6", "C4:F7", -2, "F5:G6")] // No intersection, at right, shift left
         [TestCase("C8:F11", "C4:F7", 2, "C8:F11")] // Different rows
-        [TestCase("B1:B8", "A1:C4",  1, "B1:B8")]  // More rows, shift right
+        [TestCase("B1:B8", "A1:C4", 1, "B1:B8")]  // More rows, shift right
         [TestCase("B1:B8", "A1:C4", -1, "B1:B8")]  // More rows, shift left
-
         public void ShiftColumnsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedColumns, string expectedRange)
         {
             using (var wb = new XLWorkbook())
@@ -144,7 +143,6 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
             }
         }
-
 
         [Test]
         [TestCase("B1:B4", "A1:C4", -2)] // Shift left too much
@@ -162,27 +160,25 @@ namespace ClosedXML_Tests
             }
         }
 
-
         [Test]
-        [TestCase("C4:F7", "C4:F7",  2, "C6:F9")]   // Coincide, shift down
+        [TestCase("C4:F7", "C4:F7", 2, "C6:F9")]   // Coincide, shift down
         [TestCase("C4:F7", "C4:F7", -2, "C4:F5")]   // Coincide, shift up
-        [TestCase("D5:E6", "C4:F7",  2, "D7:E8")]   // Inside, shift down
+        [TestCase("D5:E6", "C4:F7", 2, "D7:E8")]   // Inside, shift down
         [TestCase("D5:E6", "C4:F7", -2, "D4:E4")]   // Inside, shift up
-        [TestCase("C3:F8", "C4:F7",  2, "C3:F10")]  // Includes, shift down
+        [TestCase("C3:F8", "C4:F7", 2, "C3:F10")]  // Includes, shift down
         [TestCase("C3:F8", "C4:F7", -2, "C3:F6")]   // Includes, shift up
-        [TestCase("C3:F6", "C4:F7",  2, "C3:F8")]   // Intersects at top, shift down
+        [TestCase("C3:F6", "C4:F7", 2, "C3:F8")]   // Intersects at top, shift down
         [TestCase("C2:F6", "C4:F7", -3, "C2:F3")]   // Intersects at top, shift up to the sheet boundary
         [TestCase("C3:F6", "C4:F7", -2, "C3:F4")]   // Intersects at top, shift up
-        [TestCase("C5:F8", "C4:F7",  2, "C7:F10")]  // Intersects at bottom, shift down
+        [TestCase("C5:F8", "C4:F7", 2, "C7:F10")]  // Intersects at bottom, shift down
         [TestCase("C5:F8", "C4:F7", -2, "C4:F6")]   // Intersects at bottom, shift up
-        [TestCase("C1:F3", "C4:F7",  2, "C1:F3")]   // No intersection, at top, shift down
+        [TestCase("C1:F3", "C4:F7", 2, "C1:F3")]   // No intersection, at top, shift down
         [TestCase("C1:F3", "C4:F7", -2, "C1:F3")]   // No intersection, at top, shift up
-        [TestCase("C8:F10","C4:F7",  2, "C10:F12")] // No intersection, at bottom, shift down
-        [TestCase("C8:F10","C4:F7", -2, "C6:F8")]   // No intersection, at bottom, shift up
-        [TestCase("G4:J7", "C4:F7",  2, "G4:J7")]   // Different columns
-        [TestCase("A2:D2", "A1:C4",  1, "A2:D2")]   // More columns, shift down
+        [TestCase("C8:F10", "C4:F7", 2, "C10:F12")] // No intersection, at bottom, shift down
+        [TestCase("C8:F10", "C4:F7", -2, "C6:F8")]   // No intersection, at bottom, shift up
+        [TestCase("G4:J7", "C4:F7", 2, "G4:J7")]   // Different columns
+        [TestCase("A2:D2", "A1:C4", 1, "A2:D2")]   // More columns, shift down
         [TestCase("A2:D2", "A1:C4", -1, "A2:D2")]   // More columns, shift up
-
         public void ShiftRowsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedRows, string expectedRange)
         {
             using (var wb = new XLWorkbook())
@@ -266,6 +262,37 @@ namespace ClosedXML_Tests
             var range = ws.FirstCell().AsRange();
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(1048577));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(1048577));
+        }
+
+        [Test]
+        public void MergedRangesConsistencyWhenInsertingRows()
+        {
+            // https://github.com/ClosedXML/ClosedXML/issues/1013
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                //create merged row
+                ws.Cell("A1").Value = "Merged Row(1) of Range (A1:F1)";
+                ws.Range("A1:F1").Row(1).Merge();
+
+                var row = ws.FirstRow();
+
+                // Add some lines and copy format & merging
+                for (var r = 1; r <= 10; r++)
+                {
+                    row.InsertRowsBelow(1);         // insert a row below row 1, as a row 2
+                    row.CopyTo(row.RowBelow());     // copy format and merging from row 1 to row 2
+
+                    var duplicates = ws.MergedRanges
+                        .GroupBy(s => s.ToString())
+                        .Where(g => g.Count() > 1)
+                        .Select(y => new { Element = y.Key, Counter = y.Count() })
+                        .ToList();
+
+                    Assert.AreEqual(0, duplicates.Count);
+                }
+            }
         }
     }
 }

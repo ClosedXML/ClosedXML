@@ -490,5 +490,61 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
+
+        [Test]
+        public void PreserveAlignmentOnSaving()
+        {
+            using (var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\HorizontalAlignment.xlsx")))
+            using (var output = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook(input))
+                {
+                    wb.SaveAs(output);
+                }
+
+                using (var wb = new XLWorkbook(output))
+                {
+                    Assert.AreEqual(XLAlignmentHorizontalValues.Center, wb.Worksheets.First().Cell("B1").Style.Alignment.Horizontal);
+                }
+            }
+        }
+
+        [Test]
+        public void PreserveMultipleColorScalesOnSaving()
+        {
+            using (var output = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.Worksheets.Add("test");
+                    sheet.Column(1).AddConditionalFormat().ColorScale().LowestValue(XLColor.Red)
+                        .HighestValue(XLColor.Green);
+
+                    sheet.Column(2).AddConditionalFormat().ColorScale().LowestValue(XLColor.Alizarin)
+                        .HighestValue(XLColor.Blue);
+
+                    wb.SaveAs(output);
+                }
+
+                using (var wb = new XLWorkbook(output))
+                {
+                    var sheet = wb.Worksheets.First();
+                    var cf = sheet.ConditionalFormats
+                        .OrderBy(x => x.Range.RangeAddress.FirstAddress.ColumnNumber)
+                        .ToArray();
+                    Assert.AreEqual(2, cf.Length);
+                    Assert.AreEqual(XLConditionalFormatType.ColorScale, cf[0].ConditionalFormatType);
+                    Assert.AreEqual(XLColor.Red, cf[0].Colors[1]);
+                    Assert.AreEqual(XLCFContentType.Minimum, cf[0].ContentTypes[1]);
+                    Assert.AreEqual(XLColor.Green, cf[0].Colors[2]);
+                    Assert.AreEqual(XLCFContentType.Maximum, cf[0].ContentTypes[2]);
+                    Assert.AreEqual(XLConditionalFormatType.ColorScale, cf[1].ConditionalFormatType);
+                    Assert.AreEqual(XLColor.Alizarin, cf[1].Colors[1]);
+                    Assert.AreEqual(XLCFContentType.Minimum, cf[1].ContentTypes[1]);
+                    Assert.AreEqual(XLColor.Blue, cf[1].Colors[2]);
+                    Assert.AreEqual(XLCFContentType.Maximum, cf[1].ContentTypes[2]);
+                }
+            }
+        }
     }
 }

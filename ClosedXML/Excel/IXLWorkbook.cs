@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -140,11 +141,6 @@ namespace ClosedXML.Excel
 
         Object Evaluate(String expression);
 
-        /// <summary>
-        /// Force recalculation of all cell formulas.
-        /// </summary>
-        void RecalculateAllFormulas();
-
         IXLCells FindCells(Func<IXLCell, Boolean> predicate);
 
         IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate);
@@ -168,6 +164,11 @@ namespace ClosedXML.Excel
         IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws);
 
         IXLRanges Ranges(String ranges);
+
+        /// <summary>
+        /// Force recalculation of all cell formulas.
+        /// </summary>
+        void RecalculateAllFormulas();
 
         /// <summary>
         ///   Saves the current workbook.
@@ -221,6 +222,15 @@ namespace ClosedXML.Excel
         XLWorkbook SetUse1904DateSystem();
 
         XLWorkbook SetUse1904DateSystem(Boolean value);
+
+        /// <summary>
+        /// Gets the Excel table of the given name
+        /// </summary>
+        /// <param name="tableName">Name of the table to return.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies how the strings will be compared.</param>
+        /// <returns>The table with given name</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If no tables with this name could be found in the workbook.</exception>
+        IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
 
         Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet);
 

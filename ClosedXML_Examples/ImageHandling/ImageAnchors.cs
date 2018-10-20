@@ -28,7 +28,7 @@ namespace ClosedXML_Examples
 
                     fs.Position = 0;
                     ws.AddPicture(fs, XLPictureFormat.Png, "Image11")
-                        .MoveTo(ws.Cell(1, 1).Address);
+                        .MoveTo(ws.Cell(1, 1));
 
                     #endregion OneCellAnchor
 
@@ -38,7 +38,7 @@ namespace ClosedXML_Examples
 
                     fs.Position = 0;
                     ws.AddPicture(fs, XLPictureFormat.Png, "Image20")
-                        .MoveTo(ws.Cell(6, 5).Address, ws.Cell(9, 7).Address);
+                        .MoveTo(ws.Cell(6, 5), ws.Cell(9, 7));
 
                     #endregion TwoCellAnchor
                 }
@@ -49,17 +49,17 @@ namespace ClosedXML_Examples
                     ws = wb.Worksheets.Add("Images3");
 
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(ws.Cell(2, 2).Address, 20, 5, ws.Cell(5, 5).Address, 30, 10)
-                        .MoveTo(ws.Cell(2, 2).Address, ws.Cell(5, 5).Address);
+                        .MoveTo(ws.Cell(2, 2), 20, 5, ws.Cell(5, 5), 30, 10)
+                        .MoveTo(ws.Cell(2, 2), ws.Cell(5, 5));
 
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(ws.Cell(6, 2).Address, 2, 2, ws.Cell(9, 5).Address, 2, 2)
-                        .MoveTo(ws.Cell(6, 2).Address, 20, 5, ws.Cell(9, 5).Address, 30, 10);
+                        .MoveTo(ws.Cell(6, 2), 2, 2, ws.Cell(9, 5), 2, 2)
+                        .MoveTo(ws.Cell(6, 2), 20, 5, ws.Cell(9, 5), 30, 10);
 
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(ws.Cell(10, 2).Address, 20, 5)
+                        .MoveTo(ws.Cell(10, 2), 20, 5)
                         .Scale(0.2, true)
-                        .MoveTo(ws.Cell(10, 1).Address);
+                        .MoveTo(ws.Cell(10, 1));
                 }
 
                 using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))

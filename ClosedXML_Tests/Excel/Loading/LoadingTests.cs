@@ -35,7 +35,11 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\DuplicateImageNames.xlsx",
                 @"Misc\InvalidPrintArea.xlsx",
                 @"Misc\Date1904System.xlsx",
-                @"Misc\LoadImageWithoutTransform2D.xlsx"
+                @"Misc\LoadImageWithoutTransform2D.xlsx",
+                @"Misc\PivotTableWithTableSource.xlsx",
+                @"Misc\TemplateWithTableSourcePivotTables.xlsx",
+                @"Misc\PrintAreaRefersToExternalWorksheet.xlsx",
+                @"Misc\NamedRangeWithInvalidCharacter.xlsx"
             };
 
             foreach (var file in files)

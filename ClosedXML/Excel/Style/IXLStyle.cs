@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 
 namespace ClosedXML.Excel
@@ -8,14 +9,18 @@ namespace ClosedXML.Excel
 
         IXLBorder Border { get; set; }
 
+        IXLNumberFormat DateFormat { get; }
+
         IXLFill Fill { get; set; }
 
         IXLFont Font { get; set; }
 
+        Boolean IncludeQuotePrefix { get; set; }
+
         IXLNumberFormat NumberFormat { get; set; }
 
-        IXLNumberFormat DateFormat { get; }
-
         IXLProtection Protection { get; set; }
+
+        IXLStyle SetIncludeQuotePrefix(Boolean includeQuotePrefix = true);
     }
 }

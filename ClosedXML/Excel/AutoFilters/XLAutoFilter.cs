@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Linq;
 
@@ -5,7 +6,7 @@ namespace ClosedXML.Excel
 {
     using System.Collections.Generic;
 
-    internal class XLAutoFilter : IXLBaseAutoFilter, IXLAutoFilter
+    internal class XLAutoFilter : IXLAutoFilter
     {
         private readonly Dictionary<Int32, XLFilterColumn> _columns = new Dictionary<int, XLFilterColumn>();
 
@@ -18,38 +19,18 @@ namespace ClosedXML.Excel
 
         #region IXLAutoFilter Members
 
-        IXLAutoFilter IXLAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
-                                         Boolean ignoreBlanks)
-        {
-            return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
-        }
-
-        #endregion
-
-        #region IXLBaseAutoFilter Members
-
         public Boolean Enabled { get; set; }
+        public IEnumerable<IXLRangeRow> HiddenRows { get => Range.Rows(r => r.WorksheetRow().IsHidden); }
         public IXLRange Range { get; set; }
+        public Int32 SortColumn { get; set; }
+        public Boolean Sorted { get; set; }
+        public XLSortOrder SortOrder { get; set; }
+        public IEnumerable<IXLRangeRow> VisibleRows { get => Range.Rows(r => !r.WorksheetRow().IsHidden); }
 
-        IXLBaseAutoFilter IXLBaseAutoFilter.Clear()
+        IXLAutoFilter IXLAutoFilter.Clear()
         {
             return Clear();
         }
-
-        IXLBaseAutoFilter IXLBaseAutoFilter.Set(IXLRangeBase range)
-        {
-            return Set(range);
-        }
-
-        IXLBaseAutoFilter IXLBaseAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
-                                                 Boolean ignoreBlanks)
-        {
-            return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
-        }
-
-        public Boolean Sorted { get; set; }
-        public XLSortOrder SortOrder { get; set; }
-        public Int32 SortColumn { get; set; }
 
         public IXLFilterColumn Column(String column)
         {
@@ -74,39 +55,10 @@ namespace ClosedXML.Excel
             return filterColumn;
         }
 
-        #endregion
-
-        public XLAutoFilter Set(IXLRangeBase range)
+        public IXLAutoFilter Reapply()
         {
-            Range = range.AsRange();
-            Enabled = true;
-            return this;
-        }
-
-        public XLAutoFilter Clear()
-        {
-            if (!Enabled) return this;
-
-            Enabled = false;
-            Filters.Clear();
-            foreach (IXLRangeRow row in Range.Rows().Where(r => r.RowNumber() > 1))
-                row.WorksheetRow().Unhide();
-            return this;
-        }
-
-        public XLAutoFilter Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase, Boolean ignoreBlanks)
-        {
-            if (!Enabled)
-                throw new InvalidOperationException("Filter has not been enabled.");
-
             var ws = Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();
-            Range.Range(Range.FirstCell().CellBelow(), Range.LastCell()).Sort(columnToSortBy, sortOrder, matchCase,
-                                                                              ignoreBlanks);
-
-            Sorted = true;
-            SortOrder = sortOrder;
-            SortColumn = columnToSortBy;
 
             // Recalculate shown / hidden rows
             var rows = Range.Rows(2, Range.RowCount());
@@ -165,6 +117,53 @@ namespace ClosedXML.Excel
             }
 
             ws.ResumeEvents();
+            return this;
+        }
+
+        IXLAutoFilter IXLAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
+                                                                                                         Boolean ignoreBlanks)
+        {
+            return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
+        }
+
+        #endregion IXLAutoFilter Members
+
+        public XLAutoFilter Clear()
+        {
+            if (!Enabled) return this;
+
+            Enabled = false;
+            Filters.Clear();
+            foreach (IXLRangeRow row in Range.Rows().Where(r => r.RowNumber() > 1))
+                row.WorksheetRow().Unhide();
+            return this;
+        }
+
+        public XLAutoFilter Set(IXLRangeBase range)
+        {
+            Range = range.AsRange();
+            Enabled = true;
+            return this;
+        }
+
+        public XLAutoFilter Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase, Boolean ignoreBlanks)
+        {
+            if (!Enabled)
+                throw new InvalidOperationException("Filter has not been enabled.");
+
+            var ws = Range.Worksheet as XLWorksheet;
+            ws.SuspendEvents();
+            Range.Range(Range.FirstCell().CellBelow(), Range.LastCell()).Sort(columnToSortBy, sortOrder, matchCase,
+                                                                              ignoreBlanks);
+
+            Sorted = true;
+            SortOrder = sortOrder;
+            SortColumn = columnToSortBy;
+
+            ws.ResumeEvents();
+
+            Reapply();
+
             return this;
         }
     }
