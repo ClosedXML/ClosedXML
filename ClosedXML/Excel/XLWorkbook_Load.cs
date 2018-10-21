@@ -833,7 +833,7 @@ namespace ClosedXML.Excel
 
                     var xlpFormat = new XLPivotFormat(style)
                     {
-                        AreaType = fr.PivotArea.Type,
+                        AreaType = fr.PivotArea.Type ?? PivotAreaValues.Normal,
                         Outline = OpenXmlHelper.GetBooleanValueAsBool(fr.PivotArea.Outline, true),
                         DataOnly = OpenXmlHelper.GetBooleanValueAsBool(fr.PivotArea.DataOnly, true),
                         LabelOnly = OpenXmlHelper.GetBooleanValueAsBool(fr.PivotArea.LabelOnly, false),
