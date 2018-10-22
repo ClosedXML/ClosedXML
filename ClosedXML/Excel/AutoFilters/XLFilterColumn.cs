@@ -179,40 +179,40 @@ namespace ClosedXML.Excel
             LessThan(minValue).Or.GreaterThan(maxValue);
         }
 
+        public static Func<String, Object, Boolean> BeginsWithFunction { get; } = (value, input) => ((string)input).StartsWith(value, StringComparison.InvariantCultureIgnoreCase);
+
         public IXLFilterConnector BeginsWith(String value)
         {
-            return ApplyCustomFilter(value + "*", XLFilterOperator.Equal,
-                                     s => ((string)s).StartsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            return ApplyCustomFilter(value + "*", XLFilterOperator.Equal, s => BeginsWithFunction(value, s));
         }
 
         public IXLFilterConnector NotBeginsWith(String value)
         {
-            return ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual,
-                                     s => !((string)s).StartsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            return ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual, s => !BeginsWithFunction(value, s));
         }
+
+        public static Func<String, Object, Boolean> EndsWithFunction { get; } = (value, input) => ((string)input).EndsWith(value, StringComparison.InvariantCultureIgnoreCase);
 
         public IXLFilterConnector EndsWith(String value)
         {
-            return ApplyCustomFilter("*" + value, XLFilterOperator.Equal,
-                                     s => ((string)s).EndsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            return ApplyCustomFilter("*" + value, XLFilterOperator.Equal, s => EndsWithFunction(value, s));
         }
 
         public IXLFilterConnector NotEndsWith(String value)
         {
-            return ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual,
-                                     s => !((string)s).EndsWith(value, StringComparison.InvariantCultureIgnoreCase));
+            return ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual, s => !EndsWithFunction(value, s));
         }
+
+        public static Func<String, Object, Boolean> ContainsFunction { get; } = (value, input) => ((string)input).IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
 
         public IXLFilterConnector Contains(String value)
         {
-            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal,
-                                     s => ((string)s).ToLower().Contains(value.ToLower()));
+            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal, s => ContainsFunction(value, s));
         }
 
         public IXLFilterConnector NotContains(String value)
         {
-            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal,
-                                     s => !((string)s).ToLower().Contains(value.ToLower()));
+            return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal, s => !ContainsFunction(value, s));
         }
 
         public XLFilterType FilterType { get; set; }
@@ -413,28 +413,7 @@ namespace ClosedXML.Excel
                 }
             }
             _autoFilter.Column(_column).FilterType = filterType;
-            Boolean isText = typeof(T) == typeof(String);
-            Boolean isDateTime = typeof(T) == typeof(DateTime);
-            var ws = _autoFilter.Range.Worksheet as XLWorksheet;
-            ws.SuspendEvents();
-            var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
-            {
-                Boolean match;
-
-                if (isText)
-                    match = condition(row.Cell(_column).GetFormattedString());
-                else if (isDateTime)
-                    match = row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime());
-                else
-                    match = row.Cell(_column).DataType == XLDataType.Number && condition(row.Cell(_column).GetDouble());
-
-                if (match)
-                    row.WorksheetRow().Unhide();
-                else
-                    row.WorksheetRow().Hide();
-            }
-            ws.ResumeEvents();
+            _autoFilter.Reapply();
             return new XLFilterConnector(_autoFilter, _column);
         }
 

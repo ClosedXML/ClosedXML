@@ -1982,9 +1982,31 @@ namespace ClosedXML.Excel
 
                     foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
                     {
-                        var xlFilter = new XLFilter { Value = filter.Val.Value, Connector = connector };
+                        var xlFilter = new XLFilter { Connector = connector };
                         if (isText)
-                            xlFilter.Value = filter.Val.Value;
+                        {
+                            // TODO: Treat text BETWEEN functions better
+                            if (filter.Val.Value.StartsWith("*") && filter.Val.Value.EndsWith("*"))
+                            {
+                                var value = filter.Val.Value.Substring(1, filter.Val.Value.Length - 2);
+                                xlFilter.Value = filter.Val.Value;
+                                xlFilter.Condition = s => XLFilterColumn.ContainsFunction(value, s);
+                            }
+                            else if (filter.Val.Value.StartsWith("*"))
+                            {
+                                var value = filter.Val.Value.Substring(1);
+                                xlFilter.Value = filter.Val.Value;
+                                xlFilter.Condition = s => XLFilterColumn.EndsWithFunction(value, s);
+                            }
+                            else if (filter.Val.Value.EndsWith("*"))
+                            {
+                                var value = filter.Val.Value.Substring(0, filter.Val.Value.Length - 1);
+                                xlFilter.Value = filter.Val.Value;
+                                xlFilter.Condition = s => XLFilterColumn.BeginsWithFunction(value, s);
+                            }
+                            else
+                                xlFilter.Value = filter.Val.Value;
+                        }
                         else
                             xlFilter.Value = Double.Parse(filter.Val.Value, CultureInfo.InvariantCulture);
 
@@ -1993,29 +2015,34 @@ namespace ClosedXML.Excel
                         else
                             xlFilter.Operator = XLFilterOperator.Equal;
 
-                        Func<Object, Boolean> condition = null;
-                        switch (xlFilter.Operator)
+                        // Unhandled instances - we should actually improve this
+                        if (xlFilter.Condition == null)
                         {
-                            case XLFilterOperator.Equal:
-                                if (isText)
-                                    condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
-                                else
-                                    condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
-                                break;
+                            Func<Object, Boolean> condition = null;
+                            switch (xlFilter.Operator)
+                            {
+                                case XLFilterOperator.Equal:
+                                    if (isText)
+                                        condition = o => o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
+                                    else
+                                        condition = o => (o as IComparable).CompareTo(xlFilter.Value) == 0;
+                                    break;
 
-                            case XLFilterOperator.EqualOrGreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) >= 0; break;
-                            case XLFilterOperator.EqualOrLessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) <= 0; break;
-                            case XLFilterOperator.GreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) > 0; break;
-                            case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
-                            case XLFilterOperator.NotEqual:
-                                if (isText)
-                                    condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
-                                else
-                                    condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
-                                break;
+                                case XLFilterOperator.EqualOrGreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) >= 0; break;
+                                case XLFilterOperator.EqualOrLessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) <= 0; break;
+                                case XLFilterOperator.GreaterThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) > 0; break;
+                                case XLFilterOperator.LessThan: condition = o => (o as IComparable).CompareTo(xlFilter.Value) < 0; break;
+                                case XLFilterOperator.NotEqual:
+                                    if (isText)
+                                        condition = o => !o.ToString().Equals(xlFilter.Value.ToString(), StringComparison.OrdinalIgnoreCase);
+                                    else
+                                        condition = o => (o as IComparable).CompareTo(xlFilter.Value) != 0;
+                                    break;
+                            }
+
+                            xlFilter.Condition = condition;
                         }
 
-                        xlFilter.Condition = condition;
                         filterList.Add(xlFilter);
                     }
                 }
