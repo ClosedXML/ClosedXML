@@ -1231,14 +1231,14 @@ namespace ClosedXML.Excel
                     {
                         newRange = Range(cfAddress.FirstAddress.RowNumber,
                                          cfAddress.FirstAddress.ColumnNumber,
-                                         cfAddress.LastAddress.RowNumber + rowsShifted,
+                                         Math.Min(XLHelper.MaxRowNumber, cfAddress.LastAddress.RowNumber + rowsShifted),
                                          cfAddress.LastAddress.ColumnNumber);
                     }
                     else if (cfAddress.FirstAddress.RowNumber >= firstRow)
                     {
                         newRange = Range(Math.Max(cfAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
                                          cfAddress.FirstAddress.ColumnNumber,
-                                         cfAddress.LastAddress.RowNumber + rowsShifted,
+                                         Math.Min(XLHelper.MaxRowNumber, cfAddress.LastAddress.RowNumber + rowsShifted),
                                          cfAddress.LastAddress.ColumnNumber);
                     }
                     else
