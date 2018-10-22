@@ -344,6 +344,9 @@ namespace ClosedXML.Excel
 
         public static string ToInvariantString(this object value)
         {
+            if (value == null)
+                return string.Empty;
+
             switch (value)
             {
                 case sbyte v:
