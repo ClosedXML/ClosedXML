@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
 using System.Linq;
 
 namespace ClosedXML_Tests.Excel.DataValidations
@@ -238,6 +239,33 @@ namespace ClosedXML_Tests.Excel.DataValidations
                 Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
                 Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2")
                                 .All(c => c.DataValidation.MinValue == "10"));
+            }
+        }
+
+        [Test]
+        public void ListLengthOverflow()
+        {
+            var values = string.Join(",", Enumerable.Range(1, 20)
+                .Select(i => Guid.NewGuid().ToString("N")));
+
+            Assert.True(values.Length > 255);
+
+            using (var wb = new XLWorkbook())
+            {
+                var dv = wb.AddWorksheet("Sheet 1").Cell(1, 1).DataValidation;
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => dv.List(values));
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                {
+                    dv.TextLength.Between(0, 5);
+                    dv.MinValue = values;
+                });
+
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                {
+                    dv.TextLength.Between(0, 5);
+                    dv.MaxValue = values;
+                });
             }
         }
     }

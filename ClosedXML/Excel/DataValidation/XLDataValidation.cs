@@ -11,13 +11,13 @@ namespace ClosedXML.Excel
         }
 
         public XLDataValidation(IXLRange range)
-            :this()
+            : this()
         {
             Ranges.Add(new XLRange(new XLRangeParameters((XLRangeAddress)range.RangeAddress, range.Worksheet.Style)));
         }
 
         public XLDataValidation(IXLRanges ranges)
-            :this()
+            : this()
         {
             ranges.ForEach(range =>
             {
@@ -48,10 +48,9 @@ namespace ClosedXML.Excel
             return
                 AllowedValues != XLAllowedValues.AnyValue
                 || (ShowInputMessage &&
-                  (!String.IsNullOrWhiteSpace(InputTitle) || !String.IsNullOrWhiteSpace(InputMessage)))
-                ||(ShowErrorMessage &&
-                  (!String.IsNullOrWhiteSpace(ErrorTitle) || !String.IsNullOrWhiteSpace(ErrorMessage)));
-
+                   (!String.IsNullOrWhiteSpace(InputTitle) || !String.IsNullOrWhiteSpace(InputMessage)))
+                || (ShowErrorMessage &&
+                   (!String.IsNullOrWhiteSpace(ErrorTitle) || !String.IsNullOrWhiteSpace(ErrorMessage)));
         }
 
         public XLDataValidation(IXLDataValidation dataValidation)
@@ -63,7 +62,6 @@ namespace ClosedXML.Excel
 
         public IXLRanges Ranges { get; set; }
 
-
         public Boolean IgnoreBlanks { get; set; }
         public Boolean InCellDropdown { get; set; }
         public Boolean ShowInputMessage { get; set; }
@@ -73,13 +71,7 @@ namespace ClosedXML.Excel
         public String ErrorTitle { get; set; }
         public String ErrorMessage { get; set; }
         public XLErrorStyle ErrorStyle { get; set; }
-        private XLAllowedValues _allowedValues;
-        public XLAllowedValues AllowedValues
-        {
-            get { return _allowedValues; }
-            set { _allowedValues = value; }
-        }
-        
+        public XLAllowedValues AllowedValues { get; set; }
         public XLOperator Operator { get; set; }
 
         public String Value
@@ -88,8 +80,11 @@ namespace ClosedXML.Excel
             set { MinValue = value; }
         }
 
-        public String MinValue { get; set; }
-        public String MaxValue { get; set; }
+        private String minValue;
+        public String MinValue { get => minValue; set { Validate(value); minValue = value; } }
+
+        private String maxValue;
+        public String MaxValue { get => maxValue; set { Validate(value); maxValue = value; } }
 
         public XLWholeNumberCriteria WholeNumber
         {
@@ -164,7 +159,7 @@ namespace ClosedXML.Excel
             Value = customValidation;
         }
 
-        #endregion
+        #endregion IXLDataValidation Members
 
         public void CopyFrom(IXLDataValidation dataValidation)
         {
@@ -175,7 +170,6 @@ namespace ClosedXML.Excel
                 Ranges = new XLRanges();
                 dataValidation.Ranges.ForEach(r => Ranges.Add(r));
             }
-
 
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;
@@ -190,12 +184,17 @@ namespace ClosedXML.Excel
             Operator = dataValidation.Operator;
             MinValue = dataValidation.MinValue;
             MaxValue = dataValidation.MaxValue;
-
         }
 
         public void Clear()
         {
             Initialize();
+        }
+
+        private void Validate(String value)
+        {
+            if (value.Length > 255)
+                throw new ArgumentOutOfRangeException(nameof(value), "The maximum allowed length of the value is 255 characters.");
         }
     }
 }
