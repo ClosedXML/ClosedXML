@@ -921,7 +921,7 @@ namespace ClosedXML.Excel
             _rangeIndices.Add(rangeIndex);
         }
 
-        public void Dispose()
+        public void Cleanup()
         {
             Internals.Dispose();
             Pictures.ForEach(p => p.Dispose());
