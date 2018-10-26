@@ -138,6 +138,8 @@ namespace ClosedXML.Excel
             _worksheets.Values.Where(w => w.Position > position).ForEach(w => w._position -= 1);
             _workbook.UnsupportedSheets.Where(w => w.Position > position).ForEach(w => w.Position -= 1);
             _workbook.InvalidateFormulas();
+
+            ws.Cleanup();
         }
 
         IEnumerator<IXLWorksheet> IEnumerable<IXLWorksheet>.GetEnumerator()
