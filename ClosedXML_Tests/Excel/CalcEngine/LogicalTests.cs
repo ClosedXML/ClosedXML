@@ -1,10 +1,9 @@
-using System;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
-
     [TestFixture]
     public class LogicalTests
     {
@@ -14,6 +13,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"")");
             Assert.AreEqual("T", actual);
         }
+
         [Test]
         public void If_2_Params_false()
         {
@@ -27,6 +27,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"", ""F"")");
             Assert.AreEqual("T", actual);
         }
+
         [Test]
         public void If_3_Params_false()
         {
@@ -49,6 +50,14 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr(@"if("""" = """", ""A"",""B"")");
             Assert.AreEqual("A", actual);
+        }
+
+        [Test]
+        public void If_Case_Insensitivity()
+        {
+            Object actual;
+            actual = XLWorkbook.EvaluateExpr(@"IF(""text""=""TEXT"", 1, 2)");
+            Assert.AreEqual(1, actual);
         }
     }
 }
