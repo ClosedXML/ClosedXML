@@ -103,6 +103,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             value = workbook.Evaluate(@"=VLOOKUP(""Central"",Data!D:E,2,FALSE)");
             Assert.AreEqual("Kivell", value);
 
+            // Case insensitive lookup
+            value = workbook.Evaluate(@"=VLOOKUP(""central"",Data!D:E,2,FALSE)");
+            Assert.AreEqual("Kivell", value);
+
             // Range lookup true
             value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,TRUE)");
             Assert.AreEqual(179.64, value);

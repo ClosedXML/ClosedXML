@@ -240,8 +240,11 @@ namespace ClosedXML.Excel.CalcEngine
                 catch (ArgumentNullException) { return -1; }
             }
 
-            // compare
-            return c1.CompareTo(c2);
+            // String comparisons should be case insensitive
+            if (c1 is string s1 && c2 is string s2)
+                return StringComparer.OrdinalIgnoreCase.Compare(s1, s2);
+            else
+                return c1.CompareTo(c2);
         }
 
         #endregion ** IComparable<Expression>
