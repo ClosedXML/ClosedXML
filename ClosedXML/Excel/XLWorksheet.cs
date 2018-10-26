@@ -1112,6 +1112,7 @@ namespace ClosedXML.Excel
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesColumns(range, columnsShifted, ws.NamedRanges));
             MoveNamedRangesColumns(range, columnsShifted, Workbook.NamedRanges);
             ShiftConditionalFormattingColumns(range, columnsShifted);
+            ShiftDataValidationColumns(range, columnsShifted);
             ShiftPageBreaksColumns(range, columnsShifted);
         }
 
@@ -1173,6 +1174,52 @@ namespace ClosedXML.Excel
             }
         }
 
+        private void ShiftDataValidationColumns(XLRange range, int columnsShifted)
+        {
+            if (!DataValidations.Any()) return;
+            Int32 firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
+            if (firstCol == 1) return;
+
+            int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
+            var model = Column(colNum).AsRange();
+
+            foreach (var dv in DataValidations.ToList())
+            {
+                var dvRanges = dv.Ranges.ToList();
+                dv.Ranges.RemoveAll();
+
+                foreach (var dvRange in dvRanges)
+                {
+                    var dvAddress = dvRange.RangeAddress;
+                    IXLRange newRange;
+                    if (dvRange.Intersects(model))
+                    {
+                        newRange = Range(dvAddress.FirstAddress.RowNumber,
+                                         dvAddress.FirstAddress.ColumnNumber,
+                                         dvAddress.LastAddress.RowNumber,
+                                         dvAddress.LastAddress.ColumnNumber + columnsShifted);
+                    }
+                    else if (dvAddress.FirstAddress.ColumnNumber >= firstCol)
+                    {
+                        newRange = Range(dvAddress.FirstAddress.RowNumber,
+                                         Math.Max(dvAddress.FirstAddress.ColumnNumber + columnsShifted, firstCol),
+                                         dvAddress.LastAddress.RowNumber,
+                                         dvAddress.LastAddress.ColumnNumber + columnsShifted);
+                    }
+                    else
+                        newRange = dvRange;
+
+                    if (newRange.RangeAddress.IsValid &&
+                        newRange.RangeAddress.FirstAddress.ColumnNumber <=
+                        newRange.RangeAddress.LastAddress.ColumnNumber)
+                        dv.Ranges.Add(newRange);
+                }
+
+                if (!dv.Ranges.Any())
+                    DataValidations.Delete(v => v == dv);
+            }
+        }
+
         internal override void WorksheetRangeShiftedRows(XLRange range, int rowsShifted)
         {
             if (!range.IsEntireRow())
@@ -1194,6 +1241,7 @@ namespace ClosedXML.Excel
             Workbook.Worksheets.ForEach(ws => MoveNamedRangesRows(range, rowsShifted, ws.NamedRanges));
             MoveNamedRangesRows(range, rowsShifted, Workbook.NamedRanges);
             ShiftConditionalFormattingRows(range, rowsShifted);
+            ShiftDataValidationRows(range, rowsShifted);
             ShiftPageBreaksRows(range, rowsShifted);
         }
 
@@ -1251,6 +1299,51 @@ namespace ClosedXML.Excel
 
                 if (!cf.Ranges.Any())
                     ConditionalFormats.Remove(f => f == cf);
+            }
+        }
+
+        private void ShiftDataValidationRows(XLRange range, int rowsShifted)
+        {
+            if (!DataValidations.Any()) return;
+            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
+            if (firstRow == 1) return;
+
+            int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
+            var model = Row(rowNum).AsRange();
+
+            foreach (var dv in DataValidations.ToList())
+            {
+                var dvRanges = dv.Ranges.ToList();
+                dv.Ranges.RemoveAll();
+
+                foreach (var dvRange in dvRanges)
+                {
+                    var dvAddress = dvRange.RangeAddress;
+                    IXLRange newRange;
+                    if (dvRange.Intersects(model))
+                    {
+                        newRange = Range(dvAddress.FirstAddress.RowNumber,
+                                         dvAddress.FirstAddress.ColumnNumber,
+                                         dvAddress.LastAddress.RowNumber + rowsShifted,
+                                         dvAddress.LastAddress.ColumnNumber);
+                    }
+                    else if (dvAddress.FirstAddress.RowNumber >= firstRow)
+                    {
+                        newRange = Range(Math.Max(dvAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
+                                         dvAddress.FirstAddress.ColumnNumber,
+                                         dvAddress.LastAddress.RowNumber + rowsShifted,
+                                         dvAddress.LastAddress.ColumnNumber);
+                    }
+                    else
+                        newRange = dvRange;
+
+                    if (newRange.RangeAddress.IsValid &&
+                        newRange.RangeAddress.FirstAddress.RowNumber <= newRange.RangeAddress.LastAddress.RowNumber)
+                        dv.Ranges.Add(newRange);
+                }
+
+                if (!dv.Ranges.Any())
+                    DataValidations.Delete(v => v == dv);
             }
         }
 
