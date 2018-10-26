@@ -17,6 +17,11 @@ namespace ClosedXML.Excel
             _dataValidations.Add(dataValidation);
         }
 
+        public void Delete(Predicate<IXLDataValidation> predicate)
+        {
+            _dataValidations.RemoveAll(predicate);
+        }
+
         public IEnumerator<IXLDataValidation> GetEnumerator()
         {
             return _dataValidations.GetEnumerator();
@@ -39,7 +44,7 @@ namespace ClosedXML.Excel
             return count == 1;
         }
 
-        #endregion
+        #endregion IXLDataValidations Members
 
         public void Delete(IXLDataValidation dataValidation)
         {
