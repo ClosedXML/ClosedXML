@@ -17,26 +17,25 @@ namespace ClosedXML_Tests
         {
             using (var wb = new XLWorkbook())
             {
-                using (IXLWorksheet ws = wb.Worksheets.Add("Sheet1"))
-                {
-                    ws.FirstCell().SetValue("Categories")
-                        .CellBelow().SetValue("1")
-                        .CellBelow().SetValue("2");
+                var ws = wb.Worksheets.Add("Sheet1");
 
-                    IXLTable table = ws.RangeUsed().CreateTable();
+                ws.FirstCell().SetValue("Categories")
+                    .CellBelow().SetValue("1")
+                    .CellBelow().SetValue("2");
 
-                    var listOfArr = new List<Int32>();
-                    listOfArr.Add(3);
-                    listOfArr.Add(4);
-                    listOfArr.Add(5);
-                    listOfArr.Add(6);
+                IXLTable table = ws.RangeUsed().CreateTable();
 
-                    table.DataRange.InsertRowsBelow(listOfArr.Count - table.DataRange.RowCount());
-                    table.DataRange.FirstCell().InsertData(listOfArr);
+                var listOfArr = new List<Int32>();
+                listOfArr.Add(3);
+                listOfArr.Add(4);
+                listOfArr.Add(5);
+                listOfArr.Add(6);
 
-                    Assert.AreEqual("A1:A5", table.AutoFilter.Range.RangeAddress.ToStringRelative());
-                    Assert.AreEqual(5, table.AutoFilter.VisibleRows.Count());
-                }
+                table.DataRange.InsertRowsBelow(listOfArr.Count - table.DataRange.RowCount());
+                table.DataRange.FirstCell().InsertData(listOfArr);
+
+                Assert.AreEqual("A1:A5", table.AutoFilter.Range.RangeAddress.ToStringRelative());
+                Assert.AreEqual(5, table.AutoFilter.VisibleRows.Count());
             }
         }
 
@@ -45,15 +44,14 @@ namespace ClosedXML_Tests
         {
             using (var wb = new XLWorkbook())
             {
-                using (IXLWorksheet ws = wb.Worksheets.Add("Sheet1"))
-                {
-                    ws.Cell(3, 3).SetValue("Names")
-                        .CellBelow().SetValue("Manuel")
-                        .CellBelow().SetValue("Carlos")
-                        .CellBelow().SetValue("Dominic");
-                    ws.RangeUsed().SetAutoFilter().Sort();
-                    Assert.AreEqual("Carlos", ws.Cell(4, 3).GetString());
-                }
+                var ws = wb.Worksheets.Add("Sheet1");
+
+                ws.Cell(3, 3).SetValue("Names")
+                    .CellBelow().SetValue("Manuel")
+                    .CellBelow().SetValue("Carlos")
+                    .CellBelow().SetValue("Dominic");
+                ws.RangeUsed().SetAutoFilter().Sort();
+                Assert.AreEqual("Carlos", ws.Cell(4, 3).GetString());
             }
         }
 
@@ -165,23 +163,22 @@ namespace ClosedXML_Tests
         {
             using (var wb = new XLWorkbook())
             {
-                using (var ws = wb.Worksheets.Add("Sheet1"))
-                {
-                    ws.Cell(3, 3).SetValue("Names")
-                        .CellBelow().SetValue("Manuel")
-                        .CellBelow().SetValue("Carlos")
-                        .CellBelow().SetValue("Dominic");
+                var ws = wb.Worksheets.Add("Sheet1");
 
-                    var autoFilter = ws.RangeUsed()
-                        .SetAutoFilter();
+                ws.Cell(3, 3).SetValue("Names")
+                    .CellBelow().SetValue("Manuel")
+                    .CellBelow().SetValue("Carlos")
+                    .CellBelow().SetValue("Dominic");
 
-                    autoFilter.Column(1).AddFilter("Carlos");
+                var autoFilter = ws.RangeUsed()
+                    .SetAutoFilter();
 
-                    Assert.AreEqual("Carlos", ws.Cell(5, 3).GetString());
-                    Assert.AreEqual(2, autoFilter.VisibleRows.Count());
-                    Assert.AreEqual(3, autoFilter.VisibleRows.First().WorksheetRow().RowNumber());
-                    Assert.AreEqual(5, autoFilter.VisibleRows.Last().WorksheetRow().RowNumber());
-                }
+                autoFilter.Column(1).AddFilter("Carlos");
+
+                Assert.AreEqual("Carlos", ws.Cell(5, 3).GetString());
+                Assert.AreEqual(2, autoFilter.VisibleRows.Count());
+                Assert.AreEqual(3, autoFilter.VisibleRows.First().WorksheetRow().RowNumber());
+                Assert.AreEqual(5, autoFilter.VisibleRows.Last().WorksheetRow().RowNumber());
             }
         }
 
@@ -190,28 +187,27 @@ namespace ClosedXML_Tests
         {
             using (var wb = new XLWorkbook())
             {
-                using (var ws = wb.Worksheets.Add("Sheet1"))
-                {
-                    ws.Cell(3, 3).SetValue("Names")
-                        .CellBelow().SetValue("Manuel")
-                        .CellBelow().SetValue("Carlos")
-                        .CellBelow().SetValue("Dominic")
-                        .CellBelow().SetValue("Jose");
+                var ws = wb.Worksheets.Add("Sheet1");
 
-                    var autoFilter = ws.RangeUsed()
-                        .SetAutoFilter();
+                ws.Cell(3, 3).SetValue("Names")
+                    .CellBelow().SetValue("Manuel")
+                    .CellBelow().SetValue("Carlos")
+                    .CellBelow().SetValue("Dominic")
+                    .CellBelow().SetValue("Jose");
 
-                    autoFilter.Column(1).AddFilter("Carlos");
+                var autoFilter = ws.RangeUsed()
+                    .SetAutoFilter();
 
-                    Assert.AreEqual(3, autoFilter.HiddenRows.Count());
+                autoFilter.Column(1).AddFilter("Carlos");
 
-                    // Unhide the rows so that the table is out of sync with the filter
-                    autoFilter.HiddenRows.ForEach(r => r.WorksheetRow().Unhide());
-                    Assert.False(autoFilter.HiddenRows.Any());
+                Assert.AreEqual(3, autoFilter.HiddenRows.Count());
 
-                    autoFilter.Reapply();
-                    Assert.AreEqual(3, autoFilter.HiddenRows.Count());
-                }
+                // Unhide the rows so that the table is out of sync with the filter
+                autoFilter.HiddenRows.ForEach(r => r.WorksheetRow().Unhide());
+                Assert.False(autoFilter.HiddenRows.Any());
+
+                autoFilter.Reapply();
+                Assert.AreEqual(3, autoFilter.HiddenRows.Count());
             }
         }
 

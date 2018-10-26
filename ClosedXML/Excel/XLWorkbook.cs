@@ -814,7 +814,7 @@ namespace ClosedXML.Excel
 
         public void Dispose()
         {
-            Worksheets.ForEach(w => w.Dispose());
+            Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
         }
 
         public Boolean Use1904DateSystem { get; set; }
