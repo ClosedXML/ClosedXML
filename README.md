@@ -36,8 +36,10 @@ using (var workbook = new XLWorkbook())
 
 ### Extensions
 Be sure to check out our `ClosedXML` extension projects
+- https://github.com/ClosedXML/ClosedXML.Report
 - https://github.com/ClosedXML/ClosedXML.Extensions.AspNet
 - https://github.com/ClosedXML/ClosedXML.Extensions.Mvc
+- https://github.com/ClosedXML/ClosedXML.Extensions.WebApi
 
 ## Developer guidelines
 _Full guidelines to follow later_
