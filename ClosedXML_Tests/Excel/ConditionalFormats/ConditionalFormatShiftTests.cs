@@ -1,6 +1,5 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
 using System.Linq;
 
 namespace ClosedXML_Tests.Excel.ConditionalFormats
@@ -103,6 +102,25 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
                 Assert.AreEqual("B1:B1", cf[1].Range.RangeAddress.ToString());
                 Assert.AreEqual("C1:C2", cf[2].Range.RangeAddress.ToString());
                 Assert.AreEqual("G3:G4", cf[3].Range.RangeAddress.ToString());
+            }
+        }
+
+        [Test]
+        public void CFShiftedTruncateRange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("CFShift");
+                ws.AsRange().AddConditionalFormat().WhenGreaterThan(0).Fill.SetBackgroundColor(XLColor.Red);
+                var cf = ws.ConditionalFormats.Single();
+
+                ws.Row(2).InsertRowsAbove(1);
+                Assert.IsTrue(cf.Range.RangeAddress.IsValid);
+                Assert.AreEqual($"A1:{XLHelper.MaxColumnLetter}{XLHelper.MaxRowNumber}", cf.Range.RangeAddress.ToString());
+
+                ws.Column(2).InsertColumnsAfter(1);
+                Assert.IsTrue(cf.Range.RangeAddress.IsValid);
+                Assert.AreEqual($"A1:{XLHelper.MaxColumnLetter}{XLHelper.MaxRowNumber}", cf.Range.RangeAddress.ToString());
             }
         }
     }
