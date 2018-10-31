@@ -19,6 +19,8 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
+        public static String LastCell { get { return $"{MaxColumnLetter}{MaxRowNumber}"; } }
+
         private static readonly Lazy<Graphics> graphics = new Lazy<Graphics>(() => Graphics.FromImage(new Bitmap(200, 200)));
         internal static Graphics Graphics { get => graphics.Value; }
         internal static Double DpiX { get => Graphics.DpiX; }
