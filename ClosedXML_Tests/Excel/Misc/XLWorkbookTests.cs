@@ -1,7 +1,8 @@
-using System;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -146,7 +147,6 @@ namespace ClosedXML_Tests.Excel
             Assert.AreSame(r1.First(), r2.First());
             Assert.AreSame(r1.Last(), r2.Last());
         }
-
 
         [TestCase("Sheet2!C1:D2,Sheet2!F1:G4")]
         [TestCase("Sheet1!A,Sheet1!B")]
@@ -416,6 +416,29 @@ namespace ClosedXML_Tests.Excel
                 Assert.IsFalse(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsFalse(wb.IsPasswordProtected);
+            }
+        }
+
+        [Test]
+        public void FileSharingProperties()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.AddWorksheet("Sheet1").Cell("A1").Value = "Hello world!";
+                    wb.FileSharing.ReadOnlyRecommended = true;
+                    wb.FileSharing.UserName = Environment.UserName;
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    Assert.IsTrue(wb.FileSharing.ReadOnlyRecommended);
+                    Assert.AreEqual(Environment.UserName, wb.FileSharing.UserName);
+                }
             }
         }
     }
