@@ -1151,14 +1151,14 @@ namespace ClosedXML.Excel
                         newRange = Range(cfAddress.FirstAddress.RowNumber,
                                          cfAddress.FirstAddress.ColumnNumber,
                                          cfAddress.LastAddress.RowNumber,
-                                         cfAddress.LastAddress.ColumnNumber + columnsShifted);
+                                         Math.Min(XLHelper.MaxColumnNumber, cfAddress.LastAddress.ColumnNumber + columnsShifted));
                     }
                     else if (cfAddress.FirstAddress.ColumnNumber >= firstCol)
                     {
                         newRange = Range(cfAddress.FirstAddress.RowNumber,
                                          Math.Max(cfAddress.FirstAddress.ColumnNumber + columnsShifted, firstCol),
                                          cfAddress.LastAddress.RowNumber,
-                                         cfAddress.LastAddress.ColumnNumber + columnsShifted);
+                                         Math.Min(XLHelper.MaxColumnNumber, cfAddress.LastAddress.ColumnNumber + columnsShifted));
                     }
                     else
                         newRange = cfRange;
@@ -1197,14 +1197,14 @@ namespace ClosedXML.Excel
                         newRange = Range(dvAddress.FirstAddress.RowNumber,
                                          dvAddress.FirstAddress.ColumnNumber,
                                          dvAddress.LastAddress.RowNumber,
-                                         dvAddress.LastAddress.ColumnNumber + columnsShifted);
+                                         Math.Min(XLHelper.MaxColumnNumber, dvAddress.LastAddress.ColumnNumber + columnsShifted));
                     }
                     else if (dvAddress.FirstAddress.ColumnNumber >= firstCol)
                     {
                         newRange = Range(dvAddress.FirstAddress.RowNumber,
                                          Math.Max(dvAddress.FirstAddress.ColumnNumber + columnsShifted, firstCol),
                                          dvAddress.LastAddress.RowNumber,
-                                         dvAddress.LastAddress.ColumnNumber + columnsShifted);
+                                         Math.Min(XLHelper.MaxColumnNumber, dvAddress.LastAddress.ColumnNumber + columnsShifted));
                     }
                     else
                         newRange = dvRange;
@@ -1279,14 +1279,14 @@ namespace ClosedXML.Excel
                     {
                         newRange = Range(cfAddress.FirstAddress.RowNumber,
                                          cfAddress.FirstAddress.ColumnNumber,
-                                         cfAddress.LastAddress.RowNumber + rowsShifted,
+                                         Math.Min(XLHelper.MaxRowNumber, cfAddress.LastAddress.RowNumber + rowsShifted),
                                          cfAddress.LastAddress.ColumnNumber);
                     }
                     else if (cfAddress.FirstAddress.RowNumber >= firstRow)
                     {
                         newRange = Range(Math.Max(cfAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
                                          cfAddress.FirstAddress.ColumnNumber,
-                                         cfAddress.LastAddress.RowNumber + rowsShifted,
+                                         Math.Min(XLHelper.MaxRowNumber, cfAddress.LastAddress.RowNumber + rowsShifted),
                                          cfAddress.LastAddress.ColumnNumber);
                     }
                     else
@@ -1324,14 +1324,14 @@ namespace ClosedXML.Excel
                     {
                         newRange = Range(dvAddress.FirstAddress.RowNumber,
                                          dvAddress.FirstAddress.ColumnNumber,
-                                         dvAddress.LastAddress.RowNumber + rowsShifted,
+                                         Math.Min(XLHelper.MaxRowNumber, dvAddress.LastAddress.RowNumber + rowsShifted),
                                          dvAddress.LastAddress.ColumnNumber);
                     }
                     else if (dvAddress.FirstAddress.RowNumber >= firstRow)
                     {
                         newRange = Range(Math.Max(dvAddress.FirstAddress.RowNumber + rowsShifted, firstRow),
                                          dvAddress.FirstAddress.ColumnNumber,
-                                         dvAddress.LastAddress.RowNumber + rowsShifted,
+                                         Math.Min(XLHelper.MaxRowNumber, dvAddress.LastAddress.RowNumber + rowsShifted),
                                          dvAddress.LastAddress.ColumnNumber);
                     }
                     else

@@ -104,5 +104,24 @@ namespace ClosedXML_Tests.Excel.DataValidations
                 Assert.AreEqual("G3:G4", dv[3].Ranges.Single().RangeAddress.ToString());
             }
         }
+
+        [Test]
+        public void DataValidationShiftedTruncateRange()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("DataValidationShift");
+                ws.AsRange().SetDataValidation().WholeNumber.Between(0, 1);
+                var dv = ws.DataValidations.Single();
+
+                ws.Row(2).InsertRowsAbove(1);
+                Assert.IsTrue(dv.Ranges.Single().RangeAddress.IsValid);
+                Assert.AreEqual($"A1:{XLHelper.MaxColumnLetter}{XLHelper.MaxRowNumber}", dv.Ranges.Single().RangeAddress.ToString());
+
+                ws.Column(2).InsertColumnsAfter(1);
+                Assert.IsTrue(dv.Ranges.Single().RangeAddress.IsValid);
+                Assert.AreEqual($"A1:{XLHelper.MaxColumnLetter}{XLHelper.MaxRowNumber}", dv.Ranges.Single().RangeAddress.ToString());
+            }
+        }
     }
 }
