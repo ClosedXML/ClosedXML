@@ -91,7 +91,15 @@ namespace ClosedXML.Excel
             }
 
             var wbProps = dSpreadsheet.WorkbookPart.Workbook.WorkbookProperties;
-            Use1904DateSystem = wbProps?.Date1904?.Value ?? false;
+            if (wbProps != null)
+                Use1904DateSystem = OpenXmlHelper.GetBooleanValueAsBool(wbProps.Date1904, false);
+
+            var wbFilesharing = dSpreadsheet.WorkbookPart.Workbook.FileSharing;
+            if (wbFilesharing != null)
+            {
+                FileSharing.ReadOnlyRecommended = OpenXmlHelper.GetBooleanValueAsBool(wbFilesharing.ReadOnlyRecommended, false);
+                FileSharing.UserName = wbFilesharing.UserName?.Value;
+            }
 
             var wbProtection = dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection;
             if (wbProtection != null)

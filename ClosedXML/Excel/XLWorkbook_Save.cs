@@ -620,6 +620,19 @@ namespace ClosedXML.Excel
 
             #endregion WorkbookProperties
 
+            #region FileSharing
+
+            if (workbook.FileSharing == null)
+                workbook.FileSharing = new FileSharing();
+
+            workbook.FileSharing.ReadOnlyRecommended = OpenXmlHelper.GetBooleanValue(this.FileSharing.ReadOnlyRecommended, false);
+            workbook.FileSharing.UserName = String.IsNullOrWhiteSpace(this.FileSharing.UserName) ? null : StringValue.FromString(this.FileSharing.UserName);
+
+            if (!workbook.FileSharing.HasChildren && !workbook.FileSharing.HasAttributes)
+                workbook.FileSharing = null;
+
+            #endregion FileSharing
+
             #region WorkbookProtection
 
             if (LockStructure || LockWindows)

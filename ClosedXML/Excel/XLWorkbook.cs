@@ -262,6 +262,8 @@ namespace ClosedXML.Excel
             get { return true; }
         }
 
+        public IXLFileSharing FileSharing { get; } = new XLFileSharing();
+
         public Boolean DefaultRightToLeft
         {
             get { return false; }
@@ -898,11 +900,17 @@ namespace ClosedXML.Excel
 
         public Boolean LockStructure { get; set; }
 
-        public XLWorkbook SetLockStructure(Boolean value) { LockStructure = value; return this; }
+        public XLWorkbook SetLockStructure(Boolean value)
+        {
+            LockStructure = value; return this;
+        }
 
         public Boolean LockWindows { get; set; }
 
-        public XLWorkbook SetLockWindows(Boolean value) { LockWindows = value; return this; }
+        public XLWorkbook SetLockWindows(Boolean value)
+        {
+            LockWindows = value; return this;
+        }
 
         internal HexBinaryValue LockPassword { get; set; }
         public Boolean IsPasswordProtected { get { return LockPassword != null; } }

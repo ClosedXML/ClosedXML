@@ -42,6 +42,8 @@ namespace ClosedXML.Excel
 
         Boolean DefaultShowZeros { get; }
 
+        IXLFileSharing FileSharing { get; }
+
         Boolean ForceFullCalculation { get; set; }
 
         Boolean FullCalculationOnLoad { get; set; }
