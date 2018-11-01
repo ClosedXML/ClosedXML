@@ -20,7 +20,7 @@ namespace ClosedXML_Examples
                     #region AbsoluteAnchor
 
                     ws.AddPicture(fs, XLPictureFormat.Png, "Image10")
-                        .MoveTo(220, 150);
+                        .MoveTo(XLMeasure.Create(220, XLMeasureUnit.Pixels), XLMeasure.Create(150, XLMeasureUnit.Pixels));
 
                     #endregion AbsoluteAnchor
 
@@ -49,15 +49,15 @@ namespace ClosedXML_Examples
                     ws = wb.Worksheets.Add("Images3");
 
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(ws.Cell(2, 2), 20, 5, ws.Cell(5, 5), 30, 10)
+                        .MoveTo(ws.Cell(2, 2), XLMeasure.Create(20, XLMeasureUnit.Pixels), XLMeasure.Create(5, XLMeasureUnit.Pixels), ws.Cell(5, 5), XLMeasure.Create(30, XLMeasureUnit.Pixels), XLMeasure.Create(10, XLMeasureUnit.Pixels))
                         .MoveTo(ws.Cell(2, 2), ws.Cell(5, 5));
 
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(ws.Cell(6, 2), 2, 2, ws.Cell(9, 5), 2, 2)
-                        .MoveTo(ws.Cell(6, 2), 20, 5, ws.Cell(9, 5), 30, 10);
+                        .MoveTo(ws.Cell(6, 2), XLMeasure.Create(2, XLMeasureUnit.Pixels), XLMeasure.Create(2, XLMeasureUnit.Pixels), ws.Cell(9, 5), XLMeasure.Create(2, XLMeasureUnit.Pixels), XLMeasure.Create(2, XLMeasureUnit.Pixels))
+                        .MoveTo(ws.Cell(6, 2), XLMeasure.Create(20, XLMeasureUnit.Pixels), XLMeasure.Create(5, XLMeasureUnit.Pixels), ws.Cell(9, 5), XLMeasure.Create(30, XLMeasureUnit.Pixels), XLMeasure.Create(10, XLMeasureUnit.Pixels));
 
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(ws.Cell(10, 2), 20, 5)
+                        .MoveTo(ws.Cell(10, 2), XLMeasure.Create(20, XLMeasureUnit.Pixels), XLMeasure.Create(5, XLMeasureUnit.Pixels))
                         .Scale(0.2, true)
                         .MoveTo(ws.Cell(10, 1));
                 }
@@ -68,12 +68,12 @@ namespace ClosedXML_Examples
                     ws = wb.Worksheets.Add("Images4");
 
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(100, 100)
+                        .MoveTo(XLMeasure.Create(100, XLMeasureUnit.Pixels), XLMeasure.Create(100, XLMeasureUnit.Pixels))
                         .WithPlacement(XLPicturePlacement.FreeFloating);
 
                     // Add and delete picture immediately
                     ws.AddPicture(fs, XLPictureFormat.Jpeg)
-                        .MoveTo(100, 600)
+                        .MoveTo(XLMeasure.Create(100, XLMeasureUnit.Pixels), XLMeasure.Create(600, XLMeasureUnit.Pixels))
                         .Delete();
                 }
 

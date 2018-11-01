@@ -299,8 +299,8 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 ws.AddPicture(bitmap, "MyPicture")
                     .WithPlacement(XLPicturePlacement.FreeFloating)
-                    .MoveTo(50, 50)
-                    .WithSize(200, 200);
+                    .MoveTo(XLMeasure.Create(50, XLMeasureUnit.Pixels), XLMeasure.Create(50, XLMeasureUnit.Pixels))
+                    .WithSize(XLMeasure.Create(200, XLMeasureUnit.Pixels), XLMeasure.Create(200, XLMeasureUnit.Pixels));
 
                 ws.Cell("D4").Comment.SetVisible().AddText("This is a comment");
 

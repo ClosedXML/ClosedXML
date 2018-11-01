@@ -1,6 +1,5 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
-using System.Drawing;
 using System.IO;
 
 namespace ClosedXML.Excel.Drawings
@@ -15,27 +14,27 @@ namespace ClosedXML.Excel.Drawings
         /// </summary>
         XLPictureFormat Format { get; }
 
-        Int32 Height { get; set; }
+        IXLMeasure Height { get; set; }
 
         Int32 Id { get; }
 
         MemoryStream ImageStream { get; }
 
-        Int32 Left { get; set; }
+        IXLMeasure Left { get; set; }
 
         String Name { get; set; }
 
-        Int32 OriginalHeight { get; }
+        IXLMeasure OriginalHeight { get; }
 
-        Int32 OriginalWidth { get; }
+        IXLMeasure OriginalWidth { get; }
 
         XLPicturePlacement Placement { get; set; }
 
-        Int32 Top { get; set; }
+        IXLMeasure Top { get; set; }
 
         IXLCell TopLeftCell { get; }
 
-        Int32 Width { get; set; }
+        IXLMeasure Width { get; set; }
 
         IXLWorksheet Worksheet { get; }
 
@@ -57,21 +56,17 @@ namespace ClosedXML.Excel.Drawings
         /// <returns>A created copy of the picture.</returns>
         IXLPicture Duplicate();
 
-        Point GetOffset(XLMarkerPosition position);
+        Tuple<IXLMeasure, IXLMeasure> GetOffset(XLMarkerPosition position);
 
-        IXLPicture MoveTo(Int32 left, Int32 top);
+        IXLPicture MoveTo(IXLMeasure left, IXLMeasure top);
 
         IXLPicture MoveTo(IXLCell cell);
 
-        IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset);
-
-        IXLPicture MoveTo(IXLCell cell, Point offset);
+        IXLPicture MoveTo(IXLCell cell, IXLMeasure xOffset, IXLMeasure yOffset);
 
         IXLPicture MoveTo(IXLCell fromCell, IXLCell toCell);
 
-        IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset);
-
-        IXLPicture MoveTo(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset);
+        IXLPicture MoveTo(IXLCell fromCell, IXLMeasure fromCellXOffset, IXLMeasure fromCellYOffset, IXLCell toCell, IXLMeasure toCellXOffset, IXLMeasure toCellYOffset);
 
         IXLPicture Scale(Double factor, Boolean relativeToOriginal = false);
 
@@ -81,6 +76,6 @@ namespace ClosedXML.Excel.Drawings
 
         IXLPicture WithPlacement(XLPicturePlacement value);
 
-        IXLPicture WithSize(Int32 width, Int32 height);
+        IXLPicture WithSize(IXLMeasure width, IXLMeasure height);
     }
 }

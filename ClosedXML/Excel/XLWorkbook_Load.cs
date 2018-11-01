@@ -1132,24 +1132,24 @@ namespace ClosedXML.Excel
                         picture.Placement = XLPicturePlacement.FreeFloating;
 
                         if (spPr?.Transform2D?.Extents?.Cx.HasValue ?? false)
-                            picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
+                            picture.Width = new XLMeasure(spPr.Transform2D.Extents.Cx, XLMeasureUnit.EnglishMetricUnits);
 
                         if (spPr?.Transform2D?.Extents?.Cy.HasValue ?? false)
-                            picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
+                            picture.Height = new XLMeasure(spPr.Transform2D.Extents.Cy, XLMeasureUnit.EnglishMetricUnits);
 
                         if (anchor is Xdr.AbsoluteAnchor)
                         {
                             var absoluteAnchor = anchor as Xdr.AbsoluteAnchor;
                             picture.MoveTo(
-                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, GraphicsUtils.Graphics.DpiX),
-                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, GraphicsUtils.Graphics.DpiY)
+                                new XLMeasure(absoluteAnchor.Position.X.Value, XLMeasureUnit.EnglishMetricUnits),
+                                new XLMeasure(absoluteAnchor.Position.Y.Value, XLMeasureUnit.EnglishMetricUnits)
                             );
                         }
                         else if (anchor is Xdr.OneCellAnchor)
                         {
                             var oneCellAnchor = anchor as Xdr.OneCellAnchor;
                             var from = LoadMarker(ws, oneCellAnchor.FromMarker);
-                            picture.MoveTo(from.Cell, from.Offset);
+                            picture.MoveTo(from.Cell, from.X, from.Y);
                         }
                         else if (anchor is Xdr.TwoCellAnchor)
                         {
@@ -1159,7 +1159,7 @@ namespace ClosedXML.Excel
 
                             if (twoCellAnchor.EditAs == null || !twoCellAnchor.EditAs.HasValue || twoCellAnchor.EditAs.Value == Xdr.EditAsValues.TwoCell)
                             {
-                                picture.MoveTo(from.Cell, from.Offset, to.Cell, to.Offset);
+                                picture.MoveTo(from.Cell, from.X, from.Y, to.Cell, to.X, to.Y);
                             }
                             else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.Absolute)
                             {
@@ -1167,24 +1167,19 @@ namespace ClosedXML.Excel
                                 if (shapeProperties != null)
                                 {
                                     picture.MoveTo(
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.X, GraphicsUtils.Graphics.DpiX),
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.Y, GraphicsUtils.Graphics.DpiY)
+                                        new XLMeasure(spPr.Transform2D.Offset.X, XLMeasureUnit.EnglishMetricUnits),
+                                        new XLMeasure(spPr.Transform2D.Offset.Y, XLMeasureUnit.EnglishMetricUnits)
                                     );
                                 }
                             }
                             else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.OneCell)
                             {
-                                picture.MoveTo(from.Cell, from.Offset);
+                                picture.MoveTo(from.Cell, from.X, from.Y);
                             }
                         }
                     }
                 }
             }
-        }
-
-        private static Int32 ConvertFromEnglishMetricUnits(long emu, float resolution)
-        {
-            return Convert.ToInt32(emu * resolution / 914400);
         }
 
         private static XLMarker LoadMarker(IXLWorksheet ws, Xdr.MarkerType marker)
@@ -1193,10 +1188,8 @@ namespace ClosedXML.Excel
             var column = Math.Min(XLHelper.MaxColumnNumber, Math.Max(1, Convert.ToInt32(marker.ColumnId.InnerText) + 1));
             return new XLMarker(
                 ws.Cell(row, column),
-                new Point(
-                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), GraphicsUtils.Graphics.DpiX),
-                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), GraphicsUtils.Graphics.DpiY)
-                )
+                new XLMeasure(Convert.ToInt64(marker.ColumnOffset.InnerText), XLMeasureUnit.EnglishMetricUnits),
+                new XLMeasure(Convert.ToInt64(marker.RowOffset.InnerText), XLMeasureUnit.EnglishMetricUnits)
             );
         }
 

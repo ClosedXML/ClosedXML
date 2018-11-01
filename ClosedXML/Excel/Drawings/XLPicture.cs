@@ -15,10 +15,10 @@ namespace ClosedXML.Excel.Drawings
     {
         private const String InvalidNameChars = @":\/?*[]";
         private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
-        private Int32 height;
+        private IXLMeasure height;
         private Int32 id;
         private String name = string.Empty;
-        private Int32 width;
+        private IXLMeasure width;
 
         static XLPicture()
         {
@@ -129,7 +129,7 @@ namespace ClosedXML.Excel.Drawings
 
         public XLPictureFormat Format { get; private set; }
 
-        public Int32 Height
+        public IXLMeasure Height
         {
             get { return height; }
             set
@@ -154,15 +154,15 @@ namespace ClosedXML.Excel.Drawings
 
         public MemoryStream ImageStream { get; private set; }
 
-        public Int32 Left
+        public IXLMeasure Left
         {
-            get { return Markers[XLMarkerPosition.TopLeft]?.Offset.X ?? 0; }
+            get { return Markers[XLMarkerPosition.TopLeft]?.X ?? XLMeasure.Zero; }
             set
             {
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the left-hand offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new Point(value, this.Top));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), value, this.Top);
             }
         }
 
@@ -180,21 +180,21 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        public Int32 OriginalHeight { get; private set; }
+        public IXLMeasure OriginalHeight { get; private set; }
 
-        public Int32 OriginalWidth { get; private set; }
+        public IXLMeasure OriginalWidth { get; private set; }
 
         public XLPicturePlacement Placement { get; set; }
 
-        public Int32 Top
+        public IXLMeasure Top
         {
-            get { return Markers[XLMarkerPosition.TopLeft]?.Offset.Y ?? 0; }
+            get { return Markers[XLMarkerPosition.TopLeft]?.Y ?? XLMeasure.Zero; }
             set
             {
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the top offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new Point(this.Left, value));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), this.Left, value);
             }
         }
 
@@ -214,7 +214,7 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        public Int32 Width
+        public IXLMeasure Width
         {
             get { return width; }
             set
@@ -278,12 +278,16 @@ namespace ClosedXML.Excel.Drawings
             return CopyTo(Worksheet);
         }
 
-        public Point GetOffset(XLMarkerPosition position)
+        public Tuple<IXLMeasure, IXLMeasure> GetOffset(XLMarkerPosition position)
         {
-            return Markers[position].Offset;
+            var marker = Markers[position];
+            if (marker == null)
+                throw new NotSupportedException();
+
+            return new Tuple<IXLMeasure, IXLMeasure>(marker.X, marker.Y);
         }
 
-        public IXLPicture MoveTo(Int32 left, Int32 top)
+        public IXLPicture MoveTo(IXLMeasure left, IXLMeasure top)
         {
             this.Placement = XLPicturePlacement.FreeFloating;
             this.Left = left;
@@ -293,44 +297,50 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture MoveTo(IXLCell cell)
         {
-            return MoveTo(cell, 0, 0);
+            return MoveTo(cell, XLMeasure.Zero, XLMeasure.Zero);
         }
 
-        public IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset)
+        public IXLPicture MoveTo(IXLCell cell, IXLMeasure xOffset, IXLMeasure yOffset)
         {
-            return MoveTo(cell, new Point(xOffset, yOffset));
-        }
-
-        public IXLPicture MoveTo(IXLCell cell, Point offset)
-        {
-            if (cell == null) throw new ArgumentNullException(nameof(cell));
             this.Placement = XLPicturePlacement.Move;
             this.TopLeftCell = cell;
-            this.Markers[XLMarkerPosition.TopLeft].Offset = offset;
+            var marker = this.Markers[XLMarkerPosition.TopLeft];
+            marker.X = xOffset;
+            marker.Y = yOffset;
             return this;
         }
 
+        //public IXLPicture MoveTo(IXLCell cell, Point offset)
+        //{
+        //    if (cell == null) throw new ArgumentNullException(nameof(cell));
+        //    return MoveTo(cell, new XLMeasure(offset.X, XLMeasureUnit.Pixels), new XLMeasure(offset.Y, XLMeasureUnit.Pixels));
+        //}
+
         public IXLPicture MoveTo(IXLCell fromCell, IXLCell toCell)
         {
-            return MoveTo(fromCell, 0, 0, toCell, 0, 0);
+            return MoveTo(fromCell, XLMeasure.Zero, XLMeasure.Zero, toCell, XLMeasure.Zero, XLMeasure.Zero);
         }
 
-        public IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset)
-        {
-            return MoveTo(fromCell, new Point(fromCellXOffset, fromCellYOffset), toCell, new Point(toCellXOffset, toCellYOffset));
-        }
+        //public IXLPicture MoveTo(IXLCell fromCell, IXLMeasure fromCellXOffset, IXLMeasure fromCellYOffset, IXLCell toCell, IXLMeasure toCellXOffset, IXLMeasure toCellYOffset)
+        //{
+        //    return MoveTo(fromCell, new Point(fromCellXOffset, fromCellYOffset), toCell, new Point(toCellXOffset, toCellYOffset));
+        //}
 
-        public IXLPicture MoveTo(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset)
+        public IXLPicture MoveTo(IXLCell fromCell, IXLMeasure fromCellXOffset, IXLMeasure fromCellYOffset, IXLCell toCell, IXLMeasure toCellXOffset, IXLMeasure toCellYOffset)
         {
             if (fromCell == null) throw new ArgumentNullException(nameof(fromCell));
             if (toCell == null) throw new ArgumentNullException(nameof(toCell));
             this.Placement = XLPicturePlacement.MoveAndSize;
 
             this.TopLeftCell = fromCell;
-            this.Markers[XLMarkerPosition.TopLeft].Offset = fromOffset;
+            var marker = this.Markers[XLMarkerPosition.TopLeft];
+            marker.X = fromCellXOffset;
+            marker.Y = fromCellYOffset;
 
             this.BottomRightCell = toCell;
-            this.Markers[XLMarkerPosition.BottomRight].Offset = toOffset;
+            marker = this.Markers[XLMarkerPosition.BottomRight];
+            marker.X = toCellXOffset;
+            marker.Y = toCellYOffset;
 
             return this;
         }
@@ -342,13 +352,13 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture ScaleHeight(Double factor, Boolean relativeToOriginal = false)
         {
-            this.Height = Convert.ToInt32((relativeToOriginal ? this.OriginalHeight : this.Height) * factor);
+            this.Height = new XLMeasure((relativeToOriginal ? this.OriginalHeight.Value : this.Height.Value) * factor, this.Height.Unit);
             return this;
         }
 
         public IXLPicture ScaleWidth(Double factor, Boolean relativeToOriginal = false)
         {
-            this.Width = Convert.ToInt32((relativeToOriginal ? this.OriginalWidth : this.Width) * factor);
+            this.Width = new XLMeasure((relativeToOriginal ? this.OriginalWidth.Value : this.Width.Value) * factor, this.Width.Unit);
             return this;
         }
 
@@ -358,7 +368,7 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-        public IXLPicture WithSize(Int32 width, Int32 height)
+        public IXLPicture WithSize(IXLMeasure width, IXLMeasure height)
         {
             this.Width = width;
             this.Height = height;
@@ -388,12 +398,13 @@ namespace ClosedXML.Excel.Drawings
                     break;
 
                 case XLPicturePlacement.Move:
-                    newPicture.MoveTo(targetSheet.Cell(TopLeftCell.Address), GetOffset(XLMarkerPosition.TopLeft));
+                    newPicture.MoveTo(targetSheet.Cell(TopLeftCell.Address), this.Left, this.Top);
                     break;
 
                 case XLPicturePlacement.MoveAndSize:
-                    newPicture.MoveTo(targetSheet.Cell(TopLeftCell.Address), GetOffset(XLMarkerPosition.TopLeft), targetSheet.Cell(BottomRightCell.Address),
-                        GetOffset(XLMarkerPosition.BottomRight));
+                    var offset = GetOffset(XLMarkerPosition.BottomRight);
+                    newPicture.MoveTo(targetSheet.Cell(TopLeftCell.Address), this.Left, this.Top,
+                                      targetSheet.Cell(BottomRightCell.Address), offset.Item1, offset.Item2);
                     break;
             }
 
@@ -438,11 +449,11 @@ namespace ClosedXML.Excel.Drawings
 
         private void DeduceDimensionsFromBitmap(Bitmap bitmap)
         {
-            this.OriginalWidth = bitmap.Width;
-            this.OriginalHeight = bitmap.Height;
+            this.OriginalWidth = new XLMeasure(bitmap.Width, XLMeasureUnit.Pixels);
+            this.OriginalHeight = new XLMeasure(bitmap.Height, XLMeasureUnit.Pixels);
 
-            this.width = bitmap.Width;
-            this.height = bitmap.Height;
+            this.width = OriginalWidth;
+            this.height = OriginalHeight;
         }
     }
 }
