@@ -384,6 +384,19 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void LoadingOptions()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\ExternalLinks\WorkbookWithExternalLink.xlsx")))
+            {
+                Assert.DoesNotThrow(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false }));
+                Assert.Throws<ArgumentOutOfRangeException>(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = true }));
+
+                Assert.AreEqual(XLEventTracking.Disabled, new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Disabled }).EventTracking);
+                Assert.AreEqual(XLEventTracking.Enabled, new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Enabled }).EventTracking);
+            }
+        }
+
+        [Test]
         public void CanLoadWorksheetStyle()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\BaseColumnWidth.xlsx")))

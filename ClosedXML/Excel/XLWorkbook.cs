@@ -727,6 +727,12 @@ namespace ClosedXML.Excel
             Author = Environment.UserName;
         }
 
+        public XLWorkbook(LoadOptions loadOptions)
+            :this(loadOptions.EventTracking)
+        {
+        }
+
+
         /// <summary>
         ///   Opens an existing workbook from a file.
         /// </summary>
@@ -745,11 +751,19 @@ namespace ClosedXML.Excel
             Load(file);
         }
 
+        public XLWorkbook(String file, LoadOptions loadOptions)
+            : this(file, loadOptions.EventTracking)
+        {
+            if (loadOptions.RecalculateAllFormulas)
+                this.RecalculateAllFormulas();
+        }
+
         /// <summary>
         ///   Opens an existing workbook from a stream.
         /// </summary>
         /// <param name = "stream">The stream to open.</param>
-        public XLWorkbook(Stream stream) : this(stream, XLEventTracking.Enabled)
+        public XLWorkbook(Stream stream)
+            : this(stream, XLEventTracking.Enabled)
         {
         }
 
@@ -759,6 +773,13 @@ namespace ClosedXML.Excel
             _loadSource = XLLoadSource.Stream;
             _originalStream = stream;
             Load(stream);
+        }
+
+        public XLWorkbook(Stream stream, LoadOptions loadOptions)
+            : this(stream, loadOptions.EventTracking)
+        {
+            if (loadOptions.RecalculateAllFormulas)
+                this.RecalculateAllFormulas();
         }
 
         #endregion Constructor
