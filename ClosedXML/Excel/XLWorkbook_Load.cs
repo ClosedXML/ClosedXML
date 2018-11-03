@@ -1451,13 +1451,6 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (cell.CellValue != null)
-                {
-#pragma warning disable 618
-                    xlCell.ValueCached = cell.CellValue.Text;
-#pragma warning restore 618
-                    xlCell.SetInternalCellValueString(cell.CellValue.Text);
-                }
             }
             else if (cell.CellFormula != null)
             {
@@ -1508,14 +1501,6 @@ namespace ClosedXML.Excel
                             xlCell.SetDataTypeFast(XLDataType.Text);
                             break;
                     }
-                }
-
-                if (cell.CellValue != null)
-                {
-#pragma warning disable 618
-                    xlCell.ValueCached = cell.CellValue.Text;
-#pragma warning restore 618
-                    xlCell.SetInternalCellValueString(cell.CellValue.Text);
                 }
             }
             else if (cell.DataType != null)
@@ -1605,6 +1590,19 @@ namespace ClosedXML.Excel
                     else
                         xlCell.InnerStyle.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
                 }
+            }
+
+            if (xlCell.HasFormula)
+            {
+                if (cell.CellValue != null)
+                {
+#pragma warning disable 618
+                    xlCell.ValueCached = cell.CellValue.Text;
+#pragma warning restore 618
+                    xlCell.SetInternalCellValueString(cell.CellValue.Text);
+                }
+
+                xlCell.NeedsRecalculation = (xlCell.CachedValue == null);
             }
 
             if (Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)

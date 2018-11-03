@@ -1323,7 +1323,7 @@ namespace ClosedXML.Excel
                 NeedsRecalculation = res;
                 return res;
             }
-            private set
+            internal set
             {
                 _recalculationNeededLastValue = value;
                 NeedsRecalculationEvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;

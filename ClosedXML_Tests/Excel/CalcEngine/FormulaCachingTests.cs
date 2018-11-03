@@ -333,5 +333,28 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(date.ToOADate(), cell.CachedValue);
             }
         }
+
+        [Test]
+        public void CachedValueToExternalWorkbook()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\ExternalLinks\WorkbookWithExternalLink.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                var cell = ws.Cell("B2");
+                Assert.IsFalse(cell.NeedsRecalculation);
+                Assert.IsTrue(cell.HasFormula);
+
+                // This will fail when we start supporting external links
+                Assert.IsTrue(cell.FormulaA1.StartsWith("[1]"));
+
+                Assert.AreEqual("hello world", cell.CachedValue);
+                Assert.AreEqual("hello world", cell.Value);
+
+                Assert.AreEqual(11, ws.Evaluate("LEN(B2)"));
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => wb.RecalculateAllFormulas());
+            }
+        }
     }
 }
