@@ -1,8 +1,9 @@
-﻿using System;
+﻿// Keep this file CodeMaid organised and cleaned
+using System;
 
 namespace ClosedXML.Excel
 {
-    public sealed class SaveOptions
+    public class SaveOptions
     {
         public SaveOptions()
         {
@@ -11,13 +12,10 @@ namespace ClosedXML.Excel
 #else
             this.ValidatePackage = false;
 #endif
-
-            this.EvaluateFormulasBeforeSaving = false;
-            this.GenerateCalculationChain = true;
         }
 
-        public Boolean ValidatePackage;
-        public Boolean EvaluateFormulasBeforeSaving;
-        public Boolean GenerateCalculationChain;
+        public Boolean EvaluateFormulasBeforeSaving { get; set; } = false;
+        public Boolean GenerateCalculationChain { get; set; } = true;
+        public Boolean ValidatePackage { get; set; }
     }
 }
