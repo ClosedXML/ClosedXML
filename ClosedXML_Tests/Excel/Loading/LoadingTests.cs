@@ -374,7 +374,7 @@ namespace ClosedXML_Tests.Excel
                 using (XLWorkbook book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
-                    Assert.IsTrue(ws.Cell("A2").NeedsRecalculation);
+                    Assert.IsFalse(ws.Cell("A2").NeedsRecalculation);
                     Assert.AreEqual(expectedValueCached, ws.Cell("A2").ValueCached);
 
                     if (expectedCachedValue != null)
