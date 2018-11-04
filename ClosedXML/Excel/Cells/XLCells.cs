@@ -93,7 +93,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private IEnumerable<XLCell> GetUsedCellsInRange(XLRangeAddress rangeAddress, XLWorksheet worksheet, List<XLSheetPoint> usedCellsCandidates)
+        private IEnumerable<XLCell> GetUsedCellsInRange(XLRangeAddress rangeAddress, XLWorksheet worksheet, IEnumerable<XLSheetPoint> usedCellsCandidates)
         {
             if (!rangeAddress.IsValid)
                 yield break;

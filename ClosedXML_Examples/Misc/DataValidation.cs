@@ -123,8 +123,8 @@ namespace ClosedXML_Examples.Misc
             ws.CopyTo(ws.Name + " - Copy");
             ws2.CopyTo(ws2.Name + " - Copy");
 
-            wb.AddWorksheet("Copy From Range 1").FirstCell().Value = ws.RangeUsed(true);
-            wb.AddWorksheet("Copy From Range 2").FirstCell().Value = ws2.RangeUsed(true);
+            wb.AddWorksheet("Copy From Range 1").FirstCell().Value = ws.RangeUsed(XLCellsUsedOptions.All);
+            wb.AddWorksheet("Copy From Range 2").FirstCell().Value = ws2.RangeUsed(XLCellsUsedOptions.All);
 
             wb.SaveAs(filePath);
         }

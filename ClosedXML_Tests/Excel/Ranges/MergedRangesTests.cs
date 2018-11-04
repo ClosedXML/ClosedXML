@@ -14,8 +14,8 @@ namespace ClosedXML_Tests
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
             ws.Range("B2:D4").Merge();
 
-            string first = ws.FirstCellUsed(true).Address.ToStringRelative();
-            string last = ws.LastCellUsed(true).Address.ToStringRelative();
+            string first = ws.FirstCellUsed(XLCellsUsedOptions.All).Address.ToStringRelative();
+            string last = ws.LastCellUsed(XLCellsUsedOptions.All).Address.ToStringRelative();
 
             Assert.AreEqual("B2", first);
             Assert.AreEqual("D4", last);

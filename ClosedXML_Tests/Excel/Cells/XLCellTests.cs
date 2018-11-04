@@ -29,7 +29,7 @@ namespace ClosedXML_Tests
             ws.Row(3).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Column(3).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Cell(2, 2).Value = "ASDF";
-            var range = ws.RangeUsed(true).RangeAddress.ToString();
+            var range = ws.RangeUsed(XLCellsUsedOptions.All).RangeAddress.ToString();
             Assert.AreEqual("B2:C3", range);
         }
 
@@ -40,7 +40,7 @@ namespace ClosedXML_Tests
             ws.Row(2).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Column(2).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Cell(3, 3).Value = "ASDF";
-            var range = ws.RangeUsed(true).RangeAddress.ToString();
+            var range = ws.RangeUsed(XLCellsUsedOptions.All).RangeAddress.ToString();
             Assert.AreEqual("B2:C3", range);
         }
 
@@ -48,7 +48,7 @@ namespace ClosedXML_Tests
         public void CellsUsedIncludeStyles3()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var range = ws.RangeUsed(true);
+            var range = ws.RangeUsed(XLCellsUsedOptions.All);
             Assert.AreEqual(null, range);
         }
 
@@ -133,7 +133,7 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
-            bool actual = cell.IsEmpty(true);
+            bool actual = cell.IsEmpty(XLCellsUsedOptions.All);
             bool expected = true;
             Assert.AreEqual(expected, actual);
         }
@@ -155,7 +155,7 @@ namespace ClosedXML_Tests
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
-            bool actual = cell.IsEmpty(false);
+            bool actual = cell.IsEmpty(XLCellsUsedOptions.AllContents);
             bool expected = true;
             Assert.AreEqual(expected, actual);
         }
@@ -166,7 +166,7 @@ namespace ClosedXML_Tests
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
-            bool actual = cell.IsEmpty(true);
+            bool actual = cell.IsEmpty(XLCellsUsedOptions.All);
             bool expected = false;
             Assert.AreEqual(expected, actual);
         }

@@ -909,7 +909,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLRows RowsUsed(Boolean includeFormats = false, Func<IXLRow, Boolean> predicate = null)
+        public IXLRows RowsUsed(Boolean includeFormats, Func<IXLRow, Boolean> predicate = null)
         {
             return RowsUsed(includeFormats
                     ? XLCellsUsedOptions.All
@@ -917,7 +917,7 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        public IXLRows RowsUsed(XLCellsUsedOptions options, Func<IXLRow, Boolean> predicate = null)
+        public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean> predicate = null)
         {
             var rows = new XLRows(Worksheet);
             var rowsUsed = new HashSet<Int32>();
@@ -938,7 +938,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLColumns ColumnsUsed(Boolean includeFormats = false, Func<IXLColumn, Boolean> predicate = null)
+        public IXLColumns ColumnsUsed(Boolean includeFormats, Func<IXLColumn, Boolean> predicate = null)
         {
             return ColumnsUsed(includeFormats
                     ? XLCellsUsedOptions.All
@@ -946,7 +946,7 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        public IXLColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLColumn, Boolean> predicate = null)
+        public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean> predicate = null)
         {
             var columns = new XLColumns(Worksheet);
             var columnsUsed = new HashSet<Int32>();
