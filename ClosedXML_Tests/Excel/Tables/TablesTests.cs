@@ -366,7 +366,7 @@ namespace ClosedXML_Tests.Excel
 
                 Assert.AreEqual("Categories", table.Fields.First().Name);
 
-                Assert.IsTrue(ws.Cell(1, 1).IsEmpty(true));
+                Assert.IsTrue(ws.Cell(1, 1).IsEmpty(XLCellsUsedOptions.All));
                 Assert.AreEqual(null, table.HeadersRow());
                 Assert.AreEqual("A", table.DataRange.FirstRow().Field("Categories").GetString());
                 Assert.AreEqual("C", table.DataRange.LastRow().Field("Categories").GetString());

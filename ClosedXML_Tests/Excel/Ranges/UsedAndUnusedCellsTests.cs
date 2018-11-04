@@ -168,7 +168,10 @@ namespace ClosedXML_Tests.Excel.Ranges
                 }
                 ws.Range("B2:D2").Merge();
 
-                var actual = ws.RangeUsed(includeFormatting).RangeAddress;
+                var options = includeFormatting
+                    ? XLCellsUsedOptions.All
+                    : XLCellsUsedOptions.AllContents;
+                var actual = ws.RangeUsed(options).RangeAddress;
 
                 Assert.AreEqual(expectedRange, actual.ToString());
             }
@@ -188,7 +191,8 @@ namespace ClosedXML_Tests.Excel.Ranges
                 ws.Range("A2:C2").Merge();
                 ws.Range("A3:C3").Merge();
 
-                var actual = ws.LastCellUsed(true, c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
+                var actual = ws.LastCellUsed(XLCellsUsedOptions.All,
+                    c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
 
                 Assert.AreEqual("C2", actual.Address.ToString());
             }
@@ -207,7 +211,8 @@ namespace ClosedXML_Tests.Excel.Ranges
                 ws.Range("A2:C2").Merge();
                 ws.Range("A3:C3").Merge();
 
-                var actual = ws.FirstCellUsed(true, c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
+                var actual = ws.FirstCellUsed(XLCellsUsedOptions.All,
+                    c => c.Style.Fill.BackgroundColor == XLColor.Yellow);
 
                 Assert.AreEqual("A2", actual.Address.ToString());
             }
@@ -216,16 +221,18 @@ namespace ClosedXML_Tests.Excel.Ranges
         [Test]
         public void ApplyingDataValidationMakesCellNotEmpty()
         {
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
-            ws.Range("B2:B12").SetDataValidation()
-                .Decimal.EqualOrGreaterThan(0);
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.Range("B2:B12").SetDataValidation()
+                    .Decimal.EqualOrGreaterThan(0);
 
-            var usedCells = ws.CellsUsed(includeFormats: true).ToList();
+                var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
 
-            Assert.AreEqual(11, usedCells.Count);
-            Assert.AreEqual("B2", usedCells.First().Address.ToString());
-            Assert.AreEqual("B12", usedCells.Last().Address.ToString());
+                Assert.AreEqual(11, usedCells.Count);
+                Assert.AreEqual("B2", usedCells.First().Address.ToString());
+                Assert.AreEqual("B12", usedCells.Last().Address.ToString());
+            }
         }
 
         [Test]
@@ -235,7 +242,7 @@ namespace ClosedXML_Tests.Excel.Ranges
             var ws = wb.Worksheets.Add("Sheet1");
             ws.Range("B2:B12").Merge();
 
-            var usedCells = ws.CellsUsed(includeFormats: true).ToList();
+            var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
 
             Assert.AreEqual(11, usedCells.Count);
             Assert.AreEqual("B2", usedCells.First().Address.ToString());

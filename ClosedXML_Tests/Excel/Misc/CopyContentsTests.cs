@@ -18,7 +18,7 @@ namespace ClosedXML_Tests.Excel.Misc
                 destinationRow.Clear();
 
                 IXLRow originalRow = originalSheet.Row(originalRowNumber);
-                int columnNumber = originalRow.LastCellUsed(true).Address.ColumnNumber;
+                int columnNumber = originalRow.LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
 
                 IXLRange originalRange = originalSheet.Range(originalRowNumber, 1, originalRowNumber, columnNumber);
                 IXLRange destRange = destSheet.Range(destRowNumber, 1, destRowNumber, columnNumber);

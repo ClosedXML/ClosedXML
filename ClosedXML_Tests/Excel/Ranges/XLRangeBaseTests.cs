@@ -25,7 +25,7 @@ namespace ClosedXML_Tests
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty(true);
+            bool actual = range.IsEmpty(XLCellsUsedOptions.All);
             bool expected = true;
             Assert.AreEqual(expected, actual);
         }
@@ -49,7 +49,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty(false);
+            bool actual = range.IsEmpty(XLCellsUsedOptions.AllContents);
             bool expected = true;
             Assert.AreEqual(expected, actual);
         }
@@ -61,7 +61,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty(true);
+            bool actual = range.IsEmpty(XLCellsUsedOptions.All);
             bool expected = false;
             Assert.AreEqual(expected, actual);
         }

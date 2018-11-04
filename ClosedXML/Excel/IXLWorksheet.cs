@@ -430,16 +430,16 @@ namespace ClosedXML.Excel
         IXLAutoFilter AutoFilter { get; }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRows RowsUsed(Boolean includeFormats = false, Func<IXLRow, Boolean> predicate = null);
+        IXLRows RowsUsed(Boolean includeFormats, Func<IXLRow, Boolean> predicate = null);
 
-        IXLRows RowsUsed(XLCellsUsedOptions options, Func<IXLRow, Boolean> predicate = null);
+        IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean> predicate = null);
 
         IXLRows RowsUsed(Func<IXLRow, Boolean> predicate);
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLColumns ColumnsUsed(Boolean includeFormats = false, Func<IXLColumn, Boolean> predicate = null);
+        IXLColumns ColumnsUsed(Boolean includeFormats, Func<IXLColumn, Boolean> predicate = null);
 
-        IXLColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLColumn, Boolean> predicate = null);
+        IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean> predicate = null);
 
         IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate);
 

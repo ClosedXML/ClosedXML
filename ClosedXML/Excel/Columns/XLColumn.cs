@@ -511,14 +511,14 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLRangeColumn ColumnUsed(Boolean includeFormats = false)
+        public IXLRangeColumn ColumnUsed(Boolean includeFormats)
         {
             return ColumnUsed(includeFormats
                 ? XLCellsUsedOptions.All
                 : XLCellsUsedOptions.AllContents);
         }
 
-        public IXLRangeColumn ColumnUsed(XLCellsUsedOptions options)
+        public IXLRangeColumn ColumnUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents)
         {
             return Column((this as IXLRangeBase).FirstCellUsed(options),
                           (this as IXLRangeBase).LastCellUsed(options));

@@ -97,7 +97,7 @@ namespace ClosedXML_Examples.Misc
                 destinationRow.Clear();
 
                 var originalRow = originalSheet.Row(originalRowNumber);
-                int columnNumber = originalRow.LastCellUsed(true).Address.ColumnNumber;
+                int columnNumber = originalRow.LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
 
                 var originalRange = originalSheet.Range(originalRowNumber, 1, originalRowNumber, columnNumber);
                 var destRange = destSheet.Range(destRowNumber, 1, destRowNumber, columnNumber);
