@@ -2425,8 +2425,7 @@ namespace ClosedXML.Excel
             _dataType = source._dataType;
             FormulaR1C1 = source.FormulaR1C1;
             _richText = source._richText == null ? null : new XLRichText(source._richText, source.Style.Font);
-            _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font);
-
+            _comment = source._comment == null ? null : new XLComment(this, source._comment, source.Style.Font, source._comment.Style);
             if (source._hyperlink != null)
             {
                 SettingHyperlink = true;
