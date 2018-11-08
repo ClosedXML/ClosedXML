@@ -1114,12 +1114,17 @@ namespace ClosedXML.Excel
 
             var rangeToReturn = Worksheet.Range(firstRowReturn, firstColumnReturn, lastRowReturn, lastColumnReturn);
 
+            // We deliberately ignore conditional formats and data validation here. Their shifting is handled elsewhere
+            var contentFlags = XLCellsUsedOptions.All
+                & ~XLCellsUsedOptions.ConditionalFormats
+                & ~XLCellsUsedOptions.DataValidation;
+
             if (formatFromLeft && rangeToReturn.RangeAddress.FirstAddress.ColumnNumber > 1)
             {
                 var firstColumnUsed = rangeToReturn.FirstColumn();
                 var model = firstColumnUsed.ColumnLeft();
-                        var modelFirstRow = (model as IXLRangeBase).FirstCellUsed(XLCellsUsedOptions.All);
-                        var modelLastRow = (model as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All);
+                        var modelFirstRow = (model as IXLRangeBase).FirstCellUsed(contentFlags);
+                        var modelLastRow = (model as IXLRangeBase).LastCellUsed(contentFlags);
                 if (modelLastRow != null)
                 {
                     Int32 firstRoReturned = modelFirstRow.Address.RowNumber
@@ -1134,7 +1139,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var lastRoUsed = rangeToReturn.LastRowUsed(XLCellsUsedOptions.All);
+                var lastRoUsed = rangeToReturn.LastRowUsed(contentFlags);
                 if (lastRoUsed != null)
                 {
                     Int32 lastRoReturned = lastRoUsed.RowNumber();
@@ -1326,12 +1331,17 @@ namespace ClosedXML.Excel
 
             var rangeToReturn = Worksheet.Range(firstRowReturn, firstColumnReturn, lastRowReturn, lastColumnReturn);
 
+            // We deliberately ignore conditional formats and data validation here. Their shifting is handled elsewhere
+            var contentFlags = XLCellsUsedOptions.All
+                & ~XLCellsUsedOptions.ConditionalFormats
+                & ~XLCellsUsedOptions.DataValidation;
+
             if (formatFromAbove && rangeToReturn.RangeAddress.FirstAddress.RowNumber > 1)
             {
                 var fr = rangeToReturn.FirstRow();
                 var model = fr.RowAbove();
-                var modelFirstColumn = (model as IXLRangeBase).FirstCellUsed(XLCellsUsedOptions.All);
-                var modelLastColumn = (model as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All);
+                var modelFirstColumn = (model as IXLRangeBase).FirstCellUsed(contentFlags);
+                var modelLastColumn = (model as IXLRangeBase).LastCellUsed(contentFlags);
                 if (modelFirstColumn != null && modelLastColumn != null)
                 {
                     Int32 firstCoReturned = modelFirstColumn.Address.ColumnNumber
@@ -1346,7 +1356,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var lastCoUsed = rangeToReturn.LastColumnUsed(XLCellsUsedOptions.All);
+                var lastCoUsed = rangeToReturn.LastColumnUsed(contentFlags);
                 if (lastCoUsed != null)
                 {
                     Int32 lastCoReturned = lastCoUsed.ColumnNumber();
