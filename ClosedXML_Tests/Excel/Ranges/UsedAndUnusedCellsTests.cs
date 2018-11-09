@@ -238,15 +238,108 @@ namespace ClosedXML_Tests.Excel.Ranges
         [Test]
         public void MergeMakesCellNotEmpty()
         {
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
-            ws.Range("B2:B12").Merge();
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.Range("B2:B12").Merge();
 
-            var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
+                var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
 
-            Assert.AreEqual(11, usedCells.Count);
-            Assert.AreEqual("B2", usedCells.First().Address.ToString());
-            Assert.AreEqual("B12", usedCells.Last().Address.ToString());
+                Assert.AreEqual(11, usedCells.Count);
+                Assert.AreEqual("B2", usedCells.First().Address.ToString());
+                Assert.AreEqual("B12", usedCells.Last().Address.ToString());
+            }
         }
+
+        [Test]
+        public void FirstCellUsedNotHangingOnLargeCFRules()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.AddConditionalFormat().WhenIsBlank().Fill.SetBackgroundColor(XLColor.Gold);
+
+                var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
+
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual("A1", firstCell.Address.ToString());
+            }
+        }
+
+        [Test]
+        public void LastCellUsedNotHangingOnLargeCFRules()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.AddConditionalFormat().WhenIsBlank().Fill.SetBackgroundColor(XLColor.Gold);
+
+                var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
+
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
+            }
+        }
+
+        [Test]
+        public void FirstCellUsedNotHangingOnLargeDVRules()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.SetDataValidation().WholeNumber.GreaterThan(0);
+
+                var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
+
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual("A1", firstCell.Address.ToString());
+            }
+        }
+
+        [Test]
+        public void LastCellUsedNotHangingOnLargeDVRules()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.SetDataValidation().WholeNumber.GreaterThan(0);
+
+                var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
+
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
+            }
+        }
+
+        [Test]
+        public void FirstCellUsedNotHangingOnLargeMergedRanges()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.Merge();
+
+                var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
+
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual("A1", firstCell.Address.ToString());
+            }
+        }
+
+        [Test]
+        public void LastCellUsedNotHangingOnLargeMergedRanges()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.Merge();
+
+                var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
+
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
+            }
+        }
+
     }
 }

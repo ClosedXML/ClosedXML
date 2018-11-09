@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
             {
                 var ws = worksheetGroup.Key;
 
-                var usedCellsCandidates = GetUsedCellsCandidates(ws).ToList();
+                var usedCellsCandidates = GetUsedCellsCandidates(ws);
 
                 var cells = worksheetGroup.SelectMany(addr => GetUsedCellsInRange(addr, ws, usedCellsCandidates))
                     .OrderBy(cell => cell.Address.RowNumber)
@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
         {
             if (!rangeAddress.IsValid)
                 yield break;
-            var normalizedAddress = ((XLRangeAddress)rangeAddress).Normalize();
+            var normalizedAddress = rangeAddress.Normalize();
             var minRow = normalizedAddress.FirstAddress.RowNumber;
             var maxRow = normalizedAddress.LastAddress.RowNumber;
             var minColumn = normalizedAddress.FirstAddress.ColumnNumber;
@@ -128,7 +128,11 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLSheetPoint> GetUsedCellsCandidates(XLWorksheet worksheet)
         {
-            var candidates = worksheet.Internals.MergedRanges.SelectMany(r => GetAllCellsInRange(r.RangeAddress));
+            var candidates = Enumerable.Empty<XLSheetPoint>();
+
+            if (_options.HasFlag(XLCellsUsedOptions.MergedRanges))
+                candidates = candidates.Union(
+                    worksheet.Internals.MergedRanges.SelectMany(r => GetAllCellsInRange(r.RangeAddress)));
 
             if (_options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
                 candidates = candidates.Union(
