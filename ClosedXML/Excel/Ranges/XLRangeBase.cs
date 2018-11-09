@@ -643,13 +643,56 @@ namespace ClosedXML.Excel
 
         internal XLCell FirstCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate)
         {
-            var cellsUsed = CellsUsed(options, predicate).ToList();
+            predicate = predicate ?? (t => true);
+
+            //To avoid unnecessary initialization of thousands cells
+            var opt = options
+                      & ~XLCellsUsedOptions.ConditionalFormats
+                      & ~XLCellsUsedOptions.DataValidation
+                      & ~XLCellsUsedOptions.MergedRanges;
+
+            IEnumerable<IXLCell> cellsUsed = CellsUsed(opt, predicate);
+
+            if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.ConditionalFormats
+                        .SelectMany(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
+                        .Select(r => r.FirstCell())
+                        .Where(predicate)
+                );
+            }
+            if (options.HasFlag(XLCellsUsedOptions.DataValidation))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.DataValidations
+                        .SelectMany(dv => dv.Ranges.GetIntersectedRanges(RangeAddress))
+                        .Select(r => r.FirstCell())
+                        .Where(predicate)
+                );
+            }
+            if (options.HasFlag(XLCellsUsedOptions.MergedRanges))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
+                        .Select(r => r.FirstCell())
+                        .Where(predicate)
+                );
+            }
+
+            cellsUsed = cellsUsed.ToList();
 
             if (!cellsUsed.Any())
                 return null;
 
             var firstRow = cellsUsed.Min(c => c.Address.RowNumber);
             var firstColumn = cellsUsed.Min(c => c.Address.ColumnNumber);
+
+            if (firstRow < RangeAddress.FirstAddress.RowNumber)
+                firstRow = RangeAddress.FirstAddress.RowNumber;
+
+            if (firstColumn < RangeAddress.FirstAddress.ColumnNumber)
+                firstColumn = RangeAddress.FirstAddress.ColumnNumber;
 
             return Worksheet.Cell(firstRow, firstColumn);
         }
@@ -681,13 +724,56 @@ namespace ClosedXML.Excel
 
         internal XLCell LastCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate)
         {
-            var cellsUsed = CellsUsed(options, predicate).ToList();
+            predicate = predicate ?? (t => true);
+
+            //To avoid unnecessary initialization of thousands cells
+            var opt = options
+                      & ~XLCellsUsedOptions.ConditionalFormats
+                      & ~XLCellsUsedOptions.DataValidation
+                      & ~XLCellsUsedOptions.MergedRanges;
+
+            IEnumerable<IXLCell> cellsUsed = CellsUsed(opt, predicate);
+
+            if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.ConditionalFormats
+                        .SelectMany(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
+                        .Select(r => r.LastCell())
+                        .Where(predicate)
+                );
+            }
+            if (options.HasFlag(XLCellsUsedOptions.DataValidation))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.DataValidations
+                        .SelectMany(dv => dv.Ranges.GetIntersectedRanges(RangeAddress))
+                        .Select(r => r.LastCell())
+                        .Where(predicate)
+                );
+            }
+            if (options.HasFlag(XLCellsUsedOptions.MergedRanges))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
+                        .Select(r => r.LastCell())
+                        .Where(predicate)
+                );
+            }
+
+            cellsUsed = cellsUsed.ToList();
 
             if (!cellsUsed.Any())
                 return null;
 
             var lastRow = cellsUsed.Max(c => c.Address.RowNumber);
             var lastColumn = cellsUsed.Max(c => c.Address.ColumnNumber);
+
+            if (lastRow > RangeAddress.LastAddress.RowNumber)
+                lastRow = RangeAddress.LastAddress.RowNumber;
+
+            if (lastColumn > RangeAddress.LastAddress.ColumnNumber)
+                lastColumn = RangeAddress.LastAddress.ColumnNumber;
 
             return Worksheet.Cell(lastRow, lastColumn);
         }
