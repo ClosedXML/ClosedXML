@@ -372,6 +372,8 @@ namespace ClosedXML_Tests
         [Test]
         public void TryGetValue_decimal_Good2()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("1.60000001869776E-06");
             bool success = cell.TryGetValue(out decimal outValue);
