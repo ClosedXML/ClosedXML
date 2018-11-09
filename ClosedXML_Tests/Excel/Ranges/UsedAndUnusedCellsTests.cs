@@ -335,7 +335,7 @@ namespace ClosedXML_Tests.Excel.Ranges
 
                 var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
 
-                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                Assert.AreEqual(2, (ws as XLWorksheet).Internals.CellsCollection.Count);
                 Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
             }
         }
