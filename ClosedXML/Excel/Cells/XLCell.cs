@@ -1195,6 +1195,11 @@ namespace ClosedXML.Excel
                     var validation = NewDataValidation;
                     Worksheet.DataValidations.Delete(validation);
                 }
+
+                if (clearOptions.HasFlag(XLClearOptions.MergedRanges) && IsMerged())
+                {
+                    ClearMerged();
+                }
             }
 
             return this;

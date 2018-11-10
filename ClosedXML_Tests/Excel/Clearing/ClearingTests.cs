@@ -283,5 +283,27 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
+        [TestCase(XLClearOptions.All, 2)]
+        [TestCase(XLClearOptions.AllContents, 4)]
+        [TestCase(XLClearOptions.AllFormats, 4)]
+        [TestCase(XLClearOptions.Contents, 4)]
+        [TestCase(XLClearOptions.MergedRanges, 2)]
+        public void CanClearMergedRanges(XLClearOptions options, int expectedCount)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Test");
+
+                ws.Range("A1:C3").Merge();
+                ws.Range("A4:B6").Merge();
+                ws.Range("D1:F3").Merge();
+                ws.Range("E4:F6").Merge();
+
+                ws.Range("C1:D6").Clear(options);
+
+                Assert.AreEqual(expectedCount, ws.MergedRanges.Count);
+            }
+        }
     }
 }
