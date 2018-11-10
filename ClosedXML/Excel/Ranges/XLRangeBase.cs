@@ -357,8 +357,10 @@ namespace ClosedXML.Excel
             var firstCell = FirstCell();
             var firstCellStyle = (firstCell.Style as XLStyle).Key;
             var defaultStyle = XLStyle.Default.Key;
-            var cellsUsed = CellsUsed(XLCellsUsedOptions.All, c => c != firstCell);
-            cellsUsed.ForEach(c => c.Clear(XLClearOptions.All & ~XLClearOptions.NormalFormats));
+            var cellsUsed = CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c != firstCell);
+            cellsUsed.ForEach(c => c.Clear(XLClearOptions.All
+                                        & ~XLClearOptions.MergedRanges
+                                        & ~XLClearOptions.NormalFormats));
 
             if (firstCellStyle.Alignment != defaultStyle.Alignment)
                 asRange.Style.Alignment = firstCell.Style.Alignment;
@@ -409,18 +411,29 @@ namespace ClosedXML.Excel
 
         public IXLRangeBase Clear(XLClearOptions clearOptions = XLClearOptions.All)
         {
-            var options = clearOptions.ToCellsUsedOptions();
-            foreach (var cell in CellsUsed(options))
+            var cellClearOptions = clearOptions
+                    & ~XLClearOptions.ConditionalFormats
+                    & ~XLClearOptions.DataValidation
+                    & ~XLClearOptions.MergedRanges;
+            var cellUsedOptions = cellClearOptions.ToCellsUsedOptions();
+            foreach (var cell in CellsUsed(cellUsedOptions))
             {
-                // We'll clear the conditional formatting later down.
-                (cell as XLCell).Clear(clearOptions & ~XLClearOptions.ConditionalFormats, true);
+                // We'll clear the conditional formatting, data validations
+                // and merged ranges later down.
+                (cell as XLCell).Clear(cellClearOptions, true);
             }
-
-            if (clearOptions.HasFlag(XLClearOptions.NormalFormats))
-                ClearMerged();
 
             if (clearOptions.HasFlag(XLClearOptions.ConditionalFormats))
                 RemoveConditionalFormatting();
+
+            if (clearOptions.HasFlag(XLClearOptions.DataValidation))
+            {
+                var validation = NewDataValidation;
+                Worksheet.DataValidations.Delete(validation);
+            }
+
+            if (clearOptions.HasFlag(XLClearOptions.MergedRanges))
+                ClearMerged();
 
             if (clearOptions == XLClearOptions.All)
             {
