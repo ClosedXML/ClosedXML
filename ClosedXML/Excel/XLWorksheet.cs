@@ -1643,7 +1643,19 @@ namespace ClosedXML.Excel
             EventTrackingEnabled = _eventTracking;
         }
 
-        public IXLRanges SelectedRanges { get; internal set; }
+        private IXLRanges _selectedRanges;
+        public IXLRanges SelectedRanges
+        {
+            get
+            {
+                _selectedRanges?.RemoveAll(r => !r.RangeAddress.IsValid);
+                return _selectedRanges;
+            }
+            internal set
+            {
+                _selectedRanges = value;
+            }
+        }
 
         public IXLCell ActiveCell { get; set; }
 
