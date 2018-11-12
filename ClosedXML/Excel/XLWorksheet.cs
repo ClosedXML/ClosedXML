@@ -884,7 +884,11 @@ namespace ClosedXML.Excel
             var retVal = new XLRanges();
             foreach (string rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
             {
-                if (XLHelper.IsValidRangeAddress(rangeAddressStr))
+                if (rangeAddressStr.StartsWith("#REF!"))
+                {
+                    continue;
+                }
+                else if (XLHelper.IsValidRangeAddress(rangeAddressStr))
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
@@ -1643,7 +1647,19 @@ namespace ClosedXML.Excel
             EventTrackingEnabled = _eventTracking;
         }
 
-        public IXLRanges SelectedRanges { get; internal set; }
+        private IXLRanges _selectedRanges;
+        public IXLRanges SelectedRanges
+        {
+            get
+            {
+                _selectedRanges?.RemoveAll(r => !r.RangeAddress.IsValid);
+                return _selectedRanges;
+            }
+            internal set
+            {
+                _selectedRanges = value;
+            }
+        }
 
         public IXLCell ActiveCell { get; set; }
 

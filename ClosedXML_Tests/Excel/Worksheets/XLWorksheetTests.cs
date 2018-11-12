@@ -864,5 +864,25 @@ namespace ClosedXML_Tests
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.Column(XLHelper.MaxColumnNumber + 1));
             }
         }
+
+        [Test]
+        public void InvalidSelectedRangeExcluded()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                var range1 = ws.Range("B2:C2");
+                var range2 = ws.Range("B4:C4");
+                ws.SelectedRanges.Clear();
+
+                ws.SelectedRanges.Add(range1);
+                ws.SelectedRanges.Add(range2);
+
+                ws.Row(4).Delete();
+
+                Assert.IsFalse(range2.RangeAddress.IsValid);
+                Assert.AreEqual(range1, ws.SelectedRanges.Single());
+            }
+        }
     }
 }
