@@ -19,6 +19,8 @@ To install ClosedXML, run the following command in the Package Manager Console
 PM> Install-Package ClosedXML
 ```
 
+We have a lot of people saying issue x isn't fixed in nuget version y. Pay attention to the tags. Just because an issue was resolved and has a merged pull request doesnt mean it was released to nuget yet. 
+
 ### What can you do with this?
 
 ClosedXML allows you to create Excel files without the Excel application. The typical example is creating Excel reports on a web server.
