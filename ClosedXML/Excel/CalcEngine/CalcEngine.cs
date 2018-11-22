@@ -524,8 +524,8 @@ namespace ClosedXML.Excel.CalcEngine
             // operators
             // this gets called a lot, so it's pretty optimized.
             // note that operators must start with non-letter/digit characters.
-            var isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-            var isDigit = c >= '0' && c <= '9';
+            var isLetter = char.IsLetter(c);
+            var isDigit = char.IsDigit(c);
 
             var isEnclosed = matchingClosingSymbols.Keys.Contains(c);
             char matchingClosingSymbol = '\0';
@@ -535,8 +535,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (!isLetter && !isDigit && !isEnclosed)
             {
                 // if this is a number starting with a decimal, don't parse as operator
-                var nxt = _ptr + 1 < _len ? _expr[_ptr + 1] : 0;
-                bool isNumber = c == _decimal && nxt >= '0' && nxt <= '9';
+                var nxt = _ptr + 1 < _len ? _expr[_ptr + 1] : '0';
+                bool isNumber = c == _decimal && char.IsDigit(nxt);
                 if (!isNumber)
                 {
                     // look up localized list separator
@@ -581,7 +581,7 @@ namespace ClosedXML.Excel.CalcEngine
                     c = _expr[_ptr + i];
 
                     // digits always OK
-                    if (c >= '0' && c <= '9')
+                    if (char.IsDigit(c))
                     {
                         val = val * 10 + (c - '0');
                         if (div > -1)
@@ -694,8 +694,8 @@ namespace ClosedXML.Excel.CalcEngine
             for (i = 1; i + _ptr < _len; i++)
             {
                 c = _expr[_ptr + i];
-                isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-                isDigit = c >= '0' && c <= '9';
+                isLetter = char.IsLetter(c);
+                isDigit = char.IsDigit(c);
 
                 if (isEnclosed && c == matchingClosingSymbol)
                 {
@@ -704,8 +704,8 @@ namespace ClosedXML.Excel.CalcEngine
 
                     i++;
                     c = _expr[_ptr + i];
-                    isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-                    isDigit = c >= '0' && c <= '9';
+                    isLetter = char.IsLetter(c);
+                    isDigit = char.IsDigit(c);
                 }
 
                 var disallowedSymbols = new List<char>() { '\\', '/', '*', '[', ':', '?' };
