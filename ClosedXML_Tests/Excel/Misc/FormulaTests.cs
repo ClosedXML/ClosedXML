@@ -186,5 +186,25 @@ namespace ClosedXML_Tests.Excel
             Assert.Throws<NullValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#NULL!)"));
             Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("YEAR(#NUM!)"));
         }
+
+        [Test]
+        public void UnicodeLetterParsing()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet("Sheet C CÄ");
+                var ws2 = wb.AddWorksheet("ÖC");
+                var ws3 = wb.AddWorksheet("Sheet3");
+
+                ws1.FirstCell().SetValue(100);
+                ws2.FirstCell().SetValue(50);
+
+                ws3.FirstCell().FormulaA1 = "='Sheet C CÄ'!A1";
+                ws3.FirstCell().CellBelow().FormulaA1 = "ÖC!A1";
+
+                Assert.AreEqual(100, ws3.FirstCell().Value);
+                Assert.AreEqual(50, ws3.FirstCell().CellBelow().Value);
+            }
+        }
     }
 }
