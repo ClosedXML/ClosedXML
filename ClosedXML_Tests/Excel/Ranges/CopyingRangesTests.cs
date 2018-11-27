@@ -100,7 +100,41 @@ namespace ClosedXML_Tests
             Assert.AreEqual(2, ws.ConditionalFormats.Count());
             Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B1:B3").Values.Any(v => v.Value.Value == "G1" && v.Value.IsFormula));
             Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "C5:C5").Values.Any(v => v.Value.Value == "H5" && v.Value.IsFormula));
-    }
+        }
+
+        [Test]
+        public void CopyingConditionalFormatsDifferentWorksheets()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            var format = ws1.Range("A1:J2").AddConditionalFormat();
+
+            var address = format.Ranges
+                        .First()
+                        .FirstCell()
+                        .CellRight(4)
+                        .Address
+                        .ToStringRelative();
+
+            format.WhenEquals("=" + address)
+                .Fill
+                .SetBackgroundColor(XLColor.Blue);
+
+            var ws2 = wb.Worksheets.Add("Sheet2");
+
+            ws2.FirstCell().Value = ws1.Range("B1:B4");
+
+            Assert.AreEqual(1, ws2.ConditionalFormats.Count());
+            Assert.IsTrue(ws2.ConditionalFormats.All(x => x.Ranges.All(s => s.Worksheet == ws2)), "A conditional format was created for another worksheet.");
+            Assert.IsTrue(ws2.ConditionalFormats
+                .Single(x => x.Range.RangeAddress.ToStringRelative() == "A1:A2")
+                .Values.Any(v => v.Value.Value == "E1" && v.Value.IsFormula), "The formula has not been transferred correctly.");
+
+            Assert.AreEqual("Sheet1", ws1.ConditionalFormats.First().Ranges.First().Worksheet.Name);
+            Assert.AreEqual("Sheet2", ws2.ConditionalFormats.First().Ranges.First().Worksheet.Name);
+            Assert.AreEqual("A1:J2", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+            Assert.AreEqual("A1:A2", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+        }
 
         private static void FillRow(IXLRow row1)
         {
