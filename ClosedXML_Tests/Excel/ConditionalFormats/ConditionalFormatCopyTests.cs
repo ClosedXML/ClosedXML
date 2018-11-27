@@ -57,7 +57,7 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
         }
 
         [Test]
-        public void CopyConditionalFormatDiferentWorksheets()
+        public void CopyConditionalFormatsDifferentWorksheets()
         {
             var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
@@ -73,6 +73,8 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             Assert.AreEqual(1, ws2.ConditionalFormats.Count());
             Assert.AreEqual(1, ws1.ConditionalFormats.First().Ranges.Count);
             Assert.AreEqual(1, ws2.ConditionalFormats.First().Ranges.Count);
+            Assert.AreEqual("Sheet1", ws1.ConditionalFormats.First().Ranges.First().Worksheet.Name);
+            Assert.AreEqual("Sheet2", ws2.ConditionalFormats.First().Ranges.First().Worksheet.Name);
             Assert.AreEqual("A1:A1", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
             Assert.AreEqual("B2:B2", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
         }
