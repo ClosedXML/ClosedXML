@@ -403,15 +403,22 @@ namespace ClosedXML.Excel
 
         public IXLRow CopyTo(IXLRow row)
         {
+            var newRow = CopyStyleTo(row);
+
+            AsRange().CopyTo(row);
+
+            return newRow;
+        }
+
+        internal IXLRow CopyStyleTo(IXLRow row)
+        {
             row.Clear();
             var newRow = (XLRow)row;
             newRow._height = _height;
             newRow.HeightChanged = HeightChanged;
             newRow.InnerStyle = GetStyle();
             newRow.IsHidden = IsHidden;
-
-            AsRange().CopyTo(row);
-
+            
             return newRow;
         }
 
