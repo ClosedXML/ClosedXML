@@ -465,13 +465,20 @@ namespace ClosedXML.Excel
 
         public IXLColumn CopyTo(IXLColumn column)
         {
+            var newColumn = CopyStyleTo(column);
+
+            AsRange().CopyTo(column);
+
+            return newColumn;
+        }
+
+        internal IXLColumn CopyStyleTo(IXLColumn column)
+        {
             column.Clear();
             var newColumn = (XLColumn)column;
             newColumn.Width = Width;
             newColumn.InnerStyle = InnerStyle;
             newColumn.IsHidden = IsHidden;
-
-            AsRange().CopyTo(column);
 
             return newColumn;
         }
