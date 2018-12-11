@@ -94,7 +94,10 @@ namespace ClosedXML.Excel
                 item.Ranges.RemoveAll();
                 consRanges.ForEach(r => item.Ranges.Add(r));
 
-                var targetCell = item.Ranges.First().FirstCell() as XLCell;
+                var targetCell = item.Ranges
+                    .OrderBy(r => r.RangeAddress.FirstAddress.RowNumber)
+                    .ThenBy(r => r.RangeAddress.FirstAddress.ColumnNumber)
+                    .First().FirstCell() as XLCell;
                 (item as XLConditionalFormat).AdjustFormulas(baseCell, targetCell);
 
                 _conditionalFormats.Add(item);
