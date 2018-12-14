@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -116,6 +117,31 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
             Assert.AreEqual(Guid.NewGuid().ToString().Length, ws.FirstCell().GetString().Length);
+        }
+
+        [Test]
+        public void InsertData_with_Nulls()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+
+            var table = new DataTable();
+            table.TableName = "Patients";
+            table.Columns.Add("Dosage", typeof(int));
+            table.Columns.Add("Drug", typeof(string));
+            table.Columns.Add("Patient", typeof(string));
+            table.Columns.Add("Date", typeof(DateTime));
+
+            table.Rows.Add(25, "Indocin", "David", new DateTime(2000, 1, 1));
+            table.Rows.Add(50, "Enebrel", "Sam", new DateTime(2000, 1, 2));
+            table.Rows.Add(10, "Hydralazine", "Christoff", new DateTime(2000, 1, 3));
+            table.Rows.Add(21, "Combivent", DBNull.Value, new DateTime(2000, 1, 4));
+            table.Rows.Add(100, "Dilantin", "Melanie", DBNull.Value);
+
+            ws.FirstCell().InsertData(table);
+
+            Assert.AreEqual(25, ws.Cell("A1").Value);
+            Assert.AreEqual("", ws.Cell("C4").Value);
+            Assert.AreEqual("", ws.Cell("D5").Value);
         }
 
         [Test]
