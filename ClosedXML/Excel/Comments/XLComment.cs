@@ -155,32 +155,7 @@ namespace ClosedXML.Excel
 
         private void Initialize(XLCell cell)
         {
-            var style = new XLDrawingStyle();
-
-            style
-                .Margins.SetLeft(0.1)
-                .Margins.SetRight(0.1)
-                .Margins.SetTop(0.05)
-                .Margins.SetBottom(0.05)
-                .Margins.SetAutomatic()
-                .Size.SetHeight(59.25)
-                .Size.SetWidth(19.2)
-                .ColorsAndLines.SetLineColor(XLColor.Black)
-                .ColorsAndLines.SetFillColor(XLColor.FromArgb(255, 255, 225))
-                .ColorsAndLines.SetLineDash(XLDashStyle.Solid)
-                .ColorsAndLines.SetLineStyle(XLLineStyle.Single)
-                .ColorsAndLines.SetLineWeight(0.75)
-                .ColorsAndLines.SetFillTransparency(1)
-                .ColorsAndLines.SetLineTransparency(1)
-                .Alignment.SetHorizontal(XLDrawingHorizontalAlignment.Left)
-                .Alignment.SetVertical(XLDrawingVerticalAlignment.Top)
-                .Alignment.SetDirection(XLDrawingTextDirection.Context)
-                .Alignment.SetOrientation(XLDrawingTextOrientation.LeftToRight)
-                .Properties.SetPositioning(XLDrawingAnchor.Absolute)
-                .Protection.SetLocked()
-                .Protection.SetLockText();
-
-            Initialize(cell, style);
+            Initialize(cell, XLDrawingStyle.DefaultCommentStyle);
         }
 
         private void Initialize(XLCell cell, IXLDrawingStyle style)
