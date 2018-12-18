@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using System;
 using System.Data;
+using System.Linq;
 
 namespace ClosedXML_Examples.Misc
 {
@@ -14,6 +15,9 @@ namespace ClosedXML_Examples.Misc
 
             // Add all DataTables in the DataSet as a worksheets
             wb.Worksheets.Add(dataSet);
+
+            foreach (var ws in wb.Worksheets)
+                ws.Columns().AdjustToContents();
 
             wb.SaveAs(filePath);
         }
