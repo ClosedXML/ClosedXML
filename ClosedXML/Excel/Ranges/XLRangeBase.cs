@@ -940,6 +940,12 @@ namespace ClosedXML.Excel
 
         private XLRange GetRange(XLAddress newFirstCellAddress, XLAddress newLastCellAddress)
         {
+            if (!this.Worksheet.Equals(newFirstCellAddress.Worksheet))
+                throw new ArgumentException("The address refers to a different worksheet.", nameof(newFirstCellAddress));
+
+            if (!this.Worksheet.Equals(newLastCellAddress.Worksheet))
+                throw new ArgumentException("The address refers to a different worksheet.", nameof(newLastCellAddress));
+
             var newRangeAddress = new XLRangeAddress(newFirstCellAddress, newLastCellAddress);
             var xlRangeParameters = new XLRangeParameters(newRangeAddress, Style);
             if (

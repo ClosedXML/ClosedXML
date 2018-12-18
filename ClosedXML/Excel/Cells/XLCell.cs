@@ -2090,7 +2090,7 @@ namespace ClosedXML.Excel
 
         private static IXLRange Relative(IXLRangeBase range, IXLRangeBase baseRange, IXLRangeBase targetBase)
         {
-            var sheet = (XLWorksheet)range.Worksheet;
+            var sheet = (XLWorksheet)targetBase.Worksheet;
             var xlRangeAddress = new XLRangeAddress(
                 new XLAddress(sheet,
                     range.RangeAddress.FirstAddress.RowNumber - baseRange.RangeAddress.FirstAddress.RowNumber + 1,
