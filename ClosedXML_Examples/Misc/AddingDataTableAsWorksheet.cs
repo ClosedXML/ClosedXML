@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Linq;
 using ClosedXML.Excel;
 
 namespace ClosedXML_Examples.Misc
@@ -48,6 +49,7 @@ namespace ClosedXML_Examples.Misc
 
             // Add a DataTable as a worksheet
             wb.Worksheets.Add(dataTable);
+            wb.Worksheets.First().Columns().AdjustToContents();
 
             wb.SaveAs(filePath);
         }

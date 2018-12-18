@@ -167,7 +167,6 @@ namespace ClosedXML.Excel
         {
             var ws = Add(sheetName);
             ws.Cell(1, 1).InsertTable(dataTable);
-            ws.Columns().AdjustToContents(1, 75);
             return ws;
         }
 
