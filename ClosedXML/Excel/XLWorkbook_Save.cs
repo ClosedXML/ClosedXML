@@ -932,15 +932,16 @@ namespace ClosedXML.Excel
 
             var newStrings = new Dictionary<String, Int32>();
             var newRichStrings = new Dictionary<IXLRichText, Int32>();
-            foreach (
-                var c in
-                    Worksheets.Cast<XLWorksheet>().SelectMany(
-                        w =>
-                            w.Internals.CellsCollection.GetCells(
-                                c => ((c.DataType == XLDataType.Text && c.ShareString) || c.HasRichText)
-                                     && (c as XLCell).InnerText.Length > 0
-                                     && String.IsNullOrWhiteSpace(c.FormulaA1)
-                                )))
+
+            bool hasSharedString(IXLCell c)
+            {
+                if (c.DataType == XLDataType.Text && c.ShareString || c.HasRichText)
+                    return c.Style.IncludeQuotePrefix || String.IsNullOrWhiteSpace(c.FormulaA1) && (c as XLCell).InnerText.Length > 0;
+                else
+                    return false;
+            }
+
+            foreach (var c in Worksheets.Cast<XLWorksheet>().SelectMany(w => w.Internals.CellsCollection.GetCells(hasSharedString)))
             {
                 c.DataType = XLDataType.Text;
                 if (c.HasRichText)
@@ -5616,7 +5617,7 @@ namespace ClosedXML.Excel
             var dataType = xlCell.DataType;
             if (dataType == XLDataType.Text)
             {
-                if (xlCell.InnerText.Length == 0)
+                if (!xlCell.Style.IncludeQuotePrefix && xlCell.InnerText.Length == 0)
                     openXmlCell.CellValue = null;
                 else
                 {

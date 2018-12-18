@@ -1449,6 +1449,9 @@ namespace ClosedXML.Excel
 
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats))
             {
+                if (Style.IncludeQuotePrefix)
+                    return false;
+
                 if (!StyleValue.Equals(Worksheet.StyleValue))
                     return false;
 
