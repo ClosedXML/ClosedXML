@@ -254,6 +254,12 @@ namespace ClosedXML.Excel
 
                 parsed = true;
             }
+            else if (value.Equals(DBNull.Value))
+            {
+                parsedValue = "";
+                _dataType = XLDataType.Text;
+                parsed = true;
+            }
             else if (value is DateTime d && d >= BaseDate)
             {
                 parsedValue = d.ToOADate().ToInvariantString();
