@@ -73,7 +73,7 @@ namespace ClosedXML.Excel
         private XLRichText _richText;
 
         public bool SettingHyperlink;
-        public int SharedStringId;
+        internal int SharedStringId { get; set; }
         private string _formulaA1;
         private string _formulaR1C1;
 
