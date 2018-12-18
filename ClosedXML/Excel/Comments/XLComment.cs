@@ -58,20 +58,7 @@ namespace ClosedXML.Excel
         public Int32 ExtentLength { get; set; }
         public Int32 ExtentWidth { get; set; }
         public Int32 ShapeId { get; internal set; }
-
-        private Boolean _visible;
-
-        public Boolean Visible
-        {
-            get
-            {
-                return _visible;
-            }
-            set
-            {
-                _visible = value;
-            }
-        }
+        public Boolean Visible { get; set; }
 
         public IXLComment SetVisible()
         {
