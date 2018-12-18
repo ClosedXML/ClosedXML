@@ -1532,9 +1532,12 @@ namespace ClosedXML.Excel
                 {
                     xlCell.SetDataTypeFast(XLDataType.Text);
 
-                    if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
+                    if (cell.CellValue != null
+                        && Int32.TryParse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out Int32 sharedStringId)
+                        && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
                     {
-                        var sharedString = sharedStrings[Int32.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture)];
+                        xlCell.SharedStringId = sharedStringId;
+                        var sharedString = sharedStrings[sharedStringId];
                         ParseCellValue(sharedString, xlCell);
                     }
                     else
