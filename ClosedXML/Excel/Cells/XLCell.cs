@@ -260,6 +260,11 @@ namespace ClosedXML.Excel
                 parsed = true;
                 SetDateTimeFormat(style, d.Date == d);
             }
+            else if (value is DateTime e)
+            {
+                parsedValue = e.ToInvariantString();
+                parsed = true;
+            }
             else if (value is TimeSpan ts)
             {
                 parsedValue = ts.TotalDays.ToInvariantString();
@@ -1437,7 +1442,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
-        { 
+        {
             if (InnerText.Length > 0)
                 return false;
 
