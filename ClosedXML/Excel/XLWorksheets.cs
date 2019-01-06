@@ -10,13 +10,9 @@ namespace ClosedXML.Excel
 {
     internal class XLWorksheets : IXLWorksheets, IEnumerable<XLWorksheet>
     {
-        #region Constructor
-
         private readonly XLWorkbook _workbook;
         private readonly Dictionary<String, XLWorksheet> _worksheets = new Dictionary<String, XLWorksheet>(StringComparer.OrdinalIgnoreCase);
         internal ICollection<String> Deleted { get; private set; }
-
-        #endregion Constructor
 
         #region Constructor
 
@@ -87,6 +83,16 @@ namespace ClosedXML.Excel
             }
 
             return _worksheets.Values.Single(w => w.Position == position);
+        }
+
+        public IXLWorksheet Add()
+        {
+            return Add(GetNextWorksheetName());
+        }
+
+        public IXLWorksheet Add(Int32 position)
+        {
+            return Add(GetNextWorksheetName(), position);
         }
 
         public IXLWorksheet Add(String sheetName)
@@ -185,5 +191,21 @@ namespace ClosedXML.Excel
             _worksheets.Remove(oldSheetName);
             Add(newSheetName, ws);
         }
+
+        #region Private members
+
+        private String GetNextWorksheetName()
+        {
+            var worksheetNumber = this.Count + 1;
+            var sheetName = $"Sheet{worksheetNumber}";
+            while (_worksheets.Values.Any(p => p.Name.Equals(sheetName, StringComparison.OrdinalIgnoreCase)))
+            {
+                worksheetNumber++;
+                sheetName = $"Sheet{worksheetNumber}";
+            }
+            return sheetName;
+        }
+
+        #endregion Private members
     }
 }
