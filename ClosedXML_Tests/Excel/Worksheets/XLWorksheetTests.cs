@@ -109,6 +109,28 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void InsertingSheets4()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add();
+
+            Assert.AreEqual("Sheet1", ws1.Name);
+            ws1.Name = "shEEt1";
+
+            var ws2 = wb.Worksheets.Add();
+            Assert.AreEqual("Sheet2", ws2.Name);
+
+            wb.Worksheets.Add("SHEET4");
+
+            Assert.AreEqual("Sheet5", wb.Worksheets.Add().Name);
+            Assert.AreEqual("Sheet6", wb.Worksheets.Add().Name);
+
+            wb.Worksheets.Add(1);
+
+            Assert.AreEqual("Sheet7", wb.Worksheet(1).Name);
+        }
+
+        [Test]
         public void AddingDuplicateSheetNameThrowsException()
         {
             using (var wb = new XLWorkbook())

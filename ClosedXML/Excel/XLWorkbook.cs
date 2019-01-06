@@ -730,10 +730,9 @@ namespace ClosedXML.Excel
         }
 
         public XLWorkbook(LoadOptions loadOptions)
-            :this(loadOptions.EventTracking)
+            : this(loadOptions.EventTracking)
         {
         }
-
 
         /// <summary>
         ///   Opens an existing workbook from a file.
@@ -851,6 +850,16 @@ namespace ClosedXML.Excel
         {
             Use1904DateSystem = value;
             return this;
+        }
+
+        public IXLWorksheet AddWorksheet()
+        {
+            return Worksheets.Add();
+        }
+
+        public IXLWorksheet AddWorksheet(Int32 position)
+        {
+            return Worksheets.Add(position);
         }
 
         public IXLWorksheet AddWorksheet(String sheetName)

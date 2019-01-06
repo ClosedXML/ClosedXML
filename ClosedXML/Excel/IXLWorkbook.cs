@@ -123,6 +123,10 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLWorksheets Worksheets { get; }
 
+        IXLWorksheet AddWorksheet();
+
+        IXLWorksheet AddWorksheet(Int32 position);
+
         IXLWorksheet AddWorksheet(String sheetName);
 
         IXLWorksheet AddWorksheet(String sheetName, Int32 position);

@@ -8,6 +8,10 @@ namespace ClosedXML.Excel
     {
         int Count { get; }
 
+        IXLWorksheet Add();
+
+        IXLWorksheet Add(Int32 position);
+
         IXLWorksheet Add(String sheetName);
 
         IXLWorksheet Add(String sheetName, Int32 position);
