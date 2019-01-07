@@ -503,7 +503,10 @@ namespace ClosedXML.Excel
             if (force || NeedsRecalculation)
             {
                 if (HasFormula)
+                {
                     CachedValue = RecalculateFormula(FormulaA1);
+                    UpdateCachedValueFromDataType();
+                }
                 else
                     CachedValue = null;
 
@@ -529,6 +532,31 @@ namespace ClosedXML.Excel
 
             if (parseToCachedValue)
                 CachedValue = ParseCellValueFromString();
+        }
+
+        private void UpdateCachedValueFromDataType()
+        {
+            if (CachedValue is double d)
+            {
+                if (this.DataType == XLDataType.DateTime && d.IsValidOADateNumber())
+                    CachedValue = DateTime.FromOADate(d);
+                else if (this.DataType == XLDataType.TimeSpan)
+                    CachedValue = TimeSpan.FromDays(d);
+            }
+            else if (CachedValue is DateTime dt)
+            {
+                if (this.DataType == XLDataType.Number)
+                    CachedValue = dt.ToOADate();
+                else if (this.DataType == XLDataType.TimeSpan)
+                    CachedValue = TimeSpan.FromDays(dt.ToOADate());
+            }
+            else if (CachedValue is TimeSpan ts)
+            {
+                if (this.DataType == XLDataType.DateTime)
+                    CachedValue = DateTime.FromOADate(ts.TotalDays);
+                else if (this.DataType == XLDataType.Number)
+                    CachedValue = ts.TotalDays;
+            }
         }
 
         internal void SetDataTypeFast(XLDataType dataType)
@@ -1117,8 +1145,8 @@ namespace ClosedXML.Excel
 
                 _dataType = value;
 
-                if (HasFormula)
-                    CachedValue = ParseCellValueFromString();
+                if (HasFormula && !NeedsRecalculation)
+                    UpdateCachedValueFromDataType();
                 else
                     CachedValue = null;
             }
@@ -1443,7 +1471,7 @@ namespace ClosedXML.Excel
         }
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
-        { 
+        {
             if (InnerText.Length > 0)
                 return false;
 
