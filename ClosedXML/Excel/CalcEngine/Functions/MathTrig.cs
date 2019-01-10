@@ -86,7 +86,7 @@ namespace ClosedXML.Excel.CalcEngine
             //ce.RegisterFunction("SUMXMY2", SumXMY2, 1);
             ce.RegisterFunction("TAN", 1, Tan);
             ce.RegisterFunction("TANH", 1, Tanh);
-            ce.RegisterFunction("TRUNC", 1, Trunc);
+            ce.RegisterFunction("TRUNC", 1, 2, Trunc);
         }
 
         private static object Abs(List<Expression> p)
@@ -475,7 +475,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Trunc(List<Expression> p)
         {
-            return (double)(int)((double)p[0]);
+            var number = (double)p[0];
+
+            var num_digits = 0d;
+            if (p.Count > 1)
+                num_digits = (double)p[1];
+
+            var scaling = Math.Pow(10, num_digits);
+
+            var truncated = (int)(number * scaling);
+            return (double)truncated / scaling;
         }
 
         public static double DegreesToRadians(double degrees)
