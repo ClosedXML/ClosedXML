@@ -1367,5 +1367,24 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
             }
         }
+
+        [Test]
+        public void Trunc()
+        {
+            var input = 27.64799257;
+            var expectedResult = 27;
+            var actual = (double)XLWorkbook.EvaluateExpr($"TRUNC({input.ToString(CultureInfo.InvariantCulture)})");
+            Assert.AreEqual(expectedResult, actual);
+        }
+
+        [TestCase(27.64799257, -1, 20)]
+        [TestCase(27.64799257, 0, 27)]
+        [TestCase(27.64799257, 1, 27.6)]
+        [TestCase(27.64799257, 4, 27.6479)]
+        public void Trunc_Specify_Digits(double input, int digits, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr($"TRUNC({input.ToString(CultureInfo.InvariantCulture)}, {digits})");
+            Assert.AreEqual(expectedResult, actual);
+        }
     }
 }
