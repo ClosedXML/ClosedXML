@@ -436,5 +436,30 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual("B2:C2", ws.SelectedRanges.Last().RangeAddress.ToString());
             }
         }
+
+        [Test]
+        public void CanLoadCellsWithoutReferencesCorrectly()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LO\xlsx\row-index-1-based.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+
+                Assert.AreEqual("Page 1", ws.Name);
+
+                var expected = new Dictionary<string, string>()
+                {
+                    ["A1"] = "Action Plan.Name",
+                    ["B1"] = "Action Plan.Description",
+                    ["A2"] = "Jerry",
+                    ["B2"] = "This is a longer Text.\nSecond line.\nThird line.",
+                    ["A3"] = "",
+                    ["B3"] = ""
+                };
+
+                foreach (var pair in expected)
+                    Assert.AreEqual(pair.Value, ws.Cell(pair.Key).GetString(), pair.Key);
+            }
+        }
     }
 }
