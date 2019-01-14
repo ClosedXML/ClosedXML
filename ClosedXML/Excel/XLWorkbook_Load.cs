@@ -1397,7 +1397,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private Int32 lastCell;
+        private Int32 lastColumnNumber;
 
         private void LoadCells(SharedStringItem[] sharedStrings, Stylesheet s, NumberingFormats numberingFormats,
                                Fills fills, Borders borders, Fonts fonts, Dictionary<uint, string> sharedFormulasR1C1,
@@ -1405,9 +1405,16 @@ namespace ClosedXML.Excel
         {
             Int32 styleIndex = cell.StyleIndex != null ? Int32.Parse(cell.StyleIndex.InnerText) : 0;
 
-            var cellAddress = cell.CellReference == null
-                                       ? new XLAddress(ws, ++lastCell, rowIndex, false, false)
-                                       : XLAddress.Create(ws, cell.CellReference.Value);
+            XLAddress cellAddress;
+            if (cell.CellReference == null)
+            {
+                cellAddress = new XLAddress(ws, rowIndex, ++lastColumnNumber, false, false);
+            }
+            else
+            {
+                cellAddress = XLAddress.Create(ws, cell.CellReference.Value);
+                lastColumnNumber = cellAddress.ColumnNumber;
+            }
 
             var xlCell = ws.Cell(in cellAddress);
 
@@ -1458,7 +1465,6 @@ namespace ClosedXML.Excel
                             break;
                     }
                 }
-
             }
             else if (cell.CellFormula != null)
             {
@@ -1854,7 +1860,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            lastCell = 0;
+            lastColumnNumber = 0;
             foreach (Cell cell in row.Elements<Cell>())
                 LoadCells(sharedStrings, s, numberingFormats, fills, borders, fonts, sharedFormulasR1C1, ws, styleList,
                           cell, rowIndex);
