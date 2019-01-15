@@ -138,9 +138,9 @@ namespace ClosedXML_Tests
 
                 var mr = ws.MergedRanges.ToArray();
                 Assert.AreEqual(4, mr.Length);
-                Assert.AreEqual("B2:C3", mr[0].RangeAddress.ToString());
-                Assert.AreEqual("B4:C5", mr[1].RangeAddress.ToString());
-                Assert.AreEqual("H1:I2", mr[2].RangeAddress.ToString());
+                Assert.AreEqual("H1:I2", mr[0].RangeAddress.ToString());
+                Assert.AreEqual("B2:C3", mr[1].RangeAddress.ToString());
+                Assert.AreEqual("B4:C5", mr[2].RangeAddress.ToString());
                 Assert.AreEqual("H5:I6", mr[3].RangeAddress.ToString());
             }
         }
@@ -162,9 +162,9 @@ namespace ClosedXML_Tests
 
                 var mr = ws.MergedRanges.ToArray();
                 Assert.AreEqual(4, mr.Length);
-                Assert.AreEqual("B2:C3", mr[0].RangeAddress.ToString());
-                Assert.AreEqual("B4:C5", mr[1].RangeAddress.ToString());
-                Assert.AreEqual("H1:I2", mr[2].RangeAddress.ToString());
+                Assert.AreEqual("H1:I2", mr[0].RangeAddress.ToString());
+                Assert.AreEqual("B2:C3", mr[1].RangeAddress.ToString());
+                Assert.AreEqual("B4:C5", mr[2].RangeAddress.ToString());
                 Assert.AreEqual("H5:I6", mr[3].RangeAddress.ToString());
             }
         }
