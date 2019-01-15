@@ -124,10 +124,21 @@ namespace ClosedXML.Excel
         {
             get
             {
-                foreach (var col in ColumnsUsed(XLCellsUsedOptions.All).OfType<XLColumn>())
-                    yield return col;
-                foreach (var row in RowsUsed(XLCellsUsedOptions.All).OfType<XLRow>())
-                    yield return row;
+                var columnsUsed = Internals.ColumnsCollection.Keys
+                    .Union(Internals.CellsCollection.ColumnsUsed.Keys)
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToList();
+                foreach (var col in columnsUsed)
+                    yield return Column(col);
+
+                var rowsUsed = Internals.RowsCollection.Keys
+                    .Union(Internals.CellsCollection.RowsUsed.Keys)
+                    .Distinct()
+                    .OrderBy(r => r)
+                    .ToList();
+                foreach (var row in rowsUsed)
+                    yield return Row(row);
             }
         }
 
