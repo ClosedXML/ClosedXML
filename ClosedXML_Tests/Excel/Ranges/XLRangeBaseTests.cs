@@ -1,6 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML_Tests
@@ -422,6 +423,45 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual(1, ranges.Count);
             Assert.AreEqual("A1:A2", ranges.Single().RangeAddress.ToString());
+        }
+
+        [Test]
+        public void XLRangesReturnsRangesInDeterministicOrder()
+        {
+            var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            var ws2 = wb.Worksheets.Add("Another sheet");
+
+            var ranges = new XLRanges();
+            ranges.Add(ws2.Range("F1:F12"));
+            ranges.Add(ws1.Range("F12:F16"));
+            ranges.Add(ws1.Range("B1:F2"));
+            ranges.Add(ws2.Range("A13:B14"));
+            ranges.Add(ws2.Range("E1:E2"));
+            ranges.Add(ws1.Range("E1:H2"));
+            ranges.Add(ws1.Range("G2:G13"));
+            ranges.Add(ws1.Range("G20:G20"));
+
+            var expectedRanges = new List<IXLRange>
+            {
+                ws1.Range("B1:F2"),
+                ws1.Range("E1:H2"),
+                ws1.Range("G2:G13"),
+                ws1.Range("F12:F16"),
+                ws1.Range("G20:G20"),
+
+                ws2.Range("E1:E2"),
+                ws2.Range("F1:F12"),
+                ws2.Range("A13:B14"),
+            };
+
+            var actualRanges = ranges.ToList();
+
+            Assert.AreEqual(expectedRanges.Count, actualRanges.Count);
+            for (int i = 0; i < actualRanges.Count; i++)
+            {
+                Assert.AreEqual(expectedRanges[i], actualRanges[i]);
+            }
         }
     }
 }
