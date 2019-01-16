@@ -2907,7 +2907,11 @@ namespace ClosedXML.Excel
                 xlStyle.NumberFormat = xlNumberFormat;
             }
 
-            xlStylized.InnerStyle = new XLStyle(xlStylized, xlStyle);
+            //When loading columns we must propagate style to each column but not deeper. In other cases we do not propagate at all.
+            if (xlStylized is IXLColumns columns)
+                columns.Cast<XLColumn>().ForEach(col => col.InnerStyle = new XLStyle(col, xlStyle));
+            else
+                xlStylized.InnerStyle = new XLStyle(xlStylized, xlStyle);
         }
 
         private static Boolean UInt32HasValue(UInt32Value value)
