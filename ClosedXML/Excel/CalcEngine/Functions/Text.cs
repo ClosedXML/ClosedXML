@@ -369,14 +369,28 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new CellValueException("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.");
             }
 
-            try
+            //Remove all whitespace characters
+            var input = Regex.Replace(p[0], @"\s+", "", RegexOptions.Compiled);
+            if (string.IsNullOrEmpty(input))
             {
-                return double.Parse((string)p[0], NumberStyles.Any, numberFormatInfo);
+                return 0d;
             }
-            catch (FormatException ex)
+
+            if (double.TryParse(input, NumberStyles.Any, numberFormatInfo, out var result))
             {
-                throw new CellValueException(ex.Message, ex);
+                if (result <= -1e308 || result >= 1e308)
+                    throw new CellValueException("The value is too large");
+
+                if (result >= -1e-309 && result <= 1e-309 && result != 0)
+                    throw new CellValueException("The value is too tiny");
+
+                if (result >= -1e-308 && result <= 1e-308)
+                    result = 0d;
+
+                return result;
             }
+
+            throw new CellValueException("Could not convert the value to a number");
         }
 
         private static object Asc(List<Expression> p)
