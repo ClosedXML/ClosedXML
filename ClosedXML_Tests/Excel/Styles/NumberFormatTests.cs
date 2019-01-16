@@ -2,6 +2,8 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Data;
+using System.IO;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -45,6 +47,29 @@ namespace ClosedXML_Tests.Excel
                 c.Style.NumberFormat.SetFormat("m/d/yy\\ h:mm;@");
 
                 Assert.AreEqual("10/26/13 21:00", c.GetFormattedString());
+            }
+        }
+
+        [Test]
+        public void ReadAndWriteColumnNumberFormat()
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet();
+                    var sourceColumn = ws.Column(1);
+                    sourceColumn.Style.NumberFormat.Format = "0.000";
+                    wb.SaveAs(memoryStream);
+                }
+
+                memoryStream.Position = 0;
+
+                using (var wb = new XLWorkbook(memoryStream))
+                {
+                    var column = wb.Worksheets.Single().Column(1);
+                    Assert.AreEqual("0.000", column.Style.NumberFormat.Format);
+                }
             }
         }
     }
