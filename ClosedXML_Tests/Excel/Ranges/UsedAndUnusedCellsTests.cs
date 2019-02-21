@@ -170,7 +170,7 @@ namespace ClosedXML_Tests.Excel.Ranges
 
                 var options = includeFormatting
                     ? XLCellsUsedOptions.All
-                    : XLCellsUsedOptions.AllContents;
+                    : XLCellsUsedOptions.AllContents | XLCellsUsedOptions.MergedRanges;
                 var actual = ws.RangeUsed(options).RangeAddress;
 
                 Assert.AreEqual(expectedRange, actual.ToString());
