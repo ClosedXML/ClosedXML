@@ -461,5 +461,20 @@ namespace ClosedXML_Tests.Excel
                     Assert.AreEqual(pair.Value, ws.Cell(pair.Key).GetString(), pair.Key);
             }
         }
+
+        [Test]
+        public void CorrectlyLoadMergedCellsBorder()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\MergedCellsBorder\inputfile.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+
+                var c = ws.Cell("B2");
+                Assert.AreEqual(XLColorType.Theme, c.Style.Border.TopBorderColor.ColorType);
+                Assert.AreEqual(XLThemeColor.Accent1, c.Style.Border.TopBorderColor.ThemeColor);
+                Assert.AreEqual(0.39994506668294322d, c.Style.Border.TopBorderColor.ThemeTint, XLHelper.Epsilon);
+            }
+        }
     }
 }
