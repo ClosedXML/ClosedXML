@@ -261,6 +261,46 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual("BC", actual);
         }
 
+
+        [TestCase("NUMBERVALUE(\"\")", 0d)]
+        [TestCase("NUMBERVALUE(\"1,234.56\", \".\", \",\")", 1234.56d)]
+        [TestCase("NUMBERVALUE(\"1.234,56\", \",\", \".\")", 1234.56d)]
+        [TestCase("NUMBERVALUE(\"+ 1\")", 1d)]
+        [TestCase("NUMBERVALUE(\"+1\")", 1d)]
+        [TestCase("NUMBERVALUE(\"+1.23\")", 1.23)]
+        [TestCase("NUMBERVALUE(\"- 1.23\")", -1.23)]
+        [TestCase("NUMBERVALUE(\" - 0 1 2 . 3 4 \")", -12.34)]
+        [TestCase("NUMBERVALUE(\" - 0 \t1\t2\r .\n3 4 \")", -12.34)]
+        [TestCase("NUMBERVALUE(\".1\")", 0.1)]
+        [TestCase("NUMBERVALUE(\"-.1\")", -0.1)]
+        [TestCase("NUMBERVALUE(\"1.234567890E+307\")", 1.234567890E+307)]
+        [TestCase("NUMBERVALUE(\"1.234567890E-307\")", 1.234567890E-307d)]
+        [TestCase("NUMBERVALUE(\"1.234567890E-309\")", 0d)]
+        [TestCase("NUMBERVALUE(\"-1.234567890E-307\")", -1.234567890E-307d)]
+        [TestCase("NUMBERVALUE(\".99999999999999\")", 0.99999999999999)]
+        [TestCase("NUMBERVALUE(\"1,23,4\")", 1234)]
+        [TestCase("NUMBERVALUE(\"1,234,56\")", 123456)]
+        public void NumberValue_Correct(string expression, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr(expression);
+            Assert.AreEqual(expectedResult, actual, XLHelper.Epsilon);
+        }
+
+        [TestCase("NUMBERVALUE(\"123.45\", \".\", \".\")")] // Group separator same as decimal separator
+        [TestCase("NUMBERVALUE(\"1.234.5\")")] // Two decimal separators
+        [TestCase("NUMBERVALUE(\"1.234,5\")")] // Decimal separator before group separator
+        [TestCase("NUMBERVALUE(\"12;34\")")] // Illegal character
+        [TestCase("NUMBERVALUE(\"--1\")")] // Two minuses
+        [TestCase("NUMBERVALUE(\"1.234567890E+308\")")] // Too large
+        [TestCase("NUMBERVALUE(\"-1.234567890E+308\")")] // Too large (negative)
+        [TestCase("NUMBERVALUE(\"1.234567890E-310\")")] // Too tiny
+        [TestCase("NUMBERVALUE(\"-1.234567890E-310\")")] // Too tiny (negative)
+        public void NumberValue_Invalid(string expression)
+        {
+            TestDelegate action = () => XLWorkbook.EvaluateExpr(expression);
+            Assert.Throws<CellValueException>(action);
+        }
+
         [Test]
         public void Proper_Empty_Input_String()
         {
