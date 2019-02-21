@@ -42,10 +42,12 @@ namespace ClosedXML.Excel
             {
                 var item = formats.First();
 
-                var rangesToJoin = item.Ranges;
+                var rangesToJoin = new XLRanges();
+                item.Ranges.ForEach(r => rangesToJoin.Add(r));
+                var firstRange = item.Ranges.First();
                 var skippedRanges = new XLRanges();
                 Func<IXLConditionalFormat, bool> IsSameFormat = f =>
-                    f != item && f.Ranges.First().Worksheet.Position == item.Ranges.First().Worksheet.Position &&
+                    f != item && f.Ranges.First().Worksheet.Position == firstRange.Worksheet.Position &&
                     XLConditionalFormat.NoRangeComparer.Equals(f, item);
 
                 //Get the top left corner of the rectangle covering all the ranges
@@ -53,7 +55,7 @@ namespace ClosedXML.Excel
                     item.Ranges.Select(r => r.RangeAddress.FirstAddress.RowNumber).Min(),
                     item.Ranges.Select(r => r.RangeAddress.FirstAddress.ColumnNumber).Min(),
                     false, false);
-                var baseCell = item.Ranges.First().Worksheet.Cell(baseAddress) as XLCell;
+                var baseCell = firstRange.Worksheet.Cell(baseAddress) as XLCell;
 
                 int i = 1;
                 bool stop = false;

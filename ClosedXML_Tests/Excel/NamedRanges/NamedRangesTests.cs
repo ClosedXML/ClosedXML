@@ -319,9 +319,9 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(original.Name, copy.Name);
             Assert.AreEqual(original.Scope, copy.Scope);
             Assert.AreEqual("Sheet1!B2:E6", original.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
-            Assert.AreEqual("Sheet2!D1:E2", original.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
-            Assert.AreEqual("Sheet2!B2:E6", copy.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
-            Assert.AreEqual("Sheet2!D1:E2", copy.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Sheet2!D1:E2", original.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));            
+            Assert.AreEqual("Sheet2!D1:E2", copy.Ranges.First().RangeAddress.ToString(XLReferenceStyle.A1, true));
+            Assert.AreEqual("Sheet2!B2:E6", copy.Ranges.Last().RangeAddress.ToString(XLReferenceStyle.A1, true));
         }
 
         [Test]

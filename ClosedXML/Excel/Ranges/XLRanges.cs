@@ -78,7 +78,12 @@ namespace ClosedXML.Excel
 
         public IEnumerator<IXLRange> GetEnumerator()
         {
-            return Ranges.Cast<IXLRange>().GetEnumerator();
+            return Ranges
+                .OrderBy(r => r.Worksheet.Position)
+                .ThenBy(r => r.RangeAddress.FirstAddress.RowNumber)
+                .ThenBy(r => r.RangeAddress.FirstAddress.ColumnNumber)
+                .Cast<IXLRange>()
+                .GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
