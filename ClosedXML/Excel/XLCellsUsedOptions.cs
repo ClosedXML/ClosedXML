@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         MergedRanges            = 1 << 6,
 
         AllFormats = NormalFormats | ConditionalFormats,
-        AllContents = Contents | DataType | Comments | MergedRanges,
+        AllContents = Contents | DataType | Comments,
         All = Contents | DataType | NormalFormats | ConditionalFormats | Comments | DataValidation | MergedRanges
     }
 
