@@ -41,5 +41,27 @@ namespace ClosedXML_Tests.Excel
                 }
             }
         }
+
+        [TestCase("A1", TestName = "First cell")]
+        [TestCase("A2", TestName = "Cell from initialized row")]
+        [TestCase("B1", TestName = "Cell from initialized column")]
+        [TestCase("D4", TestName = "Initialized cell")]
+        [TestCase("F6", TestName = "Non-initialized cell")]
+        public void CellTakesWorksheetStyle(string cellAddress)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.Column(2);
+                ws.Row(2);
+                ws.Cell("D4").Value = "Non empty";
+                ws.Style.Font.SetFontName("Arial");
+                ws.Style.Font.SetFontSize(9);
+
+                var cell = ws.Cell(cellAddress);
+                Assert.AreEqual("Arial", cell.Style.Font.FontName);
+                Assert.AreEqual(9, cell.Style.Font.FontSize);
+            }
+        }
     }
 }
