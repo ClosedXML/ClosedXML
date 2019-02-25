@@ -546,5 +546,37 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
+
+        [Test]
+        public void RemoveExistingInlineStringsIfRequired()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\InlineStrings\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    var ws = wb.Worksheet(1);
+
+                    var numericCells = ws.CellsUsed(c => double.TryParse(c.GetString(), out double _));
+                    var textCells = ws.CellsUsed(c => !double.TryParse(c.GetString(), out double _));
+
+                    foreach (var cell in numericCells)
+                    {
+                        cell.Clear(XLClearOptions.AllFormats);
+                        cell.SetDataType(XLDataType.Number);
+                    }
+
+                    foreach (var cell in textCells)
+                    {
+                        cell.ShareString = true;
+                    }
+
+                    wb.SaveAs(ms);
+
+                    return wb;
+                }, @"Other\InlineStrings\outputfile.xlsx");
+            }
+        }
     }
 }
