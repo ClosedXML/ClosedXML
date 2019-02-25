@@ -4767,22 +4767,27 @@ namespace ClosedXML.Excel
                 }
 
                 var lastCell = 0;
-                var cellsByReference = row.Elements<Cell>().ToDictionary(c => c.CellReference == null
-                    ? XLHelper.GetColumnLetterFromNumber(
-                        ++lastCell) + distinctRow
-                    : c.CellReference.Value, c => c);
+                var currentOpenXmlRowCells = row.Elements<Cell>()
+                    .ToDictionary
+                    (
+                        c => c.CellReference?.Value ?? XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow,
+                        c => c
+                    );
 
-                foreach (var kpDel in xlWorksheet.Internals.CellsCollection.deleted.ToList())
+                if (xlWorksheet.Internals.CellsCollection.deleted.ContainsKey(distinctRow))
                 {
-                    foreach (var delCo in kpDel.Value.ToList())
+                    foreach (var deletedColumn in xlWorksheet.Internals.CellsCollection.deleted[distinctRow].ToList())
                     {
-                        var key = XLHelper.GetColumnLetterFromNumber(delCo) + kpDel.Key.ToInvariantString();
-                        if (!cellsByReference.ContainsKey(key)) continue;
-                        row.RemoveChild(cellsByReference[key]);
-                        kpDel.Value.Remove(delCo);
+                        var key = XLHelper.GetColumnLetterFromNumber(deletedColumn) + distinctRow.ToInvariantString();
+
+                        if (!currentOpenXmlRowCells.ContainsKey(key))
+                            continue;
+
+                        row.RemoveChild(currentOpenXmlRowCells[key]);
+                        xlWorksheet.Internals.CellsCollection.deleted[distinctRow].Remove(deletedColumn);
                     }
-                    if (kpDel.Value.Count == 0)
-                        xlWorksheet.Internals.CellsCollection.deleted.Remove(kpDel.Key);
+                    if (xlWorksheet.Internals.CellsCollection.deleted[distinctRow].Count == 0)
+                        xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
                 }
 
                 if (xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow))
@@ -4808,9 +4813,9 @@ namespace ClosedXML.Excel
                                                      & ~XLCellsUsedOptions.MergedRanges);
 
                         Cell cell = null;
-                        if (cellsByReference.ContainsKey(cellReference))
+                        if (currentOpenXmlRowCells.ContainsKey(cellReference))
                         {
-                            cell = cellsByReference[cellReference];
+                            cell = currentOpenXmlRowCells[cellReference];
                             if (isEmpty)
                             {
                                 cell.Remove();
