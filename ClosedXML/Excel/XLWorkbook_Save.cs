@@ -68,9 +68,8 @@ namespace ClosedXML.Excel
             switch (xlCell.DataType)
             {
                 case XLDataType.Text:
-                    {
-                        return xlCell.ShareString ? CvSharedString : CvInlineString;
-                    }
+                    return xlCell.ShareString ? CvSharedString : CvInlineString;
+
                 case XLDataType.Number:
                     return CvNumber;
 
@@ -5576,6 +5575,7 @@ namespace ClosedXML.Excel
 
             if (xlCell.HasFormula)
             {
+                openXmlCell.InlineString = null;
                 var cellValue = new CellValue();
                 try
                 {
@@ -5615,6 +5615,10 @@ namespace ClosedXML.Excel
                 openXmlCell.CellValue = null;
 
             var dataType = xlCell.DataType;
+
+            if (dataType != XLDataType.Text)
+                openXmlCell.InlineString = null;
+
             if (dataType == XLDataType.Text)
             {
                 if (!xlCell.Style.IncludeQuotePrefix && xlCell.InnerText.Length == 0)
@@ -5626,6 +5630,8 @@ namespace ClosedXML.Excel
                         var cellValue = new CellValue();
                         cellValue.Text = xlCell.SharedStringId.ToInvariantString();
                         openXmlCell.CellValue = cellValue;
+
+                        openXmlCell.InlineString = null;
                     }
                     else
                     {
