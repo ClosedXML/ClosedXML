@@ -1,11 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
@@ -24,6 +20,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("CHAR(-2)"));
             Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("CHAR(270)"));
+        }
+
+        [Test]
+        public void DivisionByZero()
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("0/0"));
         }
     }
 }
