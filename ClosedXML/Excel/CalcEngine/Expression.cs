@@ -354,12 +354,21 @@ namespace ClosedXML.Excel.CalcEngine
                     return (double)_lft * (double)_rgt;
 
                 case TKID.DIV:
+                    if (Math.Abs((double)_rgt) < double.Epsilon)
+                        throw new DivisionByZeroException();
+
                     return (double)_lft / (double)_rgt;
 
                 case TKID.DIVINT:
+                    if (Math.Abs((double)_rgt) < double.Epsilon)
+                        throw new DivisionByZeroException();
+
                     return (double)(int)((double)_lft / (double)_rgt);
 
                 case TKID.MOD:
+                    if (Math.Abs((double)_rgt) < double.Epsilon)
+                        throw new DivisionByZeroException();
+
                     return (double)(int)((double)_lft % (double)_rgt);
 
                 case TKID.POWER:
