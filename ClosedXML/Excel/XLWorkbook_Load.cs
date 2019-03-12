@@ -1362,6 +1362,8 @@ namespace ClosedXML.Excel
         private void SetColumnsOrRowsToRepeat(string area)
         {
             ParseReference(area, out String sheetName, out String sheetArea);
+            sheetArea = sheetArea.Replace("$", "");
+
             if (sheetArea.Equals("#REF")) return;
             if (IsColReference(sheetArea))
                 WorksheetsInternal.Worksheet(sheetName).PageSetup.SetColumnsToRepeatAtLeft(sheetArea);
@@ -1372,14 +1374,12 @@ namespace ClosedXML.Excel
         // either $A:$X => true or $1:$99 => false
         private static bool IsColReference(string sheetArea)
         {
-            char c = sheetArea[0] == '$' ? sheetArea[1] : sheetArea[0];
-            return char.IsLetter(c);
+            return sheetArea.All(c => c == ':' || char.IsLetter(c));
         }
 
         private static bool IsRowReference(string sheetArea)
         {
-            char c = sheetArea[0] == '$' ? sheetArea[1] : sheetArea[0];
-            return char.IsNumber(c);
+            return sheetArea.All(c => c == ':' || char.IsNumber(c));
         }
 
         private static void ParseReference(string item, out string sheetName, out string sheetArea)

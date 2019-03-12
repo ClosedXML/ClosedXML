@@ -27,6 +27,7 @@ namespace ClosedXML_Tests.Excel
                 @"Misc\LoadSheetsWithCommas.xlsx",
                 @"Misc\ExcelProducedWorkbookWithImages.xlsx",
                 @"Misc\InvalidPrintTitles.xlsx",
+                @"Misc\InvalidPrintTitles2.xlsx",
                 @"Misc\ExcelProducedWorkbookWithImages.xlsx",
                 @"Misc\EmptyCellValue.xlsx",
                 @"Misc\AllShapes.xlsx",
