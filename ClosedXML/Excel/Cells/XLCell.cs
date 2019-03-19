@@ -477,8 +477,7 @@ namespace ClosedXML.Excel
                 IsEvaluating = false;
             }
 
-            var retValEnumerable = retVal as IEnumerable;
-            if (retValEnumerable != null && !(retVal is String))
+            if (retVal is IEnumerable retValEnumerable && !(retVal is String))
                 return retValEnumerable.Cast<object>().First();
 
             return retVal;
@@ -1901,62 +1900,67 @@ namespace ClosedXML.Excel
 
         private bool SetRangeColumns(object value)
         {
-            var columns = value as XLRangeColumns;
-            if (columns == null)
-                return SetColumns(value);
-
-            var cell = this;
-            foreach (var column in columns)
+            if (value is XLRangeColumns columns)
             {
-                cell.SetRange(column);
-                cell = cell.CellRight();
+                var cell = this;
+                foreach (var column in columns)
+                {
+                    cell.SetRange(column);
+                    cell = cell.CellRight();
+                }
+                return true;
             }
-            return true;
+            else
+
+                return SetColumns(value);
         }
 
         private bool SetColumns(object value)
         {
-            var columns = value as XLColumns;
-            if (columns == null)
-                return false;
-
-            var cell = this;
-            foreach (var column in columns)
+            if (value is XLColumns columns)
             {
-                cell.SetRange(column);
-                cell = cell.CellRight();
+                var cell = this;
+                foreach (var column in columns)
+                {
+                    cell.SetRange(column);
+                    cell = cell.CellRight();
+                }
+                return true;
             }
-            return true;
+            else
+                return false;
         }
 
         private bool SetRangeRows(object value)
         {
-            var rows = value as XLRangeRows;
-            if (rows == null)
-                return SetRows(value);
-
-            var cell = this;
-            foreach (var row in rows)
+            if (value is XLRangeRows rows)
             {
-                cell.SetRange(row);
-                cell = cell.CellBelow();
+                var cell = this;
+                foreach (var row in rows)
+                {
+                    cell.SetRange(row);
+                    cell = cell.CellBelow();
+                }
+                return true;
             }
-            return true;
+            else
+                return SetRows(value);
         }
 
         private bool SetRows(object value)
         {
-            var rows = value as XLRows;
-            if (rows == null)
-                return false;
-
-            var cell = this;
-            foreach (var row in rows)
+            if (value is XLRows rows)
             {
-                cell.SetRange(row);
-                cell = cell.CellBelow();
+                var cell = this;
+                foreach (var row in rows)
+                {
+                    cell.SetRange(row);
+                    cell = cell.CellBelow();
+                }
+                return true;
             }
-            return true;
+            else
+                return false;
         }
 
         public XLRange AsRange()
@@ -2016,14 +2020,14 @@ namespace ClosedXML.Excel
 
         private bool SetRichText(object value)
         {
-            var asRichString = value as XLRichText;
-
-            if (asRichString == null)
+            if (value is XLRichText asRichString)
+            {
+                _richText = asRichString;
+                _dataType = XLDataType.Text;
+                return true;
+            }
+            else
                 return false;
-
-            _richText = asRichString;
-            _dataType = XLDataType.Text;
-            return true;
         }
 
         private Boolean SetRange(Object rangeObject)
@@ -2110,7 +2114,7 @@ namespace ClosedXML.Excel
 
                 var c = new XLConditionalFormat(fmtRanges, true);
                 c.CopyFrom(cf);
-                c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), (XLCell)fmtRanges.First().FirstCell());
+                c.AdjustFormulas((XLCell)cf.Ranges.First().FirstCell(), fmtRanges.First().FirstCell());
 
                 Worksheet.ConditionalFormats.Add(c);
             }
@@ -2118,9 +2122,10 @@ namespace ClosedXML.Excel
 
         private bool SetDataTable(object o)
         {
-            var dataTable = o as DataTable;
-            if (dataTable == null) return false;
-            return InsertData(dataTable) != null;
+            if (o is DataTable dataTable)
+                return InsertData(dataTable) != null;
+            else
+                return false;
         }
 
         private bool SetEnumerable(object collectionObject)
