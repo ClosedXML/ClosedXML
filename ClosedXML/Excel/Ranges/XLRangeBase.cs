@@ -1543,11 +1543,15 @@ namespace ClosedXML.Excel
                 RangeAddress.LastAddress.RowNumber,
                 RangeAddress.LastAddress.ColumnNumber);
 
-            foreach (
-                XLCell cell in
-                    Worksheet.Workbook.Worksheets.Cast<XLWorksheet>().SelectMany(
-                        xlWorksheet => (xlWorksheet).Internals.CellsCollection.GetCells(
-                            c => !String.IsNullOrWhiteSpace(c.FormulaA1))))
+            // Shift formulas first
+            foreach (var cell in Worksheet
+                .Workbook
+                .Worksheets
+                .Cast<XLWorksheet>()
+                .SelectMany(ws => ws
+                    .Internals
+                    .CellsCollection
+                    .GetCells(c => c.HasFormula)))
             {
                 if (shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp)
                     cell.ShiftFormulaRows((XLRange)shiftedRangeFormula, numberOfRows * -1);
@@ -1557,39 +1561,64 @@ namespace ClosedXML.Excel
 
             // Range to shift...
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
-            //var cellsDataValidations = new Dictionary<XLAddress, DataValidationToCopy>();
             var cellsToDelete = new List<IXLAddress>();
-            var shiftLeftQuery = Worksheet.Internals.CellsCollection.GetCells(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                RangeAddress.LastAddress.RowNumber,
-                Worksheet.Internals.CellsCollection.MaxColumnUsed);
 
-            var shiftUpQuery = Worksheet.Internals.CellsCollection.GetCells(
-                RangeAddress.FirstAddress.RowNumber,
-                RangeAddress.FirstAddress.ColumnNumber,
-                Worksheet.Internals.CellsCollection.MaxRowUsed,
-                RangeAddress.LastAddress.ColumnNumber);
-
-            int columnModifier = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft ? ColumnCount() : 0;
-            int rowModifier = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsUp ? RowCount() : 0;
-            var cellsQuery = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft ? shiftLeftQuery : shiftUpQuery;
-            foreach (XLCell c in cellsQuery)
+            Int32 columnModifier = 0;
+            Int32 rowModifier = 0;
+            IEnumerable<XLCell> cellsQuery;
+            switch (shiftDeleteCells)
             {
-                var newKey = new XLAddress(Worksheet, c.Address.RowNumber - rowModifier,
-                                           c.Address.ColumnNumber - columnModifier,
-                                           false, false);
-                var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
-                newCell.CopyValuesFrom(c);
-                newCell.FormulaA1 = c.FormulaA1;
+                case XLShiftDeletedCells.ShiftCellsLeft:
+                    cellsQuery = Worksheet.Internals.CellsCollection.GetCells(
+                        RangeAddress.FirstAddress.RowNumber,
+                        RangeAddress.FirstAddress.ColumnNumber,
+                        RangeAddress.LastAddress.RowNumber,
+                        Worksheet.Internals.CellsCollection.MaxColumnUsed);
+
+                    columnModifier = ColumnCount();
+
+                    break;
+
+                case XLShiftDeletedCells.ShiftCellsUp:
+                    cellsQuery = Worksheet.Internals.CellsCollection.GetCells(
+                        RangeAddress.FirstAddress.RowNumber,
+                        RangeAddress.FirstAddress.ColumnNumber,
+                        Worksheet.Internals.CellsCollection.MaxRowUsed,
+                        RangeAddress.LastAddress.ColumnNumber);
+
+                    rowModifier = RowCount();
+
+                    break;
+
+                default:
+                    cellsQuery = new XLCell[] { };
+                    break;
+            }
+
+            foreach (var c in cellsQuery)
+            {
+                // Schedule for removal from CellsCollection
                 cellsToDelete.Add(c.Address);
 
-                bool canInsert = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft
-                                     ? c.Address.ColumnNumber > RangeAddress.LastAddress.ColumnNumber
-                                     : c.Address.RowNumber > RangeAddress.LastAddress.RowNumber;
+                // Generate new cell to insert into CellsCollection
+                var newCellAddress = new XLAddress(Worksheet, c.Address.RowNumber - rowModifier,
+                                           c.Address.ColumnNumber - columnModifier,
+                                           fixedRow: false,
+                                           fixedColumn: false);
 
-                if (canInsert)
-                    cellsToInsert.Add(newKey, newCell);
+                if (newCellAddress.IsValid)
+                {
+                    var newCell = new XLCell(Worksheet, newCellAddress, c.StyleValue);
+                    newCell.CopyValuesFrom(c);
+                    newCell.FormulaA1 = c.FormulaA1;
+
+                    bool canInsert = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft
+                                         ? c.Address.ColumnNumber > RangeAddress.LastAddress.ColumnNumber
+                                         : c.Address.RowNumber > RangeAddress.LastAddress.RowNumber;
+
+                    if (canInsert)
+                        cellsToInsert.Add(newCellAddress, newCell);
+                }
             }
 
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
