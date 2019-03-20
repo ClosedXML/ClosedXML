@@ -45,7 +45,7 @@ namespace ClosedXML.Excel
             _cell.DeleteComment();
         }
 
-        #endregion
+        #endregion IXLComment Members
 
         #region IXLDrawing
 
@@ -151,7 +151,7 @@ namespace ClosedXML.Excel
             return Container;
         }
 
-        #endregion
+        #endregion IXLDrawing
 
         private void Initialize(XLCell cell)
         {
@@ -159,22 +159,26 @@ namespace ClosedXML.Excel
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();
-            Int32 pRow = cell.Address.RowNumber;
-            Double pRowOffset = 0;
-            if (pRow > 1)
+            Int32 previousRowNumber = cell.Address.RowNumber;
+            Double previousRowOffset = 0;
+
+            if (previousRowNumber > 1)
             {
-                pRow--;
-                double prevHeight = cell.Worksheet.Row(pRow).Height;
-                if (prevHeight > 7)
-                    pRowOffset = prevHeight - 7;
+                previousRowNumber--;
+
+                if (cell.Worksheet.Internals.RowsCollection.TryGetValue(previousRowNumber, out XLRow previousRow))
+                    previousRowOffset = Math.Max(0, previousRow.Height - 7);
+                else
+                    previousRowOffset = Math.Max(0, cell.Worksheet.RowHeight - 7);
             }
+
             Position = new XLDrawingPosition
-                           {
-                               Column = cell.Address.ColumnNumber + 1,
-                               ColumnOffset = 2,
-                               Row = pRow,
-                               RowOffset = pRowOffset
-                           };
+            {
+                Column = cell.Address.ColumnNumber + 1,
+                ColumnOffset = 2,
+                Row = previousRowNumber,
+                RowOffset = previousRowOffset
+            };
 
             ZOrder = cell.Worksheet.ZOrder++;
             Style
