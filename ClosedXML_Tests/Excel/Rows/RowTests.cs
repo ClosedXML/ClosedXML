@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -56,7 +56,6 @@ namespace ClosedXML_Tests.Excel
 
             Assert.AreEqual("X", ws.Row(3).Cell(2).GetString());
 
-
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, rowIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, rowIns.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, rowIns.Cell(3).Style.Fill.BackgroundColor);
@@ -110,7 +109,6 @@ namespace ClosedXML_Tests.Excel
 
             Assert.AreEqual("X", ws.Row(3).Cell(2).GetString());
 
-
             Assert.AreEqual(XLColor.Red, rowIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, rowIns.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, rowIns.Cell(3).Style.Fill.BackgroundColor);
@@ -163,7 +161,6 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual(XLColor.Red, ws.Row(4).Cell(3).Style.Fill.BackgroundColor);
 
             Assert.AreEqual("X", ws.Row(2).Cell(2).GetString());
-
 
             Assert.AreEqual(XLColor.Yellow, rowIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Green, rowIns.Cell(2).Style.Fill.BackgroundColor);
@@ -245,7 +242,6 @@ namespace ClosedXML_Tests.Excel
             Assert.AreEqual("B1:C1", fromRange.RangeAddress.ToStringRelative());
         }
 
-
         [Test]
         public void UngroupFromAll()
         {
@@ -262,6 +258,15 @@ namespace ClosedXML_Tests.Excel
             var row = new XLRow(ws, -1);
 
             Assert.IsFalse(row.RangeAddress.IsValid);
+        }
+
+        [Test]
+        public void DeleteRowOnWorksheetWithComment()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            ws.Cell(4, 1).Comment.AddText("test");
+            ws.Column(1).Width = 100;
+            Assert.DoesNotThrow(() => ws.Row(1).Delete());
         }
     }
 }
