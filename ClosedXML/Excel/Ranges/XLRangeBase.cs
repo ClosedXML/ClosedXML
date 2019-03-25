@@ -2092,11 +2092,6 @@ namespace ClosedXML.Excel
             return Worksheet.RangeRow(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
-        /*public void Dispose()
-        {
-            // Dispose does nothing but left for not breaking the existing code
-        }*/
-
         public IXLDataValidation SetDataValidation()
         {
             var existingValidation = GetDataValidation();
