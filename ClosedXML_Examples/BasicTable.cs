@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML_Examples
 {
@@ -49,8 +48,8 @@ namespace ClosedXML_Examples
             //From worksheet
             var rngTable = ws.Range("B2:F6");
             //From another range
-            var rngDates = rngTable.Range("D3:D5"); // The address is relative to rngTable (NOT the worksheet)
-            var rngNumbers = rngTable.Range("E3:E5"); // The address is relative to rngTable (NOT the worksheet)
+            var rngDates = rngTable.Range("E4:E6");
+            var rngNumbers = rngTable.Range("F4:F6");
 
             //Formatting dates and numbers
             //Using a OpenXML's predefined formats
@@ -59,7 +58,7 @@ namespace ClosedXML_Examples
             rngNumbers.Style.NumberFormat.Format = "$ #,##0";
 
             //Formatting headers
-            var rngHeaders = rngTable.Range("A2:E2"); // The address is relative to rngTable (NOT the worksheet)
+            var rngHeaders = rngTable.Range("B3:F3");
             rngHeaders.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             rngHeaders.Style.Font.Bold = true;
             rngHeaders.Style.Fill.BackgroundColor = XLColor.Aqua;
@@ -74,7 +73,7 @@ namespace ClosedXML_Examples
 
             //Merge title cells
             rngTable.Row(1).Merge(); // We could've also used: rngTable.Range("A1:E1").Merge()
-            
+
             //Add thick borders
             rngTable.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
 
