@@ -114,6 +114,9 @@ namespace ClosedXML.Excel
 
         #region Public methods
 
+        public Boolean IsNormalized => LastAddress.RowNumber >= FirstAddress.RowNumber
+                                       && LastAddress.ColumnNumber >= FirstAddress.ColumnNumber;
+
         /// <summary>
         /// Lead a range address to a normal form - when <see cref="FirstAddress"/> points to the top-left address and
         /// <see cref="LastAddress"/> points to the bottom-right address.

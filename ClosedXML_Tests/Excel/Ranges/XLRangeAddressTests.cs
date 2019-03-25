@@ -205,6 +205,35 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void RangeAddressIsNormalized()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+
+            XLRangeAddress rangeAddress;
+
+            rangeAddress = (XLRangeAddress)ws.Range(ws.Cell("A1"), ws.Cell("C3")).RangeAddress;
+            Assert.IsTrue(rangeAddress.IsNormalized);
+
+            rangeAddress = (XLRangeAddress)ws.Range(ws.Cell("C3"), ws.Cell("A1")).RangeAddress;
+            Assert.IsFalse(rangeAddress.IsNormalized);
+
+            rangeAddress = (XLRangeAddress)ws.Range("B2:B1").RangeAddress;
+            Assert.IsFalse(rangeAddress.IsNormalized);
+
+            rangeAddress = (XLRangeAddress)ws.Range("B2:B10").RangeAddress;
+            Assert.IsTrue(rangeAddress.IsNormalized);
+
+            rangeAddress = (XLRangeAddress)ws.Range("B:B").RangeAddress;
+            Assert.IsTrue(rangeAddress.IsNormalized);
+
+            rangeAddress = (XLRangeAddress)ws.Range("2:2").RangeAddress;
+            Assert.IsTrue(rangeAddress.IsNormalized);
+
+            rangeAddress = (XLRangeAddress)ws.RangeAddress;
+            Assert.IsTrue(rangeAddress.IsNormalized);
+        }
+
         #region Private Methods
 
         private IXLRangeAddress ProduceInvalidAddress()
