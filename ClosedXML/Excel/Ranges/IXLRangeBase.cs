@@ -371,5 +371,14 @@ namespace ClosedXML.Excel
         /// <param name="otherRangePredicate">Predicate applied to the other range's cells.</param>
         /// <returns></returns>
         IXLCells Difference(IXLRangeBase otherRange, Func<IXLCell, Boolean> thisRangePredicate = null, Func<IXLCell, Boolean> otherRangePredicate = null);
+
+        /// <summary>
+        /// Returns a range so that its offset from the target base range is equal to the offset of the current range to the source base range.
+        /// For example, if the current range is D4:E4, the source base range is A1:C3, then the relative range to the target base range B10:D13 is E14:F14
+        /// </summary>
+        /// <param name="sourceBaseRange">The source base range.</param>
+        /// <param name="targetBaseRange">The target base range.</param>
+        /// <returns>The relative range</returns>
+        IXLRangeBase Relative(IXLRangeBase sourceBaseRange, IXLRangeBase targetBaseRange);
     }
 }

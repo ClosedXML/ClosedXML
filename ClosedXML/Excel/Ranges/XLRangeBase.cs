@@ -434,6 +434,15 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLRangeBase Relative(IXLRangeBase sourceBaseRange, IXLRangeBase targetBaseRange)
+        {
+            var xlSourceBaseRangeAddress = (XLRangeAddress)sourceBaseRange.RangeAddress;
+            var xlTargetBaseRangeAddress = (XLRangeAddress)targetBaseRange.RangeAddress;
+            var xlRangeAddress = this.RangeAddress.Relative(in xlSourceBaseRangeAddress, in xlTargetBaseRangeAddress);
+
+            return ((XLRangeBase)targetBaseRange).Range(xlRangeAddress);
+        }
+
         internal void RemoveConditionalFormatting()
         {
             var mf = RangeAddress.FirstAddress;

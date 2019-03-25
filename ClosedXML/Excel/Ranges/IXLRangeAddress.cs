@@ -79,6 +79,15 @@ namespace ClosedXML.Excel
         /// <returns>The intersection's range address</returns>
         IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress);
 
+        /// <summary>
+        /// Returns a range address so that its offset from the target base address is equal to the offset of the current range address to the source base address.
+        /// For example, if the current range address is D4:E4, the source base address is A1:C3, then the relative address to the target base address B10:D13 is E14:F14
+        /// </summary>
+        /// <param name="sourceRangeAddress">The source base range address.</param>
+        /// <param name="targetRangeAddress">The target base range address.</param>
+        /// <returns>The relative range</returns>
+        IXLRangeAddress Relative(IXLRangeAddress sourceRangeAddress, IXLRangeAddress targetRangeAddress);
+
         /// <summary>Allocates the current range address in the internal range repository and returns it</summary>
         IXLRange AsRange();
     }

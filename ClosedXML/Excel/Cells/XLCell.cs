@@ -2105,7 +2105,7 @@ namespace ClosedXML.Excel
             {
                 var fmtRanges = cf.Ranges
                     .GetIntersectedRanges(fromRange.RangeAddress)
-                    .Select(r => Relative(r.Intersection(fromRange).AsRange(), fromRange, toRange) as XLRange)
+                    .Select(r => r.RangeAddress.Intersection(fromRange.RangeAddress).Relative(fromRange.RangeAddress, toRange.RangeAddress).AsRange() as XLRange)
                     .ToList();
 
                 var c = new XLConditionalFormat(fmtRanges, true);
@@ -2114,21 +2114,6 @@ namespace ClosedXML.Excel
 
                 Worksheet.ConditionalFormats.Add(c);
             }
-        }
-
-        private static IXLRange Relative(IXLRangeBase range, IXLRangeBase baseRange, IXLRangeBase targetBase)
-        {
-            var sheet = (XLWorksheet)targetBase.Worksheet;
-            var xlRangeAddress = new XLRangeAddress(
-                new XLAddress(sheet,
-                    range.RangeAddress.FirstAddress.RowNumber - baseRange.RangeAddress.FirstAddress.RowNumber + 1,
-                    range.RangeAddress.FirstAddress.ColumnNumber - baseRange.RangeAddress.FirstAddress.ColumnNumber + 1,
-                    false, false),
-                new XLAddress(sheet,
-                    range.RangeAddress.LastAddress.RowNumber - baseRange.RangeAddress.FirstAddress.RowNumber + 1,
-                    range.RangeAddress.LastAddress.ColumnNumber - baseRange.RangeAddress.FirstAddress.ColumnNumber + 1,
-                    false, false));
-            return ((XLRangeBase)targetBase).Range(xlRangeAddress);
         }
 
         private bool SetDataTable(object o)

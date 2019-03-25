@@ -372,6 +372,39 @@ namespace ClosedXML.Excel
             return IsValid && IsEntireColumn() && IsEntireRow();
         }
 
+        public IXLRangeAddress Relative(IXLRangeAddress sourceRangeAddress, IXLRangeAddress targetRangeAddress)
+        {
+            var xlSourceRangeAddress = (XLRangeAddress)sourceRangeAddress;
+            var xlTargetRangeAddress = (XLRangeAddress)targetRangeAddress;
+
+            return Relative(in xlSourceRangeAddress, in xlTargetRangeAddress);
+        }
+
+        internal XLRangeAddress Relative(in XLRangeAddress sourceRangeAddress, in XLRangeAddress targetRangeAddress)
+        {
+            var sheet = targetRangeAddress.Worksheet;
+
+            return new XLRangeAddress
+            (
+                new XLAddress
+                (
+                    sheet,
+                    this.FirstAddress.RowNumber - sourceRangeAddress.FirstAddress.RowNumber + targetRangeAddress.FirstAddress.RowNumber,
+                    this.FirstAddress.ColumnNumber - sourceRangeAddress.FirstAddress.ColumnNumber + targetRangeAddress.FirstAddress.ColumnNumber,
+                    fixedRow: false,
+                    fixedColumn: false
+                ),
+                new XLAddress
+                (
+                    sheet,
+                    this.LastAddress.RowNumber - sourceRangeAddress.FirstAddress.RowNumber + targetRangeAddress.FirstAddress.RowNumber,
+                    this.LastAddress.ColumnNumber - sourceRangeAddress.FirstAddress.ColumnNumber + targetRangeAddress.FirstAddress.ColumnNumber,
+                    fixedRow: false,
+                    fixedColumn: false
+                )
+            );
+        }
+
         public IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress)
         {
             if (otherRangeAddress == null)
