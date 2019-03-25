@@ -367,6 +367,17 @@ namespace ClosedXML.Excel
             return IsValid && IsEntireColumn() && IsEntireRow();
         }
 
+        public IXLRange AsRange()
+        {
+            if (this.Worksheet == null)
+                throw new InvalidOperationException("The worksheet of the current range address has not been set.");
+
+            if (!this.IsValid)
+                return null;
+
+            return this.Worksheet.Range(this);
+        }
+
         #endregion Public methods
 
         #region Operators
