@@ -261,6 +261,34 @@ namespace ClosedXML_Tests
             Assert.DoesNotThrow(() => rangeAddress.AsRange());
         }
 
+        [Test]
+        public void RelativeRanges()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+
+            IXLRangeAddress rangeAddress;
+
+            rangeAddress = ws.Range("D4:E4").RangeAddress.Relative(ws.Range("A1:E4").RangeAddress, ws.Range("B10:F14").RangeAddress);
+            Assert.IsTrue(rangeAddress.IsValid);
+            Assert.AreEqual("E13:F13", rangeAddress.ToString());
+
+            rangeAddress = ws.Range("D4:E4").RangeAddress.Relative(ws.Range("B10:F14").RangeAddress, ws.Range("A1:E4").RangeAddress);
+            Assert.IsFalse(rangeAddress.IsValid);
+            Assert.AreEqual("#REF!", rangeAddress.ToString());
+
+            rangeAddress = ws.Range("C3").RangeAddress.Relative(ws.Range("A1:B2").RangeAddress, ws.Range("C3").RangeAddress);
+            Assert.IsTrue(rangeAddress.IsValid);
+            Assert.AreEqual("E5:E5", rangeAddress.ToString());
+
+            rangeAddress = ws.Range("B2").RangeAddress.Relative(ws.Range("A1").RangeAddress, ws.Range("C3").RangeAddress);
+            Assert.IsTrue(rangeAddress.IsValid);
+            Assert.AreEqual("D4:D4", rangeAddress.ToString());
+
+            rangeAddress = ws.Range("A1").RangeAddress.Relative(ws.Range("B2").RangeAddress, ws.Range("A1").RangeAddress);
+            Assert.IsFalse(rangeAddress.IsValid);
+            Assert.AreEqual("#REF!", rangeAddress.ToString());
+        }
+
         #region Private Methods
 
         private IXLRangeAddress ProduceInvalidAddress()
