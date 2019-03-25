@@ -990,8 +990,25 @@ namespace ClosedXML.Excel
 
         public XLRange Range(Int32 firstCellRow, Int32 firstCellColumn, Int32 lastCellRow, Int32 lastCellColumn)
         {
-            var rangeAddress = new XLRangeAddress(new XLAddress(Worksheet, firstCellRow, firstCellColumn, false, false),
-                                                  new XLAddress(Worksheet, lastCellRow, lastCellColumn, false, false));
+            var rangeAddress = new XLRangeAddress
+            (
+                new XLAddress
+                (
+                    Worksheet,
+                    firstCellRow + RangeAddress.FirstAddress.RowNumber - 1,
+                    firstCellColumn + RangeAddress.FirstAddress.ColumnNumber - 1,
+                    fixedRow: false,
+                    fixedColumn: false
+                ),
+                new XLAddress
+                (
+                    Worksheet,
+                    lastCellRow + RangeAddress.FirstAddress.RowNumber - 1,
+                    lastCellColumn + RangeAddress.FirstAddress.ColumnNumber - 1,
+                    fixedRow: false,
+                    fixedColumn: false
+                )
+            );
             return Range(rangeAddress);
         }
 
@@ -1014,14 +1031,14 @@ namespace ClosedXML.Excel
                      Worksheet;
 
             var newFirstCellAddress = new XLAddress(ws,
-                                 rangeAddress.FirstAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
-                                 rangeAddress.FirstAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
+                                 rangeAddress.FirstAddress.RowNumber,
+                                 rangeAddress.FirstAddress.ColumnNumber,
                                  rangeAddress.FirstAddress.FixedRow,
                                  rangeAddress.FirstAddress.FixedColumn);
 
             var newLastCellAddress = new XLAddress(ws,
-                                rangeAddress.LastAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
-                                rangeAddress.LastAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
+                                rangeAddress.LastAddress.RowNumber,
+                                rangeAddress.LastAddress.ColumnNumber,
                                 rangeAddress.LastAddress.FixedRow,
                                 rangeAddress.LastAddress.FixedColumn);
 
@@ -1047,15 +1064,15 @@ namespace ClosedXML.Excel
 
         protected String FixColumnAddress(String address)
         {
-            if (Int32.TryParse(address, out Int32 test))
-                return "A" + address;
+            if (Int32.TryParse(address, out Int32 rowNumber))
+                return RangeAddress.FirstAddress.ColumnLetter + (rowNumber + RangeAddress.FirstAddress.RowNumber - 1).ToInvariantString();
             return address;
         }
 
         protected String FixRowAddress(String address)
         {
-            if (Int32.TryParse(address, out Int32 test))
-                return XLHelper.GetColumnLetterFromNumber(test) + "1";
+            if (Int32.TryParse(address, out Int32 columnNumber))
+                return XLHelper.GetColumnLetterFromNumber(columnNumber + RangeAddress.FirstAddress.ColumnNumber - 1) + RangeAddress.FirstAddress.RowNumber.ToInvariantString();
             return address;
         }
 
