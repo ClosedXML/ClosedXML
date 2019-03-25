@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
 
 namespace ClosedXML_Tests
 {
@@ -232,6 +233,32 @@ namespace ClosedXML_Tests
 
             rangeAddress = (XLRangeAddress)ws.RangeAddress;
             Assert.IsTrue(rangeAddress.IsNormalized);
+        }
+
+        [Test]
+        public void AsRangeTests()
+        {
+            XLRangeAddress rangeAddress;
+            rangeAddress = new XLRangeAddress
+            (
+                new XLAddress(1, 1, false, false),
+                new XLAddress(5, 5, false, false)
+            );
+
+            Assert.IsTrue(rangeAddress.IsValid);
+            Assert.IsTrue(rangeAddress.IsNormalized);
+            Assert.Throws<InvalidOperationException>(() => rangeAddress.AsRange());
+
+            var ws = new XLWorkbook().AddWorksheet() as XLWorksheet;
+            rangeAddress = new XLRangeAddress
+            (
+                new XLAddress(ws, 1, 1, false, false),
+                new XLAddress(ws, 5, 5, false, false)
+            );
+
+            Assert.IsTrue(rangeAddress.IsValid);
+            Assert.IsTrue(rangeAddress.IsNormalized);
+            Assert.DoesNotThrow(() => rangeAddress.AsRange());
         }
 
         #region Private Methods

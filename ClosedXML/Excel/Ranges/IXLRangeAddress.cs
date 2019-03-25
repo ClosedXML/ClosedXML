@@ -68,8 +68,11 @@ namespace ClosedXML.Excel
 
         String ToStringRelative(Boolean includeSheet);
 
-        bool Intersects(IXLRangeAddress otherAddress);
+        Boolean Intersects(IXLRangeAddress otherAddress);
 
-        bool Contains(IXLAddress address);
+        Boolean Contains(IXLAddress address);
+
+        /// <summary>Allocates the current range address in the internal range repository and returns it</summary>
+        IXLRange AsRange();
     }
 }
