@@ -440,7 +440,7 @@ namespace ClosedXML.Excel
             var xlTargetBaseRangeAddress = (XLRangeAddress)targetBaseRange.RangeAddress;
             var xlRangeAddress = this.RangeAddress.Relative(in xlSourceBaseRangeAddress, in xlTargetBaseRangeAddress);
 
-            return ((XLRangeBase)targetBaseRange).Range(xlRangeAddress);
+            return ((XLRangeBase)targetBaseRange).Range(in xlRangeAddress);
         }
 
         internal void RemoveConditionalFormatting()
@@ -1003,9 +1003,16 @@ namespace ClosedXML.Excel
 
         public XLRange Range(IXLRangeAddress rangeAddress)
         {
-            var ws = (XLWorksheet)rangeAddress.FirstAddress.Worksheet ??
-                     (XLWorksheet)rangeAddress.LastAddress.Worksheet ??
+            var xlRangeAddress = (XLRangeAddress)rangeAddress;
+            return Range(in xlRangeAddress);
+        }
+
+        internal XLRange Range(in XLRangeAddress rangeAddress)
+        {
+            var ws = rangeAddress.FirstAddress.Worksheet ??
+                     rangeAddress.LastAddress.Worksheet ??
                      Worksheet;
+
             var newFirstCellAddress = new XLAddress(ws,
                                  rangeAddress.FirstAddress.RowNumber + RangeAddress.FirstAddress.RowNumber - 1,
                                  rangeAddress.FirstAddress.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1,
