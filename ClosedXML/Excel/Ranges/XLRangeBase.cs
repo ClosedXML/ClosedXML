@@ -550,7 +550,7 @@ namespace ClosedXML.Excel
 
         public virtual XLRange AsRange()
         {
-            return Worksheet.Range(RangeAddress.FirstAddress, RangeAddress.LastAddress);
+            return Worksheet.Range(RangeAddress);
         }
 
         public IXLRange AddToNamed(String rangeName)
