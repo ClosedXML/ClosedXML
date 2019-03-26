@@ -84,6 +84,13 @@ namespace ClosedXML.Excel
             Worksheet = worksheet;
         }
 
+        public XLRangeAddress(XLWorksheet worksheet, XLAddress firstAddress, XLAddress lastAddress)
+        {
+            Worksheet = worksheet;
+            FirstAddress = new XLAddress(worksheet, firstAddress.RowNumber, firstAddress.ColumnNumber, firstAddress.FixedRow, firstAddress.FixedColumn);
+            LastAddress = new XLAddress(worksheet, lastAddress.RowNumber, lastAddress.ColumnNumber, lastAddress.FixedRow, lastAddress.FixedColumn);
+        }
+
         #endregion Constructor
 
         #region Public properties
