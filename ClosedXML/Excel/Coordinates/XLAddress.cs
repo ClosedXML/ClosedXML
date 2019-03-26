@@ -75,18 +75,6 @@ namespace ClosedXML.Excel
 
         #region Private fields
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool _fixedRow;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool _fixedColumn;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly int _rowNumber;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly int _columnNumber;
-
         private string _trimmedAddress;
 
         #endregion Private fields
@@ -143,17 +131,17 @@ namespace ClosedXML.Excel
         {
             Worksheet = worksheet;
 
-            _rowNumber = rowNumber;
-            _columnNumber = columnNumber;
-            _fixedColumn = fixedColumn;
-            _fixedRow = fixedRow;
+            RowNumber = rowNumber;
+            ColumnNumber = columnNumber;
+            FixedColumn = fixedColumn;
+            FixedRow = fixedRow;
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public XLWorksheet Worksheet { get; internal set; }
+        public XLWorksheet Worksheet { [DebuggerStepThrough] get; }
 
         IXLWorksheet IXLAddress.Worksheet
         {
@@ -167,38 +155,26 @@ namespace ClosedXML.Excel
             get { return Worksheet != null; }
         }
 
-        public bool FixedRow
-        {
-            get { return _fixedRow; }
-        }
+        public bool FixedRow { [DebuggerStepThrough] get; }
 
-        public bool FixedColumn
-        {
-            get { return _fixedColumn; }
-        }
+        public bool FixedColumn { [DebuggerStepThrough] get; }
 
         /// <summary>
         /// Gets the row number of this address.
         /// </summary>
-        public Int32 RowNumber
-        {
-            get { return _rowNumber; }
-        }
+        public Int32 RowNumber { [DebuggerStepThrough] get; }
 
         /// <summary>
         /// Gets the column number of this address.
         /// </summary>
-        public Int32 ColumnNumber
-        {
-            get { return _columnNumber; }
-        }
+        public Int32 ColumnNumber { [DebuggerStepThrough] get; }
 
         /// <summary>
         /// Gets the column letter(s) of this address.
         /// </summary>
         public String ColumnLetter
         {
-            get { return XLHelper.GetColumnLetterFromNumber(_columnNumber); }
+            get { return XLHelper.GetColumnLetterFromNumber(ColumnNumber); }
         }
 
         #endregion Properties
@@ -211,15 +187,15 @@ namespace ClosedXML.Excel
                 return "#REF!";
 
             String retVal = ColumnLetter;
-            if (_fixedColumn)
+            if (FixedColumn)
             {
                 retVal = "$" + retVal;
             }
-            if (_fixedRow)
+            if (FixedRow)
             {
                 retVal += "$";
             }
-            retVal += _rowNumber.ToInvariantString();
+            retVal += RowNumber.ToInvariantString();
             return retVal;
         }
 
@@ -237,7 +213,7 @@ namespace ClosedXML.Excel
                 address = GetTrimmedAddress();
             else if (referenceStyle == XLReferenceStyle.R1C1
                      || HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
-                address = "R" + _rowNumber.ToInvariantString() + "C" + ColumnNumber.ToInvariantString();
+                address = "R" + RowNumber.ToInvariantString() + "C" + ColumnNumber.ToInvariantString();
             else
                 address = GetTrimmedAddress();
 
@@ -256,7 +232,7 @@ namespace ClosedXML.Excel
 
         public string GetTrimmedAddress()
         {
-            return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToInvariantString());
+            return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + RowNumber.ToInvariantString());
         }
 
         #endregion Methods
@@ -268,8 +244,8 @@ namespace ClosedXML.Excel
             return new XLAddress(left.Worksheet,
                                  left.RowNumber + right.RowNumber,
                                  left.ColumnNumber + right.ColumnNumber,
-                                 left._fixedRow,
-                                 left._fixedColumn);
+                                 left.FixedRow,
+                                 left.FixedColumn);
         }
 
         public static XLAddress operator -(XLAddress left, XLAddress right)
@@ -277,8 +253,8 @@ namespace ClosedXML.Excel
             return new XLAddress(left.Worksheet,
                                  left.RowNumber - right.RowNumber,
                                  left.ColumnNumber - right.ColumnNumber,
-                                 left._fixedRow,
-                                 left._fixedColumn);
+                                 left.FixedRow,
+                                 left.FixedColumn);
         }
 
         public static XLAddress operator +(XLAddress left, Int32 right)
@@ -286,8 +262,8 @@ namespace ClosedXML.Excel
             return new XLAddress(left.Worksheet,
                                  left.RowNumber + right,
                                  left.ColumnNumber + right,
-                                 left._fixedRow,
-                                 left._fixedColumn);
+                                 left.FixedRow,
+                                 left.FixedColumn);
         }
 
         public static XLAddress operator -(XLAddress left, Int32 right)
@@ -295,17 +271,13 @@ namespace ClosedXML.Excel
             return new XLAddress(left.Worksheet,
                                  left.RowNumber - right,
                                  left.ColumnNumber - right,
-                                 left._fixedRow,
-                                 left._fixedColumn);
+                                 left.FixedRow,
+                                 left.FixedColumn);
         }
 
         public static Boolean operator ==(XLAddress left, XLAddress right)
         {
-            if (ReferenceEquals(left, right))
-            {
-                return true;
-            }
-            return !ReferenceEquals(left, null) && left.Equals(right);
+            return left.Equals(right);
         }
 
         public static Boolean operator !=(XLAddress left, XLAddress right)
@@ -338,32 +310,32 @@ namespace ClosedXML.Excel
             if (other == null)
                 return false;
 
-            return _rowNumber == other.RowNumber &&
-                   _columnNumber == other.ColumnNumber &&
-                   _fixedRow == other.FixedRow &&
-                   _fixedColumn == other.FixedColumn;
+            return RowNumber == other.RowNumber &&
+                   ColumnNumber == other.ColumnNumber &&
+                   FixedRow == other.FixedRow &&
+                   FixedColumn == other.FixedColumn;
         }
 
         public bool Equals(XLAddress other)
         {
-            return _rowNumber == other._rowNumber &&
-                   _columnNumber == other._columnNumber &&
-                   _fixedRow == other._fixedRow &&
-                   _fixedColumn == other._fixedColumn;
+            return RowNumber == other.RowNumber &&
+                   ColumnNumber == other.ColumnNumber &&
+                   FixedRow == other.FixedRow &&
+                   FixedColumn == other.FixedColumn;
         }
 
-        public override Boolean Equals(Object other)
+        public override Boolean Equals(Object obj)
         {
-            return Equals(other as IXLAddress);
+            return Equals(obj as IXLAddress);
         }
 
         public override int GetHashCode()
         {
             var hashCode = 2122234362;
-            hashCode = hashCode * -1521134295 + _fixedRow.GetHashCode();
-            hashCode = hashCode * -1521134295 + _fixedColumn.GetHashCode();
-            hashCode = hashCode * -1521134295 + _rowNumber.GetHashCode();
-            hashCode = hashCode * -1521134295 + _columnNumber.GetHashCode();
+            hashCode = hashCode * -1521134295 + FixedRow.GetHashCode();
+            hashCode = hashCode * -1521134295 + FixedColumn.GetHashCode();
+            hashCode = hashCode * -1521134295 + RowNumber.GetHashCode();
+            hashCode = hashCode * -1521134295 + ColumnNumber.GetHashCode();
             return hashCode;
         }
 
@@ -431,11 +403,11 @@ namespace ClosedXML.Excel
                 switch (referenceStyle)
                 {
                     case XLReferenceStyle.A1:
-                        address = String.Concat('$', ColumnLetter, '$', _rowNumber.ToInvariantString());
+                        address = String.Concat('$', ColumnLetter, '$', RowNumber.ToInvariantString());
                         break;
 
                     case XLReferenceStyle.R1C1:
-                        address = String.Concat('R', _rowNumber.ToInvariantString(), 'C', ColumnNumber);
+                        address = String.Concat('R', RowNumber.ToInvariantString(), 'C', ColumnNumber);
                         break;
 
                     default:
