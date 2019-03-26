@@ -317,6 +317,80 @@ namespace ClosedXML_Tests
             Assert.Throws<InvalidOperationException>(() => { var x = rangeAddress.NumberOfCells; });
         }
 
+        [Test]
+        public void EqualityTests()
+        {
+            // Valid addresses
+            var ws = new XLWorkbook().AddWorksheet();
+            var validAddress1 = ws.Range("A1:B2").RangeAddress;
+            var validAddress2 = ws.Range("A1:C3").RangeAddress;
+            var validAddress3 = ((XLRangeAddress)ws.Range("B2:A1").RangeAddress).Normalize();
+
+            Assert.IsFalse(validAddress1.Equals(validAddress2));
+            Assert.IsTrue(validAddress1.Equals(validAddress3));
+
+            // Invalid addresses
+            var invalidAddress1 = ProduceInvalidAddress();
+            var invalidAddress2 = ProduceAddressOnDeletedWorksheet();
+            var invalidAddress3 = ProduceInvalidAddressOnDeletedWorksheet();
+
+            var invalidAddress4 = new XLRangeAddress
+            (
+                invalidAddress1.Worksheet as XLWorksheet,
+                new XLAddress(-50, -50, false, false),
+                new XLAddress(-80, -80, false, false)
+            );
+
+            Assert.IsFalse(validAddress1.Equals(invalidAddress2));
+
+            Assert.IsFalse(invalidAddress1.Equals(invalidAddress2));
+            Assert.IsFalse(invalidAddress1.Equals(invalidAddress3));
+            Assert.IsTrue(invalidAddress1.Equals(invalidAddress4));
+
+            Assert.IsFalse(invalidAddress2.Equals(invalidAddress3));
+            Assert.IsFalse(invalidAddress2.Equals(invalidAddress4));
+
+            Assert.IsFalse(invalidAddress3.Equals(invalidAddress4));
+
+            // When the worksheet is null
+            var validAddress1WithoutWorksheet = ((XLRangeAddress)validAddress1).WithoutWorksheet();
+            var validAddress2WithoutWorksheet = ((XLRangeAddress)validAddress2).WithoutWorksheet();
+            var validAddress3WithoutWorksheet = ((XLRangeAddress)validAddress3).WithoutWorksheet();
+
+            Assert.IsFalse(validAddress1.Equals(validAddress1WithoutWorksheet));
+            Assert.IsFalse(validAddress2.Equals(validAddress2WithoutWorksheet));
+            Assert.IsFalse(validAddress3.Equals(validAddress3WithoutWorksheet));
+
+            Assert.IsFalse(validAddress1WithoutWorksheet.Equals(validAddress2WithoutWorksheet));
+            Assert.IsTrue(validAddress1WithoutWorksheet.Equals(validAddress3WithoutWorksheet));
+
+            var invalidAddress1WithoutWorksheet = ((XLRangeAddress)invalidAddress1).WithoutWorksheet();
+            var invalidAddress2WithoutWorksheet = ((XLRangeAddress)invalidAddress2).WithoutWorksheet();
+            var invalidAddress3WithoutWorksheet = ((XLRangeAddress)invalidAddress3).WithoutWorksheet();
+            var invalidAddress4WithoutWorksheet = ((XLRangeAddress)invalidAddress4).WithoutWorksheet();
+
+            Assert.IsFalse(invalidAddress1.Equals(invalidAddress1WithoutWorksheet));
+            Assert.IsFalse(invalidAddress2.Equals(invalidAddress2WithoutWorksheet));
+            Assert.IsFalse(invalidAddress3.Equals(invalidAddress3WithoutWorksheet));
+            Assert.IsFalse(invalidAddress4.Equals(invalidAddress4WithoutWorksheet));
+
+            // True this time, because worksheets are removed
+            Assert.IsTrue(validAddress1WithoutWorksheet.Equals(invalidAddress2WithoutWorksheet));
+
+            Assert.IsFalse(invalidAddress1WithoutWorksheet.Equals(invalidAddress2WithoutWorksheet));
+
+            // True this time, because worksheets are removed
+            Assert.IsTrue(invalidAddress1WithoutWorksheet.Equals(invalidAddress3WithoutWorksheet));
+
+            Assert.IsTrue(invalidAddress1WithoutWorksheet.Equals(invalidAddress4WithoutWorksheet));
+
+            Assert.IsFalse(invalidAddress2WithoutWorksheet.Equals(invalidAddress3WithoutWorksheet));
+            Assert.IsFalse(invalidAddress2WithoutWorksheet.Equals(invalidAddress4WithoutWorksheet));
+
+            // True this time, because worksheets are removed
+            Assert.IsTrue(invalidAddress3WithoutWorksheet.Equals(invalidAddress4WithoutWorksheet));
+        }
+
         #region Private Methods
 
         private IXLRangeAddress ProduceInvalidAddress()

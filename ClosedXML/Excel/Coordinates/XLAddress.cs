@@ -311,6 +311,9 @@ namespace ClosedXML.Excel
             if (other == null)
                 return false;
 
+            if (!this.IsValid && !other.IsValid)
+                return ReferenceEquals(this.Worksheet, other.Worksheet);
+
             return RowNumber == other.RowNumber &&
                    ColumnNumber == other.ColumnNumber &&
                    FixedRow == other.FixedRow &&
@@ -320,6 +323,9 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLAddress other)
         {
+            if (!this.IsValid && !other.IsValid)
+                return ReferenceEquals(this.Worksheet, other.Worksheet);
+
             return RowNumber == other.RowNumber &&
                    ColumnNumber == other.ColumnNumber &&
                    FixedRow == other.FixedRow &&

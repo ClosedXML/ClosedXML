@@ -354,15 +354,10 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            if (!(obj is XLRangeAddress))
-            {
+            if (!(obj is XLRangeAddress rangeAddress))
                 return false;
-            }
 
-            var address = (XLRangeAddress)obj;
-            return FirstAddress.Equals(address.FirstAddress) &&
-                   LastAddress.Equals(address.LastAddress) &&
-                   EqualityComparer<XLWorksheet>.Default.Equals(Worksheet, address.Worksheet);
+            return Equals(rangeAddress);
         }
 
         public override int GetHashCode()
@@ -376,6 +371,9 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLRangeAddress other)
         {
+            if (!this.IsValid && !other.IsValid)
+                return ReferenceEquals(Worksheet, other.Worksheet);
+
             return ReferenceEquals(Worksheet, other.Worksheet) &&
                    FirstAddress == other.FirstAddress &&
                    LastAddress == other.LastAddress;
