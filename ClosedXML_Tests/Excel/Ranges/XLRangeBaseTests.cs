@@ -226,12 +226,18 @@ namespace ClosedXML_Tests
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                Assert.AreEqual("D9:G11", ws.Range("B9:I11").Intersection(ws.Range("D4:G16")).RangeAddress.ToString());
-                Assert.AreEqual("E9:G11", ws.Range("E9:I11").Intersection(ws.Range("D4:G16")).RangeAddress.ToString());
-                Assert.AreEqual("E9:E9", ws.Cell("E9").AsRange().Intersection(ws.Range("D4:G16")).RangeAddress.ToString());
-                Assert.AreEqual("E9:E9", ws.Range("D4:G16").Intersection(ws.Cell("E9").AsRange()).RangeAddress.ToString());
+                Assert.AreEqual("D9:G11", ws.Range("B9:I11").Intersection(ws.Range("D4:G16")).ToString());
+                Assert.AreEqual("E9:G11", ws.Range("E9:I11").Intersection(ws.Range("D4:G16")).ToString());
+                Assert.AreEqual("E9:E9", ws.Cell("E9").AsRange().Intersection(ws.Range("D4:G16")).ToString());
+                Assert.AreEqual("E9:E9", ws.Range("D4:G16").Intersection(ws.Cell("E9").AsRange()).ToString());
 
-                Assert.Null(ws.Cell("A1").AsRange().Intersection(ws.Cell("C3").AsRange()));
+                XLRangeAddress rangeAddress;
+
+                rangeAddress = (XLRangeAddress)ws.Cell("C3").AsRange().Intersection(ws.Cell("A1").AsRange());
+                Assert.IsFalse(rangeAddress.IsValid);
+
+                rangeAddress = (XLRangeAddress)ws.Cell("A1").AsRange().Intersection(ws.Cell("C3").AsRange());
+                Assert.IsFalse(rangeAddress.IsValid);
 
                 Assert.Null(ws.Range("A1:C3").Intersection(null));
 

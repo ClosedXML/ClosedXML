@@ -72,6 +72,13 @@ namespace ClosedXML.Excel
 
         Boolean Contains(IXLAddress address);
 
+        /// <summary>
+        /// Returns the intersection of this range address with another range address on the same worksheet.
+        /// </summary>
+        /// <param name="otherRangeAddress">The other range address.</param>
+        /// <returns>The intersection's range address</returns>
+        IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress);
+
         /// <summary>Allocates the current range address in the internal range repository and returns it</summary>
         IXLRange AsRange();
     }

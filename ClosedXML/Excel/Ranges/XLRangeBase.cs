@@ -2221,7 +2221,7 @@ namespace ClosedXML.Excel
             return this.Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
         }
 
-        public IXLRangeBase Intersection(IXLRangeBase otherRange, Func<IXLCell, Boolean> thisRangePredicate = null, Func<IXLCell, Boolean> otherRangePredicate = null)
+        public IXLRangeAddress Intersection(IXLRangeBase otherRange, Func<IXLCell, Boolean> thisRangePredicate = null, Func<IXLCell, Boolean> otherRangePredicate = null)
         {
             if (otherRange == null)
                 return null;
@@ -2229,21 +2229,33 @@ namespace ClosedXML.Excel
             if (!this.Worksheet.Equals(otherRange.Worksheet))
                 return null;
 
-            if (thisRangePredicate == null) thisRangePredicate = c => true;
-            if (otherRangePredicate == null) otherRangePredicate = c => true;
+            if (thisRangePredicate == null && otherRangePredicate == null)
+            {
+                // Special case, no predicates. We can optimise this a bit then.
+                return this.RangeAddress.Intersection(otherRange.RangeAddress);
+            }
+            else
+            {
+                thisRangePredicate = thisRangePredicate ?? (c => true);
+                otherRangePredicate = otherRangePredicate ?? (c => true);
 
-            var intersectionCells = this.Cells(c => thisRangePredicate(c) && otherRange.Cells(otherRangePredicate).Contains(c));
+                var intersectionCells = this.Cells(c => thisRangePredicate(c) && otherRange.Cells(otherRangePredicate).Contains(c));
 
-            if (!intersectionCells.Any())
-                return null;
+                if (!intersectionCells.Any())
+                    return null;
 
-            var firstRow = intersectionCells.Min(c => c.Address.RowNumber);
-            var firstColumn = intersectionCells.Min(c => c.Address.ColumnNumber);
+                var firstRow = intersectionCells.Min(c => c.Address.RowNumber);
+                var firstColumn = intersectionCells.Min(c => c.Address.ColumnNumber);
 
-            var lastRow = intersectionCells.Max(c => c.Address.RowNumber);
-            var lastColumn = intersectionCells.Max(c => c.Address.ColumnNumber);
+                var lastRow = intersectionCells.Max(c => c.Address.RowNumber);
+                var lastColumn = intersectionCells.Max(c => c.Address.ColumnNumber);
 
-            return this.Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
+                return new XLRangeAddress
+                (
+                    new XLAddress(this.Worksheet, firstRow, firstColumn, fixedRow: false, fixedColumn: false),
+                    new XLAddress(this.Worksheet, lastRow, lastColumn, fixedRow: false, fixedColumn: false)
+                );
+            }
         }
 
         public IXLCells SurroundingCells(Func<IXLCell, Boolean> predicate = null)
