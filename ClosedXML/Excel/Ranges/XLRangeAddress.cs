@@ -372,6 +372,38 @@ namespace ClosedXML.Excel
             return IsValid && IsEntireColumn() && IsEntireRow();
         }
 
+        public IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress)
+        {
+            if (otherRangeAddress == null)
+                throw new ArgumentNullException(nameof(otherRangeAddress));
+
+            var xlOtherRangeAddress = (XLRangeAddress)otherRangeAddress;
+            return Intersection(in xlOtherRangeAddress);
+        }
+
+        internal XLRangeAddress Intersection(in XLRangeAddress otherRangeAddress)
+        {
+            if (!this.Worksheet.Equals(otherRangeAddress.Worksheet))
+                throw new ArgumentOutOfRangeException(nameof(otherRangeAddress), "The other range address is on a different worksheet");
+
+            var thisRangeAddressNormalized = this.Normalize();
+            var otherRangeAddressNormalized = otherRangeAddress.Normalize();
+
+            var firstRow = Math.Max(thisRangeAddressNormalized.FirstAddress.RowNumber, otherRangeAddressNormalized.FirstAddress.RowNumber);
+            var firstColumn = Math.Max(thisRangeAddressNormalized.FirstAddress.ColumnNumber, otherRangeAddressNormalized.FirstAddress.ColumnNumber);
+            var lastRow = Math.Min(thisRangeAddressNormalized.LastAddress.RowNumber, otherRangeAddressNormalized.LastAddress.RowNumber);
+            var lastColumn = Math.Min(thisRangeAddressNormalized.LastAddress.ColumnNumber, otherRangeAddressNormalized.LastAddress.ColumnNumber);
+
+            if (lastRow < firstRow || lastColumn < firstColumn)
+                return XLRangeAddress.Invalid;
+
+            return new XLRangeAddress
+            (
+                new XLAddress(this.Worksheet, firstRow, firstColumn, fixedRow: false, fixedColumn: false),
+                new XLAddress(this.Worksheet, lastRow, lastColumn, fixedRow: false, fixedColumn: false)
+            );
+        }
+
         public IXLRange AsRange()
         {
             if (this.Worksheet == null)

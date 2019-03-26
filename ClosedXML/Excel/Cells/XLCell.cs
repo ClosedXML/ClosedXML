@@ -2100,11 +2100,12 @@ namespace ClosedXML.Excel
             cCnt = Math.Min(cCnt, fromRange.ColumnCount());
             var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
             var formats = srcSheet.ConditionalFormats.Where(f => f.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any());
+
             foreach (var cf in formats.ToList())
             {
                 var fmtRanges = cf.Ranges
                     .GetIntersectedRanges(fromRange.RangeAddress)
-                    .Select(r => Relative(Intersection(r, fromRange), fromRange, toRange) as XLRange)
+                    .Select(r => Relative(r.Intersection(fromRange).AsRange(), fromRange, toRange) as XLRange)
                     .ToList();
 
                 var c = new XLConditionalFormat(fmtRanges, true);
@@ -2113,16 +2114,6 @@ namespace ClosedXML.Excel
 
                 Worksheet.ConditionalFormats.Add(c);
             }
-        }
-
-        private static IXLRangeBase Intersection(IXLRangeBase range, IXLRangeBase crop)
-        {
-            var sheet = range.Worksheet;
-            return sheet.Range(
-                Math.Max(range.RangeAddress.FirstAddress.RowNumber, crop.RangeAddress.FirstAddress.RowNumber),
-                Math.Max(range.RangeAddress.FirstAddress.ColumnNumber, crop.RangeAddress.FirstAddress.ColumnNumber),
-                Math.Min(range.RangeAddress.LastAddress.RowNumber, crop.RangeAddress.LastAddress.RowNumber),
-                Math.Min(range.RangeAddress.LastAddress.ColumnNumber, crop.RangeAddress.LastAddress.ColumnNumber));
         }
 
         private static IXLRange Relative(IXLRangeBase range, IXLRangeBase baseRange, IXLRangeBase targetBase)
