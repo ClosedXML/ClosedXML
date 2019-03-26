@@ -24,10 +24,7 @@ namespace ClosedXML.Excel
                 new XLAddress(worksheet, row, XLHelper.MaxColumnNumber, false, false));
         }
 
-        public static readonly XLRangeAddress Invalid = new XLRangeAddress(
-            new XLAddress(-1, -1, fixedRow: true, fixedColumn: true),
-            new XLAddress(-1, -1, fixedRow: true, fixedColumn: true)
-        );
+        public static readonly XLRangeAddress Invalid = new XLRangeAddress(XLAddress.Invalid, XLAddress.Invalid);
 
         #endregion Static members
 

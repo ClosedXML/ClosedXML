@@ -7,6 +7,7 @@ namespace ClosedXML.Excel
     internal struct XLAddress : IXLAddress, IEquatable<XLAddress>
     {
         #region Static
+
         /// <summary>
         /// Create address without worksheet. For calculation only!
         /// </summary>
@@ -67,6 +68,8 @@ namespace ClosedXML.Excel
             }
             return new XLAddress(worksheet, rowNumber, columnLetter, fixedRow, fixedColumn);
         }
+
+        public static readonly XLAddress Invalid = new XLAddress(-1, -1, fixedRow: true, fixedColumn: true);
 
         #endregion Static
 
