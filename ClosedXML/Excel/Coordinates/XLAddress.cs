@@ -1,5 +1,6 @@
 using ClosedXML.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ClosedXML.Excel
@@ -313,7 +314,8 @@ namespace ClosedXML.Excel
             return RowNumber == other.RowNumber &&
                    ColumnNumber == other.ColumnNumber &&
                    FixedRow == other.FixedRow &&
-                   FixedColumn == other.FixedColumn;
+                   FixedColumn == other.FixedColumn &&
+                   ReferenceEquals(this.Worksheet, other.Worksheet);
         }
 
         public bool Equals(XLAddress other)
@@ -321,7 +323,8 @@ namespace ClosedXML.Excel
             return RowNumber == other.RowNumber &&
                    ColumnNumber == other.ColumnNumber &&
                    FixedRow == other.FixedRow &&
-                   FixedColumn == other.FixedColumn;
+                   FixedColumn == other.FixedColumn &&
+                   ReferenceEquals(this.Worksheet, other.Worksheet);
         }
 
         public override Boolean Equals(Object obj)
@@ -336,6 +339,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + FixedColumn.GetHashCode();
             hashCode = hashCode * -1521134295 + RowNumber.GetHashCode();
             hashCode = hashCode * -1521134295 + ColumnNumber.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<XLWorksheet>.Default.GetHashCode(Worksheet);
             return hashCode;
         }
 
