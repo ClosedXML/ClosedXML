@@ -25,6 +25,7 @@ namespace ClosedXML.Excel
 
         private Double _rowHeight;
         private Boolean _tabActive;
+        private XLSheetProtection _protection;
         internal Boolean EventTrackingEnabled;
 
         /// <summary>
@@ -149,7 +150,16 @@ namespace ClosedXML.Excel
         internal String RelId { get; set; }
         public XLDataValidations DataValidations { get; private set; }
         public IXLCharts Charts { get; private set; }
-        public XLSheetProtection Protection { get; private set; }
+
+        public XLSheetProtection Protection
+        {
+            get => _protection;
+            set
+            {
+                _protection = value.Clone().CastTo<XLSheetProtection>();
+            }
+        }
+
         public XLAutoFilter AutoFilter { get; private set; }
 
         public bool IsDeleted { get; private set; }
@@ -683,7 +693,8 @@ namespace ClosedXML.Excel
 
         IXLSheetProtection IXLWorksheet.Protection
         {
-            get { return Protection; }
+            get => Protection;
+            set => Protection = value as XLSheetProtection;
         }
 
         public IXLSheetProtection Protect()
@@ -1659,6 +1670,7 @@ namespace ClosedXML.Excel
         }
 
         private IXLRanges _selectedRanges;
+
         public IXLRanges SelectedRanges
         {
             get

@@ -34,6 +34,16 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public object Clone()
+        {
+            return new XLSheetProtection()
+            {
+                IsProtected = this.IsProtected,
+                PasswordHash = this.PasswordHash,
+                AllowedElements = this.AllowedElements
+            };
+        }
+
         public IXLSheetProtection CopyFrom(IXLSheetProtection sheetProtection)
         {
             this.IsProtected = sheetProtection.IsProtected;

@@ -363,7 +363,7 @@ namespace ClosedXML.Excel
 
         IXLWorksheet Unhide();
 
-        IXLSheetProtection Protection { get; }
+        IXLSheetProtection Protection { get; set; }
 
         IXLSheetProtection Protect();
 

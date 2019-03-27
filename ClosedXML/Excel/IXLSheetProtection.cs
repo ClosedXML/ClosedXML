@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
             | Sort
     }
 
-    public interface IXLSheetProtection
+    public interface IXLSheetProtection : ICloneable
     {
         XLSheetProtectionElements AllowedElements { get; set; }
 
