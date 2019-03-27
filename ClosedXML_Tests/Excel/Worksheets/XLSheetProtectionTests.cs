@@ -119,5 +119,25 @@ namespace ClosedXML_Tests.Excel.Worksheets
                 Assert.IsTrue(ws.Protection.IsProtected);
             }
         }
+
+        [Test]
+        public void SetWorksheetProtectionCloning()
+        {
+            var ws1 = new XLWorkbook().AddWorksheet();
+            var ws2 = new XLWorkbook().AddWorksheet();
+
+            ws1.Protect("123")
+                .AllowElement(XLSheetProtectionElements.FormatEverything)
+                .DisallowElement(XLSheetProtectionElements.FormatCells);
+
+            Assert.AreEqual(XLSheetProtectionElements.FormatColumns | XLSheetProtectionElements.FormatRows | XLSheetProtectionElements.SelectEverything, ws1.Protection.AllowedElements);
+
+            ws2.Protection = ws1.Protection;
+
+            Assert.IsFalse(ReferenceEquals(ws1.Protection, ws2.Protection));
+            Assert.IsTrue(ws2.Protection.IsProtected);
+            Assert.AreEqual(XLSheetProtectionElements.FormatColumns | XLSheetProtectionElements.FormatRows | XLSheetProtectionElements.SelectEverything, ws2.Protection.AllowedElements);
+            Assert.AreEqual((ws1.Protection as XLSheetProtection).PasswordHash, (ws2.Protection as XLSheetProtection).PasswordHash);
+        }
     }
 }
