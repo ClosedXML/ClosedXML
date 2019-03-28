@@ -18,6 +18,8 @@ namespace ClosedXML.Excel.CalcEngine
     /// </remarks>
     internal class CalcEngine
     {
+        private const string defaultFunctionNameSpace = "_xlfn";
+
         //---------------------------------------------------------------------------
 
         #region ** fields
@@ -416,21 +418,26 @@ namespace ClosedXML.Excel.CalcEngine
 
                     // get identifier
                     id = (string)_token.Value;
+                    FunctionDefinition functionDefinition;
+
+                    var foundFunction = _fnTbl.TryGetValue(id, out functionDefinition);
+                    if (!foundFunction && id.StartsWith($"{defaultFunctionNameSpace}."))
+                        foundFunction = _fnTbl.TryGetValue(id.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
 
                     // look for functions
-                    if (_fnTbl.TryGetValue(id, out FunctionDefinition fnDef))
+                    if (foundFunction)
                     {
                         var p = GetParameters();
                         var pCnt = p == null ? 0 : p.Count;
-                        if (fnDef.ParmMin != -1 && pCnt < fnDef.ParmMin)
+                        if (functionDefinition.ParmMin != -1 && pCnt < functionDefinition.ParmMin)
                         {
-                            Throw(string.Format("Too few parameters for function '{0}'. Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
+                            Throw(string.Format("Too few parameters for function '{0}'. Expected a minimum of {1} and a maximum of {2}.", id, functionDefinition.ParmMin, functionDefinition.ParmMax));
                         }
-                        if (fnDef.ParmMax != -1 && pCnt > fnDef.ParmMax)
+                        if (functionDefinition.ParmMax != -1 && pCnt > functionDefinition.ParmMax)
                         {
-                            Throw(string.Format("Too many parameters for function '{0}'.Expected a minimum of {1} and a maximum of {2}.", id, fnDef.ParmMin, fnDef.ParmMax));
+                            Throw(string.Format("Too many parameters for function '{0}'.Expected a minimum of {1} and a maximum of {2}.", id, functionDefinition.ParmMin, functionDefinition.ParmMax));
                         }
-                        x = new FunctionExpression(fnDef, p);
+                        x = new FunctionExpression(functionDefinition, p);
                         break;
                     }
 
@@ -449,7 +456,7 @@ namespace ClosedXML.Excel.CalcEngine
                         break;
                     }
 
-                    Throw("Unexpected identifier");
+                    Throw($"Unexpected identifier: {id}");
                     break;
 
                 // sub-expressions
