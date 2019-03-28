@@ -659,5 +659,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual(2, value);
             }
         }
+
+        [Test]
+        public void TestDefaultExcelFunctionNamespace()
+        {
+            Assert.DoesNotThrow(() => XLWorkbook.EvaluateExpr("TODAY()"));
+            Assert.DoesNotThrow(() => XLWorkbook.EvaluateExpr("_xlfn.TODAY()"));
+            Assert.IsTrue((bool)XLWorkbook.EvaluateExpr("_xlfn.TODAY() = TODAY()"));
+        }
     }
 }
