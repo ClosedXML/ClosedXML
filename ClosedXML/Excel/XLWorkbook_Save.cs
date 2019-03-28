@@ -4964,7 +4964,7 @@ namespace ClosedXML.Excel
 
             #region SheetProtection
 
-            if (xlWorksheet.Protection.Protected)
+            if (xlWorksheet.Protection.IsProtected)
             {
                 if (!worksheetPart.Worksheet.Elements<SheetProtection>().Any())
                 {
@@ -4976,23 +4976,28 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWorksheetContents.SheetProtection, sheetProtection);
 
                 var protection = xlWorksheet.Protection;
-                sheetProtection.Sheet = protection.Protected;
+                sheetProtection.Sheet = protection.IsProtected;
                 if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
                     sheetProtection.Password = protection.PasswordHash;
-                sheetProtection.FormatCells = OpenXmlHelper.GetBooleanValue(!protection.FormatCells, true);
-                sheetProtection.FormatColumns = OpenXmlHelper.GetBooleanValue(!protection.FormatColumns, true);
-                sheetProtection.FormatRows = OpenXmlHelper.GetBooleanValue(!protection.FormatRows, true);
-                sheetProtection.InsertColumns = OpenXmlHelper.GetBooleanValue(!protection.InsertColumns, true);
-                sheetProtection.InsertHyperlinks = OpenXmlHelper.GetBooleanValue(!protection.InsertHyperlinks, true);
-                sheetProtection.InsertRows = OpenXmlHelper.GetBooleanValue(!protection.InsertRows, true);
-                sheetProtection.DeleteColumns = OpenXmlHelper.GetBooleanValue(!protection.DeleteColumns, true);
-                sheetProtection.DeleteRows = OpenXmlHelper.GetBooleanValue(!protection.DeleteRows, true);
-                sheetProtection.AutoFilter = OpenXmlHelper.GetBooleanValue(!protection.AutoFilter, true);
-                sheetProtection.PivotTables = OpenXmlHelper.GetBooleanValue(!protection.PivotTables, true);
-                sheetProtection.Sort = OpenXmlHelper.GetBooleanValue(!protection.Sort, true);
-                sheetProtection.Objects = OpenXmlHelper.GetBooleanValue(!protection.Objects, true);
-                sheetProtection.SelectLockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectLockedCells, false);
-                sheetProtection.SelectUnlockedCells = OpenXmlHelper.GetBooleanValue(!protection.SelectUnlockedCells, false);
+
+                // default value of "1"
+                sheetProtection.FormatCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatCells), true);
+                sheetProtection.FormatColumns = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatColumns), true);
+                sheetProtection.FormatRows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatRows), true);
+                sheetProtection.InsertColumns = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.InsertColumns), true);
+                sheetProtection.InsertRows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.InsertRows), true);
+                sheetProtection.InsertHyperlinks = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.InsertHyperlinks), true);
+                sheetProtection.DeleteColumns = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.DeleteColumns), true);
+                sheetProtection.DeleteRows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.DeleteRows), true);
+                sheetProtection.Sort = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.Sort), true);
+                sheetProtection.AutoFilter = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.AutoFilter), true);
+                sheetProtection.PivotTables = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.PivotTables), true);
+                sheetProtection.Scenarios = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.EditScenarios), true);
+
+                // default value of "0"
+                sheetProtection.Objects = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.EditObjects), false);
+                sheetProtection.SelectLockedCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.SelectLockedCells), false);
+                sheetProtection.SelectUnlockedCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.SelectUnlockedCells), false);
             }
             else
             {

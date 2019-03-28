@@ -3,58 +3,73 @@ using System;
 
 namespace ClosedXML.Excel
 {
+    [Flags]
+    public enum XLSheetProtectionElements
+    {
+        None = 0,
+        AutoFilter = 1 << 1,
+        DeleteColumns = 1 << 2,
+        DeleteRows = 1 << 3,
+        EditObjects = 1 << 4,
+        EditScenarios = 1 << 5,
+        FormatCells = 1 << 6,
+        FormatColumns = 1 << 7,
+        FormatRows = 1 << 8,
+        InsertColumns = 1 << 9,
+        InsertHyperlinks = 1 << 10,
+        InsertRows = 1 << 11,
+        PivotTables = 1 << 12,
+        SelectLockedCells = 1 << 13,
+        SelectUnlockedCells = 1 << 14,
+        Sort = 1 << 15,
+
+        DeleteEverything = DeleteColumns | DeleteRows,
+        FormatEverything = FormatCells | FormatColumns | FormatRows,
+        InsertEverything = InsertColumns | InsertHyperlinks | InsertRows,
+        SelectEverything = SelectLockedCells | SelectUnlockedCells,
+
+        Everything = AutoFilter
+            | DeleteColumns | DeleteRows
+            | EditObjects | EditScenarios
+            | FormatCells | FormatColumns | FormatRows
+            | InsertColumns | InsertHyperlinks | InsertRows
+            | PivotTables
+            | SelectLockedCells | SelectUnlockedCells
+            | Sort
+    }
+
     public interface IXLSheetProtection
     {
-        Boolean AutoFilter { get; set; }
-        Boolean DeleteColumns { get; set; }
-        Boolean DeleteRows { get; set; }
-        Boolean FormatCells { get; set; }
-        Boolean FormatColumns { get; set; }
-        Boolean FormatRows { get; set; }
-        Boolean InsertColumns { get; set; }
-        Boolean InsertHyperlinks { get; set; }
-        Boolean InsertRows { get; set; }
-        Boolean Objects { get; set; }
-        Boolean PivotTables { get; set; }
-        Boolean Protected { get; set; }
-        Boolean Scenarios { get; set; }
-        Boolean SelectLockedCells { get; set; }
-        Boolean SelectUnlockedCells { get; set; }
-        Boolean Sort { get; set; }
+        XLSheetProtectionElements AllowedElements { get; set; }
+
+        Boolean IsProtected { get; set; }
+
+        /// <summary>
+        /// Adds the sheet protection element to the list of allowed elements.
+        /// Beware that if you pass through <see cref="XLSheetProtectionElements.None" />, this will have no effect.
+        /// </summary>
+        /// <param name="element">The sheet protection element to add</param>
+        /// <param name="allowed">Set to <c>true</c> to allow the element or <c>false</c> to disallow the element</param>
+        /// <returns>The current sheet protection</returns>
+        IXLSheetProtection AllowElement(XLSheetProtectionElements element, Boolean allowed = true);
+
+        IXLSheetProtection AllowEverything();
+
+        IXLSheetProtection AllowNone();
+
+        IXLSheetProtection CopyFrom(IXLSheetProtection sheetProtection);
+
+        /// <summary>
+        /// Removes the sheet protection element to the list of allowed elements.
+        /// Beware that if you pass through <see cref="XLSheetProtectionElements.None" />, this will have no effect.
+        /// </summary>
+        /// <param name="element">The sheet protection element to remove</param>
+        /// <returns>The current sheet protection</returns>
+        IXLSheetProtection DisallowElement(XLSheetProtectionElements element);
 
         IXLSheetProtection Protect();
 
         IXLSheetProtection Protect(String password);
-
-        IXLSheetProtection SetAutoFilter(); IXLSheetProtection SetAutoFilter(Boolean value);
-
-        IXLSheetProtection SetDeleteColumns(); IXLSheetProtection SetDeleteColumns(Boolean value);
-
-        IXLSheetProtection SetDeleteRows(); IXLSheetProtection SetDeleteRows(Boolean value);
-
-        IXLSheetProtection SetFormatCells(); IXLSheetProtection SetFormatCells(Boolean value);
-
-        IXLSheetProtection SetFormatColumns(); IXLSheetProtection SetFormatColumns(Boolean value);
-
-        IXLSheetProtection SetFormatRows(); IXLSheetProtection SetFormatRows(Boolean value);
-
-        IXLSheetProtection SetInsertColumns(); IXLSheetProtection SetInsertColumns(Boolean value);
-
-        IXLSheetProtection SetInsertHyperlinks(); IXLSheetProtection SetInsertHyperlinks(Boolean value);
-
-        IXLSheetProtection SetInsertRows(); IXLSheetProtection SetInsertRows(Boolean value);
-
-        IXLSheetProtection SetObjects(); IXLSheetProtection SetObjects(Boolean value);
-
-        IXLSheetProtection SetPivotTables(); IXLSheetProtection SetPivotTables(Boolean value);
-
-        IXLSheetProtection SetScenarios(); IXLSheetProtection SetScenarios(Boolean value);
-
-        IXLSheetProtection SetSelectLockedCells(); IXLSheetProtection SetSelectLockedCells(Boolean value);
-
-        IXLSheetProtection SetSelectUnlockedCells(); IXLSheetProtection SetSelectUnlockedCells(Boolean value);
-
-        IXLSheetProtection SetSort(); IXLSheetProtection SetSort(Boolean value);
 
         IXLSheetProtection Unprotect();
 

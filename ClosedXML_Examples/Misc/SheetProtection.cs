@@ -1,55 +1,24 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML_Examples.Misc
 {
     public class SheetProtection : IXLExample
     {
-        #region Variables
-
-        // Public
-
-        // Private
-
-
-        #endregion
-
-        #region Properties
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Events
-
-        // Public
-
-        // Private
-
-        // Override
-
-
-        #endregion
-
-        #region Methods
-
-        // Public
         public void Create(String filePath)
         {
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Protected No-Password");
 
-            ws.Protect()            // On this sheet we will only allow:
-                .SetFormatCells()   // Cell Formatting
-                .SetInsertColumns() // Inserting Columns
-                .SetDeleteColumns() // Deleting Columns
-                .SetDeleteRows();   // Deleting Rows
+            ws.Protect().AllowElement
+            (
+                // On this sheet we will only allow:
+                XLSheetProtectionElements.FormatCells
+                | XLSheetProtectionElements.InsertColumns
+                | XLSheetProtectionElements.DeleteColumns
+                | XLSheetProtectionElements.DeleteRows
+                | XLSheetProtectionElements.EditScenarios
+            );
 
             ws.Cell("A1").SetValue("Locked, No Hidden (Default):").Style.Font.SetBold().Fill.SetBackgroundColor(XLColor.Cyan);
             ws.Cell("B1").Style
@@ -76,17 +45,13 @@ namespace ClosedXML_Examples.Misc
             // Protect a sheet with a password
             var protectedSheet = wb.Worksheets.Add("Protected Password = 123");
             var protection = protectedSheet.Protect("123");
-            protection.InsertRows = true;
-            protection.InsertColumns = true;
+            protection.AllowElement
+            (
+                XLSheetProtectionElements.InsertRows
+                | XLSheetProtectionElements.InsertColumns
+            );
 
             wb.SaveAs(filePath);
         }
-
-        // Private
-
-        // Override
-
-
-        #endregion
     }
 }
