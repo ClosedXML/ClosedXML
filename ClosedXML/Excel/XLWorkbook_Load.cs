@@ -2235,7 +2235,7 @@ namespace ClosedXML.Excel
         {
             if (sp == null) return;
 
-            if (sp.Sheet != null) ws.Protection.Protected = sp.Sheet.Value;
+            if (sp.Sheet != null) ws.Protection.IsProtected = sp.Sheet.Value;
 
             var algorithmName = sp.AlgorithmName?.Value ?? string.Empty;
             if (String.IsNullOrEmpty(algorithmName))
@@ -2244,24 +2244,27 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var hashValue = sp.HashValue?.Value ?? string.Empty;
-                var saltValue = sp.SaltValue?.Value ?? string.Empty;
+                //var hashValue = sp.HashValue?.Value ?? string.Empty;
+                //var saltValue = sp.SaltValue?.Value ?? string.Empty;
                 // Continue for now.
             }
-            if (sp.FormatCells != null) ws.Protection.FormatCells = !sp.FormatCells.Value;
-            if (sp.FormatColumns != null) ws.Protection.FormatColumns = !sp.FormatColumns.Value;
-            if (sp.FormatRows != null) ws.Protection.FormatRows = !sp.FormatRows.Value;
-            if (sp.InsertColumns != null) ws.Protection.InsertColumns = !sp.InsertColumns.Value;
-            if (sp.InsertHyperlinks != null) ws.Protection.InsertHyperlinks = !sp.InsertHyperlinks.Value;
-            if (sp.InsertRows != null) ws.Protection.InsertRows = !sp.InsertRows.Value;
-            if (sp.DeleteColumns != null) ws.Protection.DeleteColumns = !sp.DeleteColumns.Value;
-            if (sp.DeleteRows != null) ws.Protection.DeleteRows = !sp.DeleteRows.Value;
-            if (sp.AutoFilter != null) ws.Protection.AutoFilter = !sp.AutoFilter.Value;
-            if (sp.PivotTables != null) ws.Protection.PivotTables = !sp.PivotTables.Value;
-            if (sp.Sort != null) ws.Protection.Sort = !sp.Sort.Value;
-            if (sp.Objects != null) ws.Protection.Objects = !sp.Objects.Value;
-            if (sp.SelectLockedCells != null) ws.Protection.SelectLockedCells = sp.SelectLockedCells.Value;
-            if (sp.SelectUnlockedCells != null) ws.Protection.SelectUnlockedCells = sp.SelectUnlockedCells.Value;
+
+            ws.Protection.AllowElement(XLSheetProtectionElements.FormatCells, !OpenXmlHelper.GetBooleanValueAsBool(sp.FormatCells, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.FormatColumns, !OpenXmlHelper.GetBooleanValueAsBool(sp.FormatColumns, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.FormatRows, !OpenXmlHelper.GetBooleanValueAsBool(sp.FormatRows, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.InsertColumns, !OpenXmlHelper.GetBooleanValueAsBool(sp.InsertColumns, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.InsertHyperlinks, !OpenXmlHelper.GetBooleanValueAsBool(sp.InsertHyperlinks, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.InsertRows, !OpenXmlHelper.GetBooleanValueAsBool(sp.InsertRows, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.DeleteColumns, !OpenXmlHelper.GetBooleanValueAsBool(sp.DeleteColumns, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.DeleteRows, !OpenXmlHelper.GetBooleanValueAsBool(sp.DeleteRows, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.AutoFilter, !OpenXmlHelper.GetBooleanValueAsBool(sp.AutoFilter, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.PivotTables, !OpenXmlHelper.GetBooleanValueAsBool(sp.PivotTables, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.Sort, !OpenXmlHelper.GetBooleanValueAsBool(sp.Sort, true));
+            ws.Protection.AllowElement(XLSheetProtectionElements.EditScenarios, !OpenXmlHelper.GetBooleanValueAsBool(sp.Scenarios, true));
+
+            ws.Protection.AllowElement(XLSheetProtectionElements.EditObjects, !OpenXmlHelper.GetBooleanValueAsBool(sp.Objects, false));
+            ws.Protection.AllowElement(XLSheetProtectionElements.SelectLockedCells, !OpenXmlHelper.GetBooleanValueAsBool(sp.SelectLockedCells, false));
+            ws.Protection.AllowElement(XLSheetProtectionElements.SelectUnlockedCells, !OpenXmlHelper.GetBooleanValueAsBool(sp.SelectUnlockedCells, false));
         }
 
         private static void LoadDataValidations(DataValidations dataValidations, XLWorksheet ws)

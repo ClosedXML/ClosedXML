@@ -332,8 +332,9 @@ namespace ClosedXML_Tests.Excel
             {
                 var sheet = book.AddWorksheet("TestSheet");
                 sheet.Protect()
-                    .SetObjects(true)
-                    .SetScenarios(true);
+                    .AllowElement(XLSheetProtectionElements.EditObjects | XLSheetProtectionElements.EditScenarios);
+
+                Assert.AreEqual(XLSheetProtectionElements.SelectEverything | XLSheetProtectionElements.EditObjects | XLSheetProtectionElements.EditScenarios, sheet.Protection.AllowedElements);
 
                 using (var xlStream = new MemoryStream())
                 {
@@ -343,7 +344,7 @@ namespace ClosedXML_Tests.Excel
                     {
                         var persistedSheet = persistedBook.Worksheets.Worksheet(1);
 
-                        Assert.AreEqual(sheet.Protection.Objects, persistedSheet.Protection.Objects);
+                        Assert.AreEqual(sheet.Protection.AllowedElements, persistedSheet.Protection.AllowedElements);
                     }
                 }
             }
