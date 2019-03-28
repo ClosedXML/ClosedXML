@@ -527,10 +527,7 @@ namespace ClosedXML.Excel.CalcEngine
             var isLetter = char.IsLetter(c);
             var isDigit = char.IsDigit(c);
 
-            var isEnclosed = matchingClosingSymbols.Keys.Contains(c);
-            char matchingClosingSymbol = '\0';
-            if (isEnclosed)
-                matchingClosingSymbol = matchingClosingSymbols[c];
+            var isEnclosed = matchingClosingSymbols.TryGetValue(c, out char matchingClosingSymbol);
 
             if (!isLetter && !isDigit && !isEnclosed)
             {
