@@ -74,6 +74,26 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [Test]
         public void Concat_Value()
         {
+            Object actual = XLWorkbook.EvaluateExpr(@"Concat(""ABC"", ""123"")");
+            Assert.AreEqual("ABC123", actual);
+
+            actual = XLWorkbook.EvaluateExpr(@"Concat("""", ""123"")");
+            Assert.AreEqual("123", actual);
+
+            var ws = new XLWorkbook().AddWorksheet();
+
+            ws.FirstCell().SetValue(20)
+                .CellBelow().SetValue("AB")
+                .CellBelow().SetFormulaA1("=DATE(2019,1,1)")
+                .CellBelow().SetFormulaA1("=CONCAT(A1:A3)");
+
+            actual = ws.Cell("A4").Value;
+            Assert.AreEqual("20AB43466", actual);
+        }
+
+        [Test]
+        public void Concatenate_Value()
+        {
             Object actual = XLWorkbook.EvaluateExpr(@"Concatenate(""ABC"", ""123"")");
             Assert.AreEqual("ABC123", actual);
 

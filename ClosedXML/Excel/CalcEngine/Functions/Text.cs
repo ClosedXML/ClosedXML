@@ -1,6 +1,7 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using ExcelNumberFormat;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CHAR", 1, _Char); // Returns the character specified by the code number
             ce.RegisterFunction("CLEAN", 1, Clean); //	Removes all nonprintable characters from text
             ce.RegisterFunction("CODE", 1, Code); // Returns a numeric code for the first character in a text string
+            ce.RegisterFunction("CONCAT", 1, int.MaxValue, Concat); //	Joins several text items into one text item
             ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concatenate); //	Joins several text items into one text item
             ce.RegisterFunction("DOLLAR", 1, 2, Dollar); // Converts a number to text, using the $ (dollar) currency format
             ce.RegisterFunction("EXACT", 2, Exact); // Checks to see if two text values are identical
@@ -58,6 +60,22 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var s = (string)p[0];
             return (int)s[0];
+        }
+
+        private static object Concat(List<Expression> p)
+        {
+            var sb = new StringBuilder();
+            foreach (var x in p)
+            {
+                if (x is IEnumerable enumerable)
+                {
+                    foreach (var i in enumerable)
+                        sb.Append((string)(new Expression(i)));
+                }
+                else
+                    sb.Append((string)x);
+            }
+            return sb.ToString();
         }
 
         private static object Concatenate(List<Expression> p)
