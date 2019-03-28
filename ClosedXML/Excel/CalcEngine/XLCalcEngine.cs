@@ -108,7 +108,11 @@ namespace ClosedXML.Excel.CalcEngine
                     return references;
                 }
 
-                return GetCellRangeReference(_ws.Range(identifier));
+                var cellRangeReference = GetCellRangeReference(_ws.Range(identifier));
+                if (cellRangeReference == null)
+                    return identifier;
+                else
+                    return cellRangeReference;
             }
             else
                 return identifier;
@@ -122,6 +126,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         private CellRangeReference GetCellRangeReference(IXLRange range)
         {
+            if (range == null)
+                return null;
+
             var res = new CellRangeReference(range, this);
             _cellRanges?.Add(res.Range);
             return res;
