@@ -640,7 +640,7 @@ namespace ClosedXML.Excel
 
         public IXLRows FindRows(Func<IXLRow, Boolean> predicate)
         {
-            var rows = new XLRows(null);
+            var rows = new XLRows(null, null);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
                 foreach (IXLRow row in ws.Rows().Where(predicate))
@@ -651,7 +651,7 @@ namespace ClosedXML.Excel
 
         public IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate)
         {
-            var columns = new XLColumns(null);
+            var columns = new XLColumns(null, null);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
                 foreach (IXLColumn column in ws.Columns().Where(predicate))

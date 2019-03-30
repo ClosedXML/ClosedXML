@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         /// </summary>
         private readonly Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>> _indexes;
         private IEnumerable<XLRange> Ranges => _indexes.Values.SelectMany(index => index.GetAll());
-
+        private bool _styleInitialized = false;
 
         private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
         {
@@ -41,6 +41,16 @@ namespace ClosedXML.Excel
         {
             if (GetRangeIndex(range.Worksheet).Add(range))
                 Count++;
+
+            if (_styleInitialized)
+                return;
+
+            var worksheetStyle = range?.Worksheet?.Style;
+            if (worksheetStyle == null)
+                return;
+
+            InnerStyle = worksheetStyle;
+            _styleInitialized = true;
         }
 
         public void Add(IXLRangeBase range)

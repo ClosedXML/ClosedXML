@@ -11,8 +11,14 @@ namespace ClosedXML.Excel
         private readonly List<XLColumn> _columns = new List<XLColumn>();
         private readonly XLWorksheet _worksheet;
 
-        public XLColumns(XLWorksheet worksheet)
-            : base(XLStyle.Default.Value)
+        /// <summary>
+        /// Create a new instance of <see cref="XLColumns"/>.
+        /// </summary>
+        /// <param name="worksheet">If worksheet is specified it means that the created instance represents
+        /// all columns on a worksheet so changing its width will affect all columns.</param>
+        /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
+        public XLColumns(XLWorksheet worksheet, XLStyleValue defaultStyle)
+            : base(defaultStyle ?? XLWorkbook.DefaultStyleValue)
         {
             _worksheet = worksheet;
         }
