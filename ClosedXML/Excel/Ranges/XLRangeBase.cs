@@ -1248,10 +1248,8 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
                                           Worksheet.Cell(oldKey);
 
-                            var newCell = new XLCell(Worksheet, newKey, oldCell.StyleValue);
-                            newCell.CopyValuesFrom(oldCell);
-                            newCell.FormulaA1 = oldCell.FormulaA1;
-                            cellsToInsert.Add(newKey, newCell);
+                            oldCell.Address = newKey;
+                            cellsToInsert.Add(newKey, oldCell);
                             cellsToDelete.Add(oldKey);
                         }
 
@@ -1271,11 +1269,10 @@ namespace ClosedXML.Excel
                 {
                     int newColumn = c.Address.ColumnNumber + numberOfColumns;
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
-                    newCell.CopyValuesFrom(c);
-                    newCell.FormulaA1 = c.FormulaA1;
-                    cellsToInsert.Add(newKey, newCell);
+
                     cellsToDelete.Add(c.Address);
+                    c.Address = newKey;
+                    cellsToInsert.Add(newKey, c);
                 }
             }
 
@@ -1465,10 +1462,8 @@ namespace ClosedXML.Excel
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
                             if (oldCell != null)
                             {
-                                var newCell = new XLCell(Worksheet, newKey, oldCell.StyleValue);
-                                newCell.CopyValuesFrom(oldCell);
-                                newCell.FormulaA1 = oldCell.FormulaA1;
-                                cellsToInsert.Add(newKey, newCell);
+                                oldCell.Address = newKey;
+                                cellsToInsert.Add(newKey, oldCell);
                                 cellsToDelete.Add(oldKey);
                             }
                         }
@@ -1489,11 +1484,9 @@ namespace ClosedXML.Excel
                 {
                     int newRow = c.Address.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
-                    var newCell = new XLCell(Worksheet, newKey, c.StyleValue);
-                    newCell.CopyValuesFrom(c);
-                    newCell.FormulaA1 = c.FormulaA1;
-                    cellsToInsert.Add(newKey, newCell);
                     cellsToDelete.Add(c.Address);
+                    c.Address = newKey;
+                    cellsToInsert.Add(newKey, c);
                 }
             }
 
@@ -1654,16 +1647,14 @@ namespace ClosedXML.Excel
 
                 if (newCellAddress.IsValid)
                 {
-                    var newCell = new XLCell(Worksheet, newCellAddress, c.StyleValue);
-                    newCell.CopyValuesFrom(c);
-                    newCell.FormulaA1 = c.FormulaA1;
-
                     bool canInsert = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft
                                          ? c.Address.ColumnNumber > RangeAddress.LastAddress.ColumnNumber
                                          : c.Address.RowNumber > RangeAddress.LastAddress.RowNumber;
 
+                    c.Address = newCellAddress;
+
                     if (canInsert)
-                        cellsToInsert.Add(newCellAddress, newCell);
+                        cellsToInsert.Add(newCellAddress, c);
                 }
             }
 
