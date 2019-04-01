@@ -5,29 +5,28 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class CellRangeReference : IValueObject, IEnumerable
     {
-        private IXLRange _range;
-        private XLCalcEngine _ce;
+        private readonly XLCalcEngine _ce;
 
         public CellRangeReference(IXLRange range, XLCalcEngine ce)
         {
-            _range = range;
+            Range = range;
             _ce = ce;
         }
 
-        public IXLRange Range { get { return _range; } }
+        public IXLRange Range { get; }
 
         // ** IValueObject
         public object GetValue()
         {
-            return GetValue(_range.FirstCell());
+            return GetValue(Range.FirstCell());
         }
 
         // ** IEnumerable
         public IEnumerator GetEnumerator()
         {
-            var maxRow = Math.Min(_range.RangeAddress.LastAddress.RowNumber, _range.Worksheet.LastCellUsed().Address.RowNumber);
-            var maxCol = Math.Min(_range.RangeAddress.LastAddress.ColumnNumber, _range.Worksheet.LastCellUsed().Address.ColumnNumber);
-            var trimmedRange = (XLRangeBase) _range.Worksheet.Range(_range.FirstCell().Address,
+            var maxRow = Math.Min(Range.RangeAddress.LastAddress.RowNumber, Range.Worksheet.LastCellUsed().Address.RowNumber);
+            var maxCol = Math.Min(Range.RangeAddress.LastAddress.ColumnNumber, Range.Worksheet.LastCellUsed().Address.ColumnNumber);
+            var trimmedRange = (XLRangeBase)Range.Worksheet.Range(Range.FirstCell().Address,
                 new XLAddress(maxRow, maxCol, false, false));
             return trimmedRange.CellValues().GetEnumerator();
         }
