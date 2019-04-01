@@ -18,8 +18,8 @@ namespace ClosedXML.Excel
         /// <param name="worksheet">If worksheet is specified it means that the created instance represents
         /// all rows on a worksheet so changing its height will affect all rows.</param>
         /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
-        public XLRows(XLWorksheet worksheet, XLStyleValue defaultStyle)
-            : base(defaultStyle ?? XLWorkbook.DefaultStyleValue)
+        public XLRows(XLWorksheet worksheet, XLStyleValue defaultStyle = null)
+            : base(defaultStyle)
         {
             _worksheet = worksheet;
         }

@@ -17,8 +17,8 @@ namespace ClosedXML.Excel
         /// <param name="worksheet">If worksheet is specified it means that the created instance represents
         /// all columns on a worksheet so changing its width will affect all columns.</param>
         /// <param name="defaultStyle">Default style to use when initializing child entries.</param>
-        public XLColumns(XLWorksheet worksheet, XLStyleValue defaultStyle)
-            : base(defaultStyle ?? XLWorkbook.DefaultStyleValue)
+        public XLColumns(XLWorksheet worksheet, XLStyleValue defaultStyle = null)
+            : base(defaultStyle)
         {
             _worksheet = worksheet;
         }
