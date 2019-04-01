@@ -83,6 +83,9 @@ namespace ClosedXML.Excel.CalcEngine
             var sb = new StringBuilder();
             foreach (var x in p)
             {
+                if (x is XObjectExpression objectExpression)
+                    throw new CellValueException("This function does not accept cell ranges as parameters.");
+
                 sb.Append((string)x);
             }
             return sb.ToString();

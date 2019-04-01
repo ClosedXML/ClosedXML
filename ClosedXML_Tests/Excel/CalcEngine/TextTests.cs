@@ -99,6 +99,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             actual = XLWorkbook.EvaluateExpr(@"Concatenate("""", ""123"")");
             Assert.AreEqual("123", actual);
+
+            var ws = new XLWorkbook().AddWorksheet();
+
+            ws.FirstCell().SetValue(20)
+                .CellBelow().SetValue("AB")
+                .CellBelow().SetFormulaA1("=DATE(2019,1,1)")
+                .CellBelow().SetFormulaA1("=CONCATENATE(A1:A3)");
+
+            Assert.Throws<CellValueException>(() => ws.RecalculateAllFormulas());
         }
 
         [Test]
@@ -280,7 +289,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 2, 2)");
             Assert.AreEqual("BC", actual);
         }
-
 
         [TestCase("NUMBERVALUE(\"\")", 0d)]
         [TestCase("NUMBERVALUE(\"1,234.56\", \".\", \",\")", 1234.56d)]
