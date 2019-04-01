@@ -1850,13 +1850,13 @@ namespace ClosedXML.Excel
             if (row.CustomFormat != null)
             {
                 Int32 styleIndex = row.StyleIndex != null ? Int32.Parse(row.StyleIndex.InnerText) : -1;
-                if (styleIndex > 0)
+                if (styleIndex >= 0)
                 {
                     ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
                 }
                 else
                 {
-                    xlRow.Style = DefaultStyle;
+                    xlRow.Style = ws.Style;
                 }
             }
 
@@ -1911,13 +1911,13 @@ namespace ClosedXML.Excel
                 }
 
                 Int32 styleIndex = col.Style != null ? Int32.Parse(col.Style.InnerText) : -1;
-                if (styleIndex > 0)
+                if (styleIndex >= 0)
                 {
                     ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
                 }
                 else
                 {
-                    xlColumns.Style = DefaultStyle;
+                    xlColumns.Style = ws.Style;
                 }
             }
         }

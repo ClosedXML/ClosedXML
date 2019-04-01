@@ -478,5 +478,19 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(0.39994506668294322d, c.Style.Border.TopBorderColor.ThemeTint, XLHelper.Epsilon);
             }
         }
+
+        [Test]
+        public void CorrectlyLoadDefaultRowAndColumnStyles()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\RowAndColumnStyles\inputfile.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+
+                Assert.AreEqual(8, ws.Row(1).Style.Font.FontSize);
+                Assert.AreEqual(8, ws.Row(2).Style.Font.FontSize);
+                Assert.AreEqual(8, ws.Column("A").Style.Font.FontSize);
+            }
+        }
     }
 }

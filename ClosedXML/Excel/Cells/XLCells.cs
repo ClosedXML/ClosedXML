@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         private readonly bool _usedCellsOnly;
         private readonly Func<IXLCell, Boolean> _predicate;
         private readonly XLCellsUsedOptions _options;
-
+        private bool _styleInitialized = false;
         #endregion Fields
 
         #region Constructor
@@ -244,11 +244,21 @@ namespace ClosedXML.Excel
         public void Add(XLRangeAddress rangeAddress)
         {
             _rangeAddresses.Add(rangeAddress);
+
+            if (_styleInitialized)
+                return;
+
+            var worksheetStyle = rangeAddress.Worksheet?.Style;
+            if (worksheetStyle == null)
+                return;
+
+            InnerStyle = worksheetStyle;
+            _styleInitialized = true;
         }
 
         public void Add(XLCell cell)
         {
-            _rangeAddresses.Add(new XLRangeAddress(cell.Address, cell.Address));
+            Add(new XLRangeAddress(cell.Address, cell.Address));
         }
 
         public void Select()

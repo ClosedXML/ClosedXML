@@ -54,9 +54,9 @@ namespace ClosedXML.Excel
 
         #endregion Properties
 
-        protected XLStylizedBase(XLStyleValue styleValue)
+        protected XLStylizedBase(XLStyleValue styleValue = null)
         {
-            StyleValue = styleValue;
+            StyleValue = styleValue ?? XLWorkbook.DefaultStyleValue;
         }
 
         #region Private methods
