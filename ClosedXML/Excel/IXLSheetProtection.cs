@@ -42,7 +42,7 @@ namespace ClosedXML.Excel
     {
         XLSheetProtectionElements AllowedElements { get; set; }
 
-        Boolean IsProtected { get; set; }
+        Boolean IsProtected { get; }
 
         /// <summary>
         /// Adds the sheet protection element to the list of allowed elements.
