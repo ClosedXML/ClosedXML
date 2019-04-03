@@ -2,6 +2,7 @@ using ClosedXML.Excel.Drawings;
 using System;
 using System.Drawing;
 using System.IO;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
@@ -367,7 +368,7 @@ namespace ClosedXML.Excel
 
         IXLSheetProtection Protect();
 
-        IXLSheetProtection Protect(String password);
+        IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm);
 
         IXLSheetProtection Unprotect();
 

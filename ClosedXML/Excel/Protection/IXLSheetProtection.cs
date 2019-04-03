@@ -1,5 +1,6 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
@@ -40,6 +41,8 @@ namespace ClosedXML.Excel
 
     public interface IXLSheetProtection : ICloneable
     {
+        Algorithm Algorithm { get; }
+
         XLSheetProtectionElements AllowedElements { get; set; }
 
         Boolean IsProtected { get; }
@@ -69,7 +72,7 @@ namespace ClosedXML.Excel
 
         IXLSheetProtection Protect();
 
-        IXLSheetProtection Protect(String password);
+        IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm);
 
         IXLSheetProtection Unprotect();
 

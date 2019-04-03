@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using System;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML_Examples.Misc
 {
@@ -44,7 +45,7 @@ namespace ClosedXML_Examples.Misc
 
             // Protect a sheet with a password
             var protectedSheet = wb.Worksheets.Add("Protected Password = 123");
-            var protection = protectedSheet.Protect("123");
+            var protection = protectedSheet.Protect("123", Algorithm.SimpleHash);
             protection.AllowElement
             (
                 XLSheetProtectionElements.InsertRows

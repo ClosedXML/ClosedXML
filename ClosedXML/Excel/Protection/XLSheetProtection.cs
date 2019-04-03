@@ -1,20 +1,25 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
     internal class XLSheetProtection : IXLSheetProtection
     {
-        public XLSheetProtection()
+        public XLSheetProtection(Algorithm algorithm)
         {
+            this.Algorithm = algorithm;
             AllowedElements = XLSheetProtectionElements.SelectEverything;
         }
 
+        public Algorithm Algorithm { get; internal set; }
         public XLSheetProtectionElements AllowedElements { get; set; }
         public Boolean IsProtected { get; set; }
+        internal String Base64EncodedSalt { get; set; }
         internal String PasswordHash { get; set; }
+        internal UInt32 SpinCount { get; set; } = 100000;
 
-        public IXLSheetProtection AllowElement(XLSheetProtectionElements element, bool allowed = true)
+        public IXLSheetProtection AllowElement(XLSheetProtectionElements element, Boolean allowed = true)
         {
             if (!allowed)
                 return DisallowElement(element);
@@ -36,19 +41,27 @@ namespace ClosedXML.Excel
 
         public object Clone()
         {
-            return new XLSheetProtection()
+            return new XLSheetProtection(this.Algorithm)
             {
                 IsProtected = this.IsProtected,
                 PasswordHash = this.PasswordHash,
+                SpinCount = this.SpinCount,
+                Base64EncodedSalt = this.Base64EncodedSalt,
                 AllowedElements = this.AllowedElements
             };
         }
 
         public IXLSheetProtection CopyFrom(IXLSheetProtection sheetProtection)
         {
-            this.IsProtected = sheetProtection.IsProtected;
-            this.PasswordHash = (sheetProtection as XLSheetProtection).PasswordHash;
-            this.AllowedElements = sheetProtection.AllowedElements;
+            if (sheetProtection is XLSheetProtection xlSheetProtection)
+            {
+                this.IsProtected = xlSheetProtection.IsProtected;
+                this.Algorithm = xlSheetProtection.Algorithm;
+                this.PasswordHash = xlSheetProtection.PasswordHash;
+                this.SpinCount = xlSheetProtection.SpinCount;
+                this.Base64EncodedSalt = xlSheetProtection.Base64EncodedSalt;
+                this.AllowedElements = xlSheetProtection.AllowedElements;
+            }
             return this;
         }
 
@@ -63,7 +76,7 @@ namespace ClosedXML.Excel
             return Protect(String.Empty);
         }
 
-        public IXLSheetProtection Protect(String password)
+        public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
         {
             if (IsProtected)
             {
@@ -72,14 +85,13 @@ namespace ClosedXML.Excel
             else
             {
                 IsProtected = true;
-                PasswordHash = GetPasswordHash(password);
-            }
-            return this;
-        }
 
-        public IXLSheetProtection SetPassword(String value)
-        {
-            PasswordHash = GetPasswordHash(value);
+                password = password ?? "";
+
+                this.Algorithm = algorithm;
+                this.Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(this.Algorithm);
+                this.PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
+            }
             return this;
         }
 
@@ -92,33 +104,23 @@ namespace ClosedXML.Excel
         {
             if (IsProtected)
             {
-                String hash = GetPasswordHash(password);
+                password = password ?? "";
+
+                if ("" != PasswordHash && "" == password)
+                    throw new InvalidOperationException("The worksheet is password protected");
+
+                var hash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
                 if (hash != PasswordHash)
                     throw new ArgumentException("Invalid password");
                 else
                 {
                     IsProtected = false;
                     PasswordHash = String.Empty;
+                    this.Base64EncodedSalt = String.Empty;
                 }
             }
 
             return this;
-        }
-
-        private String GetPasswordHash(String password)
-        {
-            Int32 pLength = password.Length;
-            Int32 hash = 0;
-            if (pLength == 0) return String.Empty;
-
-            for (Int32 i = pLength - 1; i >= 0; i--)
-            {
-                hash ^= password[i];
-                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
-            }
-            hash ^= 0x8000 | 'N' << 8 | 'K';
-            hash ^= pLength;
-            return hash.ToString("X");
         }
     }
 }
