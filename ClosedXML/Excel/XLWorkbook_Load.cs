@@ -2501,18 +2501,20 @@ namespace ClosedXML.Excel
         {
             if (sp == null) return;
 
-            if (sp.Sheet != null) ws.Protection.IsProtected = sp.Sheet.Value;
+            ws.Protection.IsProtected = OpenXmlHelper.GetBooleanValueAsBool(sp.Sheet, false);
 
             var algorithmName = sp.AlgorithmName?.Value ?? string.Empty;
             if (String.IsNullOrEmpty(algorithmName))
             {
                 ws.Protection.PasswordHash = sp.Password?.Value ?? string.Empty;
+                ws.Protection.Base64EncodedSalt = string.Empty;
             }
-            else
+            else if (DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.IsValidDescription(algorithmName))
             {
-                //var hashValue = sp.HashValue?.Value ?? string.Empty;
-                //var saltValue = sp.SaltValue?.Value ?? string.Empty;
-                // Continue for now.
+                ws.Protection.Algorithm = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.FromDescription(algorithmName);
+                ws.Protection.PasswordHash = sp.HashValue?.Value ?? string.Empty;
+                ws.Protection.SpinCount = sp.SpinCount?.Value ?? 0;
+                ws.Protection.Base64EncodedSalt = sp.SaltValue?.Value ?? string.Empty;
             }
 
             ws.Protection.AllowElement(XLSheetProtectionElements.FormatCells, !OpenXmlHelper.GetBooleanValueAsBool(sp.FormatCells, true));

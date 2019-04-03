@@ -5123,7 +5123,6 @@ namespace ClosedXML.Excel
                             // reset some stuff that we'll populate later
                             cell.DataType = null;
                             cell.RemoveAllChildren<InlineString>();
-
                         }
 
                         if (!isEmpty)
@@ -5261,8 +5260,8 @@ namespace ClosedXML.Excel
                 if (existingSheetDataRows.TryGetValue(r, out Row row))
                 {
                     sheetData.RemoveChild(row);
-                existingSheetDataRows.Remove(r);
-            }
+                    existingSheetDataRows.Remove(r);
+                }
             }
 
             #endregion SheetData
@@ -5281,9 +5280,26 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWorksheetContents.SheetProtection, sheetProtection);
 
                 var protection = xlWorksheet.Protection;
-                sheetProtection.Sheet = protection.IsProtected;
-                if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
-                    sheetProtection.Password = protection.PasswordHash;
+                sheetProtection.Sheet = OpenXmlHelper.GetBooleanValue(protection.IsProtected, false);
+
+                sheetProtection.Password = null;
+                sheetProtection.AlgorithmName = null;
+                sheetProtection.HashValue = null;
+                sheetProtection.SpinCount = null;
+                sheetProtection.SaltValue = null;
+
+                if (protection.Algorithm == XLProtectionAlgorithm.Algorithm.SimpleHash)
+                {
+                    if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
+                        sheetProtection.Password = protection.PasswordHash;
+                }
+                else
+                {
+                    sheetProtection.AlgorithmName = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.ToDescription(protection.Algorithm);
+                    sheetProtection.HashValue = protection.PasswordHash;
+                    sheetProtection.SpinCount = protection.SpinCount;
+                    sheetProtection.SaltValue = protection.Base64EncodedSalt;
+                }
 
                 // default value of "1"
                 sheetProtection.FormatCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatCells), true);

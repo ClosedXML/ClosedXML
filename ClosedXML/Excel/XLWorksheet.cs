@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
@@ -65,7 +66,7 @@ namespace ClosedXML.Excel
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations(this);
             PivotTables = new XLPivotTables(this);
-            Protection = new XLSheetProtection();
+            Protection = new XLSheetProtection(DefaultProtectionAlgorithm);
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
             SparklineGroups = new XLSparklineGroups(this);
@@ -714,9 +715,9 @@ namespace ClosedXML.Excel
             return Protection.Protect();
         }
 
-        public IXLSheetProtection Protect(String password)
+        public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
         {
-            return Protection.Protect(password);
+            return Protection.Protect(password, algorithm);
         }
 
         public IXLSheetProtection Unprotect()
