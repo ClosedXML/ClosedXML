@@ -72,10 +72,17 @@ namespace ClosedXML_Tests
 
             filePath1 = Path.Combine(directory, "z" + fileName);
             var filePath2 = Path.Combine(directory, fileName);
+
             //Run test
             example.Create(filePath1);
             using (var wb = new XLWorkbook(filePath1))
-                wb.SaveAs(filePath2, true, evaluateFormulae);
+                wb.SaveAs(filePath2, validate: true, evaluateFormulae);
+
+            // Also load from template and save it again - but not necessary to test against reference file
+            // We're just testing that it can save.
+            using (var ms = new MemoryStream())
+            using (var wb = XLWorkbook.OpenFromTemplate(filePath1))
+                wb.SaveAs(ms, validate: true, evaluateFormulae);
 
             if (CompareWithResources)
             {
