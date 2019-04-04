@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.0;net40;net46</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
-    <Version>0.94.0</Version>
+    <Version>0.95.0</Version>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release;Release.Signed</Configurations>
   </PropertyGroup>
