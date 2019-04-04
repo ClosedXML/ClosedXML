@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
 
         public static XLWorkbook OpenFromTemplate(String path)
         {
-            return new XLWorkbook(path, true);
+            return new XLWorkbook(path, asTemplate: true);
         }
 
         #endregion Static

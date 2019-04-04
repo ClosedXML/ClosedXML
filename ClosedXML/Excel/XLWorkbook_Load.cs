@@ -52,6 +52,33 @@ namespace ClosedXML.Excel
         {
             using (var dSpreadsheet = SpreadsheetDocument.CreateFromTemplate(fileName))
                 LoadSpreadsheetDocument(dSpreadsheet);
+
+            // If we load a workbook as a template, we have to treat it as a "new" workbook.
+            // The original file will NOT be copied into place before changes are applied
+            // Hence all loaded RelIds have to be cleared
+            ResetAllRelIds();
+        }
+
+        private void ResetAllRelIds()
+        {
+            foreach (var ws in Worksheets.Cast<XLWorksheet>())
+            {
+                ws.SheetId = 0;
+                ws.RelId = null;
+
+                foreach (var pt in ws.PivotTables.Cast<XLPivotTable>())
+                {
+                    pt.WorkbookCacheRelId = null;
+                    pt.CacheDefinitionRelId = null;
+                    pt.RelId = null;
+                }
+
+                foreach (var picture in ws.Pictures.Cast<XLPicture>())
+                    picture.RelId = null;
+
+                foreach (var table in ws.Tables.Cast<XLTable>())
+                    table.RelId = null;
+            }
         }
 
         private void LoadSpreadsheetDocument(SpreadsheetDocument dSpreadsheet)
