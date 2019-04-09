@@ -35,5 +35,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<DateTimeGroupAutoFilter>(@"AutoFilter\DateTimeGroupAutoFilter.xlsx");
         }
+
+        [Test]
+        public void ColouredAutoFilter()
+        {
+            TestHelper.RunTestExample<ColouredAutoFilter>(@"AutoFilter\ColouredAutoFilter.xlsx");
+        }
     }
 }
