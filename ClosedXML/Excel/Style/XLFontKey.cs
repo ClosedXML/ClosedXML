@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + Shadow.GetHashCode();
             hashCode = hashCode * -1521134295 + FontSize.GetHashCode();
             hashCode = hashCode * -1521134295 + FontColor.GetHashCode();
-            hashCode = hashCode * -1521134295 + FontName.ToUpperInvariant().GetHashCode();
+            hashCode = hashCode * -1521134295 + StringComparer.InvariantCultureIgnoreCase.GetHashCode(FontName);
             hashCode = hashCode * -1521134295 + FontFamilyNumbering.GetHashCode();
             hashCode = hashCode * -1521134295 + FontCharSet.GetHashCode();
             return hashCode;
