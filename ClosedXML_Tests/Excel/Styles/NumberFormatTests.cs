@@ -72,5 +72,23 @@ namespace ClosedXML_Tests.Excel
                 }
             }
         }
+
+        [Test]
+        public void XLNumberFormatKey_GetHashCode_IsCaseSensitive()
+        {
+            var numberFormatKey1 = new XLNumberFormatKey { Format = "MM" };
+            var numberFormatKey2 = new XLNumberFormatKey { Format = "mm" };
+
+            Assert.AreNotEqual(numberFormatKey1.GetHashCode(), numberFormatKey2.GetHashCode());
+        }
+
+        [Test]
+        public void XLNumberFormatKey_Equals_IsCaseSensitive()
+        {
+            var numberFormatKey1 = new XLNumberFormatKey { Format = "MM" };
+            var numberFormatKey2 = new XLNumberFormatKey { Format = "mm" };
+
+            Assert.IsFalse(numberFormatKey1.Equals(numberFormatKey2));
+        }
     }
 }
