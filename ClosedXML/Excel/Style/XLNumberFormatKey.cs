@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         {
             var hashCode = -759193072;
             hashCode = hashCode * -1521134295 + NumberFormatId.GetHashCode();
-            hashCode = hashCode * -1521134295 + (Format == null ? 0 : Format.ToUpperInvariant().GetHashCode());
+            hashCode = hashCode * -1521134295 + (Format == null ? 0 : Format.GetHashCode());
             return hashCode;
         }
 
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         {
             return
                 NumberFormatId == other.NumberFormatId
-             && string.Equals(Format, other.Format, StringComparison.InvariantCultureIgnoreCase);
+             && string.Equals(Format, other.Format);
         }
 
         public override bool Equals(object obj)
