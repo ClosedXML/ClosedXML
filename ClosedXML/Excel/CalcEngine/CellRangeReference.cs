@@ -24,10 +24,11 @@ namespace ClosedXML.Excel.CalcEngine
         // ** IEnumerable
         public IEnumerator GetEnumerator()
         {
-            var maxRow = Math.Min(Range.RangeAddress.LastAddress.RowNumber, Range.Worksheet.LastCellUsed().Address.RowNumber);
-            var maxCol = Math.Min(Range.RangeAddress.LastAddress.ColumnNumber, Range.Worksheet.LastCellUsed().Address.ColumnNumber);
+            var lastCellAddress = Range.Worksheet.LastCellUsed().Address;
+            var maxRow = Math.Min(Range.RangeAddress.LastAddress.RowNumber, lastCellAddress.RowNumber);
+            var maxColumn = Math.Min(Range.RangeAddress.LastAddress.ColumnNumber, lastCellAddress.ColumnNumber);
             var trimmedRange = (XLRangeBase)Range.Worksheet.Range(Range.FirstCell().Address,
-                new XLAddress(maxRow, maxCol, false, false));
+                new XLAddress(maxRow, maxColumn, fixedRow: false, fixedColumn: false));
             return trimmedRange.CellValues().GetEnumerator();
         }
 

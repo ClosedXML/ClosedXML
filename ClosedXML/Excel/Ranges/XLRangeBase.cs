@@ -357,7 +357,7 @@ namespace ClosedXML.Excel
             var firstCell = FirstCell();
             var firstCellStyle = (firstCell.Style as XLStyle).Key;
             var defaultStyle = XLStyle.Default.Key;
-            var cellsUsed = CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c != firstCell);
+            var cellsUsed = CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c != firstCell).ToList();
             cellsUsed.ForEach(c => c.Clear(XLClearOptions.All
                                         & ~XLClearOptions.MergedRanges
                                         & ~XLClearOptions.NormalFormats));
