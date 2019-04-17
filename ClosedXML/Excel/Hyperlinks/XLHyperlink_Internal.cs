@@ -4,11 +4,6 @@ namespace ClosedXML.Excel
 {
     public partial class XLHyperlink
     {
-        internal XLHyperlink()
-        {
-
-        }
-
         internal XLHyperlink(XLHyperlink hyperlink)
         {
             _externalAddress = hyperlink._externalAddress;

@@ -72,6 +72,8 @@ namespace ClosedXML.Excel
             {
                 if (IsExternal)
                     return null;
+                if (_internalAddress == null)
+                    return null;
                 if (_internalAddress.Contains('!'))
                 {
                     return _internalAddress[0] != '\''
