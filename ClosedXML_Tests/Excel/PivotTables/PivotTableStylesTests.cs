@@ -152,7 +152,7 @@ namespace ClosedXML_Tests
                     ptSheet.Columns().AdjustToContents();
                 }
                 return wb;
-            }, @"Examples\PivotTables\PivotStyles.xlsx");
+            }, @"Examples\PivotTables\pivotstyles.xlsx");
         }
     }
 }
