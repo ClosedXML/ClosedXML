@@ -151,9 +151,8 @@ namespace ClosedXML_Tests
 
                     ptSheet.Columns().AdjustToContents();
                 }
-                wb.SaveAs(@"D:\Sources\asr\ClosedXML\ClosedXML_Tests\Resource\Examples\PivotTables\pivotstyles.xlsx");
                 return wb;
-            }, @"Other\PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx");
+            }, @"Examples\PivotTables\PivotStyles.xlsx");
         }
     }
 }
