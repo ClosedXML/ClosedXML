@@ -7,7 +7,9 @@ namespace ClosedXML.Excel
     {
         public XLPivotValueStyleFormat(IXLPivotField field = null, IXLStyle style = null)
             : base(field, style)
-        { }
+        {
+            Outline = false;
+        }
 
         #region IXLPivotValueStyleFormat members
 

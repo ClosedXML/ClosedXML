@@ -1,11 +1,12 @@
 ﻿// Keep this file CodeMaid organised and cleaned
+
+using System.Collections.Generic;
+
 namespace ClosedXML.Excel
 {
-    public interface IXLPivotFieldStyleFormats
+    public interface IXLPivotFieldStyleFormats: IXLPivotElementStyleFormats
     {
-        IXLPivotValueStyleFormat DataValuesFormat { get; }
         IXLPivotStyleFormat Header { get; }
-        IXLPivotStyleFormat Label { get; }
-        IXLPivotStyleFormat Subtotal { get; }
+        IXLPivotElementStyleFormats Subtotal { get; }
     }
 }

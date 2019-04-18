@@ -2323,7 +2323,8 @@ namespace ClosedXML.Excel
                 PrintDrill = OpenXmlHelper.GetBooleanValue(pt.PrintExpandCollapsedButtons, false),
                 ItemPrintTitles = OpenXmlHelper.GetBooleanValue(pt.RepeatRowLabels, false),
                 FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, false),
-                EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true)
+                EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true),
+                ApplyWidthHeightFormats = new BooleanValue(true)
             };
 
             if (!String.IsNullOrEmpty(pt.ColumnHeaderCaption))
@@ -2854,9 +2855,14 @@ namespace ClosedXML.Excel
             foreach (var pivotField in pt.ImplementedFields)
             {
                 GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Header, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Header, pivotTableDefinition, context);
-                GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Subtotal, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Subtotal, pivotTableDefinition, context);
-                GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Label, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Label, pivotTableDefinition, context);
-                GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Data, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.DataValuesFormat, pivotTableDefinition, context);
+                if (pivotField.StyleFormats.HasLabelFormat)
+                    GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Label, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Label, pivotTableDefinition, context);
+                if (pivotField.StyleFormats.Subtotal.HasLabelFormat)
+                    GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Subtotal, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pivotField.StyleFormats.Subtotal.Label, pivotTableDefinition, context);
+                foreach (var pvf in pivotField.StyleFormats.Subtotal.DataValuesFormats)
+                    GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Subtotal, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pvf, pivotTableDefinition, context);
+                foreach (var pvf in pivotField.StyleFormats.DataValuesFormats)
+                    GeneratePivotFieldFormat(XLPivotStyleFormatTarget.Data, pt, (XLPivotField)pivotField, (XLPivotStyleFormat)pvf, pivotTableDefinition, context);
             }
 
             if (pivotTableDefinition.Formats.Any())
@@ -2927,6 +2933,7 @@ namespace ClosedXML.Excel
 
             var pivotArea = GenerateDefaultPivotArea(target);
 
+            pivotArea.Outline = OpenXmlHelper.GetBooleanValue(styleFormat.Outline, true);
             pivotArea.LabelOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Label, false);
             pivotArea.DataOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Data, true);
 
@@ -2954,7 +2961,7 @@ namespace ClosedXML.Excel
                 && !styleFormat.FieldReferences.OfType<PivotLabelFieldReference>().Select(fr => fr.PivotField).Contains(pivotField))
             {
                 var fr = new PivotLabelFieldReference(pivotField);
-                fr.DefaultSubtotal = target == XLPivotStyleFormatTarget.Subtotal;
+                fr.Subtotal = target == XLPivotStyleFormatTarget.Subtotal;
                 styleFormat.FieldReferences.Insert(0, fr);
             }
 
@@ -2996,14 +3003,12 @@ namespace ClosedXML.Excel
                 case XLPivotStyleFormatTarget.Subtotal:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
                         FieldPosition = 0,
                     };
 
                 case XLPivotStyleFormatTarget.GrandTotal:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
                         FieldPosition = 0,
                         DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
                         LabelOnly = OpenXmlHelper.GetBooleanValue(false, false),
@@ -3012,7 +3017,6 @@ namespace ClosedXML.Excel
                 case XLPivotStyleFormatTarget.Label:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
                         FieldPosition = 0,
                         DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
                         LabelOnly = OpenXmlHelper.GetBooleanValue(true, false),
@@ -3021,7 +3025,6 @@ namespace ClosedXML.Excel
                 case XLPivotStyleFormatTarget.Data:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
                         FieldPosition = 0,
                     };
 
@@ -3032,18 +3035,19 @@ namespace ClosedXML.Excel
 
         private static void GeneratePivotAreaReference(XLPivotTable pt, PivotAreaReferences pivotAreaReferences, AbstractPivotFieldReference fieldReference, SaveContext context)
         {
-            var pivotAreaReference = new PivotAreaReference();
-
-            pivotAreaReference.DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.DefaultSubtotal, false);
-            pivotAreaReference.Field = fieldReference.GetFieldOffset();
+            var pivotAreaReference = pivotAreaReferences.Cast<PivotAreaReference>()
+                .FirstOrDefault(fieldReference.Equals);
+            if (pivotAreaReference == null)
+            {
+                pivotAreaReference = (PivotAreaReference) fieldReference;
+                pivotAreaReferences.AppendChild(pivotAreaReference);
+            }
 
             var matchedOffsets = fieldReference.Match(context.PivotTables[pt.Guid], pt);
             foreach (var o in matchedOffsets)
             {
                 pivotAreaReference.AppendChild(new FieldItem { Val = UInt32Value.FromUInt32((uint)o) });
             }
-
-            pivotAreaReferences.AppendChild(pivotAreaReference);
         }
 
         private static void GenerateWorksheetCommentsPartContent(WorksheetCommentsPart worksheetCommentsPart,

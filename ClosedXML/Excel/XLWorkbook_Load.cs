@@ -897,7 +897,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     Int32 fieldIndex;
-                    Boolean defaultSubtotal = false;
+                    Boolean subtotal = false;
 
                     if (pivotArea.Field != null)
                         fieldIndex = (Int32)pivotArea.Field;
@@ -909,7 +909,18 @@ namespace ClosedXML.Excel
                             continue;
 
                         fieldIndex = Convert.ToInt32((UInt32)r.Field);
-                        defaultSubtotal = OpenXmlHelper.GetBooleanValueAsBool(r.DefaultSubtotal, false);
+                        subtotal = OpenXmlHelper.GetBooleanValueAsBool(r.DefaultSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.SumSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.CountSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.CountASubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.AverageSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.MaxSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.MinSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.ApplyProductInSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.ApplyVarianceInSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.ApplyVariancePInSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.ApplyStandardDeviationInSubtotal, false)
+                                   || OpenXmlHelper.GetBooleanValueAsBool(r.ApplyStandardDeviationPInSubtotal, false);
                     }
                     else
                         throw new NotImplementedException();
@@ -931,17 +942,27 @@ namespace ClosedXML.Excel
                         field = (XLPivotField)pt.ImplementedFields.Single(f => f.SourceName.Equals(fieldName));
                     }
 
-                    if (defaultSubtotal)
+                    if (subtotal)
                     {
-                        // Subtotal format
+                        // Subtotal format of values area
                         // Example:
-                        // <x:pivotArea type="normal" fieldPosition="0">
+                        // <x:pivotArea fieldPosition="0">
                         //     <x:references count="1">
-                        //         <x:reference field="0" defaultSubtotal="1" />
+                        //         <x:reference field="0" sumSubtotal="1" />
                         //     </x:references>
                         // </x:pivotArea>
 
-                        styleFormat = field.StyleFormats.Subtotal as XLPivotStyleFormat;
+                        // Subtotal format of labels area
+                        // 	<x:pivotArea dataOnly="0" labelOnly="1" fieldPosition="0">
+                        // 		<x:references count="1">
+                        // 			<x:reference field="0" sumSubtotal="1" />
+                        // 		</x:references>
+                        // 	</x:pivotArea>
+
+                        if (labelOnly)
+                            styleFormat = field.StyleFormats.Subtotal.Label as XLPivotStyleFormat;
+                        else
+                            styleFormat = ParsePivotAreaReference(pt, pcd, pivotArea, field, field.StyleFormats.Subtotal);
                     }
                     else if (type == PivotAreaValues.Button)
                     {
@@ -973,48 +994,12 @@ namespace ClosedXML.Excel
                         //         </x:reference>
                         //         <x:reference field="4294967294">
                         //             <x:x v="0" />
+                        //             <x:x v="1" />
                         //         </x:reference>
                         //     </x:references>
                         //</x:pivotArea>
-                        styleFormat = field.StyleFormats.DataValuesFormat as XLPivotStyleFormat;
 
-                        foreach (var reference in pivotArea.PivotAreaReferences.OfType<PivotAreaReference>())
-                        {
-                            fieldIndex = unchecked((int)reference.Field.Value);
-                            if (field.Offset == fieldIndex)
-                                continue; // already handled
-
-                            var fieldItem = reference.OfType<FieldItem>().First();
-                            var fieldItemValue = (int)fieldItem.Val.Value;
-
-                            if (fieldIndex == -2)
-                            {
-                                styleFormat = (styleFormat as XLPivotValueStyleFormat)
-                                    .ForValueField(pt.Values.ElementAt(fieldItemValue))
-                                    as XLPivotValueStyleFormat;
-                            }
-                            else
-                            {
-                                var additionalFieldName = pt.SourceRangeFieldsAvailable.ElementAt(fieldIndex);
-                                var additionalField = pt.ImplementedFields
-                                    .Single(f => f.SourceName == additionalFieldName);
-
-                                var cacheField = pcd.CacheFields.OfType<CacheField>()
-                                    .FirstOrDefault(cf => cf.Name == additionalFieldName);
-
-                                Predicate<Object> predicate = null;
-                                if ((cacheField?.SharedItems?.Any() ?? false)
-                                    && fieldItemValue < cacheField.SharedItems.Count)
-                                {
-                                    var value = cacheField.SharedItems.OfType<StringItem>().ElementAt(fieldItemValue).Val?.Value;
-                                    predicate = o => o.ToString() == value;
-                                }
-
-                                styleFormat = (styleFormat as XLPivotValueStyleFormat)
-                                    .AndWith(additionalField, predicate)
-                                    as XLPivotValueStyleFormat;
-                            }
-                        }
+                        styleFormat = ParsePivotAreaReference(pt, pcd, pivotArea, field, field.StyleFormats);
                     }
 
                     styleFormat.AreaType = type.Value.ToClosedXml();
@@ -1034,6 +1019,53 @@ namespace ClosedXML.Excel
 
                 styleFormat.Style = style;
             }
+        }
+
+        private static XLPivotStyleFormat ParsePivotAreaReference(XLPivotTable pt, PivotCacheDefinition pcd, PivotArea pivotArea, XLPivotField field, IXLPivotElementStyleFormats pivotStyleFormats)
+        {
+            var styleFormat = pivotStyleFormats.AddValuesFormat() as XLPivotStyleFormat;
+
+            foreach (var reference in pivotArea.PivotAreaReferences.OfType<PivotAreaReference>())
+            {
+                var fieldIndex = unchecked((int) reference.Field.Value);
+                if (field.Offset == fieldIndex)
+                    continue; // already handled
+
+                foreach (var fieldItem in reference.OfType<FieldItem>())
+                {
+                    var fieldItemValue = (int) fieldItem.Val.Value;
+
+                    if (fieldIndex == -2)
+                    {
+                        styleFormat = (styleFormat as XLPivotValueStyleFormat)
+                            .ForValueField(pt.Values.ElementAt(fieldItemValue))
+                            as XLPivotValueStyleFormat;
+                    }
+                    else
+                    {
+                        var additionalFieldName = pt.SourceRangeFieldsAvailable.ElementAt(fieldIndex);
+                        var additionalField = pt.ImplementedFields
+                            .Single(f => f.SourceName == additionalFieldName);
+
+                        var cacheField = pcd.CacheFields.OfType<CacheField>()
+                            .FirstOrDefault(cf => cf.Name == additionalFieldName);
+
+                        Predicate<Object> predicate = null;
+                        if ((cacheField?.SharedItems?.Any() ?? false)
+                            && fieldItemValue < cacheField.SharedItems.Count)
+                        {
+                            var value = cacheField.SharedItems.OfType<StringItem>().ElementAt(fieldItemValue).Val?.Value;
+                            predicate = o => o.ToString() == value;
+                        }
+
+                        styleFormat = (styleFormat as XLPivotValueStyleFormat)
+                            .AndWith(additionalField, predicate)
+                            as XLPivotValueStyleFormat;
+                    }
+                }
+            }
+
+            return styleFormat;
         }
 
         private static void LoadFieldOptions(PivotField pf, IXLPivotField pivotField)

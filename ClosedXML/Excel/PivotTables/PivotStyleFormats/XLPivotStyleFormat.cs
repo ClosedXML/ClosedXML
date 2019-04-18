@@ -16,12 +16,12 @@ namespace ClosedXML.Excel
         public XLPivotStyleFormatElement AppliesTo { get; set; } = XLPivotStyleFormatElement.Data;
         public IXLPivotField PivotField { get; set; }
         public IXLStyle Style { get; set; }
+        public bool Outline { get; set; } = true;
 
         #endregion IXLPivotStyleFormat members
 
         internal XLPivotAreaValues AreaType { get; set; } = XLPivotAreaValues.Normal;
         internal bool CollapsedLevelsAreSubtotals { get; set; } = false;
         internal IList<AbstractPivotFieldReference> FieldReferences { get; } = new List<AbstractPivotFieldReference>();
-        internal bool Outline { get; set; } = true;
     }
 }

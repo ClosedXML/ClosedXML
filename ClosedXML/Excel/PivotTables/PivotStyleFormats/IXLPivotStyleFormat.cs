@@ -1,4 +1,5 @@
 // Keep this file CodeMaid organised and cleaned
+
 namespace ClosedXML.Excel
 {
     public interface IXLPivotStyleFormat
@@ -6,5 +7,6 @@ namespace ClosedXML.Excel
         XLPivotStyleFormatElement AppliesTo { get; }
         IXLPivotField PivotField { get; }
         IXLStyle Style { get; set; }
+        bool Outline { get; set; }
     }
 }

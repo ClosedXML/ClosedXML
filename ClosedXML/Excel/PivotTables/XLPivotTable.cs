@@ -401,10 +401,11 @@ namespace ClosedXML.Excel
 
                 foreach (var pivotField in ImplementedFields)
                 {
-                    yield return pivotField.StyleFormats.Subtotal;
+                    foreach (var format in pivotField.StyleFormats.Subtotal.DataValuesFormats) yield return format;
+                    yield return pivotField.StyleFormats.Subtotal.Label;
                     yield return pivotField.StyleFormats.Header;
                     yield return pivotField.StyleFormats.Label;
-                    yield return pivotField.StyleFormats.DataValuesFormat;
+                    foreach (var format in pivotField.StyleFormats.DataValuesFormats) yield return format;
                 }
             }
         }
