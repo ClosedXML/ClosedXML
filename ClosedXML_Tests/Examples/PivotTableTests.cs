@@ -1,4 +1,7 @@
-﻿using ClosedXML_Examples;
+﻿using System.IO;
+using System.Threading;
+using ClosedXML.Excel;
+using ClosedXML_Examples;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
@@ -10,6 +13,12 @@ namespace ClosedXML_Tests.Examples
         public void PivotTables()
         {
             TestHelper.RunTestExample<PivotTables>(@"PivotTables\PivotTables.xlsx");
+        }
+
+        [Test]
+        public void PivotTableStyles()
+        {
+            TestHelper.RunTestExample<PivotTableStyles>(@"PivotTables\PivotTableStyles.xlsx");
         }
     }
 }

@@ -867,7 +867,7 @@ namespace ClosedXML.Excel
                 if (dataOnly && labelOnly)
                     throw new InvalidOperationException("Cannot have dataOnly and labelOnly both set to true.");
 
-                XLPivotStyleFormat styleFormat;
+                XLPivotStyleFormat styleFormat = null;
 
                 if (pivotArea.Field == null && !(pivotArea.PivotAreaReferences?.OfType<PivotAreaReference>()?.Any() ?? false))
                 {
@@ -961,8 +961,9 @@ namespace ClosedXML.Excel
 
                         if (labelOnly)
                             styleFormat = field.StyleFormats.Subtotal.Label as XLPivotStyleFormat;
-                        else
+                        else if (dataOnly)
                             styleFormat = ParsePivotAreaReference(pt, pcd, pivotArea, field, field.StyleFormats.Subtotal);
+                        else continue;
                     }
                     else if (type == PivotAreaValues.Button)
                     {
@@ -982,7 +983,7 @@ namespace ClosedXML.Excel
                         // </x:pivotArea>
                         styleFormat = field.StyleFormats.Label as XLPivotStyleFormat;
                     }
-                    else
+                    else if (dataOnly)
                     {
                         // Assume DataValues format
                         // Example:
@@ -1001,6 +1002,8 @@ namespace ClosedXML.Excel
 
                         styleFormat = ParsePivotAreaReference(pt, pcd, pivotArea, field, field.StyleFormats);
                     }
+                    else
+                        continue;
 
                     styleFormat.AreaType = type.Value.ToClosedXml();
                     styleFormat.Outline = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.Outline, true);
