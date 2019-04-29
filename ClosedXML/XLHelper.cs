@@ -28,6 +28,11 @@ namespace ClosedXML.Excel
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
+        internal static readonly Regex RCSimpleRegex = new Regex(
+            @"(r\d*c\d*)"
+            ,RegexOptions.IgnoreCase | RegexOptions.Compiled
+            );
+
         internal static readonly Regex A1SimpleRegex = new Regex(
             @"\A"
             + @"(?<Reference>" // Start Group to pick
@@ -179,6 +184,14 @@ namespace ClosedXML.Excel
                 rowPos < addressLength
                 && IsValidRow(address.Substring(rowPos))
                 && IsValidColumn(address.Substring(0, rowPos));
+        }
+
+        public static bool IsValidRCAddress(string address)
+        {
+            if (String.IsNullOrWhiteSpace(address))
+                return false;
+
+            return RCSimpleRegex.IsMatch(address);
         }
 
         public static Boolean IsValidRangeAddress(String rangeAddress)

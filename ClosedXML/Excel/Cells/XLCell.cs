@@ -737,6 +737,9 @@ namespace ClosedXML.Excel
             if (data == null || data.Columns.Count == 0)
                 return null;
 
+            if (XLHelper.IsValidA1Address(tableName) || XLHelper.IsValidRCAddress(tableName))
+                throw new InvalidOperationException(string.Format("Table name cannot be a valid Cell Address '{0}'.", tableName));
+
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
