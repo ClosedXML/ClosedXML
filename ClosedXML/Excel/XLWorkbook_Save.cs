@@ -264,6 +264,17 @@ namespace ClosedXML.Excel
 
             GenerateWorkbookStylesPartContent(workbookStylesPart, context);
 
+            var pivotTables = WorksheetsInternal.Cast<XLWorksheet>().SelectMany(s=>s.PivotTables.Cast<XLPivotTable>()).ToList();
+            foreach (var pt in pivotTables)
+            {
+                if (!string.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
+                {
+                    var pivotTableCacheDefinitionPart = workbookPart.GetPartById(pt.WorkbookCacheRelId) as PivotTableCacheDefinitionPart;
+                    if (pivotTableCacheDefinitionPart != null)
+                        pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.RemoveAllChildren();
+                }
+            }
+
             foreach (var worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
                 WorksheetPart worksheetPart;
@@ -2140,19 +2151,27 @@ namespace ClosedXML.Excel
                     xlpf.Subtotals.AddRange(field.Subtotals);
                 }
 
-                var sharedItems = new SharedItems();
+                var cacheField = new CacheField { Name = xlpf.SourceName };
+
+                var sharedItems = pivotTableCacheDefinitionPart.PivotCacheDefinition?.CacheFields?.Cast<CacheField>()
+                    ?.FirstOrDefault(f => f.Name == xlpf.SourceName)
+                    ?.SharedItems;
+                sharedItems = sharedItems != null ? (SharedItems) sharedItems.CloneNode(true) : new SharedItems();
+
+                cacheField.AppendChild(sharedItems);
 
                 var ptfi = new PivotTableFieldInfo
                 {
                     IsTotallyBlankField = false
                 };
 
+                var sourceHeaderRow = source.FirstRow().RowNumber();
                 var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
-                                                           && cell.Address.RowNumber > source.FirstRow().RowNumber());
+                                                           && cell.Address.RowNumber > sourceHeaderRow);
                 var types = fieldValueCells.Select(cell => cell.DataType).Distinct().ToArray();
                 var containsBlank = source.CellsUsed(XLCellsUsedOptions.All,
                     cell => cell.Address.ColumnNumber == columnNumber
-                            && cell.Address.RowNumber > source.FirstRow().RowNumber()
+                            && cell.Address.RowNumber > sourceHeaderRow
                             && cell.IsEmpty()).Any();
 
                 // For a totally blank column, we need to check that all cells in column are unused
@@ -2166,10 +2185,6 @@ namespace ClosedXML.Excel
                 {
                     if (types.Length == 1 && types.Single() == XLDataType.Number)
                     {
-                        sharedItems.ContainsSemiMixedTypes = containsBlank;
-                        sharedItems.ContainsString = false;
-                        sharedItems.ContainsNumber = true;
-
                         ptfi.DataType = XLDataType.Number;
                         ptfi.MixedDataType = false;
                         ptfi.DistinctValues = fieldValueCells
@@ -2179,32 +2194,10 @@ namespace ClosedXML.Excel
                             .Cast<object>()
                             .ToArray();
 
-                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
-                        if (allInteger) sharedItems.ContainsInteger = true;
-
                         pti.Fields.Add(xlpf.SourceName, ptfi);
-
-                        // Output items only for row / column / filter fields
-                        if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
-                            || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
-                            || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
-                        {
-                            foreach (var value in ptfi.DistinctValues)
-                                sharedItems.AppendChild(new NumberItem { Val = (double)value });
-
-                            if (containsBlank) sharedItems.AppendChild(new MissingItem());
-                        }
-
-                        sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
-                        sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
                     }
                     else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
                     {
-                        sharedItems.ContainsSemiMixedTypes = containsBlank;
-                        sharedItems.ContainsNonDate = false;
-                        sharedItems.ContainsString = false;
-                        sharedItems.ContainsDate = true;
-
                         ptfi.DataType = XLDataType.DateTime;
                         ptfi.MixedDataType = false;
                         ptfi.DistinctValues = fieldValueCells
@@ -2215,23 +2208,8 @@ namespace ClosedXML.Excel
                             .ToArray();
 
                         pti.Fields.Add(xlpf.SourceName, ptfi);
-
-                        // Output items only for row / column / filter fields
-                        if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
-                            || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
-                            || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
-                        {
-                            foreach (var value in ptfi.DistinctValues)
-                                sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
-
-                            if (containsBlank) sharedItems.AppendChild(new MissingItem());
-                        }
-
-                        sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
-                        sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
                     }
                     else
-
                     {
                         ptfi.DataType = types.First();
                         ptfi.MixedDataType = types.Length > 1;
@@ -2250,11 +2228,61 @@ namespace ClosedXML.Excel
                                 .ToArray();
 
                         pti.Fields.Add(xlpf.SourceName, ptfi);
+                    }
 
-                        foreach (var value in ptfi.DistinctValues)
-                            sharedItems.AppendChild(new StringItem { Val = (string)value });
+                    if (!sharedItems.Any())
+                    {
+                        if (types.Length == 1 && types.Single() == XLDataType.Number)
+                        {
+                            sharedItems.ContainsSemiMixedTypes = containsBlank;
+                            sharedItems.ContainsString = false;
+                            sharedItems.ContainsNumber = true;
 
-                        if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                            var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
+                            if (allInteger) sharedItems.ContainsInteger = true;
+
+                            // Output items only for row / column / filter fields
+                            if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
+                                || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
+                                || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                            {
+                                foreach (var value in ptfi.DistinctValues)
+                                    sharedItems.AppendChild(new NumberItem { Val = (double)value });
+
+                                if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                            }
+
+                            sharedItems.MinValue = (double)ptfi.DistinctValues.Min();
+                            sharedItems.MaxValue = (double)ptfi.DistinctValues.Max();
+                        }
+                        else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
+                        {
+                            sharedItems.ContainsSemiMixedTypes = containsBlank;
+                            sharedItems.ContainsNonDate = false;
+                            sharedItems.ContainsString = false;
+                            sharedItems.ContainsDate = true;
+
+                            // Output items only for row / column / filter fields
+                            if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
+                                || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
+                                || pt.ReportFilters.Any(p => p.SourceName == xlpf.SourceName))
+                            {
+                                foreach (var value in ptfi.DistinctValues)
+                                    sharedItems.AppendChild(new DateTimeItem { Val = (DateTime)value });
+
+                                if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                            }
+
+                            sharedItems.MinDate = (DateTime)ptfi.DistinctValues.Min();
+                            sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
+                        }
+                        else
+                        {
+                            foreach (var value in ptfi.DistinctValues)
+                                sharedItems.AppendChild(new StringItem { Val = (string)value });
+
+                            if (containsBlank) sharedItems.AppendChild(new MissingItem());
+                        }
                     }
                 }
 
@@ -2265,8 +2293,6 @@ namespace ClosedXML.Excel
                 else if (ptfi.DistinctValues?.Any() ?? false)
                     sharedItems.Count = Convert.ToUInt32(ptfi.DistinctValues.Count());
 
-                var cacheField = new CacheField { Name = xlpf.SourceName };
-                cacheField.AppendChild(sharedItems);
                 cacheFields.AppendChild(cacheField);
             }
 
@@ -2366,10 +2392,13 @@ namespace ClosedXML.Excel
             };
 
             if (pt.ReportFilters.Any())
+            {
                 // Reference cell is the part BELOW the report filters
-                location.Reference = pt.TargetCell.CellBelow(pt.ReportFilters.Count() + 1).Address.ToString();
+                var targetCell = pt.TargetCell.CellBelow(pt.ReportFilters.Count() + 1);
+                location.Reference = pt.Worksheet.Range(targetCell, targetCell.CellRight(10).CellBelow(10)).RangeAddress.ToString();
+            }
             else
-                location.Reference = pt.TargetCell.Address.ToString();
+                location.Reference = pt.Worksheet.Range(pt.TargetCell, pt.TargetCell.CellRight(10).CellBelow(10)).RangeAddress.ToString();
 
             var rowFields = new RowFields();
             var columnFields = new ColumnFields();
