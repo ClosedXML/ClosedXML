@@ -8,14 +8,14 @@ namespace ClosedXML.Excel
     internal static class XLFormulaConverter
     {
         private static readonly Regex A1Regex = new Regex(
-            @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
-            + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
-            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
+            @"(?<=(\W|^))(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=(\W|$))" // A1
+            + @"|(?<=(\W|^))(\$?\d{1,7}:\$?\d{1,7})(?=(\W|$))" // 1:1
+            + @"|(?<=(\W|^))(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=(\W|$))", RegexOptions.Compiled); // A:A
 
         private static readonly Regex R1C1Regex = new Regex(
-            @"(?<=\W)([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=\W)" // R1C1
-            + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
-            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
+            @"(?<=(\W|^))([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=(\W|$))" // R1C1
+            + @"|(?<=(\W|^))([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=(\W|$))" // R:R
+            + @"|(?<=(\W|^))([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=(\W|$))", RegexOptions.Compiled); // C:C
 
         public static string GetFormula(XLAddress baseAddress, string strValue, FormulaConversionType conversionType, int rowsToShift,
             int columnsToShift)
@@ -23,36 +23,34 @@ namespace ClosedXML.Excel
             if (String.IsNullOrWhiteSpace(strValue))
                 return String.Empty;
 
-            var value = ">" + strValue + "<";
-
             var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
 
             var sb = new StringBuilder();
             var lastIndex = 0;
 
-            foreach (var match in regex.Matches(value).Cast<Match>())
+            foreach (var match in regex.Matches(strValue).Cast<Match>())
             {
                 var matchString = match.Value;
                 var matchIndex = match.Index;
-                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
-                    && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
+                if (strValue.Substring(0, matchIndex).CharCount('"') % 2 == 0
+                    && strValue.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
                 {
                     // Check if the match is in between quotes
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
+                    sb.Append(strValue.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
                         ? GetR1C1Address(baseAddress, matchString, rowsToShift, columnsToShift)
                         : GetA1Address(baseAddress, matchString, rowsToShift, columnsToShift));
                 }
                 else
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+                    sb.Append(strValue.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
                 lastIndex = matchIndex + matchString.Length;
             }
 
-            if (lastIndex < value.Length)
-                sb.Append(value.Substring(lastIndex));
+            if (lastIndex < strValue.Length)
+                sb.Append(strValue.Substring(lastIndex));
 
             var retVal = sb.ToString();
-            return retVal.Substring(1, retVal.Length - 2);
+            return retVal;
         }
 
         private static string GetA1Address(XLAddress baseAddress, string r1C1Address, int rowsToShift, int columnsToShift)
