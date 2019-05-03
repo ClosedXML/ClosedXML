@@ -20,10 +20,6 @@ namespace ClosedXML.Excel
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
 
-        private static readonly Regex A1Regex = new Regex(
-            @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
-            + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
-            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
 
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word
@@ -55,11 +51,6 @@ namespace ClosedXML.Excel
         private static readonly Regex A1ColumnRegex = new Regex(
             @"(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})" // A:A
             , RegexOptions.Compiled);
-
-        private static readonly Regex R1C1Regex = new Regex(
-            @"(?<=\W)([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=\W)" // R1C1
-            + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
-            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
 
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
@@ -2219,12 +2210,12 @@ namespace ClosedXML.Excel
 
         internal string GetFormulaR1C1(string value)
         {
-            return GetFormula(Address, value, FormulaConversionType.A1ToR1C1, rowsToShift: 0, columnsToShift: 0);
+            return XLFormulaConverter.GetFormula(Address, value, FormulaConversionType.A1ToR1C1, rowsToShift: 0, columnsToShift: 0);
         }
 
         internal string GetFormulaA1(string value)
         {
-            return GetFormula(Address, value, FormulaConversionType.R1C1ToA1, rowsToShift: 0, columnsToShift: 0);
+            return XLFormulaConverter.GetFormula(Address, value, FormulaConversionType.R1C1ToA1, rowsToShift: 0, columnsToShift: 0);
         }
 
         internal void CopyValuesFrom(XLCell source)
@@ -2640,16 +2631,7 @@ namespace ClosedXML.Excel
             return Worksheet.Cell(_rowNumber + rowsToShift, _columnNumber + columnsToShift);
         }
 
-        #region Nested type: FormulaConversionType
-
-        private enum FormulaConversionType
-        {
-            A1ToR1C1,
-            R1C1ToA1
-        };
-
-        #endregion Nested type: FormulaConversionType
-
+ 
         #region XLCell Above
 
         IXLCell IXLCell.CellAbove()

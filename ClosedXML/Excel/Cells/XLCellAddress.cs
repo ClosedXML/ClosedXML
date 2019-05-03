@@ -5,10 +5,19 @@ using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
-    internal partial class XLCell
+    internal static class XLFormulaConverter
     {
+        private static readonly Regex A1Regex = new Regex(
+            @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
+            + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
+            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
 
-        private string GetFormula(XLAddress baseAddress, string strValue, FormulaConversionType conversionType, int rowsToShift,
+        private static readonly Regex R1C1Regex = new Regex(
+            @"(?<=\W)([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=\W)" // R1C1
+            + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
+            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
+
+        public static string GetFormula(XLAddress baseAddress, string strValue, FormulaConversionType conversionType, int rowsToShift,
             int columnsToShift)
         {
             if (String.IsNullOrWhiteSpace(strValue))
@@ -176,17 +185,17 @@ namespace ClosedXML.Excel
                 var parts = a1Address.Split(':');
                 var p1 = parts[0];
                 var p2 = parts[1];
-                if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
+                if (Int32.TryParse(p1.Replace("$", String.Empty), out Int32 row1))
                 {
-                    var row2 = Int32.Parse(p2.Replace("$", string.Empty));
+                    var row2 = Int32.Parse(p2.Replace("$", String.Empty));
                     var leftPart = GetR1C1Row(baseAddress, row1, p1.Contains('$'), rowsToShift);
                     var rightPart = GetR1C1Row(baseAddress, row2, p2.Contains('$'), rowsToShift);
                     return leftPart + ":" + rightPart;
                 }
                 else
                 {
-                    var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
-                    var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
+                    var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", String.Empty));
+                    var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", String.Empty));
                     var leftPart = GetR1C1Column(baseAddress, column1, p1.Contains('$'), columnsToShift);
                     var rightPart = GetR1C1Column(baseAddress, column2, p2.Contains('$'), columnsToShift);
                     return leftPart + ":" + rightPart;
@@ -200,6 +209,11 @@ namespace ClosedXML.Excel
 
             return rowPart + columnPart;
         }
+    }
 
+    internal enum FormulaConversionType
+    {
+        A1ToR1C1,
+        R1C1ToA1
     }
 }
