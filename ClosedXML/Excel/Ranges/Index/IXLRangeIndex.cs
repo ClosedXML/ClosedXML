@@ -10,7 +10,7 @@ namespace ClosedXML.Excel.Ranges.Index
     {
         bool Add(IXLRangeBase range);
 
-        bool Remove(IXLRangeBase range);
+        bool Remove(IXLRangeAddress rangeAddress);
 
         int RemoveAll(Predicate<IXLRangeBase> predicate = null);
 
@@ -23,14 +23,14 @@ namespace ClosedXML.Excel.Ranges.Index
         bool Intersects(in XLRangeAddress rangeAddress);
 
         bool Contains(in XLAddress address);
+
+        bool MatchesType(XLRangeType rangeType);
     }
 
     internal interface IXLRangeIndex<T> : IXLRangeIndex
         where T : IXLRangeBase
     {
         bool Add(T range);
-
-        bool Remove(T range);
 
         int RemoveAll(Predicate<T> predicate = null);
 
