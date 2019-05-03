@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     internal partial class XLCell
     {
 
-        private string GetFormula(string strValue, FormulaConversionType conversionType, int rowsToShift,
+        private string GetFormula(XLAddress baseAddress, string strValue, FormulaConversionType conversionType, int rowsToShift,
             int columnsToShift)
         {
             if (String.IsNullOrWhiteSpace(strValue))
@@ -31,8 +31,8 @@ namespace ClosedXML.Excel
                     // Check if the match is in between quotes
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
                     sb.Append(conversionType == FormulaConversionType.A1ToR1C1
-                        ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
-                        : GetA1Address(matchString, rowsToShift, columnsToShift));
+                        ? GetR1C1Address(baseAddress, matchString, rowsToShift, columnsToShift)
+                        : GetA1Address(baseAddress, matchString, rowsToShift, columnsToShift));
                 }
                 else
                     sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
@@ -46,7 +46,7 @@ namespace ClosedXML.Excel
             return retVal.Substring(1, retVal.Length - 2);
         }
 
-        private string GetA1Address(string r1C1Address, int rowsToShift, int columnsToShift)
+        private static string GetA1Address(XLAddress baseAddress, string r1C1Address, int rowsToShift, int columnsToShift)
         {
             var addressToUse = r1C1Address.ToUpper();
 
@@ -59,13 +59,13 @@ namespace ClosedXML.Excel
                 string rightPart;
                 if (p1.StartsWith("R"))
                 {
-                    leftPart = GetA1Row(p1, rowsToShift);
-                    rightPart = GetA1Row(p2, rowsToShift);
+                    leftPart = GetA1Row(baseAddress, p1, rowsToShift);
+                    rightPart = GetA1Row(baseAddress, p2, rowsToShift);
                 }
                 else
                 {
-                    leftPart = GetA1Column(p1, columnsToShift);
-                    rightPart = GetA1Column(p2, columnsToShift);
+                    leftPart = GetA1Column(baseAddress, p1, columnsToShift);
+                    rightPart = GetA1Column(baseAddress, p2, columnsToShift);
                 }
 
                 return leftPart + ":" + rightPart;
@@ -74,10 +74,10 @@ namespace ClosedXML.Excel
             try
             {
                 var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
-                var rowToReturn = GetA1Row(rowPart, rowsToShift);
+                var rowToReturn = GetA1Row(baseAddress, rowPart, rowsToShift);
 
                 var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
-                var columnToReturn = GetA1Column(columnPart, columnsToShift);
+                var columnToReturn = GetA1Column(baseAddress, columnPart, columnsToShift);
 
                 var retAddress = columnToReturn + rowToReturn;
                 return retAddress;
@@ -88,11 +88,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        private string GetA1Column(string columnPart, int columnsToShift)
+        private static string GetA1Column(XLAddress baseAddress, string columnPart, int columnsToShift)
         {
             string columnToReturn;
             if (columnPart == "C")
-                columnToReturn = XLHelper.GetColumnLetterFromNumber(_columnNumber + columnsToShift);
+                columnToReturn = XLHelper.GetColumnLetterFromNumber(baseAddress.ColumnNumber + columnsToShift);
             else
             {
                 var bIndex = columnPart.IndexOf("[");
@@ -100,14 +100,14 @@ namespace ClosedXML.Excel
                 if (bIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        _columnNumber +
+                        baseAddress.ColumnNumber +
                         Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
                         );
                 }
                 else if (mIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        _columnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
+                        baseAddress.ColumnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
                         );
                 }
                 else
@@ -121,18 +121,18 @@ namespace ClosedXML.Excel
             return columnToReturn;
         }
 
-        private string GetA1Row(string rowPart, int rowsToShift)
+        private static string GetA1Row(XLAddress baseAddress, string rowPart, int rowsToShift)
         {
             string rowToReturn;
             if (rowPart == "R")
-                rowToReturn = (_rowNumber + rowsToShift).ToString();
+                rowToReturn = (baseAddress.RowNumber + rowsToShift).ToString();
             else
             {
                 var bIndex = rowPart.IndexOf("[");
                 if (bIndex >= 0)
                 {
                     rowToReturn =
-                        (_rowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
+                        (baseAddress.RowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
                          rowsToShift).ToString();
                 }
                 else
@@ -142,11 +142,11 @@ namespace ClosedXML.Excel
             return rowToReturn;
         }
 
-        private string GetR1C1Row(int rowNumber, bool fixedRow, int rowsToShift)
+        private static string GetR1C1Row(XLAddress baseAddress, int rowNumber, bool fixedRow, int rowsToShift)
         {
             string rowPart;
             rowNumber += rowsToShift;
-            var rowDiff = rowNumber - _rowNumber;
+            var rowDiff = rowNumber - baseAddress.RowNumber;
             if (rowDiff != 0 || fixedRow)
                 rowPart = fixedRow ? "R" + rowNumber : "R[" + rowDiff + "]";
             else
@@ -155,11 +155,11 @@ namespace ClosedXML.Excel
             return rowPart;
         }
 
-        private string GetR1C1Column(int columnNumber, bool fixedColumn, int columnsToShift)
+        private static string GetR1C1Column(XLAddress baseAddress, int columnNumber, bool fixedColumn, int columnsToShift)
         {
             string columnPart;
             columnNumber += columnsToShift;
-            var columnDiff = columnNumber - _columnNumber;
+            var columnDiff = columnNumber - baseAddress.ColumnNumber;
             if (columnDiff != 0 || fixedColumn)
                 columnPart = fixedColumn ? "C" + columnNumber : "C[" + columnDiff + "]";
             else
@@ -169,7 +169,7 @@ namespace ClosedXML.Excel
         }
 
 
-        private string GetR1C1Address(string a1Address, int rowsToShift, int columnsToShift)
+        private static string GetR1C1Address(XLAddress baseAddress, string a1Address, int rowsToShift, int columnsToShift)
         {
             if (a1Address.Contains(':'))
             {
@@ -179,24 +179,24 @@ namespace ClosedXML.Excel
                 if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
                 {
                     var row2 = Int32.Parse(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);
-                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), rowsToShift);
+                    var leftPart = GetR1C1Row(baseAddress, row1, p1.Contains('$'), rowsToShift);
+                    var rightPart = GetR1C1Row(baseAddress, row2, p2.Contains('$'), rowsToShift);
                     return leftPart + ":" + rightPart;
                 }
                 else
                 {
                     var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
                     var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), columnsToShift);
-                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), columnsToShift);
+                    var leftPart = GetR1C1Column(baseAddress, column1, p1.Contains('$'), columnsToShift);
+                    var rightPart = GetR1C1Column(baseAddress, column2, p2.Contains('$'), columnsToShift);
                     return leftPart + ":" + rightPart;
                 }
             }
 
-            var address = XLAddress.Create(Worksheet, a1Address);
+            var address = XLAddress.Create(baseAddress.Worksheet, a1Address);
 
-            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
-            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, columnsToShift);
+            var rowPart = GetR1C1Row(baseAddress, address.RowNumber, address.FixedRow, rowsToShift);
+            var columnPart = GetR1C1Column(baseAddress, address.ColumnNumber, address.FixedColumn, columnsToShift);
 
             return rowPart + columnPart;
         }

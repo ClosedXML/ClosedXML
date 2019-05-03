@@ -2219,12 +2219,12 @@ namespace ClosedXML.Excel
 
         internal string GetFormulaR1C1(string value)
         {
-            return GetFormula(value, FormulaConversionType.A1ToR1C1, 0, 0);
+            return GetFormula(Address, value, FormulaConversionType.A1ToR1C1, rowsToShift: 0, columnsToShift: 0);
         }
 
         internal string GetFormulaA1(string value)
         {
-            return GetFormula(value, FormulaConversionType.R1C1ToA1, 0, 0);
+            return GetFormula(Address, value, FormulaConversionType.R1C1ToA1, rowsToShift: 0, columnsToShift: 0);
         }
 
         internal void CopyValuesFrom(XLCell source)
