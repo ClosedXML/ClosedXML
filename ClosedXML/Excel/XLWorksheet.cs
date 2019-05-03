@@ -1860,8 +1860,15 @@ namespace ClosedXML.Excel
 
             foreach (var rangeIndex in _rangeIndices)
             {
-                if (rangeIndex.Remove(range))
+                if (!rangeIndex.MatchesType(rangeType))
+                    continue;
+
+                if (rangeIndex.Remove(oldAddress) &&
+                    newAddress.IsValid &&
+                    range != null)
+                {
                     rangeIndex.Add(range);
+                }
             }
         }
 

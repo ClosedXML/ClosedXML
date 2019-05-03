@@ -51,7 +51,7 @@ namespace ClosedXML.Excel.Patterns
         /// </summary>
         public IEnumerable<IXLRangeBase> Ranges
         {
-            get => _ranges?.AsEnumerable();
+            get => _ranges?.Values.AsEnumerable();
         }
 
         /// <summary>
@@ -202,10 +202,9 @@ namespace ClosedXML.Excel.Patterns
         /// Remove the range from the quadrant or from child quadrants (recursively).
         /// </summary>
         /// <returns>True if the range was removed, false if it does not exist in the QuadTree.</returns>
-        public bool Remove(IXLRangeBase range)
+        public bool Remove(IXLRangeAddress rangeAddress)
         {
             bool res = false;
-            var rangeAddress = range.RangeAddress;
 
             bool coveredByChild = false;
             if (Children != null)
@@ -214,7 +213,7 @@ namespace ClosedXML.Excel.Patterns
                 {
                     if (childQuadrant.Covers(in rangeAddress))
                     {
-                        res |= childQuadrant.Remove(range);
+                        res |= childQuadrant.Remove(rangeAddress);
                         coveredByChild = true;
                     }
                 }
@@ -222,7 +221,7 @@ namespace ClosedXML.Excel.Patterns
 
             if (!coveredByChild)
             {
-                if (_ranges?.Remove(range) == true)
+                if (_ranges?.Remove(rangeAddress) == true)
                     res = true;
             }
 
@@ -237,12 +236,18 @@ namespace ClosedXML.Excel.Patterns
         {
             if (_ranges != null)
             {
-                var ranges = _ranges.Where(r => predicate(r));
+                var ranges = _ranges.Values.Where(r => predicate(r));
+                var keysToRemove = new List<IXLRangeAddress>();
                 foreach (var range in ranges)
                 {
+                    keysToRemove.Add(range.RangeAddress);
                     yield return range;
                 }
-                _ranges.RemoveWhere(predicate);
+
+                foreach (var keyToRemove in keysToRemove)
+                {
+                    _ranges.Remove(keyToRemove);
+                }
             }
 
             if (Children != null)
@@ -265,9 +270,9 @@ namespace ClosedXML.Excel.Patterns
         private const byte MAX_LEVEL = 10;
 
         /// <summary>
-        /// Collection of ranges belonging to the current quandrant (that cannot fit into child quadrants).
+        /// Collection of ranges belonging to the current quadrant (that cannot fit into child quadrants).
         /// </summary>
-        private HashSet<IXLRangeBase> _ranges;
+        private Dictionary<IXLRangeAddress, IXLRangeBase> _ranges;
 
         #endregion Private Fields
 
@@ -280,8 +285,13 @@ namespace ClosedXML.Excel.Patterns
         private bool AddInternal(IXLRangeBase range)
         {
             if (_ranges == null)
-                _ranges = new HashSet<IXLRangeBase>();
-            return _ranges.Add(range);
+                _ranges = new Dictionary<IXLRangeAddress, IXLRangeBase>();
+
+            if (_ranges.ContainsKey(range.RangeAddress))
+                return false;
+
+            _ranges.Add(range.RangeAddress, range);
+            return true;
         }
 
         /// <summary>

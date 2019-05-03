@@ -104,9 +104,9 @@ namespace ClosedXML_Tests.Excel.Ranges
                 var ws = wb.Worksheets.Add("Sheet1") as XLWorksheet;
                 var index = FillIndexWithTestData(ws);
 
-                ws.Column(3).InsertColumnsBefore(2);
+                ws.Column(1).InsertColumnsBefore(1000);
 
-                var address = new XLAddress(ws, 102, 6, false, false);
+                var address = new XLAddress(ws, 102, 1004, false, false);
 
                 Assert.True(index.Contains(in address));
             }
@@ -240,6 +240,21 @@ namespace ClosedXML_Tests.Excel.Ranges
 
                 Assert.AreEqual(ranges.Count, ranges.Count());
 
+                // Add many entries to activate QuadTree
+                for (int i = 1; i <= TEST_COUNT; i++)
+                {
+                    ranges.Add(ws.Range(i * 2, 2, i * 2, 4));
+                }
+
+                Assert.AreEqual(2 + TEST_COUNT, ranges.Count);
+
+                for (int i = 1; i <= TEST_COUNT; i++)
+                {
+                    ranges.Remove(ws.Range(i * 2, 2, i * 2, 4));
+                }
+
+                Assert.AreEqual(2, ranges.Count);
+
                 ranges.Remove(range3);
                 Assert.AreEqual(1, ranges.Count);
                 ranges.Remove(range2);
@@ -251,7 +266,7 @@ namespace ClosedXML_Tests.Excel.Ranges
 
         private IXLRangeIndex CreateRangeIndex(IXLWorksheet worksheet)
         {
-            return new XLRangeIndex((XLWorksheet)worksheet);
+            return new XLRangeIndex<XLRange>((XLWorksheet)worksheet);
         }
 
         private IXLRangeIndex FillIndexWithTestData(IXLWorksheet worksheet)

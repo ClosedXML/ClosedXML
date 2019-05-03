@@ -1,7 +1,7 @@
+using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ClosedXML.Excel.Ranges.Index;
 
 namespace ClosedXML.Excel
 {
@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
 
         public void Remove(IXLRange range)
         {
-            if (GetRangeIndex(range.Worksheet).Remove(range))
+            if (GetRangeIndex(range.Worksheet).Remove(range.RangeAddress))
                 Count--;
         }
 

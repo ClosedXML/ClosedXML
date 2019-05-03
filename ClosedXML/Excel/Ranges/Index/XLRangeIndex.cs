@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.Ranges.Index
     /// <summary>
     /// Implementation of <see cref="IXLRangeIndex"/> internally using QuadTree.
     /// </summary>
-    internal class XLRangeIndex : IXLRangeIndex
+    internal abstract class XLRangeIndex : IXLRangeIndex
     {
         #region Public Constructors
 
@@ -16,11 +16,14 @@ namespace ClosedXML.Excel.Ranges.Index
         {
             _worksheet = worksheet;
             _rangeList = new List<IXLRangeBase>();
+            (_worksheet as XLWorksheet).RegisterRangeIndex(this);
         }
 
         #endregion Public Constructors
 
         #region Public Methods
+
+        public abstract bool MatchesType(XLRangeType rangeType);
 
         public bool Add(IXLRangeBase range)
         {
@@ -108,19 +111,19 @@ namespace ClosedXML.Excel.Ranges.Index
             return _quadTree.GetIntersectedRanges(rangeAddress).Any();
         }
 
-        public bool Remove(IXLRangeBase range)
+        public bool Remove(IXLRangeAddress rangeAddress)
         {
-            if (range == null)
-                throw new ArgumentNullException(nameof(range));
+            if (rangeAddress == null)
+                throw new ArgumentNullException(nameof(rangeAddress));
 
-            CheckWorksheet(range.Worksheet);
+            CheckWorksheet(rangeAddress.Worksheet);
 
             if (_quadTree == null)
             {
-                return _rangeList.Remove(range);
+                return _rangeList.RemoveAll(r => Equals(r.RangeAddress, rangeAddress)) > 0;
             }
 
-            return _quadTree.Remove(range);
+            return _quadTree.Remove(rangeAddress);
         }
 
         public int RemoveAll(Predicate<IXLRangeBase> predicate = null)
@@ -136,8 +139,6 @@ namespace ClosedXML.Excel.Ranges.Index
         }
 
         #endregion Public Methods
-
-
 
         #region Private Fields
 
@@ -192,11 +193,6 @@ namespace ClosedXML.Excel.Ranges.Index
             return base.Add(range);
         }
 
-        public bool Remove(T range)
-        {
-            return base.Remove(range);
-        }
-
         public int RemoveAll(Predicate<T> predicate)
         {
             return base.RemoveAll(r => predicate((T)r));
@@ -210,6 +206,49 @@ namespace ClosedXML.Excel.Ranges.Index
         public new IEnumerable<T> GetIntersectedRanges(XLAddress address)
         {
             return base.GetIntersectedRanges(address).Cast<T>();
+        }
+
+        public override bool MatchesType(XLRangeType rangeType)
+        {
+            var innerType = typeof(T);
+
+            if (innerType == typeof(IXLRangeBase) ||
+                innerType == typeof(XLRangeBase))
+                return true;
+
+            switch (rangeType)
+            {
+                case XLRangeType.Range:
+                    return innerType == typeof(IXLRange) ||
+                           innerType == typeof(XLRange);
+
+                case XLRangeType.Column:
+                    return innerType == typeof(IXLColumn) ||
+                           innerType == typeof(XLColumn);
+
+                case XLRangeType.Row:
+                    return innerType == typeof(IXLRow) ||
+                           innerType == typeof(XLRow);
+
+                case XLRangeType.RangeColumn:
+                    return innerType == typeof(IXLRangeColumn) ||
+                           innerType == typeof(XLRangeColumn);
+
+                case XLRangeType.RangeRow:
+                    return innerType == typeof(IXLRangeRow) ||
+                           innerType == typeof(XLRangeRow);
+
+                case XLRangeType.Table:
+                    return innerType == typeof(IXLTable) ||
+                           innerType == typeof(XLTable);
+
+                case XLRangeType.Worksheet:
+                    return innerType == typeof(IXLWorksheet) ||
+                           innerType == typeof(XLWorksheet);
+
+                default:
+                    throw new NotImplementedException(nameof(rangeType));
+            }
         }
 
         public new IEnumerable<T> GetAll()
