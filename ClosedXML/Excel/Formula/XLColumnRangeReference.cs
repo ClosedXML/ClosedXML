@@ -46,16 +46,19 @@ namespace ClosedXML.Excel
             if (lastColumnNumber < 1 || lastColumnNumber > XLHelper.MaxColumnNumber)
                 return "#REF!";
 
+            var firstColumnLetter = XLHelper.GetColumnLetterFromNumber(firstColumnNumber);
+            var lastColumnLetter = XLHelper.GetColumnLetterFromNumber(lastColumnNumber);
+
             if (FirstColumn.ColumnIsAbsolute && LastColumn.ColumnIsAbsolute)
-                return $"${firstColumnNumber}:${lastColumnNumber}";
+                return $"${firstColumnLetter}:${lastColumnLetter}";
 
             if (FirstColumn.ColumnIsAbsolute)
-                return $"${firstColumnNumber}:{lastColumnNumber}";
+                return $"${firstColumnLetter}:{lastColumnLetter}";
 
             if (LastColumn.ColumnIsAbsolute)
-                return $"{firstColumnNumber}:${lastColumnNumber}";
+                return $"{firstColumnLetter}:${lastColumnLetter}";
 
-            return $"{firstColumnNumber}:{lastColumnNumber}";
+            return $"{firstColumnLetter}:{lastColumnLetter}";
         }
 
         public string ToStringR1C1()
