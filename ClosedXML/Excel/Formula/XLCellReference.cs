@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// Relative or absolute reference to a single cell
     /// </summary>
-    internal class XLCellReference : IXLReference
+    internal class XLCellReference : IXLSimpleReference
     {
         #region Public Properties
 

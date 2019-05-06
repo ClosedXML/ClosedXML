@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     /// <summary>
     ///  Relative or absolute reference to a range of columns
     /// </summary>
-    internal class XLColumnRangeReference : IXLReference
+    internal class XLColumnRangeReference : IXLCompoundReference
     {
         #region Public Properties
 

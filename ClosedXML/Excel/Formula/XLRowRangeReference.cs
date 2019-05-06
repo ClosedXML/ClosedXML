@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     /// <summary>
     ///  Relative or absolute reference to a range of rows
     /// </summary>
-    internal class XLRowRangeReference : IXLReference
+    internal class XLRowRangeReference : IXLCompoundReference
     {
         #region Public Properties
 
