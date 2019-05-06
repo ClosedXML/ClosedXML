@@ -37,5 +37,34 @@ namespace ClosedXML_Tests.Excel.Formula
             Assert.IsAssignableFrom(expectedReferenceType, res.Item2[0]);
             Assert.AreEqual(referenceString, res.Item2[0].ToStringR1C1());
         }
+
+        [TestCase("=\"\"", 0)]
+        [TestCase("=COLUMN()", 0)]
+        [TestCase("=COLUMN(RC)", 1)]
+        [TestCase("RC+12", 1)]
+        [TestCase("12+RC-34", 1)]
+        [TestCase("12+RC", 1)]
+        [TestCase("12+RC+SUM(R[-1]:R[1])", 2)]
+        [TestCase("RC1*RC2*RC3*RC4*R5C", 5)]
+        public void ExtractReferencesFromFormula(string formula, int expectedNumberOfReferences)
+        {
+            var parser = new XLFormulaDefinitionR1C1Parser();
+
+            var res = parser.Parse(formula);
+
+            Assert.AreEqual(expectedNumberOfReferences, res.Item2.Length);
+            Assert.AreEqual(expectedNumberOfReferences + 1, res.Item1.Length);
+
+            var restoredFormula = "";
+            for (int i = 0; i < expectedNumberOfReferences; i++)
+            {
+                restoredFormula += res.Item1[i];
+                restoredFormula += res.Item2[i];
+            }
+
+            restoredFormula += res.Item1[expectedNumberOfReferences];
+
+            Assert.AreEqual(formula, restoredFormula);
+        }
     }
 }
