@@ -10,17 +10,26 @@ namespace ClosedXML.Excel
     {
         #region Public Methods
 
-        public Tuple<string[], IXLReference[]> Parse(string formula)
+        /// <summary>
+        /// Split a formula into string parts (which do not change on formula shifting)
+        /// and a series of <see cref="IXLReference"/>-s.
+        /// </summary>
+        /// <param name="formula">A formula to parse.</param>
+        /// <param name="baseAddress">A base address used for parsing relative references.</param>
+        /// <returns>A tuple where Item1 is a collection of strings (is never empty) and
+        /// Item2 is a collection of references. Item2 may be empty and always contains one element
+        /// fewer than Item1, so they can be joined together in order to get the original formula this way:
+        /// Item1[0] + Item2[0] + Item1[1] + Item2[2] + ... + Item1[n] + Item2[n] + Item1[n+1]</returns>
+        public Tuple<string[], IXLReference[]> Parse(string formula, IXLAddress baseAddress)
         {
             if (String.IsNullOrWhiteSpace(formula))
             {
-                return new Tuple<string[], IXLReference[]>(new[] {string.Empty}, new IXLReference[0]);
+                return new Tuple<string[], IXLReference[]>(new[] { string.Empty }, new IXLReference[0]);
             }
 
             var formulaChunks = new List<string>();
             var references = new List<IXLReference>();
             var lastIndex = 0;
-
 
             foreach (var match in ReferenceRegex.Matches(formula).Cast<Match>())
             {
@@ -31,11 +40,10 @@ namespace ClosedXML.Excel
                 {
                     // Check if the match is in between quotes
                     formulaChunks.Add(formula.Substring(lastIndex, matchIndex - lastIndex));
-                    references.Add(ParseReference(matchString));
+                    references.Add(ParseReference(matchString, baseAddress));
                 }
                 else
-                    formulaChunks.Add(formula.Substring(lastIndex,
-                        matchIndex - lastIndex + matchString.Length));
+                    formulaChunks.Add(formula.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
 
                 lastIndex = matchIndex + matchString.Length;
             }
@@ -50,7 +58,6 @@ namespace ClosedXML.Excel
 
         #endregion Public Methods
 
-
         #region Protected Properties
 
         protected abstract Regex ReferenceRegex { get; }
@@ -59,19 +66,19 @@ namespace ClosedXML.Excel
 
         #region Protected Methods
 
-        protected abstract IXLSimpleReference ParseSimpleReference(string simpleReferenceString);
+        protected abstract IXLSimpleReference ParseSimpleReference(string simpleReferenceString, IXLAddress baseAddress);
 
         #endregion Protected Methods
 
         #region Private Methods
 
-        private IXLCompoundReference ParseCompoundReference(string compoundReferenceString)
+        private IXLCompoundReference ParseCompoundReference(string compoundReferenceString, IXLAddress baseAddress)
         {
             var part1 = compoundReferenceString.Substring(0, compoundReferenceString.IndexOf(":"));
             var part2 = compoundReferenceString.Substring(compoundReferenceString.IndexOf(":") + 1);
 
-            var reference1 = ParseSimpleReference(part1);
-            var reference2 = ParseSimpleReference(part2);
+            var reference1 = ParseSimpleReference(part1, baseAddress);
+            var reference2 = ParseSimpleReference(part2, baseAddress);
 
             switch (reference1)
             {
@@ -97,17 +104,16 @@ namespace ClosedXML.Excel
                 default:
                     throw new NotImplementedException($"Type {reference1.GetType()} is not supported");
             }
-
         }
 
-        private IXLReference ParseReference(string referenceString)
+        private IXLReference ParseReference(string referenceString, IXLAddress baseAddress)
         {
             if (referenceString.Contains(":"))
             {
-                return ParseCompoundReference(referenceString);
+                return ParseCompoundReference(referenceString, baseAddress);
             }
 
-            return ParseSimpleReference(referenceString);
+            return ParseSimpleReference(referenceString, baseAddress);
         }
 
         #endregion Private Methods

@@ -14,7 +14,8 @@ namespace ClosedXML.Excel
 
         #region Protected Methods
 
-        protected override IXLSimpleReference ParseSimpleReference(string simpleReferenceString)
+        protected override IXLSimpleReference ParseSimpleReference(string simpleReferenceString, IXLAddress baseAddress)
+        //For R1C1-style references we don't need baseAddress but preserve it to be compliant with A1-parser.
         {
             var rowPartLength = simpleReferenceString.IndexOf("C", StringComparison.OrdinalIgnoreCase);
 
