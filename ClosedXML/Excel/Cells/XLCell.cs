@@ -472,6 +472,40 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        private void EvaluatePrecedingCells()
+        {
+            var evaluatingStack = new Stack<XLCell>();
+            var processingQueue = new Queue<XLCell>(new []{this});
+
+            while (processingQueue.Count > 0)
+            {
+                var currentCell = processingQueue.Dequeue();
+                if (!currentCell.IsEvaluating)
+                {
+                    evaluatingStack.Push(currentCell);
+                    currentCell.IsEvaluating = true;
+                }
+
+                var precedingCells = currentCell.GetAffectingCells();
+                foreach (var precedingCell in precedingCells)
+                {
+                    if (!precedingCell.IsEvaluating)
+                        processingQueue.Enqueue(precedingCell);
+                }
+            }
+
+            foreach (var cell in evaluatingStack)
+            {
+                cell.IsEvaluating = false;
+            }
+
+            while (evaluatingStack.Count > 0)
+            {
+                var cell = evaluatingStack.Pop();
+                cell.EvaluateInternal();
+            }
+        }
+
         public void InvalidateFormula()
         {
             NeedsRecalculation = true;
@@ -487,6 +521,14 @@ namespace ClosedXML.Excel
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
         public Object Evaluate(Boolean force = false)
+        {
+            if (force || NeedsRecalculation)
+                EvaluatePrecedingCells();
+
+            return EvaluateInternal(force);
+        }
+
+        internal Object EvaluateInternal(Boolean force = false)
         {
             if (force || NeedsRecalculation)
             {

@@ -387,5 +387,19 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 Assert.AreEqual("03:48:00", cell.GetFormattedString()); // I think the seconds in this string is due to a shortcoming in the ExcelNumberFormat library
             }
         }
+
+        [Test]
+        public void CanCalculateLongChain()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Test");
+                ws.Cell("A1").Value = 1;
+                ws.Range("A2:A100000").FormulaR1C1 = "R[-1]C+1";
+
+                var actual = ws.Cell("A100000").Value;
+                Assert.AreEqual(100000, actual);
+            }
+        }
     }
 }
