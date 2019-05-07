@@ -501,7 +501,7 @@ namespace ClosedXML.Excel
                     return SpreadsheetDocumentType.Template;
 
                 default:
-                    throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xslm', '.xltx' and '.xltm'.", extension));
+                    throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xlsm', '.xltx' and '.xltm'.", extension));
             }
         }
 
