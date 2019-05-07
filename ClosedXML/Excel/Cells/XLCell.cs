@@ -65,8 +65,6 @@ namespace ClosedXML.Excel
 
         public bool SettingHyperlink;
         internal int SharedStringId { get; set; }
-        private string _formulaA1;
-        private string _formulaR1C1;
 
         #endregion Fields
 
@@ -633,8 +631,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_formulaA1) ||
-                    !String.IsNullOrEmpty(_formulaR1C1))
+                if (HasFormula)
                 {
                     return Evaluate();
                 }
@@ -644,7 +641,7 @@ namespace ClosedXML.Excel
             }
             set
             {
-                FormulaA1 = String.Empty;
+                _formula = null;
 
                 if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
 
@@ -1201,37 +1198,26 @@ namespace ClosedXML.Excel
             Worksheet.Range(Address, Address).Delete(shiftDeleteCells);
         }
 
+        private XLCellFormula _formula;
+
         public string FormulaA1
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1))
-                {
-                    if (!String.IsNullOrWhiteSpace(_formulaR1C1))
-                    {
-                        _formulaA1 = GetFormulaA1(_formulaR1C1);
-                        return FormulaA1;
-                    }
+                if (!HasFormula)
+                    return string.Empty;
 
-                    return String.Empty;
-                }
-
-                if (_formulaA1.Trim()[0] == '=')
-                    return _formulaA1.Substring(1);
-
-                if (_formulaA1.Trim().StartsWith("{="))
-                    return "{" + _formulaA1.Substring(2);
-
-                return _formulaA1;
+                return _formula.FormulaA1.TrimStart('=');
             }
 
             set
             {
                 InvalidateFormula();
 
-                _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
-
-                _formulaR1C1 = null;
+                if (String.IsNullOrWhiteSpace(value))
+                    _formula = null;
+                else
+                    _formula = XLCellFormula.FromFormulaA1(this, value);
             }
         }
 
@@ -1239,19 +1225,20 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaR1C1))
-                    _formulaR1C1 = GetFormulaR1C1(FormulaA1);
+                if (!HasFormula)
+                    return string.Empty;
 
-                return _formulaR1C1;
+                return _formula.FormulaR1C1.TrimStart('=');
             }
 
             set
             {
                 InvalidateFormula();
 
-                _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
-
-                _formulaA1 = null;
+                if (String.IsNullOrWhiteSpace(value))
+                    _formula = null;
+                else
+                    _formula = XLCellFormula.FromFormulaR1C1(this, value);
             }
         }
 
@@ -1338,7 +1325,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1) && String.IsNullOrEmpty(_formulaR1C1))
+                if (!HasFormula)
                     return false;
 
                 if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
@@ -1361,7 +1348,7 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetAffectingCells()
         {
-            return Worksheet.CalcEngine.GetPrecedentCells(_formulaA1).Cast<XLCell>();
+            return Worksheet.CalcEngine.GetPrecedentCells(FormulaA1).Cast<XLCell>();
         }
 
         /// <summary>
@@ -2728,7 +2715,7 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula { get { return _formula != null; } }
 
         public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
 
