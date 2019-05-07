@@ -1,6 +1,7 @@
 ﻿// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -31,19 +32,26 @@ namespace ClosedXML.Excel
             var references = new List<IXLReference>();
             var lastIndex = 0;
 
-            foreach (var match in ReferenceRegex.Matches(formula).Cast<Match>())
+            var allMatches = ReferenceRegex.Matches(formula);
+            var validMatches = new List<Match>(allMatches.Count);
+            foreach (Match match in allMatches)
+            {
+                var matchIndex = match.Index;
+                if (formula.Substring(0, matchIndex).CharCount('"') % 2 == 0 &&
+                    formula.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
+                {
+                    // The match is not inside quotes
+                    validMatches.Add(match);
+                }
+            }
+
+            foreach (var match in validMatches)
             {
                 var matchString = match.Value;
                 var matchIndex = match.Index;
-                if (formula.Substring(0, matchIndex).CharCount('"') % 2 == 0
-                    && formula.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
-                {
-                    // Check if the match is in between quotes
-                    formulaChunks.Add(formula.Substring(lastIndex, matchIndex - lastIndex));
-                    references.Add(ParseReference(matchString, baseAddress));
-                }
-                else
-                    formulaChunks.Add(formula.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
+
+                formulaChunks.Add(formula.Substring(lastIndex, matchIndex - lastIndex));
+                references.Add(ParseReference(matchString, baseAddress));
 
                 lastIndex = matchIndex + matchString.Length;
             }
@@ -53,6 +61,7 @@ namespace ClosedXML.Excel
             else
                 formulaChunks.Add(string.Empty);
 
+            Debug.Assert(formulaChunks.Count == references.Count + 1);
             return new Tuple<string[], IXLReference[]>(formulaChunks.ToArray(), references.ToArray());
         }
 

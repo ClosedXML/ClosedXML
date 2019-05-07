@@ -74,6 +74,7 @@ namespace ClosedXML_Tests.Excel.Formula
         [TestCase("12+RC", 1)]
         [TestCase("12+RC+SUM(R[-1]:R[1])", 2)]
         [TestCase("RC1*RC2*RC3*RC4*R5C", 5)]
+        [TestCase("='S10 Data'!R1C1", 1)]
         public void ExtractReferencesFromFormula(string formula, int expectedNumberOfReferences)
         {
             var parser = new XLFormulaDefinitionR1C1Parser();
