@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
     using ClosedXML.Extensions;
 
     [DebuggerDisplay("{Address}")]
-    internal partial class XLCell : XLStylizedBase, IXLCell, IXLStylized
+    internal class XLCell : XLStylizedBase, IXLCell, IXLStylized
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
 
@@ -2239,12 +2239,14 @@ namespace ClosedXML.Excel
 
         internal string GetFormulaR1C1(string value)
         {
-            return XLFormulaConverter.GetFormula(Address, value, FormulaConversionType.A1ToR1C1, rowsToShift: 0, columnsToShift: 0);
+            var formula = XLCellFormula.FromFormulaA1(this, value);
+            return formula.FormulaR1C1;
         }
 
         internal string GetFormulaA1(string value)
         {
-            return XLFormulaConverter.GetFormula(Address, value, FormulaConversionType.R1C1ToA1, rowsToShift: 0, columnsToShift: 0);
+            var formula = XLCellFormula.FromFormulaR1C1(this, value);
+            return formula.FormulaA1;
         }
 
         internal void CopyValuesFrom(XLCell source)
