@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ClosedXML_Tests.Excel.Comments
@@ -102,6 +103,21 @@ namespace ClosedXML_Tests.Excel.Comments
                 ws.Row(1).Delete();
 
                 validate(ws.Cell("C2"));
+            }
+        }
+
+        [Test]
+        public void SavingDoesNotCauseTwoRootElements() // See #1157
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var stream =TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CommentAndButton.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    wb.SaveAs(ms);
+                }
+
+                Assert.DoesNotThrow(() => new XLWorkbook(ms));
             }
         }
     }
