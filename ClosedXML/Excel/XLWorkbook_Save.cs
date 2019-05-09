@@ -3092,7 +3092,7 @@ namespace ClosedXML.Excel
             var ms = new MemoryStream();
             var stream = vmlDrawingPart.GetStream(FileMode.OpenOrCreate);
             CopyStream(stream, ms);
-            ms.Position = 0;
+            stream.Position = 0;
             var writer = new XmlTextWriter(stream, Encoding.UTF8);
 
             writer.WriteStartElement("xml");
