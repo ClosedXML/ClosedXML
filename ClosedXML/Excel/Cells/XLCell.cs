@@ -2042,25 +2042,31 @@ namespace ClosedXML.Excel
 
             if (asRange != null)
             {
+                var maxRows = asRange.RowCount();
+                var maxColumns = asRange.ColumnCount();
+
+                var lastRow = Math.Min(_rowNumber + maxRows - 1, XLHelper.MaxRowNumber);
+                var lastColumn = Math.Min(_columnNumber + maxColumns - 1, XLHelper.MaxColumnNumber);
+
+                var targetRange = Worksheet.Range(_rowNumber, _columnNumber, lastRow, lastColumn);
+
                 if (!(asRange is XLRow || asRange is XLColumn))
                 {
-                    var maxRows = asRange.RowCount();
-                    var maxColumns = asRange.ColumnCount();
-
-                    var lastRow = Math.Min(_rowNumber + maxRows - 1, XLHelper.MaxRowNumber);
-                    var lastColumn = Math.Min(_columnNumber + maxColumns - 1, XLHelper.MaxColumnNumber);
-
-                    Worksheet.Range(_rowNumber, _columnNumber, lastRow, lastColumn).Clear();
+                    targetRange.Clear();
                 }
 
                 var minRow = asRange.RangeAddress.FirstAddress.RowNumber;
                 var minColumn = asRange.RangeAddress.FirstAddress.ColumnNumber;
-                foreach (var sourceCell in asRange.CellsUsed(XLCellsUsedOptions.All))
+                var cellsUsed = asRange.CellsUsed(XLCellsUsedOptions.All
+                                                  & ~XLCellsUsedOptions.ConditionalFormats
+                                                  & ~XLCellsUsedOptions.DataValidation
+                                                  & ~XLCellsUsedOptions.MergedRanges);
+                foreach (var sourceCell in cellsUsed)
                 {
                     Worksheet.Cell(
                         _rowNumber + sourceCell.Address.RowNumber - minRow,
                         _columnNumber + sourceCell.Address.ColumnNumber - minColumn
-                        ).CopyFromInternal(sourceCell as XLCell, true);
+                        ).CopyFromInternal(sourceCell as XLCell, copyDataValidations: false);
                 }
 
                 var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
@@ -2080,6 +2086,26 @@ namespace ClosedXML.Excel
                     .ToList();
 
                 rangesToMerge.ForEach(r => r.Merge(false));
+
+                var dataValidations = asRange.Worksheet.DataValidations
+                    .Where(dv => dv.Ranges.GetIntersectedRanges(asRange.RangeAddress).Any())
+                    .ToList();
+                foreach (var dataValidation in dataValidations)
+                {
+                    XLDataValidation newDataValidation = null;
+                    foreach (var dvRange in dataValidation.Ranges.GetIntersectedRanges(asRange.RangeAddress))
+                    {
+                        var dvTargetAddress = dvRange.RangeAddress.Relative(asRange.RangeAddress, targetRange.RangeAddress);
+                        var dvTargetRange = Worksheet.Range(dvTargetAddress);
+                        if (newDataValidation == null)
+                        {
+                            newDataValidation = dvTargetRange.SetDataValidation() as XLDataValidation;
+                            newDataValidation.CopyFrom(dataValidation);
+                        }
+                        else
+                            newDataValidation.Ranges.Add(dvTargetRange);
+                    }
+                }
 
                 CopyConditionalFormatsFrom(asRange);
 
