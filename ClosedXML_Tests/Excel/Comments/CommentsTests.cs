@@ -162,5 +162,20 @@ namespace ClosedXML_Tests.Excel.Comments
                 }
             }
         }
+
+        [Test]
+        public void SavingDoesNotCauseTwoRootElements() // See #1157
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CommentAndButton.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    wb.SaveAs(ms);
+                }
+
+                Assert.DoesNotThrow(() => new XLWorkbook(ms));
+            }
+        }
     }
 }
