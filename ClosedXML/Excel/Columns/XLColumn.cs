@@ -471,7 +471,7 @@ namespace ClosedXML.Excel
             newColumn.InnerStyle = InnerStyle;
             newColumn.IsHidden = IsHidden;
 
-            AsRange().CopyTo(column);
+            (this as XLRangeBase).CopyTo(column);
 
             return newColumn;
         }
