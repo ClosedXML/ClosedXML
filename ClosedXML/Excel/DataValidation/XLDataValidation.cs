@@ -1,28 +1,36 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
     internal class XLDataValidation : IXLDataValidation
     {
-        private XLDataValidation()
+        private readonly XLWorksheet _worksheet;
+        private readonly XLRanges _ranges;
+
+        internal XLWorksheet Worksheet => _worksheet;
+
+
+        private XLDataValidation(XLWorksheet worksheet)
         {
-            Ranges = new XLRanges();
+            _worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            _ranges = new XLRanges();
             Initialize();
         }
 
         public XLDataValidation(IXLRange range)
-            : this()
+            : this(range?.Worksheet as XLWorksheet)
         {
-            Ranges.Add(new XLRange(new XLRangeParameters((XLRangeAddress)range.RangeAddress, range.Worksheet.Style)));
+            if (range == null) throw new ArgumentNullException(nameof(range));
+
+            AddRange(range);
         }
 
-        public XLDataValidation(IXLRanges ranges)
-            : this()
+        public XLDataValidation(IXLDataValidation dataValidation, XLWorksheet worksheet)
         {
-            ranges.ForEach(range =>
-            {
-                Ranges.Add(new XLRange(new XLRangeParameters((XLRangeAddress)range.RangeAddress, range.Worksheet.Style)));
-            });
+            _worksheet = worksheet;
+            CopyFrom(dataValidation);
         }
 
         private void Initialize()
@@ -53,14 +61,76 @@ namespace ClosedXML.Excel
                    (!String.IsNullOrWhiteSpace(ErrorTitle) || !String.IsNullOrWhiteSpace(ErrorMessage)));
         }
 
-        public XLDataValidation(IXLDataValidation dataValidation)
-        {
-            CopyFrom(dataValidation);
-        }
-
         #region IXLDataValidation Members
 
-        public IXLRanges Ranges { get; set; }
+        public IEnumerable<IXLRange> Ranges => _ranges.AsEnumerable();
+
+        /// <summary>
+        /// Add a range to the collection of ranges this rule applies to.
+        /// If the specified range does not belong to the worksheet of the data validation
+        /// rule it is transferred to the target worksheet.
+        /// </summary>
+        /// <param name="range">A range to add.</param>
+        public void AddRange(IXLRange range)
+        {
+            if (range == null) throw new ArgumentNullException(nameof(range));
+
+            if (range.Worksheet != Worksheet)
+                range = Worksheet.Range(((XLRangeAddress) range.RangeAddress).WithoutWorksheet());
+
+            _ranges.Add(range);
+
+            RangeAdded?.Invoke(this, new RangeEventArgs(range));
+        }
+
+        /// <summary>
+        /// Add a collection of ranges to the collection of ranges this rule applies to.
+        /// Ranges that do not belong to the worksheet of the data validation
+        /// rule are transferred to the target worksheet.
+        /// </summary>
+        /// <param name="ranges">Ranges to add.</param>
+        public void AddRanges(IEnumerable<IXLRange> ranges)
+        {
+            ranges = ranges ?? Enumerable.Empty<IXLRange>();
+
+            foreach (var range in ranges)
+            {
+                AddRange(range);
+            }
+        }
+
+        /// <summary>
+        /// Detach data validation rule of all ranges it applies to.
+        /// </summary>
+        public void ClearRanges()
+        {
+            var allRanges = _ranges.ToList();
+            _ranges.Clear();
+
+            foreach (var range in allRanges)
+            {
+                RangeRemoved?.Invoke(this, new RangeEventArgs(range));
+            }
+        }
+
+        /// <summary>
+        /// Remove the specified range from the collection of range this rule applies to.
+        /// </summary>
+        /// <param name="range">A range to remove.</param>
+        public bool RemoveRange(IXLRange range)
+        {
+            if (range == null)
+                return false;
+
+            var res = _ranges.Remove(range);
+
+            if (res)
+            {
+                RangeRemoved?.Invoke(this, new RangeEventArgs(range));
+            }
+
+            return res;
+        }
 
         public Boolean IgnoreBlanks { get; set; }
         public Boolean InCellDropdown { get; set; }
@@ -165,11 +235,8 @@ namespace ClosedXML.Excel
         {
             if (dataValidation == this) return;
 
-            if (Ranges == null && dataValidation.Ranges != null)
-            {
-                Ranges = new XLRanges();
-                dataValidation.Ranges.ForEach(r => Ranges.Add(r));
-            }
+            ClearRanges();
+            AddRanges(dataValidation.Ranges);
 
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;
@@ -196,5 +263,20 @@ namespace ClosedXML.Excel
             if (value.Length > 255)
                 throw new ArgumentOutOfRangeException(nameof(value), "The maximum allowed length of the value is 255 characters.");
         }
+
+        internal event EventHandler<RangeEventArgs> RangeAdded;
+
+        internal event EventHandler<RangeEventArgs> RangeRemoved;
+
+    }
+
+    internal class RangeEventArgs : EventArgs
+    {
+        public RangeEventArgs(IXLRange range)
+        {
+            Range = range ?? throw new ArgumentNullException(nameof(range));
+        }
+
+        public IXLRange Range { get; }
     }
 }

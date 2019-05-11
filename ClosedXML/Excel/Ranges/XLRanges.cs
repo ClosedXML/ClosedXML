@@ -63,10 +63,15 @@ namespace ClosedXML.Excel
             Add(cell.AsRange());
         }
 
-        public void Remove(IXLRange range)
+        public bool Remove(IXLRange range)
         {
             if (GetRangeIndex(range.Worksheet).Remove(range.RangeAddress))
+            {
                 Count--;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -300,7 +305,9 @@ namespace ClosedXML.Excel
                     }
                 }
             }
-            var dataValidation = new XLDataValidation(this);
+
+            var dataValidation = new XLDataValidation(Ranges.First());
+            dataValidation.Ranges = this;//TODO We must not allow setting ranges directly
 
             Ranges.First().Worksheet.DataValidations.Add(dataValidation);
             return dataValidation;

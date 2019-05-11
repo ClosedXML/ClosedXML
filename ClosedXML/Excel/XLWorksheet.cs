@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
             SheetView = new XLSheetView();
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
-            DataValidations = new XLDataValidations();
+            DataValidations = new XLDataValidations(this);
             PivotTables = new XLPivotTables(this);
             Protection = new XLSheetProtection();
             AutoFilter = new XLAutoFilter();
@@ -636,7 +636,7 @@ namespace ClosedXML.Excel
             Internals.ColumnsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Column(kp.Key)));
             Internals.RowsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Row(kp.Key)));
             Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, XLCellCopyOptions.Values | XLCellCopyOptions.Styles));
-            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv)));
+            DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv, this)));
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
             targetSheet.ColumnWidthChanged = ColumnWidthChanged;

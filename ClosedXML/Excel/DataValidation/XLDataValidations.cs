@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ClosedXML.Excel.Ranges.Index;
 
 namespace ClosedXML.Excel
 {
@@ -8,14 +9,51 @@ namespace ClosedXML.Excel
 
     internal class XLDataValidations : IXLDataValidations
     {
+        private readonly XLRangeIndex<IXLRange> _rangeIndex;
+
+        internal XLWorksheet Worksheet => _worksheet;
+
+        private readonly XLWorksheet _worksheet;
         private readonly List<IXLDataValidation> _dataValidations = new List<IXLDataValidation>();
+
+        public XLDataValidations(XLWorksheet worksheet)
+        {
+            _worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            _rangeIndex = new XLRangeIndex<IXLRange>(_worksheet);
+        }
 
         #region IXLDataValidations Members
 
-        public void Add(IXLDataValidation dataValidation)
+        IXLWorksheet IXLDataValidations.Worksheet => _worksheet;
+
+        public IXLDataValidation Add(IXLDataValidation dataValidation)
         {
-            _dataValidations.Add(dataValidation);
+            if (dataValidation == null) throw new ArgumentNullException(nameof(dataValidation));
+
+            XLDataValidation xlDataValidation;
+            if (!(dataValidation is XLDataValidation) ||
+                dataValidation.Ranges.Any(r => r.Worksheet != Worksheet))
+            {
+                xlDataValidation = new XLDataValidation(dataValidation, Worksheet);
+            }
+            else
+            {
+                xlDataValidation = (XLDataValidation) dataValidation;
+            }
+
+            xlDataValidation.RangeAdded += OnRangeAdded;
+            xlDataValidation.RangeRemoved += OnRangeRemoved;
+
+            foreach (var range in xlDataValidation.Ranges)
+            {
+                ProcessRangeAdded(range);
+            }
+
+            _dataValidations.Add(xlDataValidation);
+
+            return dataValidation;
         }
+
 
         public void Delete(Predicate<IXLDataValidation> predicate)
         {
@@ -44,8 +82,6 @@ namespace ClosedXML.Excel
             return count == 1;
         }
 
-        #endregion IXLDataValidations Members
-
         public void Delete(IXLDataValidation dataValidation)
         {
             _dataValidations.RemoveAll(dv => dv.Ranges.Equals(dataValidation.Ranges));
@@ -55,6 +91,8 @@ namespace ClosedXML.Excel
         {
             _dataValidations.RemoveAll(dv => dv.Ranges.Contains(range));
         }
+
+        #endregion IXLDataValidations Members
 
         public void Consolidate()
         {
@@ -86,11 +124,35 @@ namespace ClosedXML.Excel
 
                 var consRule = similarRules.First();
                 var ranges = similarRules.SelectMany(dv => dv.Ranges).ToList();
-                consRule.Ranges.RemoveAll();
-                ranges.ForEach(r => consRule.Ranges.Add(r));
-                consRule.Ranges = consRule.Ranges.Consolidate();
+
+                IXLRanges consolidatedRanges = new XLRanges();
+                ranges.ForEach(r => consolidatedRanges.Add(r));
+                consolidatedRanges = consolidatedRanges.Consolidate();
+
+                consRule.ClearRanges();
+                consRule.AddRanges(consolidatedRanges);
                 _dataValidations.Add(consRule);
             }
+        }
+
+
+        private void OnRangeAdded(object sender, RangeEventArgs e)
+        {
+            ProcessRangeAdded(e.Range);
+        }
+        private void OnRangeRemoved(object sender, RangeEventArgs e)
+        {
+            ProcessRangeRemoved(e.Range);
+        }
+
+        private void ProcessRangeAdded(IXLRange range)
+        {
+            //TODO Split existing ranges
+            _rangeIndex.Add(range);
+        }
+        private void ProcessRangeRemoved(IXLRange range)
+        {
+            throw new NotImplementedException();
         }
     }
 }

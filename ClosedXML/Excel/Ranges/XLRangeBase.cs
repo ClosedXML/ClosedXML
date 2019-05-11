@@ -69,13 +69,13 @@ namespace ClosedXML.Excel
         {
             get
             {
-                var newRanges = new XLRanges { AsRange() };
+                var newRange = AsRange();
                 var dataValidation = DataValidation;
 
                 if (dataValidation != null)
                     Worksheet.DataValidations.Delete(dataValidation);
-
-                dataValidation = new XLDataValidation(newRanges);
+                //TODO Move the logic to XLDataValidations
+                dataValidation = new XLDataValidation(newRange);
                 Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;
             }
@@ -2207,8 +2207,8 @@ namespace ClosedXML.Excel
 
             dvEmpty.ForEach(dv => Worksheet.DataValidations.Delete(dv));
 
-            var newRanges = new XLRanges { AsRange() };
-            var dataValidation = new XLDataValidation(newRanges);
+            var newRange = AsRange();
+            var dataValidation = new XLDataValidation(newRange);
             if (dataValidationToCopy != null)
                 dataValidation.CopyFrom(dataValidationToCopy);
 

@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         /// Removes the specified range from this group.
         /// </summary>
         /// <param name="range">The range to remove from this group.</param>
-        void Remove(IXLRange range);
+        bool Remove(IXLRange range);
 
         /// <summary>
         /// Removes ranges matching the criteria from the collection, optionally releasing their event handlers.
