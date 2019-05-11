@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
@@ -7,7 +8,38 @@ namespace ClosedXML.Excel
     public enum XLOperator { EqualTo, NotEqualTo, GreaterThan, LessThan, EqualOrGreaterThan, EqualOrLessThan, Between, NotBetween }
     public interface IXLDataValidation
     {
-        IXLRanges Ranges { get; set; }
+        /// <summary>
+        /// A collection of ranges the data validation rule applies too.
+        /// </summary>
+        IEnumerable<IXLRange> Ranges { get; }
+
+        /// <summary>
+        /// Add a range to the collection of ranges this rule applies to.
+        /// If the specified range does not belong to the worksheet of the data validation
+        /// rule it is transferred to the target worksheet.
+        /// </summary>
+        /// <param name="range">A range to add.</param>
+        void AddRange(IXLRange range);
+
+        /// <summary>
+        /// Add a collection of ranges to the collection of ranges this rule applies to.
+        /// Ranges that do not belong to the worksheet of the data validation
+        /// rule are transferred to the target worksheet.
+        /// </summary>
+        /// <param name="ranges">Ranges to add.</param>
+        void AddRanges(IEnumerable<IXLRange> ranges);
+
+        /// <summary>
+        /// Detach data validation rule of all ranges it applies to.
+        /// </summary>
+        void ClearRanges();
+
+        /// <summary>
+        /// Remove the specified range from the collection of range this rule applies to.
+        /// </summary>
+        /// <param name="range">A range to remove.</param>
+        bool RemoveRange(IXLRange range);
+
         //void Delete();
         //void CopyFrom(IXLDataValidation dataValidation);
         Boolean ShowInputMessage { get; set; }
