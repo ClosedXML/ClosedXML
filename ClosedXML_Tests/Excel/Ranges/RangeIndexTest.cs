@@ -266,7 +266,7 @@ namespace ClosedXML_Tests.Excel.Ranges
 
         private IXLRangeIndex CreateRangeIndex(IXLWorksheet worksheet)
         {
-            return new XLRangeIndex<XLRange>((XLWorksheet)worksheet);
+            return new XLRangeIndex<IXLRangeBase>((XLWorksheet)worksheet);
         }
 
         private IXLRangeIndex FillIndexWithTestData(IXLWorksheet worksheet)

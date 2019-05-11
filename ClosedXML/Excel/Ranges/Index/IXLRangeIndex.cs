@@ -8,17 +8,17 @@ namespace ClosedXML.Excel.Ranges.Index
     /// </summary>
     internal interface IXLRangeIndex
     {
-        bool Add(IXLRangeBase range);
+        bool Add(IXLAddressable range);
 
-        bool Remove(IXLRangeAddress rangeAddress);
+        bool Remove(IXLAddressable range);
 
-        int RemoveAll(Predicate<IXLRangeBase> predicate = null);
+        int RemoveAll(Predicate<IXLAddressable> predicate = null);
 
-        IEnumerable<IXLRangeBase> GetIntersectedRanges(XLRangeAddress rangeAddress);
+        IEnumerable<IXLAddressable> GetIntersectedRanges(XLRangeAddress rangeAddress);
 
-        IEnumerable<IXLRangeBase> GetIntersectedRanges(XLAddress address);
+        IEnumerable<IXLAddressable> GetIntersectedRanges(XLAddress address);
 
-        IEnumerable<IXLRangeBase> GetAll();
+        IEnumerable<IXLAddressable> GetAll();
 
         bool Intersects(in XLRangeAddress rangeAddress);
 
@@ -28,7 +28,7 @@ namespace ClosedXML.Excel.Ranges.Index
     }
 
     internal interface IXLRangeIndex<T> : IXLRangeIndex
-        where T : IXLRangeBase
+        where T : IXLAddressable
     {
         bool Add(T range);
 
