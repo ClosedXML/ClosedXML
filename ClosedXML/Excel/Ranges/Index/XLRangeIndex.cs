@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.Ranges.Index
         public XLRangeIndex(IXLWorksheet worksheet)
         {
             _worksheet = worksheet;
-            _rangeList = new List<IXLRangeBase>();
+            _rangeList = new List<IXLAddressable>();
             (_worksheet as XLWorksheet).RegisterRangeIndex(this);
         }
 
@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.Ranges.Index
 
         public abstract bool MatchesType(XLRangeType rangeType);
 
-        public bool Add(IXLRangeBase range)
+        public bool Add(IXLAddressable range)
         {
             if (range == null)
                 throw new ArgumentNullException(nameof(range));
@@ -33,7 +33,7 @@ namespace ClosedXML.Excel.Ranges.Index
             if (!range.RangeAddress.IsValid)
                 throw new ArgumentException("Range is invalid");
 
-            CheckWorksheet(range.Worksheet);
+            CheckWorksheet(range.RangeAddress.Worksheet);
 
             _count++;
             if (_count < MinimumCountForIndexing)
@@ -64,7 +64,7 @@ namespace ClosedXML.Excel.Ranges.Index
             return _quadTree.GetIntersectedRanges(address).Any();
         }
 
-        public IEnumerable<IXLRangeBase> GetAll()
+        public IEnumerable<IXLAddressable> GetAll()
         {
             if (_quadTree == null)
             {
@@ -74,7 +74,7 @@ namespace ClosedXML.Excel.Ranges.Index
             return _quadTree.GetAll();
         }
 
-        public IEnumerable<IXLRangeBase> GetIntersectedRanges(XLRangeAddress rangeAddress)
+        public IEnumerable<IXLAddressable> GetIntersectedRanges(XLRangeAddress rangeAddress)
         {
             CheckWorksheet(rangeAddress.Worksheet);
 
@@ -86,7 +86,7 @@ namespace ClosedXML.Excel.Ranges.Index
             return _quadTree.GetIntersectedRanges(rangeAddress);
         }
 
-        public IEnumerable<IXLRangeBase> GetIntersectedRanges(XLAddress address)
+        public IEnumerable<IXLAddressable> GetIntersectedRanges(XLAddress address)
         {
             CheckWorksheet(address.Worksheet);
 
@@ -111,22 +111,22 @@ namespace ClosedXML.Excel.Ranges.Index
             return _quadTree.GetIntersectedRanges(rangeAddress).Any();
         }
 
-        public bool Remove(IXLRangeAddress rangeAddress)
+        public bool Remove(IXLAddressable range)
         {
-            if (rangeAddress == null)
-                throw new ArgumentNullException(nameof(rangeAddress));
+            if (range == null)
+                throw new ArgumentNullException(nameof(range));
 
-            CheckWorksheet(rangeAddress.Worksheet);
+            CheckWorksheet(range.RangeAddress.Worksheet);
 
             if (_quadTree == null)
             {
-                return _rangeList.RemoveAll(r => Equals(r.RangeAddress, rangeAddress)) > 0;
+                return _rangeList.RemoveAll(r => Equals(r.RangeAddress, range.RangeAddress)) > 0;
             }
 
-            return _quadTree.Remove(rangeAddress);
+            return _quadTree.Remove(range);
         }
 
-        public int RemoveAll(Predicate<IXLRangeBase> predicate = null)
+        public int RemoveAll(Predicate<IXLAddressable> predicate = null)
         {
             predicate = predicate ?? (_ => true);
 
@@ -152,11 +152,11 @@ namespace ClosedXML.Excel.Ranges.Index
         /// A collection of ranges used before the QuadTree is initialized (until <see cref="MinimumCountForIndexing"/>
         /// is reached.
         /// </summary>
-        private readonly List<IXLRangeBase> _rangeList;
+        protected readonly List<IXLAddressable> _rangeList;
 
         private readonly IXLWorksheet _worksheet;
         private int _count = 0;
-        private Quadrant _quadTree;
+        protected Quadrant _quadTree;
 
         #endregion Private Fields
 
@@ -170,9 +170,14 @@ namespace ClosedXML.Excel.Ranges.Index
 
         private void InitializeTree()
         {
-            _quadTree = new Quadrant();
+            _quadTree = CreateQuadTree();
             _rangeList.ForEach(r => _quadTree.Add(r));
             _rangeList.Clear();
+        }
+
+        protected virtual Quadrant CreateQuadTree()
+        {
+            return new Quadrant();
         }
 
         #endregion Private Methods
@@ -182,7 +187,7 @@ namespace ClosedXML.Excel.Ranges.Index
     /// Generic version of <see cref="XLRangeIndex"/>.
     /// </summary>
     internal class XLRangeIndex<T> : XLRangeIndex, IXLRangeIndex<T>
-        where T : IXLRangeBase
+        where T : IXLAddressable
     {
         public XLRangeIndex(IXLWorksheet worksheet) : base(worksheet)
         {
@@ -195,6 +200,8 @@ namespace ClosedXML.Excel.Ranges.Index
 
         public int RemoveAll(Predicate<T> predicate)
         {
+            predicate = predicate ?? (_ => true);
+
             return base.RemoveAll(r => predicate((T)r));
         }
 
@@ -254,6 +261,11 @@ namespace ClosedXML.Excel.Ranges.Index
         public new IEnumerable<T> GetAll()
         {
             return base.GetAll().Cast<T>();
+        }
+
+        protected override Quadrant CreateQuadTree()
+        {
+            return new Quadrant<T>();
         }
     }
 }

@@ -7,10 +7,10 @@ namespace ClosedXML.Excel.Patterns
     /// <summary>
     /// Implementation of QuadTree adapted to Excel worksheet specifics. Differences with the classic implementation
     /// are that the topmost level is split to 128 square parts (2 columns of 64 blocks, each 8192*8192 cells) and that splitting
-    /// the quadrand onto 4 smaller quadrants does not depent on the number of items in this quadrant. When the range is added to the
+    /// the quadrant onto 4 smaller quadrants does not depend on the number of items in this quadrant. When the range is added to the
     /// QuadTree it is placed on the bottommost level where it fits to a single quadrant. That means, row-wide and column-wide ranges
     /// are always placed at the level 0, and the smaller the range is the deeper it goes down the tree. This approach eliminates
-    /// the need of trasferring ranges between levels.
+    /// the need of transferring ranges between levels.
     /// </summary>
     internal class Quadrant
     {
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel.Patterns
         public int MinimumColumn { get; }
 
         /// <summary>
-        /// Minimun row included in this quadrant.
+        /// Minimum row included in this quadrant.
         /// </summary>
         public int MinimumRow { get; }
 
@@ -49,7 +49,7 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Collection of ranges belonging to this quadrant (does not include ranges from child quadrants).
         /// </summary>
-        public IEnumerable<IXLRangeBase> Ranges
+        public IEnumerable<IXLAddressable> Ranges
         {
             get => _ranges?.Values.AsEnumerable();
         }
@@ -95,7 +95,7 @@ namespace ClosedXML.Excel.Patterns
         /// Add a range to the quadrant or to one of the child quadrants (recursively).
         /// </summary>
         /// <returns>True, if range was successfully added, false if it has been added before.</returns>
-        public bool Add(IXLRangeBase range)
+        public bool Add(IXLAddressable range)
         {
             bool res = false;
             var children = Children ?? CreateChildren().ToList();
@@ -123,7 +123,7 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Get all ranges from the quadrant and all child quadrants (recursively).
         /// </summary>
-        public IEnumerable<IXLRangeBase> GetAll()
+        public IEnumerable<IXLAddressable> GetAll()
         {
             if (Ranges != null)
             {
@@ -145,7 +145,7 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Get all ranges from the quadrant and all child quadrants (recursively) that intersect the specified address.
         /// </summary>
-        public IEnumerable<IXLRangeBase> GetIntersectedRanges(IXLRangeAddress rangeAddress)
+        public IEnumerable<IXLAddressable> GetIntersectedRanges(IXLRangeAddress rangeAddress)
         {
             if (Ranges != null)
             {
@@ -173,7 +173,7 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Get all ranges from the quadrant and all child quadrants (recursively) that cover the specified address.
         /// </summary>
-        public IEnumerable<IXLRangeBase> GetIntersectedRanges(IXLAddress address)
+        public IEnumerable<IXLAddressable> GetIntersectedRanges(IXLAddress address)
         {
             if (Ranges != null)
             {
@@ -202,7 +202,7 @@ namespace ClosedXML.Excel.Patterns
         /// Remove the range from the quadrant or from child quadrants (recursively).
         /// </summary>
         /// <returns>True if the range was removed, false if it does not exist in the QuadTree.</returns>
-        public bool Remove(IXLRangeAddress rangeAddress)
+        public bool Remove(IXLAddressable range)
         {
             bool res = false;
 
@@ -225,14 +225,14 @@ namespace ClosedXML.Excel.Patterns
                     res = true;
             }
 
-            return res; ;
+            return res;
         }
 
         /// <summary>
         /// Remove all the ranges matching specified criteria from the quadrant and its child quadrants (recursively).
         /// Don't use it for searching intersections as it would be much less efficient than <see cref="GetIntersectedRanges(IXLRangeAddress)"/>.
         /// </summary>
-        public IEnumerable<IXLRangeBase> RemoveAll(Predicate<IXLRangeBase> predicate)
+        public IEnumerable<IXLAddressable> RemoveAll(Predicate<IXLAddressable> predicate)
         {
             if (_ranges != null)
             {
@@ -272,20 +272,20 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Collection of ranges belonging to the current quadrant (that cannot fit into child quadrants).
         /// </summary>
-        private Dictionary<IXLRangeAddress, IXLRangeBase> _ranges;
+        private Dictionary<IXLRangeAddress, IXLAddressable> _ranges;
 
         #endregion Private Fields
 
         #region Private Methods
 
         /// <summary>
-        /// Add a range to the collection of quandrant's own ranges.
+        /// Add a range to the collection of quadrant's own ranges.
         /// </summary>
-        /// <returns>True if the range was succesfully added, false if it had been added before.</returns>
-        private bool AddInternal(IXLRangeBase range)
+        /// <returns>True if the range was successfully added, false if it had been added before.</returns>
+        private bool AddInternal(IXLAddressable range)
         {
             if (_ranges == null)
-                _ranges = new Dictionary<IXLRangeAddress, IXLRangeBase>();
+                _ranges = new Dictionary<IXLRangeAddress, IXLAddressable>();
 
             if (_ranges.ContainsKey(range.RangeAddress))
                 return false;
@@ -336,8 +336,8 @@ namespace ClosedXML.Excel.Patterns
             byte childLevel = (byte)(Level + 1);
             if (childLevel > MAX_LEVEL)
                 yield break;
-            byte xCount = 2; // Always divide on halfs
-            byte yCount = (byte)((Level == 0) ? (XLHelper.MaxRowNumber / XLHelper.MaxColumnNumber) : 2); // Level 0 divide onto 64 parts, the rest - on halfs
+            byte xCount = 2; // Always divide on halves
+            byte yCount = (byte)((Level == 0) ? (XLHelper.MaxRowNumber / XLHelper.MaxColumnNumber) : 2); // Level 0 divide onto 64 parts, the rest - on halves
 
             for (byte dy = 0; dy < yCount; dy++)
             {
@@ -349,5 +349,43 @@ namespace ClosedXML.Excel.Patterns
         }
 
         #endregion Private Methods
+    }
+
+    /// <summary>
+    /// A generic version of <see cref="Quadrant"/>
+    /// </summary>
+    internal class Quadrant<T> : Quadrant
+        where T:IXLAddressable
+    {
+        public new IEnumerable<T> Ranges => base.Ranges.Cast<T>();
+
+        public bool Add(T range)
+        {
+            return base.Add(range);
+        }
+
+        public new IEnumerable<T> GetAll()
+        {
+            return base.GetAll().Cast<T>();
+        }
+
+        public new IEnumerable<T> GetIntersectedRanges(IXLRangeAddress rangeAddress)
+        {
+            return base.GetIntersectedRanges(rangeAddress).Cast<T>();
+        }
+
+        public new IEnumerable<T> GetIntersectedRanges(IXLAddress address)
+        {
+            return base.GetIntersectedRanges(address).Cast<T>();
+        }
+
+        public bool Remove(T range)
+        {
+            return base.Remove(range);
+        }
+        public IEnumerable<T> RemoveAll(Predicate<T> predicate)
+        {
+            return base.RemoveAll(r => predicate((T) r)).Cast<T>();
+        }
     }
 }

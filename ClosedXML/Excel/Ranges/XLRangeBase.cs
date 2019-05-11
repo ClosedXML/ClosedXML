@@ -107,7 +107,7 @@ namespace ClosedXML.Excel
 
         #region IXLRangeBase Members
 
-        IXLRangeAddress IXLRangeBase.RangeAddress
+        IXLRangeAddress IXLAddressable.RangeAddress
         {
             get { return RangeAddress; }
         }

@@ -9,14 +9,9 @@ namespace ClosedXML.Excel
         Worksheet
     }
 
-    public interface IXLRangeBase
+    public interface IXLRangeBase : IXLAddressable
     {
         IXLWorksheet Worksheet { get; }
-
-        /// <summary>
-        ///   Gets an object with the boundaries of this range.
-        /// </summary>
-        IXLRangeAddress RangeAddress { get; }
 
         /// <summary>
         ///   Sets a value to every cell in this range.
