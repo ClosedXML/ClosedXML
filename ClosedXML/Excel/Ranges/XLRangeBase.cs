@@ -739,7 +739,8 @@ namespace ClosedXML.Excel
             {
                 cellsUsed = cellsUsed.Union(
                     Worksheet.DataValidations
-                        .SelectMany(dv => dv.Ranges.GetIntersectedRanges(RangeAddress))
+                        .GetAllInRange(RangeAddress)
+                        .SelectMany(dv => dv.Ranges)
                         .Select(r => r.FirstCell())
                         .Where(predicate)
                 );
@@ -820,7 +821,8 @@ namespace ClosedXML.Excel
             {
                 cellsUsed = cellsUsed.Union(
                     Worksheet.DataValidations
-                        .SelectMany(dv => dv.Ranges.GetIntersectedRanges(RangeAddress))
+                        .GetAllInRange(RangeAddress)
+                        .SelectMany(dv => dv.Ranges)
                         .Select(r => r.LastCell())
                         .Where(predicate)
                 );
