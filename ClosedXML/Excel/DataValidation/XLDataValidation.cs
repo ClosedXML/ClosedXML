@@ -106,7 +106,7 @@ namespace ClosedXML.Excel
         public void ClearRanges()
         {
             var allRanges = _ranges.ToList();
-            _ranges.Clear();
+            _ranges.RemoveAll();
 
             foreach (var range in allRanges)
             {
