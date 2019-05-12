@@ -1590,9 +1590,8 @@ namespace ClosedXML.Excel
         /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
         private IXLDataValidation GetDataValidation()
         {
-            return Worksheet
-                .DataValidations
-                .FirstOrDefault(dv => dv.Ranges.GetIntersectedRanges(this).Any());
+            Worksheet.DataValidations.TryGet(AsRange().RangeAddress, out var dataValidation);
+            return dataValidation;
         }
 
         public IXLDataValidation SetDataValidation()

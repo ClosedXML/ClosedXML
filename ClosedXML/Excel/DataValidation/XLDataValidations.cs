@@ -9,7 +9,7 @@ namespace ClosedXML.Excel
 
     internal class XLDataValidations : IXLDataValidations
     {
-        private readonly XLRangeIndex<IXLRange> _rangeIndex;
+        private readonly XLRangeIndex<XLDataValidationIndexEntry> _dataValidationIndex;
 
         internal XLWorksheet Worksheet => _worksheet;
 
@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
         public XLDataValidations(XLWorksheet worksheet)
         {
             _worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
-            _rangeIndex = new XLRangeIndex<IXLRange>(_worksheet);
+            _dataValidationIndex = new XLRangeIndex<XLDataValidationIndexEntry>(_worksheet);
         }
 
         #region IXLDataValidations Members
@@ -46,19 +46,61 @@ namespace ClosedXML.Excel
 
             foreach (var range in xlDataValidation.Ranges)
             {
-                ProcessRangeAdded(range);
+                ProcessRangeAdded(range, xlDataValidation);
             }
 
             _dataValidations.Add(xlDataValidation);
 
-            return dataValidation;
+            return xlDataValidation;
         }
 
 
         public void Delete(Predicate<IXLDataValidation> predicate)
         {
+            //TODO remove from index
             _dataValidations.RemoveAll(predicate);
         }
+
+        /// <summary>
+        /// Get the data validation rule for the range with the specified address if it exists.
+        /// </summary>
+        /// <param name="rangeAddress">A range address.</param>
+        /// <param name="dataValidation">Data validation rule which ranges collection includes the specified
+        /// address. The specified range should be fully covered with the data validation rule.
+        /// For example, if the rule is applied to ranges A1:A3,C1:C3 then this method will
+        /// return True for ranges A1:A3, C1:C2, A2:A3, and False for ranges A1:C3, A1:C1, etc.</param>
+        /// <returns>True is the data validation rule was found, false otherwise.</returns>
+        public bool TryGet(IXLRangeAddress rangeAddress, out IXLDataValidation dataValidation)
+        {
+            dataValidation = null;
+            if (rangeAddress == null || !rangeAddress.IsValid)
+                return false;
+
+            var candidates = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress) rangeAddress)
+                .Where(c => c.RangeAddress.Contains(rangeAddress.FirstAddress) &&
+                            c.RangeAddress.Contains(rangeAddress.LastAddress));
+
+            if (!candidates.Any())
+                return false;
+
+            dataValidation = candidates.First().DataValidation;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get all data validation rules applied to ranges that intersect the specified range.
+        /// </summary>
+        public IEnumerable<IXLDataValidation> GetAllInRange(IXLRangeAddress rangeAddress)
+        {
+            if (rangeAddress == null || !rangeAddress.IsValid)
+                return Enumerable.Empty<IXLDataValidation>();
+
+            return _dataValidationIndex.GetIntersectedRanges((XLRangeAddress) rangeAddress)
+                .Select(indexEntry => indexEntry.DataValidation)
+                .Distinct();
+        }
+
 
         public IEnumerator<IXLDataValidation> GetEnumerator()
         {
@@ -84,11 +126,13 @@ namespace ClosedXML.Excel
 
         public void Delete(IXLDataValidation dataValidation)
         {
+            //TODO remove from index
             _dataValidations.RemoveAll(dv => dv.Ranges.Equals(dataValidation.Ranges));
         }
 
         public void Delete(IXLRange range)
         {
+            //TODO remove from index
             _dataValidations.RemoveAll(dv => dv.Ranges.Contains(range));
         }
 
@@ -138,21 +182,42 @@ namespace ClosedXML.Excel
 
         private void OnRangeAdded(object sender, RangeEventArgs e)
         {
-            ProcessRangeAdded(e.Range);
+            ProcessRangeAdded(e.Range, sender as XLDataValidation);
         }
         private void OnRangeRemoved(object sender, RangeEventArgs e)
         {
             ProcessRangeRemoved(e.Range);
         }
 
-        private void ProcessRangeAdded(IXLRange range)
+        private void ProcessRangeAdded(IXLRange range, XLDataValidation dataValidation)
         {
             //TODO Split existing ranges
-            _rangeIndex.Add(range);
+            var indexEntry = new XLDataValidationIndexEntry(range.RangeAddress, dataValidation);
+            _dataValidationIndex.Add(indexEntry);
         }
+
         private void ProcessRangeRemoved(IXLRange range)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Class used for indexing data validation rules.
+        /// </summary>
+        private class XLDataValidationIndexEntry : IXLAddressable
+        {
+            /// <summary>
+            ///   Gets an object with the boundaries of this range.
+            /// </summary>
+            public IXLRangeAddress RangeAddress { get; }
+
+            public XLDataValidation DataValidation { get; }
+
+            public XLDataValidationIndexEntry(IXLRangeAddress rangeAddress, XLDataValidation dataValidation)
+            {
+                RangeAddress = rangeAddress;
+                DataValidation = dataValidation;
+            }
         }
     }
 }

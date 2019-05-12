@@ -28,6 +28,7 @@ namespace ClosedXML.Excel
         }
 
         public XLDataValidation(IXLDataValidation dataValidation, XLWorksheet worksheet)
+            : this(worksheet)
         {
             _worksheet = worksheet;
             CopyFrom(dataValidation);
