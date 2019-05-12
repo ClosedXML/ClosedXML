@@ -2149,65 +2149,8 @@ namespace ClosedXML.Excel
             var existingValidation = GetDataValidation();
             if (existingValidation != null) return existingValidation;
 
-            IXLDataValidation dataValidationToCopy = null;
-            var dvEmpty = new List<IXLDataValidation>();
-            foreach (IXLDataValidation dv in Worksheet.DataValidations)
-            {
-                foreach (IXLRange dvRange in dv.Ranges.GetIntersectedRanges(RangeAddress).ToList())
-                {
-                    if (dataValidationToCopy == null)
-                        dataValidationToCopy = dv;
-
-                    dv.Ranges.Remove(dvRange);
-                    foreach (var column in dvRange.Columns())
-                    {
-                        if (column.Intersects(this))
-                        {
-                            Int32 dvStart = column.RangeAddress.FirstAddress.RowNumber;
-                            Int32 dvEnd = column.RangeAddress.LastAddress.RowNumber;
-                            Int32 thisStart = RangeAddress.FirstAddress.RowNumber;
-                            Int32 thisEnd = RangeAddress.LastAddress.RowNumber;
-
-                            if (thisStart > dvStart && thisEnd < dvEnd)
-                            {
-                                dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(dvStart, thisStart - 1));
-                                dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(thisEnd + 1, dvEnd));
-                            }
-                            else
-                            {
-                                Int32 coStart;
-                                if (dvStart < thisStart)
-                                    coStart = dvStart;
-                                else
-                                    coStart = thisEnd + 1;
-
-                                if (coStart <= dvEnd)
-                                {
-                                    Int32 coEnd;
-                                    if (dvEnd > thisEnd)
-                                        coEnd = dvEnd;
-                                    else
-                                        coEnd = thisStart - 1;
-
-                                    if (coEnd >= dvStart)
-                                    {
-                                        dv.Ranges.Add(Worksheet.Column(column.ColumnNumber()).Column(coStart, coEnd));
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            dv.Ranges.Add(column);
-                        }
-                    }
-
-                    if (!dv.Ranges.Any())
-                        dvEmpty.Add(dv);
-                }
-            }
-
-            dvEmpty.ForEach(dv => Worksheet.DataValidations.Delete(dv));
+            IXLDataValidation dataValidationToCopy = Worksheet.DataValidations.GetAllInRange(RangeAddress)
+                .FirstOrDefault();
 
             var newRange = AsRange();
             var dataValidation = new XLDataValidation(newRange);

@@ -191,9 +191,20 @@ namespace ClosedXML.Excel
 
         private void ProcessRangeAdded(IXLRange range, XLDataValidation dataValidation)
         {
-            //TODO Split existing ranges
+            SplitExistingRanges(range.RangeAddress);
             var indexEntry = new XLDataValidationIndexEntry(range.RangeAddress, dataValidation);
             _dataValidationIndex.Add(indexEntry);
+        }
+
+        private void SplitExistingRanges(IXLRangeAddress rangeAddress)
+        {
+            var entries = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress)rangeAddress);
+
+            foreach (var entry in entries)
+            {
+                entry.DataValidation.SplitBy(rangeAddress);
+            }
+            //TODO Remove empty data validations
         }
 
         private void ProcessRangeRemoved(IXLRange range)
