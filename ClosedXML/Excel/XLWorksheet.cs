@@ -1278,7 +1278,7 @@ namespace ClosedXML.Excel
             foreach (var dv in DataValidations.ToList())
             {
                 var dvRanges = dv.Ranges.ToList();
-                dv.Ranges.RemoveAll();
+                dv.ClearRanges();
 
                 foreach (var dvRange in dvRanges)
                 {
@@ -1304,7 +1304,7 @@ namespace ClosedXML.Excel
                     if (newRange.RangeAddress.IsValid &&
                         newRange.RangeAddress.FirstAddress.ColumnNumber <=
                         newRange.RangeAddress.LastAddress.ColumnNumber)
-                        dv.Ranges.Add(newRange);
+                        dv.AddRange(newRange);
                 }
 
                 if (!dv.Ranges.Any())
@@ -1407,7 +1407,7 @@ namespace ClosedXML.Excel
             foreach (var dv in DataValidations.ToList())
             {
                 var dvRanges = dv.Ranges.ToList();
-                dv.Ranges.RemoveAll();
+                dv.ClearRanges();
 
                 foreach (var dvRange in dvRanges)
                 {
@@ -1432,7 +1432,7 @@ namespace ClosedXML.Excel
 
                     if (newRange.RangeAddress.IsValid &&
                         newRange.RangeAddress.FirstAddress.RowNumber <= newRange.RangeAddress.LastAddress.RowNumber)
-                        dv.Ranges.Add(newRange);
+                        dv.AddRange(newRange);
                 }
 
                 if (!dv.Ranges.Any())

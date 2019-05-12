@@ -2116,12 +2116,13 @@ namespace ClosedXML.Excel
                 rangesToMerge.ForEach(r => r.Merge(false));
 
                 var dataValidations = asRange.Worksheet.DataValidations
-                    .Where(dv => dv.Ranges.GetIntersectedRanges(asRange.RangeAddress).Any())
+                    .GetAllInRange(asRange.RangeAddress)
                     .ToList();
+
                 foreach (var dataValidation in dataValidations)
                 {
                     XLDataValidation newDataValidation = null;
-                    foreach (var dvRange in dataValidation.Ranges.GetIntersectedRanges(asRange.RangeAddress))
+                    foreach (var dvRange in dataValidation.Ranges.Where(r => r.Intersects(asRange)))
                     {
                         var dvTargetAddress = dvRange.RangeAddress.Relative(asRange.RangeAddress, targetRange.RangeAddress);
                         var dvTargetRange = Worksheet.Range(dvTargetAddress);
@@ -2131,7 +2132,7 @@ namespace ClosedXML.Excel
                             newDataValidation.CopyFrom(dataValidation);
                         }
                         else
-                            newDataValidation.Ranges.Add(dvTargetRange);
+                            newDataValidation.AddRange(dvTargetRange);
                     }
                 }
 

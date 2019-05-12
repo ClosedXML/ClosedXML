@@ -276,8 +276,8 @@ namespace ClosedXML.Excel
             foreach (var rangeToSplit in rangesToSplit)
             {
                 var newRanges = (rangeToSplit as XLRange).Split(rangeAddress, includeIntersection: false);
-                _ranges.Remove(rangeToSplit);
-                newRanges.ForEach(r => _ranges.Add(r));
+                RemoveRange(rangeToSplit);
+                newRanges.ForEach(AddRange);
             }
         }
     }

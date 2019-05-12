@@ -291,25 +291,14 @@ namespace ClosedXML.Excel
 
         public IXLDataValidation SetDataValidation()
         {
-            foreach (XLRange range in Ranges)
+            var firstRange = Ranges.First();
+            var dataValidation = new XLDataValidation(firstRange);
+            foreach (var range in Ranges.Skip(1))
             {
-                foreach (IXLDataValidation dv in range.Worksheet.DataValidations)
-                {
-                    foreach (IXLRange dvRange in dv.Ranges.GetIntersectedRanges(range.RangeAddress))
-                    {
-                        dv.Ranges.Remove(dvRange);
-                        foreach (IXLCell c in dvRange.Cells().Where(c => !range.Contains(c.Address.ToString())))
-                        {
-                            dv.Ranges.Add(c.AsRange());
-                        }
-                    }
-                }
+                dataValidation.AddRange(range);
             }
 
-            var dataValidation = new XLDataValidation(Ranges.First());
-            dataValidation.Ranges = this;//TODO We must not allow setting ranges directly
-
-            Ranges.First().Worksheet.DataValidations.Add(dataValidation);
+            firstRange.Worksheet.DataValidations.Add(dataValidation);
             return dataValidation;
         }
 
