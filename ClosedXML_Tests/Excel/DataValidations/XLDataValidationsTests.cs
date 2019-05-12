@@ -82,7 +82,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
                 dv1.AddRange(ws.Range("C1:C3"));
 
                 var dv2 = ws.Range("E4:G6").SetDataValidation();
-                dv2.MinValue = "100";
+                dv2.MinValue = "200";
 
                 var address = new XLRangeAddress(ws as XLWorksheet, searchAddress);
 
@@ -95,6 +95,20 @@ namespace ClosedXML_Tests.Excel.DataValidations
         [Test]
         public void AddDataValidationSplitsExistingRanges()
         {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var dv1 = ws.Range("B2:G7").SetDataValidation();
+                dv1.MinValue = "100";
+                dv1.AddRange(ws.Range("C11:C13"));
+
+                var dv2 = ws.Range("E4:G6").SetDataValidation();
+                dv2.MinValue = "100";
+
+                Assert.AreEqual(6, dv1.Ranges.Count());
+                Assert.AreEqual("B2:D3,E2:G3,B4:D6,B7:D7,E7:G7,C11:C13",
+                    string.Join(",", dv1.Ranges.Select(r => r.RangeAddress.ToString())));
+            }
 
         }
     }

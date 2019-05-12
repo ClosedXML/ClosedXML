@@ -236,8 +236,8 @@ namespace ClosedXML.Excel
         {
             if (dataValidation == this) return;
 
-            ClearRanges();
-            AddRanges(dataValidation.Ranges);
+            if (!_ranges.Any())
+                AddRanges(dataValidation.Ranges);
 
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;
@@ -269,6 +269,17 @@ namespace ClosedXML.Excel
 
         internal event EventHandler<RangeEventArgs> RangeRemoved;
 
+        internal void SplitBy(IXLRangeAddress rangeAddress)
+        {
+            var rangesToSplit = _ranges.GetIntersectedRanges(rangeAddress).ToList();
+
+            foreach (var rangeToSplit in rangesToSplit)
+            {
+                var newRanges = (rangeToSplit as XLRange).Split(rangeAddress, includeIntersection: false);
+                _ranges.Remove(rangeToSplit);
+                newRanges.ForEach(r => _ranges.Add(r));
+            }
+        }
     }
 
     internal class RangeEventArgs : EventArgs
