@@ -749,6 +749,59 @@ namespace ClosedXML.Excel
             return Column(XLHelper.GetColumnNumberFromLetter(columnLetter));
         }
 
+        internal IEnumerable<XLRange> Split(IXLRangeAddress anotherRange, bool includeIntersection)
+        {
+            if (!RangeAddress.Intersects(anotherRange))
+            {
+                yield return this;
+                yield break;
+            }
+
+            var thisRow1 = RangeAddress.FirstAddress.RowNumber;
+            var thisRow2 = RangeAddress.LastAddress.RowNumber;
+            var thisColumn1 = RangeAddress.FirstAddress.ColumnNumber;
+            var thisColumn2 = RangeAddress.LastAddress.ColumnNumber;
+
+            var otherRow1 = Math.Min(Math.Max(thisRow1, anotherRange.FirstAddress.RowNumber), thisRow2 + 1);
+            var otherRow2 = Math.Max(Math.Min(thisRow2, anotherRange.LastAddress.RowNumber), thisRow1 - 1);
+            var otherColumn1 = Math.Min(Math.Max(thisColumn1, anotherRange.FirstAddress.ColumnNumber), thisColumn2 + 1);
+            var otherColumn2 = Math.Max(Math.Min(thisColumn2, anotherRange.LastAddress.ColumnNumber), thisColumn1 - 1);
+
+            var candidates = new[]
+            {
+                // to the top of the intersection
+                new XLRangeAddress(
+                    new XLAddress(thisRow1,thisColumn1, false, false),
+                    new XLAddress(otherRow1 - 1, thisColumn2, false, false)),
+
+                // to the left of the intersection
+                new XLRangeAddress(
+                    new XLAddress(otherRow1,thisColumn1, false, false),
+                    new XLAddress(otherRow2, otherColumn1 - 1, false, false)),
+
+                includeIntersection
+                    ? new XLRangeAddress(
+                        new XLAddress(otherRow1, otherColumn1, false, false),
+                        new XLAddress(otherRow2, otherColumn2, false, false))
+                    : XLRangeAddress.Invalid,
+
+                // to the right of the intersection
+                new XLRangeAddress(
+                    new XLAddress(otherRow1,otherColumn2 + 1, false, false),
+                    new XLAddress(otherRow2, thisColumn2, false, false)),
+
+                // to the bottom of the intersection
+                new XLRangeAddress(
+                    new XLAddress(otherRow2 + 1,thisColumn1, false, false),
+                    new XLAddress(thisRow2, thisColumn2, false, false)),
+            };
+
+            foreach (var rangeAddress in candidates.Where(c => c.IsValid && c.IsNormalized))
+            {
+                yield return Worksheet.Range(rangeAddress);
+            }
+        }
+
         private void TransposeRange(int squareSide)
         {
             var cellsToInsert = new Dictionary<XLSheetPoint, XLCell>();
