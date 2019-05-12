@@ -668,7 +668,10 @@ namespace ClosedXML_Tests
                     var original = ws1.DataValidations.ElementAt(i);
                     var copy = ws2.DataValidations.ElementAt(i);
 
-                    Assert.AreEqual(original.Ranges.ToString(), copy.Ranges.ToString());
+                    var originalRanges = string.Join(",", original.Ranges.Select(r => r.RangeAddress.ToString()));
+                    var copyRanges = string.Join(",", original.Ranges.Select(r => r.RangeAddress.ToString()));
+
+                    Assert.AreEqual(originalRanges, copyRanges);
                     Assert.AreEqual(original.AllowedValues, copy.AllowedValues);
                     Assert.AreEqual(original.Operator, copy.Operator);
                     Assert.AreEqual(original.ErrorStyle, copy.ErrorStyle);

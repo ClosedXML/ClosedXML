@@ -98,18 +98,35 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var dv1 = ws.Range("B2:G7").SetDataValidation();
+                var dv1 = ws.Ranges("B2:G7,C11:C13").SetDataValidation();
                 dv1.MinValue = "100";
-                dv1.AddRange(ws.Range("C11:C13"));
 
                 var dv2 = ws.Range("E4:G6").SetDataValidation();
                 dv2.MinValue = "100";
 
-                Assert.AreEqual(6, dv1.Ranges.Count());
-                Assert.AreEqual("B2:D3,E2:G3,B4:D6,B7:D7,E7:G7,C11:C13",
+                Assert.AreEqual(4, dv1.Ranges.Count());
+                Assert.AreEqual("B2:G3,B4:D6,B7:G7,C11:C13",
                     string.Join(",", dv1.Ranges.Select(r => r.RangeAddress.ToString())));
             }
+        }
 
+        [Test]
+        public void RemovedRangeExcludedFromIndex()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var dv = ws.Range("A1:A3").SetDataValidation();
+                dv.MinValue = "100";
+                var range = ws.Range("C1:C3");
+                dv.AddRange(range);
+
+                dv.RemoveRange(range);
+
+                var actualResult = ws.DataValidations.TryGet(range.RangeAddress, out var foundDv);
+                Assert.IsFalse(actualResult);
+                Assert.IsNull(foundDv);
+            }
         }
     }
 }

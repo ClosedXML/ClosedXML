@@ -70,12 +70,7 @@ namespace ClosedXML.Excel
             get
             {
                 var newRange = AsRange();
-                var dataValidation = DataValidation;
-
-                if (dataValidation != null)
-                    Worksheet.DataValidations.Delete(dataValidation);
-                //TODO Move the logic to XLDataValidations
-                dataValidation = new XLDataValidation(newRange);
+                var dataValidation = new XLDataValidation(newRange);
                 Worksheet.DataValidations.Add(dataValidation);
                 return dataValidation;
             }
@@ -94,15 +89,8 @@ namespace ClosedXML.Excel
 
         private IXLDataValidation GetDataValidation()
         {
-            foreach (var xlDataValidation in Worksheet.DataValidations)
-            {
-                foreach (var range in xlDataValidation.Ranges)
-                {
-                    if (range.ToString() == ToString())
-                        return xlDataValidation;
-                }
-            }
-            return null;
+            Worksheet.DataValidations.TryGet(RangeAddress, out var existingDataValidation);
+            return existingDataValidation;
         }
 
         #region IXLRangeBase Members
@@ -2147,7 +2135,8 @@ namespace ClosedXML.Excel
         public IXLDataValidation SetDataValidation()
         {
             var existingValidation = GetDataValidation();
-            if (existingValidation != null) return existingValidation;
+            if (existingValidation != null && existingValidation.Ranges.Any(r => r == this))
+                return existingValidation;
 
             IXLDataValidation dataValidationToCopy = Worksheet.DataValidations.GetAllInRange(RangeAddress)
                 .FirstOrDefault();

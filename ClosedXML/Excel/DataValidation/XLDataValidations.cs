@@ -57,8 +57,10 @@ namespace ClosedXML.Excel
 
         public void Delete(Predicate<IXLDataValidation> predicate)
         {
-            //TODO remove from index
-            _dataValidations.RemoveAll(predicate);
+            var dataValidationsToRemove = _dataValidations.Where(dv => predicate(dv))
+                .ToList();
+
+            dataValidationsToRemove.ForEach(Delete);
         }
 
         /// <summary>
@@ -126,14 +128,28 @@ namespace ClosedXML.Excel
 
         public void Delete(IXLDataValidation dataValidation)
         {
-            //TODO remove from index
-            _dataValidations.RemoveAll(dv => dv.Ranges.Equals(dataValidation.Ranges));
+            if (!_dataValidations.Remove(dataValidation))
+                return;
+            var xlDataValidation = dataValidation as XLDataValidation;
+            xlDataValidation.RangeAdded -= OnRangeAdded;
+            xlDataValidation.RangeRemoved -= OnRangeRemoved;
+
+            foreach (var range in dataValidation.Ranges)
+            {
+                ProcessRangeRemoved(range);
+            }
         }
 
         public void Delete(IXLRange range)
         {
-            //TODO remove from index
-            _dataValidations.RemoveAll(dv => dv.Ranges.Contains(range));
+            if (range == null) throw new ArgumentNullException(nameof(range));
+
+            var dataValidationsToRemove = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress) range.RangeAddress)
+                .Select(e => e.DataValidation)
+                .Distinct()
+                .ToList();
+
+            dataValidationsToRemove.ForEach(Delete);
         }
 
         #endregion IXLDataValidations Members
@@ -155,7 +171,8 @@ namespace ClosedXML.Excel
                     dv1.AllowedValues == dv2.AllowedValues &&
                     dv1.Operator == dv2.Operator &&
                     dv1.MinValue == dv2.MinValue &&
-                    dv1.MaxValue == dv2.MaxValue;
+                    dv1.MaxValue == dv2.MaxValue &&
+                    dv1.Value == dv2.Value;
             };
 
             var rules = _dataValidations.ToList();
@@ -189,6 +206,7 @@ namespace ClosedXML.Excel
             ProcessRangeRemoved(e.Range);
         }
 
+
         private void ProcessRangeAdded(IXLRange range, XLDataValidation dataValidation)
         {
             SplitExistingRanges(range.RangeAddress);
@@ -196,20 +214,40 @@ namespace ClosedXML.Excel
             _dataValidationIndex.Add(indexEntry);
         }
 
+        /// <summary>
+        /// The flag used to avoid unnecessary check for splitting intersected ranges when we already
+        /// are performing the splitting.
+        /// </summary>
+        private bool _skipSplittingExistingRanges = false;
         private void SplitExistingRanges(IXLRangeAddress rangeAddress)
         {
-            var entries = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress)rangeAddress);
+            if (_skipSplittingExistingRanges) return;
 
-            foreach (var entry in entries)
+            try
             {
-                entry.DataValidation.SplitBy(rangeAddress);
+                _skipSplittingExistingRanges = true;
+                var entries = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress) rangeAddress)
+                    .ToList();
+
+                foreach (var entry in entries)
+                {
+                    entry.DataValidation.SplitBy(rangeAddress);
+                }
             }
+            finally
+            {
+                _skipSplittingExistingRanges = false;
+            }
+
             //TODO Remove empty data validations
         }
 
         private void ProcessRangeRemoved(IXLRange range)
         {
-            throw new NotImplementedException();
+            var entry = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress) range.RangeAddress)
+                .SingleOrDefault(e => Equals(e.RangeAddress, range.RangeAddress));
+
+            _dataValidationIndex.Remove(entry);
         }
 
         /// <summary>
