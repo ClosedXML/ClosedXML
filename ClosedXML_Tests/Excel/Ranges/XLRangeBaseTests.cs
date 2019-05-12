@@ -485,5 +485,36 @@ namespace ClosedXML_Tests
             Assert.IsTrue(ws.Cell("B3").HasSparkline);
 
         }
+
+        [TestCase("B2:G7", "D4:E5", true, "B2:G3,B4:C5,D4:E5,F4:G5,B6:G7")]
+        [TestCase("B2:G7", "D4:E5", false, "B2:G3,B4:C5,F4:G5,B6:G7")]
+        [TestCase("B2:G7", "B2:G7", true, "B2:G7")]
+        [TestCase("B2:G7", "B2:G7", false, "")]
+        [TestCase("B2:G7", "A1:H8", true, "B2:G7")]
+        [TestCase("B2:G7", "A1:H8", false, "")]
+        [TestCase("B2:G7", "A1:B2", true, "B2:B2,C2:G2,B3:G7")]
+        [TestCase("B2:G7", "A1:B2", false, "C2:G2,B3:G7")]
+        [TestCase("B2:G7", "E4:J5", true, "B2:G3,B4:D5,E4:G5,B6:G7")]
+        [TestCase("B2:G7", "E4:J5", false, "B2:G3,B4:D5,B6:G7")]
+        [TestCase("B2:G7", "A11:H18", true, "B2:G7")]
+        [TestCase("B2:G7", "A11:H18", false, "B2:G7")]
+        [TestCase("B2:G7", "A1:H1", true, "B2:G7")]
+        [TestCase("B2:G7", "A1:A12", true, "B2:G7")]
+        [TestCase("B2:G7", "A8:H8", true, "B2:G7")]
+        [TestCase("B2:G7", "H1:H8", true, "B2:G7")]
+        public void CanSplitRange(string rangeAddress, string splitBy, bool includeIntersection, string expectedResult)
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range = ws.Range(rangeAddress) as XLRange;
+            var splitter = ws.Range(splitBy);
+
+            var result = range.Split(splitter.RangeAddress, includeIntersection);
+
+            var actualAddresses = string.Join(",", result.Select(r => r.RangeAddress.ToString()));
+
+            Assert.AreEqual(expectedResult, actualAddresses);
+
+        }
     }
 }
