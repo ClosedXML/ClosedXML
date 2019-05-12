@@ -468,6 +468,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
                 var range1 = ws.Range("A1:A3");
                 var range2 = ws.Range("C1:C3");
                 var dv = new XLDataValidation(range1);
+                dv.AddRange(range2);
 
                 var removedRanges = new List<IXLRange>();
 
