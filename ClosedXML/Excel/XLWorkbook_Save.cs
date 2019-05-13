@@ -304,7 +304,7 @@ namespace ClosedXML.Excel
                     GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
                 }
 
-                GenerateWorksheetPartContent(worksheetPart, worksheet, options.EvaluateFormulasBeforeSaving, context);
+                GenerateWorksheetPartContent(worksheetPart, worksheet, options.EvaluateFormulasBeforeSaving, options.ConsolidateConditionalFormatRanges, options.ConsolidateDataValidationRanges, context);
 
                 if (worksheet.PivotTables.Any())
                 {
@@ -4473,9 +4473,13 @@ namespace ClosedXML.Excel
         #region GenerateWorksheetPartContent
 
         private static void GenerateWorksheetPartContent(
-            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, SaveContext context)
+            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, bool consolidateConditionalFormatRanges, bool consolidateDataValidationRanges, SaveContext context)
         {
-            ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+            if(consolidateConditionalFormatRanges)
+            {
+                ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+            }
+
 
             #region Worksheet
 
@@ -5359,7 +5363,12 @@ namespace ClosedXML.Excel
                 var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
                 cm.SetElement(XLWorksheetContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
-                xlWorksheet.DataValidations.Consolidate();
+
+                if(consolidateDataValidationRanges)
+                {
+                    xlWorksheet.DataValidations.Consolidate();
+                }
+
 
                 foreach (var dv in xlWorksheet.DataValidations)
                 {

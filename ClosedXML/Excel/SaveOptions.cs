@@ -17,5 +17,7 @@ namespace ClosedXML.Excel
         public Boolean EvaluateFormulasBeforeSaving { get; set; } = false;
         public Boolean GenerateCalculationChain { get; set; } = true;
         public Boolean ValidatePackage { get; set; }
+        public Boolean ConsolidateConditionalFormatRanges { get; set; } = true;
+        public Boolean ConsolidateDataValidationRanges { get; set; } = true;
     }
 }

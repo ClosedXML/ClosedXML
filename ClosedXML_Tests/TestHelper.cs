@@ -101,7 +101,7 @@ namespace ClosedXML_Tests
             }
         }
 
-        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false)
+        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, SaveOptions options = null)
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
@@ -117,8 +117,17 @@ namespace ClosedXML_Tests
 
             var filePath2 = Path.Combine(directory, fileName);
 
+            if (options == null)
+            {
+                options = new SaveOptions()
+                {
+                    EvaluateFormulasBeforeSaving = evaluateFormulae,
+                    ValidatePackage = true
+                };
+            }
+
             using (var wb = workbookGenerator.Invoke())
-                wb.SaveAs(filePath2, true, evaluateFormulae);
+                wb.SaveAs(filePath2, options);
 
             if (CompareWithResources)
             {
