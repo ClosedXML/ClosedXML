@@ -42,11 +42,9 @@ Be sure to check out our `ClosedXML` extension projects
 - https://github.com/ClosedXML/ClosedXML.Extensions.WebApi
 
 ## Developer guidelines
-_Full guidelines to follow later_
-* Please submit pull requests that are based on the `develop` branch.
-* Where possible, pull requests should include unit tests that cover as many uses cases as possible. This is especially relevant when implementing Excel functions.
-* Install [NUnit 3.0 Test Adapter](https://github.com/nunit/docs/wiki/Adapter-Installation) if you want to run the test suite in Visual Studio.
-* We use 4 spaces for code indentation. This is the default in Visual Studio. Don't leave any trailing white space at the end of lines or files. To make this easier, ClosedXML has an [editorconfig](http://www.editorconfig.org) configuration file. It is recommended you install editorconfig from the Visual Studio Extension Manager.
+The [OpenXML specification](https://www.ecma-international.org/publications/standards/Ecma-376.htm) is a large and complicated beast. In order for ClosedXML, the wrapper around OpenXML, to support all the features, we rely on community contributions. Before opening an issue to request a new feature, we'd like to urge you to try to implement it yourself and log a pull request.
+
+Please read the [full developer guidelines](CONTRIBUTING.md).
 
 ## Credits
 * Project originally created by Manuel de Leon
