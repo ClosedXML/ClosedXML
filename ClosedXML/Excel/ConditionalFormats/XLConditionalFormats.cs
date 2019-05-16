@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     {
         private readonly List<IXLConditionalFormat> _conditionalFormats = new List<IXLConditionalFormat>();
 
-        private readonly List<XLConditionalFormatType> _conditionalFormatTypesExcludedFromConsolidation = new List<XLConditionalFormatType>()
+        private static readonly List<XLConditionalFormatType> _conditionalFormatTypesExcludedFromConsolidation = new List<XLConditionalFormatType>()
         {
             XLConditionalFormatType.DataBar,
             XLConditionalFormatType.ColorScale,
