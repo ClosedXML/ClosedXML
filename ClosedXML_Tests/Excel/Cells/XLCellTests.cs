@@ -947,6 +947,7 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
         public void FormulaWithCircularReferenceFails2()
         {
             var cell = new XLWorkbook().Worksheets.Add("Sheet1").FirstCell();

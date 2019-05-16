@@ -429,22 +429,23 @@ namespace ClosedXML.Excel
                 cAddress = fA1;
             }
 
-            if (Worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
-                w => String.Compare(w.Name, sName, true) == 0)
-                && XLHelper.IsValidA1Address(cAddress)
-                )
-            {
-                var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                    return 0;
-                else
-                    return referenceCell.Value;
-            }
-
             object retVal;
             try
             {
                 IsEvaluating = true;
+                if (Worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
+                    w => String.Compare(w.Name, sName, true) == 0)
+                    && XLHelper.IsValidA1Address(cAddress)
+                )
+                {
+                    var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                    if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
+                        return 0;
+                    else
+                        return referenceCell.Value;
+                }
+
+
 
                 if (Worksheet
                         .Workbook
