@@ -23,8 +23,8 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
             }
         }
 
-        [TestCase(true, 2)]
-        [TestCase(false, 4)]
+        [TestCase(true, 7)]
+        [TestCase(false, 8)]
         public void SaveOptionAffectsConsolidationConditionalFormatRanges(bool consolidateConditionalFormatRanges, int expectedCount)
         {
             var options = new SaveOptions
@@ -34,11 +34,15 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
 
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
+
             ws.Range("D2:D3").AddConditionalFormat().DataBar(XLColor.Red).LowestValue().HighestValue();
             ws.Range("B2:B3").AddConditionalFormat().DataBar(XLColor.Red).LowestValue().HighestValue();
             ws.Range("E2:E6").AddConditionalFormat().ColorScale().LowestValue(XLColor.Red).HighestValue(XLColor.Blue);
             ws.Range("F2:F6").AddConditionalFormat().ColorScale().LowestValue(XLColor.Red).HighestValue(XLColor.Blue);
-
+            ws.Range("G2:G7").AddConditionalFormat().WhenIsUnique().Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Range("H2:H7").AddConditionalFormat().WhenIsUnique().Fill.SetBackgroundColor(XLColor.Blue);
+            ws.Range("I2:I6").AddConditionalFormat().WhenContains("test");
+            ws.Range("J2:J6").AddConditionalFormat().WhenContains("test");
             using (var ms = new MemoryStream())
             {
                 wb.SaveAs(ms, options);
