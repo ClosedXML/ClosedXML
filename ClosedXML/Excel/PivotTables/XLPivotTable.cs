@@ -54,7 +54,23 @@ namespace ClosedXML.Excel
 
         public IEnumerable<string> SourceRangeFieldsAvailable
         {
-            get { return this.SourceRange.FirstRow().Cells().Select(c => c.GetString()); }
+            get
+            {
+                var names = new HashSet<string>();
+                foreach (var originalName in this.SourceRange.FirstRow().Cells().Select(c => c.GetString()))
+                {
+                    string name = originalName;
+                    int counter = 2;
+                    while (names.Contains(name))
+                    {
+                        name = originalName + counter++;
+                    }
+
+                    names.Add(name);
+                }
+
+                return names;
+            }
         }
 
         public IXLPivotFields Fields { get; private set; }
