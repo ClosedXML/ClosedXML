@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
@@ -10,18 +11,20 @@ namespace ClosedXML_Tests.Excel.CalcEngine
     {
         private XLWorkbook workbook;
 
+        #region Setup and teardown
+
+        [OneTimeTearDown]
+        public void Dispose()
+        {
+            workbook.Dispose();
+        }
+
         [SetUp]
         public void Init()
         {
             // Make sure tests run on a deterministic culture
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             workbook = SetupWorkbook();
-        }
-
-        [OneTimeTearDown]
-        public void Dispose()
-        {
-            workbook.Dispose();
         }
 
         private XLWorkbook SetupWorkbook()
@@ -82,12 +85,29 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             return wb;
         }
 
+        #endregion Setup and teardown
+
         [Test]
         public void Hlookup()
         {
             // Range lookup false
             var value = workbook.Evaluate(@"=HLOOKUP(""Total"",Data!$B$2:$I$71,4,FALSE)");
             Assert.AreEqual(179.64, value);
+        }
+
+        [Test]
+        public void Hyperlink()
+        {
+            XLHyperlink hl;
+            hl = XLWorkbook.EvaluateExpr("HYPERLINK(\"http://github.com/ClosedXML/ClosedXML\")") as XLHyperlink;
+            Assert.IsNotNull(hl);
+            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", hl.ExternalAddress.ToString());
+            Assert.AreEqual(string.Empty, hl.Tooltip);
+
+            hl = XLWorkbook.EvaluateExpr("HYPERLINK(\"mailto:jsmith@github.com\", \"jsmith@github.com\")") as XLHyperlink;
+            Assert.IsNotNull(hl);
+            Assert.AreEqual("mailto:jsmith@github.com", hl.ExternalAddress.ToString());
+            Assert.AreEqual("jsmith@github.com", hl.Tooltip);
         }
 
         [Test]
@@ -132,21 +152,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
 
             Assert.Throws<CellReferenceException>(() => workbook.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
-        }
-
-        [Test]
-        public void Hyperlink()
-        {
-            XLHyperlink hl;
-            hl = XLWorkbook.EvaluateExpr("HYPERLINK(\"http://github.com/ClosedXML/ClosedXML\")") as XLHyperlink;
-            Assert.IsNotNull(hl);
-            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", hl.ExternalAddress.ToString());
-            Assert.AreEqual(string.Empty, hl.Tooltip);
-
-            hl = XLWorkbook.EvaluateExpr("HYPERLINK(\"mailto:jsmith@github.com\", \"jsmith@github.com\")") as XLHyperlink;
-            Assert.IsNotNull(hl);
-            Assert.AreEqual("mailto:jsmith@github.com", hl.ExternalAddress.ToString());
-            Assert.AreEqual("jsmith@github.com", hl.Tooltip);
         }
     }
 }
