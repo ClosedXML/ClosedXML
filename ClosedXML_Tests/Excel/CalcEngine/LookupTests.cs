@@ -3,6 +3,7 @@ using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
+using System.Linq;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
@@ -108,6 +109,64 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.IsNotNull(hl);
             Assert.AreEqual("mailto:jsmith@github.com", hl.ExternalAddress.ToString());
             Assert.AreEqual("jsmith@github.com", hl.Tooltip);
+        }
+
+        [Test]
+        public void Match()
+        {
+            var ws = workbook.Worksheets.First();
+
+            Object value;
+            value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2, 0)");
+            Assert.AreEqual(4, value);
+
+            value = ws.Evaluate(@"=MATCH(""Rep"", A2:Z2, 0)");
+            Assert.AreEqual(5, value);
+
+            value = ws.Evaluate(@"=MATCH(""REP"", B2:I2, 0)");
+            Assert.AreEqual(4, value);
+
+            value = ws.Evaluate(@"=MATCH(95, B3:I3, 0)");
+            Assert.AreEqual(6, value);
+
+            value = ws.Evaluate(@"=MATCH(DATE(2015,1,6), B3:I3, 0)");
+            Assert.AreEqual(2, value);
+
+            value = ws.Evaluate(@"=MATCH(1.99, 3:3, 0)");
+            Assert.AreEqual(8, value);
+
+            value = ws.Evaluate(@"=MATCH(43, B:B, 0)");
+            Assert.AreEqual(45, value);
+
+            value = ws.Evaluate(@"=MATCH(""cENtraL"", D3:D45, 0)");
+            Assert.AreEqual(2, value);
+
+            value = ws.Evaluate(@"=MATCH(4.99, H:H, 0)");
+            Assert.AreEqual(5, value);
+
+            value = ws.Evaluate(@"=MATCH(""Rapture"", B2:I2, 1)");
+            Assert.AreEqual(2, value);
+
+            value = ws.Evaluate(@"=MATCH(22.5, B3:B45, 1)");
+            Assert.AreEqual(22, value);
+
+            value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2)");
+            Assert.AreEqual(4, value);
+
+            value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2, 1)");
+            Assert.AreEqual(4, value);
+
+            value = ws.Evaluate(@"=MATCH(40, G3:G6, -1)");
+            Assert.AreEqual(2, value);
+        }
+
+        [Test]
+        public void Match_Exceptions()
+        {
+            var ws = workbook.Worksheets.First();
+            Assert.Throws<CellValueException>(() => ws.Evaluate(@"=MATCH(""Rep"", B2:I5)"));
+            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(""Dummy"", B2:I2, 0)"));
+            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(4.5,B3:B45,-1)"));
         }
 
         [Test]

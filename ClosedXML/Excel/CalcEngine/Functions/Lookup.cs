@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("INDEX", , Index); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
-            //ce.RegisterFunction("MATCH", , Match); // Looks up values in a reference or array
+            ce.RegisterFunction("MATCH", 2, 3, Match); // Looks up values in a reference or array
             //ce.RegisterFunction("OFFSET", , Offset); // Returns a reference offset from a given reference
             //ce.RegisterFunction("ROW", , Row); // Returns the row number of a reference
             //ce.RegisterFunction("ROWS", , Rows); // Returns the number of rows in a reference
@@ -85,6 +86,81 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             String address = p[0];
             String toolTip = p.Count == 2 ? p[1] : String.Empty;
             return new XLHyperlink(address, toolTip);
+        }
+
+        private static object Match(List<Expression> p)
+        {
+            var lookup_value = p[0];
+            int match_type = 1;
+            if (p.Count > 2)
+                match_type = Math.Sign((int)p[2]);
+
+            if (!(p[1] is XObjectExpression objectExpression))
+                throw new NoValueAvailableException("lookup_array has to be a range");
+
+            if (!(objectExpression.Value is CellRangeReference cellRangeReference))
+                throw new NoValueAvailableException("lookup_array has to be a range");
+
+            var range = cellRangeReference.Range;
+
+            if (range.ColumnCount() != 1 && range.RowCount() != 1)
+                throw new CellValueException("Range has to be 1-dimensional");
+
+            Predicate<int> lookupPredicate = null;
+            switch (match_type)
+            {
+                case 0:
+                    lookupPredicate = i => i == 0;
+                    break;
+
+                case 1:
+                    lookupPredicate = i => i <= 0;
+                    break;
+
+                case -1:
+                    lookupPredicate = i => i >= 0;
+                    break;
+
+                default:
+                    throw new NoValueAvailableException("Invalid match_type");
+            }
+
+            IXLCell foundCell = null;
+
+            if (match_type == 0)
+                foundCell = range
+                    .CellsUsed(XLCellsUsedOptions.Contents, c => lookupPredicate.Invoke(new Expression(c.Value).CompareTo(lookup_value)))
+                    .FirstOrDefault();
+            else
+            {
+                object previousValue = null;
+                foundCell = range
+                    .CellsUsed(XLCellsUsedOptions.Contents)
+                    .TakeWhile(c =>
+                    {
+                        var currentCellExpression = new Expression(c.Value);
+
+                        if (previousValue != null)
+                        {
+                            // When match_type != 0, we have to assume that the order of the items being search is ascending or descending
+                            var previousValueExpression = new Expression(previousValue);
+                            if (!lookupPredicate.Invoke(previousValueExpression.CompareTo(currentCellExpression)))
+                                return false;
+                        }
+
+                        previousValue = c.Value;
+
+                        return lookupPredicate.Invoke(currentCellExpression.CompareTo(lookup_value));
+                    })
+                    .LastOrDefault();
+            }
+
+            if (foundCell == null)
+                throw new NoValueAvailableException();
+
+            var firstCell = range.FirstCell();
+
+            return (foundCell.Address.ColumnNumber - firstCell.Address.ColumnNumber + 1) * (foundCell.Address.RowNumber - firstCell.Address.RowNumber + 1);
         }
 
         private static object Vlookup(List<Expression> p)
