@@ -19,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
             ce.RegisterFunction("HLOOKUP", 3, 4, Hlookup); // Looks in the top row of an array and returns the value of the indicated cell
             ce.RegisterFunction("HYPERLINK", 1, 2, Hyperlink); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
-            //ce.RegisterFunction("INDEX", , Index); // Uses an index to choose a value from a reference or array
+            ce.RegisterFunction("INDEX", 2, 4, Index); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
             ce.RegisterFunction("MATCH", 2, 3, Match); // Looks up values in a reference or array
@@ -31,21 +31,23 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("VLOOKUP", 3, 4, Vlookup); // Looks in the first column of an array and moves across the row to return the value of a cell
         }
 
+        private static IXLRange ExtractRange(Expression expression)
+        {
+            if (!(expression is XObjectExpression objectExpression))
+                throw new NoValueAvailableException("Parameter has to be a valid range");
+
+            if (!(objectExpression.Value is CellRangeReference cellRangeReference))
+                throw new NoValueAvailableException("lookup_array has to be a range");
+
+            var range = cellRangeReference.Range;
+            return range;
+        }
+
         private static object Hlookup(List<Expression> p)
         {
             var lookup_value = p[0];
-
-            var table_array = p[1] as XObjectExpression;
-            if (table_array == null)
-                throw new NoValueAvailableException("table_array has to be a range");
-
-            var range_reference = table_array.Value as CellRangeReference;
-            if (range_reference == null)
-                throw new NoValueAvailableException("table_array has to be a range");
-
-            var range = range_reference.Range;
-
-            var row_index_num = (int)(p[2]);
+            var range = ExtractRange(p[1]);
+            var row_index_num = (int)p[2];
             var range_lookup = p.Count < 4
                                || p[3] is EmptyValueExpression
                                || (bool)(p[3]);
@@ -88,20 +90,67 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new XLHyperlink(address, toolTip);
         }
 
+        private static object Index(List<Expression> p)
+        {
+            // This is one of the few functions that is "overloaded"
+            var range = ExtractRange(p[0]);
+
+            if (range.ColumnCount() > 1 && range.RowCount() > 1)
+            {
+                var row_num = (int)p[1];
+                var column_num = (int)p[2];
+
+                if (row_num > range.RowCount())
+                    throw new CellReferenceException("Out of bound row number");
+
+                if (column_num > range.ColumnCount())
+                    throw new CellReferenceException("Out of bound column number");
+
+                return range.Row(row_num).Cell(column_num).Value;
+            }
+            else if (p.Count == 2)
+            {
+                var cellOffset = (int)p[1];
+                if (cellOffset > range.RowCount() * range.ColumnCount())
+                    throw new CellReferenceException();
+
+                return range.Cells().ElementAt(cellOffset - 1).Value;
+            }
+            else
+            {
+                int column_num = 1;
+                int row_num = 1;
+
+                if (!(p[1] is EmptyValueExpression))
+                    row_num = (int)p[1];
+
+                if (!(p[2] is EmptyValueExpression))
+                    column_num = (int)p[2];
+
+                var rangeIsRow = range.RowCount() == 1;
+                if (rangeIsRow && row_num > 1)
+                    throw new CellReferenceException();
+
+                if (!rangeIsRow && column_num > 1)
+                    throw new CellReferenceException();
+
+                if (row_num > range.RowCount())
+                    throw new CellReferenceException("Out of bound row number");
+
+                if (column_num > range.ColumnCount())
+                    throw new CellReferenceException("Out of bound column number");
+
+                return range.Row(row_num).Cell(column_num).Value;
+            }
+        }
+
         private static object Match(List<Expression> p)
         {
             var lookup_value = p[0];
+            var range = ExtractRange(p[1]);
             int match_type = 1;
             if (p.Count > 2)
                 match_type = Math.Sign((int)p[2]);
-
-            if (!(p[1] is XObjectExpression objectExpression))
-                throw new NoValueAvailableException("lookup_array has to be a range");
-
-            if (!(objectExpression.Value is CellRangeReference cellRangeReference))
-                throw new NoValueAvailableException("lookup_array has to be a range");
-
-            var range = cellRangeReference.Range;
 
             if (range.ColumnCount() != 1 && range.RowCount() != 1)
                 throw new CellValueException("Range has to be 1-dimensional");
@@ -166,18 +215,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static object Vlookup(List<Expression> p)
         {
             var lookup_value = p[0];
-
-            var table_array = p[1] as XObjectExpression;
-            if (table_array == null)
-                throw new NoValueAvailableException("table_array has to be a range");
-
-            var range_reference = table_array.Value as CellRangeReference;
-            if (range_reference == null)
-                throw new NoValueAvailableException("table_array has to be a range");
-
-            var range = range_reference.Range;
-
-            var col_index_num = (int)(p[2]);
+            var range = ExtractRange(p[1]);
+            var col_index_num = (int)p[2];
             var range_lookup = p.Count < 4
                                || p[3] is EmptyValueExpression
                                || (bool)(p[3]);

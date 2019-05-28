@@ -112,6 +112,40 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Index()
+        {
+            var ws = workbook.Worksheets.First();
+            Assert.AreEqual("Kivell", ws.Evaluate(@"=INDEX(B2:J12, 3, 4)"));
+
+            // We don't support optional parameter fully here yet.
+            // Supposedly, if you omit e.g. the row number, then ROW() of the calling cell should be assumed
+            // Assert.AreEqual("Gill", ws.Evaluate(@"=INDEX(B2:J12, , 4)"));
+
+            Assert.AreEqual("Rep", ws.Evaluate(@"=INDEX(B2:I2, 4)"));
+
+            Assert.AreEqual(3, ws.Evaluate(@"=INDEX(B2:B20, 4)"));
+            Assert.AreEqual(3, ws.Evaluate(@"=INDEX(B2:B20, 4, 1)"));
+            Assert.AreEqual(3, ws.Evaluate(@"=INDEX(B2:B20, 4, )"));
+
+            Assert.AreEqual("Rep", ws.Evaluate(@"=INDEX(B2:J2, 1, 4)"));
+            Assert.AreEqual("Rep", ws.Evaluate(@"=INDEX(B2:J2, , 4)"));
+        }
+
+        [Test]
+        public void Index_Exceptions()
+        {
+            var ws = workbook.Worksheets.First();
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I10, 20, 1)"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I10, 1, 10)"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I2, 10)"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I2, 4, 1)"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I2, 4, )"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:B10, 20)"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:B10, 20, )"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:B10, , 4)"));
+        }
+
+        [Test]
         public void Match()
         {
             var ws = workbook.Worksheets.First();
