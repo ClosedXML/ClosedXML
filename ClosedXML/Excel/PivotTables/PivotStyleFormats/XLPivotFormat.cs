@@ -21,6 +21,7 @@ namespace ClosedXML.Excel
         public bool GrandCol { get; set; } = false;
         public bool CollapsedLevelsAreSubtotals { get; set; } = false;
         public IEnumerable<IFieldRef> FieldReferences { get; } = new List<IFieldRef>();
+        public int? FieldPosition { get; set; }
 
         public XLPivotFormat(IXLStyle style = null)
         {
@@ -400,22 +401,11 @@ namespace ClosedXML.Excel
 
         public static FieldRef FromOpenXml(PivotAreaReference pref, XLPivotTable pt)
         {
-            string fieldName;
-            int[] values;
             var fieldIdx = (int)pref.Field.Value;
-            if (fieldIdx == -2)
-            {
-                fieldName = XLConstants.PivotTableValuesSentinalLabel;
-                values = new [] { (int)pref.OfType<FieldItem>().First().Val.Value };
-            }
-            else
-            {
-                fieldName = pt.SourceRangeFieldsAvailable.ElementAt(fieldIdx);
-                //var cacheField = pivotCacheDefinition.CacheFields.ElementAt(fieldIdx) as CacheField;
-                values = pref.Any()
-                    ? pref.OfType<FieldItem>().Select(item => (int)item.Val.Value).ToArray()
-                    : new[] { -1 };
-            }
+            var fieldName = fieldIdx == -2 ? XLConstants.PivotTableValuesSentinalLabel : pt.SourceRangeFieldsAvailable.ElementAt(fieldIdx);
+            var values = pref.Any()
+                ? pref.OfType<FieldItem>().Select(item => (int)item.Val.Value).ToArray()
+                : new[] { -1 };
 
             var result = Raw(fieldName, values);
             result.DefaultSubtotal = OpenXmlHelper.GetBooleanValueAsBool(pref.DefaultSubtotal, false);

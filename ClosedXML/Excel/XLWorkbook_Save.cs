@@ -2884,7 +2884,11 @@ namespace ClosedXML.Excel
             format.PivotArea.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValue(f.CollapsedLevelsAreSubtotals, false);
             format.PivotArea.GrandColumn = OpenXmlHelper.GetBooleanValue(f.GrandCol, false);
             format.PivotArea.GrandRow = OpenXmlHelper.GetBooleanValue(f.GrandRow, false);
-            format.PivotArea.FieldPosition = 0;
+            if (f.FieldPosition != null)
+            {
+                format.PivotArea.FieldPosition = UInt32Value.FromUInt32((uint)f.FieldPosition.Value);
+            }
+
             if (f.Axis.HasValue)
             {
                 format.PivotArea.Axis = (PivotTableAxisValues)f.Axis.Value;

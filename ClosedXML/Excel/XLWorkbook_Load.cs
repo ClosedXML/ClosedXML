@@ -895,6 +895,9 @@ namespace ClosedXML.Excel
                         GrandRow = OpenXmlHelper.GetBooleanValueAsBool(fr.PivotArea.GrandRow, false),
                         CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValueAsBool(fr.PivotArea.CollapsedLevelsAreSubtotals, false)
                     };
+                    if (fr.PivotArea.FieldPosition != null)
+                        xlpFormat.FieldPosition = fr.PivotArea.FieldPosition.HasValue ? (int?)fr.PivotArea.FieldPosition.Value : null;
+
                     if (fr.PivotArea.Axis != null)
                         xlpFormat.Axis = fr.PivotArea.Axis.HasValue ? fr.PivotArea.Axis.Value.ToClosedXml() : (XLPivotTableAxisValues?) null;
 

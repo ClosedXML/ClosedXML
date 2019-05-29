@@ -17,6 +17,7 @@ namespace ClosedXML.Excel
         bool GrandCol { get; }
         bool CollapsedLevelsAreSubtotals { get; }
         IEnumerable<IFieldRef> FieldReferences { get; }
+        int? FieldPosition { get; }
     }
 
     public interface IXLPivotFormatList : IEnumerable<IXLPivotFormat>
