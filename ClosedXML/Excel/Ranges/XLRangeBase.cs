@@ -344,56 +344,58 @@ namespace ClosedXML.Excel
 
         public IXLRange Merge(Boolean checkIntersect)
         {
+            var asRange = AsRange();
             if (checkIntersect)
             {
-                var intersectedMergedRanges = Worksheet.Internals.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
+                var intersectedMergedRanges =
+                    Worksheet.Internals.MergedRanges.GetIntersectedRanges(RangeAddress).ToList();
                 foreach (var intersectedMergedRange in intersectedMergedRanges)
                 {
                     Worksheet.Internals.MergedRanges.Remove(intersectedMergedRange);
                 }
+
+                var firstCell = FirstCell();
+                var firstCellStyle = (firstCell.Style as XLStyle).Key;
+                var defaultStyle = XLStyle.Default.Key;
+                var cellsUsed =
+                    CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c != firstCell).ToList();
+                cellsUsed.ForEach(c => c.Clear(XLClearOptions.All
+                                               & ~XLClearOptions.MergedRanges
+                                               & ~XLClearOptions.NormalFormats));
+
+                if (firstCellStyle.Alignment != defaultStyle.Alignment)
+                    asRange.Style.Alignment = firstCell.Style.Alignment;
+                else
+                    cellsUsed.ForEach(c => c.Style.Alignment = firstCell.Style.Alignment);
+
+                if (firstCellStyle.Fill != defaultStyle.Fill)
+                    asRange.Style.Fill = firstCell.Style.Fill;
+                else
+                    cellsUsed.ForEach(c => c.Style.Fill = firstCell.Style.Fill);
+
+                if (firstCellStyle.Font != defaultStyle.Font)
+                    asRange.Style.Font = firstCell.Style.Font;
+                else
+                    cellsUsed.ForEach(c => c.Style.Font = firstCell.Style.Font);
+
+                if (firstCellStyle.IncludeQuotePrefix != defaultStyle.IncludeQuotePrefix)
+                    asRange.Style.IncludeQuotePrefix = firstCell.Style.IncludeQuotePrefix;
+                else
+                    cellsUsed.ForEach(c => c.Style.IncludeQuotePrefix = firstCell.Style.IncludeQuotePrefix);
+
+                if (firstCellStyle.NumberFormat != defaultStyle.NumberFormat)
+                    asRange.Style.NumberFormat = firstCell.Style.NumberFormat;
+                else
+                    cellsUsed.ForEach(c => c.Style.NumberFormat = firstCell.Style.NumberFormat);
+
+                if (firstCellStyle.Protection != defaultStyle.Protection)
+                    asRange.Style.Protection = firstCell.Style.Protection;
+                else
+                    cellsUsed.ForEach(c => c.Style.Protection = firstCell.Style.Protection);
+
+                if (cellsUsed.Any(c => (c.Style as XLStyle).Key.Border != defaultStyle.Border))
+                    asRange.Style.Border.SetInsideBorder(XLBorderStyleValues.None);
             }
-
-            var asRange = AsRange();
-            var firstCell = FirstCell();
-            var firstCellStyle = (firstCell.Style as XLStyle).Key;
-            var defaultStyle = XLStyle.Default.Key;
-            var cellsUsed = CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c != firstCell).ToList();
-            cellsUsed.ForEach(c => c.Clear(XLClearOptions.All
-                                        & ~XLClearOptions.MergedRanges
-                                        & ~XLClearOptions.NormalFormats));
-
-            if (firstCellStyle.Alignment != defaultStyle.Alignment)
-                asRange.Style.Alignment = firstCell.Style.Alignment;
-            else
-                cellsUsed.ForEach(c => c.Style.Alignment = firstCell.Style.Alignment);
-
-            if (firstCellStyle.Fill != defaultStyle.Fill)
-                asRange.Style.Fill = firstCell.Style.Fill;
-            else
-                cellsUsed.ForEach(c => c.Style.Fill = firstCell.Style.Fill);
-
-            if (firstCellStyle.Font != defaultStyle.Font)
-                asRange.Style.Font = firstCell.Style.Font;
-            else
-                cellsUsed.ForEach(c => c.Style.Font = firstCell.Style.Font);
-
-            if (firstCellStyle.IncludeQuotePrefix != defaultStyle.IncludeQuotePrefix)
-                asRange.Style.IncludeQuotePrefix = firstCell.Style.IncludeQuotePrefix;
-            else
-                cellsUsed.ForEach(c => c.Style.IncludeQuotePrefix = firstCell.Style.IncludeQuotePrefix);
-
-            if (firstCellStyle.NumberFormat != defaultStyle.NumberFormat)
-                asRange.Style.NumberFormat = firstCell.Style.NumberFormat;
-            else
-                cellsUsed.ForEach(c => c.Style.NumberFormat = firstCell.Style.NumberFormat);
-
-            if (firstCellStyle.Protection != defaultStyle.Protection)
-                asRange.Style.Protection = firstCell.Style.Protection;
-            else
-                cellsUsed.ForEach(c => c.Style.Protection = firstCell.Style.Protection);
-
-            if (cellsUsed.Any(c => (c.Style as XLStyle).Key.Border != defaultStyle.Border))
-                asRange.Style.Border.SetInsideBorder(XLBorderStyleValues.None);
 
             Worksheet.Internals.MergedRanges.Add(asRange);
             return asRange;
