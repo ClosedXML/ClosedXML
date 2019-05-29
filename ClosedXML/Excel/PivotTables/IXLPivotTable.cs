@@ -269,6 +269,8 @@ namespace ClosedXML.Excel
 
         IXLWorksheet Worksheet { get; }
 
-        IXLPivotTableStyleFormats StyleFormats { get; }
+        IXLPivotFormatList Styles { get; }
+        IXLPivotFormat AddRowGrandTotalFormats(XLPivotStyleFormatElement element);
+        IXLPivotFormat AddColumnGrandTotalFormats(XLPivotStyleFormatElement element);
     }
 }

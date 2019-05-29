@@ -1619,6 +1619,27 @@ namespace ClosedXML.Excel
             }
         }
 
+        public static XLPivotTableAxisValues ToClosedXml(this PivotTableAxisValues value)
+        {
+            switch (value)
+            {
+                case PivotTableAxisValues.AxisRow:
+                    return XLPivotTableAxisValues.AxisRow;
+
+                case PivotTableAxisValues.AxisColumn:
+                    return XLPivotTableAxisValues.AxisColumn;
+
+                case PivotTableAxisValues.AxisPage:
+                    return XLPivotTableAxisValues.AxisPage;
+
+                case PivotTableAxisValues.AxisValues:
+                    return XLPivotTableAxisValues.AxisValues;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), "PivotAreaValues value not implemented");
+            }
+        }
+
         #endregion To ClosedXml
     }
 }
