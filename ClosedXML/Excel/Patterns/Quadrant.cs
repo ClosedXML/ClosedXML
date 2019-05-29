@@ -202,7 +202,7 @@ namespace ClosedXML.Excel.Patterns
         /// Remove the range from the quadrant or from child quadrants (recursively).
         /// </summary>
         /// <returns>True if the range was removed, false if it does not exist in the QuadTree.</returns>
-        public bool Remove(IXLAddressable range)
+        public bool Remove(IXLRangeAddress rangeAddress)
         {
             bool res = false;
 
@@ -211,7 +211,7 @@ namespace ClosedXML.Excel.Patterns
             {
                 foreach (var childQuadrant in Children)
                 {
-                    if (childQuadrant.Covers(in rangeAddress))
+                    if (childQuadrant.Covers(rangeAddress))
                     {
                         res |= childQuadrant.Remove(rangeAddress);
                         coveredByChild = true;
@@ -381,7 +381,7 @@ namespace ClosedXML.Excel.Patterns
 
         public bool Remove(T range)
         {
-            return base.Remove(range);
+            return Remove(range.RangeAddress);
         }
         public IEnumerable<T> RemoveAll(Predicate<T> predicate)
         {

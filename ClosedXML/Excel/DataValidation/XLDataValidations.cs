@@ -247,7 +247,7 @@ namespace ClosedXML.Excel
             var entry = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress) range.RangeAddress)
                 .SingleOrDefault(e => Equals(e.RangeAddress, range.RangeAddress));
 
-            _dataValidationIndex.Remove(entry);
+            _dataValidationIndex.Remove(entry.RangeAddress);
         }
 
         /// <summary>
