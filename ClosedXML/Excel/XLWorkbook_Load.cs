@@ -900,8 +900,9 @@ namespace ClosedXML.Excel
 
                     if (fr.PivotArea.Field != null && fr.PivotArea.Field.HasValue)
                     {
-                        var fieldName = pt.SourceRangeFieldsAvailable.ElementAt(fr.PivotArea.Field);
-                        xlpFormat.Field = (XLPivotField) pt.ImplementedFields.Single(f => f.SourceName.Equals(fieldName));
+                        xlpFormat.FieldIndex = fr.PivotArea.Field;
+                        if (xlpFormat.FieldIndex >= 0)
+                            xlpFormat.FieldName = pt.SourceRangeFieldsAvailable.ElementAt(xlpFormat.FieldIndex.Value);
                     }
 
                     var fieldRefs = ((List<IFieldRef>)xlpFormat.FieldReferences);

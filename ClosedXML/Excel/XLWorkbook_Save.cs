@@ -2890,9 +2890,9 @@ namespace ClosedXML.Excel
                 format.PivotArea.Axis = (PivotTableAxisValues)f.Axis.Value;
             }
 
-            if (f.Field != null)
+            if (f.FieldIndex != null)
             {
-                format.PivotArea.Field = f.Field.Offset;
+                format.PivotArea.Field = f.FieldIndex;
             }
 
             foreach (var fr in f.FieldReferences)

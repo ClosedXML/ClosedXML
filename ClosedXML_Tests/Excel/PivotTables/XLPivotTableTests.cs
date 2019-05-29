@@ -248,7 +248,7 @@ namespace ClosedXML_Tests
                     Assert.AreEqual(XLPivotStyleFormatElement.Label, formats[1].AppliesTo, "ForLabel field must be Label");
 
                     // ForHeader
-                    Assert.AreEqual("Month", formats[2].Field.SourceName, "ForHeader field name must be 'Month'");
+                    Assert.AreEqual("Month", formats[2].FieldName, "ForHeader field name must be 'Month'");
                     Assert.AreEqual(XLPivotStyleFormatElement.Label, formats[2].AppliesTo, "ForHeader field must be Label");
                     Assert.AreEqual(false, formats[2].Outline, "ForHeader field Outline must be false");
                     Assert.AreEqual(XLPivotAreaValues.Button, formats[2].AreaType, "ForHeader field AreaType must be false");
@@ -323,7 +323,7 @@ namespace ClosedXML_Tests
 
                         // ForSubtotal
                         Assert.AreEqual("Name", formats[0].FieldReferences.First().FieldName, "ForSubtotal field name must be 'Name'");
-                        Assert.AreEqual(true, formats[0].FieldReferences.First().DefaultSubtotal, "ForSubtotal field DefaultSubtotal must be true");
+                        Assert.AreEqual(true, formats[0].FieldReferences.First().SumSubtotal, "ForSubtotal field DefaultSubtotal must be true");
 
                         // ForLabel
                         Assert.AreEqual("Month", formats[1].FieldReferences.First().FieldName, "ForLabel field name must be 'Month'");
@@ -331,7 +331,7 @@ namespace ClosedXML_Tests
                         Assert.AreEqual(XLPivotStyleFormatElement.Label, formats[1].AppliesTo, "ForLabel field must be Label");
 
                         // ForHeader
-                        Assert.AreEqual("Month", formats[2].Field.SourceName, "ForHeader field name must be 'Month'");
+                        Assert.AreEqual("Month", formats[2].FieldName, "ForHeader field name must be 'Month'");
                         Assert.AreEqual(XLPivotStyleFormatElement.Label, formats[2].AppliesTo, "ForHeader field must be Label");
                         Assert.AreEqual(false, formats[2].Outline, "ForHeader field Outline must be false");
                         Assert.AreEqual(XLPivotAreaValues.Button, formats[2].AreaType, "ForHeader field AreaType must be false");
@@ -803,3 +803,4 @@ namespace ClosedXML_Tests
         }
     }
 }
+

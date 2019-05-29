@@ -9,7 +9,8 @@ namespace ClosedXML.Excel
         IXLStyle Style { get; set; }
         XLPivotStyleFormatElement AppliesTo { get; set; }
         bool Outline { get; set; }
-        IXLPivotField Field { get; set; }
+        string FieldName { get; set; }
+        int? FieldIndex { get; set; }
         XLPivotTableAxisValues? Axis { get; }
         XLPivotAreaValues AreaType { get; }
         bool GrandRow { get; }

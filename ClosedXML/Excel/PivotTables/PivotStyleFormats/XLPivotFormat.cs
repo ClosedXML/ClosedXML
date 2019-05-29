@@ -13,7 +13,8 @@ namespace ClosedXML.Excel
         public IXLStyle Style { get; set; }
         public XLPivotStyleFormatElement AppliesTo { get; set; } = XLPivotStyleFormatElement.Data;
         public bool Outline { get; set; } = true;
-        public IXLPivotField Field { get; set; }
+        public string FieldName { get; set; }
+        public int? FieldIndex { get; set; }
         public XLPivotTableAxisValues? Axis { get; set; } = null;
         public XLPivotAreaValues AreaType { get; set; } = XLPivotAreaValues.Normal;
         public bool GrandRow { get; set; } = false;
@@ -28,13 +29,13 @@ namespace ClosedXML.Excel
 
         public void Build(XLPivotTable pt, XLWorkbook.SaveContext context)
         {
-            if (Axis.HasValue && Field != null)
+            if (Axis.HasValue && !string.IsNullOrWhiteSpace(FieldName))
             {
-                if (pt.ColumnLabels.Contains(Field))
+                if (pt.ColumnLabels.Contains(FieldName))
                     Axis = XLPivotTableAxisValues.AxisColumn;
-                else if (pt.RowLabels.Contains(Field))
+                else if (pt.RowLabels.Contains(FieldName))
                     Axis = XLPivotTableAxisValues.AxisRow;
-                else if (pt.ReportFilters.Contains(Field))
+                else if (pt.ReportFilters.Contains(FieldName))
                     Axis = XLPivotTableAxisValues.AxisPage;
                 else Axis = XLPivotTableAxisValues.AxisValues;
             }
@@ -174,7 +175,8 @@ namespace ClosedXML.Excel
             format.AppliesTo = XLPivotStyleFormatElement.Label;
             format.Outline = false;
             format.AreaType = XLPivotAreaValues.Button;
-            format.Field = _field;
+            format.FieldName = _field.SourceName;
+            format.FieldIndex = _field.Offset;
             format.Axis = XLPivotTableAxisValues.AxisValues;
             return format;
         }
