@@ -2502,7 +2502,8 @@ namespace ClosedXML.Excel
                 if (String.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var rangeAddress in txt.Split(' '))
                 {
-                    var dvt = ws.Range(rangeAddress).SetDataValidation();
+                    var dvt = new XLDataValidation(ws.Range(rangeAddress));
+                    ws.DataValidations.Add(dvt, skipIntersectionsCheck: true);
                     if (dvs.AllowBlank != null) dvt.IgnoreBlanks = dvs.AllowBlank;
                     if (dvs.ShowDropDown != null) dvt.InCellDropdown = !dvs.ShowDropDown.Value;
                     if (dvs.ShowErrorMessage != null) dvt.ShowErrorMessage = dvs.ShowErrorMessage;

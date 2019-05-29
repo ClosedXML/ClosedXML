@@ -28,6 +28,11 @@ namespace ClosedXML.Excel
 
         public IXLDataValidation Add(IXLDataValidation dataValidation)
         {
+            return Add(dataValidation, skipIntersectionsCheck: false);
+        }
+
+        internal IXLDataValidation Add(IXLDataValidation dataValidation, bool skipIntersectionsCheck)
+        {
             if (dataValidation == null) throw new ArgumentNullException(nameof(dataValidation));
 
             XLDataValidation xlDataValidation;
@@ -38,7 +43,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                xlDataValidation = (XLDataValidation) dataValidation;
+                xlDataValidation = (XLDataValidation)dataValidation;
             }
 
             xlDataValidation.RangeAdded += OnRangeAdded;
@@ -46,14 +51,13 @@ namespace ClosedXML.Excel
 
             foreach (var range in xlDataValidation.Ranges)
             {
-                ProcessRangeAdded(range, xlDataValidation);
+                ProcessRangeAdded(range, xlDataValidation, skipIntersectionsCheck);
             }
 
             _dataValidations.Add(xlDataValidation);
 
             return xlDataValidation;
         }
-
 
         public void Delete(Predicate<IXLDataValidation> predicate)
         {
@@ -199,17 +203,20 @@ namespace ClosedXML.Excel
 
         private void OnRangeAdded(object sender, RangeEventArgs e)
         {
-            ProcessRangeAdded(e.Range, sender as XLDataValidation);
+            ProcessRangeAdded(e.Range, sender as XLDataValidation, skipIntersectionCheck: false);
         }
         private void OnRangeRemoved(object sender, RangeEventArgs e)
         {
             ProcessRangeRemoved(e.Range);
         }
 
-
-        private void ProcessRangeAdded(IXLRange range, XLDataValidation dataValidation)
+        private void ProcessRangeAdded(IXLRange range, XLDataValidation dataValidation, bool skipIntersectionCheck)
         {
-            SplitExistingRanges(range.RangeAddress);
+            if (!skipIntersectionCheck)
+            {
+                SplitExistingRanges(range.RangeAddress);
+            }
+
             var indexEntry = new XLDataValidationIndexEntry(range.RangeAddress, dataValidation);
             _dataValidationIndex.Add(indexEntry);
         }
