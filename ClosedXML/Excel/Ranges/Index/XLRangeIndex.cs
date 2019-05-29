@@ -111,19 +111,19 @@ namespace ClosedXML.Excel.Ranges.Index
             return _quadTree.GetIntersectedRanges(rangeAddress).Any();
         }
 
-        public bool Remove(IXLAddressable range)
+        public bool Remove(IXLRangeAddress rangeAddress)
         {
-            if (range == null)
-                throw new ArgumentNullException(nameof(range));
+            if (rangeAddress == null)
+                throw new ArgumentNullException(nameof(rangeAddress));
 
-            CheckWorksheet(range.RangeAddress.Worksheet);
+            CheckWorksheet(rangeAddress.Worksheet);
 
             if (_quadTree == null)
             {
-                return _rangeList.RemoveAll(r => Equals(r.RangeAddress, range.RangeAddress)) > 0;
+                return _rangeList.RemoveAll(r => Equals(r.RangeAddress, rangeAddress)) > 0;
             }
 
-            return _quadTree.Remove(range);
+            return _quadTree.Remove(rangeAddress);
         }
 
         public int RemoveAll(Predicate<IXLAddressable> predicate = null)
