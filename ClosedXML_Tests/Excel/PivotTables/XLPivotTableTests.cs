@@ -674,6 +674,17 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void PivotSubtotalsLoadingTest()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotSubtotalsSource\input.xlsx")))
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\PivotSubtotalsSource\input.xlsx");
+        }
+
+        [Test]
         public void ClearPivotTableTenderedTange()
         {
             // https://github.com/ClosedXML/ClosedXML/pull/856

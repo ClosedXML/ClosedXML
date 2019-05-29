@@ -632,9 +632,11 @@ namespace ClosedXML.Excel
                             }
 
                             // Subtotal configuration
-                            if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && pf.SubtotalTop.Value))
+                            if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => (pf.DefaultSubtotal == null || pf.DefaultSubtotal.Value)
+                                                                                              && (pf.SubtotalTop == null || pf.SubtotalTop == true)))
                                 pt.SetSubtotals(XLPivotSubtotals.AtTop);
-                            else if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => pf.SubtotalTop != null && pf.SubtotalTop.HasValue && !pf.SubtotalTop.Value))
+                            else if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => (pf.DefaultSubtotal == null || pf.DefaultSubtotal.Value)
+                                                                                                   && (pf.SubtotalTop != null && pf.SubtotalTop.Value == false)))
                                 pt.SetSubtotals(XLPivotSubtotals.AtBottom);
                             else
                                 pt.SetSubtotals(XLPivotSubtotals.DoNotShow);

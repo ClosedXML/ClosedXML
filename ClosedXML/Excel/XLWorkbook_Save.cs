@@ -2548,7 +2548,6 @@ namespace ClosedXML.Excel
                         break;
 
                     case XLPivotSubtotals.AtBottom:
-                        pf.DefaultSubtotal = true;
                         pf.SubtotalTop = false;
                         break;
 
