@@ -1,13 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
     internal class XLConditionalFormats : IXLConditionalFormats
     {
         private readonly List<IXLConditionalFormat> _conditionalFormats = new List<IXLConditionalFormat>();
+
+        private static readonly List<XLConditionalFormatType> _conditionalFormatTypesExcludedFromConsolidation = new List<XLConditionalFormatType>()
+        {
+            XLConditionalFormatType.DataBar,
+            XLConditionalFormatType.ColorScale,
+            XLConditionalFormatType.IconSet,
+            XLConditionalFormatType.Top10,
+            XLConditionalFormatType.AboveAverage,
+            XLConditionalFormatType.IsDuplicate,
+            XLConditionalFormatType.IsUnique
+        };
+
         public void Add(IXLConditionalFormat conditionalFormat)
         {
             _conditionalFormats.Add(conditionalFormat);
@@ -42,66 +53,69 @@ namespace ClosedXML.Excel
             {
                 var item = formats.First();
 
-                var rangesToJoin = new XLRanges();
-                item.Ranges.ForEach(r => rangesToJoin.Add(r));
-                var firstRange = item.Ranges.First();
-                var skippedRanges = new XLRanges();
-                Func<IXLConditionalFormat, bool> IsSameFormat = f =>
-                    f != item && f.Ranges.First().Worksheet.Position == firstRange.Worksheet.Position &&
-                    XLConditionalFormat.NoRangeComparer.Equals(f, item);
-
-                //Get the top left corner of the rectangle covering all the ranges
-                var baseAddress = new XLAddress(
-                    item.Ranges.Select(r => r.RangeAddress.FirstAddress.RowNumber).Min(),
-                    item.Ranges.Select(r => r.RangeAddress.FirstAddress.ColumnNumber).Min(),
-                    false, false);
-                var baseCell = firstRange.Worksheet.Cell(baseAddress) as XLCell;
-
-                int i = 1;
-                bool stop = false;
-                List<IXLConditionalFormat> similarFormats = new List<IXLConditionalFormat>();
-                do
+                if (!_conditionalFormatTypesExcludedFromConsolidation.Contains(item.ConditionalFormatType))
                 {
-                    stop = (i >= formats.Count);
+                    var rangesToJoin = new XLRanges();
+                    item.Ranges.ForEach(r => rangesToJoin.Add(r));
+                    var firstRange = item.Ranges.First();
+                    var skippedRanges = new XLRanges();
+                    Func<IXLConditionalFormat, bool> IsSameFormat = f =>
+                        f != item && f.Ranges.First().Worksheet.Position == firstRange.Worksheet.Position &&
+                        XLConditionalFormat.NoRangeComparer.Equals(f, item);
 
-                    if (!stop)
+                    //Get the top left corner of the rectangle covering all the ranges
+                    var baseAddress = new XLAddress(
+                        item.Ranges.Select(r => r.RangeAddress.FirstAddress.RowNumber).Min(),
+                        item.Ranges.Select(r => r.RangeAddress.FirstAddress.ColumnNumber).Min(),
+                        false, false);
+                    var baseCell = firstRange.Worksheet.Cell(baseAddress) as XLCell;
+
+                    int i = 1;
+                    bool stop = false;
+                    List<IXLConditionalFormat> similarFormats = new List<IXLConditionalFormat>();
+                    do
                     {
-                        var nextFormat = formats[i];
+                        stop = (i >= formats.Count);
 
-                        var intersectsSkipped =
-                            skippedRanges.Any(left => nextFormat.Ranges.GetIntersectedRanges(left.RangeAddress).Any());
-
-                        var isSameFormat = IsSameFormat(nextFormat);
-
-                        if (isSameFormat && !intersectsSkipped)
+                        if (!stop)
                         {
-                            similarFormats.Add(nextFormat);
-                            nextFormat.Ranges.ForEach(r => rangesToJoin.Add(r));
+                            var nextFormat = formats[i];
+
+                            var intersectsSkipped =
+                                skippedRanges.Any(left => nextFormat.Ranges.GetIntersectedRanges(left.RangeAddress).Any());
+
+                            var isSameFormat = IsSameFormat(nextFormat);
+
+                            if (isSameFormat && !intersectsSkipped)
+                            {
+                                similarFormats.Add(nextFormat);
+                                nextFormat.Ranges.ForEach(r => rangesToJoin.Add(r));
+                            }
+                            else if (rangesToJoin.Any(left => nextFormat.Ranges.GetIntersectedRanges(left.RangeAddress).Any()) ||
+                                     intersectsSkipped)
+                            {
+                                // if we reached the rule intersecting any of captured ranges stop for not breaking the priorities
+                                stop = true;
+                            }
+
+                            if (!isSameFormat)
+                                nextFormat.Ranges.ForEach(r => skippedRanges.Add(r));
                         }
-                        else if (rangesToJoin.Any(left => nextFormat.Ranges.GetIntersectedRanges(left.RangeAddress).Any()) ||
-                                 intersectsSkipped)
-                        {
-                            // if we reached the rule intersecting any of captured ranges stop for not breaking the priorities
-                            stop = true;
-                        }
 
-                        if (!isSameFormat)
-                            nextFormat.Ranges.ForEach(r => skippedRanges.Add(r));
-                    }
+                        i++;
+                    } while (!stop);
 
-                    i++;
-                } while (!stop);
+                    var consRanges = rangesToJoin.Consolidate();
+                    item.Ranges.RemoveAll();
+                    consRanges.ForEach(r => item.Ranges.Add(r));
 
-                var consRanges = rangesToJoin.Consolidate();
-                item.Ranges.RemoveAll();
-                consRanges.ForEach(r => item.Ranges.Add(r));
+                    var targetCell = item.Ranges.First().FirstCell() as XLCell;
+                    (item as XLConditionalFormat).AdjustFormulas(baseCell, targetCell);
 
-                var targetCell = item.Ranges.First().FirstCell() as XLCell;
-                (item as XLConditionalFormat).AdjustFormulas(baseCell, targetCell);
+                    similarFormats.ForEach(cf => formats.Remove(cf));
+                }
 
                 _conditionalFormats.Add(item);
-
-                similarFormats.ForEach(cf => formats.Remove(cf));
                 formats.Remove(item);
             }
         }

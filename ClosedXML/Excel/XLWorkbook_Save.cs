@@ -304,7 +304,7 @@ namespace ClosedXML.Excel
                     GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet, context);
                 }
 
-                GenerateWorksheetPartContent(worksheetPart, worksheet, options.EvaluateFormulasBeforeSaving, context);
+                GenerateWorksheetPartContent(worksheetPart, worksheet, options, context);
 
                 if (worksheet.PivotTables.Any())
                 {
@@ -4473,9 +4473,12 @@ namespace ClosedXML.Excel
         #region GenerateWorksheetPartContent
 
         private static void GenerateWorksheetPartContent(
-            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, bool evaluateFormulae, SaveContext context)
+            WorksheetPart worksheetPart, XLWorksheet xlWorksheet, SaveOptions options, SaveContext context)
         {
-            ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+            if (options.ConsolidateConditionalFormatRanges)
+            {
+                ((XLConditionalFormats)xlWorksheet.ConditionalFormats).Consolidate();
+            }
 
             #region Worksheet
 
@@ -5067,7 +5070,7 @@ namespace ClosedXML.Excel
                                     cell.CellFormula.Text = formula;
                                 }
 
-                                if (!evaluateFormulae || xlCell.CachedValue == null || xlCell.NeedsRecalculation)
+                                if (!options.EvaluateFormulasBeforeSaving || xlCell.CachedValue == null || xlCell.NeedsRecalculation)
                                     cell.CellValue = null;
                                 else
                                 {
@@ -5103,7 +5106,7 @@ namespace ClosedXML.Excel
                                 cell.DataType = xlCell.DataType == XLDataType.DateTime ? null : GetCellValueType(xlCell);
                             }
 
-                            if (evaluateFormulae || field != null || !xlCell.HasFormula)
+                            if (options.EvaluateFormulasBeforeSaving || field != null || !xlCell.HasFormula)
                                 SetCellValue(xlCell, field, cell);
                         }
                     }
@@ -5359,7 +5362,11 @@ namespace ClosedXML.Excel
                 var dataValidations = worksheetPart.Worksheet.Elements<DataValidations>().First();
                 cm.SetElement(XLWorksheetContents.DataValidations, dataValidations);
                 dataValidations.RemoveAllChildren<DataValidation>();
-                xlWorksheet.DataValidations.Consolidate();
+
+                if (options.ConsolidateDataValidationRanges)
+                {
+                    xlWorksheet.DataValidations.Consolidate();
+                }
 
                 foreach (var dv in xlWorksheet.DataValidations)
                 {
