@@ -11,5 +11,11 @@ namespace ClosedXML_Tests.Examples
         {
             TestHelper.RunTestExample<PivotTables>(@"PivotTables\PivotTables.xlsx");
         }
+
+        [Test]
+        public void PivotTableStyles()
+        {
+            TestHelper.RunTestExample<PivotTableStyles>(@"PivotTables\PivotTableStyles.xlsx");
+        }
     }
 }
