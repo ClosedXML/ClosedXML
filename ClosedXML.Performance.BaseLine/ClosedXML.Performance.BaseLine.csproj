@@ -13,4 +13,8 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClosedXML.Performance.Common\ClosedXML.Performance.Common.csproj" />
+  </ItemGroup>
+
 </Project>

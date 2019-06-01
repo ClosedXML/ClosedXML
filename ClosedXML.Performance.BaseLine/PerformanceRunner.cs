@@ -13,8 +13,19 @@ namespace ClosedXML.Performance.BaseLine
 namespace ClosedXML.Performance.Current
 #endif
 {
-    public class PerformanceRunner
+    public class PerformanceRunner : IPerformanceRunner
     {
+        public void CreateAndSaveEmptyWorkbook()
+        {
+            using (var ms = new MemoryStream())
+            using (var wb = new XLWorkbook())
+            {
+                wb.AddWorksheet();
+                wb.SaveAs(ms);
+            }
+        }
+
+
         public static void TimeAction(Action action)
         {
             var stopwatch = Stopwatch.StartNew();

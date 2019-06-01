@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClosedXML.Performance.Common\ClosedXML.Performance.Common.csproj" />
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
   </ItemGroup>
 
