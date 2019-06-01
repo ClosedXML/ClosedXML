@@ -1,27 +1,39 @@
-using System;
-using System.Linq;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 using ClosedXML.Performance.Tests.Benchmarks;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML.Performance.Tests
 {
     public class PerformanceTests
     {
-        private double Tolerance = 0.05;
+        /// <summary>
+        /// For start, let's assume the performance should not degrade for more that 10%.
+        /// </summary>
+        private const double Tolerance = 0.10;
 
-        [Test]
-        public void CreateAndSaveWorkbook()
+        [TestCase(typeof(CreateAndSaveWorkbook))]
+        //Add other classes here
+        public void CreateAndSaveWorkbook(Type benchmarkClass)
         {
-            var res = BenchmarkRunner.Run<CreateAndSaveWorkbook>();
+            var res = BenchmarkRunner.Run(benchmarkClass);
+            AssertBenchmarkResultsFitTolerance(res);
+        }
 
-            Assert.False(res.HasCriticalValidationErrors, string.Join(Environment.NewLine, res.ValidationErrors));
-            Assert.True(res.Reports.All(r => r.Success), "Not all of the runs finished successfully");
+        #region Private Methods
 
-            var baseLineCase = res.BenchmarksCases.Single(c => c.Descriptor.Baseline);
-            var baseReport = res.Reports.Single(r => r.BenchmarkCase == baseLineCase);
-            var otherReports = res.Reports.Where(r => r != baseReport);
+        private void AssertBenchmarkResultsFitTolerance(Summary benchmarkResult)
+        {
+            Assert.False(benchmarkResult.HasCriticalValidationErrors,
+                string.Join(Environment.NewLine, benchmarkResult.ValidationErrors));
+
+            Assert.True(benchmarkResult.Reports.All(r => r.Success), "Not all of the runs finished successfully");
+
+            var baseLineCase = benchmarkResult.BenchmarksCases.Single(c => c.Descriptor.Baseline);
+            var baseReport = benchmarkResult.Reports.Single(r => r.BenchmarkCase == baseLineCase);
+            var otherReports = benchmarkResult.Reports.Where(r => r != baseReport);
 
             foreach (var report in otherReports)
             {
@@ -49,5 +61,7 @@ namespace ClosedXML.Performance.Tests
                 }
             }
         }
+
+        #endregion Private Methods
     }
 }
