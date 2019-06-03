@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ClosedXML_Tests.Excel.Comments
@@ -102,6 +104,62 @@ namespace ClosedXML_Tests.Excel.Comments
                 ws.Row(1).Delete();
 
                 validate(ws.Cell("C2"));
+            }
+        }
+
+        [Test]
+        public void EnsureUnaffectedCommentAndVmlPartIdsAndUris()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CommentAndButton.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                string commentPartId;
+                string commentPartUri;
+
+                string vmlPartId;
+                string vmlPartUri;
+
+                using (var ssd = SpreadsheetDocument.Open(stream, isEditable: false))
+                {
+                    var wbp = ssd.GetPartsOfType<WorkbookPart>().Single();
+                    var wsp = wbp.GetPartsOfType<WorksheetPart>().Last();
+
+                    var wscp = wsp.GetPartsOfType<WorksheetCommentsPart>().Single();
+                    commentPartId = wsp.GetIdOfPart(wscp);
+                    commentPartUri = wscp.Uri.ToString();
+
+                    var vmlp = wsp.GetPartsOfType<VmlDrawingPart>().Single();
+                    vmlPartId = wsp.GetIdOfPart(vmlp);
+                    vmlPartUri = vmlp.Uri.ToString();
+                }
+
+                stream.Position = 0;
+                stream.CopyTo(ms);
+                ms.Position = 0;
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    Assert.IsTrue(ws.FirstCell().HasComment);
+
+                    wb.SaveAs(ms);
+                }
+
+                ms.Position = 0;
+
+                using (var ssd = SpreadsheetDocument.Open(ms, isEditable: false))
+                {
+                    var wbp = ssd.GetPartsOfType<WorkbookPart>().Single();
+                    var wsp = wbp.GetPartsOfType<WorksheetPart>().Last();
+
+                    var wscp = wsp.GetPartsOfType<WorksheetCommentsPart>().Single();
+                    Assert.AreEqual(commentPartUri, wscp.Uri.ToString());
+                    Assert.AreEqual(commentPartId, wsp.GetIdOfPart(wscp));
+
+                    var vmlp = wsp.GetPartsOfType<VmlDrawingPart>().Single();
+                    Assert.AreEqual(vmlPartUri, vmlp.Uri.ToString());
+                    Assert.AreEqual(vmlPartId, wsp.GetIdOfPart(vmlp));
+                }
             }
         }
     }
