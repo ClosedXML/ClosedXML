@@ -1437,7 +1437,7 @@ namespace ClosedXML.Excel
         {
             var location = anchor.Value.Split(',');
             drawing.Position.Column = int.Parse(location[0]) + 1;
-            drawing.Position.ColumnOffset = Double.Parse(location[1], CultureInfo.InvariantCulture) / 7.2;
+            drawing.Position.ColumnOffset = Double.Parse(location[1], CultureInfo.InvariantCulture) / 7.5;
             drawing.Position.Row = int.Parse(location[2]) + 1;
             drawing.Position.RowOffset = Double.Parse(location[3], CultureInfo.InvariantCulture);
         }
