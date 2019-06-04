@@ -161,12 +161,12 @@ namespace ClosedXML.Excel
             {
                 if (_comment == null)
                 {
-                    // MS Excel uses Tahoma 8 Swiss no matter what current style font
+                    // MS Excel uses Tahoma 9 Swiss no matter what current style font
                     // var style = GetStyleForRead();
                     var defaultFont = new XLFont
                     {
                         FontName = "Tahoma",
-                        FontSize = 8,
+                        FontSize = 9,
                         FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
                     };
                     _comment = new XLComment(this, defaultFont);
