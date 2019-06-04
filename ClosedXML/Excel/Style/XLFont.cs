@@ -7,6 +7,22 @@ namespace ClosedXML.Excel
     {
         #region Static members
 
+        public static IXLFontBase DefaultCommentFont
+        {
+            get
+            {
+                // MS Excel uses Tahoma 9 Swiss no matter what current style font
+                var defaultCommentFont = new XLFont
+                {
+                    FontName = "Tahoma",
+                    FontSize = 9,
+                    FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss
+                };
+
+                return defaultCommentFont;
+            }
+        }
+
         internal static XLFontKey GenerateKey(IXLFontBase defaultFont)
         {
             if (defaultFont == null)

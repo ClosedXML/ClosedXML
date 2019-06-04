@@ -6,6 +6,11 @@ namespace ClosedXML.Excel
     {
         private XLCell _cell;
 
+        public XLComment(XLCell cell)
+            : this(cell, XLFont.DefaultCommentFont)
+        {
+        }
+
         public XLComment(XLCell cell, IXLFontBase defaultFont)
             : base(defaultFont)
         {
