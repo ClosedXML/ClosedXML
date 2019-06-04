@@ -3440,16 +3440,21 @@ namespace ClosedXML.Excel
             }
             if (a.AutomaticSize)
                 sb.Append("mso-fit-shape-to-text:t;");
-            var retVal = new Vml.TextBox { Style = sb.ToString() };
+
+            var tb = new Vml.TextBox();
+
+            if (sb.Length > 0)
+                tb.Style = sb.ToString();
+
             var dm = ds.Margins;
             if (!dm.Automatic)
-                retVal.Inset = String.Concat(
+                tb.Inset = String.Concat(
                     dm.Left.ToInvariantString(), "in,",
                     dm.Top.ToInvariantString(), "in,",
                     dm.Right.ToInvariantString(), "in,",
                     dm.Bottom.ToInvariantString(), "in");
 
-            return retVal;
+            return tb;
         }
 
         private static Anchor GetAnchor(XLCell cell)

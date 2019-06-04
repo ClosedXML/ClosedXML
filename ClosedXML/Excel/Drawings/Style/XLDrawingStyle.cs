@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
                     .ColorsAndLines.SetLineTransparency(1)
                     .Alignment.SetHorizontal(XLDrawingHorizontalAlignment.Left)
                     .Alignment.SetVertical(XLDrawingVerticalAlignment.Top)
-                    .Alignment.SetDirection(XLDrawingTextDirection.Context)
+                    .Alignment.SetDirection(XLDrawingTextDirection.LeftToRight)
                     .Alignment.SetOrientation(XLDrawingTextOrientation.LeftToRight)
                     .Properties.SetPositioning(XLDrawingAnchor.Absolute)
                     .Protection.SetLocked()
