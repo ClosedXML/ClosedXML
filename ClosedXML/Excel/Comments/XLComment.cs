@@ -6,15 +6,10 @@ namespace ClosedXML.Excel
     {
         private XLCell _cell;
 
-        public XLComment(XLCell cell)
-            : this(cell, XLFont.DefaultCommentFont)
+        public XLComment(XLCell cell, IXLFontBase defaultFont = null, int? shapeId = null)
+            : base(defaultFont ?? XLFont.DefaultCommentFont)
         {
-        }
-
-        public XLComment(XLCell cell, IXLFontBase defaultFont)
-            : base(defaultFont)
-        {
-            Initialize(cell);
+            Initialize(cell, shapeId: shapeId);
         }
 
         public XLComment(XLCell cell, XLFormattedText<IXLComment> defaultComment, IXLFontBase defaultFont, IXLDrawingStyle style)
@@ -145,13 +140,11 @@ namespace ClosedXML.Excel
 
         #endregion IXLDrawing
 
-        private void Initialize(XLCell cell)
+        private void Initialize(XLCell cell, IXLDrawingStyle style = null, int? shapeId = null)
         {
-            Initialize(cell, XLDrawingStyle.DefaultCommentStyle);
-        }
+            style = style ?? XLDrawingStyle.DefaultCommentStyle;
+            shapeId = shapeId ?? cell.Worksheet.Workbook.ShapeIdManager.GetNext();
 
-        private void Initialize(XLCell cell, IXLDrawingStyle style)
-        {
             Author = cell.Worksheet.Author;
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
@@ -203,7 +196,7 @@ namespace ClosedXML.Excel
                 .Protection.SetLockText(style.Protection.LockText);
 
             _cell = cell;
-            ShapeId = cell.Worksheet.Workbook.ShapeIdManager.GetNext();
+            ShapeId = shapeId.Value;
         }
     }
 }

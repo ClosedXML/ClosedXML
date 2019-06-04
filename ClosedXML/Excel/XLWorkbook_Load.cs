@@ -400,24 +400,35 @@ namespace ClosedXML.Excel
                 if (worksheetPart.WorksheetCommentsPart != null)
                 {
                     var root = worksheetPart.WorksheetCommentsPart.Comments;
-                    var authors = root.GetFirstChild<Authors>().ChildElements;
-                    var comments = root.GetFirstChild<CommentList>().ChildElements;
+                    var authors = root.GetFirstChild<Authors>().ChildElements.OfType<Author>().ToList();
+                    var comments = root.GetFirstChild<CommentList>().ChildElements.OfType<Comment>().ToList();
 
                     // **** MAYBE FUTURE SHAPE SIZE SUPPORT
-                    XDocument xdoc = GetCommentVmlFile(worksheetPart);
+                    var shapes = GetCommentShapes(worksheetPart);
 
-                    foreach (Comment c in comments)
+                    for (var i = 0; i < comments.Count; i++)
                     {
+                        var c = comments[i];
+
+                        XElement shape = null;
+                        if (i < shapes.Count)
+                            shape = shapes[i];
+
                         // find cell by reference
                         var cell = ws.Cell(c.Reference);
 
-                        var xlComment = cell.Comment;
+                        var shapeIdString = shape?.Attribute("id")?.Value;
+                        if (shapeIdString?.StartsWith("_x0000_s") ?? false)
+                            shapeIdString = shapeIdString.Substring(8);
+
+                        int? shapeId = int.TryParse(shapeIdString, out int sid) ? (int?)sid : null;
+                        var xlComment = cell.CreateComment(shapeId);
+
                         xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
-                        //xlComment.ShapeId = (Int32)c.ShapeId.Value;
-                        //ShapeIdManager.Add(xlComment.ShapeId);
+                        ShapeIdManager.Add(xlComment.ShapeId);
 
                         var runs = c.GetFirstChild<CommentText>().Elements<Run>();
-                        foreach (Run run in runs)
+                        foreach (var run in runs)
                         {
                             var runProperties = run.RunProperties;
                             String text = run.Text.InnerText.FixNewLines();
@@ -425,25 +436,24 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
-                        XElement shape = GetCommentShape(xdoc);
+                        if (shape != null)
+                        {
+                            LoadShapeProperties(xlComment, shape);
 
-                        LoadShapeProperties<IXLComment>(xlComment, shape);
+                            var clientData = shape.Elements().First(e => e.Name.LocalName == "ClientData");
+                            LoadClientData(xlComment, clientData);
 
-                        var clientData = shape.Elements().First(e => e.Name.LocalName == "ClientData");
-                        LoadClientData<IXLComment>(xlComment, clientData);
+                            var textBox = shape.Elements().First(e => e.Name.LocalName == "textbox");
+                            LoadTextBox(xlComment, textBox);
 
-                        var textBox = shape.Elements().First(e => e.Name.LocalName == "textbox");
-                        LoadTextBox<IXLComment>(xlComment, textBox);
+                            var alt = shape.Attribute("alt");
+                            if (alt != null) xlComment.Style.Web.SetAlternateText(alt.Value);
 
-                        var alt = shape.Attribute("alt");
-                        if (alt != null) xlComment.Style.Web.SetAlternateText(alt.Value);
+                            LoadColorsAndLines(xlComment, shape);
 
-                        LoadColorsAndLines<IXLComment>(xlComment, shape);
-
-                        //var insetmode = (string)shape.Attributes().First(a=> a.Name.LocalName == "insetmode");
-                        //xlComment.Style.Margins.Automatic = insetmode != null && insetmode.Equals("auto");
-
-                        shape.Remove();
+                            //var insetmode = (string)shape.Attributes().First(a=> a.Name.LocalName == "insetmode");
+                            //xlComment.Style.Margins.Automatic = insetmode != null && insetmode.Equals("auto");
+                        }
                     }
                 }
 
@@ -1186,39 +1196,37 @@ namespace ClosedXML.Excel
 
         #region Comment Helpers
 
-        private XDocument GetCommentVmlFile(WorksheetPart wsPart)
+        private static IList<XElement> GetCommentShapes(WorksheetPart worksheetPart)
         {
-            XDocument xdoc = null;
-
-            foreach (var vmlPart in wsPart.VmlDrawingParts)
+            // Cannot get this to return Vml.Shape elements
+            foreach (var vmlPart in worksheetPart.VmlDrawingParts)
             {
-                xdoc = XDocumentExtensions.Load(vmlPart.GetStream(FileMode.Open));
+                using (var stream = vmlPart.GetStream(FileMode.Open))
+                {
+                    var xdoc = XDocumentExtensions.Load(stream);
+                    if (xdoc == null)
+                        continue;
 
-                //Probe for comments
-                if (xdoc?.Root == null) continue;
-                var shape = GetCommentShape(xdoc);
-                if (shape != null) break;
+                    var root = xdoc.Root.Element("xml") ?? xdoc.Root;
+
+                    if (root == null)
+                        continue;
+
+                    var shapes = root
+                        .Elements(XName.Get("shape", "urn:schemas-microsoft-com:vml"))
+                        .Where(e => new[]
+                        {
+                            "#" + XLConstants.Comment.ShapeTypeId ,
+                            "#" + XLConstants.Comment.AlternateShapeTypeId
+                        }.Contains(e.Attribute("type")?.Value))
+                        .ToList();
+
+                    if (shapes != null)
+                        return shapes;
+                }
             }
 
-            if (xdoc == null) throw new ArgumentException("Could not load comments file");
-            return xdoc;
-        }
-
-        private static XElement GetCommentShape(XDocument xdoc)
-        {
-            var xml = xdoc.Root.Element("xml");
-
-            XElement shape;
-            if (xml != null)
-                shape =
-                    xml.Elements().FirstOrDefault(e => (string)e.Attribute("type") == XLConstants.Comment.ShapeTypeId);
-            else
-                shape = xdoc.Root.Elements().FirstOrDefault(e =>
-                                                            (string)e.Attribute("type") ==
-                                                            XLConstants.Comment.ShapeTypeId ||
-                                                            (string)e.Attribute("type") ==
-                                                            XLConstants.Comment.AlternateShapeTypeId);
-            return shape;
+            throw new ArgumentException("Could not load comments file");
         }
 
         #endregion Comment Helpers
@@ -1446,14 +1454,12 @@ namespace ClosedXML.Excel
 
         private void LoadShapeProperties<T>(IXLDrawing<T> xlDrawing, XElement shape)
         {
-            var attStyle = shape.Attribute("style");
-            if (attStyle == null) return;
+            if (shape.Attribute("style") == null)
+                return;
 
-            var style = attStyle.Value;
-            var attributes = style.Split(';');
-            foreach (String pair in attributes)
+            foreach (var attributePair in shape.Attribute("style").Value.Split(';'))
             {
-                var split = pair.Split(':');
+                var split = attributePair.Split(':');
                 if (split.Length != 2) continue;
 
                 var attribute = split[0].Trim().ToLower();

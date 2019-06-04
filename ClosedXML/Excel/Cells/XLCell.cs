@@ -161,11 +161,17 @@ namespace ClosedXML.Excel
             {
                 if (_comment == null)
                 {
-                    _comment = new XLComment(this);
+                    CreateComment();
                 }
 
                 return _comment;
             }
+        }
+
+        internal XLComment CreateComment(int? shapeId = null)
+        {
+            _comment = new XLComment(this, shapeId: shapeId);
+            return _comment;
         }
 
         #region IXLCell Members
