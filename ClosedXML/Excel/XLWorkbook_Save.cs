@@ -3148,7 +3148,7 @@ namespace ClosedXML.Excel
             var shape = new Vml.Shape(
                 fill,
                 stroke,
-                new Vml.Shadow { On = true, Color = "black", Obscured = true },
+                new Vml.Shadow { Color = "black", Obscured = true },
                 new Vml.Path { ConnectionPointType = ConnectValues.None },
                 textBox,
                 new ClientData(
