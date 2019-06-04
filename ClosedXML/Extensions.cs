@@ -259,7 +259,14 @@ namespace ClosedXML.Excel
         {
             using (XmlReader reader = XmlReader.Create(stream))
             {
-                return XDocument.Load(reader);
+                try
+                {
+                    return XDocument.Load(reader);
+                }
+                catch (XmlException)
+                {
+                    return null;
+                }
             }
         }
     }

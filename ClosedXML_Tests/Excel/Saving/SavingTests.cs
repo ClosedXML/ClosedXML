@@ -31,6 +31,7 @@ namespace ClosedXML_Tests.Excel.Saving
         [Test]
         public void CanSuccessfullySaveFileMultipleTimes()
         {
+            using (var memoryStream = new MemoryStream())
             using (var wb = new XLWorkbook())
             {
                 var sheet = wb.Worksheets.Add("TestSheet");
@@ -38,17 +39,13 @@ namespace ClosedXML_Tests.Excel.Saving
                 // Comments might cause duplicate VmlDrawing Id's - ensure it's tested:
                 sheet.Cell(1, 1).Comment.AddText("abc");
 
-                var memoryStream = new MemoryStream();
-                wb.SaveAs(memoryStream, true);
+                wb.SaveAs(memoryStream, validate: true);
 
                 for (int i = 1; i <= 3; i++)
                 {
                     sheet.Cell(i, 1).Value = "test" + i;
-                    wb.SaveAs(memoryStream, true);
+                    wb.SaveAs(memoryStream, validate: true);
                 }
-
-                memoryStream.Close();
-                memoryStream.Dispose();
             }
         }
 
