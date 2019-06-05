@@ -2394,11 +2394,10 @@ namespace ClosedXML.Excel
             if (pt.ReportFilters.Any())
             {
                 // Reference cell is the part BELOW the report filters
-                var targetCell = pt.TargetCell.CellBelow(pt.ReportFilters.Count() + 1);
-                location.Reference = pt.Worksheet.Range(targetCell, targetCell.CellRight(10).CellBelow(10)).RangeAddress.ToString();
+                location.Reference = pt.TargetCell.CellBelow(pt.ReportFilters.Count() + 1).Address.ToString();
             }
             else
-                location.Reference = pt.Worksheet.Range(pt.TargetCell, pt.TargetCell.CellRight(10).CellBelow(10)).RangeAddress.ToString();
+                location.Reference = pt.TargetCell.Address.ToString();
 
             var rowFields = new RowFields();
             var columnFields = new ColumnFields();
