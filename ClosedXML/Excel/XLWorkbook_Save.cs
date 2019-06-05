@@ -389,12 +389,12 @@ namespace ClosedXML.Excel
                 // Remove existing shapes for comments
                 xdoc.Root
                     .Elements()
-                    .Where(e => e.Name.LocalName == "shapetype" && e.Attribute("id").Value == @"_x0000_t202")
+                    .Where(e => e.Name.LocalName == "shapetype" && e.Attribute("id").Value == XLConstants.Comment.ShapeTypeId)
                     .Remove();
 
                 xdoc.Root
                     .Elements()
-                    .Where(e => e.Name.LocalName == "shape" && e.Attribute("type").Value == @"#_x0000_t202")
+                    .Where(e => e.Name.LocalName == "shape" && e.Attribute("type").Value == "#" + XLConstants.Comment.ShapeTypeId)
                     .Remove();
 
                 vmlStream.Position = 0;
