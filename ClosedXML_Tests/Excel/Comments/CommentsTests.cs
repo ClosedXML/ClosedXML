@@ -10,7 +10,7 @@ namespace ClosedXML_Tests.Excel.Comments
         [Test]
         public void CanGetColorFromIndex81()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CommentsWithIndexedColor81.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentsWithIndexedColor81.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheets.First();

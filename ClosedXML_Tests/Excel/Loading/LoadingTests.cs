@@ -20,27 +20,27 @@ namespace ClosedXML_Tests.Excel
         {
             var files = new List<string>()
             {
-                @"Misc\TableWithCustomTheme.xlsx",
-                @"Misc\EmptyTable.xlsx",
-                @"Misc\LoadPivotTables.xlsx",
-                @"Misc\LoadFileWithCustomSheetViews.xlsx",
-                @"Misc\LoadSheetsWithCommas.xlsx",
-                @"Misc\ExcelProducedWorkbookWithImages.xlsx",
-                @"Misc\InvalidPrintTitles.xlsx",
-                @"Misc\InvalidPrintTitles2.xlsx",
-                @"Misc\ExcelProducedWorkbookWithImages.xlsx",
-                @"Misc\EmptyCellValue.xlsx",
-                @"Misc\AllShapes.xlsx",
-                @"Misc\TableHeadersWithLineBreaks.xlsx",
-                @"Misc\TableWithNameNull.xlsx",
-                @"Misc\DuplicateImageNames.xlsx",
-                @"Misc\InvalidPrintArea.xlsx",
-                @"Misc\Date1904System.xlsx",
-                @"Misc\LoadImageWithoutTransform2D.xlsx",
-                @"Misc\PivotTableWithTableSource.xlsx",
-                @"Misc\TemplateWithTableSourcePivotTables.xlsx",
-                @"Misc\PrintAreaRefersToExternalWorksheet.xlsx",
-                @"Misc\NamedRangeWithInvalidCharacter.xlsx"
+                @"TryToLoad\TableWithCustomTheme.xlsx",
+                @"TryToLoad\EmptyTable.xlsx",
+                @"TryToLoad\LoadPivotTables.xlsx",
+                @"TryToLoad\LoadFileWithCustomSheetViews.xlsx",
+                @"TryToLoad\LoadSheetsWithCommas.xlsx",
+                @"TryToLoad\ExcelProducedWorkbookWithImages.xlsx",
+                @"TryToLoad\InvalidPrintTitles.xlsx",
+                @"TryToLoad\InvalidPrintTitles2.xlsx",
+                @"TryToLoad\ExcelProducedWorkbookWithImages.xlsx",
+                @"TryToLoad\EmptyCellValue.xlsx",
+                @"TryToLoad\AllShapes.xlsx",
+                @"TryToLoad\TableHeadersWithLineBreaks.xlsx",
+                @"TryToLoad\TableWithNameNull.xlsx",
+                @"TryToLoad\DuplicateImageNames.xlsx",
+                @"TryToLoad\InvalidPrintArea.xlsx",
+                @"TryToLoad\Date1904System.xlsx",
+                @"TryToLoad\LoadImageWithoutTransform2D.xlsx",
+                @"TryToLoad\PivotTableWithTableSource.xlsx",
+                @"TryToLoad\TemplateWithTableSourcePivotTables.xlsx",
+                @"TryToLoad\PrintAreaRefersToExternalWorksheet.xlsx",
+                @"TryToLoad\NamedRangeWithInvalidCharacter.xlsx"
             };
 
             foreach (var file in files)
@@ -55,22 +55,22 @@ namespace ClosedXML_Tests.Excel
             // TODO: unpark all files
             var parkedForLater = new[]
             {
-                "Misc.LO.xlsx.formats.xlsx",
-                "Misc.LO.xlsx.pivot_table.shared-group-field.xlsx",
-                "Misc.LO.xlsx.pivot_table.shared-nested-dategroup.xlsx",
-                "Misc.LO.xlsx.pivottable_bool_field_filter.xlsx",
-                "Misc.LO.xlsx.pivottable_date_field_filter.xlsx",
-                "Misc.LO.xlsx.pivottable_double_field_filter.xlsx",
-                "Misc.LO.xlsx.pivottable_duplicated_member_filter.xlsx",
-                "Misc.LO.xlsx.pivottable_rowcolpage_field_filter.xlsx",
-                "Misc.LO.xlsx.pivottable_string_field_filter.xlsx",
-                "Misc.LO.xlsx.pivottable_tabular_mode.xlsx",
-                "Misc.LO.xlsx.pivot_table_first_header_row.xlsx",
-                "Misc.LO.xlsx.tdf100709.xlsx",
-                "Misc.LO.xlsx.tdf89139_pivot_table.xlsx",
-                "Misc.LO.xlsx.universal-content-strict.xlsx",
-                "Misc.LO.xlsx.universal-content.xlsx",
-                "Misc.LO.xlsx.xf_default_values.xlsx"
+                "TryToLoad.LO.xlsx.formats.xlsx",
+                "TryToLoad.LO.xlsx.pivot_table.shared-group-field.xlsx",
+                "TryToLoad.LO.xlsx.pivot_table.shared-nested-dategroup.xlsx",
+                "TryToLoad.LO.xlsx.pivottable_bool_field_filter.xlsx",
+                "TryToLoad.LO.xlsx.pivottable_date_field_filter.xlsx",
+                "TryToLoad.LO.xlsx.pivottable_double_field_filter.xlsx",
+                "TryToLoad.LO.xlsx.pivottable_duplicated_member_filter.xlsx",
+                "TryToLoad.LO.xlsx.pivottable_rowcolpage_field_filter.xlsx",
+                "TryToLoad.LO.xlsx.pivottable_string_field_filter.xlsx",
+                "TryToLoad.LO.xlsx.pivottable_tabular_mode.xlsx",
+                "TryToLoad.LO.xlsx.pivot_table_first_header_row.xlsx",
+                "TryToLoad.LO.xlsx.tdf100709.xlsx",
+                "TryToLoad.LO.xlsx.tdf89139_pivot_table.xlsx",
+                "TryToLoad.LO.xlsx.universal-content-strict.xlsx",
+                "TryToLoad.LO.xlsx.universal-content.xlsx",
+                "TryToLoad.LO.xlsx.xf_default_values.xlsx"
             };
 
             var files = TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i))).ToArray();
@@ -84,7 +84,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadAndManipulateFileWithEmptyTable()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\EmptyTable.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EmptyTable.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheets.First();
@@ -96,7 +96,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadDate1904SystemCorrectly()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\Date1904System.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\Date1904System.xlsx")))
             using (var ms = new MemoryStream())
             {
                 using (var wb = new XLWorkbook(stream))
@@ -127,7 +127,7 @@ namespace ClosedXML_Tests.Excel
             // This file's workbook.xml contains:
             // <x:sheet name="Data" sheetId="13" r:id="rId1" />
             // and the mismatch between the sheetId and r:id can create problems.
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\FileWithMismatchSheetIdAndRelId.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\FileWithMismatchSheetIdAndRelId.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 using (var ms = new MemoryStream())
@@ -140,7 +140,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadBasicPivotTable()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\LoadPivotTables.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet("PivotTable1");
@@ -162,7 +162,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadOrderedPivotTable()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\LoadPivotTables.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet("OrderedPivotTable");
@@ -176,7 +176,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadPivotTableSubtotals()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LoadPivotTables.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\LoadPivotTables.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet("PivotTableSubtotals");
@@ -199,7 +199,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanSaveFileWithDefaultStyleNameNotInEnglish()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\FileWithDefaultStyleNameNotInEnglish.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\FileWithDefaultStyleNameNotInEnglish.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 using (var ms = new MemoryStream())
@@ -218,7 +218,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadLibreOfficeFileWithDates()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LibreOfficeFileWithDates.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\LibreOfficeFileWithDates.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheets.First();
@@ -268,7 +268,7 @@ namespace ClosedXML_Tests.Excel
             // This file was produced by Excel. It contains 3 images, but the latter 2 were copied from the first.
             // There is actually only 1 embedded image if you inspect the file's internals.
             // Additionally, Excel saves all image anchors as TwoCellAnchor, but uses the EditAs attribute to distinguish the types
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\ExcelProducedWorkbookWithImages.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\ExcelProducedWorkbookWithImages.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheets.First();
@@ -289,7 +289,7 @@ namespace ClosedXML_Tests.Excel
             using (var tf1 = new TemporaryFile())
             using (var tf2 = new TemporaryFile())
             {
-                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\AllShapes.xlsx")))
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\AllShapes.xlsx")))
                 using (var wb = new XLWorkbook(stream))
                 {
                     // Save as temporary file
@@ -313,7 +313,7 @@ namespace ClosedXML_Tests.Excel
             string title = "";
             TestDelegate openWorkbook = () =>
             {
-                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\EscapedApostrophe.xlsx")))
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EscapedApostrophe.xlsx")))
                 using (var wb = new XLWorkbook(stream))
                 {
                     var ws = wb.Worksheets.First();
@@ -401,7 +401,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadWorksheetStyle()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\BaseColumnWidth.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\BaseColumnWidth.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet(1);
@@ -416,7 +416,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanCorrectLoadWorkbookCellWithStringDataType()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CellWithStringDataType.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CellWithStringDataType.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var cellToCheck = wb.Worksheet(1).Cell("B2");
@@ -442,7 +442,7 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void CanLoadCellsWithoutReferencesCorrectly()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\LO\xlsx\row-index-1-based.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\LO\xlsx\row-index-1-based.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet(1);
