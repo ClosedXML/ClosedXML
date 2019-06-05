@@ -658,7 +658,7 @@ namespace ClosedXML_Tests
         [Test]
         public void TwoPivotWithOneSourceTest()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\TwoPivot1195_template.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\input.xlsx")))
             TestHelper.CreateAndCompare(() =>
             {
                 var wb = new XLWorkbook(stream);
@@ -670,7 +670,7 @@ namespace ClosedXML_Tests
                 }
 
                 return wb;
-            }, @"Examples\PivotTables\TwoPivot1195.xlsx");
+            }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
         }
 
         [Test]
