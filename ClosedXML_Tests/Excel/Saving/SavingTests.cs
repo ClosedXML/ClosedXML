@@ -494,7 +494,7 @@ namespace ClosedXML_Tests.Excel.Saving
         [Test]
         public void PreserveAlignmentOnSaving()
         {
-            using (var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\HorizontalAlignment.xlsx")))
+            using (var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\HorizontalAlignment.xlsx")))
             using (var output = new MemoryStream())
             {
                 using (var wb = new XLWorkbook(input))

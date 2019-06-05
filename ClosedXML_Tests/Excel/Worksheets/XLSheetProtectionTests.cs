@@ -93,7 +93,7 @@ namespace ClosedXML_Tests.Excel.Worksheets
         [Test]
         public void TestUnprotectWorksheetWithNoPassword()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\SHA512PasswordProtection.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\SHA512PasswordProtection.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet("Sheet1");
@@ -106,7 +106,7 @@ namespace ClosedXML_Tests.Excel.Worksheets
         [Test]
         public void TestWorksheetWithSHA512Protection()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\SHA512PasswordProtection.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\SHA512PasswordProtection.xlsx")))
             using (var wb = new XLWorkbook(stream))
             {
                 var ws = wb.Worksheet("Sheet2");
