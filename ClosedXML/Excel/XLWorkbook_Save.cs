@@ -264,15 +264,16 @@ namespace ClosedXML.Excel
 
             GenerateWorkbookStylesPartContent(workbookStylesPart, context);
 
-            var pivotTables = WorksheetsInternal.Cast<XLWorksheet>().SelectMany(s=>s.PivotTables.Cast<XLPivotTable>()).ToList();
-            foreach (var pt in pivotTables)
+            var cacheRelIds = WorksheetsInternal
+                  .Cast<XLWorksheet>()
+                  .SelectMany(s => s.PivotTables.Cast<XLPivotTable>().Select(pt => pt.WorkbookCacheRelId))
+                  .Where(relId => !string.IsNullOrWhiteSpace(relId))
+                  .Distinct();
+
+            foreach (var relId in cacheRelIds)
             {
-                if (!string.IsNullOrWhiteSpace(pt.WorkbookCacheRelId))
-                {
-                    var pivotTableCacheDefinitionPart = workbookPart.GetPartById(pt.WorkbookCacheRelId) as PivotTableCacheDefinitionPart;
-                    if (pivotTableCacheDefinitionPart != null)
-                        pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.RemoveAllChildren();
-                }
+                if (workbookPart.GetPartById(relId) is PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart)
+                    pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.RemoveAllChildren();
             }
 
             foreach (var worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
@@ -2156,7 +2157,7 @@ namespace ClosedXML.Excel
                 var sharedItems = pivotTableCacheDefinitionPart.PivotCacheDefinition?.CacheFields?.Cast<CacheField>()
                     ?.FirstOrDefault(f => f.Name == xlpf.SourceName)
                     ?.SharedItems;
-                sharedItems = sharedItems != null ? (SharedItems) sharedItems.CloneNode(true) : new SharedItems();
+                sharedItems = sharedItems != null ? (SharedItems)sharedItems.CloneNode(true) : new SharedItems();
 
                 cacheField.AppendChild(sharedItems);
 
