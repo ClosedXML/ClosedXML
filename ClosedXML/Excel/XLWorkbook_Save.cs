@@ -264,6 +264,18 @@ namespace ClosedXML.Excel
 
             GenerateWorkbookStylesPartContent(workbookStylesPart, context);
 
+            var cacheRelIds = WorksheetsInternal
+                  .Cast<XLWorksheet>()
+                  .SelectMany(s => s.PivotTables.Cast<XLPivotTable>().Select(pt => pt.WorkbookCacheRelId))
+                  .Where(relId => !string.IsNullOrWhiteSpace(relId))
+                  .Distinct();
+
+            foreach (var relId in cacheRelIds)
+            {
+                if (workbookPart.GetPartById(relId) is PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart)
+                    pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.RemoveAllChildren();
+            }
+
             foreach (var worksheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
                 WorksheetPart worksheetPart;
@@ -2052,30 +2064,34 @@ namespace ClosedXML.Excel
 
         // Generates content of pivotTableCacheDefinitionPart
         private static void GeneratePivotTableCacheDefinitionPartContent(
-            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, IXLPivotTable pt,
+            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart, XLPivotTable pt,
             SaveContext context)
         {
+            var pivotCacheDefinition = pivotTableCacheDefinitionPart.PivotCacheDefinition;
+            if (pivotCacheDefinition == null)
+            {
+                pivotCacheDefinition = new PivotCacheDefinition { Id = "rId1" };
+
+                pivotCacheDefinition.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                pivotTableCacheDefinitionPart.PivotCacheDefinition = pivotCacheDefinition;
+            }
+
+            pivotCacheDefinition.SaveData = pt.SaveSourceData;
+            pivotCacheDefinition.RefreshOnLoad = true; //pt.RefreshDataOnOpen
+
             var pti = new PivotTableInfo
             {
-                Guid = (pt as XLPivotTable).Guid,
+                Guid = pt.Guid,
                 Fields = new Dictionary<String, PivotTableFieldInfo>()
             };
 
             var source = pt.SourceRange;
-            var pivotCacheDefinition = new PivotCacheDefinition
-            {
-                Id = "rId1",
-                SaveData = pt.SaveSourceData,
-                RefreshOnLoad = true //pt.RefreshDataOnOpen
-            };
             if (pt.ItemsToRetainPerField == XLItemsToRetain.None)
                 pivotCacheDefinition.MissingItemsLimit = 0U;
             else if (pt.ItemsToRetainPerField == XLItemsToRetain.Max)
                 pivotCacheDefinition.MissingItemsLimit = XLHelper.MaxRowNumber;
 
-            pivotCacheDefinition.AddNamespaceDeclaration("r",
-                "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-
+            // Begin CacheSource
             var cacheSource = new CacheSource { Type = SourceValues.Worksheet };
             var worksheetSource = new WorksheetSource();
 
@@ -2100,13 +2116,47 @@ namespace ClosedXML.Excel
             }
 
             cacheSource.AppendChild(worksheetSource);
+            pivotCacheDefinition.CacheSource = cacheSource;
 
-            var cacheFields = new CacheFields();
+            // End CacheSource
+
+            // Begin CacheFields
+            var cacheFields = pivotCacheDefinition.CacheFields;
+            if (cacheFields == null)
+            {
+                cacheFields = new CacheFields();
+                pivotCacheDefinition.CacheFields = cacheFields;
+            }
 
             foreach (var c in source.Columns())
             {
                 var columnNumber = c.ColumnNumber();
                 var columnName = c.FirstCell().Value.ToInvariantString();
+
+                CacheField cacheField = null;
+
+                // .CacheFields is cleared when workbook is begin saved
+                // So if there are any entries, it would be from previous pivot tables
+                // with an identical source range.
+                // When pivot sources get its refactoring, this will not be necessary
+                if (cacheFields != null)
+                {
+                    cacheField = pivotCacheDefinition
+                        .CacheFields
+                        .Elements<CacheField>()
+                        .FirstOrDefault(f => f.Name == columnName);
+                }
+
+                if (cacheField == null)
+                {
+                    cacheField = new CacheField
+                    {
+                        Name = columnName,
+                        SharedItems = new SharedItems()
+                    };
+                    cacheFields.AppendChild(cacheField);
+                }
+                var sharedItems = cacheField.SharedItems;
 
                 XLPivotField xlpf;
                 if (pt.Fields.Contains(columnName))
@@ -2140,19 +2190,18 @@ namespace ClosedXML.Excel
                     xlpf.Subtotals.AddRange(field.Subtotals);
                 }
 
-                var sharedItems = new SharedItems();
-
                 var ptfi = new PivotTableFieldInfo
                 {
                     IsTotallyBlankField = false
                 };
 
+                var sourceHeaderRow = source.FirstRow().RowNumber();
                 var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
-                                                           && cell.Address.RowNumber > source.FirstRow().RowNumber());
+                                                           && cell.Address.RowNumber > sourceHeaderRow);
                 var types = fieldValueCells.Select(cell => cell.DataType).Distinct().ToArray();
                 var containsBlank = source.CellsUsed(XLCellsUsedOptions.All,
                     cell => cell.Address.ColumnNumber == columnNumber
-                            && cell.Address.RowNumber > source.FirstRow().RowNumber()
+                            && cell.Address.RowNumber > sourceHeaderRow
                             && cell.IsEmpty()).Any();
 
                 // For a totally blank column, we need to check that all cells in column are unused
@@ -2166,10 +2215,6 @@ namespace ClosedXML.Excel
                 {
                     if (types.Length == 1 && types.Single() == XLDataType.Number)
                     {
-                        sharedItems.ContainsSemiMixedTypes = containsBlank;
-                        sharedItems.ContainsString = false;
-                        sharedItems.ContainsNumber = true;
-
                         ptfi.DataType = XLDataType.Number;
                         ptfi.MixedDataType = false;
                         ptfi.DistinctValues = fieldValueCells
@@ -2179,10 +2224,56 @@ namespace ClosedXML.Excel
                             .Cast<object>()
                             .ToArray();
 
-                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
-                        if (allInteger) sharedItems.ContainsInteger = true;
+                        pti.Fields.Add(xlpf.SourceName, ptfi);
+                    }
+                    else if (types.Length == 1 && types.Single() == XLDataType.DateTime)
+                    {
+                        ptfi.DataType = XLDataType.DateTime;
+                        ptfi.MixedDataType = false;
+                        ptfi.DistinctValues = fieldValueCells
+                            .Where(cell => cell.TryGetValue(out DateTime _))
+                            .Select(cell => cell.CachedValue.CastTo<DateTime>())
+                            .Distinct()
+                            .Cast<object>()
+                            .ToArray();
 
                         pti.Fields.Add(xlpf.SourceName, ptfi);
+                    }
+                    else
+                    {
+                        ptfi.DataType = types.First();
+                        ptfi.MixedDataType = types.Length > 1;
+
+                        if (!ptfi.MixedDataType && ptfi.DataType == XLDataType.Text)
+                            ptfi.DistinctValues = fieldValueCells
+                                .Where(cell => cell.TryGetValue(out String _))
+                                .Select(cell => cell.CachedValue.CastTo<String>())
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                                .ToArray();
+                        else
+                            ptfi.DistinctValues = fieldValueCells
+                                .Where(cell => cell.TryGetValue(out String _))
+                                .Select(cell => cell.GetString())
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                                .ToArray();
+
+                        pti.Fields.Add(xlpf.SourceName, ptfi);
+                    }
+
+                    // If this cache field exists and contains shared items,
+                    // then we can assume that this as been populated by a previous pivot table
+                    if (sharedItems.Any())
+                        continue;
+
+                    // Else we have to populate the items
+                    if (types.Length == 1 && types.Single() == XLDataType.Number)
+                    {
+                        sharedItems.ContainsSemiMixedTypes = containsBlank;
+                        sharedItems.ContainsString = false;
+                        sharedItems.ContainsNumber = true;
+
+                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
+                        if (allInteger) sharedItems.ContainsInteger = true;
 
                         // Output items only for row / column / filter fields
                         if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
@@ -2205,17 +2296,6 @@ namespace ClosedXML.Excel
                         sharedItems.ContainsString = false;
                         sharedItems.ContainsDate = true;
 
-                        ptfi.DataType = XLDataType.DateTime;
-                        ptfi.MixedDataType = false;
-                        ptfi.DistinctValues = fieldValueCells
-                            .Where(cell => cell.TryGetValue(out DateTime _))
-                            .Select(cell => cell.CachedValue.CastTo<DateTime>())
-                            .Distinct()
-                            .Cast<object>()
-                            .ToArray();
-
-                        pti.Fields.Add(xlpf.SourceName, ptfi);
-
                         // Output items only for row / column / filter fields
                         if (pt.RowLabels.Any(p => p.SourceName == xlpf.SourceName)
                             || pt.ColumnLabels.Any(p => p.SourceName == xlpf.SourceName)
@@ -2231,31 +2311,14 @@ namespace ClosedXML.Excel
                         sharedItems.MaxDate = (DateTime)ptfi.DistinctValues.Max();
                     }
                     else
-
                     {
-                        ptfi.DataType = types.First();
-                        ptfi.MixedDataType = types.Length > 1;
-
-                        if (!ptfi.MixedDataType && ptfi.DataType == XLDataType.Text)
-                            ptfi.DistinctValues = fieldValueCells
-                                .Where(cell => cell.TryGetValue(out String _))
-                                .Select(cell => cell.CachedValue.CastTo<String>())
-                                .Distinct(StringComparer.OrdinalIgnoreCase)
-                                .ToArray();
-                        else
-                            ptfi.DistinctValues = fieldValueCells
-                                .Where(cell => cell.TryGetValue(out String _))
-                                .Select(cell => cell.GetString())
-                                .Distinct(StringComparer.OrdinalIgnoreCase)
-                                .ToArray();
-
-                        pti.Fields.Add(xlpf.SourceName, ptfi);
-
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new StringItem { Val = (string)value });
 
                         if (containsBlank) sharedItems.AppendChild(new MissingItem());
                     }
+
+                    sharedItems.Count = Convert.ToUInt32(sharedItems.Elements().Count());
                 }
 
                 if (containsBlank) sharedItems.ContainsBlank = true;
@@ -2264,16 +2327,9 @@ namespace ClosedXML.Excel
                     pti.Fields.Add(xlpf.SourceName, ptfi);
                 else if (ptfi.DistinctValues?.Any() ?? false)
                     sharedItems.Count = Convert.ToUInt32(ptfi.DistinctValues.Count());
-
-                var cacheField = new CacheField { Name = xlpf.SourceName };
-                cacheField.AppendChild(sharedItems);
-                cacheFields.AppendChild(cacheField);
             }
 
-            pivotCacheDefinition.AppendChild(cacheSource);
-            pivotCacheDefinition.AppendChild(cacheFields);
-
-            pivotTableCacheDefinitionPart.PivotCacheDefinition = pivotCacheDefinition;
+            // End CacheFields
 
             var pivotTableCacheRecordsPart = pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().Any() ?
                 pivotTableCacheDefinitionPart.GetPartsOfType<PivotTableCacheRecordsPart>().First() :
@@ -2366,8 +2422,10 @@ namespace ClosedXML.Excel
             };
 
             if (pt.ReportFilters.Any())
+            {
                 // Reference cell is the part BELOW the report filters
                 location.Reference = pt.TargetCell.CellBelow(pt.ReportFilters.Count() + 1).Address.ToString();
+            }
             else
                 location.Reference = pt.TargetCell.Address.ToString();
 
