@@ -2083,6 +2083,37 @@ namespace ClosedXML.Excel
                 pivotTableCacheDefinitionPart.PivotCacheDefinition = pivotCacheDefinition;
             }
 
+            #region CreatedVersion
+
+            byte createdVersion = XLConstants.PivotTableCreatedVersion;
+
+            if (pivotCacheDefinition.CreatedVersion?.HasValue ?? false)
+                pivotCacheDefinition.CreatedVersion = Math.Max(createdVersion, pivotCacheDefinition.CreatedVersion.Value);
+            else
+                pivotCacheDefinition.CreatedVersion = createdVersion;
+
+            #endregion CreatedVersion
+
+            #region RefreshedVersion
+
+            byte refreshedVersion = XLConstants.PivotTableRefreshedVersion;
+            if (pivotCacheDefinition.RefreshedVersion?.HasValue ?? false)
+                pivotCacheDefinition.RefreshedVersion = Math.Max(refreshedVersion, pivotCacheDefinition.RefreshedVersion.Value);
+            else
+                pivotCacheDefinition.RefreshedVersion = refreshedVersion;
+
+            #endregion RefreshedVersion
+
+            #region MinRefreshableVersion
+
+            byte minRefreshableVersion = 3;
+            if (pivotCacheDefinition.MinRefreshableVersion?.HasValue ?? false)
+                pivotCacheDefinition.MinRefreshableVersion = Math.Max(minRefreshableVersion, pivotCacheDefinition.MinRefreshableVersion.Value);
+            else
+                pivotCacheDefinition.MinRefreshableVersion = minRefreshableVersion;
+
+            #endregion MinRefreshableVersion
+
             pivotCacheDefinition.SaveData = pt.SaveSourceData;
             pivotCacheDefinition.RefreshOnLoad = true; //pt.RefreshDataOnOpen
 
