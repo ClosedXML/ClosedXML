@@ -1,3 +1,4 @@
+using NeoSmart.Unicode;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -17,15 +18,25 @@ namespace ClosedXML.Utils
 
             var sb = new StringBuilder(encodeStr.Length);
 
-            foreach (var ch in encodeStr)
+            foreach (var letter in encodeStr.Letters())
             {
-                if (XmlConvert.IsXmlChar(ch))
+
+                if (Emoji.IsEmoji(letter))
                 {
-                    sb.Append(ch);
+                    sb.Append(letter);
+                    continue;
                 }
-                else
+
+                foreach (var ch in letter)
                 {
-                    sb.Append(XmlConvert.EncodeName(ch.ToString()));
+                    if (char.IsSymbol(ch) || XmlConvert.IsXmlChar(ch))
+                    {
+                        sb.Append(letter);
+                    }
+                    else
+                    {
+                        sb.Append(XmlConvert.EncodeName(ch.ToString()));
+                    }
                 }
             }
 
