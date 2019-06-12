@@ -759,6 +759,16 @@ namespace ClosedXML.Excel
             return columns;
         }
 
+        IXLPivotTable IXLRangeBase.CreatePivotTable(IXLCell targetCell, String name)
+        {
+            return CreatePivotTable(targetCell, name);
+        }
+
+        internal new XLPivotTable CreatePivotTable(IXLCell targetCell, String name)
+        {
+            return (XLPivotTable)targetCell.Worksheet.PivotTables.Add(name, targetCell, this);
+        }
+
         public IEnumerable<dynamic> AsDynamicEnumerable()
         {
             foreach (var row in this.DataRange.Rows())
