@@ -47,9 +47,9 @@ namespace ClosedXML.Utils
             return (T)adapter.ColorType;
         }
 
-        public static BooleanValue? GetBooleanValue(bool value, bool defaultValue)
+        public static BooleanValue? GetBooleanValue(bool value, bool? defaultValue = null)
         {
-            return value == defaultValue ? null : new BooleanValue(value);
+            return (defaultValue.HasValue && value == defaultValue.Value) ? null : new BooleanValue(value);
         }
 
         public static bool GetBooleanValueAsBool(BooleanValue value, bool defaultValue)
