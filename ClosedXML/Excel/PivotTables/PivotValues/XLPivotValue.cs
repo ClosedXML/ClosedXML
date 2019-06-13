@@ -1,11 +1,9 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPivotValue: IXLPivotValue
+    internal class XLPivotValue : IXLPivotValue
     {
         public XLPivotValue(string sourceName)
         {
@@ -13,47 +11,56 @@ namespace ClosedXML.Excel
             NumberFormat = new XLPivotValueFormat(this);
         }
 
+        public String BaseFieldName { get; set; }
+        public Object BaseItemValue { get; set; }
+        public XLPivotCalculation Calculation { get; set; }
+        public XLPivotCalculationItem CalculationItem { get; set; }
+        public String CustomName { get; set; }
         public IXLPivotValueFormat NumberFormat { get; private set; }
         public String SourceName { get; private set; }
-        public String CustomName { get; set; }		public IXLPivotValue SetCustomName(String value) { CustomName = value; return this; }
+        public XLPivotSummary SummaryFormula { get; set; }
 
-        public XLPivotSummary SummaryFormula { get; set; }		public IXLPivotValue SetSummaryFormula(XLPivotSummary value) { SummaryFormula = value; return this; }
-        public XLPivotCalculation Calculation { get; set; }		public IXLPivotValue SetCalculation(XLPivotCalculation value) { Calculation = value; return this; }
-        public String BaseField { get; set; }		public IXLPivotValue SetBaseField(String value) { BaseField = value; return this; }
-        public String BaseItem { get; set; }		public IXLPivotValue SetBaseItem(String value) { BaseItem = value; return this; }
-        public XLPivotCalculationItem CalculationItem { get; set; }		public IXLPivotValue SetCalculationItem(XLPivotCalculationItem value) { CalculationItem = value; return this; }
+        public IXLPivotValue SetBaseFieldName(String value) { BaseFieldName = value; return this; }
 
+        public IXLPivotValue SetBaseItemValue(Object value) { BaseItemValue = value; return this; }
+
+        public IXLPivotValue SetCalculation(XLPivotCalculation value) { Calculation = value; return this; }
+
+        public IXLPivotValue SetCalculationItem(XLPivotCalculationItem value) { CalculationItem = value; return this; }
+
+        public IXLPivotValue SetCustomName(String value) { CustomName = value; return this; }
+
+        public IXLPivotValue SetSummaryFormula(XLPivotSummary value) { SummaryFormula = value; return this; }
+
+        public IXLPivotValueCombination ShowAsDifferenceFrom(String fieldSourceName)
+        {
+            BaseFieldName = fieldSourceName;
+            SetCalculation(XLPivotCalculation.DifferenceFrom);
+            return new XLPivotValueCombination(this);
+        }
+
+        public IXLPivotValue ShowAsIndex()
+        {
+            return SetCalculation(XLPivotCalculation.Index);
+        }
 
         public IXLPivotValue ShowAsNormal()
         {
             return SetCalculation(XLPivotCalculation.Normal);
         }
-        public IXLPivotValueCombination ShowAsDifferenceFrom(String fieldSourceName)
-        {
-            BaseField = fieldSourceName;
-            SetCalculation(XLPivotCalculation.DifferenceFrom);
-            return new XLPivotValueCombination(this);
-        }
-        public IXLPivotValueCombination ShowAsPercentageFrom(String fieldSourceName)
-        {
-            BaseField = fieldSourceName;
-            SetCalculation(XLPivotCalculation.PercentageOf);
-            return new XLPivotValueCombination(this);
-        }
+
         public IXLPivotValueCombination ShowAsPercentageDifferenceFrom(String fieldSourceName)
         {
-            BaseField = fieldSourceName;
+            BaseFieldName = fieldSourceName;
             SetCalculation(XLPivotCalculation.PercentageDifferenceFrom);
             return new XLPivotValueCombination(this);
         }
-        public IXLPivotValue ShowAsRunningTotalIn(String fieldSourceName)
+
+        public IXLPivotValueCombination ShowAsPercentageFrom(String fieldSourceName)
         {
-            BaseField = fieldSourceName;
-            return SetCalculation(XLPivotCalculation.RunningTotal);
-        }
-        public IXLPivotValue ShowAsPercentageOfRow()
-        {
-            return SetCalculation(XLPivotCalculation.PercentageOfRow);
+            BaseFieldName = fieldSourceName;
+            SetCalculation(XLPivotCalculation.PercentageOf);
+            return new XLPivotValueCombination(this);
         }
 
         public IXLPivotValue ShowAsPercentageOfColumn()
@@ -61,14 +68,20 @@ namespace ClosedXML.Excel
             return SetCalculation(XLPivotCalculation.PercentageOfColumn);
         }
 
+        public IXLPivotValue ShowAsPercentageOfRow()
+        {
+            return SetCalculation(XLPivotCalculation.PercentageOfRow);
+        }
+
         public IXLPivotValue ShowAsPercentageOfTotal()
         {
             return SetCalculation(XLPivotCalculation.PercentageOfTotal);
         }
 
-        public IXLPivotValue ShowAsIndex()
+        public IXLPivotValue ShowAsRunningTotalIn(String fieldSourceName)
         {
-            return SetCalculation(XLPivotCalculation.Index);
+            BaseFieldName = fieldSourceName;
+            return SetCalculation(XLPivotCalculation.RunningTotal);
         }
     }
 }
