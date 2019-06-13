@@ -12,23 +12,23 @@ namespace ClosedXML.Excel
             _pivotValue = pivotValue;
         }
 
-        public IXLPivotValue And(String item)
+        public IXLPivotValue And(Object item)
         {
-            _pivotValue.BaseItem = item;
-            _pivotValue.CalculationItem = XLPivotCalculationItem.Value;
-            return _pivotValue;
+            return _pivotValue
+                .SetBaseItemValue(item)
+                .SetCalculationItem(XLPivotCalculationItem.Value);
         }
 
         public IXLPivotValue AndNext()
         {
-            _pivotValue.CalculationItem = XLPivotCalculationItem.Next;
-            return _pivotValue;
+            return _pivotValue
+                .SetCalculationItem(XLPivotCalculationItem.Next);
         }
 
         public IXLPivotValue AndPrevious()
         {
-            _pivotValue.CalculationItem = XLPivotCalculationItem.Previous;
-            return _pivotValue;
+            return _pivotValue
+                .SetCalculationItem(XLPivotCalculationItem.Previous);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     public interface IXLPivotValueCombination
     {
-        IXLPivotValue And(String item);
+        IXLPivotValue And(Object item);
 
         IXLPivotValue AndNext();
 

@@ -766,13 +766,13 @@ namespace ClosedXML.Excel
                                                         .Skip(1) // Skip header column
                                                         .Distinct().ToList();
 
-                                            pivotValue.BaseField = col.FirstCell().GetValue<string>();
+                                            pivotValue.BaseFieldName = col.FirstCell().GetValue<string>();
 
                                             if (df.BaseItem?.Value != null)
                                             {
                                                 var bi = (int)df.BaseItem.Value;
                                                 if (bi.Between(0, items.Count - 1))
-                                                    pivotValue.BaseItem = items[(int)df.BaseItem.Value].ToString();
+                                                    pivotValue.BaseItemValue = items[(int)df.BaseItem.Value];
                                             }
                                         }
                                     }

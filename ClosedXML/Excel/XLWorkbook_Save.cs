@@ -2853,9 +2853,9 @@ namespace ClosedXML.Excel
                     NumberFormatId = numberFormatId
                 };
 
-                if (!String.IsNullOrEmpty(value.BaseField))
+                if (!String.IsNullOrEmpty(value.BaseFieldName))
                 {
-                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.BaseField);
+                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.BaseFieldName);
                     if (baseField != null)
                     {
                         df.BaseField = baseField.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber;
@@ -2865,8 +2865,8 @@ namespace ClosedXML.Excel
                             .Skip(1) // Skip header column
                             .Distinct().ToList();
 
-                        if (items.Any(i => i.Equals(value.BaseItem)))
-                            df.BaseItem = Convert.ToUInt32(items.IndexOf(value.BaseItem));
+                        if (items.Contains(value.BaseItemValue))
+                            df.BaseItem = Convert.ToUInt32(items.IndexOf(value.BaseItemValue));
                     }
                 }
                 else
