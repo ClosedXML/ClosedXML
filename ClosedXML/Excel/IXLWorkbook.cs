@@ -28,37 +28,19 @@ namespace ClosedXML.Excel
         Double ColumnWidth { get; set; }
 
         IXLCustomProperties CustomProperties { get; }
-
         Boolean DefaultRightToLeft { get; }
-
         Boolean DefaultShowFormulas { get; }
-
         Boolean DefaultShowGridLines { get; }
-
         Boolean DefaultShowOutlineSymbols { get; }
-
         Boolean DefaultShowRowColHeaders { get; }
-
         Boolean DefaultShowRuler { get; }
-
         Boolean DefaultShowWhiteSpace { get; }
-
         Boolean DefaultShowZeros { get; }
-
         IXLFileSharing FileSharing { get; }
-
         Boolean ForceFullCalculation { get; set; }
-
         Boolean FullCalculationOnLoad { get; set; }
-
         Boolean FullPrecision { get; set; }
-
-        //Boolean IsPasswordProtected { get; }
-
-        //Boolean IsProtected { get; }
-
         Boolean LockStructure { get; set; }
-
         Boolean LockWindows { get; set; }
 
         /// <summary>
@@ -77,6 +59,8 @@ namespace ClosedXML.Excel
         ///   <para>All new worksheets will use these page options.</para>
         /// </summary>
         IXLPageSetup PageOptions { get; set; }
+
+        IXLPivotSources PivotSources { get; }
 
         /// <summary>
         ///   Gets or sets the workbook's properties.

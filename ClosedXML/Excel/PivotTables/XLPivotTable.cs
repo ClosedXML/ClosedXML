@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
             this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
             this.Guid = Guid.NewGuid();
 
-            Fields = new XLPivotFields(this);
+            //Fields = new XLPivotFields(this);
             ReportFilters = new XLPivotFields(this);
             ColumnLabels = new XLPivotFields(this);
             RowLabels = new XLPivotFields(this);
@@ -30,37 +30,9 @@ namespace ClosedXML.Excel
         }
 
         public IXLCell TargetCell { get; set; }
+        public IXLPivotSource Source { get; set; }
 
-        private IXLRange sourceRange;
-
-        public IXLRange SourceRange
-        {
-            get { return sourceRange; }
-            set
-            {
-                if (value is IXLTable)
-                    SourceType = XLPivotTableSourceType.Table;
-                else
-                    SourceType = XLPivotTableSourceType.Range;
-
-                sourceRange = value;
-            }
-        }
-
-        public IXLTable SourceTable
-        {
-            get { return SourceRange as IXLTable; }
-            set { SourceRange = value; }
-        }
-
-        public XLPivotTableSourceType SourceType { get; private set; }
-
-        public IEnumerable<string> SourceRangeFieldsAvailable
-        {
-            get { return this.SourceRange.FirstRow().Cells().Select(c => c.GetString()); }
-        }
-
-        public IXLPivotFields Fields { get; private set; }
+        //internal IXLPivotFields Fields { get; private set; }
         public IXLPivotFields ReportFilters { get; private set; }
         public IXLPivotFields ColumnLabels { get; private set; }
         public IXLPivotFields RowLabels { get; private set; }
@@ -101,12 +73,7 @@ namespace ClosedXML.Excel
                 pivotTableName = this.Name + i.ToInvariantString();
             }
 
-            var newPivotTable = this.SourceType switch
-            {
-                XLPivotTableSourceType.Table => targetSheet.PivotTables.Add(pivotTableName, targetCell, this.SourceTable) as XLPivotTable,
-                XLPivotTableSourceType.Range => targetSheet.PivotTables.Add(pivotTableName, targetCell, this.SourceRange) as XLPivotTable,
-                _ => throw new NotImplementedException(),
-            };
+            var newPivotTable = (XLPivotTable)targetSheet.PivotTables.Add(pivotTableName, targetCell, this.Source);
 
             newPivotTable.RelId = null;
 
@@ -143,8 +110,8 @@ namespace ClosedXML.Excel
                     .SetSummaryFormula(v.SummaryFormula)
                     .SetCalculation(v.Calculation)
                     .SetCalculationItem(v.CalculationItem)
-                    .SetBaseField(v.BaseField)
-                    .SetBaseItem(v.BaseItem);
+                    .SetBaseFieldName(v.BaseFieldName)
+                    .SetBaseItemValue(v.BaseItemValue);
 
                 pivotValue.NumberFormat.NumberFormatId = v.NumberFormat.NumberFormatId;
                 pivotValue.NumberFormat.Format = v.NumberFormat.Format;
@@ -180,10 +147,7 @@ namespace ClosedXML.Excel
             newPivotTable.PrintExpandCollapsedButtons = PrintExpandCollapsedButtons;
             newPivotTable.RepeatRowLabels = RepeatRowLabels;
             newPivotTable.PrintTitles = PrintTitles;
-            newPivotTable.SaveSourceData = SaveSourceData;
             newPivotTable.EnableShowDetails = EnableShowDetails;
-            newPivotTable.RefreshDataOnOpen = RefreshDataOnOpen;
-            newPivotTable.ItemsToRetainPerField = ItemsToRetainPerField;
             newPivotTable.EnableCellEditing = EnableCellEditing;
             newPivotTable.ShowRowHeaders = ShowRowHeaders;
             newPivotTable.ShowColumnHeaders = ShowColumnHeaders;
@@ -544,17 +508,6 @@ namespace ClosedXML.Excel
             PrintTitles = value; return this;
         }
 
-        public Boolean SaveSourceData { get; set; }
-
-        public IXLPivotTable SetSaveSourceData()
-        {
-            SaveSourceData = true; return this;
-        }
-
-        public IXLPivotTable SetSaveSourceData(Boolean value)
-        {
-            SaveSourceData = value; return this;
-        }
 
         public Boolean EnableShowDetails { get; set; }
 
@@ -568,24 +521,6 @@ namespace ClosedXML.Excel
             EnableShowDetails = value; return this;
         }
 
-        public Boolean RefreshDataOnOpen { get; set; }
-
-        public IXLPivotTable SetRefreshDataOnOpen()
-        {
-            RefreshDataOnOpen = true; return this;
-        }
-
-        public IXLPivotTable SetRefreshDataOnOpen(Boolean value)
-        {
-            RefreshDataOnOpen = value; return this;
-        }
-
-        public XLItemsToRetain ItemsToRetainPerField { get; set; }
-
-        public IXLPivotTable SetItemsToRetainPerField(XLItemsToRetain value)
-        {
-            ItemsToRetainPerField = value; return this;
-        }
 
         public Boolean EnableCellEditing { get; set; }
 
@@ -656,7 +591,7 @@ namespace ClosedXML.Excel
 
         public XLPivotLayout Layout
         {
-            set { Fields.ForEach(f => f.SetLayout(value)); }
+            set { ImplementedFields.ForEach(f => f.SetLayout(value)); }
         }
 
         public IXLPivotTable SetLayout(XLPivotLayout value)
@@ -666,7 +601,7 @@ namespace ClosedXML.Excel
 
         public Boolean InsertBlankLines
         {
-            set { Fields.ForEach(f => f.SetInsertBlankLines(value)); }
+            set { ImplementedFields.ForEach(f => f.SetInsertBlankLines(value)); }
         }
 
         public IXLPivotTable SetInsertBlankLines()
@@ -681,12 +616,10 @@ namespace ClosedXML.Excel
 
         internal String RelId { get; set; }
         internal String CacheDefinitionRelId { get; set; }
-        internal String WorkbookCacheRelId { get; set; }
 
         private void SetExcelDefaults()
         {
             EmptyCellReplacement = String.Empty;
-            SaveSourceData = true;
             ShowColumnHeaders = true;
             ShowRowHeaders = true;
 
