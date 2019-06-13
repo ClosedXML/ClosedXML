@@ -2852,7 +2852,7 @@ namespace ClosedXML.Excel
                     var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.BaseField);
                     if (baseField != null)
                     {
-                        df.BaseField = baseField.ColumnNumber() - 1;
+                        df.BaseField = baseField.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber;
 
                         var items = baseField.CellsUsed()
                             .Select(c => c.Value)
