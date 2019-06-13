@@ -1,5 +1,6 @@
 using ClosedXML.Excel.ContentManagers;
 using ClosedXML.Excel.Exceptions;
+using ClosedXML.Excel.Patterns;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -2865,8 +2866,8 @@ namespace ClosedXML.Excel
                             .Skip(1) // Skip header column
                             .Distinct().ToList();
 
-                        if (items.Contains(value.BaseItemValue))
-                            df.BaseItem = Convert.ToUInt32(items.IndexOf(value.BaseItemValue));
+                        if (items.Contains(value.BaseItemValue, ClosedXMLValueComparer.DefaultComparer))
+                            df.BaseItem = Convert.ToUInt32(items.FindIndex(i => ClosedXMLValueComparer.DefaultComparer.Equals(i, value.BaseItemValue)));
                     }
                 }
                 else
