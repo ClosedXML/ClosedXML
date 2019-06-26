@@ -203,6 +203,9 @@ namespace ClosedXML.Excel
 
         internal IXLCell SetValue<T>(T value, bool setTableHeader)
         {
+            if (IsInferiorMergedCell())
+                return this;
+
             if (value == null)
                 return this.Clear(XLClearOptions.Contents);
 
@@ -651,6 +654,9 @@ namespace ClosedXML.Excel
             }
             set
             {
+                if (IsInferiorMergedCell())
+                    return;
+
                 FormulaA1 = String.Empty;
 
                 if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
@@ -1234,6 +1240,9 @@ namespace ClosedXML.Excel
 
             set
             {
+                if (IsInferiorMergedCell())
+                    return;
+
                 InvalidateFormula();
 
                 _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
@@ -1254,6 +1263,9 @@ namespace ClosedXML.Excel
 
             set
             {
+                if (IsInferiorMergedCell())
+                    return;
+
                 InvalidateFormula();
 
                 _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
@@ -2993,6 +3005,16 @@ namespace ClosedXML.Excel
                 return this.Worksheet.Range(grownRangeAddress).RangeAddress;
             else
                 return FindCurrentRegion(this.Worksheet.Range(grownRangeAddress));
+        }
+
+        internal bool IsInferiorMergedCell()
+        {
+            return this.IsMerged() && !this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
+        }
+
+        internal bool IsSuperiorMergedCell()
+        {
+            return this.IsMerged() && this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
         }
     }
 }

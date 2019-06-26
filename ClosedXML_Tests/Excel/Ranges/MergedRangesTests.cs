@@ -324,7 +324,6 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D2").Style.Border.BottomBorder);
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D2").Style.Border.LeftBorder);
 
-
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B3").Style.Border.TopBorder);
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B3").Style.Border.RightBorder);
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B3").Style.Border.BottomBorder);
@@ -340,7 +339,6 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D3").Style.Border.BottomBorder);
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D3").Style.Border.LeftBorder);
 
-
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B4").Style.Border.TopBorder);
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("B4").Style.Border.RightBorder);
                 Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B4").Style.Border.BottomBorder);
@@ -355,6 +353,77 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("D4").Style.Border.RightBorder);
                 Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("D4").Style.Border.BottomBorder);
                 Assert.AreEqual(XLBorderStyleValues.None, ws.Cell("D4").Style.Border.LeftBorder);
+            }
+        }
+
+        [Test]
+        public void MergedRangesCellValuesShouldNotBeSet()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet();
+                ws.Range("A2:A4").Merge();
+                ws.Cell("A2").Value = "1";
+                ws.Cell("A3").Value = "1";
+                ws.Cell("A4").Value = "1";
+                ws.Cell("B1").FormulaA1 = "SUM(A:A)";
+                Assert.AreEqual(1, ws.Cell("B1").Value);
+            }
+
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet();
+                ws.Range("A2:A4").Merge().SetValue(1);
+                ws.Cell("B1").FormulaA1 = "SUM(A:A)";
+                Assert.AreEqual(1, ws.Cell("B1").Value);
+            }
+        }
+
+        [Test]
+        public void MergedRangesCellFormulasShouldNotBeSet()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet();
+                ws.Range("A2:A4").Merge();
+                ws.Cell("A2").FormulaA1 = "=1";
+                ws.Cell("A3").FormulaA1 = "=1";
+                ws.Cell("A4").FormulaA1 = "=1";
+                ws.Cell("B1").FormulaA1 = "SUM(A:A)";
+                Assert.AreEqual(1, ws.Cell("B1").Value);
+            }
+
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet();
+                ws.Range("A2:A4").Merge();
+                ws.Cell("A2").SetFormulaA1("=1");
+                ws.Cell("A3").SetFormulaA1("=1");
+                ws.Cell("A4").SetFormulaA1("=1");
+                ws.Cell("B1").SetFormulaA1("SUM(A:A)");
+                Assert.AreEqual(1, ws.Cell("B1").Value);
+            }
+
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet();
+                ws.Range("A2:A4").Merge();
+                ws.Cell("A2").FormulaR1C1 = "=1";
+                ws.Cell("A3").FormulaR1C1 = "=1";
+                ws.Cell("A4").FormulaR1C1 = "=1";
+                ws.Cell("B1").FormulaR1C1 = "SUM(A:A)";
+                Assert.AreEqual(1, ws.Cell("B1").Value);
+            }
+
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.AddWorksheet();
+                ws.Range("A2:A4").Merge();
+                ws.Cell("A2").SetFormulaR1C1("=1");
+                ws.Cell("A3").SetFormulaR1C1("=1");
+                ws.Cell("A4").SetFormulaR1C1("=1");
+                ws.Cell("B1").SetFormulaR1C1("SUM(A:A)");
+                Assert.AreEqual(1, ws.Cell("B1").Value);
             }
         }
     }
