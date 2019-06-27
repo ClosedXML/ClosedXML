@@ -632,6 +632,9 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position)
         {
+            if (this.IsDeleted)
+                throw new InvalidOperationException($"`{this.Name}` has been deleted and cannot be copied.");
+
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
             Internals.ColumnsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Column(kp.Key)));
             Internals.RowsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Row(kp.Key)));
