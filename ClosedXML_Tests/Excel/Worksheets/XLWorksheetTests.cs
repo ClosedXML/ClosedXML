@@ -287,6 +287,19 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CannotCopyDeletedWorksheet()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet2");
+
+                ws.Delete();
+                Assert.Throws<InvalidOperationException>(() => ws.CopyTo("Copy of Sheet2"));
+            }
+        }
+
+        [Test]
         public void WorksheetNameCannotStartWithApostrophe()
         {
             var title = "'StartsWithApostrophe";
