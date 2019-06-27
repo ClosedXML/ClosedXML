@@ -23,8 +23,17 @@ namespace ClosedXML.Excel
 
         public IXLPivotValue Add(String sourceName, String customName)
         {
-            if (sourceName != XLConstants.PivotTableValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
+            if (sourceName != XLConstants.PivotTableValuesSentinalLabel
+                && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName, StringComparer.OrdinalIgnoreCase)
+                && !this._pivotTable.CalculatedFields.Contains(sourceName))
                 throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
+
+            // This is a calculated field. The custom name can't equal the source name of anything else
+            if (_pivotTable.CalculatedFields.Contains(sourceName)
+                && customName.Equals(sourceName, StringComparison.Ordinal))
+            {
+                throw new ArgumentOutOfRangeException(nameof(customName), String.Format("Choose a unique pivot table custom name for the calculated field '{0}'. Example: 'Sum of {0}'", sourceName));
+            }
 
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
             _pivotValues.Add(customName, pivotValue);
@@ -40,9 +49,9 @@ namespace ClosedXML.Excel
             _pivotValues.Clear();
         }
 
-        public Boolean Contains(String sourceName)
+        public Boolean Contains(String customName)
         {
-            return _pivotValues.ContainsKey(sourceName);
+            return _pivotValues.ContainsKey(customName);
         }
 
         public Boolean Contains(IXLPivotValue pivotValue)
@@ -50,9 +59,14 @@ namespace ClosedXML.Excel
             return _pivotValues.ContainsKey(pivotValue.SourceName);
         }
 
-        public IXLPivotValue Get(String sourceName)
+        public Boolean ContainsSourceField(string sourceName)
         {
-            return _pivotValues[sourceName];
+            return _pivotValues.Values.Select(v => v.SourceName).Contains(sourceName, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public IXLPivotValue Get(String customName)
+        {
+            return _pivotValues[customName];
         }
 
         public IXLPivotValue Get(Int32 index)
@@ -70,11 +84,14 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Int32 IndexOf(String sourceName)
+        public Int32 IndexOf(String customName)
         {
-            var selectedItem = _pivotValues.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == sourceName);
-            if (selectedItem == null)
-                throw new ArgumentNullException(nameof(sourceName), "Invalid field name.");
+            if (!TryGetValue(customName, out IXLPivotValue pivotValue))
+                throw new ArgumentException("Invalid field name.", nameof(customName));
+
+            var selectedItem = _pivotValues
+                .Select((item, index) => new { Item = item, Position = index })
+                .First(i => i.Item.Key.Equals(customName, StringComparison.OrdinalIgnoreCase));
 
             return selectedItem.Position;
         }
@@ -84,9 +101,14 @@ namespace ClosedXML.Excel
             return IndexOf(pivotValue.SourceName);
         }
 
-        public void Remove(String sourceName)
+        public void Remove(String customName)
         {
-            _pivotValues.Remove(sourceName);
+            _pivotValues.Remove(customName);
+        }
+
+        public Boolean TryGetValue(string customName, out IXLPivotValue pivotValue)
+        {
+            return _pivotValues.TryGetValue(customName, out pivotValue);
         }
     }
 }

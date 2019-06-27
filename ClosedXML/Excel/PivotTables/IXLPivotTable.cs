@@ -121,6 +121,7 @@ namespace ClosedXML.Excel
         IXLPivotFields ColumnLabels { get; }
         IXLPivotFields RowLabels { get; }
         IXLPivotValues Values { get; }
+        IXLPivotTableCalculatedFields CalculatedFields { get; }
 
         String Name { get; set; }
         String Title { get; set; }

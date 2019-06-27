@@ -21,6 +21,7 @@ namespace ClosedXML.Excel
             ColumnLabels = new XLPivotFields(this);
             RowLabels = new XLPivotFields(this);
             Values = new XLPivotValues(this);
+            CalculatedFields = new XLPivotTableCalculatedFields(this);
             Theme = XLPivotTableTheme.PivotStyleLight16;
 
             SetExcelDefaults();
@@ -62,6 +63,7 @@ namespace ClosedXML.Excel
         public IXLPivotFields ColumnLabels { get; private set; }
         public IXLPivotFields RowLabels { get; private set; }
         public IXLPivotValues Values { get; private set; }
+        public IXLPivotTableCalculatedFields CalculatedFields { get; private set; }
 
         public IEnumerable<IXLPivotField> ImplementedFields
         {

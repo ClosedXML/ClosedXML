@@ -742,10 +742,16 @@ namespace ClosedXML.Excel
 
                                         var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt((int)df.Field.Value) as CacheField;
 
-                                        if (pf.Name != null)
-                                            pivotValue = pt.Values.Add(pf.Name.Value, df.Name.Value);
-                                        else if (cacheField.Name != null)
-                                            pivotValue = pt.Values.Add(cacheField.Name.Value, df.Name.Value);
+                                        var sourceName = pf.Name?.Value ?? cacheField.Name?.Value;
+                                        var customName = df.Name?.Value ?? pf.Name?.Value ?? cacheField.Name?.Value;
+                                        if (sourceName != null)
+                                        {
+                                            if (cacheField.Formula?.Value != null)
+                                            {
+                                                pt.CalculatedFields.Add(sourceName, cacheField.Formula.Value);
+                                            }
+                                            pivotValue = pt.Values.Add(sourceName, customName);
+                                        }
                                         else
                                             continue;
 
