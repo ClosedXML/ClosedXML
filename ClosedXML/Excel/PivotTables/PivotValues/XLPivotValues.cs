@@ -88,5 +88,10 @@ namespace ClosedXML.Excel
         {
             _pivotValues.Remove(customName);
         }
+
+        public Boolean TryGetValue(string customName, out IXLPivotValue pivotValue)
+        {
+            return _pivotValues.TryGetValue(customName, out pivotValue);
+        }
     }
 }

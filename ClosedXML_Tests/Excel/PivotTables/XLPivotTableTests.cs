@@ -659,18 +659,18 @@ namespace ClosedXML_Tests
         public void TwoPivotWithOneSourceTest()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\input.xlsx")))
-            TestHelper.CreateAndCompare(() =>
-            {
-                var wb = new XLWorkbook(stream);
-                var srcRange = wb.Range("Sheet1!$B$2:$H$207");
-
-                foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
+                TestHelper.CreateAndCompare(() =>
                 {
-                    pt.SourceRange = srcRange;
-                }
+                    var wb = new XLWorkbook(stream);
+                    var srcRange = wb.Range("Sheet1!$B$2:$H$207");
 
-                return wb;
-            }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
+                    foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
+                    {
+                        pt.SourceRange = srcRange;
+                    }
+
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
         }
 
         [Test]
@@ -708,6 +708,25 @@ namespace ClosedXML_Tests
                     Assert.IsTrue(ws.Cell("B1").IsEmpty());
                     Assert.IsTrue(ws.Cell("C2").IsEmpty());
                     Assert.IsTrue(ws.Cell("D5").IsEmpty());
+                }
+            }
+        }
+
+        [Test]
+        public void TryGetValue()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheet("pvt2");
+                    var pt = ws.PivotTables.First();
+
+                    Assert.IsTrue(pt.Values.TryGetValue("Sum of Quality", out IXLPivotValue pivotValue));
+                    Assert.AreEqual("Quality", pivotValue.SourceName);
+                    Assert.IsFalse(pt.Values.TryGetValue("dummy", out pivotValue));
+                    Assert.IsNull(pivotValue);
                 }
             }
         }

@@ -25,5 +25,7 @@ namespace ClosedXML.Excel
         Int32 IndexOf(IXLPivotValue pivotValue);
 
         void Remove(String customName);
+
+        Boolean TryGetValue(String customName, out IXLPivotValue pivotValue);
     }
 }
