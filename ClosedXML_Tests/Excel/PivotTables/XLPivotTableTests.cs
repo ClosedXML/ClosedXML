@@ -731,6 +731,24 @@ namespace ClosedXML_Tests
             }
         }
 
+        [Test]
+        public void IndexOf()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheet("pvt2");
+                    var pt = ws.PivotTables.First();
+
+                    Assert.AreEqual(0, pt.Values.IndexOf("NumberOfOrdersPercentageOfBearclaw"));
+                    Assert.AreEqual(1, pt.Values.IndexOf("Sum of Quality"));
+                    Assert.Throws<ArgumentException>(() => pt.Values.IndexOf("dummy"));
+                }
+            }
+        }
+
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
         {
             field.SubtotalsAtTop = !withDefaults;

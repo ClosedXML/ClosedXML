@@ -72,9 +72,12 @@ namespace ClosedXML.Excel
 
         public Int32 IndexOf(String customName)
         {
-            var selectedItem = _pivotValues.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == customName);
-            if (selectedItem == null)
-                throw new ArgumentNullException(nameof(customName), "Invalid field name.");
+            if (!TryGetValue(customName, out IXLPivotValue pivotValue))
+                throw new ArgumentException("Invalid field name.", nameof(customName));
+
+            var selectedItem = _pivotValues
+                .Select((item, index) => new { Item = item, Position = index })
+                .First(i => i.Item.Key.Equals(customName));
 
             return selectedItem.Position;
         }
