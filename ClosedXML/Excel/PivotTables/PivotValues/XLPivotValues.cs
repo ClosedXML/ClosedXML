@@ -77,7 +77,7 @@ namespace ClosedXML.Excel
 
             var selectedItem = _pivotValues
                 .Select((item, index) => new { Item = item, Position = index })
-                .First(i => i.Item.Key.Equals(customName));
+                .First(i => i.Item.Key.Equals(customName, StringComparison.OrdinalIgnoreCase));
 
             return selectedItem.Position;
         }

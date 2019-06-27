@@ -713,6 +713,29 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void PivotValueGet()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheet("pvt2");
+                    var pt = ws.PivotTables.First();
+
+                    IXLPivotValue pivotValue;
+                    pivotValue = pt.Values.Get("sum of quality");
+                    Assert.AreEqual("Sum of Quality", pivotValue.CustomName);
+
+                    Assert.Throws<KeyNotFoundException>(() => pivotValue = pt.Values.Get("dummy"));
+
+                    pivotValue = pt.Values.Get(1);
+                    Assert.AreEqual("Sum of Quality", pivotValue.CustomName);
+                }
+            }
+        }
+
+        [Test]
         public void TryGetValue()
         {
             using (var ms = new MemoryStream())
@@ -723,7 +746,8 @@ namespace ClosedXML_Tests
                     var ws = wb.Worksheet("pvt2");
                     var pt = ws.PivotTables.First();
 
-                    Assert.IsTrue(pt.Values.TryGetValue("Sum of Quality", out IXLPivotValue pivotValue));
+                    Assert.IsTrue(pt.Values.TryGetValue("sum of quality", out IXLPivotValue pivotValue));  // case insensitive
+                    Assert.IsTrue(pt.Values.TryGetValue("Sum of Quality", out pivotValue));
                     Assert.AreEqual("Quality", pivotValue.SourceName);
                     Assert.IsFalse(pt.Values.TryGetValue("dummy", out pivotValue));
                     Assert.IsNull(pivotValue);
@@ -744,6 +768,7 @@ namespace ClosedXML_Tests
 
                     Assert.AreEqual(0, pt.Values.IndexOf("NumberOfOrdersPercentageOfBearclaw"));
                     Assert.AreEqual(1, pt.Values.IndexOf("Sum of Quality"));
+                    Assert.AreEqual(1, pt.Values.IndexOf("sum of quality")); // case insensitive
                     Assert.Throws<ArgumentException>(() => pt.Values.IndexOf("dummy"));
                 }
             }
