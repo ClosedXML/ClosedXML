@@ -635,6 +635,7 @@ namespace ClosedXML.Excel
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
+            PivotTables.ForEach(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
             SparklineGroups.CopyTo(targetSheet);
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
