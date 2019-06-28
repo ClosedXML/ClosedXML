@@ -659,18 +659,18 @@ namespace ClosedXML_Tests
         public void TwoPivotWithOneSourceTest()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\input.xlsx")))
-            TestHelper.CreateAndCompare(() =>
-            {
-                var wb = new XLWorkbook(stream);
-                var srcRange = wb.Range("Sheet1!$B$2:$H$207");
-
-                foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
+                TestHelper.CreateAndCompare(() =>
                 {
-                    pt.SourceRange = srcRange;
-                }
+                    var wb = new XLWorkbook(stream);
+                    var srcRange = wb.Range("Sheet1!$B$2:$H$207");
 
-                return wb;
-            }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
+                    foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
+                    {
+                        pt.SourceRange = srcRange;
+                    }
+
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\TwoPivotTablesWithSingleSource\output.xlsx");
         }
 
         [Test]
