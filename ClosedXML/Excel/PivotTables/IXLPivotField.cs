@@ -69,6 +69,8 @@ namespace ClosedXML.Excel
 
         IXLPivotField AddSelectedValue(Object value);
 
+        IXLPivotField AddSelectedValues(IEnumerable<Object> values);
+
         IXLPivotFieldStyleFormats StyleFormats { get; }
 
         Boolean IsOnRowAxis { get; }
