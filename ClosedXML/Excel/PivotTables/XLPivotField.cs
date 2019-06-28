@@ -103,6 +103,12 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLPivotField AddSelectedValues(IEnumerable<Object> values)
+        {
+            ((List<Object>)SelectedValues).AddRange(values);
+            return this;
+        }
+
         private void SetExcelDefaults()
         {
             IncludeNewItemsInFilter = false;
