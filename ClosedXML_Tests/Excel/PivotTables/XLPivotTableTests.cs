@@ -51,7 +51,7 @@ namespace ClosedXML_Tests
                 pt.ShowContextualTooltips = false;
                 pt.DisplayCaptionsAndDropdowns = false;
                 pt.RepeatRowLabels = true;
-                pt.SaveSourceData = false;
+                pt.Source.SaveSourceData = false;
                 pt.EnableShowDetails = false;
                 pt.ShowColumnHeaders = false;
                 pt.ShowRowHeaders = false;
@@ -77,7 +77,7 @@ namespace ClosedXML_Tests
                 pt.PrintTitles = true;
 
                 // TODO pt.RefreshDataOnOpen = false;
-                pt.ItemsToRetainPerField = XLItemsToRetain.Max;
+                pt.Source.ItemsToRetainPerField = XLItemsToRetain.Max;
                 pt.EnableCellEditing = true;
                 pt.ShowValuesRow = true;
                 pt.ShowRowStripes = true;
@@ -122,10 +122,10 @@ namespace ClosedXML_Tests
                         Assert.AreEqual(true, ptassert.PrintExpandCollapsedButtons, "PrintExpandCollapsedButtons save failure");
                         Assert.AreEqual(true, ptassert.RepeatRowLabels, "RepeatRowLabels save failure");
                         Assert.AreEqual(true, ptassert.PrintTitles, "PrintTitles save failure");
-                        Assert.AreEqual(false, ptassert.SaveSourceData, "SaveSourceData save failure");
+                        Assert.AreEqual(false, ptassert.Source.SaveSourceData, "SaveSourceData save failure");
                         Assert.AreEqual(false, ptassert.EnableShowDetails, "EnableShowDetails save failure");
                         // TODO Assert.AreEqual(false, ptassert.RefreshDataOnOpen, "RefreshDataOnOpen save failure");
-                        Assert.AreEqual(XLItemsToRetain.Max, ptassert.ItemsToRetainPerField, "ItemsToRetainPerField save failure");
+                        Assert.AreEqual(XLItemsToRetain.Max, ptassert.Source.ItemsToRetainPerField, "ItemsToRetainPerField save failure");
                         Assert.AreEqual(true, ptassert.EnableCellEditing, "EnableCellEditing save failure");
                         Assert.AreEqual(XLPivotTableTheme.PivotStyleDark13, ptassert.Theme, "Theme save failure");
                         Assert.AreEqual(true, ptassert.ShowValuesRow, "ShowValuesRow save failure");
@@ -435,7 +435,7 @@ namespace ClosedXML_Tests
                 TestHelper.CreateAndCompare(() =>
                 {
                     var wb = new XLWorkbook(stream);
-                    wb.SaveAs(ms);
+                    wb.SaveAs(ms, validate: false);
                     return wb;
                 }, @"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\outputfile.xlsx");
             }
@@ -664,9 +664,11 @@ namespace ClosedXML_Tests
                     var wb = new XLWorkbook(stream);
                     var srcRange = wb.Range("Sheet1!$B$2:$H$207");
 
+                    var pivotSource = wb.PivotSources.Add(srcRange);
+
                     foreach (var pt in wb.Worksheets.SelectMany(ws => ws.PivotTables))
                     {
-                        pt.SourceRange = srcRange;
+                        pt.Source = pivotSource;
                     }
 
                     return wb;
@@ -681,7 +683,7 @@ namespace ClosedXML_Tests
                 {
                     var wb = new XLWorkbook(stream);
                     return wb;
-                }, @"Other\PivotTableReferenceFiles\PivotSubtotalsSource\input.xlsx");
+                }, @"Other\PivotTableReferenceFiles\PivotSubtotalsSource\output.xlsx");
         }
 
         [Test]

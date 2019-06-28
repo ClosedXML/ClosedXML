@@ -118,7 +118,7 @@ namespace ClosedXML_Tests
             var filePath2 = Path.Combine(directory, fileName);
 
             using (var wb = workbookGenerator.Invoke())
-                wb.SaveAs(filePath2, true, evaluateFormulae);
+                wb.SaveAs(filePath2, validate: false, evaluateFormulae);
 
             if (CompareWithResources)
             {

@@ -1,10 +1,26 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel
 {
+    public enum XLPivotCalculation
+    {
+        Normal,
+        DifferenceFrom,
+        PercentageOf,
+        PercentageDifferenceFrom,
+        RunningTotal,
+        PercentageOfRow,
+        PercentageOfColumn,
+        PercentageOfTotal,
+        Index
+    }
+
+    public enum XLPivotCalculationItem
+    {
+        Value, Previous, Next
+    }
+
     public enum XLPivotSummary
     {
         Sum,
@@ -20,52 +36,57 @@ namespace ClosedXML.Excel
         PopulationVariance,
     }
 
-    public enum XLPivotCalculation
-    {
-        Normal,
-        DifferenceFrom,
-        PercentageOf,
-        PercentageDifferenceFrom,
-        RunningTotal,
-        PercentageOfRow,
-        PercentageOfColumn,
-        PercentageOfTotal,
-        Index
-    }
-    public enum XLPivotCalculationItem
-    {
-        Value, Previous, Next
-    }
-
     public interface IXLPivotValue
     {
-        String SourceName { get; }
-        String CustomName { get; set; }
+        /// <summary>
+        /// Specifies the index to the base field when the ShowDataAs calculation is in use.
+        /// </summary>
+        /// <value>
+        /// The name of the column of the relevant base field.
+        /// </value>
+        String BaseFieldName { get; set; }
 
-        IXLPivotValueFormat NumberFormat { get; }
+        /// <summary>
+        /// Specifies the index to the base item when the ShowDataAs calculation is in use.
+        /// </summary>
+        /// <value>
+        /// The value of the referenced base field item.
+        /// </value>
+        Object BaseItemValue { get; set; }
 
-        XLPivotSummary SummaryFormula { get; set; }
         XLPivotCalculation Calculation { get; set; }
-        String BaseField { get; set; }
-        String BaseItem { get; set; }
         XLPivotCalculationItem CalculationItem { get; set; }
+        String CustomName { get; set; }
+        IXLPivotValueFormat NumberFormat { get; }
+        String SourceName { get; }
+        XLPivotSummary SummaryFormula { get; set; }
 
-        IXLPivotValue SetSummaryFormula(XLPivotSummary value);
+        IXLPivotValue SetBaseFieldName(String value);
+
+        IXLPivotValue SetBaseItemValue(Object value);
+
         IXLPivotValue SetCalculation(XLPivotCalculation value);
-        IXLPivotValue SetBaseField(String value);
-        IXLPivotValue SetBaseItem(String value);
+
         IXLPivotValue SetCalculationItem(XLPivotCalculationItem value);
 
+        IXLPivotValue SetSummaryFormula(XLPivotSummary value);
 
-        IXLPivotValue ShowAsNormal();
         IXLPivotValueCombination ShowAsDifferenceFrom(String fieldSourceName);
-        IXLPivotValueCombination ShowAsPercentageFrom(String fieldSourceName);
-        IXLPivotValueCombination ShowAsPercentageDifferenceFrom(String fieldSourceName);
-        IXLPivotValue ShowAsRunningTotalIn(String fieldSourceName);
-        IXLPivotValue ShowAsPercentageOfRow();
-        IXLPivotValue ShowAsPercentageOfColumn();
-        IXLPivotValue ShowAsPercentageOfTotal();
+
         IXLPivotValue ShowAsIndex();
 
+        IXLPivotValue ShowAsNormal();
+
+        IXLPivotValueCombination ShowAsPercentageDifferenceFrom(String fieldSourceName);
+
+        IXLPivotValueCombination ShowAsPercentageFrom(String fieldSourceName);
+
+        IXLPivotValue ShowAsPercentageOfColumn();
+
+        IXLPivotValue ShowAsPercentageOfRow();
+
+        IXLPivotValue ShowAsPercentageOfTotal();
+
+        IXLPivotValue ShowAsRunningTotalIn(String fieldSourceName);
     }
 }

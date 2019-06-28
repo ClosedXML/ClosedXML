@@ -166,6 +166,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLTheme Theme { get; private set; }
 
+        public IXLPivotSources PivotSources { get; private set; }
+
         /// <summary>
         ///   Gets or sets the default style for the workbook.
         ///   <para>All new worksheets will use this style.</para>
@@ -726,6 +728,7 @@ namespace ClosedXML.Excel
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
             NamedRanges = new XLNamedRanges(this);
+            PivotSources = new XLPivotSources();
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
             Author = Environment.UserName;

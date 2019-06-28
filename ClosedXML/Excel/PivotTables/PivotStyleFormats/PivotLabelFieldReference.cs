@@ -26,9 +26,9 @@ namespace ClosedXML.Excel
             return UInt32Value.FromUInt32((uint)PivotField.Offset);
         }
 
-        internal override IEnumerable<Int32> Match(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)
+        internal override IEnumerable<Int32> Match(XLWorkbook.PivotSourceInfo psi, IXLPivotTable pt)
         {
-            var values = pti.Fields[PivotField.SourceName].DistinctValues.ToList();
+            var values = psi.Fields[PivotField.SourceName].DistinctValues.ToList();
 
             if (predicate == null)
                 return new Int32[] { };

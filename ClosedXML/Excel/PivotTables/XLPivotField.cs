@@ -124,6 +124,6 @@ namespace ClosedXML.Excel
 
         public Boolean IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
 
-        public Int32 Offset => _pivotTable.SourceRangeFieldsAvailable.ToList().IndexOf(this.SourceName);
+        public Int32 Offset => _pivotTable.Source.SourceRangeFields.ToList().IndexOf(this.SourceName);
     }
 }

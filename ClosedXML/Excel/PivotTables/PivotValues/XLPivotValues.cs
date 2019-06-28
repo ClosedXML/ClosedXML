@@ -23,7 +23,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotValue Add(String sourceName, String customName)
         {
-            if (sourceName != XLConstants.PivotTableValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
+            if (sourceName != XLConstants.PivotTableValuesSentinalLabel && !this._pivotTable.Source.SourceRangeFields.Contains(sourceName))
                 throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
 
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };

@@ -13,23 +13,25 @@ namespace ClosedXML.Excel
             public SaveContext()
             {
                 DifferentialFormats = new Dictionary<XLStyleKey, int>();
-                PivotTables = new Dictionary<Guid, PivotTableInfo>();
+                PivotSources = new Dictionary<Guid, PivotSourceInfo>();
                 RelIdGenerator = new RelIdGenerator();
                 SharedFonts = new Dictionary<XLFontValue, FontInfo>();
                 SharedNumberFormats = new Dictionary<int, NumberFormatInfo>();
                 SharedStyles = new Dictionary<XLStyleKey, StyleInfo>();
                 TableId = 0;
                 TableNames = new HashSet<String>();
+                PivotSourceCacheId = 0;
             }
 
             public Dictionary<XLStyleKey, Int32> DifferentialFormats { get; private set; }
-            public IDictionary<Guid, PivotTableInfo> PivotTables { get; private set; }
+            public IDictionary<Guid, PivotSourceInfo> PivotSources { get; private set; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
             public Dictionary<Int32, NumberFormatInfo> SharedNumberFormats { get; private set; }
             public Dictionary<XLStyleKey, StyleInfo> SharedStyles { get; private set; }
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
+            public uint PivotSourceCacheId { get; set; }
         }
 
         #endregion Nested type: SaveContext
@@ -151,16 +153,16 @@ namespace ClosedXML.Excel
 
         internal struct PivotTableFieldInfo
         {
-            public XLDataType DataType;
+            public XLDataType? DataType;
             public Boolean MixedDataType;
-            public IEnumerable<Object> DistinctValues;
+            public Object[] DistinctValues;
             public Boolean IsTotallyBlankField;
         }
 
-        internal struct PivotTableInfo
+        internal struct PivotSourceInfo
         {
-            public IDictionary<String, PivotTableFieldInfo> Fields;
             public Guid Guid;
+            public IDictionary<String, PivotTableFieldInfo> Fields;
         }
 
         #endregion Nested type: Pivot tables

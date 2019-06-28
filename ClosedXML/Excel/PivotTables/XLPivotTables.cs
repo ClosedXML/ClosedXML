@@ -18,28 +18,35 @@ namespace ClosedXML.Excel
             _pivotTables.Add(name, (XLPivotTable)pivotTable);
         }
 
-        public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
+        public IXLPivotTable Add(string name, IXLCell targetCell, IXLPivotSource pivotSource)
         {
+            if (!pivotSource.CachedFields.Any())
+                pivotSource.Refresh();
+
             var pivotTable = new XLPivotTable(this.Worksheet)
             {
                 Name = name,
                 TargetCell = targetCell,
-                SourceRange = range
+                Source = pivotSource
             };
             _pivotTables.Add(name, pivotTable);
             return pivotTable;
         }
 
+        public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
+        {
+            if (!this.Worksheet.Workbook.PivotSources.TryGet(range, out IXLPivotSource pivotSource))
+                pivotSource = this.Worksheet.Workbook.PivotSources.Add(range);
+
+            return Add(name, targetCell, pivotSource);
+        }
+
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLTable table)
         {
-            var pivotTable = new XLPivotTable(this.Worksheet)
-            {
-                Name = name,
-                TargetCell = targetCell,
-                SourceTable = table
-            };
-            _pivotTables.Add(name, pivotTable);
-            return pivotTable;
+            if (!this.Worksheet.Workbook.PivotSources.TryGet(table, out IXLPivotSource pivotSource))
+                pivotSource = this.Worksheet.Workbook.PivotSources.Add(table);
+
+            return Add(name, targetCell, pivotSource);
         }
 
         public IXLPivotTable AddNew(string name, IXLCell targetCell, IXLRange range)

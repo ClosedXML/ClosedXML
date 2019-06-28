@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
             return UInt32Value.FromUInt32(unchecked((uint)-2));
         }
 
-        internal override IEnumerable<Int32> Match(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)
+        internal override IEnumerable<Int32> Match(XLWorkbook.PivotSourceInfo psi, IXLPivotTable pt)
         {
             return new Int32[]
             {

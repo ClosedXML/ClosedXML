@@ -59,7 +59,6 @@ namespace ClosedXML_Examples
                 var table = ws.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
                 ws.Columns().AdjustToContents();
 
-
                 IXLWorksheet ptSheet;
                 IXLPivotTable pt;
 
@@ -194,7 +193,7 @@ namespace ClosedXML_Examples
                     .AddSelectedValue(new DateTime(2017, 05, 03));
 
                 #endregion Pivot Table with filter
-                
+
                 #region Pivot table sorting
 
                 ptSheet = wb.Worksheets.Add("pvtSort");
@@ -208,7 +207,7 @@ namespace ClosedXML_Examples
 
                 pt.SetRowHeaderCaption("Pastry name");
 
-                #endregion Different kind of pivot
+                #endregion Pivot table sorting
 
                 #region Pivot Table with integer rows
 
@@ -225,7 +224,7 @@ namespace ClosedXML_Examples
                 pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
                 pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
 
-                #endregion Pivot Table with filter
+                #endregion Pivot Table with integer rows
 
                 wb.SaveAs(filePath);
             }
