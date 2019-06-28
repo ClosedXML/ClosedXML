@@ -599,6 +599,11 @@ namespace ClosedXML.Excel
             return CopyTo(Workbook, newSheetName, position);
         }
 
+        public IXLWorksheet CopyTo(XLWorkbook workbook)
+        {
+            return CopyTo(workbook, Name, workbook.WorksheetsInternal.Count + 1);
+        }
+
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName)
         {
             return CopyTo(workbook, newSheetName, workbook.WorksheetsInternal.Count + 1);
