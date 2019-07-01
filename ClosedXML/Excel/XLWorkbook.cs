@@ -135,6 +135,8 @@ namespace ClosedXML.Excel
             RecalculationCounter++;
         }
 
+        internal XLFormulaDefinitionRepository FormulaDefinitionRepository { get; }
+
         #region Nested Type : XLLoadSource
 
         private enum XLLoadSource
@@ -725,6 +727,7 @@ namespace ClosedXML.Excel
             ShowZeros = DefaultShowZeros;
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
+            FormulaDefinitionRepository = new XLFormulaDefinitionRepository(key => new XLFormulaDefinition(key.FormulaR1C1));
             NamedRanges = new XLNamedRanges(this);
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
@@ -839,6 +842,7 @@ namespace ClosedXML.Excel
         public void Dispose()
         {
             Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
+            FormulaDefinitionRepository.Clear();
         }
 
         public Boolean Use1904DateSystem { get; set; }

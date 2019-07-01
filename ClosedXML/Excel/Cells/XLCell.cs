@@ -20,10 +20,6 @@ namespace ClosedXML.Excel
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
 
-        private static readonly Regex A1Regex = new Regex(
-            @"(?<=\W)(\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
-            + @"|(?<=\W)(\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
-            + @"|(?<=\W)(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
 
         public static readonly Regex A1SimpleRegex = new Regex(
             //  @"(?<=\W)" // Start with non word
@@ -56,11 +52,6 @@ namespace ClosedXML.Excel
             @"(\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})" // A:A
             , RegexOptions.Compiled);
 
-        private static readonly Regex R1C1Regex = new Regex(
-            @"(?<=\W)([Rr](?:\[-?\d{0,7}\]|\d{0,7})?[Cc](?:\[-?\d{0,7}\]|\d{0,7})?)(?=\W)" // R1C1
-            + @"|(?<=\W)([Rr]\[?-?\d{0,7}\]?:[Rr]\[?-?\d{0,7}\]?)(?=\W)" // R:R
-            + @"|(?<=\W)([Cc]\[?-?\d{0,5}\]?:[Cc]\[?-?\d{0,5}\]?)(?=\W)", RegexOptions.Compiled); // C:C
-
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
         #region Fields
@@ -74,8 +65,6 @@ namespace ClosedXML.Excel
 
         public bool SettingHyperlink;
         internal int SharedStringId { get; set; }
-        private string _formulaA1;
-        private string _formulaR1C1;
 
         #endregion Fields
 
@@ -438,22 +427,23 @@ namespace ClosedXML.Excel
                 cAddress = fA1;
             }
 
-            if (Worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
-                w => String.Compare(w.Name, sName, true) == 0)
-                && XLHelper.IsValidA1Address(cAddress)
-                )
-            {
-                var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                    return 0;
-                else
-                    return referenceCell.Value;
-            }
-
             object retVal;
             try
             {
                 IsEvaluating = true;
+                if (Worksheet.Workbook.WorksheetsInternal.Any<XLWorksheet>(
+                    w => String.Compare(w.Name, sName, true) == 0)
+                    && XLHelper.IsValidA1Address(cAddress)
+                )
+                {
+                    var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                    if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
+                        return 0;
+                    else
+                        return referenceCell.Value;
+                }
+
+
 
                 if (Worksheet
                         .Workbook
@@ -481,6 +471,40 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
+        private void EvaluatePrecedingCells()
+        {
+            var evaluatingStack = new Stack<XLCell>();
+            var processingQueue = new Queue<XLCell>(new []{this});
+
+            while (processingQueue.Count > 0)
+            {
+                var currentCell = processingQueue.Dequeue();
+                if (!currentCell.IsEvaluating)
+                {
+                    evaluatingStack.Push(currentCell);
+                    currentCell.IsEvaluating = true;
+                }
+
+                var precedingCells = currentCell.GetAffectingCells();
+                foreach (var precedingCell in precedingCells)
+                {
+                    if (!precedingCell.IsEvaluating)
+                        processingQueue.Enqueue(precedingCell);
+                }
+            }
+
+            foreach (var cell in evaluatingStack)
+            {
+                cell.IsEvaluating = false;
+            }
+
+            while (evaluatingStack.Count > 0)
+            {
+                var cell = evaluatingStack.Pop();
+                cell.EvaluateInternal();
+            }
+        }
+
         public void InvalidateFormula()
         {
             NeedsRecalculation = true;
@@ -496,6 +520,14 @@ namespace ClosedXML.Excel
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
         public Object Evaluate(Boolean force = false)
+        {
+            if (force || NeedsRecalculation)
+                EvaluatePrecedingCells();
+
+            return EvaluateInternal(force);
+        }
+
+        internal Object EvaluateInternal(Boolean force = false)
         {
             if (force || NeedsRecalculation)
             {
@@ -640,8 +672,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_formulaA1) ||
-                    !String.IsNullOrEmpty(_formulaR1C1))
+                if (HasFormula)
                 {
                     return Evaluate();
                 }
@@ -651,7 +682,7 @@ namespace ClosedXML.Excel
             }
             set
             {
-                FormulaA1 = String.Empty;
+                _formula = null;
 
                 if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
 
@@ -1208,37 +1239,26 @@ namespace ClosedXML.Excel
             Worksheet.Range(Address, Address).Delete(shiftDeleteCells);
         }
 
+        private XLCellFormula _formula;
+
         public string FormulaA1
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1))
-                {
-                    if (!String.IsNullOrWhiteSpace(_formulaR1C1))
-                    {
-                        _formulaA1 = GetFormulaA1(_formulaR1C1);
-                        return FormulaA1;
-                    }
+                if (!HasFormula)
+                    return string.Empty;
 
-                    return String.Empty;
-                }
-
-                if (_formulaA1.Trim()[0] == '=')
-                    return _formulaA1.Substring(1);
-
-                if (_formulaA1.Trim().StartsWith("{="))
-                    return "{" + _formulaA1.Substring(2);
-
-                return _formulaA1;
+                return _formula.FormulaA1.TrimStart('=');
             }
 
             set
             {
                 InvalidateFormula();
 
-                _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
-
-                _formulaR1C1 = null;
+                if (String.IsNullOrWhiteSpace(value))
+                    _formula = null;
+                else
+                    _formula = XLCellFormula.FromFormulaA1(this, value);
             }
         }
 
@@ -1246,19 +1266,20 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaR1C1))
-                    _formulaR1C1 = GetFormulaR1C1(FormulaA1);
+                if (!HasFormula)
+                    return string.Empty;
 
-                return _formulaR1C1;
+                return _formula.FormulaR1C1.TrimStart('=');
             }
 
             set
             {
                 InvalidateFormula();
 
-                _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
-
-                _formulaA1 = null;
+                if (String.IsNullOrWhiteSpace(value))
+                    _formula = null;
+                else
+                    _formula = XLCellFormula.FromFormulaR1C1(this, value);
             }
         }
 
@@ -1345,7 +1366,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1) && String.IsNullOrEmpty(_formulaR1C1))
+                if (!HasFormula)
                     return false;
 
                 if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
@@ -1368,7 +1389,7 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetAffectingCells()
         {
-            return Worksheet.CalcEngine.GetPrecedentCells(_formulaA1).Cast<XLCell>();
+            return Worksheet.CalcEngine.GetPrecedentCells(FormulaA1).Cast<XLCell>();
         }
 
         /// <summary>
@@ -2243,204 +2264,14 @@ namespace ClosedXML.Excel
 
         internal string GetFormulaR1C1(string value)
         {
-            return GetFormula(value, FormulaConversionType.A1ToR1C1, 0, 0);
+            var formula = XLCellFormula.FromFormulaA1(this, value);
+            return formula.FormulaR1C1;
         }
 
         internal string GetFormulaA1(string value)
         {
-            return GetFormula(value, FormulaConversionType.R1C1ToA1, 0, 0);
-        }
-
-        private string GetFormula(string strValue, FormulaConversionType conversionType, int rowsToShift,
-                                  int columnsToShift)
-        {
-            if (String.IsNullOrWhiteSpace(strValue))
-                return String.Empty;
-
-            var value = ">" + strValue + "<";
-
-            var regex = conversionType == FormulaConversionType.A1ToR1C1 ? A1Regex : R1C1Regex;
-
-            var sb = new StringBuilder();
-            var lastIndex = 0;
-
-            foreach (var match in regex.Matches(value).Cast<Match>())
-            {
-                var matchString = match.Value;
-                var matchIndex = match.Index;
-                if (value.Substring(0, matchIndex).CharCount('"') % 2 == 0
-                    && value.Substring(0, matchIndex).CharCount('\'') % 2 == 0)
-                {
-                    // Check if the match is in between quotes
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex));
-                    sb.Append(conversionType == FormulaConversionType.A1ToR1C1
-                        ? GetR1C1Address(matchString, rowsToShift, columnsToShift)
-                        : GetA1Address(matchString, rowsToShift, columnsToShift));
-                }
-                else
-                    sb.Append(value.Substring(lastIndex, matchIndex - lastIndex + matchString.Length));
-                lastIndex = matchIndex + matchString.Length;
-            }
-
-            if (lastIndex < value.Length)
-                sb.Append(value.Substring(lastIndex));
-
-            var retVal = sb.ToString();
-            return retVal.Substring(1, retVal.Length - 2);
-        }
-
-        private string GetA1Address(string r1C1Address, int rowsToShift, int columnsToShift)
-        {
-            var addressToUse = r1C1Address.ToUpper();
-
-            if (addressToUse.Contains(':'))
-            {
-                var parts = addressToUse.Split(':');
-                var p1 = parts[0];
-                var p2 = parts[1];
-                string leftPart;
-                string rightPart;
-                if (p1.StartsWith("R"))
-                {
-                    leftPart = GetA1Row(p1, rowsToShift);
-                    rightPart = GetA1Row(p2, rowsToShift);
-                }
-                else
-                {
-                    leftPart = GetA1Column(p1, columnsToShift);
-                    rightPart = GetA1Column(p2, columnsToShift);
-                }
-
-                return leftPart + ":" + rightPart;
-            }
-
-            try
-            {
-                var rowPart = addressToUse.Substring(0, addressToUse.IndexOf("C"));
-                var rowToReturn = GetA1Row(rowPart, rowsToShift);
-
-                var columnPart = addressToUse.Substring(addressToUse.IndexOf("C"));
-                var columnToReturn = GetA1Column(columnPart, columnsToShift);
-
-                var retAddress = columnToReturn + rowToReturn;
-                return retAddress;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return "#REF!";
-            }
-        }
-
-        private string GetA1Column(string columnPart, int columnsToShift)
-        {
-            string columnToReturn;
-            if (columnPart == "C")
-                columnToReturn = XLHelper.GetColumnLetterFromNumber(_columnNumber + columnsToShift);
-            else
-            {
-                var bIndex = columnPart.IndexOf("[");
-                var mIndex = columnPart.IndexOf("-");
-                if (bIndex >= 0)
-                {
-                    columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        _columnNumber +
-                        Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
-                        );
-                }
-                else if (mIndex >= 0)
-                {
-                    columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        _columnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
-                        );
-                }
-                else
-                {
-                    columnToReturn = "$" +
-                                     XLHelper.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) +
-                                                                        columnsToShift);
-                }
-            }
-
-            return columnToReturn;
-        }
-
-        private string GetA1Row(string rowPart, int rowsToShift)
-        {
-            string rowToReturn;
-            if (rowPart == "R")
-                rowToReturn = (_rowNumber + rowsToShift).ToString();
-            else
-            {
-                var bIndex = rowPart.IndexOf("[");
-                if (bIndex >= 0)
-                {
-                    rowToReturn =
-                        (_rowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
-                         rowsToShift).ToString();
-                }
-                else
-                    rowToReturn = "$" + (Int32.Parse(rowPart.Substring(1)) + rowsToShift);
-            }
-
-            return rowToReturn;
-        }
-
-        private string GetR1C1Address(string a1Address, int rowsToShift, int columnsToShift)
-        {
-            if (a1Address.Contains(':'))
-            {
-                var parts = a1Address.Split(':');
-                var p1 = parts[0];
-                var p2 = parts[1];
-                if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
-                {
-                    var row2 = Int32.Parse(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);
-                    var rightPart = GetR1C1Row(row2, p2.Contains('$'), rowsToShift);
-                    return leftPart + ":" + rightPart;
-                }
-                else
-                {
-                    var column1 = XLHelper.GetColumnNumberFromLetter(p1.Replace("$", string.Empty));
-                    var column2 = XLHelper.GetColumnNumberFromLetter(p2.Replace("$", string.Empty));
-                    var leftPart = GetR1C1Column(column1, p1.Contains('$'), columnsToShift);
-                    var rightPart = GetR1C1Column(column2, p2.Contains('$'), columnsToShift);
-                    return leftPart + ":" + rightPart;
-                }
-            }
-
-            var address = XLAddress.Create(Worksheet, a1Address);
-
-            var rowPart = GetR1C1Row(address.RowNumber, address.FixedRow, rowsToShift);
-            var columnPart = GetR1C1Column(address.ColumnNumber, address.FixedColumn, columnsToShift);
-
-            return rowPart + columnPart;
-        }
-
-        private string GetR1C1Row(int rowNumber, bool fixedRow, int rowsToShift)
-        {
-            string rowPart;
-            rowNumber += rowsToShift;
-            var rowDiff = rowNumber - _rowNumber;
-            if (rowDiff != 0 || fixedRow)
-                rowPart = fixedRow ? "R" + rowNumber : "R[" + rowDiff + "]";
-            else
-                rowPart = "R";
-
-            return rowPart;
-        }
-
-        private string GetR1C1Column(int columnNumber, bool fixedColumn, int columnsToShift)
-        {
-            string columnPart;
-            columnNumber += columnsToShift;
-            var columnDiff = columnNumber - _columnNumber;
-            if (columnDiff != 0 || fixedColumn)
-                columnPart = fixedColumn ? "C" + columnNumber : "C[" + columnDiff + "]";
-            else
-                columnPart = "C";
-
-            return columnPart;
+            var formula = XLCellFormula.FromFormulaR1C1(this, value);
+            return formula.FormulaA1;
         }
 
         internal void CopyValuesFrom(XLCell source)
@@ -2856,16 +2687,7 @@ namespace ClosedXML.Excel
             return Worksheet.Cell(_rowNumber + rowsToShift, _columnNumber + columnsToShift);
         }
 
-        #region Nested type: FormulaConversionType
-
-        private enum FormulaConversionType
-        {
-            A1ToR1C1,
-            R1C1ToA1
-        };
-
-        #endregion Nested type: FormulaConversionType
-
+ 
         #region XLCell Above
 
         IXLCell IXLCell.CellAbove()
@@ -2962,7 +2784,7 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula { get { return _formula != null; } }
 
         public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
 

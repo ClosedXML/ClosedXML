@@ -49,7 +49,7 @@ namespace ClosedXML.Excel.CalcEngine
                     return cell.Value;
                 else
                 {
-                    return (cell as XLCell).Evaluate();
+                    return (cell as XLCell).EvaluateInternal();
                 }
             }
             finally
