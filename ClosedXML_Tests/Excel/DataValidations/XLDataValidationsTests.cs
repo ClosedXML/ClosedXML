@@ -128,5 +128,27 @@ namespace ClosedXML_Tests.Excel.DataValidations
                 Assert.IsNull(foundDv);
             }
         }
+
+        [Test]
+        public void ConsolidatedDataValidationsAreUnsubscribed()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var dv1 = ws.Range("A1:A3").SetDataValidation();
+                dv1.MinValue = "100";
+                var dv2 = ws.Range("B1:B3").SetDataValidation();
+                dv2.MinValue = "100";
+
+                (ws.DataValidations as XLDataValidations).Consolidate();
+                dv1.AddRange(ws.Range("C1:C3"));
+                dv2.AddRange(ws.Range("D1:D3"));
+
+                var consolidatedDv = ws.DataValidations.Single();
+                Assert.AreSame(dv1, consolidatedDv);
+                Assert.True(ws.Cell("C1").HasDataValidation);
+                Assert.False(ws.Cell("D1").HasDataValidation);
+            }
+        }
     }
 }
