@@ -180,7 +180,7 @@ namespace ClosedXML.Excel
             };
 
             var rules = _dataValidations.ToList();
-            _dataValidations.Clear();
+            rules.ForEach(Delete);
 
             while (rules.Any())
             {
@@ -196,7 +196,7 @@ namespace ClosedXML.Excel
 
                 consRule.ClearRanges();
                 consRule.AddRanges(consolidatedRanges);
-                _dataValidations.Add(consRule);
+                Add(consRule);
             }
         }
 
