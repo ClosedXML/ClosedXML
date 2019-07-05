@@ -110,7 +110,7 @@ namespace ClosedXML_Tests.Excel.Comments
         [Test]
         public void EnsureUnaffectedCommentAndVmlPartIdsAndUris()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CommentAndButton.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentAndButton.xlsx")))
             using (var ms = new MemoryStream())
             {
                 string commentPartId;
@@ -168,7 +168,7 @@ namespace ClosedXML_Tests.Excel.Comments
         {
             using (var ms = new MemoryStream())
             {
-                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Misc\CommentAndButton.xlsx")))
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentAndButton.xlsx")))
                 using (var wb = new XLWorkbook(stream))
                 {
                     wb.SaveAs(ms);
