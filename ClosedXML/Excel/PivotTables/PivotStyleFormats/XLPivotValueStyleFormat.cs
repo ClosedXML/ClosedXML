@@ -1,15 +1,25 @@
 ﻿// Keep this file CodeMaid organised and cleaned
 using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    internal class XLPivotValueStyleFormat : XLPivotStyleFormat, IXLPivotValueStyleFormat
+    internal class XLPivotValueStyleFormat : IXLPivotValueStyleFormat
     {
-        public XLPivotValueStyleFormat(IXLPivotField field = null, IXLStyle style = null)
-            : base(field, style)
-        { }
+        public XLPivotValueStyleFormat(IXLPivotFormat pivotFormat)
+        {
+            PivotFormat = pivotFormat;
+        }
 
         #region IXLPivotValueStyleFormat members
+
+        public IXLStyle Style
+        {
+            get => PivotFormat.Style;
+            set => PivotFormat.Style = value;
+        }
+
+        public IXLPivotFormat PivotFormat { get; }
 
         public IXLPivotValueStyleFormat AndWith(IXLPivotField field)
         {
@@ -18,13 +28,13 @@ namespace ClosedXML.Excel
 
         public IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<Object> predicate)
         {
-            FieldReferences.Add(new PivotLabelFieldReference(field, predicate));
+            ((List<IFieldRef>)PivotFormat.FieldReferences).Add(FieldRef.ForField(field.SourceName, predicate));
             return this;
         }
 
         public IXLPivotValueStyleFormat ForValueField(IXLPivotValue valueField)
         {
-            FieldReferences.Add(new PivotValueFieldReference(valueField.SourceName));
+            ((List<IFieldRef>)PivotFormat.FieldReferences).Add(FieldRef.ValueField(valueField.SourceName));
             return this;
         }
 

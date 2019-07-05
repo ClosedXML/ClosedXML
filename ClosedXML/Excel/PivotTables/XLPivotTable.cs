@@ -387,26 +387,16 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Worksheet { get; }
 
-        public IXLPivotTableStyleFormats StyleFormats { get; } = new XLPivotTableStyleFormats();
+        public IXLPivotFormatList Styles { get; } = new XLPivotFormatList();
 
-        public IEnumerable<IXLPivotStyleFormat> AllStyleFormats
+        public IXLPivotFormat AddRowGrandTotalFormats(XLPivotStyleFormatElement element)
         {
-            get
-            {
-                foreach (var styleFormat in this.StyleFormats.RowGrandTotalFormats)
-                    yield return styleFormat;
+            return Styles.Add(b => { b.ForGrandRow().AppliesTo(element); });
+        }
 
-                foreach (var styleFormat in this.StyleFormats.ColumnGrandTotalFormats)
-                    yield return styleFormat;
-
-                foreach (var pivotField in ImplementedFields)
-                {
-                    yield return pivotField.StyleFormats.Subtotal;
-                    yield return pivotField.StyleFormats.Header;
-                    yield return pivotField.StyleFormats.Label;
-                    yield return pivotField.StyleFormats.DataValuesFormat;
-                }
-            }
+        public IXLPivotFormat AddColumnGrandTotalFormats(XLPivotStyleFormatElement element)
+        {
+            return Styles.Add(b => { b.ForGrandColumn().AppliesTo(element); });
         }
     }
 }

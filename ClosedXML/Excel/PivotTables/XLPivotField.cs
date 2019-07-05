@@ -17,8 +17,6 @@ namespace ClosedXML.Excel
             SelectedValues = new List<Object>();
             SortType = XLPivotSortType.Default;
             SetExcelDefaults();
-
-            StyleFormats = new XLPivotFieldStyleFormats(this);
         }
 
         public String SourceName { get; private set; }
@@ -103,6 +101,30 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLPivotFormat AddLabelStyle()
+        {
+            return _pivotTable.Styles.Add(b => { b.ForLabel(this); });
+        }
+
+        public IXLPivotFormat AddHeaderStyle()
+        {
+            return _pivotTable.Styles.Add(b => { b.ForHeader(this); });
+        }
+
+        public IXLPivotValueStyleFormat AddDataValuesStyle()
+        {
+            var pf = _pivotTable.Styles.Add(b => { b.ForData(this); });
+            return new XLPivotValueStyleFormat(pf);
+        }
+
+        public IXLPivotFormat AddSubtotalStyle(XLPivotStyleFormatElement element)
+        {
+            if (_pivotTable.ClassicPivotTableLayout)
+                return _pivotTable.Styles.Add(b => { b.ForSubtotal(this).AppliesTo(element); });
+            else
+                return _pivotTable.Styles.Add(b => { b.ForData(this).AndWith(this).AppliesTo(element); });
+        }
+
         private void SetExcelDefaults()
         {
             IncludeNewItemsInFilter = false;
@@ -115,8 +137,6 @@ namespace ClosedXML.Excel
             SubtotalsAtTop = true;
             Collapsed = false;
         }
-
-        public IXLPivotFieldStyleFormats StyleFormats { get; set; }
 
         public Boolean IsOnRowAxis => _pivotTable.RowLabels.Contains(this.SourceName);
 

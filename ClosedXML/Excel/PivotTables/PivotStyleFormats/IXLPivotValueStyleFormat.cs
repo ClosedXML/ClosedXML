@@ -3,8 +3,11 @@ using System;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLPivotValueStyleFormat : IXLPivotStyleFormat
+    public interface IXLPivotValueStyleFormat
     {
+        IXLPivotFormat PivotFormat { get; }
+        IXLStyle Style { get; set; }
+
         IXLPivotValueStyleFormat AndWith(IXLPivotField field);
 
         IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<Object> predicate);

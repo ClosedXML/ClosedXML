@@ -69,12 +69,14 @@ namespace ClosedXML.Excel
 
         IXLPivotField AddSelectedValue(Object value);
 
-        IXLPivotFieldStyleFormats StyleFormats { get; }
-
         Boolean IsOnRowAxis { get; }
         Boolean IsOnColumnAxis { get; }
         Boolean IsInFilterList { get; }
 
         Int32 Offset { get; }
+        IXLPivotFormat AddLabelStyle();
+        IXLPivotFormat AddHeaderStyle();
+        IXLPivotValueStyleFormat AddDataValuesStyle();
+        IXLPivotFormat AddSubtotalStyle(XLPivotStyleFormatElement element);
     }
 }
