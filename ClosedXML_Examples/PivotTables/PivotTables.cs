@@ -74,12 +74,12 @@ namespace ClosedXML_Examples
                     pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table.AsRange());
 
                     // The rows in our pivot table will be the names of the pastries
-                    if (i == 2) pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                    if (i == 2) pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
                     pt.RowLabels.Add("Name");
 
                     // The columns will be the months
                     pt.ColumnLabels.Add("Month");
-                    if (i == 3) pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                    if (i == 3) pt.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
 
                     // The values in our table will come from the "NumberOfOrders" field
                     // The default calculation setting is a total of each row/column
@@ -150,7 +150,7 @@ namespace ClosedXML_Examples
                 pt = ptSheet.PivotTables.Add("pvtHidesubTotals", ptSheet.Cell(1, 1), table.AsRange());
 
                 // The rows in our pivot table will be the names of the pastries
-                pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
 
                 // The columns will be the months
                 pt.ColumnLabels.Add("Month");

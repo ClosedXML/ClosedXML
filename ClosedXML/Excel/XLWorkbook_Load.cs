@@ -660,7 +660,7 @@ namespace ClosedXML.Excel
                                     {
                                         IXLPivotField pivotField = null;
                                         if (rf.Index.Value == -2)
-                                            pivotField = pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                            pivotField = pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
                                         else
                                         {
                                             var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
@@ -697,7 +697,7 @@ namespace ClosedXML.Excel
                                 {
                                     IXLPivotField pivotField = null;
                                     if (cf.Index.Value == -2)
-                                        pivotField = pt.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                        pivotField = pt.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
                                     else if (cf.Index < pivotTableDefinition.PivotFields.Count)
                                     {
                                         var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
@@ -733,7 +733,7 @@ namespace ClosedXML.Excel
                                 {
                                     IXLPivotValue pivotValue = null;
                                     if ((int)df.Field.Value == -2)
-                                        pivotValue = pt.Values.Add(XLConstants.PivotTableValuesSentinalLabel);
+                                        pivotValue = pt.Values.Add(XLConstants.PivotTable.ValuesSentinalLabel);
                                     else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
                                     {
                                         var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;

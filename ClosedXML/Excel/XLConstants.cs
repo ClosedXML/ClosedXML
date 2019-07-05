@@ -4,13 +4,18 @@ namespace ClosedXML.Excel
     //Use the class to store magic strings or variables.
     public static class XLConstants
     {
-        public const int NumberOfBuiltInStyles = 164; // But they are stored as 0-based (0 - 163)
+        internal const int NumberOfBuiltInStyles = 164; // But they are stored as 0-based (0 - 163)
 
         #region Pivot Table constants
 
-        public const byte PivotTableCreatedVersion = 5;
-        public const byte PivotTableRefreshedVersion = 5;
-        public const string PivotTableValuesSentinalLabel = "{{Values}}";
+        public static class PivotTable
+        {
+            internal const byte CreatedVersion = 5;
+            internal const byte RefreshedVersion = 5;
+
+            //TODO: Needs to be refactored to be more user-friendly.
+            public const string ValuesSentinalLabel = "{{Values}}";
+        }
 
         #endregion Pivot Table constants
 

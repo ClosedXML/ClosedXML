@@ -600,7 +600,7 @@ namespace ClosedXML_Tests
 
                     pt.RowLabels.Add("Month");
                     pt.RowLabels.Add("Name");
-                    pt.RowLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+                    pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
 
                     pt.ColumnLabels.Add("BakeDate");
                     pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
