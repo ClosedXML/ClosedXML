@@ -23,14 +23,14 @@ namespace ClosedXML.Excel
 
         public IXLPivotValue Add(String sourceName, String customName)
         {
-            if (sourceName != XLConstants.PivotTableValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
                 throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
 
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
             _pivotValues.Add(customName, pivotValue);
 
-            if (_pivotValues.Count > 1 && this._pivotTable.ColumnLabels.All(cl => cl.SourceName != XLConstants.PivotTableValuesSentinalLabel) && this._pivotTable.RowLabels.All(rl => rl.SourceName != XLConstants.PivotTableValuesSentinalLabel))
-                _pivotTable.ColumnLabels.Add(XLConstants.PivotTableValuesSentinalLabel);
+            if (_pivotValues.Count > 1 && this._pivotTable.ColumnLabels.All(cl => cl.SourceName != XLConstants.PivotTable.ValuesSentinalLabel) && this._pivotTable.RowLabels.All(rl => rl.SourceName != XLConstants.PivotTable.ValuesSentinalLabel))
+                _pivotTable.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
 
             return pivotValue;
         }

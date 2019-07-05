@@ -2087,7 +2087,7 @@ namespace ClosedXML.Excel
 
             #region CreatedVersion
 
-            byte createdVersion = XLConstants.PivotTableCreatedVersion;
+            byte createdVersion = XLConstants.PivotTable.CreatedVersion;
 
             if (pivotCacheDefinition.CreatedVersion?.HasValue ?? false)
                 pivotCacheDefinition.CreatedVersion = Math.Max(createdVersion, pivotCacheDefinition.CreatedVersion.Value);
@@ -2098,7 +2098,7 @@ namespace ClosedXML.Excel
 
             #region RefreshedVersion
 
-            byte refreshedVersion = XLConstants.PivotTableRefreshedVersion;
+            byte refreshedVersion = XLConstants.PivotTable.RefreshedVersion;
             if (pivotCacheDefinition.RefreshedVersion?.HasValue ?? false)
                 pivotCacheDefinition.RefreshedVersion = Math.Max(refreshedVersion, pivotCacheDefinition.RefreshedVersion.Value);
             else
@@ -2483,15 +2483,15 @@ namespace ClosedXML.Excel
             // Add value fields first
             if (pt.Values.Any())
             {
-                if (pt.RowLabels.Contains(XLConstants.PivotTableValuesSentinalLabel))
+                if (pt.RowLabels.Contains(XLConstants.PivotTable.ValuesSentinalLabel))
                 {
-                    var f = pt.RowLabels.First(f1 => f1.SourceName == XLConstants.PivotTableValuesSentinalLabel);
+                    var f = pt.RowLabels.First(f1 => f1.SourceName == XLConstants.PivotTable.ValuesSentinalLabel);
                     orderedRowLabels.Add(pt.RowLabels.IndexOf(f), new Field { Index = -2 });
                     pivotTableDefinition.DataOnRows = true;
                 }
-                else if (pt.ColumnLabels.Contains(XLConstants.PivotTableValuesSentinalLabel))
+                else if (pt.ColumnLabels.Contains(XLConstants.PivotTable.ValuesSentinalLabel))
                 {
-                    var f = pt.ColumnLabels.First(f1 => f1.SourceName == XLConstants.PivotTableValuesSentinalLabel);
+                    var f = pt.ColumnLabels.First(f1 => f1.SourceName == XLConstants.PivotTable.ValuesSentinalLabel);
                     orderedColumnLabels.Add(pt.ColumnLabels.IndexOf(f), new Field { Index = -2 });
                 }
             }
@@ -2833,7 +2833,7 @@ namespace ClosedXML.Excel
                 pivotTableDefinition.AppendChild(rowItems);
             }
 
-            if (pt.ColumnLabels.All(cl => cl.CustomName == XLConstants.PivotTableValuesSentinalLabel))
+            if (pt.ColumnLabels.All(cl => cl.CustomName == XLConstants.PivotTable.ValuesSentinalLabel))
             {
                 for (int i = 0; i < pt.Values.Count(); i++)
                 {
