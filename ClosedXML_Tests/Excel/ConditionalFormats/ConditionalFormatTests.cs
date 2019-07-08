@@ -1,7 +1,9 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace ClosedXML_Tests.Excel.ConditionalFormats
 {
@@ -70,6 +72,46 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
                 wb.SaveAs(ms, options);
                 var wb_saved = new XLWorkbook(ms);
                 Assert.AreEqual(expectedCount, wb_saved.Worksheet("Sheet").DataValidations.Count());
+            }
+        }
+
+        [TestCase("en-US")]
+        [TestCase("fr-FR")]
+        [TestCase("ru-RU")]
+        public void SaveConditionalFormat_CultureIndependent(string culture)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var expectedValue = 1.5;
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet();
+                    var i = 1;
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenEquals(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenNotEquals(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenGreaterThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenLessThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrGreaterThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrLessThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                    ws.Cell(i++, 1).AddConditionalFormat().WhenNotBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+
+                    var conditionalFormatValues = ws.ConditionalFormats
+                        .SelectMany(cf => cf.Values.Values)
+                        .Select(v => v.Value)
+                        .Distinct();
+
+                    Assert.AreEqual(1, conditionalFormatValues.Count());
+                    Assert.AreEqual("1.5", conditionalFormatValues.Single());
+                }
             }
         }
     }
