@@ -434,7 +434,7 @@ namespace ClosedXML.Excel
                             var runProperties = run.RunProperties;
                             String text = run.Text.InnerText.FixNewLines();
                             var rt = xlComment.AddText(text);
-                            LoadFont(runProperties, rt);
+                            LoadFont(runProperties, rt, isDifferentialFormat: false);
                         }
 
                         if (shape != null)
@@ -1035,17 +1035,14 @@ namespace ClosedXML.Excel
                     styleFormat.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.CollapsedLevelsAreSubtotals, false);
                 }
 
-                IXLStyle style = XLStyle.Default;
                 if (format.FormatId != null)
                 {
                     var df = differentialFormats[(Int32)format.FormatId.Value];
-                    LoadFont(df.Font, style.Font);
-                    LoadFill(df.Fill, style.Fill, differentialFillFormat: true);
-                    LoadBorder(df.Border, style.Border);
-                    LoadNumberFormat(df.NumberingFormat, style.NumberFormat);
+                    LoadFont(df.Font, styleFormat.Style.Font, isDifferentialFormat: true);
+                    LoadFill(df.Fill, styleFormat.Style.Fill, differentialFillFormat: true);
+                    LoadBorder(df.Border, styleFormat.Style.Border);
+                    LoadNumberFormat(df.NumberingFormat, styleFormat.Style.NumberFormat);
                 }
-
-                styleFormat.Style = style;
             }
         }
 
@@ -1880,7 +1877,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     var rt = xlCell.RichText.AddText(text);
-                    LoadFont(runProperties, rt);
+                    LoadFont(runProperties, rt, isDifferentialFormat: false);
                 }
                 if (!hasRuns)
                     hasRuns = true;
@@ -1899,7 +1896,7 @@ namespace ClosedXML.Excel
                 if (pp.Type != null)
                     xlCell.RichText.Phonetics.Type = pp.Type.Value.ToClosedXml();
 
-                LoadFont(pp, xlCell.RichText.Phonetics);
+                LoadFont(pp, xlCell.RichText.Phonetics, isDifferentialFormat: false);
             }
 
             #endregion Load PhoneticProperties
@@ -2000,48 +1997,39 @@ namespace ClosedXML.Excel
             }
         }
 
-        private void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase)
+        private void LoadFont(OpenXmlElement fontSource, IXLFontBase fontBase, bool isDifferentialFormat)
         {
             if (fontSource == null) return;
 
-            fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault());
+            fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault(), isDifferentialFormat ? fontBase.Bold : false);
+
             var fontColor = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>().FirstOrDefault();
             if (fontColor != null)
                 fontBase.FontColor = fontColor.ToClosedXMLColor(_colorList);
 
-            var fontFamilyNumbering =
-                fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
-            if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
-                fontBase.FontFamilyNumbering =
-                    (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
-            var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
-            if (runFont != null)
-            {
-                if (runFont.Val != null)
-                    fontBase.FontName = runFont.Val;
-            }
-            var fontSize = fontSource.Elements<FontSize>().FirstOrDefault();
-            if (fontSize != null)
-            {
-                if ((fontSize).Val != null)
-                    fontBase.FontSize = (fontSize).Val;
-            }
+            var fontFamilyNumbering = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
+            if (fontFamilyNumbering?.Val != null)
+                fontBase.FontFamilyNumbering = (XLFontFamilyNumberingValues)Int32.Parse(fontFamilyNumbering.Val.ToString());
 
-            fontBase.Italic = GetBoolean(fontSource.Elements<Italic>().FirstOrDefault());
-            fontBase.Shadow = GetBoolean(fontSource.Elements<Shadow>().FirstOrDefault());
-            fontBase.Strikethrough = GetBoolean(fontSource.Elements<Strike>().FirstOrDefault());
+            var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
+            if (runFont?.Val?.Value != null)
+                fontBase.FontName = runFont.Val.Value;
+
+            var fontSize = fontSource.Elements<FontSize>().FirstOrDefault();
+            if (fontSize?.Val?.Value != null)
+                fontBase.FontSize = fontSize.Val.Value;
+
+            fontBase.Italic = GetBoolean(fontSource.Elements<Italic>().FirstOrDefault(), isDifferentialFormat ? fontBase.Italic : false);
+            fontBase.Shadow = GetBoolean(fontSource.Elements<Shadow>().FirstOrDefault(), isDifferentialFormat ? fontBase.Shadow : false);
+            fontBase.Strikethrough = GetBoolean(fontSource.Elements<Strike>().FirstOrDefault(), isDifferentialFormat ? fontBase.Strikethrough : false);
 
             var underline = fontSource.Elements<Underline>().FirstOrDefault();
             if (underline != null)
-            {
                 fontBase.Underline = underline.Val != null ? underline.Val.Value.ToClosedXml() : XLFontUnderlineValues.Single;
-            }
 
             var verticalTextAlignment = fontSource.Elements<VerticalTextAlignment>().FirstOrDefault();
-
-            if (verticalTextAlignment == null) return;
-
-            fontBase.VerticalAlignment = verticalTextAlignment.Val != null ? verticalTextAlignment.Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
+            if (verticalTextAlignment != null)
+                fontBase.VerticalAlignment = verticalTextAlignment.Val != null ? verticalTextAlignment.Val.Value.ToClosedXml() : XLFontVerticalTextAlignmentValues.Baseline;
         }
 
         private Int32 lastRow;
@@ -2540,7 +2528,7 @@ namespace ClosedXML.Excel
 
                 if (fr.FormatId != null)
                 {
-                    LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font);
+                    LoadFont(differentialFormats[(Int32)fr.FormatId.Value].Font, conditionalFormat.Style.Font, isDifferentialFormat: true);
                     LoadFill(differentialFormats[(Int32)fr.FormatId.Value].Fill, conditionalFormat.Style.Fill,
                         differentialFillFormat: true);
                     LoadBorder(differentialFormats[(Int32)fr.FormatId.Value].Border, conditionalFormat.Style.Border);
@@ -3193,16 +3181,17 @@ namespace ClosedXML.Excel
             return value != null && value.HasValue;
         }
 
-        private static Boolean GetBoolean(BooleanPropertyType property)
+        private static Boolean GetBoolean(BooleanPropertyType property, bool defaultValue = false)
         {
             if (property != null)
             {
                 if (property.Val != null)
                     return property.Val;
+
                 return true;
             }
 
-            return false;
+            return defaultValue;
         }
     }
 }

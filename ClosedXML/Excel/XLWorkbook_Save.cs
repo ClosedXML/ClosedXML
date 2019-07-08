@@ -3857,7 +3857,7 @@ namespace ClosedXML.Excel
                 var emptyContainer = new XLStylizedEmpty(DefaultStyle);
 
                 var style = new XLStyle(emptyContainer, DefaultStyle);
-                LoadFont(df.Font, emptyContainer.Style.Font);
+                LoadFont(df.Font, emptyContainer.Style.Font, isDifferentialFormat: true);
                 LoadBorder(df.Border, emptyContainer.Style.Border);
                 LoadNumberFormat(df.NumberingFormat, emptyContainer.Style.NumberFormat);
                 LoadFill(df.Fill, emptyContainer.Style.Fill, differentialFillFormat: true);
