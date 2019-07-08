@@ -179,6 +179,7 @@ namespace ClosedXML.Excel
             format.FieldName = _field.SourceName;
             format.FieldIndex = _field.Offset;
             format.Axis = XLPivotTableAxisValues.AxisValues;
+            format.FieldPosition = _field.Offset;
             return format;
         }
     }
