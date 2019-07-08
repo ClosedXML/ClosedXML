@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
+using System.Globalization;
 
 namespace ClosedXML.Excel
 {
@@ -31,10 +32,15 @@ namespace ClosedXML.Excel
         private String GetQuoted(XLFormula formula)
         {
             String value = formula.Value;
-            if ((!Double.TryParse(value, out double num) && !formula.IsFormula) && value[0] != '\"' && !value.EndsWith("\""))
-                return String.Format("\"{0}\"", value.Replace("\"", "\"\""));
 
-            return value;
+            if (formula.IsFormula ||
+                value.StartsWith("\"") && value.EndsWith("\"") ||
+                Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out double num))
+            {
+                return value;
+            }
+
+            return String.Format("\"{0}\"", value.Replace("\"", "\"\""));
         }
     }
 }
