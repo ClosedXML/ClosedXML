@@ -1244,13 +1244,16 @@ namespace ClosedXML.Excel
                         int newColumn = co + numberOfColumns;
                         for (int ro = lastRow; ro >= firstRow; ro--)
                         {
+                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
+                            if (oldCell == null)
+                                continue;
+
                             var oldKey = new XLAddress(Worksheet, ro, co, false, false);
                             var newKey = new XLAddress(Worksheet, ro, newColumn, false, false);
-                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co) ??
-                                          Worksheet.Cell(oldKey);
 
                             oldCell.Address = newKey;
-                            cellsToInsert.Add(newKey, oldCell);
+                            if (newKey.IsValid)
+                                cellsToInsert.Add(newKey, oldCell);
                             cellsToDelete.Add(oldKey);
                         }
 
@@ -1458,15 +1461,17 @@ namespace ClosedXML.Excel
 
                         for (int co = lastColumn; co >= firstColumn; co--)
                         {
+                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
+                            if (oldCell == null)
+                                continue;
+
                             var oldKey = new XLAddress(Worksheet, ro, co, false, false);
                             var newKey = new XLAddress(Worksheet, newRow, co, false, false);
-                            var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
-                            if (oldCell != null)
-                            {
-                                oldCell.Address = newKey;
+                          
+                            oldCell.Address = newKey;
+                            if (newKey.IsValid)
                                 cellsToInsert.Add(newKey, oldCell);
-                                cellsToDelete.Add(oldKey);
-                            }
+                            cellsToDelete.Add(oldKey);
                         }
                         if (this.IsEntireRow())
                         {
