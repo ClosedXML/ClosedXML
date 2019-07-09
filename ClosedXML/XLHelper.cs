@@ -29,9 +29,8 @@ namespace ClosedXML.Excel
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
         internal static readonly Regex RCSimpleRegex = new Regex(
-            @"(r\d*c\d*)"
-            ,RegexOptions.IgnoreCase | RegexOptions.Compiled
-            );
+            @"^(r(((-\d)?\d*)|\[(-\d)?\d*\]))?(c(((-\d)?\d*)|\[(-\d)?\d*\]))?$"
+            , RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         internal static readonly Regex A1SimpleRegex = new Regex(
             @"\A"
