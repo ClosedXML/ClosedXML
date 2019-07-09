@@ -1069,5 +1069,35 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
             }
         }
+
+        [Test]
+        public void MaxColumnUsedUpdatedWhenColumnDeleted()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("C1");
+                var cell2 = ws.Cell(1, XLHelper.MaxColumnNumber);
+
+                ws.Column(XLHelper.MaxColumnNumber).Delete();
+
+                Assert.AreEqual(3, (ws as XLWorksheet).Internals.CellsCollection.MaxColumnUsed);
+            }
+        }
+
+        [Test]
+        public void MaxRowUsedUpdatedWhenRowDeleted()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A3");
+                var cell2 = ws.Cell(XLHelper.MaxRowNumber, 1);
+
+                ws.Row(XLHelper.MaxRowNumber).Delete();
+
+                Assert.AreEqual(3, (ws as XLWorksheet).Internals.CellsCollection.MaxRowUsed);
+            }
+        }
     }
 }
