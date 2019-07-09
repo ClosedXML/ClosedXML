@@ -1,5 +1,6 @@
 using ClosedXML.Excel.ContentManagers;
 using ClosedXML.Excel.Exceptions;
+using ClosedXML.Excel.Patterns;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -2886,9 +2887,9 @@ namespace ClosedXML.Excel
                     NumberFormatId = numberFormatId
                 };
 
-                if (!String.IsNullOrEmpty(value.BaseField))
+                if (!String.IsNullOrEmpty(value.BaseFieldName))
                 {
-                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.BaseField);
+                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.BaseFieldName);
                     if (baseField != null)
                     {
                         df.BaseField = baseField.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber;
@@ -2898,8 +2899,8 @@ namespace ClosedXML.Excel
                             .Skip(1) // Skip header column
                             .Distinct().ToList();
 
-                        if (items.Any(i => i.Equals(value.BaseItem)))
-                            df.BaseItem = Convert.ToUInt32(items.IndexOf(value.BaseItem));
+                        if (items.Contains(value.BaseItemValue, ClosedXMLValueComparer.DefaultComparer))
+                            df.BaseItem = Convert.ToUInt32(items.FindIndex(i => ClosedXMLValueComparer.DefaultComparer.Equals(i, value.BaseItemValue)));
                     }
                 }
                 else

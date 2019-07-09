@@ -1,10 +1,9 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.Patterns;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -83,15 +82,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (x is ErrorExpression)
                 (x as ErrorExpression).ThrowApplicableException();
 
-            var v = x.Evaluate();
-
-            if (v == null)
-                return string.Empty;
-
-            if (v is bool b)
-                return b.ToString().ToUpper();
-
-            return v.ToString();
+            var v = new ConvertibleObject(x.Evaluate());
+            return (string)v;
         }
 
         public static implicit operator double(Expression x)
@@ -99,41 +91,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (x is ErrorExpression)
                 (x as ErrorExpression).ThrowApplicableException();
 
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle doubles
-            if (v is double dbl)
-            {
-                return dbl;
-            }
-
-            // handle booleans
-            if (v is bool b)
-            {
-                return b ? 1 : 0;
-            }
-
-            // handle dates
-            if (v is DateTime dt)
-            {
-                return dt.ToOADate();
-            }
-
-            if (v is TimeSpan ts)
-            {
-                return ts.TotalDays;
-            }
-
-            // handle nulls
-            if (v == null || v is string)
-            {
-                return 0;
-            }
-
-            // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
-            return (double)Convert.ChangeType(v, typeof(double), _ci);
+            var v = new ConvertibleObject(x.Evaluate());
+            return (double)v;
         }
 
         public static implicit operator bool(Expression x)
@@ -141,29 +100,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (x is ErrorExpression)
                 (x as ErrorExpression).ThrowApplicableException();
 
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle booleans
-            if (v is bool b)
-            {
-                return b;
-            }
-
-            // handle nulls
-            if (v == null)
-            {
-                return false;
-            }
-
-            // handle doubles
-            if (v is double dbl)
-            {
-                return dbl != 0;
-            }
-
-            // handle everything else
-            return (double)Convert.ChangeType(v, typeof(double)) != 0;
+            var v = new ConvertibleObject(x.Evaluate());
+            return (bool)v;
         }
 
         public static implicit operator DateTime(Expression x)
@@ -171,29 +109,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (x is ErrorExpression)
                 (x as ErrorExpression).ThrowApplicableException();
 
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle dates
-            if (v is DateTime dt)
-            {
-                return dt;
-            }
-
-            if (v is TimeSpan ts)
-            {
-                return new DateTime().Add(ts);
-            }
-
-            // handle numbers
-            if (v.IsNumber())
-            {
-                return DateTime.FromOADate((double)x);
-            }
-
-            // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
-            return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
+            var v = new ConvertibleObject(x.Evaluate());
+            return (DateTime)v;
         }
 
         #endregion ** implicit converters
@@ -204,47 +121,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public int CompareTo(Expression other)
         {
-            // get both values
-            var c1 = this.Evaluate() as IComparable;
-            var c2 = other.Evaluate() as IComparable;
-
-            // handle nulls
-            if (c1 == null && c2 == null)
-            {
-                return 0;
-            }
-            if (c2 == null)
-            {
-                return -1;
-            }
-            if (c1 == null)
-            {
-                return +1;
-            }
-
-            // make sure types are the same
-            if (c1.GetType() != c2.GetType())
-            {
-                try
-                {
-                    if (c1 is DateTime)
-                        c2 = ((DateTime)other);
-                    else if (c2 is DateTime)
-                        c1 = ((DateTime)this);
-                    else
-                        c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
-                }
-                catch (InvalidCastException) { return -1; }
-                catch (FormatException) { return -1; }
-                catch (OverflowException) { return -1; }
-                catch (ArgumentNullException) { return -1; }
-            }
-
-            // String comparisons should be case insensitive
-            if (c1 is string s1 && c2 is string s2)
-                return StringComparer.OrdinalIgnoreCase.Compare(s1, s2);
-            else
-                return c1.CompareTo(c2);
+            return ClosedXMLValueComparer.DefaultComparer.Compare(this, other);
         }
 
         #endregion ** IComparable<Expression>
