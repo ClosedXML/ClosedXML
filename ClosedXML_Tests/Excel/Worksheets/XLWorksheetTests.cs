@@ -971,5 +971,69 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(range1, ws.SelectedRanges.Single());
             }
         }
+
+        [Test]
+        public void InsertColumnsDoesNotIncreaseCellsCount()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell("AAA50");
+                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                ws.Column(1).InsertColumnsBefore(1);
+
+                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+            }
+        }
+
+        [Test]
+        public void InsertRowsDoesNotIncreaseCellsCount()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell("AAA500");
+                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                ws.Row(1).InsertRowsAbove(1);
+
+                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+            }
+        }
+
+        [Test]
+        public void InsertCellsBeforeDoesNotIncreaseCellsCount()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell("AAA50");
+                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                cell1.InsertCellsBefore(1);
+
+                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+            }
+        }
+
+        [Test]
+        public void InsertCellsAboveDoesNotIncreaseCellsCount()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell("AAA500");
+                var originalCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                cell1.InsertCellsAbove(1);
+
+                Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
+            }
+        }
     }
 }
