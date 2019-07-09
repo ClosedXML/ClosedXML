@@ -1035,5 +1035,39 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(originalCount, (ws as XLWorksheet).Internals.CellsCollection.Count);
             }
         }
+
+        [Test]
+        public void CellsShiftedTooFarRightArePurged()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell(1, XLHelper.MaxColumnNumber);
+                var cell3 = ws.Cell(2, XLHelper.MaxColumnNumber);
+
+                cell1.InsertCellsBefore(1);
+                Assert.AreEqual(2, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                ws.Column(1).InsertColumnsBefore(1);
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+            }
+        }
+
+        [Test]
+        public void CellsShiftedTooFarDownArePurged()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell(XLHelper.MaxRowNumber, 1);
+                var cell3 = ws.Cell(XLHelper.MaxRowNumber, 2);
+
+                cell1.InsertCellsAbove(1);
+                Assert.AreEqual(2, (ws as XLWorksheet).Internals.CellsCollection.Count);
+                ws.Row(1).InsertRowsAbove(1);
+                Assert.AreEqual(1, (ws as XLWorksheet).Internals.CellsCollection.Count);
+            }
+        }
     }
 }
