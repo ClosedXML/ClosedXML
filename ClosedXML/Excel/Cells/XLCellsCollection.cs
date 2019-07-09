@@ -59,14 +59,23 @@ namespace ClosedXML.Excel
                 dictionary.Add(key, 1);
         }
 
-        private static void DecrementUsage(Dictionary<int, int> dictionary, Int32 key)
+        /// <summary/>
+        /// <returns>True if the number was lowered to zero so MaxColumnUsed or MaxRowUsed may require
+        /// recomputation.</returns>
+        private static bool DecrementUsage(Dictionary<int, int> dictionary, Int32 key)
         {
-            if (!dictionary.TryGetValue(key, out Int32 count)) return;
+            if (!dictionary.TryGetValue(key, out Int32 count)) return false;
 
-            if (count > 0)
+            if (count > 1)
+            {
                 dictionary[key]--;
+                return false;
+            }
             else
+            {
                 dictionary.Remove(key);
+                return true;
+            }
         }
 
         public void Clear()
@@ -88,8 +97,22 @@ namespace ClosedXML.Excel
         public void Remove(Int32 row, Int32 column)
         {
             Count--;
-            DecrementUsage(RowsUsed, row);
-            DecrementUsage(ColumnsUsed, row);
+            var rowRemoved = DecrementUsage(RowsUsed, row);
+            var columnRemoved = DecrementUsage(ColumnsUsed, column);
+
+            if (rowRemoved && row == MaxRowUsed)
+            {
+                MaxRowUsed = RowsUsed.Keys.Any()
+                    ? RowsUsed.Keys.Max()
+                    : 0;
+            }
+
+            if (columnRemoved && column == MaxColumnUsed)
+            {
+                MaxColumnUsed = ColumnsUsed.Keys.Any()
+                    ? ColumnsUsed.Keys.Max()
+                    : 0;
+            }
 
             if (deleted.TryGetValue(row, out HashSet<Int32> delHash))
             {
