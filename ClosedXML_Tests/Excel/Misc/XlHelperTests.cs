@@ -114,6 +114,32 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [TestCase("R")]
+        [TestCase("C")]
+        [TestCase("RC")]
+        [TestCase("R111C222")]
+        [TestCase("R[]C")]
+        [TestCase("RC[]")]
+        [TestCase("R[]C[]")]
+        [TestCase("R[111]C222")]
+        [TestCase("R111C[222]")]
+        [TestCase("R[111]C[222]")]
+        [TestCase("R[-111]C[-222]")]
+        public void ValidRCAddresses(string address)
+        {
+            Assert.IsTrue(XLHelper.IsValidRCAddress(address));
+        }
+
+        [TestCase("RD")]
+        [TestCase("CC")]
+        [TestCase("R[-]C222")]
+        [TestCase("R[]C[-]")]
+        [TestCase("_R111C222")]
+        public void InvalidRCAddresses(string address)
+        {
+            Assert.IsFalse(XLHelper.IsValidRCAddress(address));
+        }
+
         #region Old XLHelper methods
 
         private static readonly string[] letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
