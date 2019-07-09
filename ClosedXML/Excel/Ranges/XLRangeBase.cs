@@ -1276,7 +1276,8 @@ namespace ClosedXML.Excel
 
                     cellsToDelete.Add(c.Address);
                     c.Address = newKey;
-                    cellsToInsert.Add(newKey, c);
+                    if (newKey.IsValid)
+                        cellsToInsert.Add(newKey, c);
                 }
             }
 
@@ -1467,7 +1468,7 @@ namespace ClosedXML.Excel
 
                             var oldKey = new XLAddress(Worksheet, ro, co, false, false);
                             var newKey = new XLAddress(Worksheet, newRow, co, false, false);
-                          
+
                             oldCell.Address = newKey;
                             if (newKey.IsValid)
                                 cellsToInsert.Add(newKey, oldCell);
@@ -1492,7 +1493,8 @@ namespace ClosedXML.Excel
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
                     cellsToDelete.Add(c.Address);
                     c.Address = newKey;
-                    cellsToInsert.Add(newKey, c);
+                    if (newKey.IsValid)
+                        cellsToInsert.Add(newKey, c);
                 }
             }
 
