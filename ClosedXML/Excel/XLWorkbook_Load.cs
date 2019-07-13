@@ -21,6 +21,7 @@ namespace ClosedXML.Excel
     using Ap;
     using Drawings;
     using Op;
+    using System.Collections;
     using System.Drawing;
 
     public partial class XLWorkbook
@@ -873,12 +874,19 @@ namespace ClosedXML.Excel
                 if (pivotArea == null)
                     continue;
 
-                var type = pivotArea.Type ?? PivotAreaValues.Normal;
+                var ruleType = pivotArea.Type?.Value.ToClosedXml() ?? XLPivotStyleFormatRule.DefaultRuleType;
+
                 var dataOnly = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.DataOnly, true);
                 var labelOnly = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.LabelOnly, false);
 
                 if (dataOnly && labelOnly)
                     throw new InvalidOperationException("Cannot have dataOnly and labelOnly both set to true.");
+
+                var appliesTo = XLPivotStyleFormatElement.All;
+                if (dataOnly)
+                    appliesTo = XLPivotStyleFormatElement.Data;
+                else if (labelOnly)
+                    appliesTo = XLPivotStyleFormatElement.Label;
 
                 XLPivotStyleFormat styleFormat;
 
@@ -887,12 +895,6 @@ namespace ClosedXML.Excel
                     // If the pivot field is null and doesn't have children (references), we assume this format is a grand total
                     // Example:
                     // <x:pivotArea type="normal" dataOnly="0" grandRow="1" axis="axisRow" fieldPosition="0" />
-
-                    var appliesTo = XLPivotStyleFormatElement.All;
-                    if (dataOnly)
-                        appliesTo = XLPivotStyleFormatElement.Data;
-                    else if (labelOnly)
-                        appliesTo = XLPivotStyleFormatElement.Label;
 
                     var isRow = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.GrandRow, false);
                     var isColumn = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.GrandColumn, false);
@@ -910,7 +912,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     Int32 fieldIndex;
-                    Boolean defaultSubtotal = false;
+                    XLPivotStyleFormatSubTotalFilter styleFormatSubTotalFilter = XLPivotStyleFormatSubTotalFilter.None;
 
                     if (pivotArea.Field != null)
                         fieldIndex = (Int32)pivotArea.Field;
@@ -922,7 +924,27 @@ namespace ClosedXML.Excel
                             continue;
 
                         fieldIndex = Convert.ToInt32((UInt32)r.Field);
-                        defaultSubtotal = OpenXmlHelper.GetBooleanValueAsBool(r.DefaultSubtotal, false);
+
+                        var bitArray = new BitArray(new[]
+                        {
+                            OpenXmlHelper.GetBooleanValueAsBool(r.AverageSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.CountASubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.CountSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.DefaultSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.MaxSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.MinSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.ApplyProductInSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.ApplyStandardDeviationPInSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.ApplyStandardDeviationInSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.SumSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.ApplyVariancePInSubtotal, false),
+                            OpenXmlHelper.GetBooleanValueAsBool(r.ApplyVarianceInSubtotal, false)
+                        });
+
+                        styleFormatSubTotalFilter = (XLPivotStyleFormatSubTotalFilter)(bitArray
+                            .Cast<Boolean>()
+                            .Reverse()
+                            .Aggregate(0, (agg, b) => (agg << 1) + (b ? 1 : 0)) << 1);
                     }
                     else
                         throw new NotImplementedException();
@@ -944,8 +966,10 @@ namespace ClosedXML.Excel
                         field = (XLPivotField)pt.ImplementedFields.Single(f => f.SourceName.Equals(fieldName));
                     }
 
-                    if (defaultSubtotal)
+                    if (styleFormatSubTotalFilter != XLPivotStyleFormatSubTotalFilter.None)
                     {
+                        // We know this applies to subtotals
+
                         // Subtotal format
                         // Example:
                         // <x:pivotArea type="normal" fieldPosition="0">
@@ -955,8 +979,14 @@ namespace ClosedXML.Excel
                         // </x:pivotArea>
 
                         styleFormat = field.StyleFormats.Subtotal as XLPivotStyleFormat;
+                        var reference = new PivotLabelFieldReference(field)
+                        {
+                            SubTotalFilter = styleFormatSubTotalFilter
+                        };
+
+                        styleFormat.FieldReferences.Add(reference);
                     }
-                    else if (type == PivotAreaValues.Button)
+                    else if (ruleType == XLPivotStyleFormatRuleType.Button)
                     {
                         // Header format
                         // Example:
@@ -1030,9 +1060,11 @@ namespace ClosedXML.Excel
                         }
                     }
 
-                    styleFormat.AreaType = type.Value.ToClosedXml();
-                    styleFormat.Outline = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.Outline, true);
-                    styleFormat.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.CollapsedLevelsAreSubtotals, false);
+                    styleFormat.AppliesTo = appliesTo;
+                    styleFormat.Rule.RuleType = ruleType;
+
+                    styleFormat.Rule.IsInOutlineMode = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.Outline, true);
+                    styleFormat.Rule.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.CollapsedLevelsAreSubtotals, false);
                 }
 
                 if (format.FormatId != null)

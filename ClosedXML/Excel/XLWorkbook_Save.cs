@@ -3027,18 +3027,31 @@ namespace ClosedXML.Excel
             pivotArea.LabelOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Label, false);
             pivotArea.DataOnly = OpenXmlHelper.GetBooleanValue(styleFormat.AppliesTo == XLPivotStyleFormatElement.Data, true);
 
-            pivotArea.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValue(styleFormat.CollapsedLevelsAreSubtotals, false);
+            pivotArea.Outline = OpenXmlHelper.GetBooleanValue(styleFormat.Rule.IsInOutlineMode, true);
+            pivotArea.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValue(styleFormat.Rule.CollapsedLevelsAreSubtotals, false);
 
             if (target == XLPivotStyleFormatTarget.Header)
             {
+                pivotArea.FieldPosition = null;
+
                 pivotArea.Field = pivotField.Offset;
 
                 if (pivotField.IsOnRowAxis)
+                {
                     pivotArea.Axis = PivotTableAxisValues.AxisRow;
+                    pivotArea.FieldPosition = Convert.ToUInt32(pt.RowLabels.IndexOf(pivotField));
+
+                }
                 else if (pivotField.IsOnColumnAxis)
+                {
                     pivotArea.Axis = PivotTableAxisValues.AxisColumn;
+                    pivotArea.FieldPosition = Convert.ToUInt32(pt.ColumnLabels.IndexOf(pivotField));
+                }
                 else if (pivotField.IsInFilterList)
+                {
                     pivotArea.Axis = PivotTableAxisValues.AxisPage;
+                    pivotArea.FieldPosition = Convert.ToUInt32(pt.ReportFilters.IndexOf(pivotField));
+                }
                 else
                     throw new NotImplementedException();
             }
@@ -3051,7 +3064,7 @@ namespace ClosedXML.Excel
                 && !styleFormat.FieldReferences.OfType<PivotLabelFieldReference>().Select(fr => fr.PivotField).Contains(pivotField))
             {
                 var fr = new PivotLabelFieldReference(pivotField);
-                fr.DefaultSubtotal = target == XLPivotStyleFormatTarget.Subtotal;
+                //fr.SubTotalFilter = XLPivotStyleFormatSubTotalFilter.DefaultSubtotal;
                 styleFormat.FieldReferences.Insert(0, fr);
             }
 
@@ -3084,7 +3097,6 @@ namespace ClosedXML.Excel
                     return new PivotArea
                     {
                         Type = PivotAreaValues.Button,
-                        FieldPosition = 0,
                         DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
                         LabelOnly = OpenXmlHelper.GetBooleanValue(true, false),
                         Outline = OpenXmlHelper.GetBooleanValue(false, true),
@@ -3093,15 +3105,13 @@ namespace ClosedXML.Excel
                 case XLPivotStyleFormatTarget.Subtotal:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
-                        FieldPosition = 0,
+                        //Type = PivotAreaValues.Normal,
                     };
 
                 case XLPivotStyleFormatTarget.GrandTotal:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
-                        FieldPosition = 0,
+                        //Type = PivotAreaValues.Normal,
                         DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
                         LabelOnly = OpenXmlHelper.GetBooleanValue(false, false),
                     };
@@ -3109,8 +3119,7 @@ namespace ClosedXML.Excel
                 case XLPivotStyleFormatTarget.Label:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
-                        FieldPosition = 0,
+                        //Type = PivotAreaValues.Normal,
                         DataOnly = OpenXmlHelper.GetBooleanValue(false, true),
                         LabelOnly = OpenXmlHelper.GetBooleanValue(true, false),
                     };
@@ -3118,8 +3127,7 @@ namespace ClosedXML.Excel
                 case XLPivotStyleFormatTarget.Data:
                     return new PivotArea
                     {
-                        Type = PivotAreaValues.Normal,
-                        FieldPosition = 0,
+                        //Type = PivotAreaValues.Normal,
                     };
 
                 default:
@@ -3131,7 +3139,18 @@ namespace ClosedXML.Excel
         {
             var pivotAreaReference = new PivotAreaReference();
 
-            pivotAreaReference.DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.DefaultSubtotal, false);
+            pivotAreaReference.AverageSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.AverageSubtotal), false);
+            pivotAreaReference.CountASubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.CountASubtotal), false);
+            pivotAreaReference.CountSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.CountSubtotal), false);
+            pivotAreaReference.DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.DefaultSubtotal), false);
+            pivotAreaReference.MaxSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.MaxSubtotal), false);
+            pivotAreaReference.MinSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.MinSubtotal), false);
+            pivotAreaReference.ApplyProductInSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.ProductSubtotal), false);
+            pivotAreaReference.ApplyStandardDeviationPInSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.StandardDeviationPSubtotal), false);
+            pivotAreaReference.ApplyStandardDeviationInSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.StandardDeviationSubtotal), false);
+            pivotAreaReference.SumSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.SumSubtotal), false);
+            pivotAreaReference.ApplyVariancePInSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.VariancePSubtotal), false);
+            pivotAreaReference.ApplyVarianceInSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.SubTotalFilter.HasFlag(XLPivotStyleFormatSubTotalFilter.VarianceSubtotal), false);
             pivotAreaReference.Field = fieldReference.GetFieldOffset();
 
             var matchedOffsets = fieldReference.Match(context.PivotTables[pt.Guid], pt);
