@@ -13,7 +13,6 @@
     <PackageReleaseNotes>See https://github.com/ClosedXML/ClosedXML/releases/tag/$(productVersion)</PackageReleaseNotes>
     <Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
     <Copyright>MIT</Copyright>
-    <PackageLicenseUrl>https://github.com/ClosedXML/ClosedXML/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png</PackageIconUrl>
@@ -21,6 +20,7 @@
     <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Configurations>Debug;Release;Release.Signed</Configurations>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
