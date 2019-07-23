@@ -7,9 +7,9 @@ namespace ClosedXML_Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
-            var worksheet = workbook.Worksheets.Add("Sample Sheet");
-            worksheet.Cell("A1").Value = "Hello World!";
+            IXLWorkbook workbook = new XLWorkbook();
+            IXLWorksheet worksheet = workbook.Worksheets.Add("Sample Sheet");
+            worksheet.Cell(1,1).Value = "Hello World!";
             workbook.SaveAs(filePath);
         }
     }
