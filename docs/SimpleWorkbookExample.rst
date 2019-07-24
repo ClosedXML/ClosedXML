@@ -6,7 +6,7 @@ In this example we will show you how to create a simple workbook with one worksh
 The first thing we are going to do, is create a HelloWorld class with a method Create, which takes a filepath as a parameter. That should look something like this:
 
 .. literalinclude:: ../ClosedXML_Examples/HelloWorld.cs
-   :lines: 6-9, 14-15
+   :lines: 4-9, 14-16
    :linenos:
 
 The next step is to add a using statement for the ClosedXML package at the top of our file, like this:
@@ -48,7 +48,7 @@ Or you can use the address, like so:
 
    worksheet.Cell("A1").Value = "Hello World";
 
-As you can see in the end result, we went with the first option, but you can do either.
+For small sheets the difference is neglegible, but for larger sheets it is better to use the integers.
 
 Saving the workbook
 -------------------
