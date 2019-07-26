@@ -39,7 +39,7 @@ namespace ClosedXML_Tests
             try
             {
                 new BasicTable().Create(left);
-                //new HelloWorld().Create(right);
+                new HelloWorld().Create(right);
 
                 Assert.IsFalse(ExcelDocsComparer.Compare(left, right, out string message));
             }
