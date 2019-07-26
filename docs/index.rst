@@ -7,9 +7,7 @@ Welcome to ClosedXML's documentation!
    
    GettingStarted
    SimpleWorkbookExample
-   workbook
-   worksheet
-   cell
+   IntroToStyling
 
 Contribute
 ----------

@@ -32,7 +32,8 @@ release = '0.95'
 # ones.
 extensions = [
 'sphinx.ext.autodoc',
-'sphinx.ext.todo']
+'sphinx.ext.todo',
+'sphinx_copybutton']
 
 todo_include_todos = True
 

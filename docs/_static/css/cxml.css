@@ -6,3 +6,28 @@
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
 }
+
+.Bash {
+    background-color: #cacaca;
+}
+
+@import '../../html/_static/basic.css';
+div.literal-block-wrapper.docutils.container {
+    padding: 0 1em 0 0;
+}
+
+@import '../../html/_static/basic.css';
+table.highlighttable {
+    margin-left: 0;
+    max-width: 900px;
+}
+
+@import '../../html/_static/basic.css';
+div.body {
+    max-width: 900px;
+}
+
+@import '../../html/_static/alabaster.css';
+div.document {
+    width: 100%;
+}

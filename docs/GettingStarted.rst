@@ -24,7 +24,7 @@ NuGet
 -----
 The easiest way to add ClosedXML to your project is to install it using the NuGet package manager.
 
-.. code-block:: Bash
+.. code-block:: bash
    :caption: Bash
    :name: Bash
 
