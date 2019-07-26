@@ -15,8 +15,6 @@ namespace ClosedXML_Examples
         {
             var path = Program.BaseCreatedDirectory;
 
-            new HelloWorld().Create(Path.Combine(path, "HelloWorld.xlsx"));
-            new HelloWorldStyling().Create(Path.Combine(path, "HelloWorldStyling.xlsx"));
             new BasicTable().Create(Path.Combine(path, "BasicTable.xlsx"));
 
             new StyleExamples().Create();
