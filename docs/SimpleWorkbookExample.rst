@@ -5,14 +5,14 @@ In this example we will show you how to create a simple workbook with one worksh
 
 The first thing we are going to do, is create a HelloWorld class with a method Create, which takes a filepath as a parameter. That should look something like this:
 
-.. literalinclude:: ../ClosedXML_Examples/HelloWorld/HelloWorld.orig.cs
+.. literalinclude:: ../ClosedXML_Examples/Tutorials/HelloWorld/HelloWorld.orig.cs
    :language: csharp
    :lines: 4-9, 16-18
    :linenos:
 
 The next step is to add a using statement for the ClosedXML package at the top of our file, like this:
 
-.. literalinclude:: ../ClosedXML_Examples/HelloWorld/HelloWorld.orig.cs
+.. literalinclude:: ../ClosedXML_Examples/Tutorials/HelloWorld/HelloWorld.orig.cs
    :language: csharp
    :lines: 1-9, 16-
    :emphasize-lines: 2
@@ -72,6 +72,6 @@ End result
 ----------
 If we combine all this code, this is what we have:
 
-.. literalinclude:: ../ClosedXML_Examples/HelloWorld/HelloWorld.orig.cs
+.. literalinclude:: ../ClosedXML_Examples/Tutorials/HelloWorld/HelloWorld.orig.cs
    :language: csharp
    :linenos:

@@ -34,6 +34,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Tutorials\**" />
+    <EmbeddedResource Remove="Tutorials\**" />
+    <None Remove="Tutorials\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 

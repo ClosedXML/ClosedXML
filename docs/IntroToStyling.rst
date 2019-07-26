@@ -3,8 +3,8 @@ Introduction to styling
 ***********************
 In our last tutorial we created a simple workbook, with a cell which says "Hello World". In this tutorial we are going to expand on what we did previously, by adding styling to our worksheet. However, before we start on that, lets add a few more cells, so we have a little bit more data to experiment with. With those changes, our file now looks like this:
 
-.. literalinclude:: ../ClosedXML_Examples/HelloWorld/HelloWorld.bfs.cs
-   :diff: ../ClosedXML_Examples/HelloWorld/HelloWorld.orig.cs
+.. literalinclude:: ../ClosedXML_Examples/Tutorials/HelloWorld/HelloWorld.bfs.cs
+   :diff: ../ClosedXML_Examples/Tutorials/HelloWorld/HelloWorld.orig.cs
    :language: csharp
    :linenos:
 
@@ -32,6 +32,6 @@ Now that we have defined a range, we can use that range to set a border around t
 
 There are plenty more styling options available in ClosedXML, but we will discuss those later on. With the modifications we made in the tutorial, our file now looks like this:
 
-.. literalinclude:: ../ClosedXML_Examples/HelloWorld/HelloWorldStyling.as.cs
+.. literalinclude:: ../ClosedXML_Examples/Tutorials/HelloWorld/HelloWorldStyling.as.cs
    :language: csharp
    :linenos:
