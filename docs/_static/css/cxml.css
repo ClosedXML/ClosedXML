@@ -1,4 +1,10 @@
-.code-block-caption {
+@import '../../html/_static/alabaster.css';
+div.document {
+    width: 100%;
+}
+
+@import '../../html/_static/css/theme.css';
+.rst-content .code-block-caption {
     background-color: #ecd9a3;
     padding-left: 0.5rem;
     padding-bottom: 0.25rem;
@@ -7,27 +13,8 @@
     border-top-left-radius: 5px;
 }
 
-.Bash {
-    background-color: #cacaca;
-}
-
-@import '../../html/_static/basic.css';
-div.literal-block-wrapper.docutils.container {
-    padding: 0 1em 0 0;
-}
-
-@import '../../html/_static/basic.css';
-table.highlighttable {
-    margin-left: 0;
-    max-width: 900px;
-}
-
-@import '../../html/_static/basic.css';
-div.body {
-    max-width: 900px;
-}
-
-@import '../../html/_static/alabaster.css';
-div.document {
-    width: 100%;
+@import '../../html/_static/copybutton.css';
+a.copybtn.o-tooltip--left {
+    width: 2em;
+    height: 2em;
 }

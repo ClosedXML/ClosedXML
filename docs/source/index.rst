@@ -11,6 +11,7 @@ Welcome to ClosedXML's documentation!
    workbook
    worksheet
    cell
+   doxygenindex
 
 Contribute
 ----------

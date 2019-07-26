@@ -12,7 +12,9 @@
 #
 import os
 import sys
+import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('../ClosedXML/ClosedXML/Excel'))
+#sys.path.append( "/ext/breathe/" )
 
 
 # -- Project information -----------------------------------------------------
@@ -33,9 +35,10 @@ release = '0.95'
 extensions = [
 'sphinx.ext.autodoc',
 'sphinx.ext.todo',
-'sphinx_copybutton']
-
-todo_include_todos = True
+'sphinx_copybutton',
+"sphinx_rtd_theme",
+"breathe",
+'sphinx_csharp.csharp']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -43,7 +46,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['../_build', '../Thumbs.db', '../.DS_Store']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -51,11 +54,15 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 pygments_style = 'sphinx'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['../_static']
 html_css_files = ['css/cxml.css']
+
+# Breathe Configuration
+breathe_projects = { "ClosedXML" : "../xml" }
+breathe_default_project = "ClosedXML"

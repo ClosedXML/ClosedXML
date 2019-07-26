@@ -30,3 +30,6 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 /packages
 _build
+/docs/xml
+/docs/latex
+/docs/html
