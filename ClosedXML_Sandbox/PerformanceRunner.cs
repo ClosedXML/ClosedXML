@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Word;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,6 +49,13 @@ namespace ClosedXML_Sandbox
                 var cell = ws.FirstCellUsed();
                 Console.WriteLine(cell.Value);
             }
+        }
+
+        public static void CreateTestDocument( )
+        {
+            var document = new XLDocument( );
+            document.CreateNewWordDocument( );
+            Console.WriteLine( "Done" );
         }
 
         private static void CreateMergedCell(IXLWorksheet worksheet)

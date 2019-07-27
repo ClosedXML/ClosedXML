@@ -6,8 +6,8 @@ namespace ClosedXML_Sandbox
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Running {0}", nameof(PerformanceRunner.OpenTestFile));
-            PerformanceRunner.TimeAction(PerformanceRunner.OpenTestFile);
+            Console.WriteLine("Running {0}", nameof(PerformanceRunner.CreateTestDocument));
+            PerformanceRunner.TimeAction(PerformanceRunner.CreateTestDocument);
             Console.WriteLine();
 
             // Disable this block by default - I don't use it often
