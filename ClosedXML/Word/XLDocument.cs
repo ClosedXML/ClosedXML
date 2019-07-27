@@ -6,7 +6,7 @@ using System.IO;
 
 namespace ClosedXML.Word
 {
-    public class XLDocument : IDisposable
+    public class XLDocument : IXLDocument
     {
         private string file;
 
@@ -20,6 +20,7 @@ namespace ClosedXML.Word
         {
         }
 
+        //Temporary method
         public void CreateNewWordDocument( )
         {
             string path = Path.Combine( Path.GetTempPath( ), "test.docx" );
@@ -38,6 +39,30 @@ namespace ClosedXML.Word
             }
         }
 
+        public void Dispose( )
+        {
+            throw new NotImplementedException( );
+        }
+
+        public void Save( )
+        {
+            throw new NotImplementedException( );
+        }
+
+        public void SaveAs(
+            string file )
+        {
+            throw new NotImplementedException( );
+        }
+
+        //Temporary method
+        private void AddTextToBody( Body body, string text )
+        {
+            Paragraph para = body.AppendChild( new Paragraph( ) );
+            Run run = para.AppendChild( new Run( ) );
+            run.AppendChild( new Text( text ) );
+        }
+
         private void Load( string file )
         {
             using ( WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open( file, true ) )
@@ -49,18 +74,6 @@ namespace ClosedXML.Word
             Body body = document.MainDocumentPart.Document.Body;
             AddTextToBody( body, "ClosedXML Word Test" );
             document.Close( );
-        }
-
-        private void AddTextToBody( Body body, string text )
-        {
-            Paragraph para = body.AppendChild( new Paragraph( ) );
-            Run run = para.AppendChild( new Run( ) );
-            run.AppendChild( new Text( text ) );
-        }
-
-        public void Dispose( )
-        {
-            throw new NotImplementedException( );
         }
     }
 }
