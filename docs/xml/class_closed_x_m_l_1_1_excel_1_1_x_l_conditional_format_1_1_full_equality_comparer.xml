@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer" kind="class" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEqualityComparer&lt; IXLConditionalFormat &gt;</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a6b00a70657d5298b23eb2e9ae442c3f6" prot="private" static="no" mutable="no">
+        <type>readonly bool</type>
+        <definition>readonly bool _compareRange</definition>
+        <argsstring></argsstring>
+        <name>_compareRange</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a45e3e996ed9562827e3f86773832e285" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer" kindref="compound">DictionaryComparer</ref>&lt; int, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref> &gt;</type>
+        <definition>readonly DictionaryComparer&lt;int, XLColor&gt; _colorsComparer</definition>
+        <argsstring></argsstring>
+        <name>_colorsComparer</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer" kindref="compound">DictionaryComparer</ref>&lt;int, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a78074aa22ea975de5030f34c27963889" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer" kindref="compound">EnumerableComparer</ref>&lt; string &gt;</type>
+        <definition>readonly EnumerableComparer&lt;string&gt; _listComparer</definition>
+        <argsstring></argsstring>
+        <name>_listComparer</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer" kindref="compound">EnumerableComparer</ref>&lt;string&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a5c2b99b5f570296d25b5077c75773441" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer" kindref="compound">DictionaryComparer</ref>&lt; int, XLCFContentType &gt;</type>
+        <definition>readonly DictionaryComparer&lt;int, XLCFContentType&gt; _contentsTypeComparer</definition>
+        <argsstring></argsstring>
+        <name>_contentsTypeComparer</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer" kindref="compound">DictionaryComparer</ref>&lt;int, XLCFContentType&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1aa4b74f3f2300f9507ce4f0818b87a804" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer" kindref="compound">DictionaryComparer</ref>&lt; int, XLCFIconSetOperator &gt;</type>
+        <definition>readonly DictionaryComparer&lt;int, XLCFIconSetOperator&gt; _iconSetTypeComparer</definition>
+        <argsstring></argsstring>
+        <name>_iconSetTypeComparer</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer" kindref="compound">DictionaryComparer</ref>&lt;int, XLCFIconSetOperator&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1ab6da9974f229d1aacd2eb7b620fc156b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>FullEqualityComparer</definition>
+        <argsstring>(bool compareRange)</argsstring>
+        <name>FullEqualityComparer</name>
+        <param>
+          <type>bool</type>
+          <declname>compareRange</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="17" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a09fc17a3936e11fd3c690f13f90192c0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLConditionalFormat x, IXLConditionalFormat y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="22" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a063fae95c4e98691085d372e32125e94" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int GetHashCode</definition>
+        <argsstring>(IXLConditionalFormat obj)</argsstring>
+        <name>GetHashCode</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="59" bodyend="90"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="155">
+        <label>XLConditionalFormat.FullEqualityComparer</label>
+        <childnode refid="156" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="156">
+        <label>IEqualityComparer&lt; IXLConditionalFormat &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="157">
+        <label>XLConditionalFormat.FullEqualityComparer</label>
+        <childnode refid="158" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="158">
+        <label>IEqualityComparer&lt; IXLConditionalFormat &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="9" bodyend="91"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a45e3e996ed9562827e3f86773832e285" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>_colorsComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a6b00a70657d5298b23eb2e9ae442c3f6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>_compareRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a5c2b99b5f570296d25b5077c75773441" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>_contentsTypeComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1aa4b74f3f2300f9507ce4f0818b87a804" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>_iconSetTypeComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a78074aa22ea975de5030f34c27963889" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>_listComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a09fc17a3936e11fd3c690f13f90192c0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1ab6da9974f229d1aacd2eb7b620fc156b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>FullEqualityComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1_1_full_equality_comparer_1a063fae95c4e98691085d372e32125e94" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLConditionalFormat::FullEqualityComparer</scope><name>GetHashCode</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

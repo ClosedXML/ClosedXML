@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_web" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLDrawingWeb</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_web" prot="public" virt="non-virtual">XLDrawingWeb</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_web_1a690bafb201ac0d1839fb4396806f73ec" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String AlternateText</definition>
+        <argsstring></argsstring>
+        <name>AlternateText</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingWeb.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingWeb.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_web_1a0f4f5e321fbf4b0224a99e7f87a3f9de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAlternateText</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetAlternateText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_web_1a0f4f5e321fbf4b0224a99e7f87a3f9de">SetAlternateText</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingWeb.cs" line="11" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="364">
+        <label>XLDrawingWeb</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_web"/>
+        <childnode refid="363" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="363">
+        <label>IXLDrawingWeb</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_web"/>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingWeb.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingWeb.cs" bodystart="8" bodyend="13"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_web_1a690bafb201ac0d1839fb4396806f73ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingWeb</scope><name>AlternateText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_web_1a0f4f5e321fbf4b0224a99e7f87a3f9de" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingWeb</scope><name>SetAlternateText</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

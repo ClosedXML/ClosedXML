@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_7ff51bb2376b3a5c19824e76b88fc391" kind="dir">
+    <compoundname>Sparkline</compoundname>
+    <innerfile refid="_i_x_l_sparkline_8cs">IXLSparkline.cs</innerfile>
+    <innerfile refid="_i_x_l_spark_line_group_8cs">IXLSparkLineGroup.cs</innerfile>
+    <innerfile refid="_i_x_l_spark_line_groups_8cs">IXLSparkLineGroups.cs</innerfile>
+    <innerfile refid="_i_x_l_sparkline_horizontal_axis_8cs">IXLSparklineHorizontalAxis.cs</innerfile>
+    <innerfile refid="_i_x_l_sparkline_style_8cs">IXLSparklineStyle.cs</innerfile>
+    <innerfile refid="_i_x_l_sparkline_vertical_axis_8cs">IXLSparklineVerticalAxis.cs</innerfile>
+    <innerfile refid="_x_l_spark_line_8cs">XLSparkLine.cs</innerfile>
+    <innerfile refid="_x_l_spark_line_group_8cs">XLSparkLineGroup.cs</innerfile>
+    <innerfile refid="_x_l_spark_line_groups_8cs">XLSparkLineGroups.cs</innerfile>
+    <innerfile refid="_x_l_sparkline_horizontal_axis_8cs">XLSparklineHorizontalAxis.cs</innerfile>
+    <innerfile refid="_x_l_sparkline_style_8cs">XLSparklineStyle.cs</innerfile>
+    <innerfile refid="_x_l_sparkline_theme_8cs">XLSparklineTheme.cs</innerfile>
+    <innerfile refid="_x_l_sparkline_vertical_axis_8cs">XLSparklineVerticalAxis.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/"/>
+  </compounddef>
+</doxygen>

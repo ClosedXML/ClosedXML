@@ -1,0 +1,383 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLRangeRows</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" prot="public" virt="non-virtual">XLStylizedBase</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" prot="public" virt="non-virtual">IXLRangeRows</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized" prot="public" virt="non-virtual">IXLStylized</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a4476b3865cbad720d3d9438ceb20f093" prot="private" static="no" mutable="no">
+        <type>readonly List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row" kindref="compound">XLRangeRow</ref> &gt;</type>
+        <definition>readonly List&lt;XLRangeRow&gt; _ranges</definition>
+        <argsstring></argsstring>
+        <name>_ranges</name>
+        <initializer>= new List&lt;<ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row" kindref="compound">XLRangeRow</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a828e67d067323eaae0298ac984fb1b38" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref> &gt;</type>
+        <definition>override IEnumerable&lt;IXLStyle&gt; Styles</definition>
+        <argsstring></argsstring>
+        <name>Styles</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="91" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="92" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a0e7c8a7cd654858c658a13cfc711d47e" prot="protected" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" kindref="compound">XLStylizedBase</ref> &gt;</type>
+        <definition>override IEnumerable&lt;XLStylizedBase&gt; Children</definition>
+        <argsstring></argsstring>
+        <name>Children</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="109" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="110" bodyend="116"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a4ce46e5cf51436fee040eb080347cd4b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>override IXLRanges RangesUsed</definition>
+        <argsstring></argsstring>
+        <name>RangesUsed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="119" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="120" bodyend="127"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a747f3a8a4b91e2b2149a9478f3546e1b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeRows</definition>
+        <argsstring>()</argsstring>
+        <name>XLRangeRows</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="13" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a99d9f9b5e397d10c01057d1563fb6dcf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a99d9f9b5e397d10c01057d1563fb6dcf">Clear</reimplements>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of these rows. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="19" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1ac2e5aab0612d67400354a4fe71278a21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1ac2e5aab0612d67400354a4fe71278a21">Delete</reimplements>
+        <briefdescription>
+<para>Deletes all rows and shifts the rows below them accordingly. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="25" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a2c4989b58b2b4285b2e81b5ce72fff56" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLRangeRow range)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a0ca2bf0d32d6c3891cf5ae141f42c64c">Add</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+          <declname>rowRange</declname>
+        </param>
+        <briefdescription>
+<para>Adds a row range to this group. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rowRange</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The row range to add.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="31" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1acddaf4e375781bb45ff656d5d80c722d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLRangeRow&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="36" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells Cells</definition>
+        <argsstring>()</argsstring>
+        <name>Cells</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a3a388f07ee977ad805d8f72cc51418c5">Cells</reimplements>
+        <briefdescription>
+<para>Returns the collection of cells. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="49" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a6ad63b5f449b6fa15192912119681a06" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>()</argsstring>
+        <name>CellsUsed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a6ad63b5f449b6fa15192912119681a06">CellsUsed</reimplements>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="57" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>(Boolean includeFormats)</argsstring>
+        <name>CellsUsed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3">CellsUsed</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>includeFormats</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if set to <computeroutput>true</computeroutput> will return all cells with a value or a style different than the default.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="66" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="66" bodyend="71"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>(XLCellsUsedOptions options)</argsstring>
+        <name>CellsUsed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5">CellsUsed</reimplements>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="73" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a8e658da926fecc7dafb1772cf6c9ccbb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows SetDataType</definition>
+        <argsstring>(XLDataType dataType)</argsstring>
+        <name>SetDataType</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a8e658da926fecc7dafb1772cf6c9ccbb">SetDataType</reimplements>
+        <param>
+          <type>XLDataType</type>
+          <declname>dataType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="81" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1aae6b677d47187a8187e734714222240b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Select</definition>
+        <argsstring>()</argsstring>
+        <name>Select</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1aae6b677d47187a8187e734714222240b">Select</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="131" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="131" bodyend="135"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator IEnumerable.</type>
+        <definition>IEnumerator IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="44" bodyend="47"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1655">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1656" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1658">
+        <label>IEnumerable&lt; IXLRangeRow &gt;</label>
+      </node>
+      <node id="1656">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+      <node id="1657">
+        <label>IXLRangeRows</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows"/>
+        <childnode refid="1658" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1654">
+        <label>XLRangeRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows"/>
+        <childnode refid="1655" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1657" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1656" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1660">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1661" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1663">
+        <label>IEnumerable&lt; IXLRangeRow &gt;</label>
+      </node>
+      <node id="1661">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+      <node id="1662">
+        <label>IXLRangeRows</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows"/>
+        <childnode refid="1663" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1659">
+        <label>XLRangeRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows"/>
+        <childnode refid="1660" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1662" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1661" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeRows.cs" bodystart="9" bodyend="136"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a4476b3865cbad720d3d9438ceb20f093" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>_ranges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a2c4989b58b2b4285b2e81b5ce72fff56" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a6ad63b5f449b6fa15192912119681a06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a0e7c8a7cd654858c658a13cfc711d47e" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>Children</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a99d9f9b5e397d10c01057d1563fb6dcf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1acddaf4e375781bb45ff656d5d80c722d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1ae6ee4236123731a11e2d26675428cb6f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>InnerStyle</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized_1a5373ddcfb7ecde9c9eb5b9ef6bc1e132" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>ModifyStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a4ce46e5cf51436fee040eb080347cd4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>RangesUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1aae6b677d47187a8187e734714222240b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>Select</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a8e658da926fecc7dafb1772cf6c9ccbb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>SetDataType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLStylizedBase."><scope>ClosedXML::Excel::XLRangeRows</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRows."><scope>ClosedXML::Excel::XLRangeRows</scope><name>Style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a828e67d067323eaae0298ac984fb1b38" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>Styles</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized_1ab73e3cfe4bba81a18e0d0320c26f8bbd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>StyleValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows_1a747f3a8a4b91e2b2149a9478f3546e1b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>XLRangeRows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1aecdc64299b389c824504360946a93b16" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeRows</scope><name>XLStylizedBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

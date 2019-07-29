@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Caching::XLWorkbookElementRepositoryBase</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" prot="public" virt="non-virtual">XLRepositoryBase&lt; Tkey, Tvalue &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>Tkey</type>
+      </param>
+      <param>
+        <type>Tvalue</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1af434f69b7ea50cc619964785721af235" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>XLWorkbook Workbook</definition>
+        <argsstring></argsstring>
+        <name>Workbook</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1ad284c9c58f5522ca5e6a69e2ed735469" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLWorkbookElementRepositoryBase</definition>
+        <argsstring>(XLWorkbook workbook, Func&lt; Tkey, Tvalue &gt; createNew)</argsstring>
+        <name>XLWorkbookElementRepositoryBase</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+          <declname>workbook</declname>
+        </param>
+        <param>
+          <type>Func&lt; Tkey, Tvalue &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1afffaff212303fc9bd1ea873bb901746e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLWorkbookElementRepositoryBase</definition>
+        <argsstring>(XLWorkbook workbook, Func&lt; Tkey, Tvalue &gt; createNew, IEqualityComparer&lt; Tkey &gt; сomparer)</argsstring>
+        <name>XLWorkbookElementRepositoryBase</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+          <declname>workbook</declname>
+        </param>
+        <param>
+          <type>Func&lt; Tkey, Tvalue &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; Tkey &gt;</type>
+          <declname>сomparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" bodystart="20" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Base repository for <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref> elements. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1970">
+        <label>XLWorkbookElementRepositoryBase&lt; Tkey, Tvalue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base"/>
+        <childnode refid="1971" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1971">
+        <label>XLRepositoryBase&lt; Tkey, Tvalue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1972">
+        <label>XLWorkbookElementRepositoryBase&lt; Tkey, Tvalue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base"/>
+        <childnode refid="1973" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1973">
+        <label>XLRepositoryBase&lt; Tkey, Tvalue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLWorkbookElementRepositoryBase.cs" bodystart="9" bodyend="25"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1af434f69b7ea50cc619964785721af235" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLWorkbookElementRepositoryBase</scope><name>Workbook</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1ad284c9c58f5522ca5e6a69e2ed735469" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLWorkbookElementRepositoryBase</scope><name>XLWorkbookElementRepositoryBase</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1afffaff212303fc9bd1ea873bb901746e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLWorkbookElementRepositoryBase</scope><name>XLWorkbookElementRepositoryBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_x_l_range_address_comparer_8cs" kind="file" language="C#">
+    <compoundname>XLRangeAddressComparer.cs</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer" prot="public">ClosedXML::Excel::CalcEngine::XLRangeAddressComparer</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine">ClosedXML::Excel::CalcEngine</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine" kindref="compound">ClosedXML.Excel.CalcEngine</ref></highlight></codeline>
+<codeline lineno="4"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="5" refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">internal</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer" kindref="compound">XLRangeAddressComparer</ref><sp/>:<sp/>IEqualityComparer&lt;IXLRangeAddress&gt;</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal"><sp/>readonly<sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer" kindref="compound">XLAddressComparer</ref><sp/>_addressComparer;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer" kindref="compound">XLRangeAddressComparer</ref>(</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>ignoreFixed)</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_addressComparer<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer" kindref="compound">XLAddressComparer</ref>(ignoreFixed);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>Equals(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref><sp/>x,<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref><sp/>y)</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(x<sp/>==<sp/></highlight><highlight class="keyword">null</highlight><highlight class="normal"><sp/>&amp;&amp;<sp/>y<sp/>==<sp/></highlight><highlight class="keyword">null</highlight><highlight class="normal">)<sp/>||</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(x<sp/>!=<sp/></highlight><highlight class="keyword">null</highlight><highlight class="normal"><sp/>&amp;&amp;<sp/>y<sp/>!=<sp/></highlight><highlight class="keyword">null</highlight><highlight class="normal"><sp/>&amp;&amp;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_addressComparer.Equals(x.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a68106121f807d13591fb080ec4243f1e" kindref="member">FirstAddress</ref>,<sp/>y.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a68106121f807d13591fb080ec4243f1e" kindref="member">FirstAddress</ref>)<sp/>&amp;&amp;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_addressComparer.Equals(x.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ab4d00490b0c6bcdc663c3c6384046c9c" kindref="member">LastAddress</ref>,<sp/>y.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ab4d00490b0c6bcdc663c3c6384046c9c" kindref="member">LastAddress</ref>));</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>GetHashCode(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref><sp/>obj)</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>FirstHash<sp/>=<sp/>_addressComparer.GetHashCode(obj.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a68106121f807d13591fb080ec4243f1e" kindref="member">FirstAddress</ref>),</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>LastHash<sp/>=<sp/>_addressComparer.GetHashCode(obj.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ab4d00490b0c6bcdc663c3c6384046c9c" kindref="member">LastAddress</ref>),</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}.GetHashCode();</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs"/>
+  </compounddef>
+</doxygen>

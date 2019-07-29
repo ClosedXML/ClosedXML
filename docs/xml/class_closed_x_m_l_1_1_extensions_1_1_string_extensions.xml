@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_extensions_1_1_string_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Extensions::StringExtensions</compoundname>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_extensions_1_1_string_extensions_1ad2b3020636a443f3925429c9f9cd7d2c" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal string</type>
+        <definition>static internal string EscapeSheetName</definition>
+        <argsstring>(this String sheetName)</argsstring>
+        <name>EscapeSheetName</name>
+        <param>
+          <type>this String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" bodystart="7" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_extensions_1_1_string_extensions_1aab09a4940135f3bdcdee81f8f80e844f" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal string</type>
+        <definition>static internal string UnescapeSheetName</definition>
+        <argsstring>(this String sheetName)</argsstring>
+        <name>UnescapeSheetName</name>
+        <param>
+          <type>this String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" bodystart="16" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_extensions_1_1_string_extensions_1a505776b3d84b6e91a4c14283a2423857" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal String</type>
+        <definition>static internal String HashPassword</definition>
+        <argsstring>(this String password)</argsstring>
+        <name>HashPassword</name>
+        <param>
+          <type>this String</type>
+          <declname>password</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" bodystart="23" bodyend="39"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/StringExtensions.cs" bodystart="5" bodyend="40"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_extensions_1_1_string_extensions_1ad2b3020636a443f3925429c9f9cd7d2c" prot="private" virt="non-virtual"><scope>ClosedXML::Extensions::StringExtensions</scope><name>EscapeSheetName</name></member>
+      <member refid="class_closed_x_m_l_1_1_extensions_1_1_string_extensions_1a505776b3d84b6e91a4c14283a2423857" prot="private" virt="non-virtual"><scope>ClosedXML::Extensions::StringExtensions</scope><name>HashPassword</name></member>
+      <member refid="class_closed_x_m_l_1_1_extensions_1_1_string_extensions_1aab09a4940135f3bdcdee81f8f80e844f" prot="private" virt="non-virtual"><scope>ClosedXML::Extensions::StringExtensions</scope><name>UnescapeSheetName</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

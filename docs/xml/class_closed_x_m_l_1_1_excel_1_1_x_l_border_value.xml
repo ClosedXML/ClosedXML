@@ -1,0 +1,317 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLBorderValue</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a06f2818643b6ade1617b3ca98ed4c3af" prot="private" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository" kindref="compound">XLBorderRepository</ref></type>
+        <definition>readonly XLBorderRepository Repository</definition>
+        <argsstring></argsstring>
+        <name>Repository</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository" kindref="compound">XLBorderRepository</ref>(key =&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value" kindref="compound">XLBorderValue</ref>(key))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a272348246698eed984dc2c574c7adf92" prot="private" static="yes" mutable="no">
+        <type>internal readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value" kindref="compound">XLBorderValue</ref></type>
+        <definition>internal readonly XLBorderValue Default</definition>
+        <argsstring></argsstring>
+        <name>Default</name>
+        <initializer>= FromKey(new <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref>
+        {
+            BottomBorder = XLBorderStyleValues.None,
+            DiagonalBorder = XLBorderStyleValues.None,
+            DiagonalDown = false,
+            DiagonalUp = false,
+            LeftBorder = XLBorderStyleValues.None,
+            RightBorder = XLBorderStyleValues.None,
+            TopBorder = XLBorderStyleValues.None,
+            BottomBorderColor = XLColor.Black.Key,
+            DiagonalBorderColor = XLColor.Black.Key,
+            LeftBorderColor = XLColor.Black.Key,
+            RightBorderColor = XLColor.Black.Key,
+            TopBorderColor = XLColor.Black.Key
+        })</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a9bd1c48871007d747979f016785c09e5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref></type>
+        <definition>XLBorderKey Key</definition>
+        <argsstring></argsstring>
+        <name>Key</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="30" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a36e8ee03f31e4fe7656ab3512b74b292" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLBorderStyleValues</type>
+        <definition>XLBorderStyleValues LeftBorder</definition>
+        <argsstring></argsstring>
+        <name>LeftBorder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a30cfc2619c9ab8bfdbe9adbc48f11ed3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor LeftBorderColor</definition>
+        <argsstring></argsstring>
+        <name>LeftBorderColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="34" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1af84b9d0c6e8073c83b9c43f68ba310d4" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLBorderStyleValues</type>
+        <definition>XLBorderStyleValues RightBorder</definition>
+        <argsstring></argsstring>
+        <name>RightBorder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="36" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1afa23355479bdcb30e384053358a02610" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor RightBorderColor</definition>
+        <argsstring></argsstring>
+        <name>RightBorderColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a94062c672a3bd1483feb2a197320c203" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLBorderStyleValues</type>
+        <definition>XLBorderStyleValues TopBorder</definition>
+        <argsstring></argsstring>
+        <name>TopBorder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="40" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a43ff6896c47cc37df0d412094257dec5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor TopBorderColor</definition>
+        <argsstring></argsstring>
+        <name>TopBorderColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="42" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a94b425368e27cfd2c46e3d87ab367a0d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLBorderStyleValues</type>
+        <definition>XLBorderStyleValues BottomBorder</definition>
+        <argsstring></argsstring>
+        <name>BottomBorder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="44" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a3048568c7deb421ef638946ef4d5f393" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor BottomBorderColor</definition>
+        <argsstring></argsstring>
+        <name>BottomBorderColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="46" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1ac0cf1292e5d3b5faa74de8cbd79e337d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLBorderStyleValues</type>
+        <definition>XLBorderStyleValues DiagonalBorder</definition>
+        <argsstring></argsstring>
+        <name>DiagonalBorder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="48" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1aa33c7895c5881c692b2275fef7139965" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor DiagonalBorderColor</definition>
+        <argsstring></argsstring>
+        <name>DiagonalBorderColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="50" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1ad379a5594dc0b683f85c6fa12807af2c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool DiagonalUp</definition>
+        <argsstring></argsstring>
+        <name>DiagonalUp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="52" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a4cb230b48980455e3785d44b58ddedc8" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool DiagonalDown</definition>
+        <argsstring></argsstring>
+        <name>DiagonalDown</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="54" bodyend="54"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a71d98150574d04f32506f757553c3039" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value" kindref="compound">XLBorderValue</ref></type>
+        <definition>static XLBorderValue FromKey</definition>
+        <argsstring>(XLBorderKey key)</argsstring>
+        <name>FromKey</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="9" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a2a93b3ba5a5fb240292cb326e74b3192" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLBorderValue</definition>
+        <argsstring>(XLBorderKey key)</argsstring>
+        <name>XLBorderValue</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="56" bodyend="65"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="67" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="74" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="74" bodyend="77"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorderValue.cs" bodystart="5" bodyend="78"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a94b425368e27cfd2c46e3d87ab367a0d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>BottomBorder</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a3048568c7deb421ef638946ef4d5f393" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>BottomBorderColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a272348246698eed984dc2c574c7adf92" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>Default</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1ac0cf1292e5d3b5faa74de8cbd79e337d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>DiagonalBorder</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1aa33c7895c5881c692b2275fef7139965" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>DiagonalBorderColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a4cb230b48980455e3785d44b58ddedc8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>DiagonalDown</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1ad379a5594dc0b683f85c6fa12807af2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>DiagonalUp</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a71d98150574d04f32506f757553c3039" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>FromKey</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a9bd1c48871007d747979f016785c09e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>Key</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a36e8ee03f31e4fe7656ab3512b74b292" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>LeftBorder</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a30cfc2619c9ab8bfdbe9adbc48f11ed3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>LeftBorderColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a06f2818643b6ade1617b3ca98ed4c3af" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>Repository</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1af84b9d0c6e8073c83b9c43f68ba310d4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>RightBorder</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1afa23355479bdcb30e384053358a02610" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>RightBorderColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a94062c672a3bd1483feb2a197320c203" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>TopBorder</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a43ff6896c47cc37df0d412094257dec5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>TopBorderColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value_1a2a93b3ba5a5fb240292cb326e74b3192" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorderValue</scope><name>XLBorderValue</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

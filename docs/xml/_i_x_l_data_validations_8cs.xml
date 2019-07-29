@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_data_validations_8cs" kind="file" language="C#">
+    <compoundname>IXLDataValidations.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations" prot="public">ClosedXML::Excel::IXLDataValidations</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="6" refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations" kindref="compound">IXLDataValidations</ref><sp/>:<sp/>IEnumerable&lt;IXLDataValidation&gt;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref><sp/>Worksheet<sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1a659920aba00a74920f992d7e91779a77" kindref="member">Add</ref>(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref><sp/>dataValidation);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Boolean<sp/>ContainsSingle(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref><sp/>range);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Delete(Predicate&lt;IXLDataValidation&gt;<sp/>predicate);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1add8eecf6637d80f5a02dc7d5263d1517" kindref="member">TryGet</ref>(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref><sp/>rangeAddress,<sp/>out<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref><sp/>dataValidation);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>IEnumerable&lt;IXLDataValidation&gt;<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1aacd636c982238bca53714d5184f1bb37" kindref="member">GetAllInRange</ref>(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref><sp/>rangeAddress);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs"/>
+  </compounddef>
+</doxygen>

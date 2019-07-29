@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Caching::XLFillRepository</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" prot="public" virt="non-virtual">XLRepositoryBase&lt; XLFillKey, XLFillValue &gt;</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository_1aebcf7aa740bc41dade85cf114aaf8dc9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFillRepository</definition>
+        <argsstring>(Func&lt; XLFillKey, XLFillValue &gt; createNew)</argsstring>
+        <name>XLFillRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_fill_value" kindref="compound">XLFillValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLFillRepository.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLFillRepository.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository_1a81b76fd47eca96f77188d7022e915a94" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFillRepository</definition>
+        <argsstring>(Func&lt; XLFillKey, XLFillValue &gt; createNew, IEqualityComparer&lt; XLFillKey &gt; comparer)</argsstring>
+        <name>XLFillRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_fill_value" kindref="compound">XLFillValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref> &gt;</type>
+          <declname>comparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLFillRepository.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLFillRepository.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1299">
+        <label>XLFillRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository"/>
+        <childnode refid="1300" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1300">
+        <label>XLRepositoryBase&lt; XLFillKey, XLFillValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1301">
+        <label>XLFillRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository"/>
+        <childnode refid="1302" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1302">
+        <label>XLRepositoryBase&lt; XLFillKey, XLFillValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLFillRepository.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLFillRepository.cs" bodystart="6" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository_1aebcf7aa740bc41dade85cf114aaf8dc9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLFillRepository</scope><name>XLFillRepository</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository_1a81b76fd47eca96f77188d7022e915a94" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLFillRepository</scope><name>XLFillRepository</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

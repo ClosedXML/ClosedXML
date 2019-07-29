@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLPivotValueCombination</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination" prot="public" virt="non-virtual">IXLPivotValueCombination</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1aa5810458fcb200483731b61a21f5bcc8" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>readonly IXLPivotValue _pivotValue</definition>
+        <argsstring></argsstring>
+        <name>_pivotValue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1aa79ceaf0db6dd189728b1c6ed7e74456" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLPivotValueCombination</definition>
+        <argsstring>(IXLPivotValue pivotValue)</argsstring>
+        <name>XLPivotValueCombination</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+          <declname>pivotValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" bodystart="11" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1af96c2c299f238202c94e86476eda95bf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue And</definition>
+        <argsstring>(String item)</argsstring>
+        <name>And</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination_1af96c2c299f238202c94e86476eda95bf">And</reimplements>
+        <param>
+          <type>String</type>
+          <declname>item</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" bodystart="15" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1ab8404fb0646610cdb25c8c2e744ef420" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue AndPrevious</definition>
+        <argsstring>()</argsstring>
+        <name>AndPrevious</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination_1ab8404fb0646610cdb25c8c2e744ef420">AndPrevious</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" bodystart="21" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1a262386e64e07582114f79eac2f594628" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue AndNext</definition>
+        <argsstring>()</argsstring>
+        <name>AndNext</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination_1a262386e64e07582114f79eac2f594628">AndNext</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" bodystart="26" bodyend="30"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1492">
+        <label>XLPivotValueCombination</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination"/>
+        <childnode refid="1493" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1493">
+        <label>IXLPivotValueCombination</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1494">
+        <label>XLPivotValueCombination</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination"/>
+        <childnode refid="1495" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1495">
+        <label>IXLPivotValueCombination</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/XLPivotValueCombination.cs" bodystart="8" bodyend="31"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1aa5810458fcb200483731b61a21f5bcc8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotValueCombination</scope><name>_pivotValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1af96c2c299f238202c94e86476eda95bf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotValueCombination</scope><name>And</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1a262386e64e07582114f79eac2f594628" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotValueCombination</scope><name>AndNext</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1ab8404fb0646610cdb25c8c2e744ef420" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotValueCombination</scope><name>AndPrevious</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_combination_1aa79ceaf0db6dd189728b1c6ed7e74456" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotValueCombination</scope><name>XLPivotValueCombination</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

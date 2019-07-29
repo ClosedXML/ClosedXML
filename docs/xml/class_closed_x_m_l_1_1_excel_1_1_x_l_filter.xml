@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFilter</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a641b35c7513679962739de5756157229" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Func&lt; Object, Boolean &gt;</type>
+        <definition>Func&lt;Object, Boolean&gt; Condition</definition>
+        <argsstring></argsstring>
+        <name>Condition</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a883e7addd96488cc38383721acc39972" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLConnector</type>
+        <definition>XLConnector Connector</definition>
+        <argsstring></argsstring>
+        <name>Connector</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a8fb51297fcf089bd28b4ec6393d48b0d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDateTimeGrouping</type>
+        <definition>XLDateTimeGrouping DateTimeGrouping</definition>
+        <argsstring></argsstring>
+        <name>DateTimeGrouping</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1ae9bad21d6daa249b9c4af000a0aadfcd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFilterOperator</type>
+        <definition>XLFilterOperator Operator</definition>
+        <argsstring></argsstring>
+        <name>Operator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Object</type>
+        <definition>Object Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a07ffea724b7335075fc5f5ffde29cc88" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFilter</definition>
+        <argsstring>(XLFilterOperator op=XLFilterOperator.Equal)</argsstring>
+        <name>XLFilter</name>
+        <param>
+          <type>XLFilterOperator</type>
+          <declname>op</declname>
+          <defval>XLFilterOperator.Equal</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" bodystart="12" bodyend="15"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilter.cs" bodystart="10" bodyend="22"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a641b35c7513679962739de5756157229" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilter</scope><name>Condition</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a883e7addd96488cc38383721acc39972" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilter</scope><name>Connector</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a8fb51297fcf089bd28b4ec6393d48b0d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilter</scope><name>DateTimeGrouping</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1ae9bad21d6daa249b9c4af000a0aadfcd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilter</scope><name>Operator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilter</scope><name>Value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_1a07ffea724b7335075fc5f5ffde29cc88" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilter</scope><name>XLFilter</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

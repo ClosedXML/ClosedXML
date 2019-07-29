@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_2da665cc31c78110bc869ea551a97894" kind="dir">
+    <compoundname>Sort</compoundname>
+    <innerfile refid="_i_x_l_sort_element_8cs">IXLSortElement.cs</innerfile>
+    <innerfile refid="_i_x_l_sort_elements_8cs">IXLSortElements.cs</innerfile>
+    <innerfile refid="_x_l_sort_element_8cs">XLSortElement.cs</innerfile>
+    <innerfile refid="_x_l_sort_elements_8cs">XLSortElements.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/"/>
+  </compounddef>
+</doxygen>

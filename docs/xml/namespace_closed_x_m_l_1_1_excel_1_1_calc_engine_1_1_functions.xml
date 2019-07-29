@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Excel::CalcEngine::Functions</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_database" prot="public">ClosedXML::Excel::CalcEngine::Functions::Database</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time" prot="public">ClosedXML::Excel::CalcEngine::Functions::DateAndTime</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information" prot="public">ClosedXML::Excel::CalcEngine::Functions::Information</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup" prot="public">ClosedXML::Excel::CalcEngine::Functions::Lookup</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math" prot="public">ClosedXML::Excel::CalcEngine::Functions::XLMath</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" prot="public">ClosedXML::Excel::CalcEngine::Functions::XLMatrix</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Database.cs" line="7" column="1"/>
+  </compounddef>
+</doxygen>

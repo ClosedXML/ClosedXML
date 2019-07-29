@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLChart</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing" prot="public" virt="non-virtual">IXLDrawing&lt; IXLChart &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_chart" prot="public" virt="non-virtual">XLChart</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1afb1a823e54dbde88f11e746125ae769b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean RightAngleAxes</definition>
+        <argsstring></argsstring>
+        <name>RightAngleAxes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" bodystart="82" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1ad42a186fa7770bbcd44519f39a470a14" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLChartType</type>
+        <definition>XLChartType ChartType</definition>
+        <argsstring></argsstring>
+        <name>ChartType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" bodystart="86" bodyend="86"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1a96a61ff3cdd1d75d15d18da037fb9d2b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref></type>
+        <definition>IXLChart SetRightAngleAxes</definition>
+        <argsstring>()</argsstring>
+        <name>SetRightAngleAxes</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_chart_1a96a61ff3cdd1d75d15d18da037fb9d2b">SetRightAngleAxes</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" line="83" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1a12e175fa7c4da8d713371175e4b294f8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref></type>
+        <definition>IXLChart SetRightAngleAxes</definition>
+        <argsstring>(Boolean rightAngleAxes)</argsstring>
+        <name>SetRightAngleAxes</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_chart_1a12e175fa7c4da8d713371175e4b294f8">SetRightAngleAxes</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>rightAngleAxes</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" line="84" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1a1708529603daa2951e0b424c63ddec95" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref></type>
+        <definition>IXLChart SetChartType</definition>
+        <argsstring>(XLChartType chartType)</argsstring>
+        <name>SetChartType</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_chart_1a1708529603daa2951e0b424c63ddec95">SetChartType</reimplementedby>
+        <param>
+          <type>XLChartType</type>
+          <declname>chartType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" line="87" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="274">
+        <label>XLChart</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_chart"/>
+        <childnode refid="272" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="273">
+        <label>IXLDrawing&lt; IXLChart &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing"/>
+      </node>
+      <node id="272">
+        <label>IXLChart</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart"/>
+        <childnode refid="273" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="276">
+        <label>IXLDrawing&lt; IXLChart &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing"/>
+      </node>
+      <node id="275">
+        <label>IXLChart</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart"/>
+        <childnode refid="276" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLChart.cs" bodystart="80" bodyend="89"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1ad42a186fa7770bbcd44519f39a470a14" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>ChartType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1af5e8d258ee4f537352f49fff306e05a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>Position</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1afb1a823e54dbde88f11e746125ae769b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>RightAngleAxes</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1a1708529603daa2951e0b424c63ddec95" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>SetChartType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1a96a61ff3cdd1d75d15d18da037fb9d2b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>SetRightAngleAxes</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart_1a12e175fa7c4da8d713371175e4b294f8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>SetRightAngleAxes</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a5415ed97e41fc084469d1ea3e318c4f4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>SetVisible</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1acba3f890571b5838d9e7cf7d4db507cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>SetVisible</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1af529763152938ee3329b94c1a50de55c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>SetZOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1ac827c63b86b0f22e4ebbb6e27f0bf49a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>ShapeId</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1abda7b1e0511530b36bbb471a3ecbbd0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>Visible</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a66fddb5599abf78b920d997931202409" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLChart</scope><name>ZOrder</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

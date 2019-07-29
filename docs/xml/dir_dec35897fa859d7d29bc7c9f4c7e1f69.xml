@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_dec35897fa859d7d29bc7c9f4c7e1f69" kind="dir">
+    <compoundname>PivotTables</compoundname>
+    <innerdir refid="dir_0d0ee74e9bdaa8ae30c54eff896b2149">PivotStyleFormats</innerdir>
+    <innerdir refid="dir_77dbb2854d5abd7e585f00508245d762">PivotValues</innerdir>
+    <innerfile refid="_i_x_l_pivot_field_8cs">IXLPivotField.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_fields_8cs">IXLPivotFields.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_table_8cs">IXLPivotTable.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_tables_8cs">IXLPivotTables.cs</innerfile>
+    <innerfile refid="_x_l_pivot_area_values_8cs">XLPivotAreaValues.cs</innerfile>
+    <innerfile refid="_x_l_pivot_field_8cs">XLPivotField.cs</innerfile>
+    <innerfile refid="_x_l_pivot_fields_8cs">XLPivotFields.cs</innerfile>
+    <innerfile refid="_x_l_pivot_table_8cs">XLPivotTable.cs</innerfile>
+    <innerfile refid="_x_l_pivot_tables_8cs">XLPivotTables.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kind="struct" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLNumberFormatKey</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; XLNumberFormatKey &gt;</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1acee77e51e0ba1f6d59e7b9cef55c1f3b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int NumberFormatId</definition>
+        <argsstring></argsstring>
+        <name>NumberFormatId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1a89b3ee10cec1e00b59697544d1619a52" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>string</type>
+        <definition>string Format</definition>
+        <argsstring></argsstring>
+        <name>Format</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" bodystart="11" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1af74d8282a7baee0aea6638a88a802d01" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(XLNumberFormatKey other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" bodystart="19" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" bodystart="26" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" bodystart="33" bodyend="36"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1af6cbfb44099a38928e476c8718ce1fff" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator==</definition>
+        <argsstring>(XLNumberFormatKey left, XLNumberFormatKey right)</argsstring>
+        <name>operator==</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="38" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1a7e387780c5568a29cef15f496e8960f8" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator !=</definition>
+        <argsstring>(XLNumberFormatKey left, XLNumberFormatKey right)</argsstring>
+        <name>operator !=</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="40" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1401">
+        <label>XLNumberFormatKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key"/>
+        <childnode refid="1402" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1402">
+        <label>IEquatable&lt; XLNumberFormatKey &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1403">
+        <label>XLNumberFormatKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key"/>
+        <childnode refid="1404" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1404">
+        <label>IEquatable&lt; XLNumberFormatKey &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormatKey.cs" bodystart="5" bodyend="41"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1af74d8282a7baee0aea6638a88a802d01" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1a89b3ee10cec1e00b59697544d1619a52" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>Format</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1acee77e51e0ba1f6d59e7b9cef55c1f3b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>NumberFormatId</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1a7e387780c5568a29cef15f496e8960f8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>operator !=</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1af6cbfb44099a38928e476c8718ce1fff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>operator==</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormatKey</scope><name>ToString</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

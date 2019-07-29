@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_fill_info" kind="struct" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::FillInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_fill_info_1a6c34984876548d09564123d173231442" prot="public" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_fill_value" kindref="compound">XLFillValue</ref></type>
+        <definition>XLFillValue Fill</definition>
+        <argsstring></argsstring>
+        <name>Fill</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="109" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_fill_info_1a20bb21fc039b8f4daf78050632c1c1b3" prot="public" static="no" mutable="no">
+        <type>UInt32</type>
+        <definition>UInt32 FillId</definition>
+        <argsstring></argsstring>
+        <name>FillId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="110" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="146">
+        <label>XLWorkbook.FillInfo</label>
+        <childnode refid="147" relation="usage">
+          <edgelabel>Fill</edgelabel>
+        </childnode>
+      </node>
+      <node id="147">
+        <label>XLFillValue</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_fill_value"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="108" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="107" bodyend="111"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_fill_info_1a6c34984876548d09564123d173231442" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::FillInfo</scope><name>Fill</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_fill_info_1a20bb21fc039b8f4daf78050632c1c1b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::FillInfo</scope><name>FillId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

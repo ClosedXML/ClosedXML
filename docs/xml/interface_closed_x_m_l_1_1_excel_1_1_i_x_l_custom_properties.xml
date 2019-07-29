@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLCustomProperties</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLCustomProperty &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_properties" prot="public" virt="non-virtual">XLCustomProperties</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1abc9f2e9770ba207d70a03ed7c1abb339" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLCustomProperty customProperty)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_properties_1abc9f2e9770ba207d70a03ed7c1abb339">Add</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_property" kindref="compound">IXLCustomProperty</ref></type>
+          <declname>customProperty</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/IXLCustomProperties.cs" line="8" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1ab98d63268f3277464f887f3e9a4ccfa2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add&lt; T &gt;</definition>
+        <argsstring>(String name, T value)</argsstring>
+        <name>Add&lt; T &gt;</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_properties_1ab98d63268f3277464f887f3e9a4ccfa2">Add&lt; T &gt;</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/IXLCustomProperties.cs" line="9" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1ae7666eaaedc15b21295c02273948bf48" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_properties_1ae7666eaaedc15b21295c02273948bf48">Delete</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/IXLCustomProperties.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1a9690a51c3f6a17648fd51e4de815d9cd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_property" kindref="compound">IXLCustomProperty</ref></type>
+        <definition>IXLCustomProperty CustomProperty</definition>
+        <argsstring>(String name)</argsstring>
+        <name>CustomProperty</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_properties_1a9690a51c3f6a17648fd51e4de815d9cd">CustomProperty</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/IXLCustomProperties.cs" line="11" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="312">
+        <label>IXLCustomProperties</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties"/>
+        <childnode refid="313" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="313">
+        <label>IEnumerable&lt; IXLCustomProperty &gt;</label>
+      </node>
+      <node id="314">
+        <label>XLCustomProperties</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_properties"/>
+        <childnode refid="312" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="315">
+        <label>IXLCustomProperties</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties"/>
+        <childnode refid="316" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="316">
+        <label>IEnumerable&lt; IXLCustomProperty &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/IXLCustomProperties.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/IXLCustomProperties.cs" bodystart="6" bodyend="13"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1abc9f2e9770ba207d70a03ed7c1abb339" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCustomProperties</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1ab98d63268f3277464f887f3e9a4ccfa2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCustomProperties</scope><name>Add&lt; T &gt;</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1a9690a51c3f6a17648fd51e4de815d9cd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCustomProperties</scope><name>CustomProperty</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties_1ae7666eaaedc15b21295c02273948bf48" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCustomProperties</scope><name>Delete</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

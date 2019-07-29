@@ -1,0 +1,1016 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aaa67832d590739b1f2ec1d45d2b7eca4" prot="public" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>XLMatrix L</definition>
+        <argsstring></argsstring>
+        <name>L</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a71c3cb58648d5ede8fab64c282cdae86" prot="public" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>XLMatrix U</definition>
+        <argsstring></argsstring>
+        <name>U</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a4407a60bc4387adae24cee658711f2d9" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int cols</definition>
+        <argsstring></argsstring>
+        <name>cols</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a1cc17aa313a5550b8b0566ef59db94fc" prot="public" static="no" mutable="no">
+        <type>double [,]</type>
+        <definition>double [,] mat</definition>
+        <argsstring></argsstring>
+        <name>mat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a061459acc9e078fa4699e0e349887215" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int rows</definition>
+        <argsstring></argsstring>
+        <name>rows</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a871445ca658ba878a22bd4259d232503" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double detOfP</definition>
+        <argsstring></argsstring>
+        <name>detOfP</name>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a4bdaea7e17a7dedfb03d78e47fb2ca83" prot="private" static="no" mutable="no">
+        <type>int []</type>
+        <definition>int [] pi</definition>
+        <argsstring></argsstring>
+        <name>pi</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a01ebbc54d2b1f258db4f1c4d1a19bd6c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>double</type>
+        <definition>double this[int iRow, int iCol]</definition>
+        <argsstring></argsstring>
+        <name>this[int iRow, int iCol]</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="38" bodyend="41"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a92d977e36979f35fdda628d5dc2af24b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLMatrix</definition>
+        <argsstring>(int iRows, int iCols)</argsstring>
+        <name>XLMatrix</name>
+        <param>
+          <type>int</type>
+          <declname>iRows</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>iCols</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="17" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a28e15ae68074153383e1b82edbfbd070" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLMatrix</definition>
+        <argsstring>(Double[,] arr)</argsstring>
+        <name>XLMatrix</name>
+        <param>
+          <type>Double</type>
+          <declname>arr</declname>
+          <array>[,]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="23" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a159eabe889106e1e7f7e1cfbdeb5a931" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean IsSquare</definition>
+        <argsstring>()</argsstring>
+        <name>IsSquare</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="43" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a1e5077cd86636b3bfb4d061d721578f2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>XLMatrix GetCol</definition>
+        <argsstring>(int k)</argsstring>
+        <name>GetCol</name>
+        <param>
+          <type>int</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="48" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ac341f294060d290706326a296987d4b3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetCol</definition>
+        <argsstring>(XLMatrix v, int k)</argsstring>
+        <name>SetCol</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>v</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="55" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a6160feaac465fc9faca55fdf23a3ba96" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void MakeLU</definition>
+        <argsstring>()</argsstring>
+        <name>MakeLU</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="60" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a61e94e26c9a859a41449fed2db00608f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>XLMatrix SolveWith</definition>
+        <argsstring>(XLMatrix v)</argsstring>
+        <name>SolveWith</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="116" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="116" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ac2b70c2e949ff96e6c783100c0567947" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>XLMatrix Invert</definition>
+        <argsstring>()</argsstring>
+        <name>Invert</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="131" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="131" bodyend="145"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa902a22699a2214b67e3b08e3ac6340f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Determinant</definition>
+        <argsstring>()</argsstring>
+        <name>Determinant</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="148" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a61fd4180dcfb90de98f7ae46a7e726f3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>XLMatrix GetP</definition>
+        <argsstring>()</argsstring>
+        <name>GetP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="156" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1add66bb8f0ea016ff963fd8ec0151c985" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>XLMatrix Duplicate</definition>
+        <argsstring>()</argsstring>
+        <name>Duplicate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="165" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="165" bodyend="172"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="252" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="252" bodyend="261"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a27c0db389c92a766995e3852165c2366" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix SubsForth</definition>
+        <argsstring>(XLMatrix A, XLMatrix b)</argsstring>
+        <name>SubsForth</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="174" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="174" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ad7d2c81574b38966fdaf1b3093af310d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix SubsBack</definition>
+        <argsstring>(XLMatrix A, XLMatrix b)</argsstring>
+        <name>SubsBack</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="189" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="189" bodyend="202"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aadbb3271703360cc9034dbf7c1af9379" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix ZeroMatrix</definition>
+        <argsstring>(int iRows, int iCols)</argsstring>
+        <name>ZeroMatrix</name>
+        <param>
+          <type>int</type>
+          <declname>iRows</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>iCols</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="204" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="204" bodyend="211"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa1225d92c92be0eaec5ca4d4a5e1ed37" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix IdentityMatrix</definition>
+        <argsstring>(int iRows, int iCols)</argsstring>
+        <name>IdentityMatrix</name>
+        <param>
+          <type>int</type>
+          <declname>iRows</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>iCols</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="213" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="213" bodyend="219"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a14b3d024a222f1c9631fd283df91d7c2" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix RandomMatrix</definition>
+        <argsstring>(int iRows, int iCols, int dispersion)</argsstring>
+        <name>RandomMatrix</name>
+        <param>
+          <type>int</type>
+          <declname>iRows</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>iCols</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>dispersion</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="221" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="221" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1abd68623f0068071bcd67abb09236f3be" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix Parse</definition>
+        <argsstring>(string ps)</argsstring>
+        <name>Parse</name>
+        <param>
+          <type>string</type>
+          <declname>ps</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="231" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="231" bodyend="250"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1afbd210fea862fc09a4cb8a5d21d586c2" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix Transpose</definition>
+        <argsstring>(XLMatrix m)</argsstring>
+        <name>Transpose</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="263" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="263" bodyend="270"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ace2aae513be7eb5cab5c1392f30e23da" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix Power</definition>
+        <argsstring>(XLMatrix m, int pow)</argsstring>
+        <name>Power</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>pow</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="272" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="272" bodyend="294"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a750cda0c06b0663f02a01ed57e85e97f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix StupidMultiply</definition>
+        <argsstring>(XLMatrix m1, XLMatrix m2)</argsstring>
+        <name>StupidMultiply</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="514" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="514" bodyend="524"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ae4fb779596012caf2dca0592680d3b40" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string NormalizeMatrixString</definition>
+        <argsstring>(string matStr)</argsstring>
+        <name>NormalizeMatrixString</name>
+        <param>
+          <type>string</type>
+          <declname>matStr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="546" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="546" bodyend="565"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a56bf0a2cef9a8e4905ef15697e8dd3b9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix operator -</definition>
+        <argsstring>(XLMatrix m)</argsstring>
+        <name>operator -</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="569" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="569" bodyend="572"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ab0eb17cc6c6b3f110d8c2f08ab326ea2" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix operator+</definition>
+        <argsstring>(XLMatrix m1, XLMatrix m2)</argsstring>
+        <name>operator+</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="574" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="574" bodyend="577"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aed386d610cbcb1fea8067d78a963cdb3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix operator -</definition>
+        <argsstring>(XLMatrix m1, XLMatrix m2)</argsstring>
+        <name>operator -</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="579" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="579" bodyend="582"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a00960a1bd9406698cf71923c316d2c4b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix operator *</definition>
+        <argsstring>(XLMatrix m1, XLMatrix m2)</argsstring>
+        <name>operator *</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="584" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="584" bodyend="587"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a8df3ae6d122ce5cb768cafff27c848d3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix operator *</definition>
+        <argsstring>(double n, XLMatrix m)</argsstring>
+        <name>operator *</name>
+        <param>
+          <type>double</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="589" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="589" bodyend="592"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a4c9d8e5d49c2d28ceac921b31a45c5ba" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void SafeAplusBintoC</definition>
+        <argsstring>(XLMatrix A, int xa, int ya, XLMatrix B, int xb, int yb, XLMatrix C, int size)</argsstring>
+        <name>SafeAplusBintoC</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xa</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ya</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xb</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>yb</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="296" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="296" bodyend="305"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ab786c8564741f8175395f2699c66fdcd" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void SafeAminusBintoC</definition>
+        <argsstring>(XLMatrix A, int xa, int ya, XLMatrix B, int xb, int yb, XLMatrix C, int size)</argsstring>
+        <name>SafeAminusBintoC</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xa</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ya</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xb</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>yb</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="307" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="307" bodyend="316"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a732357bd818abc7dc12658481a43e968" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void SafeACopytoC</definition>
+        <argsstring>(XLMatrix A, int xa, int ya, XLMatrix C, int size)</argsstring>
+        <name>SafeACopytoC</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xa</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ya</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="318" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="318" bodyend="326"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa247a31347894cf5c5d1fcbd5bc91db1" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void AplusBintoC</definition>
+        <argsstring>(XLMatrix A, int xa, int ya, XLMatrix B, int xb, int yb, XLMatrix C, int size)</argsstring>
+        <name>AplusBintoC</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xa</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ya</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xb</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>yb</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="328" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="328" bodyend="332"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a42d38378e3d7e1d2aac82b54f65bef5b" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void AminusBintoC</definition>
+        <argsstring>(XLMatrix A, int xa, int ya, XLMatrix B, int xb, int yb, XLMatrix C, int size)</argsstring>
+        <name>AminusBintoC</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xa</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ya</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xb</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>yb</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="334" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="334" bodyend="338"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a2db2c869fe0959dba1b2707d588ba69e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void ACopytoC</definition>
+        <argsstring>(XLMatrix A, int xa, int ya, XLMatrix C, int size)</argsstring>
+        <name>ACopytoC</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>xa</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ya</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="340" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="340" bodyend="344"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1afa1f6e4aa4e8658d2522e8a9c1a4c151" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix StrassenMultiply</definition>
+        <argsstring>(XLMatrix A, XLMatrix B)</argsstring>
+        <name>StrassenMultiply</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>B</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="346" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="346" bodyend="443"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a209b5e60eceda4b492e882819d6b6697" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void StrassenMultiplyRun</definition>
+        <argsstring>(XLMatrix A, XLMatrix B, XLMatrix C, int l, XLMatrix[,] f)</argsstring>
+        <name>StrassenMultiplyRun</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>B</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>C</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>f</declname>
+          <array>[,]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="447" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="447" bodyend="512"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a151caf4a47c0274099332e3eb77ede5e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix Multiply</definition>
+        <argsstring>(double n, XLMatrix m)</argsstring>
+        <name>Multiply</name>
+        <param>
+          <type>double</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="526" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="526" bodyend="533"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa7036040e06a624717c78bfe1403310d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+        <definition>static XLMatrix Add</definition>
+        <argsstring>(XLMatrix m1, XLMatrix m2)</argsstring>
+        <name>Add</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix" kindref="compound">XLMatrix</ref></type>
+          <declname>m2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="535" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="535" bodyend="544"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1382">
+        <label>XLMatrix</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix"/>
+        <childnode refid="1382" relation="usage">
+          <edgelabel>U</edgelabel>
+          <edgelabel>L</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMatrix.cs" bodystart="7" bodyend="593"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a2db2c869fe0959dba1b2707d588ba69e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>ACopytoC</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa7036040e06a624717c78bfe1403310d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a42d38378e3d7e1d2aac82b54f65bef5b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>AminusBintoC</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa247a31347894cf5c5d1fcbd5bc91db1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>AplusBintoC</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a4407a60bc4387adae24cee658711f2d9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>cols</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa902a22699a2214b67e3b08e3ac6340f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Determinant</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a871445ca658ba878a22bd4259d232503" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>detOfP</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1add66bb8f0ea016ff963fd8ec0151c985" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Duplicate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a1e5077cd86636b3bfb4d061d721578f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>GetCol</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a61fd4180dcfb90de98f7ae46a7e726f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>GetP</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa1225d92c92be0eaec5ca4d4a5e1ed37" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>IdentityMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ac2b70c2e949ff96e6c783100c0567947" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Invert</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a159eabe889106e1e7f7e1cfbdeb5a931" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>IsSquare</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aaa67832d590739b1f2ec1d45d2b7eca4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>L</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a6160feaac465fc9faca55fdf23a3ba96" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>MakeLU</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a1cc17aa313a5550b8b0566ef59db94fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>mat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a151caf4a47c0274099332e3eb77ede5e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Multiply</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ae4fb779596012caf2dca0592680d3b40" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>NormalizeMatrixString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a00960a1bd9406698cf71923c316d2c4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>operator *</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a8df3ae6d122ce5cb768cafff27c848d3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>operator *</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a56bf0a2cef9a8e4905ef15697e8dd3b9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>operator -</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aed386d610cbcb1fea8067d78a963cdb3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>operator -</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ab0eb17cc6c6b3f110d8c2f08ab326ea2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>operator+</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1abd68623f0068071bcd67abb09236f3be" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Parse</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a4bdaea7e17a7dedfb03d78e47fb2ca83" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>pi</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ace2aae513be7eb5cab5c1392f30e23da" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Power</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a14b3d024a222f1c9631fd283df91d7c2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>RandomMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a061459acc9e078fa4699e0e349887215" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>rows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a732357bd818abc7dc12658481a43e968" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>SafeACopytoC</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ab786c8564741f8175395f2699c66fdcd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>SafeAminusBintoC</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a4c9d8e5d49c2d28ceac921b31a45c5ba" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>SafeAplusBintoC</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ac341f294060d290706326a296987d4b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>SetCol</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a61e94e26c9a859a41449fed2db00608f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>SolveWith</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1afa1f6e4aa4e8658d2522e8a9c1a4c151" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>StrassenMultiply</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a209b5e60eceda4b492e882819d6b6697" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>StrassenMultiplyRun</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a750cda0c06b0663f02a01ed57e85e97f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>StupidMultiply</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1ad7d2c81574b38966fdaf1b3093af310d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>SubsBack</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a27c0db389c92a766995e3852165c2366" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>SubsForth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a01ebbc54d2b1f258db4f1c4d1a19bd6c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>this[int iRow, int iCol]</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1afbd210fea862fc09a4cb8a5d21d586c2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>Transpose</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a71c3cb58648d5ede8fab64c282cdae86" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>U</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a92d977e36979f35fdda628d5dc2af24b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>XLMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1a28e15ae68074153383e1b82edbfbd070" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>XLMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_matrix_1aadbb3271703360cc9034dbf7c1af9379" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMatrix</scope><name>ZeroMatrix</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLConditionalFormats</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLConditionalFormat &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_formats" prot="public" virt="non-virtual">XLConditionalFormats</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats_1afe9f2564c07b836466dc1e2a2b17a616" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLConditionalFormat conditionalFormat)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_formats_1afe9f2564c07b836466dc1e2a2b17a616">Add</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>conditionalFormat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormats.cs" line="8" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats_1a9aa9f847832ca5467851014a0d73e9bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void RemoveAll</definition>
+        <argsstring>()</argsstring>
+        <name>RemoveAll</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_formats_1a9aa9f847832ca5467851014a0d73e9bc">RemoveAll</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormats.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats_1a79607016f02fd8f4b58ad9061f0d1f27" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(Predicate&lt; IXLConditionalFormat &gt; predicate)</argsstring>
+        <name>Remove</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_formats_1a79607016f02fd8f4b58ad9061f0d1f27">Remove</reimplementedby>
+        <param>
+          <type>Predicate&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref> &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormats.cs" line="12" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="305">
+        <label>IEnumerable&lt; IXLConditionalFormat &gt;</label>
+      </node>
+      <node id="306">
+        <label>XLConditionalFormats</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_formats"/>
+        <childnode refid="304" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="304">
+        <label>IXLConditionalFormats</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats"/>
+        <childnode refid="305" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="308">
+        <label>IEnumerable&lt; IXLConditionalFormat &gt;</label>
+      </node>
+      <node id="307">
+        <label>IXLConditionalFormats</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats"/>
+        <childnode refid="308" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormats.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormats.cs" bodystart="6" bodyend="13"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats_1afe9f2564c07b836466dc1e2a2b17a616" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormats</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats_1a79607016f02fd8f4b58ad9061f0d1f27" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormats</scope><name>Remove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_formats_1a9aa9f847832ca5467851014a0d73e9bc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormats</scope><name>RemoveAll</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

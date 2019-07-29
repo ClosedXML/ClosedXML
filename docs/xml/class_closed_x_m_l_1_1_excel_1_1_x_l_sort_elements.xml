@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLSortElements</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements" prot="public" virt="non-virtual">IXLSortElements</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a484613cd159ef75c8c280c98d6f1f4e0" prot="private" static="no" mutable="no">
+        <type>List&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element" kindref="compound">IXLSortElement</ref> &gt;</type>
+        <definition>List&lt;IXLSortElement&gt; elements</definition>
+        <argsstring></argsstring>
+        <name>elements</name>
+        <initializer>= new List&lt;<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element" kindref="compound">IXLSortElement</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1aec62ed159e08155da368374fea53ca2a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(Int32 elementNumber)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1aec62ed159e08155da368374fea53ca2a">Add</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>elementNumber</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="9" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1afb54b9d6e993163253ba19cc25819092" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(Int32 elementNumber, XLSortOrder sortOrder)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1afb54b9d6e993163253ba19cc25819092">Add</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>elementNumber</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="13" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a23764c9037ca88f2ae1b81be047b598a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(Int32 elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1a23764c9037ca88f2ae1b81be047b598a">Add</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>elementNumber</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="17" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a8d683e142c1409ffdd70c8f90ce5aebb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(Int32 elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks, Boolean matchCase)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1a8d683e142c1409ffdd70c8f90ce5aebb">Add</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>elementNumber</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>matchCase</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="21" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1afe13c04966ef64afd6f0bf3c766aa53d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(String elementNumber)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1afe13c04966ef64afd6f0bf3c766aa53d">Add</reimplements>
+        <param>
+          <type>String</type>
+          <declname>elementNumber</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="32" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a4f0d6acdcdd8202fbd404eacbe5bc481" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(String elementNumber, XLSortOrder sortOrder)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1a4f0d6acdcdd8202fbd404eacbe5bc481">Add</reimplements>
+        <param>
+          <type>String</type>
+          <declname>elementNumber</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="36" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1acbae9ee220f12111b7308696ebf378f3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(String elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1acbae9ee220f12111b7308696ebf378f3">Add</reimplements>
+        <param>
+          <type>String</type>
+          <declname>elementNumber</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="40" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a92950abf17500615ace85b1d6e545d84" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(String elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks, Boolean matchCase)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1a92950abf17500615ace85b1d6e545d84">Add</reimplements>
+        <param>
+          <type>String</type>
+          <declname>elementNumber</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>matchCase</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="44" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1aa23634f19e3ea8792b4111526336d0d6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element" kindref="compound">IXLSortElement</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLSortElement&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="55" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1aa71d36872f416feaa853788a7a7a7ef8">Clear</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="65" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1ad75b5fa3375b9e4a6be1e1440afee569" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(Int32 elementNumber)</argsstring>
+        <name>Remove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements_1ad75b5fa3375b9e4a6be1e1440afee569">Remove</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>elementNumber</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="70" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="70" bodyend="73"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>System.Collections.IEnumerator System.Collections.IEnumerable.</type>
+        <definition>System.Collections.IEnumerator System.Collections.IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="60" bodyend="63"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1763">
+        <label>IEnumerable&lt; IXLSortElement &gt;</label>
+      </node>
+      <node id="1762">
+        <label>IXLSortElements</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements"/>
+        <childnode refid="1763" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1761">
+        <label>XLSortElements</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements"/>
+        <childnode refid="1762" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1766">
+        <label>IEnumerable&lt; IXLSortElement &gt;</label>
+      </node>
+      <node id="1765">
+        <label>IXLSortElements</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements"/>
+        <childnode refid="1766" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1764">
+        <label>XLSortElements</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements"/>
+        <childnode refid="1765" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/XLSortElements.cs" bodystart="6" bodyend="74"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1aec62ed159e08155da368374fea53ca2a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1afb54b9d6e993163253ba19cc25819092" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a23764c9037ca88f2ae1b81be047b598a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a8d683e142c1409ffdd70c8f90ce5aebb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1afe13c04966ef64afd6f0bf3c766aa53d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a4f0d6acdcdd8202fbd404eacbe5bc481" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1acbae9ee220f12111b7308696ebf378f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a92950abf17500615ace85b1d6e545d84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a484613cd159ef75c8c280c98d6f1f4e0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>elements</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1aa23634f19e3ea8792b4111526336d0d6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_elements_1ad75b5fa3375b9e4a6be1e1440afee569" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSortElements</scope><name>Remove</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

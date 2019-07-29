@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border" kind="class" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IDisposable</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a60d01892be3c6d01b3705cff9d674408" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>readonly IXLRange _range</definition>
+        <argsstring></argsstring>
+        <name>_range</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="491" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="491" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a9f6328398177ce98152f7a3a43d6f677" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; int, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;int, XLBorderKey&gt; _topBorders</definition>
+        <argsstring></argsstring>
+        <name>_topBorders</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="492" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="492" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a23c3c6cffc8b08a071ede8370d86a742" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; int, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;int, XLBorderKey&gt; _bottomBorders</definition>
+        <argsstring></argsstring>
+        <name>_bottomBorders</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="493" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="493" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a31777bbdedbc940b3c3bc04942ec8dbf" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; int, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;int, XLBorderKey&gt; _leftBorders</definition>
+        <argsstring></argsstring>
+        <name>_leftBorders</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="494" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="494" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1ac6856492a5c41bcacce2e0b6f43ea469" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; int, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;int, XLBorderKey&gt; _rightBorders</definition>
+        <argsstring></argsstring>
+        <name>_rightBorders</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="495" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="495" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a9f7c157d54307e00aeabedbef6f3fd5c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>RestoreOutsideBorder</definition>
+        <argsstring>(IXLRange range)</argsstring>
+        <name>RestoreOutsideBorder</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="497" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="497" bodyend="516"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a6e2d745cdb7a7b983f861ed6a9a541a7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Dispose</definition>
+        <argsstring>()</argsstring>
+        <name>Dispose</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="518" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="518" bodyend="532"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Helper class that remembers outside border state before editing (in constructor) and restore afterwards (on disposing). It presumes that size of the range does not change during the editing, else it will fail. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="875">
+        <label>IDisposable</label>
+      </node>
+      <node id="874">
+        <label>XLBorder.RestoreOutsideBorder</label>
+        <childnode refid="875" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="877">
+        <label>IDisposable</label>
+      </node>
+      <node id="876">
+        <label>XLBorder.RestoreOutsideBorder</label>
+        <childnode refid="877" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" line="490" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLBorder.cs" bodystart="489" bodyend="533"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a23c3c6cffc8b08a071ede8370d86a742" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</scope><name>_bottomBorders</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a31777bbdedbc940b3c3bc04942ec8dbf" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</scope><name>_leftBorders</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a60d01892be3c6d01b3705cff9d674408" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</scope><name>_range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1ac6856492a5c41bcacce2e0b6f43ea469" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</scope><name>_rightBorders</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a9f6328398177ce98152f7a3a43d6f677" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</scope><name>_topBorders</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a6e2d745cdb7a7b983f861ed6a9a541a7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</scope><name>Dispose</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_1_1_restore_outside_border_1a9f7c157d54307e00aeabedbef6f3fd5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLBorder::RestoreOutsideBorder</scope><name>RestoreOutsideBorder</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

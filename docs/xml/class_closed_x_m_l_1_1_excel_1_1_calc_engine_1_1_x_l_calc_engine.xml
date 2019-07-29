@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::XLCalcEngine</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" prot="public" virt="non-virtual">CalcEngine</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a6af48bcbb45bba78e9f62b1553f9ff04" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>readonly IXLWorksheet _ws</definition>
+        <argsstring></argsstring>
+        <name>_ws</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a318476c1a8df4c36a96b69856ba541e5" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>readonly XLWorkbook _wb</definition>
+        <argsstring></argsstring>
+        <name>_wb</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a5dcd5617686f9cd9041096a24a64a0ef" prot="private" static="no" mutable="no">
+        <type>IList&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+        <definition>IList&lt;IXLRange&gt; _cellRanges</definition>
+        <argsstring></argsstring>
+        <name>_cellRanges</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a843624569a5e4336877d3be2b8ca4bd7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCalcEngine</definition>
+        <argsstring>()</argsstring>
+        <name>XLCalcEngine</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="12" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1ab88e16c912bf84cd87d45be508a6605a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCalcEngine</definition>
+        <argsstring>(XLWorkbook wb)</argsstring>
+        <name>XLCalcEngine</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+          <declname>wb</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="15" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a440e791238710d78537db3902f980d0f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCalcEngine</definition>
+        <argsstring>(IXLWorksheet ws)</argsstring>
+        <name>XLCalcEngine</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>ws</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="21" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1adbbc759934a882e10f4ba29454da522c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLRange&gt; GetPrecedentRanges</definition>
+        <argsstring>(string expression)</argsstring>
+        <name>GetPrecedentRanges</name>
+        <param>
+          <type>string</type>
+          <declname>expression</declname>
+        </param>
+        <briefdescription>
+<para>Get a collection of cell ranges included into the expression. Order is not preserved. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>expression</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Formula to parse.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Collection of ranges included into the expression.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="33" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1ab38ef6a927f1e533b2201ec899bb6173" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLCell&gt; GetPrecedentCells</definition>
+        <argsstring>(string expression)</argsstring>
+        <name>GetPrecedentCells</name>
+        <param>
+          <type>string</type>
+          <declname>expression</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="50" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a51a8fa04aa3a146264c2315814e02534" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>override object</type>
+        <definition>override object GetExternalObject</definition>
+        <argsstring>(string identifier)</argsstring>
+        <name>GetExternalObject</name>
+        <reimplements refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a328877d7c998b9da042413ea7b13cfa6">GetExternalObject</reimplements>
+        <param>
+          <type>string</type>
+          <declname>identifier</declname>
+        </param>
+        <briefdescription>
+<para>Gets an external object based on an identifier. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This method is useful when the engine needs to create objects dynamically. For example, a spreadsheet calc engine would use this method to dynamically create cell range objects based on identifiers that cannot be enumerated at design time (such as &quot;AB12&quot;, &quot;A1:AB12&quot;, etc.) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="68" bodyend="119"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a7d4843d6281e8307dac8c26ca91d47cb" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool TryGetNamedRange</definition>
+        <argsstring>(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)</argsstring>
+        <name>TryGetNamedRange</name>
+        <param>
+          <type>string</type>
+          <declname>identifier</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <param>
+          <type>out <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref></type>
+          <declname>namedRange</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="121" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="121" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a250dae5e8b5b8a721ae96baf735db598" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference" kindref="compound">CellRangeReference</ref></type>
+        <definition>CellRangeReference GetCellRangeReference</definition>
+        <argsstring>(IXLRange range)</argsstring>
+        <name>GetCellRangeReference</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="127" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="127" bodyend="135"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="979">
+        <label>CalcEngine</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine"/>
+      </node>
+      <node id="978">
+        <label>XLCalcEngine</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine"/>
+        <childnode refid="979" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="981">
+        <label>CalcEngine</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine"/>
+      </node>
+      <node id="980">
+        <label>XLCalcEngine</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine"/>
+        <childnode refid="981" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLCalcEngine.cs" bodystart="7" bodyend="136"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a5dcd5617686f9cd9041096a24a64a0ef" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>_cellRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a318476c1a8df4c36a96b69856ba541e5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>_wb</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a6af48bcbb45bba78e9f62b1553f9ff04" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>_ws</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad87babacb2c55cbb10448255e4b1fd82" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>CacheExpressions</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a5d233e2e53f4e0ffd6d9ab19bfc92bac" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>CalcEngine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a14ef55c903dc8c369e88012d7765a7d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>CultureInfo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3b1e541fafb6f4dc89588c681083d662" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>DataContext</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aca76a6baa09959d08feea2ff16da5035" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>Evaluate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a01ed05386fbd39b5ae0034b0a7c92fbe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>Functions</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a250dae5e8b5b8a721ae96baf735db598" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>GetCellRangeReference</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a51a8fa04aa3a146264c2315814e02534" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>GetExternalObject</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1ab38ef6a927f1e533b2201ec899bb6173" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>GetPrecedentCells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1adbbc759934a882e10f4ba29454da522c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>GetPrecedentRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab2fb00dd65042bcd93f26c0180939844" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>IdentifierChars</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a180e8034fa1d7414e02ba9072872c65a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>OptimizeExpressions</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a858b194717bcb7943b857d196d15db7a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>Parse</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a6f1d83d439c8d1c7791872d2edf531c0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>RegisterFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aa09de85f0768d66c2c90d5e498d6f0d7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>RegisterFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a7d4843d6281e8307dac8c26ca91d47cb" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>TryGetNamedRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab92b39900eeb1bf2283ada026fefce84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>Variables</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a843624569a5e4336877d3be2b8ca4bd7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>XLCalcEngine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1ab88e16c912bf84cd87d45be508a6605a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>XLCalcEngine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a440e791238710d78537db3902f980d0f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLCalcEngine</scope><name>XLCalcEngine</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_2c355a8198a3181dbe9a11394c45329f" kind="dir">
+    <compoundname>ConditionalFormats</compoundname>
+    <innerdir refid="dir_8996b5c179ffd2e93614feae379994ac">Save</innerdir>
+    <innerfile refid="_i_x_l_c_f_color_scale_max_8cs">IXLCFColorScaleMax.cs</innerfile>
+    <innerfile refid="_i_x_l_c_f_color_scale_mid_8cs">IXLCFColorScaleMid.cs</innerfile>
+    <innerfile refid="_i_x_l_c_f_color_scale_min_8cs">IXLCFColorScaleMin.cs</innerfile>
+    <innerfile refid="_i_x_l_c_f_data_bar_max_8cs">IXLCFDataBarMax.cs</innerfile>
+    <innerfile refid="_i_x_l_c_f_data_bar_min_8cs">IXLCFDataBarMin.cs</innerfile>
+    <innerfile refid="_i_x_l_c_f_icon_set_8cs">IXLCFIconSet.cs</innerfile>
+    <innerfile refid="_i_x_l_conditional_format_8cs">IXLConditionalFormat.cs</innerfile>
+    <innerfile refid="_i_x_l_conditional_formats_8cs">IXLConditionalFormats.cs</innerfile>
+    <innerfile refid="_x_l_c_f_color_scale_max_8cs">XLCFColorScaleMax.cs</innerfile>
+    <innerfile refid="_x_l_c_f_color_scale_mid_8cs">XLCFColorScaleMid.cs</innerfile>
+    <innerfile refid="_x_l_c_f_color_scale_min_8cs">XLCFColorScaleMin.cs</innerfile>
+    <innerfile refid="_x_l_c_f_data_bar_max_8cs">XLCFDataBarMax.cs</innerfile>
+    <innerfile refid="_x_l_c_f_data_bar_min_8cs">XLCFDataBarMin.cs</innerfile>
+    <innerfile refid="_x_l_c_f_icon_set_8cs">XLCFIconSet.cs</innerfile>
+    <innerfile refid="_x_l_conditional_format_8cs">XLConditionalFormat.cs</innerfile>
+    <innerfile refid="_x_l_conditional_formats_8cs">XLConditionalFormats.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/"/>
+  </compounddef>
+</doxygen>

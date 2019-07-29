@@ -1,0 +1,411 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLRangeAddress</compoundname>
+    <derivedcompoundref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" prot="public" virt="non-virtual">XLRangeAddress</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a68106121f807d13591fb080ec4243f1e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+        <definition>IXLAddress FirstAddress</definition>
+        <argsstring></argsstring>
+        <name>FirstAddress</name>
+        <briefdescription>
+<para>Gets or sets the first address in the range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The first address. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a72b69dfb0ae31ece894fe6a5afec26e9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsValid</definition>
+        <argsstring></argsstring>
+        <name>IsValid</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether this range is valid. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if this instance is valid; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" bodystart="45" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ab4d00490b0c6bcdc663c3c6384046c9c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+        <definition>IXLAddress LastAddress</definition>
+        <argsstring></argsstring>
+        <name>LastAddress</name>
+        <briefdescription>
+<para>Gets or sets the last address in the range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The last address. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" bodystart="55" bodyend="55"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a0c01ae3e8b076d4d357a35c75846308f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean IsEntireColumn</definition>
+        <argsstring>()</argsstring>
+        <name>IsEntireColumn</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1a128543c3195a04e6db078f39effae9e2">IsEntireColumn</reimplementedby>
+        <briefdescription>
+<para>Determines whether range address spans the entire column. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para><computeroutput>true</computeroutput> if is entire column; otherwise, <computeroutput>false</computeroutput>. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a032290a268e87e37c8067e91b123c176" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean IsEntireRow</definition>
+        <argsstring>()</argsstring>
+        <name>IsEntireRow</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1ab0cc507585d8630192dd4940dc9a88ba">IsEntireRow</reimplementedby>
+        <briefdescription>
+<para>Determines whether range address spans the entire row. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para><computeroutput>true</computeroutput> if is entire row; otherwise, <computeroutput>false</computeroutput>. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="29" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a9c38a38c2e325c49d8113bad8b329afb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean IsEntireSheet</definition>
+        <argsstring>()</argsstring>
+        <name>IsEntireSheet</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1ac3f8f0859e46d288573066b6b4ee2fbb">IsEntireSheet</reimplementedby>
+        <briefdescription>
+<para>Determines whether the range address spans the entire worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para><computeroutput>true</computeroutput> if is entire sheet; otherwise, <computeroutput>false</computeroutput>. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="37" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a83d2064d7137620932e9629a30558358" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToString</definition>
+        <argsstring>(XLReferenceStyle referenceStyle)</argsstring>
+        <name>ToString</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1a74cf90567b0011f2443b05cb59cc9f70">ToString</reimplementedby>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="57" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1addc19aa7475b6e5835dac7d5d25303fa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToString</definition>
+        <argsstring>(XLReferenceStyle referenceStyle, Boolean includeSheet)</argsstring>
+        <name>ToString</name>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="59" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ac654148aad0cfbe0d77d39083a53f91c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>()</argsstring>
+        <name>ToStringFixed</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1ac654148aad0cfbe0d77d39083a53f91c">ToStringFixed</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="61" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a96b7f9afb9feaec21e9e16b2ad57776f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>(XLReferenceStyle referenceStyle)</argsstring>
+        <name>ToStringFixed</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1a96b7f9afb9feaec21e9e16b2ad57776f">ToStringFixed</reimplementedby>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="63" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a46c320f16f8a856fb5b98f043dadb131" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>(XLReferenceStyle referenceStyle, Boolean includeSheet)</argsstring>
+        <name>ToStringFixed</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1a46c320f16f8a856fb5b98f043dadb131">ToStringFixed</reimplementedby>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="65" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a36c99e076eac2caee32a25180de6f541" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringRelative</definition>
+        <argsstring>()</argsstring>
+        <name>ToStringRelative</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1a36c99e076eac2caee32a25180de6f541">ToStringRelative</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="67" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ab1c7e586256e93648062b22d14d4abc4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringRelative</definition>
+        <argsstring>(Boolean includeSheet)</argsstring>
+        <name>ToStringRelative</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1ab1c7e586256e93648062b22d14d4abc4">ToStringRelative</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="69" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a38d6b965185fecdfb0a4a9ac819c4aea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Intersects</definition>
+        <argsstring>(IXLRangeAddress otherAddress)</argsstring>
+        <name>Intersects</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1a11adea2875686dcc9902725ea6829dc6">Intersects</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>otherAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="71" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a20e874304c74017e7d3561d6bc332bf9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Contains</definition>
+        <argsstring>(IXLAddress address)</argsstring>
+        <name>Contains</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1aad2fda8a70d2157cf497ec075ece6d7d">Contains</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="73" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ac697dbf086d4634765844ff254df7d20" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+        <definition>IXLRangeAddress Intersection</definition>
+        <argsstring>(IXLRangeAddress otherRangeAddress)</argsstring>
+        <name>Intersection</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1ac697dbf086d4634765844ff254df7d20">Intersection</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>otherRangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Returns the intersection of this range address with another range address on the same worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>otherRangeAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The other range address.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The intersection&apos;s range address</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="80" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1aa0f84f6cba5da98372b8ea2c3476f1c5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+        <definition>IXLRangeAddress Relative</definition>
+        <argsstring>(IXLRangeAddress sourceRangeAddress, IXLRangeAddress targetRangeAddress)</argsstring>
+        <name>Relative</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1aa0f84f6cba5da98372b8ea2c3476f1c5">Relative</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>sourceRangeAddress</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>targetRangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Returns a range address so that its offset from the target base address is equal to the offset of the current range address to the source base address. For example, if the current range address is D4:E4, the source base address is A1:C3, then the relative address to the target base address B10:D13 is E14:F14 </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sourceRangeAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source base range address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>targetRangeAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The target base range address.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The relative range</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="89" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a7ab606dd801924c03c4ba2d7799d470f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange AsRange</definition>
+        <argsstring>()</argsstring>
+        <name>AsRange</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address_1a7ab606dd801924c03c4ba2d7799d470f">AsRange</reimplementedby>
+        <briefdescription>
+<para>Allocates the current range address in the internal range repository and returns it </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="92" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="552">
+        <label>IXLRangeAddress</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address"/>
+      </node>
+      <node id="553">
+        <label>XLRangeAddress</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address"/>
+        <childnode refid="552" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeAddress.cs" bodystart="5" bodyend="93"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a7ab606dd801924c03c4ba2d7799d470f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>AsRange</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a20e874304c74017e7d3561d6bc332bf9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a68106121f807d13591fb080ec4243f1e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>FirstAddress</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ac697dbf086d4634765844ff254df7d20" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>Intersection</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a38d6b965185fecdfb0a4a9ac819c4aea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>Intersects</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a0c01ae3e8b076d4d357a35c75846308f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>IsEntireColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a032290a268e87e37c8067e91b123c176" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>IsEntireRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a9c38a38c2e325c49d8113bad8b329afb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>IsEntireSheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a72b69dfb0ae31ece894fe6a5afec26e9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>IsValid</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ab4d00490b0c6bcdc663c3c6384046c9c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>LastAddress</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1aa0f84f6cba5da98372b8ea2c3476f1c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>Relative</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a83d2064d7137620932e9629a30558358" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>ToString</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1addc19aa7475b6e5835dac7d5d25303fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>ToString</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ac654148aad0cfbe0d77d39083a53f91c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>ToStringFixed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a96b7f9afb9feaec21e9e16b2ad57776f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>ToStringFixed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a46c320f16f8a856fb5b98f043dadb131" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>ToStringFixed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a36c99e076eac2caee32a25180de6f541" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>ToStringRelative</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1ab1c7e586256e93648062b22d14d4abc4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>ToStringRelative</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRangeAddress</scope><name>Worksheet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

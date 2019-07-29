@@ -1,0 +1,294 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLTables</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables" prot="public" virt="non-virtual">IXLTables</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1aedc564a090df5aa048a1dc2505a9ce17" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; String, <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;String, IXLTable&gt; _tables</definition>
+        <argsstring></argsstring>
+        <name>_tables</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a97a65afc4eac157848242b096ff21f05" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>internal ICollection&lt; String &gt;</type>
+        <definition>internal ICollection&lt;String&gt; Deleted</definition>
+        <argsstring></argsstring>
+        <name>Deleted</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1ae2fd007c8770d0ecefeeb060e96f5485" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLTables</definition>
+        <argsstring>()</argsstring>
+        <name>XLTables</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="13" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a86ef7a0719aea3cf78be738ecc6e1439" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLTable table)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1a86ef7a0719aea3cf78be738ecc6e1439">Add</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+          <declname>table</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="23" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a3a40d87a31eac432413c9799df62fe1d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables" kindref="compound">IXLTables</ref></type>
+        <definition>IXLTables Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1a3a40d87a31eac432413c9799df62fe1d">Clear</reimplements>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of these tables. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="29" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1accb3a92b5560d05951853cefaf8ef44f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Contains</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Contains</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1accb3a92b5560d05951853cefaf8ef44f">Contains</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="35" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a3ce8304475fdd9d70cd68edb75eb58be" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLTable&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="40" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1add2919d12af858611a4c872273329bd2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(Int32 index)</argsstring>
+        <name>Remove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1add2919d12af858611a4c872273329bd2">Remove</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="50" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a8c5676a0e88b6b6f02705fe498418048" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Remove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1a8c5676a0e88b6b6f02705fe498418048">Remove</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="55" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a6bcd28cc41d9d245d0828b7ef08af726" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable Table</definition>
+        <argsstring>(Int32 index)</argsstring>
+        <name>Table</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1a6bcd28cc41d9d245d0828b7ef08af726">Table</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="66" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="66" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1aa35486c8d86306e5720249dfa6e70b5f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable Table</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Table</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1aa35486c8d86306e5720249dfa6e70b5f">Table</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="71" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="71" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a7142a1c775990d7930f0dd44b112d8b3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool TryGetTable</definition>
+        <argsstring>(string tableName, out IXLTable table)</argsstring>
+        <name>TryGetTable</name>
+        <param>
+          <type>string</type>
+          <declname>tableName</declname>
+        </param>
+        <param>
+          <type>out <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+          <declname>table</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="79" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="79" bodyend="88"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator IEnumerable.</type>
+        <definition>IEnumerator IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="45" bodyend="48"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1922">
+        <label>IXLTables</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables"/>
+        <childnode refid="1923" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1921">
+        <label>XLTables</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables"/>
+        <childnode refid="1922" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1923">
+        <label>IEnumerable&lt; IXLTable &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1925">
+        <label>IXLTables</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables"/>
+        <childnode refid="1926" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1924">
+        <label>XLTables</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables"/>
+        <childnode refid="1925" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1926">
+        <label>IEnumerable&lt; IXLTable &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTables.cs" bodystart="9" bodyend="91"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1aedc564a090df5aa048a1dc2505a9ce17" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>_tables</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a86ef7a0719aea3cf78be738ecc6e1439" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a3a40d87a31eac432413c9799df62fe1d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1accb3a92b5560d05951853cefaf8ef44f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a97a65afc4eac157848242b096ff21f05" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Deleted</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a3ce8304475fdd9d70cd68edb75eb58be" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1add2919d12af858611a4c872273329bd2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a8c5676a0e88b6b6f02705fe498418048" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a6bcd28cc41d9d245d0828b7ef08af726" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Table</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1aa35486c8d86306e5720249dfa6e70b5f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>Table</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1a7142a1c775990d7930f0dd44b112d8b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>TryGetTable</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_tables_1a533c9109ee9406acb352a96fda0b5905" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLTables."><scope>ClosedXML::Excel::XLTables</scope><name>TryGetTable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_tables_1ae2fd007c8770d0ecefeeb060e96f5485" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTables</scope><name>XLTables</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

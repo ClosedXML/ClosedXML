@@ -1,0 +1,384 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLRichString</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" prot="public" virt="non-virtual">IXLFontBase</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLRichString &gt;</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string" prot="public" virt="non-virtual">IXLWithRichString</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string" prot="public" virt="non-virtual">XLRichString</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Text</definition>
+        <argsstring></argsstring>
+        <name>Text</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a733081ba89665b333b2356f6abdd768f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetBold</definition>
+        <argsstring>()</argsstring>
+        <name>SetBold</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a733081ba89665b333b2356f6abdd768f">SetBold</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1abba4df90c9d0092ff44cf5e38c2536ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetBold</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetBold</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1abba4df90c9d0092ff44cf5e38c2536ef">SetBold</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1ad887440ce6ea8af75958ca6f4f9c11ea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetItalic</definition>
+        <argsstring>()</argsstring>
+        <name>SetItalic</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1ad887440ce6ea8af75958ca6f4f9c11ea">SetItalic</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="16" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a7e10236203ef440fb454e7c9012d9abc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetItalic</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetItalic</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a7e10236203ef440fb454e7c9012d9abc">SetItalic</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="16" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1aeb64d19d76043b500e924e2a48732007" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetUnderline</definition>
+        <argsstring>()</argsstring>
+        <name>SetUnderline</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1aeb64d19d76043b500e924e2a48732007">SetUnderline</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="17" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a2270d5813c8acf58442e7189a1e9be6f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetUnderline</definition>
+        <argsstring>(XLFontUnderlineValues value)</argsstring>
+        <name>SetUnderline</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a2270d5813c8acf58442e7189a1e9be6f">SetUnderline</reimplementedby>
+        <param>
+          <type>XLFontUnderlineValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="17" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a1d8aeb2e1d3c46bd11ce4f2d37dbc926" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetStrikethrough</definition>
+        <argsstring>()</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a1d8aeb2e1d3c46bd11ce4f2d37dbc926">SetStrikethrough</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="18" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1af73812e2ba34856e74ebef2bc2d2a9f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetStrikethrough</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1af73812e2ba34856e74ebef2bc2d2a9f1">SetStrikethrough</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="18" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1af6a9272289a66a4c6188e71e0ab17b00" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetVerticalAlignment</definition>
+        <argsstring>(XLFontVerticalTextAlignmentValues value)</argsstring>
+        <name>SetVerticalAlignment</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1af6a9272289a66a4c6188e71e0ab17b00">SetVerticalAlignment</reimplementedby>
+        <param>
+          <type>XLFontVerticalTextAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a0d4335d9137cf994a2f9ae5595844a93" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetShadow</definition>
+        <argsstring>()</argsstring>
+        <name>SetShadow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a0d4335d9137cf994a2f9ae5595844a93">SetShadow</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="20" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1ae9fbfa00abd632ca62a4f69e856e0718" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetShadow</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShadow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1ae9fbfa00abd632ca62a4f69e856e0718">SetShadow</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="20" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a990b58efb954b4799e916ae7d44a1b23" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetFontSize</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetFontSize</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a990b58efb954b4799e916ae7d44a1b23">SetFontSize</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1ae43d3bfb5f2499edba4125d1f03861b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetFontColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetFontColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1ae43d3bfb5f2499edba4125d1f03861b4">SetFontColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="22" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1aaa3a9cce900b1af63d721bf644f00e1d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetFontName</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetFontName</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1aaa3a9cce900b1af63d721bf644f00e1d">SetFontName</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a8151bbfea13f294de361602d9328dd56" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetFontFamilyNumbering</definition>
+        <argsstring>(XLFontFamilyNumberingValues value)</argsstring>
+        <name>SetFontFamilyNumbering</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a8151bbfea13f294de361602d9328dd56">SetFontFamilyNumbering</reimplementedby>
+        <param>
+          <type>XLFontFamilyNumberingValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a23768bff08c512fe0016168a7b823ea6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString SetFontCharSet</definition>
+        <argsstring>(XLFontCharSet value)</argsstring>
+        <name>SetFontCharSet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a23768bff08c512fe0016168a7b823ea6">SetFontCharSet</reimplementedby>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1a16954fe0e0c237f1f972b2432676c381" kindref="member">XLFontCharSet</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="25" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="631">
+        <label>XLRichString</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string"/>
+        <childnode refid="627" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="627">
+        <label>IXLRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string"/>
+        <childnode refid="628" relation="public-inheritance">
+        </childnode>
+        <childnode refid="629" relation="public-inheritance">
+        </childnode>
+        <childnode refid="630" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="630">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="628">
+        <label>IXLFontBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base"/>
+      </node>
+      <node id="629">
+        <label>IEquatable&lt; IXLRichString &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="632">
+        <label>IXLRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string"/>
+        <childnode refid="633" relation="public-inheritance">
+        </childnode>
+        <childnode refid="634" relation="public-inheritance">
+        </childnode>
+        <childnode refid="635" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="635">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="633">
+        <label>IXLFontBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base"/>
+      </node>
+      <node id="634">
+        <label>IEquatable&lt; IXLRichString &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" bodystart="10" bodyend="26"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>AddNewLine</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>AddText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>Bold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2e7968d4653cb5742f2eb152ee7eca17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>FontCharSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>FontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>FontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>FontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>FontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>Italic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a733081ba89665b333b2356f6abdd768f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1abba4df90c9d0092ff44cf5e38c2536ef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a23768bff08c512fe0016168a7b823ea6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetFontCharSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1ae43d3bfb5f2499edba4125d1f03861b4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetFontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a8151bbfea13f294de361602d9328dd56" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetFontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1aaa3a9cce900b1af63d721bf644f00e1d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetFontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a990b58efb954b4799e916ae7d44a1b23" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetFontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1ad887440ce6ea8af75958ca6f4f9c11ea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a7e10236203ef440fb454e7c9012d9abc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a0d4335d9137cf994a2f9ae5595844a93" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1ae9fbfa00abd632ca62a4f69e856e0718" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a1d8aeb2e1d3c46bd11ce4f2d37dbc926" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1af73812e2ba34856e74ebef2bc2d2a9f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1aeb64d19d76043b500e924e2a48732007" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a2270d5813c8acf58442e7189a1e9be6f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1af6a9272289a66a4c6188e71e0ab17b00" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>SetVerticalAlignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>Shadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>Strikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>Text</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>Underline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichString</scope><name>VerticalAlignment</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

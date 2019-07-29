@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_list_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::ListExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_list_extensions_1a29cdc77dacb448e72ccfc461d8ccba0a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void RemoveAll&lt; T &gt;</definition>
+        <argsstring>(this IList&lt; T &gt; list, Func&lt; T, bool &gt; predicate)</argsstring>
+        <name>RemoveAll&lt; T &gt;</name>
+        <param>
+          <type>this IList&lt; T &gt;</type>
+          <declname>list</declname>
+        </param>
+        <param>
+          <type>Func&lt; T, bool &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="290" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="290" bodyend="297"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="289" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="288" bodyend="298"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_list_extensions_1a29cdc77dacb448e72ccfc461d8ccba0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::ListExtensions</scope><name>RemoveAll&lt; T &gt;</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

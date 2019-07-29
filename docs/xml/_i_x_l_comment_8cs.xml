@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_comment_8cs" kind="file" language="C#">
+    <compoundname>IXLComment.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" prot="public">ClosedXML::Excel::IXLComment</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="6" refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref><sp/>:<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt;IXLComment&gt;,<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing" kindref="compound">IXLDrawing</ref>&lt;IXLComment&gt;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>String<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment_1aca9f76df1e60f93e7a7c5d1a0d4a3fc5" kindref="member">Author</ref><sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment_1aab2b1e49fb90ddf289d1ee1ca91a417b" kindref="member">SetAuthor</ref>(String<sp/>value);</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment_1a495e9f1462d7d3bdf4ac3242b0d81655" kindref="member">AddSignature</ref>();</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Delete();</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/IXLComment.cs"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDateTimeGroupFilteredColumn</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_date_time_group_filtered_column" prot="public" virt="non-virtual">IXLDateTimeGroupFilteredColumn</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+        <definition>readonly XLAutoFilter _autoFilter</definition>
+        <argsstring></argsstring>
+        <name>_autoFilter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a401a6529feffcc7b66481264ab30dc62" prot="private" static="no" mutable="no">
+        <type>readonly Int32</type>
+        <definition>readonly Int32 _column</definition>
+        <argsstring></argsstring>
+        <name>_column</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a8ae993e02c532977a3ae25359c070b06" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDateTimeGroupFilteredColumn</definition>
+        <argsstring>(XLAutoFilter autoFilter, Int32 column)</argsstring>
+        <name>XLDateTimeGroupFilteredColumn</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+          <declname>autoFilter</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" bodystart="15" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a91380243158fc41e0addc989a306dc99" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_date_time_group_filtered_column" kindref="compound">IXLDateTimeGroupFilteredColumn</ref></type>
+        <definition>IXLDateTimeGroupFilteredColumn AddDateGroupFilter</definition>
+        <argsstring>(DateTime date, XLDateTimeGrouping dateTimeGrouping)</argsstring>
+        <name>AddDateGroupFilter</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_date_time_group_filtered_column_1a91380243158fc41e0addc989a306dc99">AddDateGroupFilter</reimplements>
+        <param>
+          <type>DateTime</type>
+          <declname>date</declname>
+        </param>
+        <param>
+          <type>XLDateTimeGrouping</type>
+          <declname>dateTimeGrouping</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" bodystart="21" bodyend="42"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a932bd02625b7b08bb329ec30acc82114" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal Boolean</type>
+        <definition>static internal Boolean IsMatch</definition>
+        <argsstring>(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)</argsstring>
+        <name>IsMatch</name>
+        <param>
+          <type>DateTime</type>
+          <declname>date1</declname>
+        </param>
+        <param>
+          <type>DateTime</type>
+          <declname>date2</declname>
+        </param>
+        <param>
+          <type>XLDateTimeGrouping</type>
+          <declname>dateTimeGrouping</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" bodystart="44" bodyend="55"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1225">
+        <label>IXLDateTimeGroupFilteredColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_date_time_group_filtered_column"/>
+      </node>
+      <node id="1224">
+        <label>XLDateTimeGroupFilteredColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column"/>
+        <childnode refid="1225" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1227">
+        <label>IXLDateTimeGroupFilteredColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_date_time_group_filtered_column"/>
+      </node>
+      <node id="1226">
+        <label>XLDateTimeGroupFilteredColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column"/>
+        <childnode refid="1227" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLDateTimeGroupFilteredColumn.cs" bodystart="10" bodyend="56"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDateTimeGroupFilteredColumn</scope><name>_autoFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a401a6529feffcc7b66481264ab30dc62" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDateTimeGroupFilteredColumn</scope><name>_column</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a91380243158fc41e0addc989a306dc99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateTimeGroupFilteredColumn</scope><name>AddDateGroupFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a932bd02625b7b08bb329ec30acc82114" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDateTimeGroupFilteredColumn</scope><name>IsMatch</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_time_group_filtered_column_1a8ae993e02c532977a3ae25359c070b06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateTimeGroupFilteredColumn</scope><name>XLDateTimeGroupFilteredColumn</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

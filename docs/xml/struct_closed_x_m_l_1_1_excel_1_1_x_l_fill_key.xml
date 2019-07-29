@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kind="struct" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFillKey</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; XLFillKey &gt;</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1aa0e2bac11c9bab43d8e7c7fe49cd1bb8" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_color_key" kindref="compound">XLColorKey</ref></type>
+        <definition>XLColorKey BackgroundColor</definition>
+        <argsstring></argsstring>
+        <name>BackgroundColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a47c8d34b82fabac368d658e964631136" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_color_key" kindref="compound">XLColorKey</ref></type>
+        <definition>XLColorKey PatternColor</definition>
+        <argsstring></argsstring>
+        <name>PatternColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1ab49908e824f3f4c44de225a6aad98a41" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFillPatternValues</type>
+        <definition>XLFillPatternValues PatternType</definition>
+        <argsstring></argsstring>
+        <name>PatternType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="13" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a7067db9843f18ba676852c04decbe318" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(XLFillKey other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="29" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="52" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="59" bodyend="62"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a4f150c4fcfc71642734eb77b9925bd5a" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool HasNoFill</definition>
+        <argsstring>()</argsstring>
+        <name>HasNoFill</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="40" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1afe33245631881ee415d01859ef077ad4" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool HasNoForeground</definition>
+        <argsstring>()</argsstring>
+        <name>HasNoForeground</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="46" bodyend="50"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a486151ecc654a1a207eae38779058313" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator==</definition>
+        <argsstring>(XLFillKey left, XLFillKey right)</argsstring>
+        <name>operator==</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="64" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a983e9dcc20528090f47cd36927b800c2" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator !=</definition>
+        <argsstring>(XLFillKey left, XLFillKey right)</argsstring>
+        <name>operator !=</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key" kindref="compound">XLFillKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="66" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1296">
+        <label>IEquatable&lt; XLFillKey &gt;</label>
+      </node>
+      <node id="1295">
+        <label>XLFillKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key"/>
+        <childnode refid="1296" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1298">
+        <label>IEquatable&lt; XLFillKey &gt;</label>
+      </node>
+      <node id="1297">
+        <label>XLFillKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key"/>
+        <childnode refid="1298" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFillKey.cs" bodystart="5" bodyend="67"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1aa0e2bac11c9bab43d8e7c7fe49cd1bb8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>BackgroundColor</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a7067db9843f18ba676852c04decbe318" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a4f150c4fcfc71642734eb77b9925bd5a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>HasNoFill</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1afe33245631881ee415d01859ef077ad4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>HasNoForeground</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a983e9dcc20528090f47cd36927b800c2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>operator !=</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a486151ecc654a1a207eae38779058313" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>operator==</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1a47c8d34b82fabac368d658e964631136" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>PatternColor</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1ab49908e824f3f4c44de225a6aad98a41" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>PatternType</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_fill_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFillKey</scope><name>ToString</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

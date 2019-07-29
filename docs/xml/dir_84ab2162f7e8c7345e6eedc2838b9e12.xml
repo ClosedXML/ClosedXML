@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_84ab2162f7e8c7345e6eedc2838b9e12" kind="dir">
+    <compoundname>Rows</compoundname>
+    <innerfile refid="_i_x_l_row_8cs">IXLRow.cs</innerfile>
+    <innerfile refid="_i_x_l_rows_8cs">IXLRows.cs</innerfile>
+    <innerfile refid="_x_l_row_8cs">XLRow.cs</innerfile>
+    <innerfile refid="_x_l_row_collection_8cs">XLRowCollection.cs</innerfile>
+    <innerfile refid="_x_l_row_parameters_8cs">XLRowParameters.cs</innerfile>
+    <innerfile refid="_x_l_rows_8cs">XLRows.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/"/>
+  </compounddef>
+</doxygen>

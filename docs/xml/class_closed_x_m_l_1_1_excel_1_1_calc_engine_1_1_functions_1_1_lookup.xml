@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Functions::Lookup</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1ad572d5831ec1544c2333017cb75a55df" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Register</definition>
+        <argsstring>(CalcEngine ce)</argsstring>
+        <name>Register</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="11" bodyend="32"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1aa72ed014e7bcd59270db9f88daccebe8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>static IXLRange ExtractRange</definition>
+        <argsstring>(Expression expression)</argsstring>
+        <name>ExtractRange</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+          <declname>expression</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="34" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a0031bf1c5e59dc5fbbc91a371bd7039a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Hlookup</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Hlookup</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="46" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a610ed617de05e69b3dc3a13f5c14d870" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Hyperlink</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Hyperlink</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="88" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a7d6b1539c527b60cd15c325ba314fbe8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Index</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Index</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="95" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="95" bodyend="147"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a8cd408aab8815a9d578bb26c97e65d4c" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Match</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Match</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="149" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="149" bodyend="215"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1adb96515691e33c03cd61e6ef0fa56ca8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Vlookup</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Vlookup</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="217" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="217" bodyend="264"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Lookup.cs" bodystart="9" bodyend="265"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1aa72ed014e7bcd59270db9f88daccebe8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Lookup</scope><name>ExtractRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a0031bf1c5e59dc5fbbc91a371bd7039a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Lookup</scope><name>Hlookup</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a610ed617de05e69b3dc3a13f5c14d870" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Lookup</scope><name>Hyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a7d6b1539c527b60cd15c325ba314fbe8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Lookup</scope><name>Index</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1a8cd408aab8815a9d578bb26c97e65d4c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Lookup</scope><name>Match</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1ad572d5831ec1544c2333017cb75a55df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Lookup</scope><name>Register</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_lookup_1adb96515691e33c03cd61e6ef0fa56ca8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Lookup</scope><name>Vlookup</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

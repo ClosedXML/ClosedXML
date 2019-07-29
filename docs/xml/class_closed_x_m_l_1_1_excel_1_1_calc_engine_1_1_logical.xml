@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Logical</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1ad572d5831ec1544c2333017cb75a55df" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Register</definition>
+        <argsstring>(CalcEngine ce)</argsstring>
+        <name>Register</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="8" bodyend="17"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a1811fc0078ab12bbafa4656bd4bbbc2d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object And</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>And</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="19" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1ae9f4bdacf564e79df8a1dd90c57e8368" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Or</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Or</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="29" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a880a1c23ba459c37979db0202265859e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Not</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Not</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="39" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a993331c6c4e17eccbc02e174bfa6f7c8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object If</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>If</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="44" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a638ce0fb5710b89f47443e265ebd55a9" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object True</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>True</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="60" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1aecf89203aa166d4def5d64dc11a1077d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object False</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>False</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="65" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a9fca78b34cbba3acaca91348c6d2c420" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IfError</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IfError</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="70" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="70" bodyend="80"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Logical.cs" bodystart="6" bodyend="81"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a1811fc0078ab12bbafa4656bd4bbbc2d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>And</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1aecf89203aa166d4def5d64dc11a1077d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>False</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a993331c6c4e17eccbc02e174bfa6f7c8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>If</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a9fca78b34cbba3acaca91348c6d2c420" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>IfError</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a880a1c23ba459c37979db0202265859e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>Not</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1ae9f4bdacf564e79df8a1dd90c57e8368" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>Or</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1ad572d5831ec1544c2333017cb75a55df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>Register</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical_1a638ce0fb5710b89f47443e265ebd55a9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Logical</scope><name>True</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLTableRows</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLTableRow &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows" prot="public" virt="non-virtual">XLTableRows</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a6cef8de98f05983f520efefc334e6b13" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a4f8b79083dd7a8404d879deda51f8236" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLTableRow tableRow)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1a4f8b79083dd7a8404d879deda51f8236">Add</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref></type>
+          <declname>tableRow</declname>
+        </param>
+        <briefdescription>
+<para>Adds a table row to this group. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tableRow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The row table to add.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells Cells</definition>
+        <argsstring>()</argsstring>
+        <name>Cells</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1a3a388f07ee977ad805d8f72cc51418c5">Cells</reimplementedby>
+        <briefdescription>
+<para>Returns the collection of cells. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="20" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a6ad63b5f449b6fa15192912119681a06" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>()</argsstring>
+        <name>CellsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1a6ad63b5f449b6fa15192912119681a06">CellsUsed</reimplementedby>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>(Boolean includeFormats)</argsstring>
+        <name>CellsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3">CellsUsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>includeFormats</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if set to <computeroutput>true</computeroutput> will return all cells with a value or a style different than the default.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="32" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>(XLCellsUsedOptions options)</argsstring>
+        <name>CellsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5">CellsUsed</reimplementedby>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="34" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1acf56e0fbe7a9df4b7f90d7a9c9dc8131" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows" kindref="compound">IXLTableRows</ref></type>
+        <definition>IXLTableRows Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1acf56e0fbe7a9df4b7f90d7a9c9dc8131">Clear</reimplementedby>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of these rows. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="40" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1ac2e5aab0612d67400354a4fe71278a21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1ac2e5aab0612d67400354a4fe71278a21">Delete</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="42" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1aae6b677d47187a8187e734714222240b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Select</definition>
+        <argsstring>()</argsstring>
+        <name>Select</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows_1aae6b677d47187a8187e734714222240b">Select</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="44" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="752">
+        <label>XLTableRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows"/>
+        <childnode refid="750" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="751">
+        <label>IEnumerable&lt; IXLTableRow &gt;</label>
+      </node>
+      <node id="750">
+        <label>IXLTableRows</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows"/>
+        <childnode refid="751" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="754">
+        <label>IEnumerable&lt; IXLTableRow &gt;</label>
+      </node>
+      <node id="753">
+        <label>IXLTableRows</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows"/>
+        <childnode refid="754" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/IXLTableRows.cs" bodystart="7" bodyend="45"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a4f8b79083dd7a8404d879deda51f8236" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a6ad63b5f449b6fa15192912119681a06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1acf56e0fbe7a9df4b7f90d7a9c9dc8131" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1aae6b677d47187a8187e734714222240b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>Select</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLTableRows</scope><name>Style</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

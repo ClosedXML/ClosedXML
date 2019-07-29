@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_range_columns_8cs" kind="file" language="C#">
+    <compoundname>IXLRangeColumns.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" prot="public">ClosedXML::Excel::IXLRangeColumns</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="6" refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref><sp/>:<sp/>IEnumerable&lt;IXLRangeColumn&gt;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns_1ad5074f7439301ddee6b40b4131cae834" kindref="member">Add</ref>(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref><sp/>columRange);</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns_1a3a388f07ee977ad805d8f72cc51418c5" kindref="member">Cells</ref>();</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>();</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[Obsolete(</highlight><highlight class="stringliteral">&quot;Use<sp/>the<sp/>overload<sp/>with<sp/>XLCellsUsedOptions&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>(Boolean<sp/>includeFormats);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>(XLCellsUsedOptions<sp/>options);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns_1ac2e5aab0612d67400354a4fe71278a21" kindref="member">Delete</ref>();</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref><sp/>Style<sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref><sp/>SetDataType(XLDataType<sp/>dataType);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns_1a0092008442e8ec0baa1b245b46143c93" kindref="member">Clear</ref>(XLClearOptions<sp/>clearOptions<sp/>=<sp/>XLClearOptions.All);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Select();</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRangeColumns.cs"/>
+  </compounddef>
+</doxygen>

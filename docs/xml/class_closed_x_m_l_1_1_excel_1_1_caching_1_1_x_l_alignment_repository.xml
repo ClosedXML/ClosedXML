@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Caching::XLAlignmentRepository</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" prot="public" virt="non-virtual">XLRepositoryBase&lt; XLAlignmentKey, XLAlignmentValue &gt;</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository_1ade4abf7f37a823cccf9ac984b7440e90" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLAlignmentRepository</definition>
+        <argsstring>(Func&lt; XLAlignmentKey, XLAlignmentValue &gt; createNew)</argsstring>
+        <name>XLAlignmentRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_value" kindref="compound">XLAlignmentValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLAlignmentRepository.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLAlignmentRepository.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository_1a106d08de55ca62b73666dbe9041aad20" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLAlignmentRepository</definition>
+        <argsstring>(Func&lt; XLAlignmentKey, XLAlignmentValue &gt; createNew, IEqualityComparer&lt; XLAlignmentKey &gt; comparer)</argsstring>
+        <name>XLAlignmentRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_value" kindref="compound">XLAlignmentValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref> &gt;</type>
+          <declname>comparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLAlignmentRepository.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLAlignmentRepository.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="945">
+        <label>XLAlignmentRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository"/>
+        <childnode refid="946" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="946">
+        <label>XLRepositoryBase&lt; XLAlignmentKey, XLAlignmentValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="947">
+        <label>XLAlignmentRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository"/>
+        <childnode refid="948" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="948">
+        <label>XLRepositoryBase&lt; XLAlignmentKey, XLAlignmentValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLAlignmentRepository.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLAlignmentRepository.cs" bodystart="6" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository_1ade4abf7f37a823cccf9ac984b7440e90" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLAlignmentRepository</scope><name>XLAlignmentRepository</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository_1a106d08de55ca62b73666dbe9041aad20" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLAlignmentRepository</scope><name>XLAlignmentRepository</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

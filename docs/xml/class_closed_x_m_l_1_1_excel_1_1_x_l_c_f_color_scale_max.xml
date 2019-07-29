@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFColorScaleMax</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max" prot="public" virt="non-virtual">IXLCFColorScaleMax</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1aae2cd3dcd495588de23bdd50c14f7842" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" kindref="compound">XLConditionalFormat</ref></type>
+        <definition>readonly XLConditionalFormat _conditionalFormat</definition>
+        <argsstring></argsstring>
+        <name>_conditionalFormat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1ac9e464e1666c010b2886c8a25d6d4f35" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCFColorScaleMax</definition>
+        <argsstring>(XLConditionalFormat conditionalFormat)</argsstring>
+        <name>XLCFColorScaleMax</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" kindref="compound">XLConditionalFormat</ref></type>
+          <declname>conditionalFormat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" bodystart="8" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1afcef61594e16967e6a311f1f41705c1d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Maximum</definition>
+        <argsstring>(XLCFContentType type, String value, XLColor color)</argsstring>
+        <name>Maximum</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max_1afcef61594e16967e6a311f1f41705c1d">Maximum</reimplements>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" bodystart="13" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1aff149a421559857ee4df43389a12741a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Maximum</definition>
+        <argsstring>(XLCFContentType type, Double value, XLColor color)</argsstring>
+        <name>Maximum</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max_1aff149a421559857ee4df43389a12741a">Maximum</reimplements>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" bodystart="19" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1a0a883c95ffb4f72b9d4dbe64a48a9f77" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void HighestValue</definition>
+        <argsstring>(XLColor color)</argsstring>
+        <name>HighestValue</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max_1a0a883c95ffb4f72b9d4dbe64a48a9f77">HighestValue</reimplements>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" bodystart="23" bodyend="28"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1018">
+        <label>IXLCFColorScaleMax</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max"/>
+      </node>
+      <node id="1017">
+        <label>XLCFColorScaleMax</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max"/>
+        <childnode refid="1018" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1020">
+        <label>IXLCFColorScaleMax</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max"/>
+      </node>
+      <node id="1019">
+        <label>XLCFColorScaleMax</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max"/>
+        <childnode refid="1020" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMax.cs" bodystart="5" bodyend="29"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1aae2cd3dcd495588de23bdd50c14f7842" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMax</scope><name>_conditionalFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1a0a883c95ffb4f72b9d4dbe64a48a9f77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMax</scope><name>HighestValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1afcef61594e16967e6a311f1f41705c1d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMax</scope><name>Maximum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1aff149a421559857ee4df43389a12741a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMax</scope><name>Maximum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_max_1ac9e464e1666c010b2886c8a25d6d4f35" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMax</scope><name>XLCFColorScaleMax</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

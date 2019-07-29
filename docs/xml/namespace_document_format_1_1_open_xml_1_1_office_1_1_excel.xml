@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_document_format_1_1_open_xml_1_1_office_1_1_excel" kind="namespace" language="Unknown">
+    <compoundname>DocumentFormat::OpenXml::Office::Excel</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" line="2" column="1"/>
+  </compounddef>
+</doxygen>

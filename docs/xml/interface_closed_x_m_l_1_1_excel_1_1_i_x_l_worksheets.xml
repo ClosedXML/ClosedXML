@@ -1,0 +1,316 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLWorksheets</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLWorksheet &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets" prot="public" virt="non-virtual">XLWorksheets</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1aad462966ed963f892117056de1eba502" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int Count</definition>
+        <argsstring></argsstring>
+        <name>Count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1af2787903926ec59bb9a7e89e0dee0c2d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Add</definition>
+        <argsstring>()</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1af2787903926ec59bb9a7e89e0dee0c2d">Add</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1ad6f6abb98857a280f87fe4ac12c9d9e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Add</definition>
+        <argsstring>(Int32 position)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1ad6f6abb98857a280f87fe4ac12c9d9e1">Add</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a12f13a8d296a167c87d3c1d2e0c43398" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Add</definition>
+        <argsstring>(String sheetName)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1a12f13a8d296a167c87d3c1d2e0c43398">Add</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a704b001d120739149e450eeb61d0b019" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Add</definition>
+        <argsstring>(String sheetName, Int32 position)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1a704b001d120739149e450eeb61d0b019">Add</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="17" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a563090a9d3c35c2f0c29e1e4539eb825" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Add</definition>
+        <argsstring>(DataTable dataTable)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1a563090a9d3c35c2f0c29e1e4539eb825">Add</reimplementedby>
+        <param>
+          <type>DataTable</type>
+          <declname>dataTable</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a54e9e87e2ec1271e4696c889e5d853ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Add</definition>
+        <argsstring>(DataTable dataTable, String sheetName)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1a54e9e87e2ec1271e4696c889e5d853ef">Add</reimplementedby>
+        <param>
+          <type>DataTable</type>
+          <declname>dataTable</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1aa56e21c6e984ca9e5f901d093d20635a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(DataSet dataSet)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1aa56e21c6e984ca9e5f901d093d20635a">Add</reimplementedby>
+        <param>
+          <type>DataSet</type>
+          <declname>dataSet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a490a1c0de56c0a56ab68e1dfeb13f9f5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Contains</definition>
+        <argsstring>(String sheetName)</argsstring>
+        <name>Contains</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1a490a1c0de56c0a56ab68e1dfeb13f9f5">Contains</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1af7c0994363a291a423b488811da4174b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(String sheetName)</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1af7c0994363a291a423b488811da4174b">Delete</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a1aaa3b19d9b9871b8d306c51d11ad424" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(Int32 position)</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1a1aaa3b19d9b9871b8d306c51d11ad424">Delete</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="29" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a687e226c74a7793f4f90585341b397b2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool TryGetWorksheet</definition>
+        <argsstring>(string sheetName, out IXLWorksheet worksheet)</argsstring>
+        <name>TryGetWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1a687e226c74a7793f4f90585341b397b2">TryGetWorksheet</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>sheetName</declname>
+        </param>
+        <param>
+          <type>out <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="31" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1aee0c5893b017b2f7077dbd170e137785" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring>(String sheetName)</argsstring>
+        <name>Worksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1aee0c5893b017b2f7077dbd170e137785">Worksheet</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="33" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1ade9295d6ce3ce40866f428bce83cdea1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring>(Int32 position)</argsstring>
+        <name>Worksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets_1ade9295d6ce3ce40866f428bce83cdea1">Worksheet</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="35" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="793">
+        <label>XLWorksheets</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheets"/>
+        <childnode refid="791" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="792">
+        <label>IEnumerable&lt; IXLWorksheet &gt;</label>
+      </node>
+      <node id="791">
+        <label>IXLWorksheets</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets"/>
+        <childnode refid="792" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="795">
+        <label>IEnumerable&lt; IXLWorksheet &gt;</label>
+      </node>
+      <node id="794">
+        <label>IXLWorksheets</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets"/>
+        <childnode refid="795" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorksheets.cs" bodystart="7" bodyend="36"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1af2787903926ec59bb9a7e89e0dee0c2d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1ad6f6abb98857a280f87fe4ac12c9d9e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a12f13a8d296a167c87d3c1d2e0c43398" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a704b001d120739149e450eeb61d0b019" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a563090a9d3c35c2f0c29e1e4539eb825" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a54e9e87e2ec1271e4696c889e5d853ef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1aa56e21c6e984ca9e5f901d093d20635a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a490a1c0de56c0a56ab68e1dfeb13f9f5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1aad462966ed963f892117056de1eba502" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Count</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1af7c0994363a291a423b488811da4174b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a1aaa3b19d9b9871b8d306c51d11ad424" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1a687e226c74a7793f4f90585341b397b2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>TryGetWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1aee0c5893b017b2f7077dbd170e137785" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Worksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets_1ade9295d6ce3ce40866f428bce83cdea1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorksheets</scope><name>Worksheet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

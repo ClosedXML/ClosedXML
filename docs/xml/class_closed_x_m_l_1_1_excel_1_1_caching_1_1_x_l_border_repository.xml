@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Caching::XLBorderRepository</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" prot="public" virt="non-virtual">XLRepositoryBase&lt; XLBorderKey, XLBorderValue &gt;</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository_1ac402e12c5b9e71155894caee1fc2f694" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLBorderRepository</definition>
+        <argsstring>(Func&lt; XLBorderKey, XLBorderValue &gt; createNew)</argsstring>
+        <name>XLBorderRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value" kindref="compound">XLBorderValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLBorderRepository.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLBorderRepository.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository_1a859c8060830eee8d38676d4f8613686e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLBorderRepository</definition>
+        <argsstring>(Func&lt; XLBorderKey, XLBorderValue &gt; createNew, IEqualityComparer&lt; XLBorderKey &gt; comparer)</argsstring>
+        <name>XLBorderRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value" kindref="compound">XLBorderValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_border_key" kindref="compound">XLBorderKey</ref> &gt;</type>
+          <declname>comparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLBorderRepository.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLBorderRepository.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="973">
+        <label>XLRepositoryBase&lt; XLBorderKey, XLBorderValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+      <node id="972">
+        <label>XLBorderRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository"/>
+        <childnode refid="973" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="975">
+        <label>XLRepositoryBase&lt; XLBorderKey, XLBorderValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+      <node id="974">
+        <label>XLBorderRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository"/>
+        <childnode refid="975" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLBorderRepository.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLBorderRepository.cs" bodystart="6" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository_1ac402e12c5b9e71155894caee1fc2f694" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLBorderRepository</scope><name>XLBorderRepository</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository_1a859c8060830eee8d38676d4f8613686e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLBorderRepository</scope><name>XLBorderRepository</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

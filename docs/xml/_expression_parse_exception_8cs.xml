@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_expression_parse_exception_8cs" kind="file" language="C#">
+    <compoundname>ExpressionParseException.cs</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception" prot="public">ClosedXML::Excel::CalcEngine::ExpressionParseException</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine">ClosedXML::Excel::CalcEngine</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Text;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine" kindref="compound">ClosedXML.Excel.CalcEngine</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="9" refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception" kindref="compound">ExpressionParseException</ref><sp/>:<sp/>Exception</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception_1ae75d7512b6f45c5646f3ab4c6c61cee3" kindref="member">ExpressionParseException</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>message)</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>base(message)</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionParseException.cs"/>
+  </compounddef>
+</doxygen>

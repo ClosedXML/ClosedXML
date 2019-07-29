@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::XLAddressComparer</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEqualityComparer&lt; IXLAddress &gt;</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1a182880c3ac4e349598de07ca80eafe64" prot="private" static="no" mutable="no">
+        <type>readonly bool</type>
+        <definition>readonly bool _ignoreFixed</definition>
+        <argsstring></argsstring>
+        <name>_ignoreFixed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1a06e84df2a59c8f2cabc3e279b0a1367b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLAddressComparer</definition>
+        <argsstring>(bool ignoreFixed)</argsstring>
+        <name>XLAddressComparer</name>
+        <param>
+          <type>bool</type>
+          <declname>ignoreFixed</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1af7703b1408e27239d646cb80201cd333" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLAddress x, IXLAddress y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" bodystart="15" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1a42bf1d772dd0f76ed83d6b2f7877c05c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int GetHashCode</definition>
+        <argsstring>(IXLAddress obj)</argsstring>
+        <name>GetHashCode</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" bodystart="26" bodyend="36"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="932">
+        <label>IEqualityComparer&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="931">
+        <label>XLAddressComparer</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer"/>
+        <childnode refid="932" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="934">
+        <label>IEqualityComparer&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="933">
+        <label>XLAddressComparer</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer"/>
+        <childnode refid="934" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLAddressComparer.cs" bodystart="6" bodyend="37"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1a182880c3ac4e349598de07ca80eafe64" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLAddressComparer</scope><name>_ignoreFixed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1af7703b1408e27239d646cb80201cd333" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLAddressComparer</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1a42bf1d772dd0f76ed83d6b2f7877c05c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLAddressComparer</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer_1a06e84df2a59c8f2cabc3e279b0a1367b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLAddressComparer</scope><name>XLAddressComparer</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

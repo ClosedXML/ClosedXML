@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLSparkline</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline" prot="public" virt="non-virtual">IXLSparkline</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a3cfdc2750c615e5d5a6935f1e4dd4a18" prot="private" static="no" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell _location</definition>
+        <argsstring></argsstring>
+        <name>_location</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1abdb9d6ea32d09275076fc04ecbd7ade5" prot="private" static="no" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange _sourceData</definition>
+        <argsstring></argsstring>
+        <name>_sourceData</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a62885a2911b2c21274564c3d9e407c2c" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool IsValid</definition>
+        <argsstring></argsstring>
+        <name>IsValid</name>
+        <initializer>=&gt;
+            Location != null &amp;&amp;
+            SourceData != null &amp;&amp;
+            ((<ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref>)Location.Address).IsValid &amp;&amp;
+            ((<ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref>)SourceData.RangeAddress).IsValid</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a61ad601c54442e2175222b019bda55f1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Location</definition>
+        <argsstring></argsstring>
+        <name>Location</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="24" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a2929b4216328978a171cd0ae04609544" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange SourceData</definition>
+        <argsstring></argsstring>
+        <name>SourceData</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="30" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a74b7dd4a6f9b19ba688933efe96887fa" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+        <definition>IXLSparklineGroup SparklineGroup</definition>
+        <argsstring></argsstring>
+        <name>SparklineGroup</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="35" bodyend="35"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a530944f5f689247be3f9560c68f13067" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLSparkline</definition>
+        <argsstring>(IXLSparklineGroup sparklineGroup, IXLCell cell, IXLRange sourceData)</argsstring>
+        <name>XLSparkline</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+          <declname>sparklineGroup</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>sourceData</declname>
+        </param>
+        <briefdescription>
+<para>Create a new sparkline </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sparklineGroup</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The sparkline group to add the sparkline to</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cell</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell to place the sparkline in</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sourceData</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The range the sparkline gets data from</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="47" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="47" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1ad90ee4477eed91203f0c68aaaadc67d6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline" kindref="compound">IXLSparkline</ref></type>
+        <definition>IXLSparkline SetLocation</definition>
+        <argsstring>(IXLCell cell)</argsstring>
+        <name>SetLocation</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_1aa42b377a95f4dadce324678bacde2142">SetLocation</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="67" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1ac33e42fa70c32e4fc64b6d74b66ea2c9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline" kindref="compound">IXLSparkline</ref></type>
+        <definition>IXLSparkline SetSourceData</definition>
+        <argsstring>(IXLRange range)</argsstring>
+        <name>SetSourceData</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_1abcd1e6cb37663f151d9a12ac6cd87cda">SetSourceData</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="80" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="80" bodyend="87"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1768">
+        <label>IXLSparkline</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline"/>
+      </node>
+      <node id="1767">
+        <label>XLSparkline</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline"/>
+        <childnode refid="1768" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1770">
+        <label>IXLSparkline</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline"/>
+      </node>
+      <node id="1769">
+        <label>XLSparkline</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline"/>
+        <childnode refid="1770" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLine.cs" bodystart="6" bodyend="90"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a3cfdc2750c615e5d5a6935f1e4dd4a18" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>_location</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1abdb9d6ea32d09275076fc04ecbd7ade5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>_sourceData</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a62885a2911b2c21274564c3d9e407c2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>IsValid</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a61ad601c54442e2175222b019bda55f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>Location</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1ad90ee4477eed91203f0c68aaaadc67d6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>SetLocation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1ac33e42fa70c32e4fc64b6d74b66ea2c9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>SetSourceData</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a2929b4216328978a171cd0ae04609544" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>SourceData</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a74b7dd4a6f9b19ba688933efe96887fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>SparklineGroup</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_1a530944f5f689247be3f9560c68f13067" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparkline</scope><name>XLSparkline</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

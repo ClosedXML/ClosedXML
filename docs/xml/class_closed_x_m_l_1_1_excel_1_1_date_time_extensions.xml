@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::DateTimeExtensions</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1aeae904017b483a8fad5a3af835a7a042" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double MaxOADate</definition>
+        <argsstring></argsstring>
+        <name>MaxOADate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="139" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="140" bodyend="145"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1a0bb6fef234ef2cf8bbb4bd40401d8288" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DateTime</type>
+        <definition>static DateTime NextWorkday</definition>
+        <argsstring>(this DateTime date, IEnumerable&lt; DateTime &gt; bankHolidays)</argsstring>
+        <name>NextWorkday</name>
+        <param>
+          <type>this DateTime</type>
+          <declname>date</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; DateTime &gt;</type>
+          <declname>bankHolidays</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="147" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="147" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1ae4520f9388377a36a3c95597aceb8d56" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DateTime</type>
+        <definition>static DateTime PreviousWorkDay</definition>
+        <argsstring>(this DateTime date, IEnumerable&lt; DateTime &gt; bankHolidays)</argsstring>
+        <name>PreviousWorkDay</name>
+        <param>
+          <type>this DateTime</type>
+          <declname>date</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; DateTime &gt;</type>
+          <declname>bankHolidays</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="156" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1a19f01290aeab752b47d2bd8d188b5c87" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool IsWorkDay</definition>
+        <argsstring>(this DateTime date, IEnumerable&lt; DateTime &gt; bankHolidays)</argsstring>
+        <name>IsWorkDay</name>
+        <param>
+          <type>this DateTime</type>
+          <declname>date</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; DateTime &gt;</type>
+          <declname>bankHolidays</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="165" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="165" bodyend="170"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="138" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="137" bodyend="171"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1a19f01290aeab752b47d2bd8d188b5c87" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DateTimeExtensions</scope><name>IsWorkDay</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1aeae904017b483a8fad5a3af835a7a042" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DateTimeExtensions</scope><name>MaxOADate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1a0bb6fef234ef2cf8bbb4bd40401d8288" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DateTimeExtensions</scope><name>NextWorkday</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_date_time_extensions_1ae4520f9388377a36a3c95597aceb8d56" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DateTimeExtensions</scope><name>PreviousWorkDay</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

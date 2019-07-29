@@ -1,0 +1,886 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFormattedText</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" prot="public" virt="non-virtual">ClosedXML::Excel::IXLFormattedText&lt; T &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a311367c1eb194ee8f884ad349d78cf0a" prot="private" static="no" mutable="no">
+        <type>List&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref> &gt;</type>
+        <definition>List&lt;IXLRichString&gt; _richTexts</definition>
+        <argsstring></argsstring>
+        <name>_richTexts</name>
+        <initializer>= new List&lt;<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ac7bc151dea46ef12387f89af658f2bfa" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+        <definition>readonly IXLFontBase _defaultFont</definition>
+        <argsstring></argsstring>
+        <name>_defaultFont</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a6b872dfb149856d7642118eb28a05a8d" prot="private" static="no" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics _phonetics</definition>
+        <argsstring></argsstring>
+        <name>_phonetics</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="181" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="181" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab5513473566233ebcc80af68e63221d1" prot="protected" static="no" mutable="no">
+        <type>T</type>
+        <definition>T Container</definition>
+        <argsstring></argsstring>
+        <name>Container</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Count</definition>
+        <argsstring></argsstring>
+        <name>Count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="37" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9fde862c8bc443d7a6872a487ec265a3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>int</type>
+        <definition>int Length</definition>
+        <argsstring></argsstring>
+        <name>Length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Bold</definition>
+        <argsstring></argsstring>
+        <name>Bold</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="142" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="142" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Italic</definition>
+        <argsstring></argsstring>
+        <name>Italic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="143" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="143" bodyend="143"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ade07c3e4c3de563a158815ee72f9c421" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontUnderlineValues</type>
+        <definition>XLFontUnderlineValues Underline</definition>
+        <argsstring></argsstring>
+        <name>Underline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="144" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="144" bodyend="144"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Strikethrough</definition>
+        <argsstring></argsstring>
+        <name>Strikethrough</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="145" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="145" bodyend="145"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontVerticalTextAlignmentValues</type>
+        <definition>XLFontVerticalTextAlignmentValues VerticalAlignment</definition>
+        <argsstring></argsstring>
+        <name>VerticalAlignment</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="146" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="146" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Shadow</definition>
+        <argsstring></argsstring>
+        <name>Shadow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="147" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="147" bodyend="147"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a24703697e0f802836de9316ecfece8f6" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double FontSize</definition>
+        <argsstring></argsstring>
+        <name>FontSize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="148" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor FontColor</definition>
+        <argsstring></argsstring>
+        <name>FontColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="149" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="149" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2f5d45d920f2ac94216aada78cef6486" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String FontName</definition>
+        <argsstring></argsstring>
+        <name>FontName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="150" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="150" bodyend="150"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontFamilyNumberingValues</type>
+        <definition>XLFontFamilyNumberingValues FontFamilyNumbering</definition>
+        <argsstring></argsstring>
+        <name>FontFamilyNumbering</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="151" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="151" bodyend="151"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Text</definition>
+        <argsstring></argsstring>
+        <name>Text</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="179" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="179" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad53a2353d840f45425ce50baa1cdf0c4" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref>??</type>
+        <definition>IXLPhonetics?? Phonetics</definition>
+        <argsstring></argsstring>
+        <name>Phonetics</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="182" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="183" bodyend="185"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5327a161110bcc94676d17df2d302298" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean HasPhonetics</definition>
+        <argsstring></argsstring>
+        <name>HasPhonetics</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="187" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="187" bodyend="187"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aadb75636402a224ab286f1246d447a0c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormattedText</definition>
+        <argsstring>(IXLFontBase defaultFont)</argsstring>
+        <name>XLFormattedText</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>defaultFont</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="14" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad6b2fff7b0c7bd5b77bd007ea268af96" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormattedText</definition>
+        <argsstring>(IXLFormattedText&lt; T &gt; defaultRichText, IXLFontBase defaultFont)</argsstring>
+        <name>XLFormattedText</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+          <declname>defaultRichText</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>defaultFont</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="20" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9bd22a2f60eb36b12fec9348b7475130" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormattedText</definition>
+        <argsstring>(String text, IXLFontBase defaultFont)</argsstring>
+        <name>XLFormattedText</name>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>defaultFont</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="31" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(String text)</argsstring>
+        <name>AddText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a5023e57f9f8ea89097e384bfc7db7ae4">AddText</reimplements>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="40" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a39999f7b5368945b92ee8e6222486faf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(String text, IXLFontBase font)</argsstring>
+        <name>AddText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a39999f7b5368945b92ee8e6222486faf">AddText</reimplements>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>font</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="44" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a696f43c35527053a865f4c6839efb0fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(IXLRichString richText)</argsstring>
+        <name>AddText</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+          <declname>richText</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="50" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddNewLine</definition>
+        <argsstring>()</argsstring>
+        <name>AddNewLine</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a18121cd759e5c2ba19b97ac27dea6bba">AddNewLine</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="57" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a94149a05873dbd833b4332ecdf8e3e2c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; ClearText</definition>
+        <argsstring>()</argsstring>
+        <name>ClearText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a94149a05873dbd833b4332ecdf8e3e2c">ClearText</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="62" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="62" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1af8579f54f0b976d3bf00b7b1568aef17" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; ClearFont</definition>
+        <argsstring>()</argsstring>
+        <name>ClearFont</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1af8579f54f0b976d3bf00b7b1568aef17">ClearFont</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="68" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="76" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="76" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ae7b755b98b500bbd52e4bc264575790b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; Substring</definition>
+        <argsstring>(Int32 index)</argsstring>
+        <name>Substring</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ae7b755b98b500bbd52e4bc264575790b">Substring</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="83" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="83" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3c1fbaae30b42bf0e1621ddb9e11848c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; Substring</definition>
+        <argsstring>(Int32 index, Int32 length)</argsstring>
+        <name>Substring</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3c1fbaae30b42bf0e1621ddb9e11848c">Substring</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>index</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="87" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="87" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a94c9eb6b882a7995306d54364cfa898f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLRichString&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="132" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="132" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad92281012307e59756d4fb1809df4c89" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetBold</definition>
+        <argsstring>()</argsstring>
+        <name>SetBold</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ad92281012307e59756d4fb1809df4c89">SetBold</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="153" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="153" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3b248f2dbf026e966f8ef4dfa02b7a10" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetBold</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetBold</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3b248f2dbf026e966f8ef4dfa02b7a10">SetBold</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="153" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="153" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2cb535f226b8c6dd3a79dfe11d01fc03" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetItalic</definition>
+        <argsstring>()</argsstring>
+        <name>SetItalic</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a2cb535f226b8c6dd3a79dfe11d01fc03">SetItalic</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="154" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="154" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a65fbee7a2038903bfd856c793c6a271d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetItalic</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetItalic</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a65fbee7a2038903bfd856c793c6a271d">SetItalic</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="154" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="154" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a224ab04198f32fa7fe9fdc3546257980" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetUnderline</definition>
+        <argsstring>()</argsstring>
+        <name>SetUnderline</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a224ab04198f32fa7fe9fdc3546257980">SetUnderline</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="155" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a37d04151ab31f7bcb2f92adeb53eacff" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetUnderline</definition>
+        <argsstring>(XLFontUnderlineValues value)</argsstring>
+        <name>SetUnderline</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a37d04151ab31f7bcb2f92adeb53eacff">SetUnderline</reimplements>
+        <param>
+          <type>XLFontUnderlineValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="155" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aab501c7e9bf73d4d4e3bbb1d21bb3f5c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetStrikethrough</definition>
+        <argsstring>()</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1aab501c7e9bf73d4d4e3bbb1d21bb3f5c">SetStrikethrough</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="156" bodyend="156"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a331a3f17e74b57beff3ab3e43720bfbb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetStrikethrough</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a331a3f17e74b57beff3ab3e43720bfbb">SetStrikethrough</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="156" bodyend="156"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aa2c3716de5c579a23e6ffbdafb40196e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetVerticalAlignment</definition>
+        <argsstring>(XLFontVerticalTextAlignmentValues value)</argsstring>
+        <name>SetVerticalAlignment</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1aa2c3716de5c579a23e6ffbdafb40196e">SetVerticalAlignment</reimplements>
+        <param>
+          <type>XLFontVerticalTextAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="157" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="157" bodyend="157"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a749417cc932575dee7471f8c963bdab1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetShadow</definition>
+        <argsstring>()</argsstring>
+        <name>SetShadow</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a749417cc932575dee7471f8c963bdab1">SetShadow</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="158" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="158" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3a16ee5c007a38ce6f89a62aab721677" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetShadow</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShadow</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3a16ee5c007a38ce6f89a62aab721677">SetShadow</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="158" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="158" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a24740d5cd42be5b3fd66d0275e7cb106" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetFontSize</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetFontSize</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a24740d5cd42be5b3fd66d0275e7cb106">SetFontSize</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="159" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="159" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab28576f1b0357fe67862f430b331eabc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetFontColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetFontColor</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ab28576f1b0357fe67862f430b331eabc">SetFontColor</reimplements>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="160" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="160" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab69cd25d22e0f495f156667499bb84f9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetFontName</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetFontName</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ab69cd25d22e0f495f156667499bb84f9">SetFontName</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="161" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="161" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1afff78ff77b7a0e3861042177c6bdfce8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+        <definition>IXLFormattedText&lt;T&gt; SetFontFamilyNumbering</definition>
+        <argsstring>(XLFontFamilyNumberingValues value)</argsstring>
+        <name>SetFontFamilyNumbering</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1afff78ff77b7a0e3861042177c6bdfce8">SetFontFamilyNumbering</reimplements>
+        <param>
+          <type>XLFontFamilyNumberingValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="162" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="162" bodyend="162"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a56479f6a1ebc6edaf80e7a256b0cb0ae" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLFormattedText&lt; T &gt; other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" kindref="compound">IXLFormattedText</ref>&lt; T &gt;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="164" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="164" bodyend="177"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>System.Collections.IEnumerator System.Collections.IEnumerable.</type>
+        <definition>System.Collections.IEnumerator System.Collections.IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="137" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="137" bodyend="140"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1337">
+        <label>XLFormattedText&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text"/>
+        <childnode refid="1338" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1340">
+        <label>IEquatable&lt; IXLFormattedText&lt; T &gt;&gt;</label>
+      </node>
+      <node id="1341">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="1339">
+        <label>IEnumerable&lt; IXLRichString &gt;</label>
+      </node>
+      <node id="1338">
+        <label>IXLFormattedText&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text"/>
+        <childnode refid="1339" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1340" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1341" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1342">
+        <label>XLFormattedText&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text"/>
+        <childnode refid="1343" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1345">
+        <label>IEquatable&lt; IXLFormattedText&lt; T &gt;&gt;</label>
+      </node>
+      <node id="1346">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="1344">
+        <label>IEnumerable&lt; IXLRichString &gt;</label>
+      </node>
+      <node id="1343">
+        <label>IXLFormattedText&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text"/>
+        <childnode refid="1344" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1345" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1346" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/XLFormattedText.cs" bodystart="8" bodyend="188"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ac7bc151dea46ef12387f89af658f2bfa" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>_defaultFont</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a6b872dfb149856d7642118eb28a05a8d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>_phonetics</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a311367c1eb194ee8f884ad349d78cf0a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>_richTexts</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>AddNewLine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a39999f7b5368945b92ee8e6222486faf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a696f43c35527053a865f4c6839efb0fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Bold</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1af8579f54f0b976d3bf00b7b1568aef17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>ClearFont</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a94149a05873dbd833b4332ecdf8e3e2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>ClearText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab5513473566233ebcc80af68e63221d1" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Container</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Count</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a56479f6a1ebc6edaf80e7a256b0cb0ae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>FontColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>FontFamilyNumbering</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>FontName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>FontSize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a94c9eb6b882a7995306d54364cfa898f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5327a161110bcc94676d17df2d302298" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>HasPhonetics</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Italic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9fde862c8bc443d7a6872a487ec265a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Length</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad53a2353d840f45425ce50baa1cdf0c4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Phonetics</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad92281012307e59756d4fb1809df4c89" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetBold</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3b248f2dbf026e966f8ef4dfa02b7a10" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetBold</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab28576f1b0357fe67862f430b331eabc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetFontColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1afff78ff77b7a0e3861042177c6bdfce8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetFontFamilyNumbering</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab69cd25d22e0f495f156667499bb84f9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetFontName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a24740d5cd42be5b3fd66d0275e7cb106" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetFontSize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2cb535f226b8c6dd3a79dfe11d01fc03" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetItalic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a65fbee7a2038903bfd856c793c6a271d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetItalic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a749417cc932575dee7471f8c963bdab1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetShadow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3a16ee5c007a38ce6f89a62aab721677" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetShadow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aab501c7e9bf73d4d4e3bbb1d21bb3f5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetStrikethrough</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a331a3f17e74b57beff3ab3e43720bfbb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetStrikethrough</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a224ab04198f32fa7fe9fdc3546257980" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetUnderline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a37d04151ab31f7bcb2f92adeb53eacff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetUnderline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aa2c3716de5c579a23e6ffbdafb40196e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>SetVerticalAlignment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Shadow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Strikethrough</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ae7b755b98b500bbd52e4bc264575790b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Substring</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3c1fbaae30b42bf0e1621ddb9e11848c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Substring</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Text</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>Underline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>VerticalAlignment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aadb75636402a224ab286f1246d447a0c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>XLFormattedText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad6b2fff7b0c7bd5b77bd007ea268af96" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>XLFormattedText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9bd22a2f60eb36b12fec9348b7475130" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormattedText</scope><name>XLFormattedText</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

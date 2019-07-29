@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_named_ranges_8cs" kind="file" language="C#">
+    <compoundname>IXLNamedRanges.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges" prot="public">ClosedXML::Excel::IXLNamedRanges</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="6" refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges" kindref="compound">IXLNamedRanges</ref>:<sp/>IEnumerable&lt;IXLNamedRange&gt;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a4e20e13790a5d55d37a3733b414d261c" kindref="member">NamedRange</ref>(String<sp/>rangeName);</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a2effd40a6066c5dca96c1c6019bdb1aa" kindref="member">Add</ref>(String<sp/>rangeName,<sp/>String<sp/>rangeAddress);</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a2effd40a6066c5dca96c1c6019bdb1aa" kindref="member">Add</ref>(String<sp/>rangeName,<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref><sp/>range);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a2effd40a6066c5dca96c1c6019bdb1aa" kindref="member">Add</ref>(String<sp/>rangeName,<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref><sp/>ranges);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a2effd40a6066c5dca96c1c6019bdb1aa" kindref="member">Add</ref>(String<sp/>rangeName,<sp/>String<sp/>rangeAddress,<sp/>String<sp/>comment);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a2effd40a6066c5dca96c1c6019bdb1aa" kindref="member">Add</ref>(String<sp/>rangeName,<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref><sp/>range,<sp/>String<sp/>comment);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a2effd40a6066c5dca96c1c6019bdb1aa" kindref="member">Add</ref>(String<sp/>rangeName,<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref><sp/>ranges,<sp/>String<sp/>comment);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a9cf52370978eee5aab7304876eab3d71" kindref="member">Delete</ref>(String<sp/>rangeName);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a9cf52370978eee5aab7304876eab3d71" kindref="member">Delete</ref>(Int32<sp/>rangeIndex);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a693228cfa1dc7ae83b83236c5dc6e4be" kindref="member">DeleteAll</ref>();</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Boolean<sp/>TryGetValue(String<sp/>name,<sp/>out<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref><sp/>range);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Boolean<sp/>Contains(String<sp/>name);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>IEnumerable&lt;IXLNamedRange&gt;<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1adf493b7ef5999b3ddc094bfde466fd17" kindref="member">ValidNamedRanges</ref>();</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>IEnumerable&lt;IXLNamedRange&gt;<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges_1a211c6efa53e39b8bb2f6e0a51ab80a21" kindref="member">InvalidNamedRanges</ref>();</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/IXLNamedRanges.cs"/>
+  </compounddef>
+</doxygen>

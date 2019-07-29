@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_enumerable_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::EnumerableExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enumerable_extensions_1ac67fbb9248018235ba0c851c5ea18045" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void ForEach&lt; T &gt;</definition>
+        <argsstring>(this IEnumerable&lt; T &gt; source, Action&lt; T &gt; action)</argsstring>
+        <name>ForEach&lt; T &gt;</name>
+        <param>
+          <type>this IEnumerable&lt; T &gt;</type>
+          <declname>source</declname>
+        </param>
+        <param>
+          <type>Action&lt; T &gt;</type>
+          <declname>action</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="276" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="276" bodyend="280"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enumerable_extensions_1a0f6db76fa3846fd05237f64abe5a6147" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Type</type>
+        <definition>static Type GetItemType&lt; T &gt;</definition>
+        <argsstring>(this IEnumerable&lt; T &gt; source)</argsstring>
+        <name>GetItemType&lt; T &gt;</name>
+        <param>
+          <type>this IEnumerable&lt; T &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="282" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="282" bodyend="285"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="275" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="274" bodyend="286"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_extensions_1ac67fbb9248018235ba0c851c5ea18045" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumerableExtensions</scope><name>ForEach&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_extensions_1a0f6db76fa3846fd05237f64abe5a6147" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumerableExtensions</scope><name>GetItemType&lt; T &gt;</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

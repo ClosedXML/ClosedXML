@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLConstants::PivotTable</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table_1ac293d768f466524b93ec213e35837e06" prot="private" static="no" mutable="no">
+        <type>internal const byte</type>
+        <definition>internal const byte CreatedVersion</definition>
+        <argsstring></argsstring>
+        <name>CreatedVersion</name>
+        <initializer>= 5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table_1a22bf26deeae7009bce5ea97e0cd16b3e" prot="private" static="no" mutable="no">
+        <type>internal const byte</type>
+        <definition>internal const byte RefreshedVersion</definition>
+        <argsstring></argsstring>
+        <name>RefreshedVersion</name>
+        <initializer>= 5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table_1ad229e44d8ff302217ff8b406b3a52251" prot="public" static="no" mutable="no">
+        <type>const string</type>
+        <definition>const string ValuesSentinalLabel</definition>
+        <argsstring></argsstring>
+        <name>ValuesSentinalLabel</name>
+        <initializer>= &quot;{{Values}}&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="11" bodyend="18"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table_1ac293d768f466524b93ec213e35837e06" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConstants::PivotTable</scope><name>CreatedVersion</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table_1a22bf26deeae7009bce5ea97e0cd16b3e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConstants::PivotTable</scope><name>RefreshedVersion</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table_1ad229e44d8ff302217ff8b406b3a52251" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLConstants::PivotTable</scope><name>ValuesSentinalLabel</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

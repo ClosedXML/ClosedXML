@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception" prot="public" virt="non-virtual">CalcEngineException</basecompoundref>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception_1a7bacc5c2beb773d898ce239bcabd7dd0" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal NoValueAvailableException</definition>
+        <argsstring>()</argsstring>
+        <name>NoValueAvailableException</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" bodystart="14" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception_1aa8a54cff2fffd69192d9a37349168358" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal NoValueAvailableException</definition>
+        <argsstring>(string message)</argsstring>
+        <name>NoValueAvailableException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" bodystart="18" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception_1a28d7ca60caa9bd7bf87ec05f875103b1" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal NoValueAvailableException</definition>
+        <argsstring>(string message, Exception innerException)</argsstring>
+        <name>NoValueAvailableException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>Exception</type>
+          <declname>innerException</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" bodystart="22" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Technically, this is not an error value but a special value that you can manually enter into a cell to indicate that you don’t yet have a necessary value. Corresponds to the #N/A error in <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref>. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="see"><para>System.ApplicationException</para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="812">
+        <label>NoValueAvailableException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception"/>
+        <childnode refid="813" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="813">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="814" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="814">
+        <label>ArgumentException</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="815">
+        <label>NoValueAvailableException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception"/>
+        <childnode refid="816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="816">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="817" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="817">
+        <label>ArgumentException</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/NoValueAvailableException.cs" bodystart="12" bodyend="26"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1af165d26040b4d3695b2f0ad82ba577b4" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a601146d0629d5fb5b4e1252be25fdb57" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a220f839bf265c4484fb9574093ea8dd6" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception_1a7bacc5c2beb773d898ce239bcabd7dd0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</scope><name>NoValueAvailableException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception_1aa8a54cff2fffd69192d9a37349168358" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</scope><name>NoValueAvailableException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception_1a28d7ca60caa9bd7bf87ec05f875103b1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</scope><name>NoValueAvailableException</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

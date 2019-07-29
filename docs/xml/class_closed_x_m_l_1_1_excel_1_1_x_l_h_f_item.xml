@@ -1,0 +1,398 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLHFItem</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" prot="public" virt="non-virtual">IXLHFItem</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a1f8dfd3cabf5d42c371f3f77afbaa3b9" prot="private" static="no" mutable="no">
+        <type>internal readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer" kindref="compound">XLHeaderFooter</ref></type>
+        <definition>internal readonly XLHeaderFooter HeaderFooter</definition>
+        <argsstring></argsstring>
+        <name>HeaderFooter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a62478fade6fa4b4f31b3be73b024e166" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; XLHFOccurrence, List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_text" kindref="compound">XLHFText</ref> &gt; &gt;</type>
+        <definition>readonly Dictionary&lt;XLHFOccurrence, List&lt;XLHFText&gt; &gt; texts</definition>
+        <argsstring></argsstring>
+        <name>texts</name>
+        <initializer>= new Dictionary&lt;XLHFOccurrence, List&lt;<ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_text" kindref="compound">XLHFText</ref>&gt;&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a11b0c83816a0a32bb8fe2327b057b702" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHFItem</definition>
+        <argsstring>(XLHeaderFooter headerFooter)</argsstring>
+        <name>XLHFItem</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer" kindref="compound">XLHeaderFooter</ref></type>
+          <declname>headerFooter</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a4d5d9d98131f06aaca62e02390531286" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHFItem</definition>
+        <argsstring>(XLHFItem defaultHFItem, XLHeaderFooter headerFooter)</argsstring>
+        <name>XLHFItem</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item" kindref="compound">XLHFItem</ref></type>
+          <declname>defaultHFItem</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer" kindref="compound">XLHeaderFooter</ref></type>
+          <declname>headerFooter</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="14" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a95fd239705953e4074fc48ec2b697965" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String GetText</definition>
+        <argsstring>(XLHFOccurrence occurrence)</argsstring>
+        <name>GetText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a95fd239705953e4074fc48ec2b697965">GetText</reimplements>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Gets the text of the specified header/footer occurrence. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="20" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(String text)</argsstring>
+        <name>AddText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a5023e57f9f8ea89097e384bfc7db7ae4">AddText</reimplements>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="32" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a64782963a9d70bf23e6dbf4ce3be529f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(XLHFPredefinedText predefinedText)</argsstring>
+        <name>AddText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a64782963a9d70bf23e6dbf4ce3be529f">AddText</reimplements>
+        <param>
+          <type>XLHFPredefinedText</type>
+          <declname>predefinedText</declname>
+        </param>
+        <briefdescription>
+<para>Adds the given predefined text to this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>predefinedText</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The predefined text to add to this header/footer item.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="36" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a4f6b29fd1430b090b2f9930b8b8df44a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(String text, XLHFOccurrence occurrence)</argsstring>
+        <name>AddText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a4f6b29fd1430b090b2f9930b8b8df44a">AddText</reimplements>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Adds the given text to this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>text</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The text to add to this header/footer item.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence for the text.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="41" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddNewLine</definition>
+        <argsstring>()</argsstring>
+        <name>AddNewLine</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a18121cd759e5c2ba19b97ac27dea6bba">AddNewLine</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="60" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a9fd34712793253acf4664b05590adc46" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddImage</definition>
+        <argsstring>(String imagePath, XLHFOccurrence occurrence=XLHFOccurrence.AllPages)</argsstring>
+        <name>AddImage</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a9fd34712793253acf4664b05590adc46">AddImage</reimplements>
+        <param>
+          <type>String</type>
+          <declname>imagePath</declname>
+        </param>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+          <defval>XLHFOccurrence.AllPages</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="65" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a1eaaf16ca62122d6ae7b95be2a2e1fa4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)</argsstring>
+        <name>AddText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a1eaaf16ca62122d6ae7b95be2a2e1fa4">AddText</reimplements>
+        <param>
+          <type>XLHFPredefinedText</type>
+          <declname>predefinedText</declname>
+        </param>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Adds the given predefined text to this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>predefinedText</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The predefined text to add to this header/footer item.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence for the predefined text.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="80" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="80" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a3f53ca22e8ac4c9675ea1b9a15c5161f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>(XLHFOccurrence occurrence=XLHFOccurrence.AllPages)</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a3f53ca22e8ac4c9675ea1b9a15c5161f">Clear</reimplements>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+          <defval>XLHFOccurrence.AllPages</defval>
+        </param>
+        <briefdescription>
+<para>Clears the text/formats of this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="98" bodyend="110"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1aae479b11fe788d256d8e1a63daf8daa5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddTextToOccurrence</definition>
+        <argsstring>(XLHFText hfText, XLHFOccurrence occurrence)</argsstring>
+        <name>AddTextToOccurrence</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_text" kindref="compound">XLHFText</ref></type>
+          <declname>hfText</declname>
+        </param>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="70" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="70" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a12dd5aa320baed303cc18721b315a5b1" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ClearOccurrence</definition>
+        <argsstring>(XLHFOccurrence occurrence)</argsstring>
+        <name>ClearOccurrence</name>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="112" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="112" bodyend="116"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1355">
+        <label>XLHFItem</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item"/>
+        <childnode refid="1356" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1357">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="1356">
+        <label>IXLHFItem</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item"/>
+        <childnode refid="1357" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1358">
+        <label>XLHFItem</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item"/>
+        <childnode refid="1359" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1360">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="1359">
+        <label>IXLHFItem</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item"/>
+        <childnode refid="1360" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHFItem.cs" bodystart="7" bodyend="117"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a9fd34712793253acf4664b05590adc46" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>AddImage</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>AddNewLine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a64782963a9d70bf23e6dbf4ce3be529f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a4f6b29fd1430b090b2f9930b8b8df44a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a1eaaf16ca62122d6ae7b95be2a2e1fa4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1aae479b11fe788d256d8e1a63daf8daa5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>AddTextToOccurrence</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a3f53ca22e8ac4c9675ea1b9a15c5161f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a12dd5aa320baed303cc18721b315a5b1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>ClearOccurrence</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a95fd239705953e4074fc48ec2b697965" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>GetText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a1f8dfd3cabf5d42c371f3f77afbaa3b9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>HeaderFooter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a62478fade6fa4b4f31b3be73b024e166" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>texts</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a11b0c83816a0a32bb8fe2327b057b702" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>XLHFItem</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a4d5d9d98131f06aaca62e02390531286" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHFItem</scope><name>XLHFItem</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

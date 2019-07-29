@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception" prot="public" virt="non-virtual">CalcEngineException</basecompoundref>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception_1a51230f22afdafa6d3a36eca878305ac8" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal CellValueException</definition>
+        <argsstring>()</argsstring>
+        <name>CellValueException</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" bodystart="14" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception_1ab9c9614c456cbe9111fc5edd320bd2b5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal CellValueException</definition>
+        <argsstring>(string message)</argsstring>
+        <name>CellValueException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" bodystart="18" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception_1ac6aba4df99438475dab8204aff69abc9" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal CellValueException</definition>
+        <argsstring>(string message, Exception innerException)</argsstring>
+        <name>CellValueException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>Exception</type>
+          <declname>innerException</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" bodystart="22" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>This error is most often the result of specifying a mathematical operation with one or more cells that contain text. Corresponds to the #VALUE! error in <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> </para>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="see"><para><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception" kindref="compound">ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException</ref></para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="45">
+        <label>CellValueException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception"/>
+        <childnode refid="46" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="46">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="47" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>ArgumentException</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="48">
+        <label>CellValueException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception"/>
+        <childnode refid="49" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="50" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="50">
+        <label>ArgumentException</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CellValueException.cs" bodystart="12" bodyend="25"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1af165d26040b4d3695b2f0ad82ba577b4" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a601146d0629d5fb5b4e1252be25fdb57" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a220f839bf265c4484fb9574093ea8dd6" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception_1a51230f22afdafa6d3a36eca878305ac8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</scope><name>CellValueException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception_1ab9c9614c456cbe9111fc5edd320bd2b5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</scope><name>CellValueException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception_1ac6aba4df99438475dab8204aff69abc9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</scope><name>CellValueException</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

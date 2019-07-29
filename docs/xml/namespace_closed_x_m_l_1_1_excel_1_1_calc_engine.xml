@@ -1,0 +1,292 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Excel::CalcEngine</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression" prot="public">ClosedXML::Excel::CalcEngine::BinaryExpression</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" prot="public">ClosedXML::Excel::CalcEngine::CalcEngine</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers" prot="public">ClosedXML::Excel::CalcEngine::CalcEngineHelpers</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference" prot="public">ClosedXML::Excel::CalcEngine::CellRangeReference</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_empty_value_expression" prot="public">ClosedXML::Excel::CalcEngine::EmptyValueExpression</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression" prot="public">ClosedXML::Excel::CalcEngine::ErrorExpression</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" prot="public">ClosedXML::Excel::CalcEngine::Expression</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base" prot="public">ClosedXML::Excel::CalcEngine::ExpressionBase</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache" prot="public">ClosedXML::Excel::CalcEngine::ExpressionCache</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception" prot="public">ClosedXML::Excel::CalcEngine::ExpressionParseException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition" prot="public">ClosedXML::Excel::CalcEngine::FunctionDefinition</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_expression" prot="public">ClosedXML::Excel::CalcEngine::FunctionExpression</innerclass>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_i_value_object" prot="public">ClosedXML::Excel::CalcEngine::IValueObject</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_logical" prot="public">ClosedXML::Excel::CalcEngine::Logical</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig" prot="public">ClosedXML::Excel::CalcEngine::MathTrig</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical" prot="public">ClosedXML::Excel::CalcEngine::Statistical</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally" prot="public">ClosedXML::Excel::CalcEngine::Tally</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_text" prot="public">ClosedXML::Excel::CalcEngine::Text</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" prot="public">ClosedXML::Excel::CalcEngine::Token</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_unary_expression" prot="public">ClosedXML::Excel::CalcEngine::UnaryExpression</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_variable_expression" prot="public">ClosedXML::Excel::CalcEngine::VariableExpression</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer" prot="public">ClosedXML::Excel::CalcEngine::XLAddressComparer</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine" prot="public">ClosedXML::Excel::CalcEngine::XLCalcEngine</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer" prot="public">ClosedXML::Excel::CalcEngine::XLRangeAddressComparer</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression" prot="public">ClosedXML::Excel::CalcEngine::XObjectExpression</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions">ClosedXML::Excel::CalcEngine::Exceptions</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions">ClosedXML::Excel::CalcEngine::Functions</innernamespace>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>TKTYPE</name>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678afee1f202df8193b3ba65f00ad61efcef" prot="public">
+          <name>COMPARE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678a0766b144630a6326d3fd3c4781862ea3" prot="public">
+          <name>ADDSUB</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678a1323e49256ff61fbf66afdbfdfa7ab05" prot="public">
+          <name>MULDIV</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678ac9c9c146c630ca5ef9197c73c032f4a6" prot="public">
+          <name>POWER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678a720909a4b948fc9e33633b61960d6b3c" prot="public">
+          <name>GROUP</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678aa0000d7769148184776f1d17656921b0" prot="public">
+          <name>LITERAL</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678a6fcc416051346daca31c571646af127a" prot="public">
+          <name>IDENTIFIER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678abb1ca97ec761fc37101737ba0aa2e7c5" prot="public">
+          <name>ERROR</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kindref="compound">Token</ref> types (used when building expressions, sequence defines operator priority) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" bodystart="26" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="enum" id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9db" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>TKID</name>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbacd6a9bd2a175104eed40f0d33a8b4020" prot="public">
+          <name>GT</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbac562607189d77eb9dfb707464c1e7b0b" prot="public">
+          <name>LT</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbaf803729628adf4199f224c2a225038e9" prot="public">
+          <name>GE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbacfe6055d2e0503be378bb63449ec7ba6" prot="public">
+          <name>LE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba2dcbad7477fd40561e8b8198f173bd47" prot="public">
+          <name>EQ</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbadc33066c3993e0d50896e533fd692ce0" prot="public">
+          <name>NE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba9eeb52badb613229884838847294b90d" prot="public">
+          <name>ADD</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba241dd841abade20fcb27b8a9f494e1eb" prot="public">
+          <name>SUB</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba2cdf52a55876063ec93b7d18bc741f6c" prot="public">
+          <name>MUL</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba29bbf66f7f8529ec47e394fb5a36c646" prot="public">
+          <name>DIV</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbac23267f02c563647cb518ef7e47f988d" prot="public">
+          <name>DIVINT</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbac5a28f4b35a2884fa3277150ac5d0967" prot="public">
+          <name>MOD</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbac9c9c146c630ca5ef9197c73c032f4a6" prot="public">
+          <name>POWER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbaa38bd5138bf35514df41a1795ebbf5c3" prot="public">
+          <name>OPEN</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba7286293c9125ac7d7bace94c190bc16d" prot="public">
+          <name>CLOSE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbab1a326c06d88bf042f73d70f50197905" prot="public">
+          <name>END</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba4d9b3e9fc12849d060371eb65154c751" prot="public">
+          <name>COMMA</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dbade58a28573783fe95304a260ccd90362" prot="public">
+          <name>PERIOD</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba7baa9395b756b815ce561078935cafeb" prot="public">
+          <name>ATOM</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9dba911737ef056ac1eb1c4c7dbe6eb90786" prot="public">
+          <name>CONCAT</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kindref="compound">Token</ref> ID (used when evaluating expressions) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" bodystart="41" bodyend="50"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a8146529f99f58469466a04ffdee46fef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>internal delegate object</type>
+        <definition>internal delegate object ClosedXML.Excel.CalcEngine.CalcEngineFunction</definition>
+        <argsstring>(List&lt; Expression &gt; parms)</argsstring>
+        <name>CalcEngineFunction</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>parms</declname>
+        </param>
+        <briefdescription>
+<para>Delegate that represents <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref> functions. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>parms</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>List of <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> objects that represent the parameters to be used in the function call.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The function result.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="834" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="8" column="1"/>
+  </compounddef>
+</doxygen>

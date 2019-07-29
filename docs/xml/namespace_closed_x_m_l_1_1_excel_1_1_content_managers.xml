@@ -1,0 +1,386 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Excel::ContentManagers</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager" prot="public">ClosedXML::Excel::ContentManagers::XLBaseContentManager</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_sheet_view_content_manager" prot="public">ClosedXML::Excel::ContentManagers::XLSheetViewContentManager</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager" prot="public">ClosedXML::Excel::ContentManagers::XLWorksheetContentManager</innerclass>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1af3d49feb225ae765161bcf31e78637da" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>XLSheetViewContents</name>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1af3d49feb225ae765161bcf31e78637daa5ca3c7e03f9e01719506e895288046dc" prot="public">
+          <name>Pane</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1af3d49feb225ae765161bcf31e78637daa6ff9dd0d34f65181173c1e4bc39939de" prot="public">
+          <name>Selection</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1af3d49feb225ae765161bcf31e78637daac01d22d870a7d7d58a63235dfd33e16e" prot="public">
+          <name>PivotSelection</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1af3d49feb225ae765161bcf31e78637daac4573501b27ccdc6c366360d647404e0" prot="public">
+          <name>ExtensionList</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLSheetViewContentManager.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLSheetViewContentManager.cs" bodystart="6" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="enum" id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>XLWorksheetContents</name>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234aa6de38ffe49770627aa6a657ef07e216" prot="public">
+          <name>SheetProperties</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234afd60d00dc463179e0b9e65807c3c6408" prot="public">
+          <name>SheetDimension</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234af9d96efe0eabc73d7131fd5475dd39fe" prot="public">
+          <name>SheetViews</name>
+          <initializer>= 3</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234af9a5ce2673f9eaf29f4c1050c638d871" prot="public">
+          <name>SheetFormatProperties</name>
+          <initializer>= 4</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a168b82d33f8073018c50a4f658a02559" prot="public">
+          <name>Columns</name>
+          <initializer>= 5</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a4c5168060954b70817b603678e9fb30c" prot="public">
+          <name>SheetData</name>
+          <initializer>= 6</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a6d9c6488221cdea5d84b368a538b481d" prot="public">
+          <name>SheetCalculationProperties</name>
+          <initializer>= 7</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234ae76e0001b823f0162ab70e6a9f05b122" prot="public">
+          <name>SheetProtection</name>
+          <initializer>= 8</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a5c2fb14be0342d1c36ada3c020ca156f" prot="public">
+          <name>ProtectedRanges</name>
+          <initializer>= 9</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a85051346c766b4444af7bfaaa0c189f5" prot="public">
+          <name>Scenarios</name>
+          <initializer>= 10</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234ab1b70ac3876a7311d95e1b50100aaa97" prot="public">
+          <name>AutoFilter</name>
+          <initializer>= 11</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a6511e6b502885e6fccb18edcfae3b0b6" prot="public">
+          <name>SortState</name>
+          <initializer>= 12</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a0f108d611684abd8beefe8aa8cc788e9" prot="public">
+          <name>DataConsolidate</name>
+          <initializer>= 13</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a5f5b854c594ebe5b1ed5c305b1236bb8" prot="public">
+          <name>CustomSheetViews</name>
+          <initializer>= 14</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234aab376362a6ba2cf4764d6e6014c843d5" prot="public">
+          <name>MergeCells</name>
+          <initializer>= 15</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234ae011e8a39172b7e4b811eb9c8d95b821" prot="public">
+          <name>PhoneticProperties</name>
+          <initializer>= 16</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a144a668c1fe7ffaf1cc0d8b1b506aa18" prot="public">
+          <name>ConditionalFormatting</name>
+          <initializer>= 17</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a0574840dcfcac18c46b13c1403dbd6bc" prot="public">
+          <name>DataValidations</name>
+          <initializer>= 18</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a4026bdc02b3c0aad4f786126a66996b1" prot="public">
+          <name>Hyperlinks</name>
+          <initializer>= 19</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a63480670a717080bc7344bc35bd59339" prot="public">
+          <name>PrintOptions</name>
+          <initializer>= 20</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234af9ba40eacf9e34233f15c922b5656afd" prot="public">
+          <name>PageMargins</name>
+          <initializer>= 21</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a2a5d5d687308deefdc3df1675af082ad" prot="public">
+          <name>PageSetup</name>
+          <initializer>= 22</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a6808239090702c608c5b3caf879821bb" prot="public">
+          <name>HeaderFooter</name>
+          <initializer>= 23</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234ae367be0f3a36fb75de6b8ff477fd1851" prot="public">
+          <name>RowBreaks</name>
+          <initializer>= 24</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234addbd090f5fa21553740f3177bd38ce4b" prot="public">
+          <name>ColumnBreaks</name>
+          <initializer>= 25</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234ae5d626203c784e4c5a6f42577b7b8390" prot="public">
+          <name>CustomProperties</name>
+          <initializer>= 26</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a23e8eb1c289ec0647d0397cda965486f" prot="public">
+          <name>CellWatches</name>
+          <initializer>= 27</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234acb9b155da6f1fea5644b00be23bc0f78" prot="public">
+          <name>IgnoredErrors</name>
+          <initializer>= 28</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234aee01d8ea921f585ae540b6d434e0f2f2" prot="public">
+          <name>SmartTags</name>
+          <initializer>= 29</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a681d72abce5de4f856e71bfb1856796b" prot="public">
+          <name>Drawing</name>
+          <initializer>= 30</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a4ae92e89259247dd51bdb16af332816c" prot="public">
+          <name>LegacyDrawing</name>
+          <initializer>= 31</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234af9b3bbedb42d9752b21f5885e984c7c7" prot="public">
+          <name>LegacyDrawingHeaderFooter</name>
+          <initializer>= 32</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a0e90952495db86b5abdd98c3a67dd031" prot="public">
+          <name>DrawingHeaderFooter</name>
+          <initializer>= 33</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a8ae5811be1a55b9b8447ad2dbdadbf6e" prot="public">
+          <name>Picture</name>
+          <initializer>= 34</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234af7d8d6557e02719fcc84d0ceb449dbfb" prot="public">
+          <name>OleObjects</name>
+          <initializer>= 35</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a24b6472fcfa59cddd3f7bbc326582b5f" prot="public">
+          <name>Controls</name>
+          <initializer>= 36</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a205885712d0e36300cbd2d69ce1520f1" prot="public">
+          <name>AlternateContent</name>
+          <initializer>= 37</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234afd407f2c55a5c888467ef2675c452974" prot="public">
+          <name>WebPublishItems</name>
+          <initializer>= 38</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a1cac2199be79eafd8a8e5660d3ac15b2" prot="public">
+          <name>TableParts</name>
+          <initializer>= 39</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_content_managers_1a9a0fdf6acb85609af50e5c978994a234a5a91d9e622e274a8079070c9a4677d6c" prot="public">
+          <name>WorksheetExtensionList</name>
+          <initializer>= 40</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLWorksheetContentManager.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLWorksheetContentManager.cs" bodystart="7" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" line="7" column="1"/>
+  </compounddef>
+</doxygen>

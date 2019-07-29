@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLHeaderFooter</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer" prot="public" virt="non-virtual">IXLHeaderFooter</basecompoundref>
+    <innerclass refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1_1_parsed_header_footer_element" prot="private">ClosedXML::Excel::XLHeaderFooter::ParsedHeaderFooterElement</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a491f9ad89f7b31ce18d9ffcff1fb7847" prot="private" static="no" mutable="no">
+        <type>internal readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>internal readonly IXLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a7efc03b89f6cbc1fc6ad5bad2c269a3c" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; XLHFOccurrence, String &gt;</type>
+        <definition>Dictionary&lt;XLHFOccurrence, String&gt; innerTexts</definition>
+        <argsstring></argsstring>
+        <name>innerTexts</name>
+        <initializer>= new Dictionary&lt;XLHFOccurrence, String&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a04d885d00d2e751ebbf3cdb29ac819ea" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; XLHFOccurrence, String &gt;</type>
+        <definition>Dictionary&lt;XLHFOccurrence, String&gt; _initialTexts</definition>
+        <argsstring></argsstring>
+        <name>_initialTexts</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="122" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a938e5580dded2509834c6adbb52a21ed" prot="private" static="no" mutable="no">
+        <type>Boolean</type>
+        <definition>Boolean _changed</definition>
+        <argsstring></argsstring>
+        <name>_changed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="124" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1aedcd77af2f5e21b0e1d6a04b2fbf0d77" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" kindref="compound">IXLHFItem</ref></type>
+        <definition>IXLHFItem Left</definition>
+        <argsstring></argsstring>
+        <name>Left</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1ad9be9a806e2468db72a81270dcd40a92" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" kindref="compound">IXLHFItem</ref></type>
+        <definition>IXLHFItem Center</definition>
+        <argsstring></argsstring>
+        <name>Center</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="33" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a551e2e01498a34a513557d52f9327bb2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" kindref="compound">IXLHFItem</ref></type>
+        <definition>IXLHFItem Right</definition>
+        <argsstring></argsstring>
+        <name>Right</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="34" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1aad06db3800360dea52214d22590f6be8" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>internal Boolean</type>
+        <definition>internal Boolean Changed</definition>
+        <argsstring></argsstring>
+        <name>Changed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="125" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="126" bodyend="132"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a58743eac5ed93c63284bb59a1bf32402" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHeaderFooter</definition>
+        <argsstring>(XLWorksheet worksheet)</argsstring>
+        <name>XLHeaderFooter</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="11" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a8d7f4d729660db86551be855756ccdad" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHeaderFooter</definition>
+        <argsstring>(XLHeaderFooter defaultHF, XLWorksheet worksheet)</argsstring>
+        <name>XLHeaderFooter</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer" kindref="compound">XLHeaderFooter</ref></type>
+          <declname>defaultHF</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="20" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a95fd239705953e4074fc48ec2b697965" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String GetText</definition>
+        <argsstring>(XLHFOccurrence occurrence)</argsstring>
+        <name>GetText</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1a95fd239705953e4074fc48ec2b697965">GetText</reimplements>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Gets the text of the specified header/footer occurrence. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="36" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1ab670142242a52533f704966fa71818f7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer" kindref="compound">IXLHeaderFooter</ref></type>
+        <definition>IXLHeaderFooter Clear</definition>
+        <argsstring>(XLHFOccurrence occurrence=XLHFOccurrence.AllPages)</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1ab670142242a52533f704966fa71818f7">Clear</reimplements>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+          <defval>XLHFOccurrence.AllPages</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="144" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="144" bodyend="150"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1ac6c42ed48a1bbb193c5f496770243d0e" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal String</type>
+        <definition>internal String SetInnerText</definition>
+        <argsstring>(XLHFOccurrence occurrence, String text)</argsstring>
+        <name>SetInnerText</name>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="53" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a2afd768c94063e52ad264e64787838d2" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void SetAsInitial</definition>
+        <argsstring>()</argsstring>
+        <name>SetAsInitial</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="134" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="134" bodyend="141"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a4ab76939c5e2c28828c3c70ae8be9fff" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; ParsedHeaderFooterElement &gt;</type>
+        <definition>static IEnumerable&lt;ParsedHeaderFooterElement&gt; ParseFormattedHeaderFooterText</definition>
+        <argsstring>(string text)</argsstring>
+        <name>ParseFormattedHeaderFooterText</name>
+        <param>
+          <type>string</type>
+          <declname>text</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="81" bodyend="120"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1350">
+        <label>IXLHeaderFooter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer"/>
+      </node>
+      <node id="1349">
+        <label>XLHeaderFooter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer"/>
+        <childnode refid="1350" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1352">
+        <label>IXLHeaderFooter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer"/>
+      </node>
+      <node id="1351">
+        <label>XLHeaderFooter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer"/>
+        <childnode refid="1352" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLHeaderFooter.cs" bodystart="8" bodyend="151"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a938e5580dded2509834c6adbb52a21ed" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>_changed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a04d885d00d2e751ebbf3cdb29ac819ea" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>_initialTexts</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1ad9be9a806e2468db72a81270dcd40a92" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>Center</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1aad06db3800360dea52214d22590f6be8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>Changed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1ab670142242a52533f704966fa71818f7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a95fd239705953e4074fc48ec2b697965" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>GetText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a7efc03b89f6cbc1fc6ad5bad2c269a3c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>innerTexts</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1aedcd77af2f5e21b0e1d6a04b2fbf0d77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>Left</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a4ab76939c5e2c28828c3c70ae8be9fff" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>ParseFormattedHeaderFooterText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a551e2e01498a34a513557d52f9327bb2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>Right</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a2afd768c94063e52ad264e64787838d2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>SetAsInitial</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1ac6c42ed48a1bbb193c5f496770243d0e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>SetInnerText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a491f9ad89f7b31ce18d9ffcff1fb7847" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>Worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a58743eac5ed93c63284bb59a1bf32402" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>XLHeaderFooter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a8d7f4d729660db86551be855756ccdad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHeaderFooter</scope><name>XLHeaderFooter</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

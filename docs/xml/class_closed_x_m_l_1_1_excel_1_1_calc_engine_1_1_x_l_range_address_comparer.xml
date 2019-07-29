@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::XLRangeAddressComparer</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEqualityComparer&lt; IXLRangeAddress &gt;</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1a4e3bbf62f5499e5d5a14e5ef1fbd9557" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_address_comparer" kindref="compound">XLAddressComparer</ref></type>
+        <definition>readonly XLAddressComparer _addressComparer</definition>
+        <argsstring></argsstring>
+        <name>_addressComparer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1a3b964d6e91847018f30ba43e60b8f827" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeAddressComparer</definition>
+        <argsstring>(bool ignoreFixed)</argsstring>
+        <name>XLRangeAddressComparer</name>
+        <param>
+          <type>bool</type>
+          <declname>ignoreFixed</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" bodystart="9" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1aa6f45e9dc831ce3eb9c8fd6382799def" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLRangeAddress x, IXLRangeAddress y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" bodystart="14" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1a102f2ef619d2e120e39bfaf02ae6ce07" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int GetHashCode</definition>
+        <argsstring>(IXLRangeAddress obj)</argsstring>
+        <name>GetHashCode</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" bodystart="22" bodyend="29"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1564">
+        <label>XLRangeAddressComparer</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer"/>
+        <childnode refid="1565" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1565">
+        <label>IEqualityComparer&lt; IXLRangeAddress &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1566">
+        <label>XLRangeAddressComparer</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer"/>
+        <childnode refid="1567" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1567">
+        <label>IEqualityComparer&lt; IXLRangeAddress &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/XLRangeAddressComparer.cs" bodystart="5" bodyend="30"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1a4e3bbf62f5499e5d5a14e5ef1fbd9557" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLRangeAddressComparer</scope><name>_addressComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1aa6f45e9dc831ce3eb9c8fd6382799def" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLRangeAddressComparer</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1a102f2ef619d2e120e39bfaf02ae6ce07" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLRangeAddressComparer</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_range_address_comparer_1a3b964d6e91847018f30ba43e60b8f827" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XLRangeAddressComparer</scope><name>XLRangeAddressComparer</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_base_collection_8cs" kind="file" language="C#">
+    <compoundname>IXLBaseCollection.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection" prot="public">ClosedXML::Excel::IXLBaseCollection</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="6" refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection" kindref="compound">IXLBaseCollection</ref>&lt;TSingle,<sp/>TMultiple&gt;<sp/>:<sp/>IEnumerable&lt;TSingle&gt;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Int32<sp/>Count<sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref><sp/>Style<sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref><sp/>SetDataValidation();</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>TMultiple<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a46a46f8e2190f4b50d21ba02f0c62183" kindref="member">AddToNamed</ref>(String<sp/>rangeName);</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>TMultiple<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a46a46f8e2190f4b50d21ba02f0c62183" kindref="member">AddToNamed</ref>(String<sp/>rangeName,<sp/>XLScope<sp/>scope);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>TMultiple<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a46a46f8e2190f4b50d21ba02f0c62183" kindref="member">AddToNamed</ref>(String<sp/>rangeName,<sp/>XLScope<sp/>scope,<sp/>String<sp/>comment);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Object<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1af92ee5154cd05483efe2109f7f9b7b58" kindref="member">Value</ref><sp/>{<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>TMultiple<sp/>SetValue&lt;T&gt;(T<sp/>value);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a3a388f07ee977ad805d8f72cc51418c5" kindref="member">Cells</ref>();</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>();</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>(Boolean<sp/>includeFormats);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>TMultiple<sp/>SetDataType(XLDataType<sp/>dataType);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>TMultiple<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a7669414bb25e06dff8ead708563c72cf" kindref="member">Clear</ref>(XLClearOptions<sp/>clearOptions<sp/>=<sp/>XLClearOptions.All);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,375 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Utils::OpenXmlHelper</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a457e5a4f2b7b8880ef6045eef7081d73" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>static T FromClosedXMLColor&lt; T &gt;</definition>
+        <argsstring>(this ColorType openXMLColor, XLColor xlColor, bool isDifferential=false)</argsstring>
+        <name>FromClosedXMLColor&lt; T &gt;</name>
+        <param>
+          <type>this ColorType</type>
+          <declname>openXMLColor</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>xlColor</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isDifferential</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Convert color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> representation to specified OpenXML type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The descendant of ColorType.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>openXMLColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The existing instance of ColorType.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>xlColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> format.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>isDifferential</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Flag specifiying that the color should be saved in differential format (affects the transparent color processing).</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The original color in OpenXML format.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="25" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a1435d21732cb879f8dfbf8d90942b4ac" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>static T FromClosedXMLColor&lt; T &gt;</definition>
+        <argsstring>(this X14.ColorType openXMLColor, XLColor xlColor, bool isDifferential=false)</argsstring>
+        <name>FromClosedXMLColor&lt; T &gt;</name>
+        <param>
+          <type>this X14.ColorType</type>
+          <declname>openXMLColor</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>xlColor</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isDifferential</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Convert color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> representation to specified OpenXML type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>T</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The descendant of X14.ColorType.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>openXMLColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The existing instance of ColorType.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>xlColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> format.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>isDifferential</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Flag specifiying that the color should be saved in differential format (affects the transparent color processing).</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The original color in OpenXML format.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="41" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a4c45028f58c4bf9aaa53c0a1e30c1aa3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>BooleanValue</type>
+        <definition>static BooleanValue GetBooleanValue</definition>
+        <argsstring>(bool value, bool defaultValue)</argsstring>
+        <name>GetBooleanValue</name>
+        <param>
+          <type>bool</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>defaultValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="48" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a39ba1c2bb2a0172d967b97c5ddb23dc2" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool GetBooleanValueAsBool</definition>
+        <argsstring>(BooleanValue value, bool defaultValue)</argsstring>
+        <name>GetBooleanValueAsBool</name>
+        <param>
+          <type>BooleanValue</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>defaultValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="53" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a8a96e647669d208cab3f27a9c4a1f5b0" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>static XLColor ToClosedXMLColor</definition>
+        <argsstring>(this ColorType openXMLColor, IDictionary&lt; string, Drawing.Color &gt; colorCache=null)</argsstring>
+        <name>ToClosedXMLColor</name>
+        <param>
+          <type>this ColorType</type>
+          <declname>openXMLColor</declname>
+        </param>
+        <param>
+          <type>IDictionary&lt; string, Drawing.Color &gt;</type>
+          <declname>colorCache</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Convert color in OpenXML representation to <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>openXMLColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Color in OpenXML format.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>colorCache</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dictionary containing parsed colors to optimize performance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> format.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="64" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1abd50202f4e59ce2e7c1ac80cf440e3b5" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>static XLColor ToClosedXMLColor</definition>
+        <argsstring>(this X14.ColorType openXMLColor, IDictionary&lt; string, Drawing.Color &gt; colorCache=null)</argsstring>
+        <name>ToClosedXMLColor</name>
+        <param>
+          <type>this X14.ColorType</type>
+          <declname>openXMLColor</declname>
+        </param>
+        <param>
+          <type>IDictionary&lt; string, Drawing.Color &gt;</type>
+          <declname>colorCache</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Convert color in OpenXML representation to <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>openXMLColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Color in OpenXML format.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>colorCache</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dictionary containing parsed colors to optimize performance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> format.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="75" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="75" bodyend="78"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a2b2547d7ca304e5325e54538e238e57a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>static XLColor ConvertToClosedXMLColor</definition>
+        <argsstring>(dynamic openXMLColor, IDictionary&lt; string, Drawing.Color &gt; colorCache)</argsstring>
+        <name>ConvertToClosedXMLColor</name>
+        <param>
+          <type>dynamic</type>
+          <declname>openXMLColor</declname>
+        </param>
+        <param>
+          <type>IDictionary&lt; string, Drawing.Color &gt;</type>
+          <declname>colorCache</declname>
+        </param>
+        <briefdescription>
+<para>Here we perform the actual convertion from OpenXML color to <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> color. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>openXMLColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>OpenXML color. Must be either ColorType or X14.ColorType. Since these types do not implement a common interface we use dynamic.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>colorCache</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The dictionary containing parsed colors to optimize performance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> format.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="91" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="91" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a43da452f85f810900bdc2bb50ac7f147" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void FillFromClosedXMLColor</definition>
+        <argsstring>(dynamic openXMLColor, XLColor xlColor, bool isDifferential)</argsstring>
+        <name>FillFromClosedXMLColor</name>
+        <param>
+          <type>dynamic</type>
+          <declname>openXMLColor</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>xlColor</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isDifferential</declname>
+        </param>
+        <briefdescription>
+<para>Initialize properties of the existing instance of the color in OpenXML format basing on properties of the color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> format. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>openXMLColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>OpenXML color. Must be either ColorType or X14.ColorType. Since these types do not implement a common interface we use dynamic.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>xlColor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Color in <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> format.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>isDifferential</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Flag specifiying that the color should be saved in differential format (affects the transparent color processing).</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="133" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="133" bodyend="160"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/OpenXmlHelper.cs" bodystart="12" bodyend="163"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a2b2547d7ca304e5325e54538e238e57a" prot="private" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>ConvertToClosedXMLColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a43da452f85f810900bdc2bb50ac7f147" prot="private" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>FillFromClosedXMLColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a457e5a4f2b7b8880ef6045eef7081d73" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>FromClosedXMLColor&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a1435d21732cb879f8dfbf8d90942b4ac" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>FromClosedXMLColor&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a4c45028f58c4bf9aaa53c0a1e30c1aa3" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>GetBooleanValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a39ba1c2bb2a0172d967b97c5ddb23dc2" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>GetBooleanValueAsBool</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1a8a96e647669d208cab3f27a9c4a1f5b0" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>ToClosedXMLColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper_1abd50202f4e59ce2e7c1ac80cf440e3b5" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::OpenXmlHelper</scope><name>ToClosedXMLColor</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

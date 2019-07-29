@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLCells</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLCell &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells" prot="public" virt="non-virtual">XLCells</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Object</type>
+        <definition>Object Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+<para>Sets the cells&apos; value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the object is an IEnumerable <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> will copy the collection&apos;s data into a table starting from each cell.</para>
+<para>If the object is a range <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> will copy the range starting from each cell.</para>
+<para>Setting the value to an object (not IEnumerable/range) will call the object&apos;s ToString() method.</para>
+<para><ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> will try to translate it to the corresponding type, if it can&apos;t then the value will be left as a string.</para>
+<para>The object containing the value(s) to set. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a0244a76d7e0bdd9e9e07b596b162345a" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDataType</type>
+        <definition>XLDataType DataType</definition>
+        <argsstring></argsstring>
+        <name>DataType</name>
+        <briefdescription>
+<para>Sets the type of the cells&apos; data. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Changing the data type will cause <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> to covert the current value to the new data type.</para>
+<para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
+<para>The type of the cell&apos;s data. </para>
+<para><parameterlist kind="exception"><parameteritem>
+<parameternamelist>
+<parametername>ArgumentException</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" bodystart="29" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1ae2f4e1e71fd07b7a1e543e1ff1714928" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String FormulaA1</definition>
+        <argsstring></argsstring>
+        <name>FormulaA1</name>
+        <briefdescription>
+<para>Sets the cells&apos; formula with A1 references. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The formula with A1 references.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a8fb301b8d8608c02e861f131f65eba79" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String FormulaR1C1</definition>
+        <argsstring></argsstring>
+        <name>FormulaR1C1</name>
+        <briefdescription>
+<para>Sets the cells&apos; formula with R1C1 references. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The formula with R1C1 references.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" bodystart="59" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a6cef8de98f05983f520efefc334e6b13" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="61" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" bodystart="61" bodyend="61"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a5096d1dc297e328a262881cec1dc2e33" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells SetDataType</definition>
+        <argsstring>(XLDataType dataType)</argsstring>
+        <name>SetDataType</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_1a5096d1dc297e328a262881cec1dc2e33">SetDataType</reimplementedby>
+        <param>
+          <type>XLDataType</type>
+          <declname>dataType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="31" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a877b4d31160090787986ca275e8ad363" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_1a877b4d31160090787986ca275e8ad363">Clear</reimplementedby>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of these cells. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="37" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a1dd58bbf54f3c4cb61687dad16b6b35f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void DeleteComments</definition>
+        <argsstring>()</argsstring>
+        <name>DeleteComments</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_1a1dd58bbf54f3c4cb61687dad16b6b35f">DeleteComments</reimplementedby>
+        <briefdescription>
+<para>Delete the comments of these cells. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="42" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a0e37f51e00bbdb29d8038627d8511059" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void DeleteSparklines</definition>
+        <argsstring>()</argsstring>
+        <name>DeleteSparklines</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_1a0e37f51e00bbdb29d8038627d8511059">DeleteSparklines</reimplementedby>
+        <briefdescription>
+<para>Delete the sparklines of these cells. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="47" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1aae6b677d47187a8187e734714222240b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Select</definition>
+        <argsstring>()</argsstring>
+        <name>Select</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_1aae6b677d47187a8187e734714222240b">Select</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="63" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="231">
+        <label>XLCells</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells"/>
+        <childnode refid="229" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="229">
+        <label>IXLCells</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells"/>
+        <childnode refid="230" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="230">
+        <label>IEnumerable&lt; IXLCell &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="232">
+        <label>IXLCells</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells"/>
+        <childnode refid="233" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="233">
+        <label>IEnumerable&lt; IXLCell &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/IXLCells.cs" bodystart="6" bodyend="64"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a877b4d31160090787986ca275e8ad363" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a0244a76d7e0bdd9e9e07b596b162345a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>DataType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a1dd58bbf54f3c4cb61687dad16b6b35f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>DeleteComments</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a0e37f51e00bbdb29d8038627d8511059" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>DeleteSparklines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1ae2f4e1e71fd07b7a1e543e1ff1714928" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>FormulaA1</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a8fb301b8d8608c02e861f131f65eba79" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>FormulaR1C1</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1aae6b677d47187a8187e734714222240b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>Select</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a5096d1dc297e328a262881cec1dc2e33" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>SetDataType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCells</scope><name>Value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

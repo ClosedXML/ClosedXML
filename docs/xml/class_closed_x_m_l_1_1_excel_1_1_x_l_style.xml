@@ -1,0 +1,451 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLStyle</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" prot="public" virt="non-virtual">IXLStyle</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a30fe3e1d88d07e97e72a7f5099a271c1" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+        <definition>XLStyle Default</definition>
+        <argsstring></argsstring>
+        <name>Default</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a0061dedf9679e86e96329b74dd504960" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>internal <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+        <definition>internal XLStyleValue Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="41" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a10f9cd6a7eb27c8ffd6ee85bca950d3f" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>internal <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref></type>
+        <definition>internal XLStyleKey Key</definition>
+        <argsstring></argsstring>
+        <name>Key</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="44" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1adba6c7207386f4f945b764b7661311d1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font" kindref="compound">IXLFont</ref></type>
+        <definition>IXLFont Font</definition>
+        <argsstring></argsstring>
+        <name>Font</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="93" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="94" bodyend="100"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ae203ea63fbd8fbe2bffb3747b4ace7fe" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment" kindref="compound">IXLAlignment</ref></type>
+        <definition>IXLAlignment Alignment</definition>
+        <argsstring></argsstring>
+        <name>Alignment</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="102" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="103" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a1a1076177725bd35b081fc0a13a895ba" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_border" kindref="compound">IXLBorder</ref></type>
+        <definition>IXLBorder Border</definition>
+        <argsstring></argsstring>
+        <name>Border</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="111" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="112" bodyend="118"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1afeb19cbb079259fae1da857584727178" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_fill" kindref="compound">IXLFill</ref></type>
+        <definition>IXLFill Fill</definition>
+        <argsstring></argsstring>
+        <name>Fill</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="120" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="121" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a7ef7ca6f3189ee27b3b9ad0a13436be3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IncludeQuotePrefix</definition>
+        <argsstring></argsstring>
+        <name>IncludeQuotePrefix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="129" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="130" bodyend="136"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a19339c75901e4618379478e00f7fa89b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format" kindref="compound">IXLNumberFormat</ref></type>
+        <definition>IXLNumberFormat NumberFormat</definition>
+        <argsstring></argsstring>
+        <name>NumberFormat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="144" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="145" bodyend="151"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a4f62b56e9532ce5e7da01fdd4c1d4aff" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection" kindref="compound">IXLProtection</ref></type>
+        <definition>IXLProtection Protection</definition>
+        <argsstring></argsstring>
+        <name>Protection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="153" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="154" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ab22abc4c8d1458d78a88b929881fffe7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format" kindref="compound">IXLNumberFormat</ref></type>
+        <definition>IXLNumberFormat DateFormat</definition>
+        <argsstring></argsstring>
+        <name>DateFormat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="162" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="163" bodyend="165"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a7a54fd6ab4c731a049547517df5cf133" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized" kindref="compound">IXLStylized</ref></type>
+        <definition>readonly IXLStylized _container</definition>
+        <argsstring></argsstring>
+        <name>_container</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ac359239492033adc8bae35d55629c6d8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref></type>
+        <definition>static internal XLStyleKey GenerateKey</definition>
+        <argsstring>(IXLStyle initialStyle)</argsstring>
+        <name>GenerateKey</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+          <declname>initialStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="12" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a3f51efc3c6e7add7bc7d9b28efddcd35" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+        <definition>static internal XLStyle CreateEmptyStyle</definition>
+        <argsstring>()</argsstring>
+        <name>CreateEmptyStyle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="30" bodyend="33"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a9425e7ad6834e5dac631e65b126b7f2a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLStyle</definition>
+        <argsstring>(IXLStylized container, IXLStyle initialStyle=null, Boolean useDefaultModify=true)</argsstring>
+        <name>XLStyle</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized" kindref="compound">IXLStylized</ref></type>
+          <declname>container</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+          <declname>initialStyle</declname>
+          <defval>null</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>useDefaultModify</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="56" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1af48c7e9751300c8b9dc7ed3451207a42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLStyle</definition>
+        <argsstring>(IXLStylized container, XLStyleKey key)</argsstring>
+        <name>XLStyle</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized" kindref="compound">IXLStylized</ref></type>
+          <declname>container</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="60" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ae79fd5f2fe01f1602956591f1d859776" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetIncludeQuotePrefix</definition>
+        <argsstring>(Boolean includeQuotePrefix=true)</argsstring>
+        <name>SetIncludeQuotePrefix</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style_1ae79fd5f2fe01f1602956591f1d859776">SetIncludeQuotePrefix</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>includeQuotePrefix</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="138" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="138" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="171" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="171" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a0be65275e381c166a18d2c9c4d72b3da" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLStyle other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="189" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="189" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="200" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="200" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="205" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="205" bodyend="210"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ac8beb58110aa55ab5f55f64d41e19f9d" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XLStyle</definition>
+        <argsstring>(IXLStylized container, XLStyleValue value)</argsstring>
+        <name>XLStyle</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized" kindref="compound">IXLStylized</ref></type>
+          <declname>container</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="64" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a438b0dcb1b01e7b31625adcbb9efd2cf" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLStyle</definition>
+        <argsstring>(XLStyleValue value)</argsstring>
+        <name>XLStyle</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>To initialize XLStyle.Default only </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="73" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ab492575e71cb42c719b5eb5c5c424373" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void Modify</definition>
+        <argsstring>(Func&lt; XLStyleKey, XLStyleKey &gt; modification)</argsstring>
+        <name>Modify</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref>, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref> &gt;</type>
+          <declname>modification</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="81" bodyend="89"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1801">
+        <label>IXLStyle</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style"/>
+        <childnode refid="1802" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1802">
+        <label>IEquatable&lt; IXLStyle &gt;</label>
+      </node>
+      <node id="1800">
+        <label>XLStyle</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style"/>
+        <childnode refid="1801" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1804">
+        <label>IXLStyle</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style"/>
+        <childnode refid="1805" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1805">
+        <label>IEquatable&lt; IXLStyle &gt;</label>
+      </node>
+      <node id="1803">
+        <label>XLStyle</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style"/>
+        <childnode refid="1804" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStyle.cs" bodystart="6" bodyend="213"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a7a54fd6ab4c731a049547517df5cf133" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>_container</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ae203ea63fbd8fbe2bffb3747b4ace7fe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Alignment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a1a1076177725bd35b081fc0a13a895ba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Border</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a3f51efc3c6e7add7bc7d9b28efddcd35" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>CreateEmptyStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ab22abc4c8d1458d78a88b929881fffe7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>DateFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a30fe3e1d88d07e97e72a7f5099a271c1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Default</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a0be65275e381c166a18d2c9c4d72b3da" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1afeb19cbb079259fae1da857584727178" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Fill</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1adba6c7207386f4f945b764b7661311d1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Font</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ac359239492033adc8bae35d55629c6d8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>GenerateKey</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a7ef7ca6f3189ee27b3b9ad0a13436be3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>IncludeQuotePrefix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a10f9cd6a7eb27c8ffd6ee85bca950d3f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Key</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ab492575e71cb42c719b5eb5c5c424373" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Modify</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a19339c75901e4618379478e00f7fa89b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>NumberFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a4f62b56e9532ce5e7da01fdd4c1d4aff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Protection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ae79fd5f2fe01f1602956591f1d859776" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>SetIncludeQuotePrefix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a0061dedf9679e86e96329b74dd504960" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>Value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a9425e7ad6834e5dac631e65b126b7f2a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>XLStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1af48c7e9751300c8b9dc7ed3451207a42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>XLStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1ac8beb58110aa55ab5f55f64d41e19f9d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>XLStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_1a438b0dcb1b01e7b31625adcbb9efd2cf" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStyle</scope><name>XLStyle</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

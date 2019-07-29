@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLCharts</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLChart &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts" prot="public" virt="non-virtual">XLCharts</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts_1a69a0ba27178af614918caa32ed4829f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLChart chart)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a69a0ba27178af614918caa32ed4829f1">Add</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref></type>
+          <declname>chart</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLCharts.cs" line="7" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="278">
+        <label>IEnumerable&lt; IXLChart &gt;</label>
+      </node>
+      <node id="277">
+        <label>IXLCharts</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts"/>
+        <childnode refid="278" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="279">
+        <label>XLCharts</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts"/>
+        <childnode refid="277" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="281">
+        <label>IEnumerable&lt; IXLChart &gt;</label>
+      </node>
+      <node id="280">
+        <label>IXLCharts</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts"/>
+        <childnode refid="281" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLCharts.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/IXLCharts.cs" bodystart="5" bodyend="8"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts_1a69a0ba27178af614918caa32ed4829f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCharts</scope><name>Add</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

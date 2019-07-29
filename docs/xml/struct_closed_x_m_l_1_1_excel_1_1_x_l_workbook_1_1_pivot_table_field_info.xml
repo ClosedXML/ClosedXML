@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info" kind="struct" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::PivotTableFieldInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1a0244a76d7e0bdd9e9e07b596b162345a" prot="public" static="no" mutable="no">
+        <type>XLDataType</type>
+        <definition>XLDataType DataType</definition>
+        <argsstring></argsstring>
+        <name>DataType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="154" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="154" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1a15e2634d6ecfc971bdd1bd118716e511" prot="public" static="no" mutable="no">
+        <type>Boolean</type>
+        <definition>Boolean MixedDataType</definition>
+        <argsstring></argsstring>
+        <name>MixedDataType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="155" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1a3237ba13cdfab9595724655d933849ef" prot="public" static="no" mutable="no">
+        <type>IEnumerable&lt; Object &gt;</type>
+        <definition>IEnumerable&lt;Object&gt; DistinctValues</definition>
+        <argsstring></argsstring>
+        <name>DistinctValues</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1aff06a428321e7d164345d59c8018ba2b" prot="public" static="no" mutable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsTotallyBlankField</definition>
+        <argsstring></argsstring>
+        <name>IsTotallyBlankField</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="157" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="157" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="153" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="152" bodyend="158"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1a0244a76d7e0bdd9e9e07b596b162345a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::PivotTableFieldInfo</scope><name>DataType</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1a3237ba13cdfab9595724655d933849ef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::PivotTableFieldInfo</scope><name>DistinctValues</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1aff06a428321e7d164345d59c8018ba2b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::PivotTableFieldInfo</scope><name>IsTotallyBlankField</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_field_info_1a15e2634d6ecfc971bdd1bd118716e511" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::PivotTableFieldInfo</scope><name>MixedDataType</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

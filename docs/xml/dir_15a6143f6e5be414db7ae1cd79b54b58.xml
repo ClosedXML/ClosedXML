@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_15a6143f6e5be414db7ae1cd79b54b58" kind="dir">
+    <compoundname>Patterns</compoundname>
+    <innerfile refid="_quadrant_8cs">Quadrant.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/"/>
+  </compounddef>
+</doxygen>

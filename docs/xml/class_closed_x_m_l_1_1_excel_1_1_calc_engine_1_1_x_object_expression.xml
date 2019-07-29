@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::XObjectExpression</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" prot="public" virt="non-virtual">Expression</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a35d1cfc36920bc4d21a952a5bee98e81" prot="private" static="no" mutable="no">
+        <type>readonly object</type>
+        <definition>readonly object _value</definition>
+        <argsstring></argsstring>
+        <name>_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="487" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="487" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a2d7e8cd2081ad3db5aa8e597557123e9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>object</type>
+        <definition>object Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="495" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="495" bodyend="495"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1ab2f80f076db930ec0eda03dd1d715240" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override string</type>
+        <definition>override string LastParseItem</definition>
+        <argsstring></argsstring>
+        <name>LastParseItem</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="519" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="520" bodyend="522"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a52cd82cc85be9684bc1b749abb5ba80c" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XObjectExpression</definition>
+        <argsstring>(object value)</argsstring>
+        <name>XObjectExpression</name>
+        <param>
+          <type>object</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="490" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="490" bodyend="493"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a76b93d4fd4a54c15edf4541bbdbb8e81" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>override object</type>
+        <definition>override object Evaluate</definition>
+        <argsstring>()</argsstring>
+        <name>Evaluate</name>
+        <reimplements refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a95e683b3f90348f4d3ebb47a518cb8d6">Evaluate</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="498" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="498" bodyend="509"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a008c8e4a2b3246b30982de4596d98968" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator</type>
+        <definition>IEnumerator GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="511" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="511" bodyend="517"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> that represents an external object. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2009">
+        <label>Expression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression"/>
+        <childnode refid="2010" relation="public-inheritance">
+        </childnode>
+        <childnode refid="2011" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2008">
+        <label>XObjectExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression"/>
+        <childnode refid="2009" relation="public-inheritance">
+        </childnode>
+        <childnode refid="2012" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2011">
+        <label>IComparable&lt; Expression &gt;</label>
+      </node>
+      <node id="2012">
+        <label>IEnumerable</label>
+      </node>
+      <node id="2010">
+        <label>ExpressionBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2014">
+        <label>Expression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression"/>
+        <childnode refid="2015" relation="public-inheritance">
+        </childnode>
+        <childnode refid="2016" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2013">
+        <label>XObjectExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression"/>
+        <childnode refid="2014" relation="public-inheritance">
+        </childnode>
+        <childnode refid="2017" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2016">
+        <label>IComparable&lt; Expression &gt;</label>
+      </node>
+      <node id="2017">
+        <label>IEnumerable</label>
+      </node>
+      <node id="2015">
+        <label>ExpressionBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="486" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="483" bodyend="523"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a35d1cfc36920bc4d21a952a5bee98e81" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>_value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a15a31dcc1f392a5ba4765ac3365efe26" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>CompareTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a76b93d4fd4a54c15edf4541bbdbb8e81" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>Evaluate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a008c8e4a2b3246b30982de4596d98968" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1ab2f80f076db930ec0eda03dd1d715240" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>LastParseItem</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a4ce654b9e910399fa2090d1225264599" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>operator bool</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a62982685408e14dc20becbbf15ebaf6c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>operator DateTime</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1ac7b54147a502b4e27fb5d01d6c67315b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>operator double</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a06007e3975e1e5ee6a443b4f6c790171" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>operator string</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1afb8dcf602fd5a9fda8c7c828c0f3114a" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>Optimize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a2d7e8cd2081ad3db5aa8e597557123e9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>Value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression_1a52cd82cc85be9684bc1b749abb5ba80c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::XObjectExpression</scope><name>XObjectExpression</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

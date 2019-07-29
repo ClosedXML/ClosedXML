@@ -1,0 +1,282 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLPrintAreas</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas" prot="public" virt="non-virtual">IXLPrintAreas</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a9f6e36918fde6c474fdb69a9c30f452a" prot="private" static="no" mutable="no">
+        <type>List&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+        <definition>List&lt;IXLRange&gt; ranges</definition>
+        <argsstring></argsstring>
+        <name>ranges</name>
+        <initializer>= new List&lt;<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1addac4cdb5a22b6c76382ecf86a90dce5" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+        <definition>XLWorksheet worksheet</definition>
+        <argsstring></argsstring>
+        <name>worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a0e388dc6656d7cf4be1606042c65d134" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLPrintAreas</definition>
+        <argsstring>(XLWorksheet worksheet)</argsstring>
+        <name>XLPrintAreas</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1afe64339d3f2a80e8dfc98da53666aab1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLPrintAreas</definition>
+        <argsstring>(XLPrintAreas defaultPrintAreas, XLWorksheet worksheet)</argsstring>
+        <name>XLPrintAreas</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas" kindref="compound">XLPrintAreas</ref></type>
+          <declname>defaultPrintAreas</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="15" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas_1aa71d36872f416feaa853788a7a7a7ef8">Clear</reimplements>
+        <briefdescription>
+<para>Removes the print areas from the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="21" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a6c66fdc06b93db8fb4461f35d8681460" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>int</type>
+          <declname>firstCellRow</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>firstCellColumn</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lastCellRow</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lastCellColumn</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="26" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1adb2e718e5d1076d76e46ef39c9e3b833" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(string rangeAddress)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>string</type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="31" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a4edb03c037ce0c8ef0d0ff00439c15fa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(string firstCellAddress, string lastCellAddress)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>string</type>
+          <declname>firstCellAddress</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>lastCellAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="36" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a0bbc87d8c3747d6f43493d1710b64790" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLAddress firstCellAddress, IXLAddress lastCellAddress)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas_1a0bbc87d8c3747d6f43493d1710b64790">Add</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>firstCellAddress</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>lastCellAddress</declname>
+        </param>
+        <briefdescription>
+<para>Adds a range to the print areas. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstCellAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastCellAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last cell address.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="41" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a4110d5b640fb902e435721bd8243b078" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLRange&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="46" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>System.Collections.IEnumerator System.Collections.IEnumerable.</type>
+        <definition>System.Collections.IEnumerator System.Collections.IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="51" bodyend="54"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1520">
+        <label>XLPrintAreas</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas"/>
+        <childnode refid="1521" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1522">
+        <label>IEnumerable&lt; IXLRange &gt;</label>
+      </node>
+      <node id="1521">
+        <label>IXLPrintAreas</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas"/>
+        <childnode refid="1522" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1523">
+        <label>XLPrintAreas</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas"/>
+        <childnode refid="1524" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1525">
+        <label>IEnumerable&lt; IXLRange &gt;</label>
+      </node>
+      <node id="1524">
+        <label>IXLPrintAreas</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas"/>
+        <childnode refid="1525" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLPrintAreas.cs" bodystart="6" bodyend="55"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a6c66fdc06b93db8fb4461f35d8681460" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1adb2e718e5d1076d76e46ef39c9e3b833" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a4edb03c037ce0c8ef0d0ff00439c15fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a0bbc87d8c3747d6f43493d1710b64790" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas_1a401ff8943e59346badb83617dc5c6491" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLPrintAreas."><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas_1ad88e0e0b820adceec0378984465b9e7e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLPrintAreas."><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas_1ad4268093e12d12c9dc59ca5ee24b2d59" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLPrintAreas."><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a4110d5b640fb902e435721bd8243b078" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a9f6e36918fde6c474fdb69a9c30f452a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>ranges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1addac4cdb5a22b6c76382ecf86a90dce5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1a0e388dc6656d7cf4be1606042c65d134" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>XLPrintAreas</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_print_areas_1afe64339d3f2a80e8dfc98da53666aab1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPrintAreas</scope><name>XLPrintAreas</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

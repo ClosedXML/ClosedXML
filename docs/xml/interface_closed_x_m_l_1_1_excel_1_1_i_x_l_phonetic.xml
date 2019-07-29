@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPhonetic</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLPhonetic &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetic" prot="public" virt="non-virtual">XLPhonetic</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Text</definition>
+        <argsstring></argsstring>
+        <name>Text</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic_1adb84fb297102492f77f81bc7de6472ec" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Start</definition>
+        <argsstring></argsstring>
+        <name>Start</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic_1a83169beb6d2afce666b66f031560b36d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 End</definition>
+        <argsstring></argsstring>
+        <name>End</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="452">
+        <label>IXLPhonetic</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic"/>
+        <childnode refid="453" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="453">
+        <label>IEquatable&lt; IXLPhonetic &gt;</label>
+      </node>
+      <node id="454">
+        <label>XLPhonetic</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetic"/>
+        <childnode refid="452" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="455">
+        <label>IXLPhonetic</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic"/>
+        <childnode refid="456" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="456">
+        <label>IEquatable&lt; IXLPhonetic &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetic.cs" bodystart="5" bodyend="10"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic_1a83169beb6d2afce666b66f031560b36d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetic</scope><name>End</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic_1adb84fb297102492f77f81bc7de6472ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetic</scope><name>Start</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetic_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetic</scope><name>Text</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

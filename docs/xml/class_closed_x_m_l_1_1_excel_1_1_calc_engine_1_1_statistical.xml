@@ -1,0 +1,399 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Statistical</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ad572d5831ec1544c2333017cb75a55df" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Register</definition>
+        <argsstring>(CalcEngine ce)</argsstring>
+        <name>Register</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="10" bodyend="97"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1af360f30b5913fc70c27b6b08e26398ab" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Average</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Average</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="99" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="99" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1aa109bf64791b50e4ad2cfd916492803a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object AverageA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>AverageA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="104" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1aee399e49ce2943adb5f1bffbd3168683" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Count</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Count</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="109" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="109" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1adeea9ebe47e9cfb8e56ae2260fcfec8e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object CountA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>CountA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="114" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="114" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a1724434c7a93c1069f9436e3ec9b7db5" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object CountBlank</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>CountBlank</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="119" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="119" bodyend="134"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1adf60f18e883939b70a03728d2792e831" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object CountIf</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>CountIf</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="136" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="136" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a29deacc9d7cca74249cff490d23241a2" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object CountIfs</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>CountIfs</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="161" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="161" bodyend="209"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a6b10ffc66cd088541fb9837c47413ff6" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Max</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Max</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="211" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="211" bodyend="214"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a8a6d168e4a34711e3f7bfb4d4b6afd8f" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object MaxA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>MaxA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="216" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="216" bodyend="219"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ae003b405584a8f21e31b10ecfbfa1515" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Min</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Min</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="221" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="221" bodyend="224"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1af6cdadbb0b27718c79af9814f81b0618" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object MinA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>MinA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="226" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="226" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a9ad65b73e6f877843ea692965be5c44d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object StDev</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>StDev</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="231" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="231" bodyend="234"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ad7173556aa17b682e4fde3a745a9e42f" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object StDevA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>StDevA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="236" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="236" bodyend="239"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ab3229f1614a055130a30e50d1d18ab53" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object StDevP</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>StDevP</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="241" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="241" bodyend="244"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1af0a7fdf4e9883d1affcfe11740b2a265" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object StDevPA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>StDevPA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="246" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="246" bodyend="249"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ae4c28f7aa5922f47b019bb5adfc4a28a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Var</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Var</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="251" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="251" bodyend="254"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ab86823ac238c23b8fd210ae4f8e61899" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object VarA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>VarA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="256" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="256" bodyend="259"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1aa7e24bc4f6a53d4e400efe628ad9eb3e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object VarP</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>VarP</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="261" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="261" bodyend="264"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a3f5a4e21e0742ed2b484bb9a5cdd028a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object VarPA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>VarPA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="266" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="266" bodyend="269"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a54e662b6e84aa4c9035be444bac23d70" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally" kindref="compound">Tally</ref></type>
+        <definition>static Tally GetTally</definition>
+        <argsstring>(List&lt; Expression &gt; p, bool numbersOnly)</argsstring>
+        <name>GetTally</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>numbersOnly</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="272" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="272" bodyend="275"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Statistical.cs" bodystart="8" bodyend="276"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1af360f30b5913fc70c27b6b08e26398ab" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>Average</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1aa109bf64791b50e4ad2cfd916492803a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>AverageA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1aee399e49ce2943adb5f1bffbd3168683" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>Count</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1adeea9ebe47e9cfb8e56ae2260fcfec8e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>CountA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a1724434c7a93c1069f9436e3ec9b7db5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>CountBlank</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1adf60f18e883939b70a03728d2792e831" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>CountIf</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a29deacc9d7cca74249cff490d23241a2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>CountIfs</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a54e662b6e84aa4c9035be444bac23d70" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>GetTally</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a6b10ffc66cd088541fb9837c47413ff6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>Max</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a8a6d168e4a34711e3f7bfb4d4b6afd8f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>MaxA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ae003b405584a8f21e31b10ecfbfa1515" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>Min</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1af6cdadbb0b27718c79af9814f81b0618" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>MinA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ad572d5831ec1544c2333017cb75a55df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>Register</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a9ad65b73e6f877843ea692965be5c44d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>StDev</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ad7173556aa17b682e4fde3a745a9e42f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>StDevA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ab3229f1614a055130a30e50d1d18ab53" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>StDevP</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1af0a7fdf4e9883d1affcfe11740b2a265" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>StDevPA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ae4c28f7aa5922f47b019bb5adfc4a28a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>Var</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1ab86823ac238c23b8fd210ae4f8e61899" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>VarA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1aa7e24bc4f6a53d4e400efe628ad9eb3e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>VarP</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_statistical_1a3f5a4e21e0742ed2b484bb9a5cdd028a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Statistical</scope><name>VarPA</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

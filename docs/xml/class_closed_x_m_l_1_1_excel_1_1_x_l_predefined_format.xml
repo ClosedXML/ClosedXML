@@ -1,0 +1,357 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLPredefinedFormat</compoundname>
+      <sectiondef kind="public-type">
+      <memberdef kind="enum" id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>Number</name>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a0db377921f4ce762c62526131097968f" prot="public">
+          <name>General</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+<para>General </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48aa0faef0851b4294c06f2b94bb1cb2044" prot="public">
+          <name>Integer</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+<para>0 </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a9dad941278b74b486b645442cba10bfa" prot="public">
+          <name>Precision2</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+<para>0.00 </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a896ba3b3121754f859ec665722f2d308" prot="public">
+          <name>IntegerWithSeparator</name>
+          <initializer>= 3</initializer>
+          <briefdescription>
+<para>#,##0 </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a5a9ca8de4cee179395e2475b2556bf64" prot="public">
+          <name>Precision2WithSeparator</name>
+          <initializer>= 4</initializer>
+          <briefdescription>
+<para>#,##0.00 </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48aee74a976683b30f2a93beba006d8367b" prot="public">
+          <name>PercentInteger</name>
+          <initializer>= 9</initializer>
+          <briefdescription>
+<para>0% </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a9c9de61b5170d0983e047faa0c4e8564" prot="public">
+          <name>PercentPrecision2</name>
+          <initializer>= 10</initializer>
+          <briefdescription>
+<para>0.00% </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48ab892abcd655bfe8e7de9dd8cbcd4f257" prot="public">
+          <name>ScientificPrecision2</name>
+          <initializer>= 11</initializer>
+          <briefdescription>
+<para>0.00E+00 </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a7beb4bcb05c11fd8f1a0bb9d53052d53" prot="public">
+          <name>FractionPrecision1</name>
+          <initializer>= 12</initializer>
+          <briefdescription>
+<para># ?/? </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a2aad998e70fefedb01a4361e0b6b347e" prot="public">
+          <name>FractionPrecision2</name>
+          <initializer>= 13</initializer>
+          <briefdescription>
+<para># ??/?? </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a5c501d78435379198a5b86a187db25a5" prot="public">
+          <name>IntegerWithSeparatorAndParens</name>
+          <initializer>= 37</initializer>
+          <briefdescription>
+<para>#,##0 ,(#,##0) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a0aee0deee6b806674d2ab7e8d9e2695e" prot="public">
+          <name>IntegerWithSeparatorAndParensRed</name>
+          <initializer>= 38</initializer>
+          <briefdescription>
+<para>#,##0 ,[Red](#,##0) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a4d0dee893f37afd4254027dd050be1e1" prot="public">
+          <name>Precision2WithSeparatorAndParens</name>
+          <initializer>= 39</initializer>
+          <briefdescription>
+<para>#,##0.00,(#,##0.00) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a583adeea44ffdb96375ac78183eeb9e0" prot="public">
+          <name>Precision2WithSeparatorAndParensRed</name>
+          <initializer>= 40</initializer>
+          <briefdescription>
+<para>#,##0.00,[Red](#,##0.00) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a386c0116c4431d810f0a1c304eedee19" prot="public">
+          <name>ScientificUpToHundredsAndPrecision1</name>
+          <initializer>= 48</initializer>
+          <briefdescription>
+<para>##0.0E+0 </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48a9dffbf69ffba8bc38bc4e01abf4b1675" prot="public">
+          <name>Text</name>
+          <initializer>= 49</initializer>
+          <briefdescription>
+<para>@ </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" bodystart="16" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="enum" id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419e" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>DateTime</name>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea0db377921f4ce762c62526131097968f" prot="public">
+          <name>General</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+<para>General </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea89599f480f1371dccae3797df85d8aec" prot="public">
+          <name>DayMonthYear4WithSlashes</name>
+          <initializer>= 14</initializer>
+          <briefdescription>
+<para>d/m/yyyy </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea9d8697a51476b9842e3484b043dc3aa2" prot="public">
+          <name>DayMonthAbbrYear2WithDashes</name>
+          <initializer>= 15</initializer>
+          <briefdescription>
+<para>d-mmm-yy </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419eafb61336ad1bf8904bfb70f05dd301d46" prot="public">
+          <name>DayMonthAbbrWithDash</name>
+          <initializer>= 16</initializer>
+          <briefdescription>
+<para>d-mmm </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea0b509a8532ca0e3875468ebbc6b4309e" prot="public">
+          <name>MonthAbbrYear2WithDash</name>
+          <initializer>= 17</initializer>
+          <briefdescription>
+<para>mmm-yy </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea7f5d01eb8b4f52e797b20581318b3505" prot="public">
+          <name>Hour12MinutesAmPm</name>
+          <initializer>= 18</initializer>
+          <briefdescription>
+<para>h:mm tt </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419eaba9f86bda52203f2657d4b0e01716567" prot="public">
+          <name>Hour12MinutesSecondsAmPm</name>
+          <initializer>= 19</initializer>
+          <briefdescription>
+<para>h:mm:ss tt </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419eabb8a4a01518ae3f2b82084a54550b338" prot="public">
+          <name>Hour24Minutes</name>
+          <initializer>= 20</initializer>
+          <briefdescription>
+<para>H:mm </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea4a95febed24f358a1d6fc9a111bd164c" prot="public">
+          <name>Hour24MinutesSeconds</name>
+          <initializer>= 21</initializer>
+          <briefdescription>
+<para>H:mm:ss </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea286a0bdea5b2221bb75ff34585567359" prot="public">
+          <name>MonthDayYear4WithDashesHour24Minutes</name>
+          <initializer>= 22</initializer>
+          <briefdescription>
+<para>m/d/yyyy H:mm </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419eaa9afc305b46fcb1be5950dc5d32f4955" prot="public">
+          <name>MinutesSeconds</name>
+          <initializer>= 45</initializer>
+          <briefdescription>
+<para>mm:ss </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419eadcc4e6de20b75525922efe27434d0884" prot="public">
+          <name>Hour12MinutesSeconds</name>
+          <initializer>= 46</initializer>
+          <briefdescription>
+<para>[h]:mm:ss </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea6d50029a167fe66b0a84a5ad520eb521" prot="public">
+          <name>MinutesSecondsMillis1</name>
+          <initializer>= 47</initializer>
+          <briefdescription>
+<para>mmss.0 </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419ea9dffbf69ffba8bc38bc4e01abf4b1675" prot="public">
+          <name>Text</name>
+          <initializer>= 49</initializer>
+          <briefdescription>
+<para>@ </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" bodystart="99" bodyend="170"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a554e75e09b3746a8a39e1650ac237314" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int General</definition>
+        <argsstring></argsstring>
+        <name>General</name>
+        <briefdescription>
+<para>General </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a03ff7162109316a00cf3d76b7b92e3eb" prot="private" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>internal IDictionary&lt; int, string &gt;??????</type>
+        <definition>internal IDictionary&lt;int, string&gt;?????? FormatCodes</definition>
+        <argsstring></argsstring>
+        <name>FormatCodes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" line="174" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" bodystart="175" bodyend="217"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a0f441682c0367a8a5ad5e01dd29f2c4e" prot="private" static="yes" mutable="no">
+        <type>IDictionary&lt; int, string &gt;</type>
+        <definition>IDictionary&lt;int, string&gt; _formatCodes</definition>
+        <argsstring></argsstring>
+        <name>_formatCodes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" line="172" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" bodystart="172" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Reference point of date/number formats available. See more at: <ulink url="https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.numberingformat.aspx">https://msdn.microsoft.com/en-us/library/documentformat.openxml.spreadsheet.numberingformat.aspx</ulink> </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLPredefinedFormat.cs" bodystart="9" bodyend="218"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a0f441682c0367a8a5ad5e01dd29f2c4e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPredefinedFormat</scope><name>_formatCodes</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a5c27317fbed9f82200b4dcfad999419e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPredefinedFormat</scope><name>DateTime</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a03ff7162109316a00cf3d76b7b92e3eb" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPredefinedFormat</scope><name>FormatCodes</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1a554e75e09b3746a8a39e1650ac237314" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPredefinedFormat</scope><name>General</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_predefined_format_1ad1fb407b73d9c6e54eec2180d3bc4d48" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPredefinedFormat</scope><name>Number</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_file_sharing" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFileSharing</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_file_sharing" prot="public" virt="non-virtual">IXLFileSharing</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_file_sharing_1a20a687147270f9d283df28178cacaa0e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool ReadOnlyRecommended</definition>
+        <argsstring></argsstring>
+        <name>ReadOnlyRecommended</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLFileSharing.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLFileSharing.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_file_sharing_1a6ec251e40abde6d9263485e1a237a82f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>string</type>
+        <definition>string UserName</definition>
+        <argsstring></argsstring>
+        <name>UserName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLFileSharing.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLFileSharing.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1286">
+        <label>IXLFileSharing</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_file_sharing"/>
+      </node>
+      <node id="1285">
+        <label>XLFileSharing</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_file_sharing"/>
+        <childnode refid="1286" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1288">
+        <label>IXLFileSharing</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_file_sharing"/>
+      </node>
+      <node id="1287">
+        <label>XLFileSharing</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_file_sharing"/>
+        <childnode refid="1288" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLFileSharing.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLFileSharing.cs" bodystart="5" bodyend="9"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_file_sharing_1a20a687147270f9d283df28178cacaa0e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFileSharing</scope><name>ReadOnlyRecommended</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_file_sharing_1a6ec251e40abde6d9263485e1a237a82f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFileSharing</scope><name>UserName</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

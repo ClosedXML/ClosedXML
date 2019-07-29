@@ -1,0 +1,235 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPivotFields</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLPivotField &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields" prot="public" virt="non-virtual">XLPivotFields</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1abe056b6a1071d8290719fa8f3a6bece6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField Add</definition>
+        <argsstring>(String sourceName)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1abe056b6a1071d8290719fa8f3a6bece6">Add</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="9" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1ad77d899d8907d667a7ec636e72b1e4a4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField Add</definition>
+        <argsstring>(String sourceName, String customName)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1ad77d899d8907d667a7ec636e72b1e4a4">Add</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sourceName</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>customName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1aa71d36872f416feaa853788a7a7a7ef8">Clear</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1ab66380ade5234008ad4d4626218cbb21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Contains</definition>
+        <argsstring>(String sourceName)</argsstring>
+        <name>Contains</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1ab66380ade5234008ad4d4626218cbb21">Contains</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1a50b640858624f9b6a3eb692a4934171e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Contains</definition>
+        <argsstring>(IXLPivotField pivotField)</argsstring>
+        <name>Contains</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1a945efbb3a95d2df3ea4f31d9bf1a51d3">Contains</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+          <declname>pivotField</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="17" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1af5614c002a9dd5bc65af7318eb49dbc3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField Get</definition>
+        <argsstring>(String sourceName)</argsstring>
+        <name>Get</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1af5614c002a9dd5bc65af7318eb49dbc3">Get</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1a345e69f20eea8ed16e04eec8e617b2a4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField Get</definition>
+        <argsstring>(Int32 index)</argsstring>
+        <name>Get</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1a345e69f20eea8ed16e04eec8e617b2a4">Get</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1aba90211197096dcd773f8f21aaf8a066" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Int32</type>
+        <definition>Int32 IndexOf</definition>
+        <argsstring>(String sourceName)</argsstring>
+        <name>IndexOf</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1aba90211197096dcd773f8f21aaf8a066">IndexOf</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1af880ecd0857b53fe1d001611bd5b9dd8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Int32</type>
+        <definition>Int32 IndexOf</definition>
+        <argsstring>(IXLPivotField pf)</argsstring>
+        <name>IndexOf</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1af880ecd0857b53fe1d001611bd5b9dd8">IndexOf</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+          <declname>pf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1a2ac1340edc7002adae89fabec2ab249b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(String sourceName)</argsstring>
+        <name>Remove</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields_1a2ac1340edc7002adae89fabec2ab249b">Remove</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="26" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="480">
+        <label>IEnumerable&lt; IXLPivotField &gt;</label>
+      </node>
+      <node id="479">
+        <label>IXLPivotFields</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields"/>
+        <childnode refid="480" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="481">
+        <label>XLPivotFields</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_fields"/>
+        <childnode refid="479" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="483">
+        <label>IEnumerable&lt; IXLPivotField &gt;</label>
+      </node>
+      <node id="482">
+        <label>IXLPivotFields</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields"/>
+        <childnode refid="483" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotFields.cs" bodystart="7" bodyend="27"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1abe056b6a1071d8290719fa8f3a6bece6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1ad77d899d8907d667a7ec636e72b1e4a4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1ab66380ade5234008ad4d4626218cbb21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1a50b640858624f9b6a3eb692a4934171e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1af5614c002a9dd5bc65af7318eb49dbc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Get</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1a345e69f20eea8ed16e04eec8e617b2a4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Get</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1aba90211197096dcd773f8f21aaf8a066" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>IndexOf</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1af880ecd0857b53fe1d001611bd5b9dd8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>IndexOf</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_fields_1a2ac1340edc7002adae89fabec2ab249b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotFields</scope><name>Remove</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

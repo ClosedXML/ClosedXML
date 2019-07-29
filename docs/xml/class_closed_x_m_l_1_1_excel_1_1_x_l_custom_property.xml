@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCustomProperty</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_property" prot="public" virt="non-virtual">IXLCustomProperty</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a86aea6da361afa15ecfbcc40540b9a7f" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>readonly XLWorkbook _workbook</definition>
+        <argsstring></argsstring>
+        <name>_workbook</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a9a2326f35466e54c36c070829245c557" prot="private" static="no" mutable="no">
+        <type>String</type>
+        <definition>String name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a934fa09ba291a97f43720640e4d83f25" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Name</definition>
+        <argsstring></argsstring>
+        <name>Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="20" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1af2b63f1efc3d6fff3398240cd2845812" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLCustomPropertyType</type>
+        <definition>XLCustomPropertyType Type</definition>
+        <argsstring></argsstring>
+        <name>Type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="35" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Object</type>
+        <definition>Object Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="51" bodyend="51"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1ab2a88e33cb6bba7935f5ca62e2735b69" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCustomProperty</definition>
+        <argsstring>(XLWorkbook workbook)</argsstring>
+        <name>XLCustomProperty</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+          <declname>workbook</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="12" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a66149a7c8d24a09b29dd7f20d68e51eb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T GetValue&lt; T &gt;</definition>
+        <argsstring>()</argsstring>
+        <name>GetValue&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_property_1a66149a7c8d24a09b29dd7f20d68e51eb">GetValue&lt; T &gt;</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="53" bodyend="56"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1199">
+        <label>XLCustomProperty</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property"/>
+        <childnode refid="1200" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1200">
+        <label>IXLCustomProperty</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_property"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1201">
+        <label>XLCustomProperty</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property"/>
+        <childnode refid="1202" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1202">
+        <label>IXLCustomProperty</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_property"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/XLCustomProperty.cs" bodystart="6" bodyend="59"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a86aea6da361afa15ecfbcc40540b9a7f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCustomProperty</scope><name>_workbook</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a66149a7c8d24a09b29dd7f20d68e51eb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCustomProperty</scope><name>GetValue&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a9a2326f35466e54c36c070829245c557" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCustomProperty</scope><name>name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1a934fa09ba291a97f43720640e4d83f25" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCustomProperty</scope><name>Name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1af2b63f1efc3d6fff3398240cd2845812" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCustomProperty</scope><name>Type</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCustomProperty</scope><name>Value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_custom_property_1ab2a88e33cb6bba7935f5ca62e2735b69" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCustomProperty</scope><name>XLCustomProperty</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

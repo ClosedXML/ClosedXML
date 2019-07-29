@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLPivotTableStyleFormats</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table_style_formats" prot="public" virt="non-virtual">IXLPivotTableStyleFormats</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1ac845c400f10a033d6ddbe522c84dc7dd" prot="private" static="no" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats" kindref="compound">IXLPivotStyleFormats</ref></type>
+        <definition>IXLPivotStyleFormats columnGrandTotalFormats</definition>
+        <argsstring></argsstring>
+        <name>columnGrandTotalFormats</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1a5cece21256840e8ff8be7ccef9b72c67" prot="private" static="no" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats" kindref="compound">IXLPivotStyleFormats</ref></type>
+        <definition>IXLPivotStyleFormats rowGrandTotalFormats</definition>
+        <argsstring></argsstring>
+        <name>rowGrandTotalFormats</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1a35020c851b1186987eca18510179f794" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats" kindref="compound">IXLPivotStyleFormats</ref>??</type>
+        <definition>IXLPivotStyleFormats?? ColumnGrandTotalFormats</definition>
+        <argsstring></argsstring>
+        <name>ColumnGrandTotalFormats</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" bodystart="12" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1af74a293396cc7d5ecff8b88c5b82d611" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats" kindref="compound">IXLPivotStyleFormats</ref>??</type>
+        <definition>IXLPivotStyleFormats?? RowGrandTotalFormats</definition>
+        <argsstring></argsstring>
+        <name>RowGrandTotalFormats</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" bodystart="18" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1484">
+        <label>XLPivotTableStyleFormats</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats"/>
+        <childnode refid="1485" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1485">
+        <label>IXLPivotTableStyleFormats</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table_style_formats"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1486">
+        <label>XLPivotTableStyleFormats</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats"/>
+        <childnode refid="1487" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1487">
+        <label>IXLPivotTableStyleFormats</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table_style_formats"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" line="5" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotTableStyleFormats.cs" bodystart="4" bodyend="24"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1ac845c400f10a033d6ddbe522c84dc7dd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTableStyleFormats</scope><name>columnGrandTotalFormats</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1a35020c851b1186987eca18510179f794" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTableStyleFormats</scope><name>ColumnGrandTotalFormats</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1af74a293396cc7d5ecff8b88c5b82d611" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTableStyleFormats</scope><name>RowGrandTotalFormats</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table_style_formats_1a5cece21256840e8ff8be7ccef9b72c67" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTableStyleFormats</scope><name>rowGrandTotalFormats</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

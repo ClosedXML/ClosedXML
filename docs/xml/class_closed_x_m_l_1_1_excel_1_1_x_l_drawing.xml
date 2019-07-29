@@ -1,0 +1,516 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDrawing</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing" prot="public" virt="non-virtual">ClosedXML::Excel::IXLDrawing&lt; T &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af20ef925590130638e4a44d412e345aa" prot="private" static="no" mutable="no">
+        <type>internal T</type>
+        <definition>internal T Container</definition>
+        <argsstring></argsstring>
+        <name>Container</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1ac827c63b86b0f22e4ebbb6e27f0bf49a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ShapeId</definition>
+        <argsstring></argsstring>
+        <name>ShapeId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Visible</definition>
+        <argsstring></argsstring>
+        <name>Visible</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a934fa09ba291a97f43720640e4d83f25" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Name</definition>
+        <argsstring></argsstring>
+        <name>Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="28" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a2a9d7649174c82227bf52a8053cf5032" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Description</definition>
+        <argsstring></argsstring>
+        <name>Description</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="35" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af5e8d258ee4f537352f49fff306e05a2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kindref="compound">IXLDrawingPosition</ref></type>
+        <definition>IXLDrawingPosition Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="42" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a66fddb5599abf78b920d997931202409" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ZOrder</definition>
+        <argsstring></argsstring>
+        <name>ZOrder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="44" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1acdd17375793c5d3af830d499a287945f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean HorizontalFlip</definition>
+        <argsstring></argsstring>
+        <name>HorizontalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="51" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1aaf18b4f902b6cbd703241fd68ca76a68" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean VerticalFlip</definition>
+        <argsstring></argsstring>
+        <name>VerticalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="63" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="63" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a1a236f7d89ff2b5e8f9161f46bdddcf2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Rotation</definition>
+        <argsstring></argsstring>
+        <name>Rotation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="75" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="75" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a4f4d601baecc7fdd206fb13f2c0cc209" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 OffsetX</definition>
+        <argsstring></argsstring>
+        <name>OffsetX</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="82" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1aaa9b2d94e3a45751b89092126aec13e7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 OffsetY</definition>
+        <argsstring></argsstring>
+        <name>OffsetY</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="89" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="89" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a3d4dd7b8b87b956ddb5c55eb6b592cab" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ExtentLength</definition>
+        <argsstring></argsstring>
+        <name>ExtentLength</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="96" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="96" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1abc26e75b63f2646b7504e795c5be367a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ExtentWidth</definition>
+        <argsstring></argsstring>
+        <name>ExtentWidth</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="103" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="103" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1abda7b1e0511530b36bbb471a3ecbbd0a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="110" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="110" bodyend="110"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a38dd255e74879d653cb8f18557993179" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDrawing</definition>
+        <argsstring>()</argsstring>
+        <name>XLDrawing</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="8" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a5415ed97e41fc084469d1ea3e318c4f4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetVisible</definition>
+        <argsstring>()</argsstring>
+        <name>SetVisible</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a5415ed97e41fc084469d1ea3e318c4f4">SetVisible</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="17" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1acba3f890571b5838d9e7cf7d4db507cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetVisible</definition>
+        <argsstring>(Boolean hidden)</argsstring>
+        <name>SetVisible</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1acba3f890571b5838d9e7cf7d4db507cf">SetVisible</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>hidden</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="22" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af68d835d16fd0a8f87437fb2b05ab6da" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetName</definition>
+        <argsstring>(String name)</argsstring>
+        <name>SetName</name>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="29" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a1cbe4e10a4ea92aadcc4476b1db7d39d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetDescription</definition>
+        <argsstring>(String description)</argsstring>
+        <name>SetDescription</name>
+        <param>
+          <type>String</type>
+          <declname>description</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="36" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af529763152938ee3329b94c1a50de55c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetZOrder</definition>
+        <argsstring>(Int32 zOrder)</argsstring>
+        <name>SetZOrder</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1af529763152938ee3329b94c1a50de55c">SetZOrder</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>zOrder</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="45" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a18250925968451d8250bd6c032570e60" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetHorizontalFlip</definition>
+        <argsstring>()</argsstring>
+        <name>SetHorizontalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="52" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af3a2e655135ac9a250b00ca0a9392911" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetHorizontalFlip</definition>
+        <argsstring>(Boolean horizontalFlip)</argsstring>
+        <name>SetHorizontalFlip</name>
+        <param>
+          <type>Boolean</type>
+          <declname>horizontalFlip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="57" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a5a29f1e52a1f2f6f15d1bca90ebf2d3d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetVerticalFlip</definition>
+        <argsstring>()</argsstring>
+        <name>SetVerticalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="64" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a407400175c976a1a67794ba9a1c34848" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetVerticalFlip</definition>
+        <argsstring>(Boolean verticalFlip)</argsstring>
+        <name>SetVerticalFlip</name>
+        <param>
+          <type>Boolean</type>
+          <declname>verticalFlip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="69" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="69" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a1fb0dadcfd100d6d2358c32a36ce23db" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetRotation</definition>
+        <argsstring>(Int32 rotation)</argsstring>
+        <name>SetRotation</name>
+        <param>
+          <type>Int32</type>
+          <declname>rotation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="76" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="76" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a564647942e524125e6bc83c80a69ab21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetOffsetX</definition>
+        <argsstring>(Int32 offsetX)</argsstring>
+        <name>SetOffsetX</name>
+        <param>
+          <type>Int32</type>
+          <declname>offsetX</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="83" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="83" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a795c7531290a2cbb814b965a3b0507ec" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetOffsetY</definition>
+        <argsstring>(Int32 offsetY)</argsstring>
+        <name>SetOffsetY</name>
+        <param>
+          <type>Int32</type>
+          <declname>offsetY</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="90" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="90" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1aa07555376b12c7a9c6067c5e74d3d9a4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetExtentLength</definition>
+        <argsstring>(Int32 extentLength)</argsstring>
+        <name>SetExtentLength</name>
+        <param>
+          <type>Int32</type>
+          <declname>extentLength</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="97" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="97" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1ad8a0b52399256e47b46b189f60773e40" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetExtentWidth</definition>
+        <argsstring>(Int32 extentWidth)</argsstring>
+        <name>SetExtentWidth</name>
+        <param>
+          <type>Int32</type>
+          <declname>extentWidth</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="104" bodyend="108"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1240">
+        <label>IXLDrawing&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing"/>
+      </node>
+      <node id="1239">
+        <label>XLDrawing&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing"/>
+        <childnode refid="1240" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1242">
+        <label>IXLDrawing&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing"/>
+      </node>
+      <node id="1241">
+        <label>XLDrawing&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing"/>
+        <childnode refid="1242" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLDrawing.cs" bodystart="5" bodyend="113"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af20ef925590130638e4a44d412e345aa" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>Container</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a2a9d7649174c82227bf52a8053cf5032" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>Description</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a3d4dd7b8b87b956ddb5c55eb6b592cab" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>ExtentLength</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1abc26e75b63f2646b7504e795c5be367a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>ExtentWidth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1acdd17375793c5d3af830d499a287945f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>HorizontalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a934fa09ba291a97f43720640e4d83f25" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>Name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a4f4d601baecc7fdd206fb13f2c0cc209" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>OffsetX</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1aaa9b2d94e3a45751b89092126aec13e7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>OffsetY</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af5e8d258ee4f537352f49fff306e05a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>Position</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a1a236f7d89ff2b5e8f9161f46bdddcf2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>Rotation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a1cbe4e10a4ea92aadcc4476b1db7d39d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetDescription</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1aa07555376b12c7a9c6067c5e74d3d9a4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetExtentLength</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1ad8a0b52399256e47b46b189f60773e40" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetExtentWidth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a18250925968451d8250bd6c032570e60" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetHorizontalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af3a2e655135ac9a250b00ca0a9392911" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetHorizontalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af68d835d16fd0a8f87437fb2b05ab6da" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a564647942e524125e6bc83c80a69ab21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetOffsetX</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a795c7531290a2cbb814b965a3b0507ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetOffsetY</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a1fb0dadcfd100d6d2358c32a36ce23db" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetRotation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a5a29f1e52a1f2f6f15d1bca90ebf2d3d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetVerticalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a407400175c976a1a67794ba9a1c34848" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetVerticalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a5415ed97e41fc084469d1ea3e318c4f4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetVisible</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1acba3f890571b5838d9e7cf7d4db507cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetVisible</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af529763152938ee3329b94c1a50de55c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>SetZOrder</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1ac827c63b86b0f22e4ebbb6e27f0bf49a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>ShapeId</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1abda7b1e0511530b36bbb471a3ecbbd0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>Style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1aaf18b4f902b6cbd703241fd68ca76a68" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>VerticalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>Visible</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a38dd255e74879d653cb8f18557993179" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>XLDrawing</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a66fddb5599abf78b920d997931202409" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawing</scope><name>ZOrder</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

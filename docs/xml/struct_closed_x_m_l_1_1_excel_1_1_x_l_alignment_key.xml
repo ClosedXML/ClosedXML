@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kind="struct" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLAlignmentKey</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; XLAlignmentKey &gt;</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a2fbac8fdf5945c9e6cccdabb1ba11974" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLAlignmentHorizontalValues</type>
+        <definition>XLAlignmentHorizontalValues Horizontal</definition>
+        <argsstring></argsstring>
+        <name>Horizontal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a2147e69c7b22319049251df6f10ac853" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLAlignmentVerticalValues</type>
+        <definition>XLAlignmentVerticalValues Vertical</definition>
+        <argsstring></argsstring>
+        <name>Vertical</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a83a5f1b0daaa5a627b4d10654be8458b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int Indent</definition>
+        <argsstring></argsstring>
+        <name>Indent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a85e6ae4008459c3a5627bf7a1fdc32ed" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool JustifyLastLine</definition>
+        <argsstring></argsstring>
+        <name>JustifyLastLine</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a4cf45d351958b2228a61495390805d99" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLAlignmentReadingOrderValues</type>
+        <definition>XLAlignmentReadingOrderValues ReadingOrder</definition>
+        <argsstring></argsstring>
+        <name>ReadingOrder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a58f2b1ae1981b44a7b9fcbec79461b0b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int RelativeIndent</definition>
+        <argsstring></argsstring>
+        <name>RelativeIndent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a5b43385ec5818b69dd7848f4af8b4c06" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool ShrinkToFit</definition>
+        <argsstring></argsstring>
+        <name>ShrinkToFit</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a2f441a7fd08b00161c2b5ead3f276c3b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int TextRotation</definition>
+        <argsstring></argsstring>
+        <name>TextRotation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1ae333ee17f0a9ce7e997b6339f83480bf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool WrapText</definition>
+        <argsstring></argsstring>
+        <name>WrapText</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="23" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a94f658a5828a54b1f5c3f7fb57456449" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool TopToBottom</definition>
+        <argsstring></argsstring>
+        <name>TopToBottom</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1ad028970de26905e3f05275f2245185dd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(XLAlignmentKey other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="27" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="42" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="49" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="65" bodyend="72"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1aaa49f1425b696ac47082079206f7cb42" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator==</definition>
+        <argsstring>(XLAlignmentKey left, XLAlignmentKey right)</argsstring>
+        <name>operator==</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="74" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a4371bd9e44a653efaa4d82aaf079afa3" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator !=</definition>
+        <argsstring>(XLAlignmentKey left, XLAlignmentKey right)</argsstring>
+        <name>operator !=</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key" kindref="compound">XLAlignmentKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="76" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="942">
+        <label>IEquatable&lt; XLAlignmentKey &gt;</label>
+      </node>
+      <node id="941">
+        <label>XLAlignmentKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key"/>
+        <childnode refid="942" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="944">
+        <label>IEquatable&lt; XLAlignmentKey &gt;</label>
+      </node>
+      <node id="943">
+        <label>XLAlignmentKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key"/>
+        <childnode refid="944" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLAlignmentKey.cs" bodystart="5" bodyend="77"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1ad028970de26905e3f05275f2245185dd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a2fbac8fdf5945c9e6cccdabb1ba11974" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>Horizontal</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a83a5f1b0daaa5a627b4d10654be8458b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>Indent</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a85e6ae4008459c3a5627bf7a1fdc32ed" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>JustifyLastLine</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a4371bd9e44a653efaa4d82aaf079afa3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>operator !=</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1aaa49f1425b696ac47082079206f7cb42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>operator==</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a4cf45d351958b2228a61495390805d99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>ReadingOrder</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a58f2b1ae1981b44a7b9fcbec79461b0b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>RelativeIndent</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a5b43385ec5818b69dd7848f4af8b4c06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>ShrinkToFit</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a2f441a7fd08b00161c2b5ead3f276c3b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>TextRotation</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a94f658a5828a54b1f5c3f7fb57456449" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>TopToBottom</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>ToString</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1a2147e69c7b22319049251df6f10ac853" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>Vertical</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_alignment_key_1ae333ee17f0a9ce7e997b6339f83480bf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAlignmentKey</scope><name>WrapText</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

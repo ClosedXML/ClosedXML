@@ -1,0 +1,477 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Tally</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; Object &gt;</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1aeba598d493333684417013f035778c0c" prot="private" static="no" mutable="no">
+        <type>readonly List&lt; object &gt;</type>
+        <definition>readonly List&lt;object&gt; _list</definition>
+        <argsstring></argsstring>
+        <name>_list</name>
+        <initializer>= new List&lt;object&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a23c366e764b162d62c0fb25182ffabe8" prot="private" static="no" mutable="no">
+        <type>readonly bool</type>
+        <definition>readonly bool NumbersOnly</definition>
+        <argsstring></argsstring>
+        <name>NumbersOnly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a5c83cf3ef75b7dd70b8fb5e74f3a5cf5" prot="private" static="no" mutable="no">
+        <type>double []</type>
+        <definition>double [] _numericValues</definition>
+        <argsstring></argsstring>
+        <name>_numericValues</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a928fe472ccf7beba73c2f434e2a9b0e1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Tally</definition>
+        <argsstring>()</argsstring>
+        <name>Tally</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="16" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1afc758792663c5fdecc49b3e0e472ac2f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Tally</definition>
+        <argsstring>(bool numbersOnly)</argsstring>
+        <name>Tally</name>
+        <param>
+          <type>bool</type>
+          <declname>numbersOnly</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="20" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a2a709bb3fa4b441faede4af5acc1aef0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Tally</definition>
+        <argsstring>(IEnumerable&lt; Expression &gt; p)</argsstring>
+        <name>Tally</name>
+        <param>
+          <type>IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="24" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a863315a37893c6d05970876003e8062f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Tally</definition>
+        <argsstring>(IEnumerable&lt; Expression &gt; p, bool numbersOnly)</argsstring>
+        <name>Tally</name>
+        <param>
+          <type>IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>numbersOnly</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="28" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1acdabff2091b4664c178f23ccf098ba27" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(Expression e)</argsstring>
+        <name>Add</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+          <declname>e</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="41" bodyend="65"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a56f15197198308a5f6ef337596b46251" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddValue</definition>
+        <argsstring>(Object v)</argsstring>
+        <name>AddValue</name>
+        <param>
+          <type>Object</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="67" bodyend="71"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a16ab5de43695147e80efba843d644f77" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Count</definition>
+        <argsstring>()</argsstring>
+        <name>Count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="73" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a58d7f32cdc36d09e1f26120eb57ff96c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Count</definition>
+        <argsstring>(bool numbersOnly)</argsstring>
+        <name>Count</name>
+        <param>
+          <type>bool</type>
+          <declname>numbersOnly</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="78" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="78" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a0532981c0808bc0560bb5717952f97ea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>IEnumerable&lt; double &gt;</type>
+        <definition>IEnumerable&lt;double&gt; NumericValues</definition>
+        <argsstring>()</argsstring>
+        <name>NumericValues</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="128" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1af5a70c75e3b768ff1ca50ff7ec09a21e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Product</definition>
+        <argsstring>()</argsstring>
+        <name>Product</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="131" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="131" bodyend="137"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a9e9452ede5e90b8ff16a4fb0d029e4a6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Sum</definition>
+        <argsstring>()</argsstring>
+        <name>Sum</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="139" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a893df0bb7c30cef1e01f68fcdaeea34d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Average</definition>
+        <argsstring>()</argsstring>
+        <name>Average</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="141" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="141" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a1d8432d252030d37bac63e486c6b6117" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Min</definition>
+        <argsstring>()</argsstring>
+        <name>Min</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="148" bodyend="152"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a5ce77a1e1d90d5d3cf8d1bd4d12f0f87" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Max</definition>
+        <argsstring>()</argsstring>
+        <name>Max</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="154" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="154" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1aefd101e6c6b63be066646d73a0d82ac4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Range</definition>
+        <argsstring>()</argsstring>
+        <name>Range</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="160" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1adc2666d0bcab3780123996560cfc57ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double VarP</definition>
+        <argsstring>()</argsstring>
+        <name>VarP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="167" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="167" bodyend="174"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a1c8fa741062eb33cdefc149c04170eeb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double StdP</definition>
+        <argsstring>()</argsstring>
+        <name>StdP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="176" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="176" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1ae286acabec443cfebd8eb3bc5f33cdc3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Var</definition>
+        <argsstring>()</argsstring>
+        <name>Var</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="185" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="185" bodyend="192"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a283af310401a4c90d6333db9c5a5b122" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Std</definition>
+        <argsstring>()</argsstring>
+        <name>Std</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="194" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="194" bodyend="213"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a35de297593de6662968cdc813344b4fd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; object &gt;</type>
+        <definition>IEnumerator&lt;object&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="215" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="215" bodyend="218"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1abe0868e40faea2f4b96a3f0620ed4189" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; double &gt;</type>
+        <definition>IEnumerable&lt;double&gt; NumericValuesEnumerable</definition>
+        <argsstring>()</argsstring>
+        <name>NumericValuesEnumerable</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="86" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1ab4aa4a3a4b7e1b7af3f7ce8dc1b942a9" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool TryParseToDouble</definition>
+        <argsstring>(object value, out double d)</argsstring>
+        <name>TryParseToDouble</name>
+        <param>
+          <type>object</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>out double</type>
+          <declname>d</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="107" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="107" bodyend="123"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a90bf63462d7eb8050cdb79f0e1c3fc43" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double []</type>
+        <definition>double [] NumericValuesInternal</definition>
+        <argsstring>()</argsstring>
+        <name>NumericValuesInternal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="125" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator IEnumerable.</type>
+        <definition>IEnumerator IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="220" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="220" bodyend="223"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a91c2bd23a5550f39e39d8abf9c85a7cd" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double Sum2</definition>
+        <argsstring>(IEnumerable&lt; double &gt; nums)</argsstring>
+        <name>Sum2</name>
+        <param>
+          <type>IEnumerable&lt; double &gt;</type>
+          <declname>nums</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="162" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="162" bodyend="165"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="892">
+        <label>IEnumerable&lt; Object &gt;</label>
+      </node>
+      <node id="891">
+        <label>Tally</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally"/>
+        <childnode refid="892" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="894">
+        <label>IEnumerable&lt; Object &gt;</label>
+      </node>
+      <node id="893">
+        <label>Tally</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally"/>
+        <childnode refid="894" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Tally.cs" bodystart="9" bodyend="224"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1aeba598d493333684417013f035778c0c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>_list</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a5c83cf3ef75b7dd70b8fb5e74f3a5cf5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>_numericValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1acdabff2091b4664c178f23ccf098ba27" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a56f15197198308a5f6ef337596b46251" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>AddValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a893df0bb7c30cef1e01f68fcdaeea34d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Average</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a16ab5de43695147e80efba843d644f77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Count</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a58d7f32cdc36d09e1f26120eb57ff96c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Count</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a35de297593de6662968cdc813344b4fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a5ce77a1e1d90d5d3cf8d1bd4d12f0f87" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Max</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a1d8432d252030d37bac63e486c6b6117" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Min</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a23c366e764b162d62c0fb25182ffabe8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>NumbersOnly</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a0532981c0808bc0560bb5717952f97ea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>NumericValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1abe0868e40faea2f4b96a3f0620ed4189" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>NumericValuesEnumerable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a90bf63462d7eb8050cdb79f0e1c3fc43" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>NumericValuesInternal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1af5a70c75e3b768ff1ca50ff7ec09a21e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Product</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1aefd101e6c6b63be066646d73a0d82ac4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a283af310401a4c90d6333db9c5a5b122" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Std</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a1c8fa741062eb33cdefc149c04170eeb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>StdP</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a9e9452ede5e90b8ff16a4fb0d029e4a6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Sum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a91c2bd23a5550f39e39d8abf9c85a7cd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Sum2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a928fe472ccf7beba73c2f434e2a9b0e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Tally</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1afc758792663c5fdecc49b3e0e472ac2f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Tally</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a2a709bb3fa4b441faede4af5acc1aef0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Tally</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1a863315a37893c6d05970876003e8062f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Tally</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1ab4aa4a3a4b7e1b7af3f7ce8dc1b942a9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>TryParseToDouble</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1ae286acabec443cfebd8eb3bc5f33cdc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>Var</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_tally_1adc2666d0bcab3780123996560cfc57ca" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Tally</scope><name>VarP</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

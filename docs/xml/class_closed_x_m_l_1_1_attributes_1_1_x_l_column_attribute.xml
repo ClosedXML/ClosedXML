@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Attributes::XLColumnAttribute</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">Attribute</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a75f9de8fdb468f219bb2e5bfb1cbd476" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Header</definition>
+        <argsstring></argsstring>
+        <name>Header</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a24be3950172634352b7486b29ff0b8cf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Ignore</definition>
+        <argsstring></argsstring>
+        <name>Ignore</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1ada1bbcb91925cec4d6e8eb4ebcbb0f52" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Order</definition>
+        <argsstring></argsstring>
+        <name>Order</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a83c4742ff0aff9ddcc0cd394fa194f86" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute" kindref="compound">XLColumnAttribute</ref></type>
+        <definition>static XLColumnAttribute GetXLColumnAttribute</definition>
+        <argsstring>(MemberInfo mi)</argsstring>
+        <name>GetXLColumnAttribute</name>
+        <param>
+          <type>MemberInfo</type>
+          <declname>mi</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="15" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1ad60bf4989400fd4dce357a033031311e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal String</type>
+        <definition>static internal String GetHeader</definition>
+        <argsstring>(MemberInfo mi)</argsstring>
+        <name>GetHeader</name>
+        <param>
+          <type>MemberInfo</type>
+          <declname>mi</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="21" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1af274bba3f6342db83591769915553352" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal Int32</type>
+        <definition>static internal Int32 GetOrder</definition>
+        <argsstring>(MemberInfo mi)</argsstring>
+        <name>GetOrder</name>
+        <param>
+          <type>MemberInfo</type>
+          <declname>mi</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="28" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a682bc518322e4448772fbf8e0cede940" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal Boolean</type>
+        <definition>static internal Boolean IgnoreMember</definition>
+        <argsstring>(MemberInfo mi)</argsstring>
+        <name>IgnoreMember</name>
+        <param>
+          <type>MemberInfo</type>
+          <declname>mi</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="35" bodyend="40"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1144">
+        <label>Attribute</label>
+      </node>
+      <node id="1143">
+        <label>XLColumnAttribute</label>
+        <link refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute"/>
+        <childnode refid="1144" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1146">
+        <label>Attribute</label>
+      </node>
+      <node id="1145">
+        <label>XLColumnAttribute</label>
+        <link refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute"/>
+        <childnode refid="1146" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" bodystart="9" bodyend="41"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1ad60bf4989400fd4dce357a033031311e" prot="private" virt="non-virtual"><scope>ClosedXML::Attributes::XLColumnAttribute</scope><name>GetHeader</name></member>
+      <member refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1af274bba3f6342db83591769915553352" prot="private" virt="non-virtual"><scope>ClosedXML::Attributes::XLColumnAttribute</scope><name>GetOrder</name></member>
+      <member refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a83c4742ff0aff9ddcc0cd394fa194f86" prot="private" virt="non-virtual"><scope>ClosedXML::Attributes::XLColumnAttribute</scope><name>GetXLColumnAttribute</name></member>
+      <member refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a75f9de8fdb468f219bb2e5bfb1cbd476" prot="public" virt="non-virtual"><scope>ClosedXML::Attributes::XLColumnAttribute</scope><name>Header</name></member>
+      <member refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a24be3950172634352b7486b29ff0b8cf" prot="public" virt="non-virtual"><scope>ClosedXML::Attributes::XLColumnAttribute</scope><name>Ignore</name></member>
+      <member refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1a682bc518322e4448772fbf8e0cede940" prot="private" virt="non-virtual"><scope>ClosedXML::Attributes::XLColumnAttribute</scope><name>IgnoreMember</name></member>
+      <member refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute_1ada1bbcb91925cec4d6e8eb4ebcbb0f52" prot="public" virt="non-virtual"><scope>ClosedXML::Attributes::XLColumnAttribute</scope><name>Order</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

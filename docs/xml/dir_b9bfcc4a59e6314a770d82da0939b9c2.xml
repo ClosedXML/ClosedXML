@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_b9bfcc4a59e6314a770d82da0939b9c2" kind="dir">
+    <compoundname>Attributes</compoundname>
+    <innerfile refid="_x_l_column_attribute_8cs">XLColumnAttribute.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/"/>
+  </compounddef>
+</doxygen>

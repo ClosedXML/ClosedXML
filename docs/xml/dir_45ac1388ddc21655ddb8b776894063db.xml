@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_45ac1388ddc21655ddb8b776894063db" kind="dir">
+    <compoundname>net46</compoundname>
+    <innerfile refid="net46_2_closed_x_m_l_8_assembly_info_8cs">net46/ClosedXML.AssemblyInfo.cs</innerfile>
+    <innerfile refid="_temporary_generated_file__036_c0_b5_b-1481-4323-8_d20-8_f5_a_d_c_b23_d92_8cs">TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs</innerfile>
+    <innerfile refid="_temporary_generated_file__5937a670-0e60-4077-877b-f7221da3dda1_8cs">TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs</innerfile>
+    <innerfile refid="_temporary_generated_file___e7_a71_f73-0_f8_d-4_b9_b-_b56_e-8_e70_b10_b_c5_d3_8cs">TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/obj/Debug/net46/"/>
+  </compounddef>
+</doxygen>

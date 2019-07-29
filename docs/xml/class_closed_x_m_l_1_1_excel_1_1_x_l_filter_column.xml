@@ -1,0 +1,868 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFilterColumn</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" prot="public" virt="non-virtual">IXLFilterColumn</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+        <definition>readonly XLAutoFilter _autoFilter</definition>
+        <argsstring></argsstring>
+        <name>_autoFilter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a401a6529feffcc7b66481264ab30dc62" prot="private" static="no" mutable="no">
+        <type>readonly Int32</type>
+        <definition>readonly Int32 _column</definition>
+        <argsstring></argsstring>
+        <name>_column</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5a4dd2e10f9117b7f72a7fe90e6305e9" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Func&lt; String, Object, Boolean &gt;</type>
+        <definition>Func&lt;String, Object, Boolean&gt; BeginsWithFunction</definition>
+        <argsstring></argsstring>
+        <name>BeginsWithFunction</name>
+        <initializer>= (value, input) =&gt; ((string)input).StartsWith(value, StringComparison.InvariantCultureIgnoreCase)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="182" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="182" bodyend="182"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5093203ffbaf9092cc8ac6fae4096b0b" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Func&lt; String, Object, Boolean &gt;</type>
+        <definition>Func&lt;String, Object, Boolean&gt; EndsWithFunction</definition>
+        <argsstring></argsstring>
+        <name>EndsWithFunction</name>
+        <initializer>= (value, input) =&gt; ((string)input).EndsWith(value, StringComparison.InvariantCultureIgnoreCase)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="194" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="194" bodyend="194"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a265b87d4c267be1929c4977bea2f1ae0" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Func&lt; String, Object, Boolean &gt;</type>
+        <definition>Func&lt;String, Object, Boolean&gt; ContainsFunction</definition>
+        <argsstring></argsstring>
+        <name>ContainsFunction</name>
+        <initializer>= (value, input) =&gt; ((string)input).IndexOf(value, StringComparison.OrdinalIgnoreCase) &gt;= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="206" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="206" bodyend="206"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ad84284474aeafdae82ade9238cff7599" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFilterType</type>
+        <definition>XLFilterType FilterType</definition>
+        <argsstring></argsstring>
+        <name>FilterType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="218" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="218" bodyend="218"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aa1315db947570412b0748c6b4937b099" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 TopBottomValue</definition>
+        <argsstring></argsstring>
+        <name>TopBottomValue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="220" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="220" bodyend="220"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a729ac66119bbb1e50d5c2d44e86f7aa0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLTopBottomType</type>
+        <definition>XLTopBottomType TopBottomType</definition>
+        <argsstring></argsstring>
+        <name>TopBottomType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="221" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="221" bodyend="221"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac4a28a5896f3d05465b54b7169a137b4" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLTopBottomPart</type>
+        <definition>XLTopBottomPart TopBottomPart</definition>
+        <argsstring></argsstring>
+        <name>TopBottomPart</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="222" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="222" bodyend="222"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1af8b181acc00790def0e959f9081ddd78" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFilterDynamicType</type>
+        <definition>XLFilterDynamicType DynamicType</definition>
+        <argsstring></argsstring>
+        <name>DynamicType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="224" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="224" bodyend="224"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a7b1d7f7c1685871ab92ba3e646864ff0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double DynamicValue</definition>
+        <argsstring></argsstring>
+        <name>DynamicValue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="225" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="225" bodyend="225"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5175bfbabc4490ce39943a1651ff4613" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFilterColumn</definition>
+        <argsstring>(XLAutoFilter autoFilter, Int32 column)</argsstring>
+        <name>XLFilterColumn</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+          <declname>autoFilter</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="13" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1aa71d36872f416feaa853788a7a7a7ef8">Clear</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="21" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac5cf4d83feff2ee750ad25f1892684fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filtered_column" kindref="compound">IXLFilteredColumn</ref></type>
+        <definition>IXLFilteredColumn AddFilter&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>AddFilter&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1ac5cf4d83feff2ee750ad25f1892684fc">AddFilter&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="27" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a91380243158fc41e0addc989a306dc99" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_date_time_group_filtered_column" kindref="compound">IXLDateTimeGroupFilteredColumn</ref></type>
+        <definition>IXLDateTimeGroupFilteredColumn AddDateGroupFilter</definition>
+        <argsstring>(DateTime date, XLDateTimeGrouping dateTimeGrouping)</argsstring>
+        <name>AddDateGroupFilter</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a91380243158fc41e0addc989a306dc99">AddDateGroupFilter</reimplements>
+        <param>
+          <type>DateTime</type>
+          <declname>date</declname>
+        </param>
+        <param>
+          <type>XLDateTimeGrouping</type>
+          <declname>dateTimeGrouping</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="44" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1af3d15f8369018c58d4574d99c5c0b47b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Top</definition>
+        <argsstring>(Int32 value, XLTopBottomType type=XLTopBottomType.Items)</argsstring>
+        <name>Top</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1af3d15f8369018c58d4574d99c5c0b47b">Top</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLTopBottomType</type>
+          <declname>type</declname>
+          <defval>XLTopBottomType.Items</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="98" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a6417a97efd679bf391da385f17a5a75e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Bottom</definition>
+        <argsstring>(Int32 value, XLTopBottomType type=XLTopBottomType.Items)</argsstring>
+        <name>Bottom</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a6417a97efd679bf391da385f17a5a75e">Bottom</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLTopBottomType</type>
+          <declname>type</declname>
+          <defval>XLTopBottomType.Items</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="104" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1acb94fcdf7f58c3cf5b214b92208f2ca5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void AboveAverage</definition>
+        <argsstring>()</argsstring>
+        <name>AboveAverage</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1acb94fcdf7f58c3cf5b214b92208f2ca5">AboveAverage</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="110" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="110" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a72bb82d53bcb0af73df549d4f93b8c4e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void BelowAverage</definition>
+        <argsstring>()</argsstring>
+        <name>BelowAverage</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a72bb82d53bcb0af73df549d4f93b8c4e">BelowAverage</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="115" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="115" bodyend="118"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a2c2858c2363a66437b36861d76d8adfe" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector EqualTo&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>EqualTo&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a2c2858c2363a66437b36861d76d8adfe">EqualTo&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="120" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="120" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a30f7eec1fe1aeae39a979f20cdede4fe" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector NotEqualTo&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>NotEqualTo&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a30f7eec1fe1aeae39a979f20cdede4fe">NotEqualTo&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="134" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="134" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aae6579083851e82682f299d13b573094" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector GreaterThan&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>GreaterThan&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1aae6579083851e82682f299d13b573094">GreaterThan&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="148" bodyend="152"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ae65e1206a80609c3f342ec7f984b7ab0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector LessThan&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>LessThan&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1ae65e1206a80609c3f342ec7f984b7ab0">LessThan&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="154" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="154" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a3e83339f959abea7f97e9418604d9a5b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector EqualOrGreaterThan&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>EqualOrGreaterThan&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a3e83339f959abea7f97e9418604d9a5b">EqualOrGreaterThan&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="160" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="160" bodyend="164"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aada5acd5db70c346c7f4e5d1ab7eec4f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector EqualOrLessThan&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>EqualOrLessThan&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1aada5acd5db70c346c7f4e5d1ab7eec4f">EqualOrLessThan&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="166" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="166" bodyend="170"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1af100c30ead1e0b7b126a1581e144c8c6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Between&lt; T &gt;</definition>
+        <argsstring>(T minValue, T maxValue)</argsstring>
+        <name>Between&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1af100c30ead1e0b7b126a1581e144c8c6">Between&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="172" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="172" bodyend="175"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a4ceb2784e58b805818478dd27423f902" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void NotBetween&lt; T &gt;</definition>
+        <argsstring>(T minValue, T maxValue)</argsstring>
+        <name>NotBetween&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a4ceb2784e58b805818478dd27423f902">NotBetween&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="177" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="177" bodyend="180"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a8941c4c898659ab35578ab106c3fff06" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector BeginsWith</definition>
+        <argsstring>(String value)</argsstring>
+        <name>BeginsWith</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a8941c4c898659ab35578ab106c3fff06">BeginsWith</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="184" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="184" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a653d7a40d7cb9bef2052aacb5a6f6e8b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector NotBeginsWith</definition>
+        <argsstring>(String value)</argsstring>
+        <name>NotBeginsWith</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a653d7a40d7cb9bef2052aacb5a6f6e8b">NotBeginsWith</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="189" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="189" bodyend="192"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a994793594316888540dfb8694999a588" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector EndsWith</definition>
+        <argsstring>(String value)</argsstring>
+        <name>EndsWith</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a994793594316888540dfb8694999a588">EndsWith</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="196" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="196" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac59968d35136d6316649dbdc5f07365d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector NotEndsWith</definition>
+        <argsstring>(String value)</argsstring>
+        <name>NotEndsWith</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1ac59968d35136d6316649dbdc5f07365d">NotEndsWith</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="201" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="201" bodyend="204"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a7b97922312bf92c97baa1395818d9e43" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector Contains</definition>
+        <argsstring>(String value)</argsstring>
+        <name>Contains</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a7b97922312bf92c97baa1395818d9e43">Contains</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="208" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="208" bodyend="211"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a14ba38d8a031967a4c0483212f9abd89" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector NotContains</definition>
+        <argsstring>(String value)</argsstring>
+        <name>NotContains</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a14ba38d8a031967a4c0483212f9abd89">NotContains</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="213" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="213" bodyend="216"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ad013041402ed140f0463aa9483127212" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn SetFilterType</definition>
+        <argsstring>(XLFilterType value)</argsstring>
+        <name>SetFilterType</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1ad013041402ed140f0463aa9483127212">SetFilterType</reimplements>
+        <param>
+          <type>XLFilterType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="420" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="420" bodyend="420"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5802bb82ed99885b726be876609157e0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn SetTopBottomValue</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetTopBottomValue</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a5802bb82ed99885b726be876609157e0">SetTopBottomValue</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="422" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="422" bodyend="422"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac0b2fede096a729207610a2b8ec83261" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn SetTopBottomType</definition>
+        <argsstring>(XLTopBottomType value)</argsstring>
+        <name>SetTopBottomType</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1ac0b2fede096a729207610a2b8ec83261">SetTopBottomType</reimplements>
+        <param>
+          <type>XLTopBottomType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="424" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="424" bodyend="424"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a259b5e1b66cab69da768af7419d224cb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn SetTopBottomPart</definition>
+        <argsstring>(XLTopBottomPart value)</argsstring>
+        <name>SetTopBottomPart</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a259b5e1b66cab69da768af7419d224cb">SetTopBottomPart</reimplements>
+        <param>
+          <type>XLTopBottomPart</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="426" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="426" bodyend="426"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a814b2165d3c196a16009f467a6dc0fef" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn SetDynamicType</definition>
+        <argsstring>(XLFilterDynamicType value)</argsstring>
+        <name>SetDynamicType</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a814b2165d3c196a16009f467a6dc0fef">SetDynamicType</reimplements>
+        <param>
+          <type>XLFilterDynamicType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="428" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="428" bodyend="428"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a8380b328ab68660550a3f1358b167ba5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn SetDynamicValue</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetDynamicValue</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column_1a8380b328ab68660550a3f1358b167ba5">SetDynamicValue</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="430" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="430" bodyend="430"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ab3e9c8ab4404fa49f6525f96b3f38bcd" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetTopBottom</definition>
+        <argsstring>(Int32 value, XLTopBottomType type, Boolean takeTop=true)</argsstring>
+        <name>SetTopBottom</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLTopBottomType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>takeTop</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="229" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="229" bodyend="273"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a3e9357d716ffa24cf69fd35f8bde878a" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; double &gt;</type>
+        <definition>IEnumerable&lt;double&gt; GetValues</definition>
+        <argsstring>(int value, XLTopBottomType type, bool takeTop)</argsstring>
+        <name>GetValues</name>
+        <param>
+          <type>int</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLTopBottomType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>takeTop</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="275" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="275" bodyend="300"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a97a453c4d94d4d75ccf3007cdfcd1dc3" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShowAverage</definition>
+        <argsstring>(Boolean aboveAverage)</argsstring>
+        <name>ShowAverage</name>
+        <param>
+          <type>Boolean</type>
+          <declname>aboveAverage</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="302" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="302" bodyend="349"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a7a068fd66464661fadf0dd28ee5ec760" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; double &gt;</type>
+        <definition>IEnumerable&lt;double&gt; GetAverageValues</definition>
+        <argsstring>(bool aboveAverage)</argsstring>
+        <name>GetAverageValues</name>
+        <param>
+          <type>bool</type>
+          <declname>aboveAverage</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="351" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="351" bodyend="368"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a4f75ebbb84281be8a2eed285d7242410" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" kindref="compound">IXLFilterConnector</ref></type>
+        <definition>IXLFilterConnector ApplyCustomFilter&lt; T &gt;</definition>
+        <argsstring>(T value, XLFilterOperator op, Func&lt; Object, Boolean &gt; condition, XLFilterType filterType=XLFilterType.Custom)</argsstring>
+        <name>ApplyCustomFilter&lt; T &gt;</name>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLFilterOperator</type>
+          <declname>op</declname>
+        </param>
+        <param>
+          <type>Func&lt; Object, Boolean &gt;</type>
+          <declname>condition</declname>
+        </param>
+        <param>
+          <type>XLFilterType</type>
+          <declname>filterType</declname>
+          <defval>XLFilterType.Custom</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="370" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="370" bodyend="418"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1307">
+        <label>XLFilterColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column"/>
+        <childnode refid="1308" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1308">
+        <label>IXLFilterColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1309">
+        <label>XLFilterColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column"/>
+        <childnode refid="1310" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1310">
+        <label>IXLFilterColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterColumn.cs" bodystart="8" bodyend="431"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>_autoFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a401a6529feffcc7b66481264ab30dc62" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>_column</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1acb94fcdf7f58c3cf5b214b92208f2ca5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>AboveAverage</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a91380243158fc41e0addc989a306dc99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>AddDateGroupFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac5cf4d83feff2ee750ad25f1892684fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>AddFilter&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a4f75ebbb84281be8a2eed285d7242410" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>ApplyCustomFilter&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a8941c4c898659ab35578ab106c3fff06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>BeginsWith</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5a4dd2e10f9117b7f72a7fe90e6305e9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>BeginsWithFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a72bb82d53bcb0af73df549d4f93b8c4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>BelowAverage</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1af100c30ead1e0b7b126a1581e144c8c6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>Between&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a6417a97efd679bf391da385f17a5a75e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>Bottom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a7b97922312bf92c97baa1395818d9e43" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a265b87d4c267be1929c4977bea2f1ae0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>ContainsFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1af8b181acc00790def0e959f9081ddd78" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>DynamicType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a7b1d7f7c1685871ab92ba3e646864ff0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>DynamicValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a994793594316888540dfb8694999a588" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>EndsWith</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5093203ffbaf9092cc8ac6fae4096b0b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>EndsWithFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a3e83339f959abea7f97e9418604d9a5b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>EqualOrGreaterThan&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aada5acd5db70c346c7f4e5d1ab7eec4f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>EqualOrLessThan&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a2c2858c2363a66437b36861d76d8adfe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>EqualTo&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ad84284474aeafdae82ade9238cff7599" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>FilterType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a7a068fd66464661fadf0dd28ee5ec760" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>GetAverageValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a3e9357d716ffa24cf69fd35f8bde878a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>GetValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aae6579083851e82682f299d13b573094" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>GreaterThan&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ae65e1206a80609c3f342ec7f984b7ab0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>LessThan&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a653d7a40d7cb9bef2052aacb5a6f6e8b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>NotBeginsWith</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a4ceb2784e58b805818478dd27423f902" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>NotBetween&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a14ba38d8a031967a4c0483212f9abd89" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>NotContains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac59968d35136d6316649dbdc5f07365d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>NotEndsWith</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a30f7eec1fe1aeae39a979f20cdede4fe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>NotEqualTo&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a814b2165d3c196a16009f467a6dc0fef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>SetDynamicType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a8380b328ab68660550a3f1358b167ba5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>SetDynamicValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ad013041402ed140f0463aa9483127212" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>SetFilterType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ab3e9c8ab4404fa49f6525f96b3f38bcd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>SetTopBottom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a259b5e1b66cab69da768af7419d224cb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>SetTopBottomPart</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac0b2fede096a729207610a2b8ec83261" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>SetTopBottomType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5802bb82ed99885b726be876609157e0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>SetTopBottomValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a97a453c4d94d4d75ccf3007cdfcd1dc3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>ShowAverage</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1af3d15f8369018c58d4574d99c5c0b47b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>Top</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1ac4a28a5896f3d05465b54b7169a137b4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>TopBottomPart</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a729ac66119bbb1e50d5c2d44e86f7aa0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>TopBottomType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1aa1315db947570412b0748c6b4937b099" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>TopBottomValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_column_1a5175bfbabc4490ce39943a1651ff4613" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterColumn</scope><name>XLFilterColumn</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

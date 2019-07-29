@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kind="struct" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLRangeKey</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; XLRangeKey &gt;</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1aa8f338636865e110bd03d4afe0748638" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>XLRangeType</type>
+        <definition>XLRangeType RangeType</definition>
+        <argsstring></argsstring>
+        <name>RangeType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1a41775220135f45e9b65654f48a144f4e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+        <definition>XLRangeAddress RangeAddress</definition>
+        <argsstring></argsstring>
+        <name>RangeAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1ad358804b9d2f5369d13c9b3e2c4a211d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeKey</definition>
+        <argsstring>(XLRangeType rangeType, XLRangeAddress address)</argsstring>
+        <name>XLRangeKey</name>
+        <param>
+          <type>XLRangeType</type>
+          <declname>rangeType</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="12" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1acd49b9d5f04dddc90c9164c291f0ddeb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(XLRangeKey other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Indicates whether the current object is equal to another object of the same type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>true if the current object is equal to the <emphasis>other</emphasis>  parameter; otherwise, false.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An object to compare with this object.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="23" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+<para>Indicates whether this instance and a specified object are equal. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>true if <emphasis>obj</emphasis>  and this instance are the same type and represent the same value; otherwise, false.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>obj</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Another object to compare to. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="32" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+<para>Returns the hash code for this instance. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>A 32-bit signed integer that is the hash code for this instance.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="40" bodyend="46"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1acbb5bd95f786acaabddad8268eab7507" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator==</definition>
+        <argsstring>(XLRangeKey left, XLRangeKey right)</argsstring>
+        <name>operator==</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="48" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1ae4837c11c8a1766dc152686af73fbb98" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator !=</definition>
+        <argsstring>(XLRangeKey left, XLRangeKey right)</argsstring>
+        <name>operator !=</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="53" bodyend="56"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1629">
+        <label>XLRangeKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key"/>
+        <childnode refid="1630" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1630">
+        <label>IEquatable&lt; XLRangeKey &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1631">
+        <label>XLRangeKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key"/>
+        <childnode refid="1632" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1632">
+        <label>IEquatable&lt; XLRangeKey &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeKey.cs" bodystart="6" bodyend="59"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1acd49b9d5f04dddc90c9164c291f0ddeb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1ae4837c11c8a1766dc152686af73fbb98" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>operator !=</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1acbb5bd95f786acaabddad8268eab7507" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>operator==</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1a41775220135f45e9b65654f48a144f4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>RangeAddress</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1aa8f338636865e110bd03d4afe0748638" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>RangeType</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key_1ad358804b9d2f5369d13c9b3e2c4a211d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeKey</scope><name>XLRangeKey</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

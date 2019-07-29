@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Caching::XLRangeRepository</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base" prot="public" virt="non-virtual">XLWorkbookElementRepositoryBase&lt; XLRangeKey, XLRangeBase &gt;</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository_1ab41a8e21f3ae99a5aabe43afde1bfce6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeRepository</definition>
+        <argsstring>(XLWorkbook workbook, Func&lt; XLRangeKey, XLRangeBase &gt; createNew)</argsstring>
+        <name>XLRangeRepository</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+          <declname>workbook</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base" kindref="compound">XLRangeBase</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRangeRepository.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRangeRepository.cs" bodystart="8" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository_1aa6471e273e72289b4305815df7c89b4b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeRepository</definition>
+        <argsstring>(XLWorkbook workbook, Func&lt; XLRangeKey, XLRangeBase &gt; createNew, IEqualityComparer&lt; XLRangeKey &gt; сomparer)</argsstring>
+        <name>XLRangeRepository</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+          <declname>workbook</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base" kindref="compound">XLRangeBase</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref> &gt;</type>
+          <declname>сomparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRangeRepository.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRangeRepository.cs" bodystart="12" bodyend="14"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1636">
+        <label>XLWorkbookElementRepositoryBase&lt; XLRangeKey, XLRangeBase &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base"/>
+      </node>
+      <node id="1635">
+        <label>XLRangeRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository"/>
+        <childnode refid="1636" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1638">
+        <label>XLWorkbookElementRepositoryBase&lt; XLRangeKey, XLRangeBase &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base"/>
+      </node>
+      <node id="1637">
+        <label>XLRangeRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository"/>
+        <childnode refid="1638" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRangeRepository.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRangeRepository.cs" bodystart="6" bodyend="15"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1af434f69b7ea50cc619964785721af235" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRangeRepository</scope><name>Workbook</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository_1ab41a8e21f3ae99a5aabe43afde1bfce6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRangeRepository</scope><name>XLRangeRepository</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository_1aa6471e273e72289b4305815df7c89b4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRangeRepository</scope><name>XLRangeRepository</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1ad284c9c58f5522ca5e6a69e2ed735469" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRangeRepository</scope><name>XLWorkbookElementRepositoryBase</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base_1afffaff212303fc9bd1ea873bb901746e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRangeRepository</scope><name>XLWorkbookElementRepositoryBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

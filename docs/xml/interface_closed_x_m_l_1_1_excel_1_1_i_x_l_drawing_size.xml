@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLDrawingSize</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_size" prot="public" virt="non-virtual">XLDrawingSize</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a13094acc5b183eaf4c76fc4b2d2073a2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean AutomaticSize</definition>
+        <argsstring></argsstring>
+        <name>AutomaticSize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a5554d9ddb970ea46ca620bfa405ba2a3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Height</definition>
+        <argsstring></argsstring>
+        <name>Height</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a05425db48f3352d6f85b7e66a95d0a79" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Width</definition>
+        <argsstring></argsstring>
+        <name>Width</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a40fba5486c16a6d542311bade09935a1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAutomaticSize</definition>
+        <argsstring>()</argsstring>
+        <name>SetAutomaticSize</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_size_1a40fba5486c16a6d542311bade09935a1">SetAutomaticSize</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="14" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a9c0e1f4cea7f37d0142b2f2e29649fde" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAutomaticSize</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetAutomaticSize</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_size_1a9c0e1f4cea7f37d0142b2f2e29649fde">SetAutomaticSize</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="14" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a8f72eb4672debc1375d66d6bca3f294f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetHeight</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetHeight</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_size_1a8f72eb4672debc1375d66d6bca3f294f">SetHeight</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a5f4c235ceda9a497816e67f0435f4901" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetWidth</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetWidth</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_size_1a5f4c235ceda9a497816e67f0435f4901">SetWidth</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="16" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="357">
+        <label>IXLDrawingSize</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size"/>
+      </node>
+      <node id="358">
+        <label>XLDrawingSize</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_size"/>
+        <childnode refid="357" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingSize.cs" bodystart="8" bodyend="18"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a13094acc5b183eaf4c76fc4b2d2073a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingSize</scope><name>AutomaticSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a5554d9ddb970ea46ca620bfa405ba2a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingSize</scope><name>Height</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a40fba5486c16a6d542311bade09935a1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingSize</scope><name>SetAutomaticSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a9c0e1f4cea7f37d0142b2f2e29649fde" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingSize</scope><name>SetAutomaticSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a8f72eb4672debc1375d66d6bca3f294f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingSize</scope><name>SetHeight</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a5f4c235ceda9a497816e67f0435f4901" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingSize</scope><name>SetWidth</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size_1a05425db48f3352d6f85b7e66a95d0a79" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingSize</scope><name>Width</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::ExpressionParseException</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">Exception</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception_1ae75d7512b6f45c5646f3ab4c6c61cee3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ExpressionParseException</definition>
+        <argsstring>(string message)</argsstring>
+        <name>ExpressionParseException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+<para>Initializes a new instance of the <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception" kindref="compound">ExpressionParseException</ref> class with a specified error message. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>message</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The message that describes the error.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionParseException.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionParseException.cs" bodystart="16" bodyend="19"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>The exception that is thrown when the strings to be parsed to an expression is invalid. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="139">
+        <label>ExpressionParseException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception"/>
+        <childnode refid="140" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="140">
+        <label>Exception</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="141">
+        <label>ExpressionParseException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception"/>
+        <childnode refid="142" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="142">
+        <label>Exception</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionParseException.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionParseException.cs" bodystart="9" bodyend="20"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_parse_exception_1ae75d7512b6f45c5646f3ab4c6c61cee3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionParseException</scope><name>ExpressionParseException</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLAutoFilter</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" prot="public" virt="non-virtual">XLAutoFilter</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a0d54cbeba816f7543a911249ba11c571" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Enabled</definition>
+        <argsstring></argsstring>
+        <name>Enabled</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1aaba3f3761f713579e9a3ad405412b13a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLRangeRow&gt; HiddenRows</definition>
+        <argsstring></argsstring>
+        <name>HiddenRows</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a15f2dc39a857059e1a5051660fc49475" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring></argsstring>
+        <name>Range</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a9f2f28a8bd57201045297e7e29fc9d37" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 SortColumn</definition>
+        <argsstring></argsstring>
+        <name>SortColumn</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1af7341413e01b93597b4f2e1201fb9d03" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Sorted</definition>
+        <argsstring></argsstring>
+        <name>Sorted</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1ae9d0bb5f7d228544a764fa87a14b022a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLSortOrder</type>
+        <definition>XLSortOrder SortOrder</definition>
+        <argsstring></argsstring>
+        <name>SortOrder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a0e1f30fe321016db6aca87cfab19ccd2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLRangeRow&gt; VisibleRows</definition>
+        <argsstring></argsstring>
+        <name>VisibleRows</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a067574621e7c4a275facb92120476197" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter" kindref="compound">IXLAutoFilter</ref></type>
+        <definition>IXLAutoFilter Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter_1a803e440ffcc2f474415235b724e1c137">Clear</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter_1a3dcd9713284e7ab7a69ca5472688f3c6">Clear</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1abbd04865c68a37de5292b486d80945b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn Column</definition>
+        <argsstring>(String column)</argsstring>
+        <name>Column</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter_1abbd04865c68a37de5292b486d80945b6">Column</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a646b81d2642c64fb0d2902dcd6d212a0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_column" kindref="compound">IXLFilterColumn</ref></type>
+        <definition>IXLFilterColumn Column</definition>
+        <argsstring>(Int32 column)</argsstring>
+        <name>Column</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter_1a646b81d2642c64fb0d2902dcd6d212a0">Column</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a3e0715a0f7a9f119c18f4ab50d6ce733" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter" kindref="compound">IXLAutoFilter</ref></type>
+        <definition>IXLAutoFilter Reapply</definition>
+        <argsstring>()</argsstring>
+        <name>Reapply</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter_1a3e0715a0f7a9f119c18f4ab50d6ce733">Reapply</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="29" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a41f5005ca7247e55ac750b4616ae3bcb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter" kindref="compound">IXLAutoFilter</ref></type>
+        <definition>IXLAutoFilter Sort</definition>
+        <argsstring>(Int32 columnToSortBy=1, XLSortOrder sortOrder=XLSortOrder.Ascending, Boolean matchCase=false, Boolean ignoreBlanks=true)</argsstring>
+        <name>Sort</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter_1a0292c0c47c96b722844ffd584a82807a">Sort</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter_1ac3081519753301b331f5468d24a4374a">Sort</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>columnToSortBy</declname>
+          <defval>1</defval>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+          <defval>XLSortOrder.Ascending</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>matchCase</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="31" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="214">
+        <label>IXLAutoFilter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter"/>
+      </node>
+      <node id="215">
+        <label>XLAutoFilter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter"/>
+        <childnode refid="214" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/IXLAutoFilter.cs" bodystart="13" bodyend="32"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a067574621e7c4a275facb92120476197" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1abbd04865c68a37de5292b486d80945b6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Column</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a646b81d2642c64fb0d2902dcd6d212a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Column</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a0d54cbeba816f7543a911249ba11c571" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Enabled</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1aaba3f3761f713579e9a3ad405412b13a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>HiddenRows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a15f2dc39a857059e1a5051660fc49475" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a3e0715a0f7a9f119c18f4ab50d6ce733" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Reapply</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a41f5005ca7247e55ac750b4616ae3bcb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Sort</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a9f2f28a8bd57201045297e7e29fc9d37" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>SortColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1af7341413e01b93597b4f2e1201fb9d03" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>Sorted</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1ae9d0bb5f7d228544a764fa87a14b022a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>SortOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_auto_filter_1a0e1f30fe321016db6aca87cfab19ccd2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAutoFilter</scope><name>VisibleRows</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

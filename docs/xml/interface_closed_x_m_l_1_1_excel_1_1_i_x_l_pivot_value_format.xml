@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPivotValueFormat</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base" prot="public" virt="non-virtual">IXLNumberFormatBase</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLNumberFormatBase &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_format" prot="public" virt="non-virtual">XLPivotValueFormat</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format_1a000d8e68cafb006d991143c485695b9d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue SetNumberFormatId</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetNumberFormatId</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_format_1a000d8e68cafb006d991143c485695b9d">SetNumberFormatId</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValueFormat.cs" line="7" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format_1aa93b35e7e3437aa4530637520a4c51c6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue SetFormat</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetFormat</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_format_1aa93b35e7e3437aa4530637520a4c51c6">SetFormat</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValueFormat.cs" line="9" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="515">
+        <label>IXLNumberFormatBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base"/>
+      </node>
+      <node id="516">
+        <label>IEquatable&lt; IXLNumberFormatBase &gt;</label>
+      </node>
+      <node id="514">
+        <label>IXLPivotValueFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format"/>
+        <childnode refid="515" relation="public-inheritance">
+        </childnode>
+        <childnode refid="516" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="517">
+        <label>XLPivotValueFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_format"/>
+        <childnode refid="514" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="519">
+        <label>IXLNumberFormatBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base"/>
+      </node>
+      <node id="520">
+        <label>IEquatable&lt; IXLNumberFormatBase &gt;</label>
+      </node>
+      <node id="518">
+        <label>IXLPivotValueFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format"/>
+        <childnode refid="519" relation="public-inheritance">
+        </childnode>
+        <childnode refid="520" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValueFormat.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValueFormat.cs" bodystart="5" bodyend="10"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1ab01475eb537fcb588741220d82a8f0ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueFormat</scope><name>Format</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueFormat</scope><name>NumberFormatId</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format_1aa93b35e7e3437aa4530637520a4c51c6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueFormat</scope><name>SetFormat</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format_1a000d8e68cafb006d991143c485695b9d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueFormat</scope><name>SetNumberFormatId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

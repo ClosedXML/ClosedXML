@@ -1,0 +1,367 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLColumnsCollection</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IDictionary&lt; Int32, XLColumn &gt;</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a1cc271de791211ac2b914fd881a72f68" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; Int32, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;Int32, XLColumn&gt; _dictionary</definition>
+        <argsstring></argsstring>
+        <name>_dictionary</name>
+        <initializer>= new Dictionary&lt;Int32, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1acdb3366aa0e1a8e5660addbaa5b60306" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>ICollection&lt; int &gt;</type>
+        <definition>ICollection&lt;int&gt; Keys</definition>
+        <argsstring></argsstring>
+        <name>Keys</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="37" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1ad290d1959d75db0f4867194a142b88a1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>ICollection&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref> &gt;</type>
+        <definition>ICollection&lt;XLColumn&gt; Values</definition>
+        <argsstring></argsstring>
+        <name>Values</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="52" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1af00868323c3bc285c64fec4d0624ada2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref></type>
+        <definition>XLColumn this[int key]</definition>
+        <argsstring></argsstring>
+        <name>this[int key]</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="57" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aad462966ed963f892117056de1eba502" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int Count</definition>
+        <argsstring></argsstring>
+        <name>Count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="89" bodyend="91"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1ad1b02f19e753582b3c5f9ed71bb0318a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool IsReadOnly</definition>
+        <argsstring></argsstring>
+        <name>IsReadOnly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="93" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="94" bodyend="96"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1ab40b6c0ed97b2cc5f3b62fab05aec1c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShiftColumnsRight</definition>
+        <argsstring>(Int32 startingColumn, Int32 columnsToShift)</argsstring>
+        <name>ShiftColumnsRight</name>
+        <param>
+          <type>Int32</type>
+          <declname>startingColumn</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>columnsToShift</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="9" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a1e8a0a31292683a6ffb6ff092adcd584" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(int key, XLColumn value)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>int</type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="26" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aad47c5790ad7e03bba11b7f8e661fd84" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool ContainsKey</definition>
+        <argsstring>(int key)</argsstring>
+        <name>ContainsKey</name>
+        <param>
+          <type>int</type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="31" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a93a84b0b82624a7243636be0641b575f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Remove</definition>
+        <argsstring>(int key)</argsstring>
+        <name>Remove</name>
+        <param>
+          <type>int</type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="41" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a986c8c71f780bc95c12522b41c3ea30b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool TryGetValue</definition>
+        <argsstring>(int key, out XLColumn value)</argsstring>
+        <name>TryGetValue</name>
+        <param>
+          <type>int</type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type>out <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="46" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a91256ec911c6139da3c19c0ac7890fa6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(KeyValuePair&lt; int, XLColumn &gt; item)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>KeyValuePair&lt; int, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref> &gt;</type>
+          <declname>item</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="68" bodyend="71"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="73" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a57520cb7b623c85b022fb9793aed2e35" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Contains</definition>
+        <argsstring>(KeyValuePair&lt; int, XLColumn &gt; item)</argsstring>
+        <name>Contains</name>
+        <param>
+          <type>KeyValuePair&lt; int, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref> &gt;</type>
+          <declname>item</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="78" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="78" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a248c391233507de227d0f5d1378a1f2e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CopyTo</definition>
+        <argsstring>(KeyValuePair&lt; int, XLColumn &gt;[] array, int arrayIndex)</argsstring>
+        <name>CopyTo</name>
+        <param>
+          <type>KeyValuePair&lt; int, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref> &gt; []</type>
+          <declname>array</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>arrayIndex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="83" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="83" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aa6beb946d058f6ae7e069a5230c72ded" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Remove</definition>
+        <argsstring>(KeyValuePair&lt; int, XLColumn &gt; item)</argsstring>
+        <name>Remove</name>
+        <param>
+          <type>KeyValuePair&lt; int, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref> &gt;</type>
+          <declname>item</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="98" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a4a62ac39fc586b5d4f8a0ab589b08eb5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; KeyValuePair&lt; int, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref> &gt; &gt;</type>
+        <definition>IEnumerator&lt;KeyValuePair&lt;int, XLColumn&gt; &gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="103" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="103" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a220103c6c1e5e84259f5cd6a0b8d17cb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void RemoveAll</definition>
+        <argsstring>(Func&lt; XLColumn, Boolean &gt; predicate)</argsstring>
+        <name>RemoveAll</name>
+        <param>
+          <type>Func&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="113" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="113" bodyend="116"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>System.Collections.IEnumerator System.Collections.IEnumerable.</type>
+        <definition>System.Collections.IEnumerator System.Collections.IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="108" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="108" bodyend="111"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1159">
+        <label>XLColumnsCollection</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection"/>
+        <childnode refid="1160" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1160">
+        <label>IDictionary&lt; Int32, XLColumn &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1161">
+        <label>XLColumnsCollection</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection"/>
+        <childnode refid="1162" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1162">
+        <label>IDictionary&lt; Int32, XLColumn &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/XLColumnCollection.cs" bodystart="7" bodyend="117"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a1cc271de791211ac2b914fd881a72f68" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>_dictionary</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a1e8a0a31292683a6ffb6ff092adcd584" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a91256ec911c6139da3c19c0ac7890fa6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a57520cb7b623c85b022fb9793aed2e35" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aad47c5790ad7e03bba11b7f8e661fd84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>ContainsKey</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a248c391233507de227d0f5d1378a1f2e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>CopyTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aad462966ed963f892117056de1eba502" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Count</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a4a62ac39fc586b5d4f8a0ab589b08eb5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1ad1b02f19e753582b3c5f9ed71bb0318a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>IsReadOnly</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1acdb3366aa0e1a8e5660addbaa5b60306" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Keys</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a93a84b0b82624a7243636be0641b575f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1aa6beb946d058f6ae7e069a5230c72ded" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a220103c6c1e5e84259f5cd6a0b8d17cb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>RemoveAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1ab40b6c0ed97b2cc5f3b62fab05aec1c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>ShiftColumnsRight</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1af00868323c3bc285c64fec4d0624ada2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>this[int key]</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1a986c8c71f780bc95c12522b41c3ea30b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>TryGetValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection_1ad290d1959d75db0f4867194a142b88a1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLColumnsCollection</scope><name>Values</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

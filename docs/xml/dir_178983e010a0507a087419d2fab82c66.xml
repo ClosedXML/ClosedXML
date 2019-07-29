@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_178983e010a0507a087419d2fab82c66" kind="dir">
+    <compoundname>Caching</compoundname>
+    <innerfile refid="_i_x_l_repository_8cs">IXLRepository.cs</innerfile>
+    <innerfile refid="_x_l_alignment_repository_8cs">XLAlignmentRepository.cs</innerfile>
+    <innerfile refid="_x_l_border_repository_8cs">XLBorderRepository.cs</innerfile>
+    <innerfile refid="_x_l_color_repository_8cs">XLColorRepository.cs</innerfile>
+    <innerfile refid="_x_l_fill_repository_8cs">XLFillRepository.cs</innerfile>
+    <innerfile refid="_x_l_font_repository_8cs">XLFontRepository.cs</innerfile>
+    <innerfile refid="_x_l_number_format_repository_8cs">XLNumberFormatRepository.cs</innerfile>
+    <innerfile refid="_x_l_protection_repository_8cs">XLProtectionRepository.cs</innerfile>
+    <innerfile refid="_x_l_range_repository_8cs">XLRangeRepository.cs</innerfile>
+    <innerfile refid="_x_l_repository_base_8cs">XLRepositoryBase.cs</innerfile>
+    <innerfile refid="_x_l_style_repository_8cs">XLStyleRepository.cs</innerfile>
+    <innerfile refid="_x_l_workbook_element_repository_base_8cs">XLWorkbookElementRepositoryBase.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/"/>
+  </compounddef>
+</doxygen>

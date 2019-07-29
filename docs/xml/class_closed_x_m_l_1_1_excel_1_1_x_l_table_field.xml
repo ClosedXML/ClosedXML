@@ -1,0 +1,419 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLTableField</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_field" prot="public" virt="non-virtual">IXLTableField</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a5e09dbbb37de7310063a94f948e7d7f7" prot="private" static="no" mutable="no">
+        <type>internal XLTotalsRowFunction</type>
+        <definition>internal XLTotalsRowFunction totalsRowFunction</definition>
+        <argsstring></argsstring>
+        <name>totalsRowFunction</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a62f2484208b69199c941fbfc40a80369" prot="private" static="no" mutable="no">
+        <type>internal String</type>
+        <definition>internal String totalsRowLabel</definition>
+        <argsstring></argsstring>
+        <name>totalsRowLabel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1aa70b1a306f419378d1e006d220a1b749" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table" kindref="compound">XLTable</ref></type>
+        <definition>readonly XLTable table</definition>
+        <argsstring></argsstring>
+        <name>table</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a1906dc26b530da745b51c2e111eeb81c" prot="private" static="no" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn _column</definition>
+        <argsstring></argsstring>
+        <name>_column</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a7c3a873e401e03e84fe995936055bf88" prot="private" static="no" mutable="no">
+        <type>Int32</type>
+        <definition>Int32 index</definition>
+        <argsstring></argsstring>
+        <name>index</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a9a2326f35466e54c36c070829245c557" prot="private" static="no" mutable="no">
+        <type>String</type>
+        <definition>String name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a16491ef511e7309b9a302978ff58b849" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn Column</definition>
+        <argsstring></argsstring>
+        <name>Column</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="26" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ab134813a08c7bab83312c4f29b794c3b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells DataCells</definition>
+        <argsstring></argsstring>
+        <name>DataCells</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="42" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a6a58d5c00babb9f3bbfe48689dab1736" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell HeaderCell</definition>
+        <argsstring></argsstring>
+        <name>HeaderCell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="57" bodyend="65"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ae273134055c7a29353bd63188d763eb0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Index</definition>
+        <argsstring></argsstring>
+        <name>Index</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="68" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a934fa09ba291a97f43720640e4d83f25" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Name</definition>
+        <argsstring></argsstring>
+        <name>Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="78" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="79" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a68ffde83dd657b73668d84fe554244ba" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable Table</definition>
+        <argsstring></argsstring>
+        <name>Table</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="96" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="96" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a8516965fd5c839afc215deb248c182f6" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell TotalsCell</definition>
+        <argsstring></argsstring>
+        <name>TotalsCell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="99" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a169b6dd9f34b777fccf6df2761a8be29" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String TotalsRowFormulaA1</definition>
+        <argsstring></argsstring>
+        <name>TotalsRowFormulaA1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="109" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="110" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a54569b7aecd17ef6d9233d9cbc15643e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String TotalsRowFormulaR1C1</definition>
+        <argsstring></argsstring>
+        <name>TotalsRowFormulaR1C1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="119" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="120" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a5bcaef5610621617b9893e6c88bc4348" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLTotalsRowFunction</type>
+        <definition>XLTotalsRowFunction TotalsRowFunction</definition>
+        <argsstring></argsstring>
+        <name>TotalsRowFunction</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="129" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="130" bodyend="137"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a23d666e4e7985412aa02a97b18dc1af1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String TotalsRowLabel</definition>
+        <argsstring></argsstring>
+        <name>TotalsRowLabel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="139" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="140" bodyend="148"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ac3ebd3cd7037a0273dfe52119c5d58f0" prot="private" static="yes" mutable="no">
+        <type>IEnumerable&lt; String &gt;</type>
+        <definition>IEnumerable&lt;String&gt; QuotedTableFieldCharacters</definition>
+        <argsstring></argsstring>
+        <name>QuotedTableFieldCharacters</name>
+        <initializer>= new[] { &quot;&apos;&quot;, &quot;#&quot; }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="219" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="219" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1aa50c11d434c7ad8622f80a2948e7a6e4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLTableField</definition>
+        <argsstring>(XLTable table, String name)</argsstring>
+        <name>XLTableField</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table" kindref="compound">XLTable</ref></type>
+          <declname>table</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="19" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ac2e5aab0612d67400354a4fe71278a21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_field_1ac2e5aab0612d67400354a4fe71278a21">Delete</reimplements>
+        <briefdescription>
+<para>Deletes this table field from the table. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="150" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="150" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a835f0fa740aefeac24b6dec44d05e40b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool IsConsistentDataType</definition>
+        <argsstring>()</argsstring>
+        <name>IsConsistentDataType</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_field_1a1374f813c4b620f181961c9d8c0d875d">IsConsistentDataType</reimplements>
+        <briefdescription>
+<para>Determines whether all cells this table field have a consistent data type. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="168" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="168" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1abcda605cd4dd181edd58a193540033e9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean IsConsistentFormula</definition>
+        <argsstring>()</argsstring>
+        <name>IsConsistentFormula</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_field_1abcda605cd4dd181edd58a193540033e9">IsConsistentFormula</reimplements>
+        <briefdescription>
+<para>Determines whether all cells this table field have a consistent formula. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="185" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="185" bodyend="200"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a3ba368aa2247808e8ddfb190a7806d4e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool IsConsistentStyle</definition>
+        <argsstring>()</argsstring>
+        <name>IsConsistentStyle</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_field_1a6d629063328e1ce33f1d05fd2566efae">IsConsistentStyle</reimplements>
+        <briefdescription>
+<para>Determines whether all cells this table field have a consistent style. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="202" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="202" bodyend="217"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a0ae3ea517c4d8669650c20f2249ef6c9" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void Delete</definition>
+        <argsstring>(Boolean deleteUnderlyingRangeColumn)</argsstring>
+        <name>Delete</name>
+        <param>
+          <type>Boolean</type>
+          <declname>deleteUnderlyingRangeColumn</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="155" bodyend="166"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ad92f187c1c21bbfdb520ca086b965420" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void UpdateTableFieldTotalsRowFormula</definition>
+        <argsstring>()</argsstring>
+        <name>UpdateTableFieldTotalsRowFormula</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="221" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="221" bodyend="257"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1871">
+        <label>XLTableField</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field"/>
+        <childnode refid="1872" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1872">
+        <label>IXLTableField</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_field"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1873">
+        <label>XLTableField</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field"/>
+        <childnode refid="1874" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1874">
+        <label>IXLTableField</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_field"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableField.cs" bodystart="9" bodyend="258"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a1906dc26b530da745b51c2e111eeb81c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>_column</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a16491ef511e7309b9a302978ff58b849" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>Column</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ab134813a08c7bab83312c4f29b794c3b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>DataCells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a0ae3ea517c4d8669650c20f2249ef6c9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a6a58d5c00babb9f3bbfe48689dab1736" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>HeaderCell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a7c3a873e401e03e84fe995936055bf88" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>index</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ae273134055c7a29353bd63188d763eb0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>Index</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a835f0fa740aefeac24b6dec44d05e40b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>IsConsistentDataType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1abcda605cd4dd181edd58a193540033e9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>IsConsistentFormula</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a3ba368aa2247808e8ddfb190a7806d4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>IsConsistentStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a934fa09ba291a97f43720640e4d83f25" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>Name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a9a2326f35466e54c36c070829245c557" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ac3ebd3cd7037a0273dfe52119c5d58f0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>QuotedTableFieldCharacters</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1aa70b1a306f419378d1e006d220a1b749" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>table</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a68ffde83dd657b73668d84fe554244ba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>Table</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a8516965fd5c839afc215deb248c182f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>TotalsCell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a169b6dd9f34b777fccf6df2761a8be29" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>TotalsRowFormulaA1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a54569b7aecd17ef6d9233d9cbc15643e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>TotalsRowFormulaR1C1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a5bcaef5610621617b9893e6c88bc4348" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>TotalsRowFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a5e09dbbb37de7310063a94f948e7d7f7" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>totalsRowFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a62f2484208b69199c941fbfc40a80369" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>totalsRowLabel</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1a23d666e4e7985412aa02a97b18dc1af1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>TotalsRowLabel</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1ad92f187c1c21bbfdb520ca086b965420" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>UpdateTableFieldTotalsRowFormula</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_field_1aa50c11d434c7ad8622f80a2948e7a6e4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableField</scope><name>XLTableField</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

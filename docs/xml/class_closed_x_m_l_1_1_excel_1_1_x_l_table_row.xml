@@ -1,0 +1,701 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLTableRow</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row" prot="public" virt="non-virtual">XLRangeRow</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" prot="public" virt="non-virtual">IXLTableRow</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ad5889437535e3b46b88f81f7200f7b12" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range" kindref="compound">XLTableRange</ref></type>
+        <definition>readonly XLTableRange _tableRange</definition>
+        <argsstring></argsstring>
+        <name>_tableRange</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a4e1c7233c770f369ce274bd9225deaec" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLTableRow</definition>
+        <argsstring>(XLTableRange tableRange, XLRangeRow rangeRow)</argsstring>
+        <name>XLTableRow</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range" kindref="compound">XLTableRange</ref></type>
+          <declname>tableRange</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row" kindref="compound">XLRangeRow</ref></type>
+          <declname>rangeRow</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="9" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1af6dd08c1b7993ae5d57514d9e42aee3a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Field</definition>
+        <argsstring>(Int32 index)</argsstring>
+        <name>Field</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1af6dd08c1b7993ae5d57514d9e42aee3a">Field</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="17" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a60c1ab93ca66bad79649979ef974be03" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Field</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Field</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1a60c1ab93ca66bad79649979ef974be03">Field</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="22" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1add3addcdf4806a70184830ff9cfb582d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref></type>
+        <definition>new IXLTableRow Sort</definition>
+        <argsstring>()</argsstring>
+        <name>Sort</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1add3addcdf4806a70184830ff9cfb582d">Sort</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="28" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a5b68626ddc81ca72f40555f02cf5238a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref></type>
+        <definition>new IXLTableRow SortLeftToRight</definition>
+        <argsstring>(XLSortOrder sortOrder=XLSortOrder.Ascending, Boolean matchCase=false, Boolean ignoreBlanks=true)</argsstring>
+        <name>SortLeftToRight</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1a5b68626ddc81ca72f40555f02cf5238a">SortLeftToRight</reimplements>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+          <defval>XLSortOrder.Ascending</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>matchCase</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="33" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ad4d0dbb7ffe47c4f4c5ee9c07f7a2bae" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row" kindref="compound">XLTableRow</ref></type>
+        <definition>new XLTableRow RowAbove</definition>
+        <argsstring>()</argsstring>
+        <name>RowAbove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1af8b3b4350965fba02e2992ebd7205fef">RowAbove</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="58" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="58" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1af0d784d471597e65adc5427aabe50f7d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row" kindref="compound">XLTableRow</ref></type>
+        <definition>new XLTableRow RowAbove</definition>
+        <argsstring>(Int32 step)</argsstring>
+        <name>RowAbove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1aad483c087ef1dda091058506a6e8bd74">RowAbove</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>step</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="63" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="63" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1accb82e860c85e81788787616b9b90ac5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row" kindref="compound">XLTableRow</ref></type>
+        <definition>new XLTableRow RowBelow</definition>
+        <argsstring>()</argsstring>
+        <name>RowBelow</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1a803b077ec4c4d87c2627770ae4f08526">RowBelow</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="82" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ae056b71fdb1f15fcc8335537eb25946c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row" kindref="compound">XLTableRow</ref></type>
+        <definition>new XLTableRow RowBelow</definition>
+        <argsstring>(Int32 step)</argsstring>
+        <name>RowBelow</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1af04647b104cd99879fc16812273b844d">RowBelow</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>step</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="87" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="87" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a64b5c05c03b82d3699f2e9240475e4f2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref></type>
+        <definition>new IXLTableRow Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1a64b5c05c03b82d3699f2e9240475e4f2">Clear</reimplements>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of this row. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="94" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="94" bodyend="98"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ab253761f4b35c3bad37af344483ac113" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows" kindref="compound">IXLTableRows</ref></type>
+        <definition>new IXLTableRows InsertRowsAbove</definition>
+        <argsstring>(int numberOfRows)</argsstring>
+        <name>InsertRowsAbove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1ab253761f4b35c3bad37af344483ac113">InsertRowsAbove</reimplements>
+        <param>
+          <type>int</type>
+          <declname>numberOfRows</declname>
+        </param>
+        <briefdescription>
+<para>Inserts X number of rows on top of this row. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This row and all cells below it will be shifted X number of rows.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>numberOfRows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of rows to insert.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="100" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a063ebdbb1d7281cca3652383e9689674" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows" kindref="compound">IXLTableRows</ref></type>
+        <definition>new IXLTableRows InsertRowsBelow</definition>
+        <argsstring>(int numberOfRows)</argsstring>
+        <name>InsertRowsBelow</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1a063ebdbb1d7281cca3652383e9689674">InsertRowsBelow</reimplements>
+        <param>
+          <type>int</type>
+          <declname>numberOfRows</declname>
+        </param>
+        <briefdescription>
+<para>Inserts X number of rows below this row. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All cells below this row will be shifted X number of rows.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>numberOfRows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of rows to insert.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="105" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="105" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a6ed18833d4ea0723a141b2045db80195" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new void</type>
+        <definition>new void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1ac2e5aab0612d67400354a4fe71278a21">Delete</reimplements>
+        <briefdescription>
+<para>Deletes this range and shifts the cells below. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="110" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="110" bodyend="113"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a6c6831d572c7f7a00d808722e1570f2f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row" kindref="compound">XLTableRow</ref></type>
+        <definition>XLTableRow RowShift</definition>
+        <argsstring>(Int32 rowsToShift)</argsstring>
+        <name>RowShift</name>
+        <param>
+          <type>Int32</type>
+          <declname>rowsToShift</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="41" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a2514669900a91ead427110fff5f36055" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref> IXLTableRow.</type>
+        <definition>IXLTableRow IXLTableRow. RowAbove</definition>
+        <argsstring>()</argsstring>
+        <name>RowAbove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1af8b3b4350965fba02e2992ebd7205fef">RowAbove</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="48" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a6cb5432878693b8db85aaabbe1c3030d" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref> IXLTableRow.</type>
+        <definition>IXLTableRow IXLTableRow. RowAbove</definition>
+        <argsstring>(Int32 step)</argsstring>
+        <name>RowAbove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1aad483c087ef1dda091058506a6e8bd74">RowAbove</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>step</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="53" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a0c28d78244ebe304094664adbb907177" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref> IXLTableRow.</type>
+        <definition>IXLTableRow IXLTableRow. RowBelow</definition>
+        <argsstring>()</argsstring>
+        <name>RowBelow</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1a803b077ec4c4d87c2627770ae4f08526">RowBelow</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="72" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="72" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a29b2eaca1cfe51197f3cb04008f3eed2" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row" kindref="compound">IXLTableRow</ref> IXLTableRow.</type>
+        <definition>IXLTableRow IXLTableRow. RowBelow</definition>
+        <argsstring>(Int32 step)</argsstring>
+        <name>RowBelow</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row_1af04647b104cd99879fc16812273b844d">RowBelow</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>step</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="77" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="77" bodyend="80"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1898">
+        <label>IXLRangeBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base"/>
+        <childnode refid="1899" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1896">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1897" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1894">
+        <label>XLRangeRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row"/>
+        <childnode refid="1895" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1900" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1897">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+      <node id="1895">
+        <label>XLRangeBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base"/>
+        <childnode refid="1896" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1898" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1897" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1901">
+        <label>IXLTableRow</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row"/>
+        <childnode refid="1900" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1900">
+        <label>IXLRangeRow</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row"/>
+        <childnode refid="1898" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1893">
+        <label>XLTableRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row"/>
+        <childnode refid="1894" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1901" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1899">
+        <label>IXLAddressable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1907">
+        <label>IXLRangeBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base"/>
+        <childnode refid="1908" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1905">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1906" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1903">
+        <label>XLRangeRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row"/>
+        <childnode refid="1904" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1909" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1906">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+      <node id="1904">
+        <label>XLRangeBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base"/>
+        <childnode refid="1905" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1907" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1906" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1910">
+        <label>IXLTableRow</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row"/>
+        <childnode refid="1909" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1909">
+        <label>IXLRangeRow</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row"/>
+        <childnode refid="1907" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1902">
+        <label>XLTableRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row"/>
+        <childnode refid="1903" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1910" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1908">
+        <label>IXLAddressable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableRow.cs" bodystart="5" bodyend="114"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ad5889437535e3b46b88f81f7200f7b12" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>_tableRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a045ed9e7df80ac03b71478b8f92a3ba0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>AddConditionalFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0693772c450e4364874433bea8a76c2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>AddToNamed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aabd4e1b796a30968e5dbdc8e2b8dc3bc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>AddToNamed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1af248f5a36ed604861a6e6dfd9361f1f0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>AddToNamed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aaf8aa4705faa056a8372f51ff815cc64" prot="public" virt="virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>AsRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1ad8f5e80adf40c0964030035845acbe9e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1ada25d763125b0a85ffcadf52f4b11e6a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a31481f16a03a6806fc28a3082456f042" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1abc8d710e6552d697e9e3bcc1b9d064c0" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a619cf5a47e6fae57f6b6a1aa8970957e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a8fb80d2861af15edba36d3fd14117053" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ae95bb8ef90005cd7d526d12f95e1dff8" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a84412114396bacdb09447668b6947e08" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a8da55c1db4fb7a9c13374c0878a91a65" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a7f9f84f2eb34faf6ec0745c346bd461e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellCount</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a7858f46092a14c46eebf14ed52cc387a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1ab54aea1a586d3921fe61d433999a0b6f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a5ee73bc5b3183ea1a5775adda23aa288" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a59c3686be1cb61dcf252eb7afa0f500d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ae36d8c7ef410f92fd34d5b99ad0a1beb" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ab38b528fc2532b468140d7ad51032159" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0c7d460179d1a5a4893f6c3640b188a8" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a2e40f4a09794cdf812201151d5d9cb05" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1acf726e884ee266528995e78595e95f1f" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a3741c9dced5135c0423471cfada33f57" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1ace768b8df6b90558e013bb477a2b7c5c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a6ad63b5f449b6fa15192912119681a06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aca6029c46d68307c1b2e2b29e3962c01" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0d9f76bdbd85d9afc39c70ad41040e5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aa2fd743972ab0481f301859745e455d3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1abc22a5cf6219117653418e2f996f1b0c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a34844b51f1cf3b56cd76146171811338" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CellValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0e7c8a7cd654858c658a13cfc711d47e" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Children</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a64b5c05c03b82d3699f2e9240475e4f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ab9529d5a2a9d4b5b8f473ba1e0e6f862" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ColumnCount</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a6d0664427bf1ce2b4637690fef97b8f5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ColumnLetter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a54dcc6aea50fdc7e7e3b6e9df8930e78" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ColumnNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a506f698916af164a7bdcb63d1172a981" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ColumnQuick</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1ab779f6ca1577a11067d68bedf267251e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CompareTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a65be729dbf98b59e940630982437dbbf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a86d7c1ed45ecb8919344be4d76991bc8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0520a4ebb5551bbd6f55a53c121e6224" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a4cdb8204448bad28efa3c26774d0e811" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a6215315796741e653f08568f30b1a382" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a250e55d1fdb436e5cfa77963732c832e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CopyTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1abac5022e685ca5b46767295c2d5e35e2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CopyTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ada46ced1f770b7653f8fb9ca2717c393" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>CreatePivotTable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0244a76d7e0bdd9e9e07b596b162345a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>DataType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a2f94c10bf5c4ec0fa52f2d45d3ec5ce2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>DataValidation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a6ed18833d4ea0723a141b2045db80195" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a010dacb77980f49e3ac716014c2a3da1" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a010dacb77980f49e3ac716014c2a3da1" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a1dd58bbf54f3c4cb61687dad16b6b35f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>DeleteComments</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a5d944882d18a6bc7fd910ba8e26a40d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Difference</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1af6dd08c1b7993ae5d57514d9e42aee3a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Field</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a60c1ab93ca66bad79649979ef974be03" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Field</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af7ebb65dd41af70c5d1be23629b19f84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>FirstCell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ad22088a7fc90d6cedb1b996a62635e33" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a7ab6f2748cd2050272f354cd4d171d29" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a93c0f3572a5e2ea46de521183a5e7fd5" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a93b02c997bbc5642f67c11791129e840" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a1512279cbbe176b4a4fe22b8e806de7c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a8e99eedfb37a11890a4aa5b7d8e9c468" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>FirstCellUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a00e476dc6c4c65dc4e98bd024c7652f4" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>FixColumnAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a331fa879619070278c4ee1813925727c" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>FixRowAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ae2f4e1e71fd07b7a1e543e1ff1714928" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>FormulaA1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a8fb301b8d8608c02e861f131f65eba79" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>FormulaR1C1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0b2edd348a2a3a710c02520e9f712856" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>GetStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a32d7dc02e62c5bd7d17d976b62e5b13b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Grow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ae0e39713e0362a2f6b675b951bd57c4c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Grow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aceddc6292c640c47b3455fc906912733" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Grow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ad9b1d6da7d234c2ced9dd41d01886071" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Hyperlinks</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1ae6ee4236123731a11e2d26675428cb6f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InnerStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a28fc6e3586fc447410938cf4fff0b42b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertCellsAfter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1ab615b8fb9ddbc496d7f752476e63af3f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertCellsAfter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a4786d361e12edd332f84e9cc1c8dd96d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertCellsAfter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a98bb85804662fbf71ccb7984f8addf29" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertCellsBefore</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a3e7bb938af44fc32724ddabb19437da4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertCellsBefore</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1ab8b5c190baa4e7c31735cf1d3d112714" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertCellsBefore</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a73f23556a4a639b4c66cb62f0e0c28f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsAfter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a6509859df3cf540cc1b1e8f84779ef60" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsAfter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a3e6dfbc237f4bd30f51a500b21764d98" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsAfter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1acafcede0b477adf1f108119c27e9fe8e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsAfterVoid</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a91435b6202048d1cec88b96bdb4091a4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsBefore</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ab6c89fc8e2b51fb1c3b503f8dec518e3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsBefore</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a45b4c9a8f32460fe691bcc2c1c4ca641" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsBefore</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1acea93ceac15d97683fa7b45d0b781c64" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertColumnsBeforeVoid</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ab253761f4b35c3bad37af344483ac113" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a229fed8cc82d7f67efea72224b309476" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ab533427acbd25fa77eb15703d3567cb7" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1af8e94d748c1baa9f6cabbca79134ae5a" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsAbove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a8092b320d98ac4fd3bb25d4d0802ceac" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a332296da7cd269d2a08af91853941ee8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsAboveVoid</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a063ebdbb1d7281cca3652383e9689674" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ac98384d9b4d80245ff9fc332f7c2d436" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1af1ca51aa06f546b0f9336cecaff4f8b8" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1abc5b925561a37c18793e9baacd0bcce8" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsBelow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a89d3e1772520e7ce926205007da9c94d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aed59ee97f877f581e7c779b76751e633" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>InsertRowsBelowVoid</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1af4540841bb274b197b66c588b2d6b3b8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Intersection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1acb410840ef3dbd71b4270810de850d9f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Intersects</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a2c8d288603ae6690ad92992fcb8c0410" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Intersects</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a9dfc70116289387e0f8fc25d9e178fd4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Intersects</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a183681dc2759ce04ff946fc0866e25e3" prot="public" virt="virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>IsEmpty</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aae02da6a845fc78d3e555e676bd409e7" prot="public" virt="virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>IsEmpty</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a6bb1846684dffde43e05f0a4b5c9ef0a" prot="public" virt="virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>IsEmpty</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a1d641f460deed1eab22cff2ad98fb240" prot="public" virt="virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>IsEntireColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a04cb739faae1be6e13fddf3410fb7a60" prot="public" virt="virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>IsEntireRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a9c38a38c2e325c49d8113bad8b329afb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>IsEntireSheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ac508d3d23160e437ba169b5f5efad943" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>IsMerged</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a2e4ed23199ddb2c366bb3213537cad09" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>LastCell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a3a0db70658e2655c3a530343df13b825" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af1dd49086ef48804c6c3802fa8a8cf48" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a1b272563b26364b91d9a567c8e20d9e7" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af08964bfcf5dcc5c2d8c8270911c77b4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a7a3ff08a48c48be8effb0ec491e69c58" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a83038328f70eaf73feaa401c1e6bf798" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>LastCellUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a9ec137bf8a2ec4986f791f77b40e46e8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Merge</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aefd902805e28264a17f013da1af0628f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Merge</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized_1a5373ddcfb7ecde9c9eb5b9ef6bc1e132" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ModifyStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a24d7d4373ffe303bd80f56183bf4ef31" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>NewDataValidation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aadebf1f35341bf21382dc71017fbcfa3" prot="protected" virt="virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>OnRangeAddressChanged</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1ad73e78048c8d3ea2a42151f61a883203" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a03abd4141c6de746849c0ed0ae43b13f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a1269173d6deade8b463620247e2cdd56" prot="public" virt="virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ae1aeef4769891a48e162774a71873281" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a272a66549bb114cb9a02a0e2747a5a27" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a45cf26ac1bcf8feb2421a2ae8c55d3c7" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a672a865d00f454e2d02ba34a156b9d4c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a7d54dc4b3f565f52f63c5817c7825c0f" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Range</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a41775220135f45e9b65654f48a144f4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RangeAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a5cf23fa75d422e342dc7729d43eed73e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Ranges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aa43f5aff94ad796197df4a2d30757d6d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Ranges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a4ce46e5cf51436fee040eb080347cd4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RangesUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a0776dc3189e1be822c8430e6d8ecde93" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RangeType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a874742bb1da1a75d1ab929e6d5a185ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RangeUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a0633b916ea41711a16af0456abe08ec8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RangeUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a79368de6f825cdfb9aacb353d0bfb661" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RangeUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a5f93cb981ce40dfe4454ff1a8134a417" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Relative</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a888cf070a829b63fcc3a7fb33c9641d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Row</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a1fa3a30cd81fbfc3d33b4082bd1aa6e7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Row</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a96c930651dcd56cdcc5544fc0a7a3d81" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Row</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a2514669900a91ead427110fff5f36055" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a6cb5432878693b8db85aaabbe1c3030d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ad4d0dbb7ffe47c4f4c5ee9c07f7a2bae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1af0d784d471597e65adc5427aabe50f7d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowAbove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a0c28d78244ebe304094664adbb907177" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a29b2eaca1cfe51197f3cb04008f3eed2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1accb82e860c85e81788787616b9b90ac5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1ae056b71fdb1f15fcc8335537eb25946c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowBelow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1af1f39cf10a4e2e64c73bea4dd343ecc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowCount</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a1269c9bcb283b37159898de2832bd020" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>RowNumber</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1a1269c9bcb283b37159898de2832bd020" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>RowNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a648718a889e061d37835956fc3f7f831" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowQuick</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1aab925e89cbdd8cca65edb25555d940c8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Rows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row_1ace88e357dfdf0968343210f478113c1f" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeRow."><scope>ClosedXML::Excel::XLTableRow</scope><name>Rows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a6c6831d572c7f7a00d808722e1570f2f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowShift</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a0943dca008bc2ed6dcb36cc35fcc9334" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a200df4a92dbf12d8dfc919000f237160" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>RowUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a900537cc87664f566790192b42088169" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Search</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aae6b677d47187a8187e734714222240b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Select</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a958d6e3dc40e406ebe59e0dba89f42a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SetAutoFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a33f579c790bafaf5187bf949e9b8d6a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SetAutoFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1af93b07e5e8424dbee9bd9cc41650e378" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SetDataType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ac2cf6fc38d414bd2729f7e5a9e1f5a69" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SetDataValidation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a892298839e9c7107a7436b560709af9a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SetValue&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a2308e53a5e41ad078dee5c46117ebf96" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ShareString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a27744df0d3d3f532eb9c6944063d22ea" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ShiftColumns</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ac60432d0f3f360a52405d745deedba27" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ShiftRows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1af7b512edf1d60b96ab51e026a4c8ac6c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Shrink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a76f4f1e6ea6f4f50c146259bd5f67918" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Shrink</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a302f6fde2044d7d5bb00e51c41ff466e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Shrink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1add3addcdf4806a70184830ff9cfb582d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Sort</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a3cdd987c102568f555c4d9b2352e14e2" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Sort</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ac40063aac4444a977f562e141f6fd9d4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Sort</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aefaf4d3a166edf3e5f4bb4ed964025b8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SortColumns</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a5b68626ddc81ca72f40555f02cf5238a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SortLeftToRight</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a2dc2cef94add34fe36645b41864aa70c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SortRows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLRangeRow.ClosedXML::Excel::XLRangeBase.ClosedXML::Excel::XLStylizedBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRangeBase."><scope>ClosedXML::Excel::XLTableRow</scope><name>Style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a828e67d067323eaae0298ac984fb1b38" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Styles</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized_1ab73e3cfe4bba81a18e0d0320c26f8bbd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>StyleValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a4f9710191bbdace5b2a7dcdb65b9388d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>SurroundingCells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ab03d6b686702baec2cbb71b665a6a691" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Union</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ad0ad45fa40a5b8b61707196b3f65b370" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Unmerge</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1a19a616becd18467a8471ea0059589add" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>Worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1ab3168dd9dcff520922056b462c5d2355" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>WorksheetRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base_1ae9ae0c4e07b1a0d29c8eec6b206791c1" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>XLRangeBase</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row_1a83ac672d3b719868f45c9aaf0cb0cf62" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>XLRangeRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1aecdc64299b389c824504360946a93b16" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>XLStylizedBase</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row_1a4e1c7233c770f369ce274bd9225deaec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableRow</scope><name>XLTableRow</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

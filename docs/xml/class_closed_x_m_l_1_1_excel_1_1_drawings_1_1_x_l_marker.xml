@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Drawings::XLMarker</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1af5830bb428368814c7edfa7261c5c303" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>readonly IXLRange rangeCell</definition>
+        <argsstring></argsstring>
+        <name>rangeCell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1aa608043066609c0ea416f5ea262f29fc" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Cell</definition>
+        <argsstring></argsstring>
+        <name>Cell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1ad357c8cd4e6e03d9163aeb9cdf8210c7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ColumnNumber</definition>
+        <argsstring></argsstring>
+        <name>ColumnNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="33" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1ae0605dd7644b5a177ebbd1b312aa4e7d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Point</type>
+        <definition>Point Offset</definition>
+        <argsstring></argsstring>
+        <name>Offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="34" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1a85981da2dad289efd77a175a8b477b07" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 RowNumber</definition>
+        <argsstring></argsstring>
+        <name>RowNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="35" bodyend="35"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1a0bbd06857b093c3a32b51b098cc9f839" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XLMarker</definition>
+        <argsstring>(IXLCell cell)</argsstring>
+        <name>XLMarker</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="15" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1ad95732eab070198e534bea332ca5c8aa" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XLMarker</definition>
+        <argsstring>(IXLCell cell, Point offset)</argsstring>
+        <name>XLMarker</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type>Point</type>
+          <declname>offset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="19" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1a2aa65491306ba4989a60d44e9fd96c05" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLMarker</definition>
+        <argsstring>(IXLRange rangeCell, Point offset)</argsstring>
+        <name>XLMarker</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>rangeCell</declname>
+        </param>
+        <param>
+          <type>Point</type>
+          <declname>offset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="23" bodyend="30"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLMarker.cs" bodystart="9" bodyend="36"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1aa608043066609c0ea416f5ea262f29fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1ad357c8cd4e6e03d9163aeb9cdf8210c7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>ColumnNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1ae0605dd7644b5a177ebbd1b312aa4e7d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>Offset</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1af5830bb428368814c7edfa7261c5c303" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>rangeCell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1a85981da2dad289efd77a175a8b477b07" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>RowNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1a0bbd06857b093c3a32b51b098cc9f839" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>XLMarker</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1ad95732eab070198e534bea332ca5c8aa" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>XLMarker</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker_1a2aa65491306ba4989a60d44e9fd96c05" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLMarker</scope><name>XLMarker</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

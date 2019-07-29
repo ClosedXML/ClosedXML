@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix" kind="class" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1aa1fb80dcf8fbd4380eae76807aa28b7a" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>readonly IXLWorksheet _worksheet</definition>
+        <argsstring></argsstring>
+        <name>_worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="116" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a16250f441278337fef6924df820dd16c" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; int, BitArray &gt;</type>
+        <definition>Dictionary&lt;int, BitArray&gt; _bitMatrix</definition>
+        <argsstring></argsstring>
+        <name>_bitMatrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="117" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a699d388938469f0a5e3bca16a0330038" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _maxColumn</definition>
+        <argsstring></argsstring>
+        <name>_maxColumn</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="118" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a4211282980af42fad6997ba486cb22af" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _minColumn</definition>
+        <argsstring></argsstring>
+        <name>_minColumn</name>
+        <initializer>= XLHelper.MaxColumnNumber + 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="119" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1aed7fe4f7ff4c8e244809cd9c3abf119a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeConsolidationMatrix</definition>
+        <argsstring>(IXLWorksheet worksheet, IEnumerable&lt; IXLRange &gt; ranges)</argsstring>
+        <name>XLRangeConsolidationMatrix</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+          <declname>ranges</declname>
+        </param>
+        <briefdescription>
+<para>Constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>worksheet</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current worksheet.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>ranges</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_ranges" kindref="compound">Ranges</ref> to be consolidated. They are expected to belong to the current worksheet, no check is performed.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="70" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="70" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1ab27404a4ae7158cc44b14e4254ab5675" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLRange&gt; GetConsolidatedRanges</definition>
+        <argsstring>()</argsstring>
+        <name>GetConsolidatedRanges</name>
+        <briefdescription>
+<para>Get consolidated ranges equivalent to the input ones. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="84" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="84" bodyend="110"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a47b22e57f274921da7c7ac46b2a7d03d" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddToBitMatrix</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>AddToBitMatrix</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="125" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="125" bodyend="141"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1abe81a45e91e17fe3cc195a9022d75d79" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ClearRangeInRow</definition>
+        <argsstring>(BitArray rowArray, Tuple&lt; int, int &gt; rangeBoundaries)</argsstring>
+        <name>ClearRangeInRow</name>
+        <param>
+          <type>BitArray</type>
+          <declname>rowArray</declname>
+        </param>
+        <param>
+          <type>Tuple&lt; int, int &gt;</type>
+          <declname>rangeBoundaries</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="143" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="143" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a05d86f4b34e2ecbbe6a6bc03c6fc0f08" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void FillBitMatrix</definition>
+        <argsstring>(IEnumerable&lt; IXLRange &gt; ranges)</argsstring>
+        <name>FillBitMatrix</name>
+        <param>
+          <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+          <declname>ranges</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="151" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="151" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1ab1feac462003ed5683ef4997ef73f3d5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; Tuple&lt; int, int &gt; &gt;</type>
+        <definition>IEnumerable&lt;Tuple&lt;int, int&gt; &gt; GetRangesBoundariesStartingByRow</definition>
+        <argsstring>(BitArray rowArray)</argsstring>
+        <name>GetRangesBoundariesStartingByRow</name>
+        <param>
+          <type>BitArray</type>
+          <declname>rowArray</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="162" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="162" bodyend="172"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a974ae3b1e1e91232fc31d99e690711a1" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void PrepareBitMatrix</definition>
+        <argsstring>(IEnumerable&lt; IXLRange &gt; ranges)</argsstring>
+        <name>PrepareBitMatrix</name>
+        <param>
+          <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref> &gt;</type>
+          <declname>ranges</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="174" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="174" bodyend="200"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a97d03239e3f18edd04562b2b7dd8dcbd" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool RowIncludesRange</definition>
+        <argsstring>(BitArray rowArray, Tuple&lt; int, int &gt; rangeBoundaries)</argsstring>
+        <name>RowIncludesRange</name>
+        <param>
+          <type>BitArray</type>
+          <declname>rowArray</declname>
+        </param>
+        <param>
+          <type>Tuple&lt; int, int &gt;</type>
+          <declname>rangeBoundaries</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="201" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="201" bodyend="210"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Class representing the area covering ranges to be consolidated as a set of bit matrices. Does all the dirty job of ranges consolidation. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="62" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="61" bodyend="213"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a16250f441278337fef6924df820dd16c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>_bitMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a699d388938469f0a5e3bca16a0330038" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>_maxColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a4211282980af42fad6997ba486cb22af" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>_minColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1aa1fb80dcf8fbd4380eae76807aa28b7a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>_worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a47b22e57f274921da7c7ac46b2a7d03d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>AddToBitMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1abe81a45e91e17fe3cc195a9022d75d79" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>ClearRangeInRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a05d86f4b34e2ecbbe6a6bc03c6fc0f08" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>FillBitMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1ab27404a4ae7158cc44b14e4254ab5675" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>GetConsolidatedRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1ab1feac462003ed5683ef4997ef73f3d5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>GetRangesBoundariesStartingByRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a974ae3b1e1e91232fc31d99e690711a1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>PrepareBitMatrix</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1a97d03239e3f18edd04562b2b7dd8dcbd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>RowIncludesRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix_1aed7fe4f7ff4c8e244809cd9c3abf119a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</scope><name>XLRangeConsolidationMatrix</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

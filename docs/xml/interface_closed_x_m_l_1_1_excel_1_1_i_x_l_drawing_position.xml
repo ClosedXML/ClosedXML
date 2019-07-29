@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLDrawingPosition</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_position" prot="public" virt="non-virtual">XLDrawingPosition</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a44429d001691cc65799756be8e49ed5c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Column</definition>
+        <argsstring></argsstring>
+        <name>Column</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1addf9cdabd929c9e421de743426a7c3b3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double ColumnOffset</definition>
+        <argsstring></argsstring>
+        <name>ColumnOffset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1ad8d3b89e168d71eb2d0856ca0d0050d7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Row</definition>
+        <argsstring></argsstring>
+        <name>Row</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a9aace40549f08c5cdc1391db98c7ccb3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double RowOffset</definition>
+        <argsstring></argsstring>
+        <name>RowOffset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1afb40dd26c161d5827374afc2b8fb2f32" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kindref="compound">IXLDrawingPosition</ref></type>
+        <definition>IXLDrawingPosition SetColumn</definition>
+        <argsstring>(Int32 column)</argsstring>
+        <name>SetColumn</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_position_1afb40dd26c161d5827374afc2b8fb2f32">SetColumn</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a5cd774a82626bb24c5e31c7db297021b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kindref="compound">IXLDrawingPosition</ref></type>
+        <definition>IXLDrawingPosition SetColumnOffset</definition>
+        <argsstring>(Double columnOffset)</argsstring>
+        <name>SetColumnOffset</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_position_1a5cd774a82626bb24c5e31c7db297021b">SetColumnOffset</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>columnOffset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a0c38d4c9622e156e453663c17b2e6379" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kindref="compound">IXLDrawingPosition</ref></type>
+        <definition>IXLDrawingPosition SetRow</definition>
+        <argsstring>(Int32 row)</argsstring>
+        <name>SetRow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_position_1a0c38d4c9622e156e453663c17b2e6379">SetRow</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>row</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="16" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1ad2d3c9d45ec1c6f2250dd014da6dfa3f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kindref="compound">IXLDrawingPosition</ref></type>
+        <definition>IXLDrawingPosition SetRowOffset</definition>
+        <argsstring>(Double rowOffset)</argsstring>
+        <name>SetRowOffset</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_position_1ad2d3c9d45ec1c6f2250dd014da6dfa3f">SetRowOffset</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>rowOffset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="18" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="348">
+        <label>IXLDrawingPosition</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position"/>
+      </node>
+      <node id="349">
+        <label>XLDrawingPosition</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_position"/>
+        <childnode refid="348" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawingPosition.cs" bodystart="8" bodyend="19"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a44429d001691cc65799756be8e49ed5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>Column</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1addf9cdabd929c9e421de743426a7c3b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>ColumnOffset</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1ad8d3b89e168d71eb2d0856ca0d0050d7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>Row</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a9aace40549f08c5cdc1391db98c7ccb3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>RowOffset</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1afb40dd26c161d5827374afc2b8fb2f32" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>SetColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a5cd774a82626bb24c5e31c7db297021b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>SetColumnOffset</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1a0c38d4c9622e156e453663c17b2e6379" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>SetRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position_1ad2d3c9d45ec1c6f2250dd014da6dfa3f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingPosition</scope><name>SetRowOffset</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

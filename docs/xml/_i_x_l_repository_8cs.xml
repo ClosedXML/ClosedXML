@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_repository_8cs" kind="file" language="C#">
+    <compoundname>IXLRepository.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" prot="public">ClosedXML::Excel::Caching::IXLRepository</innerclass>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" prot="public">ClosedXML::Excel::Caching::IXLRepository</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel_1_1_caching">ClosedXML::Excel::Caching</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4" refid="namespace_closed_x_m_l_1_1_excel_1_1_caching" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_caching" kindref="compound">ClosedXML.Excel.Caching</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="9" refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">internal</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" kindref="compound">IXLRepository</ref></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Clear();</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">internal</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" kindref="compound">IXLRepository</ref>&lt;Tkey,<sp/>Tvalue&gt;<sp/>:<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" kindref="compound">IXLRepository</ref>,<sp/>IEnumerable&lt;Tvalue&gt;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>where<sp/>Tkey<sp/>:<sp/>struct,<sp/>IEquatable&lt;Tkey&gt;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>where<sp/>Tvalue<sp/>:<sp/>class</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tvalue<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository_1ac539801a0214e48870b8b8c021646fc0" kindref="member">Store</ref>(Tkey<sp/>key,<sp/>Tvalue<sp/>value);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/IXLRepository.cs"/>
+  </compounddef>
+</doxygen>

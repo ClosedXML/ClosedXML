@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::ContentManagers::XLWorksheetContentManager</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager" prot="public" virt="non-virtual">XLBaseContentManager&lt; XLWorksheetContents &gt;</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager_1a75f7f94416361b349ff63845137c1b00" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLWorksheetContentManager</definition>
+        <argsstring>(Worksheet opWorksheet)</argsstring>
+        <name>XLWorksheetContentManager</name>
+        <param>
+          <type>Worksheet</type>
+          <declname>opWorksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLWorksheetContentManager.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLWorksheetContentManager.cs" bodystart="53" bodyend="95"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1990">
+        <label>XLWorksheetContentManager</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager"/>
+        <childnode refid="1991" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1991">
+        <label>XLBaseContentManager&lt; XLWorksheetContents &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1992">
+        <label>XLWorksheetContentManager</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager"/>
+        <childnode refid="1993" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1993">
+        <label>XLBaseContentManager&lt; XLWorksheetContents &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLWorksheetContentManager.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLWorksheetContentManager.cs" bodystart="51" bodyend="96"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager_1a75f7f94416361b349ff63845137c1b00" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::ContentManagers::XLWorksheetContentManager</scope><name>XLWorksheetContentManager</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

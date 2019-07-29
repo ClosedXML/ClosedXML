@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLCFDataBarMin</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_min" prot="public" virt="non-virtual">XLCFDataBarMin</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min_1a4f55641db8afee88743141456c93fdb6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max" kindref="compound">IXLCFDataBarMax</ref></type>
+        <definition>IXLCFDataBarMax Minimum</definition>
+        <argsstring>(XLCFContentType type, String value)</argsstring>
+        <name>Minimum</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_min_1a4f55641db8afee88743141456c93fdb6">Minimum</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMin.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min_1a07fcee36df27d5f87590322b9d6ae9b5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max" kindref="compound">IXLCFDataBarMax</ref></type>
+        <definition>IXLCFDataBarMax Minimum</definition>
+        <argsstring>(XLCFContentType type, Double value)</argsstring>
+        <name>Minimum</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_min_1a07fcee36df27d5f87590322b9d6ae9b5">Minimum</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMin.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min_1a21f839abaf20c5344c788eacb98cd94a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max" kindref="compound">IXLCFDataBarMax</ref></type>
+        <definition>IXLCFDataBarMax LowestValue</definition>
+        <argsstring>()</argsstring>
+        <name>LowestValue</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_min_1a21f839abaf20c5344c788eacb98cd94a">LowestValue</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMin.cs" line="12" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="266">
+        <label>IXLCFDataBarMin</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min"/>
+      </node>
+      <node id="267">
+        <label>XLCFDataBarMin</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_min"/>
+        <childnode refid="266" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMin.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMin.cs" bodystart="8" bodyend="13"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min_1a21f839abaf20c5344c788eacb98cd94a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFDataBarMin</scope><name>LowestValue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min_1a4f55641db8afee88743141456c93fdb6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFDataBarMin</scope><name>Minimum</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min_1a07fcee36df27d5f87590322b9d6ae9b5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFDataBarMin</scope><name>Minimum</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

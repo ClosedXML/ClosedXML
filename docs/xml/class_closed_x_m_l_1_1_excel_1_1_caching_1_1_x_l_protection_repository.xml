@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Caching::XLProtectionRepository</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" prot="public" virt="non-virtual">XLRepositoryBase&lt; XLProtectionKey, XLProtectionValue &gt;</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository_1a217356c679afe245cff2c5325ff57ecf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLProtectionRepository</definition>
+        <argsstring>(Func&lt; XLProtectionKey, XLProtectionValue &gt; createNew)</argsstring>
+        <name>XLProtectionRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_value" kindref="compound">XLProtectionValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLProtectionRepository.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLProtectionRepository.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository_1a67e2e1419f26e4d8784f97f049dc1ebe" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLProtectionRepository</definition>
+        <argsstring>(Func&lt; XLProtectionKey, XLProtectionValue &gt; createNew, IEqualityComparer&lt; XLProtectionKey &gt; comparer)</argsstring>
+        <name>XLProtectionRepository</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref>, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_value" kindref="compound">XLProtectionValue</ref> &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref> &gt;</type>
+          <declname>comparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLProtectionRepository.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLProtectionRepository.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1536">
+        <label>XLProtectionRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository"/>
+        <childnode refid="1537" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1537">
+        <label>XLRepositoryBase&lt; XLProtectionKey, XLProtectionValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1538">
+        <label>XLProtectionRepository</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository"/>
+        <childnode refid="1539" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1539">
+        <label>XLRepositoryBase&lt; XLProtectionKey, XLProtectionValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLProtectionRepository.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLProtectionRepository.cs" bodystart="6" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository_1a217356c679afe245cff2c5325ff57ecf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLProtectionRepository</scope><name>XLProtectionRepository</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository_1a67e2e1419f26e4d8784f97f049dc1ebe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLProtectionRepository</scope><name>XLProtectionRepository</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

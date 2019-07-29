@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLCFConverter</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_cell_is_converter" prot="public" virt="non-virtual">XLCFCellIsConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_converter" prot="public" virt="non-virtual">XLCFColorScaleConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_contains_converter" prot="public" virt="non-virtual">XLCFContainsConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter" prot="public" virt="non-virtual">XLCFDataBarConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter" prot="public" virt="non-virtual">XLCFDatesOccurringConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_ends_with_converter" prot="public" virt="non-virtual">XLCFEndsWithConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter" prot="public" virt="non-virtual">XLCFIconSetConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_is_blank_converter" prot="public" virt="non-virtual">XLCFIsBlankConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_is_error_converter" prot="public" virt="non-virtual">XLCFIsErrorConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_not_blank_converter" prot="public" virt="non-virtual">XLCFNotBlankConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_not_contains_converter" prot="public" virt="non-virtual">XLCFNotContainsConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_not_error_converter" prot="public" virt="non-virtual">XLCFNotErrorConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_starts_with_converter" prot="public" virt="non-virtual">XLCFStartsWithConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_top_converter" prot="public" virt="non-virtual">XLCFTopConverter</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_unique_converter" prot="public" virt="non-virtual">XLCFUniqueConverter</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>ConditionalFormattingRule</type>
+        <definition>ConditionalFormattingRule Convert</definition>
+        <argsstring>(IXLConditionalFormat cf, Int32 priority, XLWorkbook.SaveContext context)</argsstring>
+        <name>Convert</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44">Convert</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44">Convert</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44">Convert</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>cf</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>priority</declname>
+        </param>
+        <param>
+          <type>XLWorkbook.SaveContext</type>
+          <declname>context</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/IXLCFConverter.cs" line="11" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="257">
+        <label>XLCFTopConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_top_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="250">
+        <label>XLCFIconSetConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="244">
+        <label>XLCFCellIsConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_cell_is_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="258">
+        <label>XLCFUniqueConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_unique_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="246">
+        <label>XLCFContainsConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_contains_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="247">
+        <label>XLCFDataBarConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="254">
+        <label>XLCFNotContainsConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_not_contains_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="245">
+        <label>XLCFColorScaleConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="253">
+        <label>XLCFNotBlankConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_not_blank_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="252">
+        <label>XLCFIsErrorConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_is_error_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="251">
+        <label>XLCFIsBlankConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_is_blank_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="249">
+        <label>XLCFEndsWithConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_ends_with_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="256">
+        <label>XLCFStartsWithConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_starts_with_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="243">
+        <label>IXLCFConverter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter"/>
+      </node>
+      <node id="255">
+        <label>XLCFNotErrorConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_not_error_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="248">
+        <label>XLCFDatesOccurringConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/IXLCFConverter.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/IXLCFConverter.cs" bodystart="9" bodyend="12"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFConverter</scope><name>Convert</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

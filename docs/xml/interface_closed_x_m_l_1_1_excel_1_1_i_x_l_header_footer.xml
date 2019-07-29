@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLHeaderFooter</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer" prot="public" virt="non-virtual">XLHeaderFooter</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1aedcd77af2f5e21b0e1d6a04b2fbf0d77" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" kindref="compound">IXLHFItem</ref></type>
+        <definition>IXLHFItem Left</definition>
+        <argsstring></argsstring>
+        <name>Left</name>
+        <briefdescription>
+<para>Gets the left header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1ad9be9a806e2468db72a81270dcd40a92" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" kindref="compound">IXLHFItem</ref></type>
+        <definition>IXLHFItem Center</definition>
+        <argsstring></argsstring>
+        <name>Center</name>
+        <briefdescription>
+<para>Gets the middle header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1a551e2e01498a34a513557d52f9327bb2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" kindref="compound">IXLHFItem</ref></type>
+        <definition>IXLHFItem Right</definition>
+        <argsstring></argsstring>
+        <name>Right</name>
+        <briefdescription>
+<para>Gets the right header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1a95fd239705953e4074fc48ec2b697965" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String GetText</definition>
+        <argsstring>(XLHFOccurrence occurrence)</argsstring>
+        <name>GetText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1a95fd239705953e4074fc48ec2b697965">GetText</reimplementedby>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Gets the text of the specified header/footer occurrence. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1ab670142242a52533f704966fa71818f7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer" kindref="compound">IXLHeaderFooter</ref></type>
+        <definition>IXLHeaderFooter Clear</definition>
+        <argsstring>(XLHFOccurrence occurrence=XLHFOccurrence.AllPages)</argsstring>
+        <name>Clear</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer_1ab670142242a52533f704966fa71818f7">Clear</reimplementedby>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+          <defval>XLHFOccurrence.AllPages</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" line="29" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="409">
+        <label>IXLHeaderFooter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer"/>
+      </node>
+      <node id="410">
+        <label>XLHeaderFooter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_header_footer"/>
+        <childnode refid="409" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHeaderFooter.cs" bodystart="6" bodyend="30"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1ad9be9a806e2468db72a81270dcd40a92" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHeaderFooter</scope><name>Center</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1ab670142242a52533f704966fa71818f7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHeaderFooter</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1a95fd239705953e4074fc48ec2b697965" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHeaderFooter</scope><name>GetText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1aedcd77af2f5e21b0e1d6a04b2fbf0d77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHeaderFooter</scope><name>Left</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer_1a551e2e01498a34a513557d52f9327bb2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHeaderFooter</scope><name>Right</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

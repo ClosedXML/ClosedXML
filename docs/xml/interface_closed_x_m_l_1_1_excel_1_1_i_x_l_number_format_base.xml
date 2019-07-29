@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLNumberFormatBase</compoundname>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format" prot="public" virt="non-virtual">IXLNumberFormat</derivedcompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format" prot="public" virt="non-virtual">IXLPivotValueFormat</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 NumberFormatId</definition>
+        <argsstring></argsstring>
+        <name>NumberFormatId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormatBase.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormatBase.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1ab01475eb537fcb588741220d82a8f0ff" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Format</definition>
+        <argsstring></argsstring>
+        <name>Format</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormatBase.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormatBase.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="441">
+        <label>IXLNumberFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format"/>
+        <childnode refid="440" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="442">
+        <label>XLNumberFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format"/>
+        <childnode refid="441" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="440">
+        <label>IXLNumberFormatBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base"/>
+      </node>
+      <node id="443">
+        <label>IXLPivotValueFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format"/>
+        <childnode refid="440" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="444">
+        <label>XLPivotValueFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_format"/>
+        <childnode refid="443" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormatBase.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormatBase.cs" bodystart="5" bodyend="10"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1ab01475eb537fcb588741220d82a8f0ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLNumberFormatBase</scope><name>Format</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLNumberFormatBase</scope><name>NumberFormatId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_5681f86d08a5c57b6b81041cecd3cb48" kind="dir">
+    <compoundname>Comments</compoundname>
+    <innerfile refid="_i_x_l_comment_8cs">IXLComment.cs</innerfile>
+    <innerfile refid="_x_l_comment_8cs">XLComment.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/"/>
+  </compounddef>
+</doxygen>

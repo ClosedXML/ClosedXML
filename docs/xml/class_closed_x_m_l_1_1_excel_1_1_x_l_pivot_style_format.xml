@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLPivotStyleFormat</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format" prot="public" virt="non-virtual">IXLPivotStyleFormat</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_style_format" prot="public" virt="non-virtual">XLPivotValueStyleFormat</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a7e797bf9750201cbd176689a2be39f83" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPivotStyleFormatElement</type>
+        <definition>XLPivotStyleFormatElement AppliesTo</definition>
+        <argsstring></argsstring>
+        <name>AppliesTo</name>
+        <initializer>= XLPivotStyleFormatElement.Data</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1aa445b54d7d0a94157a36f1501545e31a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField PivotField</definition>
+        <argsstring></argsstring>
+        <name>PivotField</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a6cef8de98f05983f520efefc334e6b13" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a38ea72c18a459c60e98b081468127968" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>internal XLPivotAreaValues</type>
+        <definition>internal XLPivotAreaValues AreaType</definition>
+        <argsstring></argsstring>
+        <name>AreaType</name>
+        <initializer>= XLPivotAreaValues.Normal</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a55b27b183d4065aa2c538ec755fd32c2" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>internal bool</type>
+        <definition>internal bool CollapsedLevelsAreSubtotals</definition>
+        <argsstring></argsstring>
+        <name>CollapsedLevelsAreSubtotals</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="23" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a0cf76e4bff0b80adb9635254ad6bdbe2" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>internal IList&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference" kindref="compound">AbstractPivotFieldReference</ref> &gt;</type>
+        <definition>internal IList&lt;AbstractPivotFieldReference&gt; FieldReferences</definition>
+        <argsstring></argsstring>
+        <name>FieldReferences</name>
+        <initializer>= new List&lt;<ref refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference" kindref="compound">AbstractPivotFieldReference</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="24" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1ae5dfa1a66a4d9f315f8bd59acab72e21" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>internal bool</type>
+        <definition>internal bool Outline</definition>
+        <argsstring></argsstring>
+        <name>Outline</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a4a46542a7601117eb4050a75b7ec39b5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLPivotStyleFormat</definition>
+        <argsstring>(IXLPivotField field=null, IXLStyle style=null)</argsstring>
+        <name>XLPivotStyleFormat</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+          <declname>field</declname>
+          <defval>null</defval>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+          <declname>style</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="8" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1464">
+        <label>IXLPivotStyleFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format"/>
+      </node>
+      <node id="1463">
+        <label>XLPivotStyleFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format"/>
+        <childnode refid="1464" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1465">
+        <label>XLPivotValueStyleFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_style_format"/>
+        <childnode refid="1463" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1467">
+        <label>IXLPivotStyleFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format"/>
+      </node>
+      <node id="1466">
+        <label>XLPivotStyleFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format"/>
+        <childnode refid="1467" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/XLPivotStyleFormat.cs" bodystart="6" bodyend="26"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a7e797bf9750201cbd176689a2be39f83" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>AppliesTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a38ea72c18a459c60e98b081468127968" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>AreaType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a55b27b183d4065aa2c538ec755fd32c2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>CollapsedLevelsAreSubtotals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a0cf76e4bff0b80adb9635254ad6bdbe2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>FieldReferences</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1ae5dfa1a66a4d9f315f8bd59acab72e21" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>Outline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1aa445b54d7d0a94157a36f1501545e31a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>PivotField</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>Style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_format_1a4a46542a7601117eb4050a75b7ec39b5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotStyleFormat</scope><name>XLPivotStyleFormat</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

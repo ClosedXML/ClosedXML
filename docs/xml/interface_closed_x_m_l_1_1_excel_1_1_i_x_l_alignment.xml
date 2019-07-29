@@ -1,0 +1,448 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLAlignment</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLAlignment &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment" prot="public" virt="non-virtual">XLAlignment</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a2fbac8fdf5945c9e6cccdabb1ba11974" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLAlignmentHorizontalValues</type>
+        <definition>XLAlignmentHorizontalValues Horizontal</definition>
+        <argsstring></argsstring>
+        <name>Horizontal</name>
+        <briefdescription>
+<para>Gets or sets the cell&apos;s horizontal alignment. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a2147e69c7b22319049251df6f10ac853" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLAlignmentVerticalValues</type>
+        <definition>XLAlignmentVerticalValues Vertical</definition>
+        <argsstring></argsstring>
+        <name>Vertical</name>
+        <briefdescription>
+<para>Gets or sets the cell&apos;s vertical alignment. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="43" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a2934ed018c03133c54603b6610094aeb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Indent</definition>
+        <argsstring></argsstring>
+        <name>Indent</name>
+        <briefdescription>
+<para>Gets or sets the cell&apos;s text indentation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="48" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a1a910bab720b470d6f68036ef9de40fe" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean JustifyLastLine</definition>
+        <argsstring></argsstring>
+        <name>JustifyLastLine</name>
+        <briefdescription>
+<para>Gets or sets whether the cell&apos;s last line is justified or not. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a4cf45d351958b2228a61495390805d99" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLAlignmentReadingOrderValues</type>
+        <definition>XLAlignmentReadingOrderValues ReadingOrder</definition>
+        <argsstring></argsstring>
+        <name>ReadingOrder</name>
+        <briefdescription>
+<para>Gets or sets the cell&apos;s reading order. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="58" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="58" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1af6f40a1033914b74b3bfc1455c91e4aa" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 RelativeIndent</definition>
+        <argsstring></argsstring>
+        <name>RelativeIndent</name>
+        <briefdescription>
+<para>Gets or sets the cell&apos;s relative indent. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="63" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="63" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a004564c662d12ca6fc5f247a191001cf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShrinkToFit</definition>
+        <argsstring></argsstring>
+        <name>ShrinkToFit</name>
+        <briefdescription>
+<para>Gets or sets whether the cell&apos;s font size should decrease to fit the contents. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="68" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ab4ba2f0911f53faa36a718081791ffd6" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 TextRotation</definition>
+        <argsstring></argsstring>
+        <name>TextRotation</name>
+        <briefdescription>
+<para>Gets or sets the cell&apos;s text rotation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="73" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aa62a389f14b112ce98558a03e70c7fca" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean WrapText</definition>
+        <argsstring></argsstring>
+        <name>WrapText</name>
+        <briefdescription>
+<para>Gets or sets whether the cell&apos;s text should wrap if it doesn&apos;t fit. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="78" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="78" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a84caa78c7d4b1b7b4add8cad00335001" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean TopToBottom</definition>
+        <argsstring></argsstring>
+        <name>TopToBottom</name>
+        <briefdescription>
+<para>Gets or sets wheter the cell&apos;s text should be displayed from to to bottom </para>
+        </briefdescription>
+        <detaileddescription>
+<para>(as opposed to the normal left to right).</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="84" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="84" bodyend="84"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1af0713fb80b7d715227414333e68a1e12" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetHorizontal</definition>
+        <argsstring>(XLAlignmentHorizontalValues value)</argsstring>
+        <name>SetHorizontal</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1af0713fb80b7d715227414333e68a1e12">SetHorizontal</reimplementedby>
+        <param>
+          <type>XLAlignmentHorizontalValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="86" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a599bfb11fd831dbb1cda3f740d7cdc7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetVertical</definition>
+        <argsstring>(XLAlignmentVerticalValues value)</argsstring>
+        <name>SetVertical</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1a599bfb11fd831dbb1cda3f740d7cdc7a">SetVertical</reimplementedby>
+        <param>
+          <type>XLAlignmentVerticalValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="88" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aa4d08393463b96d4da675103fe100317" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetIndent</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetIndent</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1aa4d08393463b96d4da675103fe100317">SetIndent</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="90" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aba9b106d0993196ad144e72488529dcc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetJustifyLastLine</definition>
+        <argsstring>()</argsstring>
+        <name>SetJustifyLastLine</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1aba9b106d0993196ad144e72488529dcc">SetJustifyLastLine</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="92" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1abc0af1490114797857cf0b97157a2815" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetJustifyLastLine</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetJustifyLastLine</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1abc0af1490114797857cf0b97157a2815">SetJustifyLastLine</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="92" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aacff07131b14fa119faddaac8bff8d2b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetReadingOrder</definition>
+        <argsstring>(XLAlignmentReadingOrderValues value)</argsstring>
+        <name>SetReadingOrder</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1aacff07131b14fa119faddaac8bff8d2b">SetReadingOrder</reimplementedby>
+        <param>
+          <type>XLAlignmentReadingOrderValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="94" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1af287ddec7cdaece4f06977908354245e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetRelativeIndent</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetRelativeIndent</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1af287ddec7cdaece4f06977908354245e">SetRelativeIndent</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="96" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ae2a393d0c281093b90d0f974c6ffb54a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetShrinkToFit</definition>
+        <argsstring>()</argsstring>
+        <name>SetShrinkToFit</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1ae2a393d0c281093b90d0f974c6ffb54a">SetShrinkToFit</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="98" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ae9c76ec2f431b604dea2a63718955c70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetShrinkToFit</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShrinkToFit</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1ae9c76ec2f431b604dea2a63718955c70">SetShrinkToFit</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="98" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a510f08539733f8fed204cacc5dd4d7fe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetTextRotation</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetTextRotation</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1a510f08539733f8fed204cacc5dd4d7fe">SetTextRotation</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="100" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a15ef51b841f7c5ce8e65cd008dc2ca5c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetWrapText</definition>
+        <argsstring>()</argsstring>
+        <name>SetWrapText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1a15ef51b841f7c5ce8e65cd008dc2ca5c">SetWrapText</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="102" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ac3af507443576c5b065201fb7ad2ecb9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetWrapText</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetWrapText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1ac3af507443576c5b065201fb7ad2ecb9">SetWrapText</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="102" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ab72ecfd1fe23044854ba13863b0e4a5c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetTopToBottom</definition>
+        <argsstring>()</argsstring>
+        <name>SetTopToBottom</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1ab72ecfd1fe23044854ba13863b0e4a5c">SetTopToBottom</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="104" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a0b0566a624de178f1991f639cd88ff24" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetTopToBottom</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetTopToBottom</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment_1a0b0566a624de178f1991f639cd88ff24">SetTopToBottom</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="104" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="211">
+        <label>XLAlignment</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_alignment"/>
+        <childnode refid="209" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="210">
+        <label>IEquatable&lt; IXLAlignment &gt;</label>
+      </node>
+      <node id="209">
+        <label>IXLAlignment</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment"/>
+        <childnode refid="210" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="213">
+        <label>IEquatable&lt; IXLAlignment &gt;</label>
+      </node>
+      <node id="212">
+        <label>IXLAlignment</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment"/>
+        <childnode refid="213" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLAlignment.cs" bodystart="33" bodyend="105"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a2fbac8fdf5945c9e6cccdabb1ba11974" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>Horizontal</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a2934ed018c03133c54603b6610094aeb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>Indent</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a1a910bab720b470d6f68036ef9de40fe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>JustifyLastLine</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a4cf45d351958b2228a61495390805d99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>ReadingOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1af6f40a1033914b74b3bfc1455c91e4aa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>RelativeIndent</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1af0713fb80b7d715227414333e68a1e12" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetHorizontal</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aa4d08393463b96d4da675103fe100317" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetIndent</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aba9b106d0993196ad144e72488529dcc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetJustifyLastLine</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1abc0af1490114797857cf0b97157a2815" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetJustifyLastLine</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aacff07131b14fa119faddaac8bff8d2b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetReadingOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1af287ddec7cdaece4f06977908354245e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetRelativeIndent</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ae2a393d0c281093b90d0f974c6ffb54a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetShrinkToFit</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ae9c76ec2f431b604dea2a63718955c70" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetShrinkToFit</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a510f08539733f8fed204cacc5dd4d7fe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetTextRotation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ab72ecfd1fe23044854ba13863b0e4a5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetTopToBottom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a0b0566a624de178f1991f639cd88ff24" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetTopToBottom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a599bfb11fd831dbb1cda3f740d7cdc7a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetVertical</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a15ef51b841f7c5ce8e65cd008dc2ca5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetWrapText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ac3af507443576c5b065201fb7ad2ecb9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>SetWrapText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a004564c662d12ca6fc5f247a191001cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>ShrinkToFit</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1ab4ba2f0911f53faa36a718081791ffd6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>TextRotation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a84caa78c7d4b1b7b4add8cad00335001" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>TopToBottom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1a2147e69c7b22319049251df6f10ac853" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>Vertical</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_alignment_1aa62a389f14b112ce98558a03e70c7fca" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAlignment</scope><name>WrapText</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

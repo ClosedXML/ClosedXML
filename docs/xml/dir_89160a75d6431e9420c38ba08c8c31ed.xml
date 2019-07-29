@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_89160a75d6431e9420c38ba08c8c31ed" kind="dir">
+    <compoundname>Functions</compoundname>
+    <innerfile refid="_database_8cs">Database.cs</innerfile>
+    <innerfile refid="_date_and_time_8cs">DateAndTime.cs</innerfile>
+    <innerfile refid="_information_8cs">Information.cs</innerfile>
+    <innerfile refid="_logical_8cs">Logical.cs</innerfile>
+    <innerfile refid="_lookup_8cs">Lookup.cs</innerfile>
+    <innerfile refid="_math_trig_8cs">MathTrig.cs</innerfile>
+    <innerfile refid="_statistical_8cs">Statistical.cs</innerfile>
+    <innerfile refid="_tally_8cs">Tally.cs</innerfile>
+    <innerfile refid="_text_8cs">Text.cs</innerfile>
+    <innerfile refid="_x_l_math_8cs">XLMath.cs</innerfile>
+    <innerfile refid="_x_l_matrix_8cs">XLMatrix.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/"/>
+  </compounddef>
+</doxygen>

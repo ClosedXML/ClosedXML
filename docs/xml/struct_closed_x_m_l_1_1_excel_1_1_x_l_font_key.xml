@@ -1,0 +1,304 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key" kind="struct" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFontKey</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; XLFontKey &gt;</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a6e8342d1bf5d0e1ffd1100dcc77b8bfe" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool Bold</definition>
+        <argsstring></argsstring>
+        <name>Bold</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a5e86a69187a6ff3076f52dfabdda62fb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool Italic</definition>
+        <argsstring></argsstring>
+        <name>Italic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1ade07c3e4c3de563a158815ee72f9c421" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontUnderlineValues</type>
+        <definition>XLFontUnderlineValues Underline</definition>
+        <argsstring></argsstring>
+        <name>Underline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1ae4ef677ba227f351822166b169bbd096" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool Strikethrough</definition>
+        <argsstring></argsstring>
+        <name>Strikethrough</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontVerticalTextAlignmentValues</type>
+        <definition>XLFontVerticalTextAlignmentValues VerticalAlignment</definition>
+        <argsstring></argsstring>
+        <name>VerticalAlignment</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a8e723807d779620974b1c9f5715e781c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool Shadow</definition>
+        <argsstring></argsstring>
+        <name>Shadow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a140f463a1dfbc66c11886bc96f416476" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>double</type>
+        <definition>double FontSize</definition>
+        <argsstring></argsstring>
+        <name>FontSize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1aabf09c3f50db42314a0e65054c902a1f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_color_key" kindref="compound">XLColorKey</ref></type>
+        <definition>XLColorKey FontColor</definition>
+        <argsstring></argsstring>
+        <name>FontColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1adaedc6823c6fc2019778332b81ed7230" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>string</type>
+        <definition>string FontName</definition>
+        <argsstring></argsstring>
+        <name>FontName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="23" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontFamilyNumberingValues</type>
+        <definition>XLFontFamilyNumberingValues FontFamilyNumbering</definition>
+        <argsstring></argsstring>
+        <name>FontFamilyNumbering</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a2e7968d4653cb5742f2eb152ee7eca17" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="namespace_closed_x_m_l_1_1_excel_1a16954fe0e0c237f1f972b2432676c381" kindref="member">XLFontCharSet</ref></type>
+        <definition>XLFontCharSet FontCharSet</definition>
+        <argsstring></argsstring>
+        <name>FontCharSet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a560f06a32f0363c6786f32eded945a24" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(XLFontKey other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key" kindref="compound">XLFontKey</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="29" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="45" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="52" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="69" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="69" bodyend="75"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a60dbbf1e3f2b283ce1889b0bb66f366a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator==</definition>
+        <argsstring>(XLFontKey left, XLFontKey right)</argsstring>
+        <name>operator==</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key" kindref="compound">XLFontKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key" kindref="compound">XLFontKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="77" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a028ec7eec60894ccb56ad2d56277e3c1" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool operator !=</definition>
+        <argsstring>(XLFontKey left, XLFontKey right)</argsstring>
+        <name>operator !=</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key" kindref="compound">XLFontKey</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key" kindref="compound">XLFontKey</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="79" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1327">
+        <label>XLFontKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key"/>
+        <childnode refid="1328" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1328">
+        <label>IEquatable&lt; XLFontKey &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1329">
+        <label>XLFontKey</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key"/>
+        <childnode refid="1330" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1330">
+        <label>IEquatable&lt; XLFontKey &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLFontKey.cs" bodystart="5" bodyend="80"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a6e8342d1bf5d0e1ffd1100dcc77b8bfe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>Bold</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a560f06a32f0363c6786f32eded945a24" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a2e7968d4653cb5742f2eb152ee7eca17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>FontCharSet</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1aabf09c3f50db42314a0e65054c902a1f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>FontColor</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>FontFamilyNumbering</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1adaedc6823c6fc2019778332b81ed7230" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>FontName</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a140f463a1dfbc66c11886bc96f416476" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>FontSize</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a5e86a69187a6ff3076f52dfabdda62fb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>Italic</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a028ec7eec60894ccb56ad2d56277e3c1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>operator !=</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a60dbbf1e3f2b283ce1889b0bb66f366a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>operator==</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a8e723807d779620974b1c9f5715e781c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>Shadow</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1ae4ef677ba227f351822166b169bbd096" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>Strikethrough</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>ToString</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>Underline</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_font_key_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFontKey</scope><name>VerticalAlignment</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

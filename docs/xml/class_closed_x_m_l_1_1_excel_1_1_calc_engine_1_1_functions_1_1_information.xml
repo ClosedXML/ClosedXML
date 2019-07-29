@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Functions::Information</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a27de3948d21034aefd8e9edff36dcf91" prot="private" static="yes" mutable="no">
+        <type>IDictionary&lt; ErrorExpression.ExpressionErrorType, int &gt;</type>
+        <definition>IDictionary&lt;ErrorExpression.ExpressionErrorType, int&gt; errorTypes</definition>
+        <argsstring></argsstring>
+        <name>errorTypes</name>
+        <initializer>= new Dictionary&lt;ErrorExpression.ExpressionErrorType, int&gt;()
+        {
+            [ErrorExpression.ExpressionErrorType.NullValue] = 1,
+            [ErrorExpression.ExpressionErrorType.DivisionByZero] = 2,
+            [ErrorExpression.ExpressionErrorType.CellValue] = 3,
+            [ErrorExpression.ExpressionErrorType.CellReference] = 4,
+            [ErrorExpression.ExpressionErrorType.NameNotRecognized] = 5,
+            [ErrorExpression.ExpressionErrorType.NumberInvalid] = 6,
+            [ErrorExpression.ExpressionErrorType.NoValueAvailable] = 7
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ad572d5831ec1544c2333017cb75a55df" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Register</definition>
+        <argsstring>(CalcEngine ce)</argsstring>
+        <name>Register</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="10" bodyend="28"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a2db04d5612bb05ef4d5cd95a48a3d4b0" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object ErrorType</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>ErrorType</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="41" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a9eda8f3bce4631f56ebe193afba12a2e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsBlank</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsBlank</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="51" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a640d54db8956e121cb3b2d6d99d34a97" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsErr</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsErr</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="65" bodyend="71"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ac196de65974b1029690901e23f3579cb" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsError</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsError</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="73" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a298aa64f034ae2b43cbad645b7b93375" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsEven</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsEven</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="80" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="80" bodyend="89"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a8d312fcd23e8064e76382b0d49cf14e3" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsLogical</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsLogical</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="91" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="91" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a0abf09393bdaa133efba2e8760a684d2" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsNa</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsNa</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="105" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="105" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a9ae6d840c96451666654cc15faa6e7da" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsNonText</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsNonText</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="113" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="113" bodyend="116"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1aaf3cc6d3b6e73371cef7fe3e68d86968" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsNumber</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsNumber</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="118" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="118" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1afcf11e16c65140919f3d093e046e228c" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsOdd</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsOdd</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="150" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="150" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ac376bb80fa13ceaa9ed234a11dd11a9d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsRef</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsRef</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="155" bodyend="164"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ad2b46e31e8cb4200631366b49a6a8439" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsText</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsText</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="166" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="166" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ae4cd53cbcd214d4611d44ad7afc7f897" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object N</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>N</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="181" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="181" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ad0d4422f67912a4c2a90c123eb432e8a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object NA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>NA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="186" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="186" bodyend="189"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a19ce2a280eb361ab59b9f481a3ead201" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Type</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Type</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="191" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="191" bodyend="214"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/Information.cs" bodystart="8" bodyend="215"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a2db04d5612bb05ef4d5cd95a48a3d4b0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>ErrorType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a27de3948d21034aefd8e9edff36dcf91" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>errorTypes</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a9eda8f3bce4631f56ebe193afba12a2e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsBlank</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a640d54db8956e121cb3b2d6d99d34a97" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsErr</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ac196de65974b1029690901e23f3579cb" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsError</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a298aa64f034ae2b43cbad645b7b93375" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsEven</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a8d312fcd23e8064e76382b0d49cf14e3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsLogical</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a0abf09393bdaa133efba2e8760a684d2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsNa</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a9ae6d840c96451666654cc15faa6e7da" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsNonText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1aaf3cc6d3b6e73371cef7fe3e68d86968" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1afcf11e16c65140919f3d093e046e228c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsOdd</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ac376bb80fa13ceaa9ed234a11dd11a9d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsRef</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ad2b46e31e8cb4200631366b49a6a8439" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>IsText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ae4cd53cbcd214d4611d44ad7afc7f897" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>N</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ad0d4422f67912a4c2a90c123eb432e8a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>NA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1ad572d5831ec1544c2333017cb75a55df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>Register</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_information_1a19ce2a280eb361ab59b9f481a3ead201" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::Information</scope><name>Type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

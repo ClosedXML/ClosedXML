@@ -1,0 +1,424 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLStylizedBase</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized" prot="public" virt="non-virtual">IXLStylized</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cell" prot="public" virt="non-virtual">XLCell</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells" prot="public" virt="non-virtual">XLCells</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns" prot="public" virt="non-virtual">XLColumns</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" prot="public" virt="non-virtual">XLConditionalFormat</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base" prot="public" virt="non-virtual">XLRangeBase</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_columns" prot="public" virt="non-virtual">XLRangeColumns</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows" prot="public" virt="non-virtual">XLRangeRows</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_ranges" prot="public" virt="non-virtual">XLRanges</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows" prot="public" virt="non-virtual">XLRows</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_container" prot="public" virt="non-virtual">XLStylizedContainer</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_empty" prot="public" virt="non-virtual">XLStylizedEmpty</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows" prot="public" virt="non-virtual">XLTableRows</derivedcompoundref>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer" prot="public">ClosedXML::Excel::XLStylizedBase::ReferenceEqualityComparer</innerclass>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a1c0712bdaddc556e0b2196120a30d2c7" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>internal <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+        <definition>internal XLStyleValue StyleValue</definition>
+        <argsstring></argsstring>
+        <name>StyleValue</name>
+        <briefdescription>
+<para>Read-only style property. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a650b2dedb78cc33ee30fe5e78e9a3c82" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref> IXLStylized.</type>
+        <definition>XLStyleValue IXLStylized. StyleValue</definition>
+        <argsstring></argsstring>
+        <name>StyleValue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="20" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a6cef8de98f05983f520efefc334e6b13" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+<para>Editable style of the workbook element. Modification of this property DOES affect styles of child objects as well - they will be changed accordingly. Accessing this property causes a new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref> instance generated so use this property with caution. If you need only _read_ the style consider using StyleValue property instead. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="30" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1ae6ee4236123731a11e2d26675428cb6f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle InnerStyle</definition>
+        <argsstring></argsstring>
+        <name>InnerStyle</name>
+        <briefdescription>
+<para>Editable style of the workbook element. Modification of this property DOES NOT affect styles of child objects. Accessing this property causes a new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref> instance generated so use this property with caution. If you need only _read_ the style consider using StyleValue property instead. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="41" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a842068aec8108ddd6dfdd424ff5329a8" prot="protected" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>abstract IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" kindref="compound">XLStylizedBase</ref> &gt;</type>
+        <definition>abstract IEnumerable&lt;XLStylizedBase&gt; Children</definition>
+        <argsstring></argsstring>
+        <name>Children</name>
+        <briefdescription>
+<para>Get a collection of stylized entities which current entity&apos;s style changes should be propagated to. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="49" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1ad62372c32d21e59a0bf5e944b5004d88" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>abstract <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>abstract IXLRanges RangesUsed</definition>
+        <argsstring></argsstring>
+        <name>RangesUsed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="51" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a313ff4b7863959946f83db62bd8f8800" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>abstract IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref> &gt;</type>
+        <definition>abstract IEnumerable&lt;IXLStyle&gt; Styles</definition>
+        <argsstring></argsstring>
+        <name>Styles</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="53" bodyend="53"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a8987f6adb543f3c8831f4aeb497aaa35" prot="private" static="yes" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer" kindref="compound">ReferenceEqualityComparer</ref>&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref> &gt;</type>
+        <definition>ReferenceEqualityComparer&lt;XLStyleValue&gt; _comparer</definition>
+        <argsstring></argsstring>
+        <name>_comparer</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer" kindref="compound">ReferenceEqualityComparer</ref>&lt;<ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1aecdc64299b389c824504360946a93b16" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLStylizedBase</definition>
+        <argsstring>(XLStyleValue styleValue=null)</argsstring>
+        <name>XLStylizedBase</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+          <declname>styleValue</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="57" bodyend="60"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1abf99edb7a476ae5c375dc953d5893ca6" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetStyle</definition>
+        <argsstring>(IXLStyle style, bool propagate=false)</argsstring>
+        <name>SetStyle</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>propagate</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="64" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a7d0c21bd6173282681c5d3feff4a583a" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetStyle</definition>
+        <argsstring>(XLStyleValue value, bool propagate=false)</argsstring>
+        <name>SetStyle</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>propagate</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Apply specified style to the container. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Style to apply.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>propagate</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Whether or not propagate the style to inner ranges.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="77" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="77" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a768f5984e0136916aad84840ab1a97c0" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void IXLStylized.</type>
+        <definition>void IXLStylized. ModifyStyle</definition>
+        <argsstring>(Func&lt; XLStyleKey, XLStyleKey &gt; modification)</argsstring>
+        <name>ModifyStyle</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized_1a5373ddcfb7ecde9c9eb5b9ef6bc1e132">ModifyStyle</reimplements>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref>, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref> &gt;</type>
+          <declname>modification</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="88" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a9f90956c6c7cc74380b9742dd2c49461" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" kindref="compound">XLStylizedBase</ref> &gt;</type>
+        <definition>IEnumerable&lt;XLStylizedBase&gt; GetChildrenRecursively</definition>
+        <argsstring>(XLStylizedBase parent)</argsstring>
+        <name>GetChildrenRecursively</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" kindref="compound">XLStylizedBase</ref></type>
+          <declname>parent</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="104" bodyend="108"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Base class for any workbook element that has or may have a style. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1837">
+        <label>XLStylizedEmpty</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_empty"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1838">
+        <label>XLTableRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_rows"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1823">
+        <label>XLColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column"/>
+        <childnode refid="1822" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1816">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1817" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1821">
+        <label>XLConditionalFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1828">
+        <label>XLRangeRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row"/>
+        <childnode refid="1822" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1834">
+        <label>XLRanges</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_ranges"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1818">
+        <label>XLCell</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cell"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1817">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+      <node id="1822">
+        <label>XLRangeBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1827">
+        <label>XLRangeColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_column"/>
+        <childnode refid="1822" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1819">
+        <label>XLCells</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1820">
+        <label>XLColumns</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1836">
+        <label>XLStylizedContainer</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_container"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1832">
+        <label>XLRangeColumns</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_columns"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1826">
+        <label>XLTableRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range"/>
+        <childnode refid="1824" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1829">
+        <label>XLTableRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row"/>
+        <childnode refid="1828" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1831">
+        <label>XLWorksheet</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet"/>
+        <childnode refid="1822" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1824">
+        <label>XLRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range"/>
+        <childnode refid="1822" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1830">
+        <label>XLRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_row"/>
+        <childnode refid="1822" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1825">
+        <label>XLTable</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table"/>
+        <childnode refid="1824" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1833">
+        <label>XLRangeRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_rows"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1835">
+        <label>XLRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows"/>
+        <childnode refid="1816" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1839">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1840" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1840">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="11" bodyend="122"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a8987f6adb543f3c8831f4aeb497aaa35" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>_comparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a842068aec8108ddd6dfdd424ff5329a8" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>Children</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a9f90956c6c7cc74380b9742dd2c49461" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>GetChildrenRecursively</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1ae6ee4236123731a11e2d26675428cb6f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>InnerStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a768f5984e0136916aad84840ab1a97c0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>ModifyStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1ad62372c32d21e59a0bf5e944b5004d88" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>RangesUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1abf99edb7a476ae5c375dc953d5893ca6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>SetStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a7d0c21bd6173282681c5d3feff4a583a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>SetStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>Style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a313ff4b7863959946f83db62bd8f8800" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>Styles</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a1c0712bdaddc556e0b2196120a30d2c7" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>StyleValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a650b2dedb78cc33ee30fe5e78e9a3c82" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>StyleValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1aecdc64299b389c824504360946a93b16" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase</scope><name>XLStylizedBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

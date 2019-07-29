@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFilterConnector</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector" prot="public" virt="non-virtual">IXLFilterConnector</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+        <definition>readonly XLAutoFilter _autoFilter</definition>
+        <argsstring></argsstring>
+        <name>_autoFilter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1a401a6529feffcc7b66481264ab30dc62" prot="private" static="no" mutable="no">
+        <type>readonly Int32</type>
+        <definition>readonly Int32 _column</definition>
+        <argsstring></argsstring>
+        <name>_column</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1aa3c444d4728d9766426207e8a4b35931" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_filtered_column" kindref="compound">IXLCustomFilteredColumn</ref></type>
+        <definition>IXLCustomFilteredColumn And</definition>
+        <argsstring></argsstring>
+        <name>And</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" bodystart="22" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1adda3e0c684bbb147cdd449490b689feb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_filtered_column" kindref="compound">IXLCustomFilteredColumn</ref></type>
+        <definition>IXLCustomFilteredColumn Or</definition>
+        <argsstring></argsstring>
+        <name>Or</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" bodystart="27" bodyend="29"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1a4e06a90707b33571290033b61f292c35" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFilterConnector</definition>
+        <argsstring>(XLAutoFilter autoFilter, Int32 column)</argsstring>
+        <name>XLFilterConnector</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+          <declname>autoFilter</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" bodystart="13" bodyend="17"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1311">
+        <label>XLFilterConnector</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector"/>
+        <childnode refid="1312" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1312">
+        <label>IXLFilterConnector</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1313">
+        <label>XLFilterConnector</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector"/>
+        <childnode refid="1314" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1314">
+        <label>IXLFilterConnector</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filter_connector"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilterConnector.cs" bodystart="8" bodyend="32"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterConnector</scope><name>_autoFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1a401a6529feffcc7b66481264ab30dc62" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterConnector</scope><name>_column</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1aa3c444d4728d9766426207e8a4b35931" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterConnector</scope><name>And</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1adda3e0c684bbb147cdd449490b689feb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterConnector</scope><name>Or</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filter_connector_1a4e06a90707b33571290033b61f292c35" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilterConnector</scope><name>XLFilterConnector</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

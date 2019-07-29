@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLTextLengthCriteria</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria" prot="public" virt="non-virtual">XLValidationCriteria</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a5f28f5391cc92588cc64a3612c09e8eb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLTextLengthCriteria</definition>
+        <argsstring>(IXLDataValidation dataValidation)</argsstring>
+        <name>XLTextLengthCriteria</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref></type>
+          <declname>dataValidation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="7" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1ad7583dcdfbe993c2ad0fbbaf27d4acde" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualTo</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>EqualTo</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="12" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a728b342e84f10c762cee4333e2e0567e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void NotEqualTo</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>NotEqualTo</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="18" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1ae8082b4bde88fe840ad6b8faf09f2d37" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void GreaterThan</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>GreaterThan</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="24" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1aafb3acde5bd761e46d110f4b1ed5552b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void LessThan</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>LessThan</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="30" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1ad75a0f0f89e69f8c11072c9cbcb6c0f2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualOrGreaterThan</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>EqualOrGreaterThan</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="36" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a0cf5a7aff0829558ed2619bb750e04b0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualOrLessThan</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>EqualOrLessThan</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="42" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a55a5a574c1f185726b695aa90bdbe760" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Between</definition>
+        <argsstring>(Int32 minValue, Int32 maxValue)</argsstring>
+        <name>Between</name>
+        <param>
+          <type>Int32</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="48" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a51d933911c5b88228ef6032599d6317d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void NotBetween</definition>
+        <argsstring>(Int32 minValue, Int32 maxValue)</argsstring>
+        <name>NotBetween</name>
+        <param>
+          <type>Int32</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="55" bodyend="60"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1929">
+        <label>XLTextLengthCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria"/>
+        <childnode refid="1930" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1930">
+        <label>XLValidationCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria"/>
+        <childnode refid="1931" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1931">
+        <label>IXLValidationCriteria</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_validation_criteria"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1932">
+        <label>XLTextLengthCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria"/>
+        <childnode refid="1933" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1933">
+        <label>XLValidationCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria"/>
+        <childnode refid="1934" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1935" relation="usage">
+          <edgelabel>dataValidation</edgelabel>
+        </childnode>
+      </node>
+      <node id="1934">
+        <label>IXLValidationCriteria</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_validation_criteria"/>
+      </node>
+      <node id="1935">
+        <label>IXLDataValidation</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLTextLengthCriteria.cs" bodystart="5" bodyend="61"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a55a5a574c1f185726b695aa90bdbe760" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a1b4b471d753a1ec9c94b2edc96bb4ca3" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a944d6ab868611e49eef1d5dbae095abb" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a7f145200d57b45232e20f6714ef1c216" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a27bed2459018e83c630123bbc3de7c9c" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>dataValidation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1ad75a0f0f89e69f8c11072c9cbcb6c0f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a1657cdc1017788eea48aee0c2ace7ab4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a999abc5d3bd371f6b29668a84f5e614b" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ae283b94d9762868ccbc6f03e26111700" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a0cf5a7aff0829558ed2619bb750e04b0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a18c33137d2fc51c66638114ab3b35302" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aca166048aa8a13efe3160c3c7162a692" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1afab31c05a5802b8fe44709a50f9454aa" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1ad7583dcdfbe993c2ad0fbbaf27d4acde" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a93c5873b6751ba6ab1a2c31ef2891cdc" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aa48c759f9cea1e79ac3e206fc3a87a41" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a45836061369690242cd64ef3a694a8d4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1ae8082b4bde88fe840ad6b8faf09f2d37" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a451590a4efe4e6ccde37725a6eec14b7" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a6a63c5ae76ca330236e4535baefca838" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a87d34644ab63f6aa4aba7c2d07beeb2d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1aafb3acde5bd761e46d110f4b1ed5552b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ac5f002f39a7c9860d2ab13fd696f8f83" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ae2875209c796cf07d11522068bbb0e13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a8888a8b25db529a78beb343ff09d451d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a51d933911c5b88228ef6032599d6317d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ade37755e22ebc67469f1ed77c9b89aa1" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a7b5bf0b665bb8c5ba0abdc428da15779" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1abcce28a500a7f213e7cfd52b23b43b8c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a728b342e84f10c762cee4333e2e0567e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a13684d69b413aa68493506428f58a6bc" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aca4c1323fe1e543d833d8e1e98b11927" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1acbeb77dd62e5070b71cf5654accf1714" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_text_length_criteria_1a5f28f5391cc92588cc64a3612c09e8eb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTextLengthCriteria</scope><name>XLTextLengthCriteria</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

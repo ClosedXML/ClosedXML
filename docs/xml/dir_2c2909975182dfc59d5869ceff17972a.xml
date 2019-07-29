@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_2c2909975182dfc59d5869ceff17972a" kind="dir">
+    <compoundname>Exceptions</compoundname>
+    <innerfile refid="_calc_engine_exception_8cs">CalcEngineException.cs</innerfile>
+    <innerfile refid="_cell_reference_exception_8cs">CellReferenceException.cs</innerfile>
+    <innerfile refid="_cell_value_exception_8cs">CellValueException.cs</innerfile>
+    <innerfile refid="_division_by_zero_exception_8cs">DivisionByZeroException.cs</innerfile>
+    <innerfile refid="_name_not_recognized_exception_8cs">NameNotRecognizedException.cs</innerfile>
+    <innerfile refid="_no_value_available_exception_8cs">NoValueAvailableException.cs</innerfile>
+    <innerfile refid="_null_value_exception_8cs">NullValueException.cs</innerfile>
+    <innerfile refid="_number_exception_8cs">NumberException.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/"/>
+  </compounddef>
+</doxygen>

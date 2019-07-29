@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_utils_1_1_xml_encoder" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Utils::XmlEncoder</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1a5ffcb6206ce05c26486c92725675edaa" prot="private" static="yes" mutable="no">
+        <type>readonly Regex</type>
+        <definition>readonly Regex xHHHHRegex</definition>
+        <argsstring></argsstring>
+        <name>xHHHHRegex</name>
+        <initializer>= new Regex(&quot;_(x[\\dA-Fa-f]{4})_&quot;, RegexOptions.Compiled)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1a37a45177fea0472e2cd093283699e2f2" prot="private" static="yes" mutable="no">
+        <type>readonly Regex</type>
+        <definition>readonly Regex Uppercase_X_HHHHRegex</definition>
+        <argsstring></argsstring>
+        <name>Uppercase_X_HHHHRegex</name>
+        <initializer>= new Regex(&quot;_(X[\\dA-Fa-f]{4})_&quot;, RegexOptions.Compiled)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1a50f995b39bfc5be93bc7f30885c73688" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string EncodeString</definition>
+        <argsstring>(string encodeStr)</argsstring>
+        <name>EncodeString</name>
+        <param>
+          <type>string</type>
+          <declname>encodeStr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" bodystart="12" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1af5d98efc5445ac8ec37788b16ec092f9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string DecodeString</definition>
+        <argsstring>(string decodeStr)</argsstring>
+        <name>DecodeString</name>
+        <param>
+          <type>string</type>
+          <declname>decodeStr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" bodystart="35" bodyend="45"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/XmlEncoder.cs" bodystart="7" bodyend="46"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1af5d98efc5445ac8ec37788b16ec092f9" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::XmlEncoder</scope><name>DecodeString</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1a50f995b39bfc5be93bc7f30885c73688" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::XmlEncoder</scope><name>EncodeString</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1a37a45177fea0472e2cd093283699e2f2" prot="private" virt="non-virtual"><scope>ClosedXML::Utils::XmlEncoder</scope><name>Uppercase_X_HHHHRegex</name></member>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_xml_encoder_1a5ffcb6206ce05c26486c92725675edaa" prot="private" virt="non-virtual"><scope>ClosedXML::Utils::XmlEncoder</scope><name>xHHHHRegex</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_cf3434c66a7a7b2702c78f20460761fe" kind="dir">
+    <compoundname>ContentManagers</compoundname>
+    <innerfile refid="_x_l_base_content_manager_8cs">XLBaseContentManager.cs</innerfile>
+    <innerfile refid="_x_l_sheet_view_content_manager_8cs">XLSheetViewContentManager.cs</innerfile>
+    <innerfile refid="_x_l_worksheet_content_manager_8cs">XLWorksheetContentManager.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/"/>
+  </compounddef>
+</doxygen>

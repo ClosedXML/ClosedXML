@@ -1,0 +1,427 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLHyperlink</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ae5799c4d9402a907220e3b6a226e6d74" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>internal <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+        <definition>internal XLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="64" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aad8d7d4974725b03c4ddb56878f048a7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsExternal</definition>
+        <argsstring></argsstring>
+        <name>IsExternal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="52" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a3aebdc71b788693623e1fe82d542937b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Uri?</type>
+        <definition>Uri? ExternalAddress</definition>
+        <argsstring></argsstring>
+        <name>ExternalAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="55" bodyend="65"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aa608043066609c0ea416f5ea262f29fc" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Cell</definition>
+        <argsstring></argsstring>
+        <name>Cell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="67" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ac87c6c447962513c3fa5358832b70ded" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String?</type>
+        <definition>String? InternalAddress</definition>
+        <argsstring></argsstring>
+        <name>InternalAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="69" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="70" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aabd9a56a0346623401d630adc484ed04" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Tooltip</definition>
+        <argsstring></argsstring>
+        <name>Tooltip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="98" bodyend="98"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a3633d456ac4921a8ed8995479ba441a3" prot="private" static="no" mutable="no">
+        <type>Uri</type>
+        <definition>Uri _externalAddress</definition>
+        <argsstring></argsstring>
+        <name>_externalAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ae4cc1002cbd5d57120dde403bdf93d87" prot="private" static="no" mutable="no">
+        <type>String</type>
+        <definition>String _internalAddress</definition>
+        <argsstring></argsstring>
+        <name>_internalAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a44301b892d5f560d482d711760c1a2ce" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XLHyperlink</definition>
+        <argsstring>()</argsstring>
+        <name>XLHyperlink</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="7" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a4d3ef973c1b35fed5a24ac991ed50bf5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XLHyperlink</definition>
+        <argsstring>(XLHyperlink hyperlink)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink" kindref="compound">XLHyperlink</ref></type>
+          <declname>hyperlink</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="12" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aeea1e07f029eeff6bfe74fc7087ee0bf" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void SetValues</definition>
+        <argsstring>(String address, String tooltip)</argsstring>
+        <name>SetValues</name>
+        <param>
+          <type>String</type>
+          <declname>address</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="20" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ac0f2c2fc75d004ba52308036bd5f0c90" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void SetValues</definition>
+        <argsstring>(Uri uri, String tooltip)</argsstring>
+        <name>SetValues</name>
+        <param>
+          <type>Uri</type>
+          <declname>uri</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="43" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ae7a572fa8e95a998c2f724095c5b9ba4" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void SetValues</definition>
+        <argsstring>(IXLCell cell, String tooltip)</argsstring>
+        <name>SetValues</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="50" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aaa267081fcdaca4e811cf6fd4a22e9a7" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void SetValues</definition>
+        <argsstring>(IXLRangeBase range, String tooltip)</argsstring>
+        <name>SetValues</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref></type>
+          <declname>range</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="57" bodyend="62"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a534bea05d89ce2053eb1b3219ebe0728" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(String address)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type>String</type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="12" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a1cd36f96b8fd1ac05475c3e83978fec7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(String address, String tooltip)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type>String</type>
+          <declname>address</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="17" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a69add9482043a2429377e8940d7f3edd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(IXLCell cell)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="22" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a565880978794c82d1142f1b1678b19e2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(IXLCell cell, String tooltip)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="27" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1af11092b3df5db928e44324224458a579" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(IXLRangeBase range)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="32" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a9662a09f3c20af0d8a764e241540f036" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(IXLRangeBase range, String tooltip)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref></type>
+          <declname>range</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="37" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aeacd2ed359b319dbf476b12dae63c8e2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(Uri uri)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type>Uri</type>
+          <declname>uri</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="42" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1acb0736bcb5bf94a7b4033eb946289347" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLHyperlink</definition>
+        <argsstring>(Uri uri, String tooltip)</argsstring>
+        <name>XLHyperlink</name>
+        <param>
+          <type>Uri</type>
+          <declname>uri</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>tooltip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="47" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="47" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ac2e5aab0612d67400354a4fe71278a21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_public.cs" bodystart="100" bodyend="108"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/XLHyperlink_Internal.cs" bodystart="5" bodyend="65"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a3633d456ac4921a8ed8995479ba441a3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>_externalAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ae4cc1002cbd5d57120dde403bdf93d87" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>_internalAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aa608043066609c0ea416f5ea262f29fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>Cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a3aebdc71b788693623e1fe82d542937b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>ExternalAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ac87c6c447962513c3fa5358832b70ded" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>InternalAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aad8d7d4974725b03c4ddb56878f048a7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>IsExternal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aeea1e07f029eeff6bfe74fc7087ee0bf" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>SetValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ac0f2c2fc75d004ba52308036bd5f0c90" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>SetValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ae7a572fa8e95a998c2f724095c5b9ba4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>SetValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aaa267081fcdaca4e811cf6fd4a22e9a7" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>SetValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aabd9a56a0346623401d630adc484ed04" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>Tooltip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1ae5799c4d9402a907220e3b6a226e6d74" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>Worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a44301b892d5f560d482d711760c1a2ce" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a4d3ef973c1b35fed5a24ac991ed50bf5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a534bea05d89ce2053eb1b3219ebe0728" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a1cd36f96b8fd1ac05475c3e83978fec7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a69add9482043a2429377e8940d7f3edd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a565880978794c82d1142f1b1678b19e2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1af11092b3df5db928e44324224458a579" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1a9662a09f3c20af0d8a764e241540f036" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1aeacd2ed359b319dbf476b12dae63c8e2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink_1acb0736bcb5bf94a7b4033eb946289347" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHyperlink</scope><name>XLHyperlink</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

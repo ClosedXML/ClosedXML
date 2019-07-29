@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_a68b19f2eaa0ffb486ec27dcd7dcf42e" kind="dir">
+    <compoundname>Style</compoundname>
+    <innerdir refid="dir_71d99b29a63fc3092e89d8ddb68ba21b">Colors</innerdir>
+    <innerfile refid="_i_x_l_alignment_8cs">IXLAlignment.cs</innerfile>
+    <innerfile refid="_i_x_l_border_8cs">IXLBorder.cs</innerfile>
+    <innerfile refid="_i_x_l_fill_8cs">IXLFill.cs</innerfile>
+    <innerfile refid="_i_x_l_font_8cs">IXLFont.cs</innerfile>
+    <innerfile refid="_i_x_l_font_base_8cs">IXLFontBase.cs</innerfile>
+    <innerfile refid="_i_x_l_number_format_8cs">IXLNumberFormat.cs</innerfile>
+    <innerfile refid="_i_x_l_number_format_base_8cs">IXLNumberFormatBase.cs</innerfile>
+    <innerfile refid="_i_x_l_protection_8cs">IXLProtection.cs</innerfile>
+    <innerfile refid="_i_x_l_style_8cs">IXLStyle.cs</innerfile>
+    <innerfile refid="_i_x_l_stylized_8cs">IXLStylized.cs</innerfile>
+    <innerfile refid="_x_l_alignment_8cs">XLAlignment.cs</innerfile>
+    <innerfile refid="_x_l_alignment_key_8cs">XLAlignmentKey.cs</innerfile>
+    <innerfile refid="_x_l_alignment_value_8cs">XLAlignmentValue.cs</innerfile>
+    <innerfile refid="_x_l_border_8cs">XLBorder.cs</innerfile>
+    <innerfile refid="_x_l_border_key_8cs">XLBorderKey.cs</innerfile>
+    <innerfile refid="_x_l_border_value_8cs">XLBorderValue.cs</innerfile>
+    <innerfile refid="_x_l_color_key_8cs">XLColorKey.cs</innerfile>
+    <innerfile refid="_x_l_fill_8cs">XLFill.cs</innerfile>
+    <innerfile refid="_x_l_fill_key_8cs">XLFillKey.cs</innerfile>
+    <innerfile refid="_x_l_fill_value_8cs">XLFillValue.cs</innerfile>
+    <innerfile refid="_x_l_font_8cs">XLFont.cs</innerfile>
+    <innerfile refid="_x_l_font_key_8cs">XLFontKey.cs</innerfile>
+    <innerfile refid="_x_l_font_value_8cs">XLFontValue.cs</innerfile>
+    <innerfile refid="_x_l_number_format_8cs">XLNumberFormat.cs</innerfile>
+    <innerfile refid="_x_l_number_format_key_8cs">XLNumberFormatKey.cs</innerfile>
+    <innerfile refid="_x_l_number_format_value_8cs">XLNumberFormatValue.cs</innerfile>
+    <innerfile refid="_x_l_predefined_format_8cs">XLPredefinedFormat.cs</innerfile>
+    <innerfile refid="_x_l_protection_8cs">XLProtection.cs</innerfile>
+    <innerfile refid="_x_l_protection_key_8cs">XLProtectionKey.cs</innerfile>
+    <innerfile refid="_x_l_protection_value_8cs">XLProtectionValue.cs</innerfile>
+    <innerfile refid="_x_l_style_8cs">XLStyle.cs</innerfile>
+    <innerfile refid="_x_l_style_key_8cs">XLStyleKey.cs</innerfile>
+    <innerfile refid="_x_l_style_value_8cs">XLStyleValue.cs</innerfile>
+    <innerfile refid="_x_l_stylized_base_8cs">XLStylizedBase.cs</innerfile>
+    <innerfile refid="_x_l_stylized_container_8cs">XLStylizedContainer.cs</innerfile>
+    <innerfile refid="_x_l_stylized_empty_8cs">XLStylizedEmpty.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/"/>
+  </compounddef>
+</doxygen>

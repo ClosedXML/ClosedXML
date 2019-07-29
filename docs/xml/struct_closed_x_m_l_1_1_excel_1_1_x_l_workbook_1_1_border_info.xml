@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_border_info" kind="struct" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::BorderInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_border_info_1a66ba7c29340855ad5c531b89c0869c9d" prot="public" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value" kindref="compound">XLBorderValue</ref></type>
+        <definition>XLBorderValue Border</definition>
+        <argsstring></argsstring>
+        <name>Border</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="119" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_border_info_1a4e45bebca604c0ff559280af5985fe0a" prot="public" static="no" mutable="no">
+        <type>UInt32</type>
+        <definition>UInt32 BorderId</definition>
+        <argsstring></argsstring>
+        <name>BorderId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="120" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="15">
+        <label>XLWorkbook.BorderInfo</label>
+        <childnode refid="16" relation="usage">
+          <edgelabel>Border</edgelabel>
+        </childnode>
+      </node>
+      <node id="16">
+        <label>XLBorderValue</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_border_value"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="118" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="117" bodyend="121"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_border_info_1a66ba7c29340855ad5c531b89c0869c9d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::BorderInfo</scope><name>Border</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_border_info_1a4e45bebca604c0ff559280af5985fe0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::BorderInfo</scope><name>BorderId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

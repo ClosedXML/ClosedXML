@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLHyperlinks</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; XLHyperlink &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlinks" prot="public" virt="non-virtual">XLHyperlinks</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks_1a8b93ebde3f5147a3935eb9f3cf06c108" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(XLHyperlink hyperlink)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlinks_1a8b93ebde3f5147a3935eb9f3cf06c108">Add</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink" kindref="compound">XLHyperlink</ref></type>
+          <declname>hyperlink</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/IXLHyperlinks.cs" line="7" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks_1a6693471a38d70becae057040163677f6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(XLHyperlink hyperlink)</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlinks_1a6693471a38d70becae057040163677f6">Delete</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlink" kindref="compound">XLHyperlink</ref></type>
+          <declname>hyperlink</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/IXLHyperlinks.cs" line="8" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks_1ac91a3ec21d92f3b921751bbe41240293" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(IXLAddress address)</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlinks_1ac91a3ec21d92f3b921751bbe41240293">Delete</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/IXLHyperlinks.cs" line="9" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="418">
+        <label>IEnumerable&lt; XLHyperlink &gt;</label>
+      </node>
+      <node id="417">
+        <label>IXLHyperlinks</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks"/>
+        <childnode refid="418" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="419">
+        <label>XLHyperlinks</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_hyperlinks"/>
+        <childnode refid="417" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="421">
+        <label>IEnumerable&lt; XLHyperlink &gt;</label>
+      </node>
+      <node id="420">
+        <label>IXLHyperlinks</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks"/>
+        <childnode refid="421" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/IXLHyperlinks.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/IXLHyperlinks.cs" bodystart="5" bodyend="11"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks_1a8b93ebde3f5147a3935eb9f3cf06c108" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHyperlinks</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks_1a6693471a38d70becae057040163677f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHyperlinks</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_hyperlinks_1ac91a3ec21d92f3b921751bbe41240293" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHyperlinks</scope><name>Delete</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

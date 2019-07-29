@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_656005f925567676466363c1cedf4b18" kind="dir">
+    <compoundname>ClosedXML</compoundname>
+    <innerdir refid="dir_b9bfcc4a59e6314a770d82da0939b9c2">Attributes</innerdir>
+    <innerdir refid="dir_cf00fb89625041d2e75e264886d1c303">Excel</innerdir>
+    <innerdir refid="dir_15cdf95d61f6e4eb4cdc64e74da7ea24">Extensions</innerdir>
+    <innerdir refid="dir_3dde53b80e5b1f27fe51e874f18bd2df">obj</innerdir>
+    <innerdir refid="dir_b172f11f44a82c8dd53019355f191b76">Properties</innerdir>
+    <innerdir refid="dir_09efbe1df772f8a831c6afa93c403691">Utils</innerdir>
+    <innerfile refid="_attribute_extensions_8cs">AttributeExtensions.cs</innerfile>
+    <innerfile refid="_extensions_8cs">Extensions.cs</innerfile>
+    <innerfile refid="_path_helper_8cs">PathHelper.cs</innerfile>
+    <innerfile refid="_x_l_helper_8cs">XLHelper.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/"/>
+  </compounddef>
+</doxygen>

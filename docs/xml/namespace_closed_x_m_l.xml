@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l" kind="namespace" language="C#">
+    <compoundname>ClosedXML</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_attribute_extensions" prot="public">ClosedXML::AttributeExtensions</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_path_helper" prot="public">ClosedXML::PathHelper</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_attributes">ClosedXML::Attributes</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_extensions">ClosedXML::Extensions</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_utils">ClosedXML::Utils</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" line="7" column="1"/>
+  </compounddef>
+</doxygen>

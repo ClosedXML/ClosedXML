@@ -1,0 +1,379 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" kind="class" language="C#" prot="public" abstract="yes">
+    <compoundname>ClosedXML::Excel::Caching::XLRepositoryBase</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" prot="public" virt="non-virtual">IXLRepository</basecompoundref>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" prot="public" virt="non-virtual">XLRepositoryBase</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" prot="public" virt="non-virtual">IXLRepository&lt; Tkey, Tvalue &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>Tkey</type>
+      </param>
+      <param>
+        <type>Tvalue</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1aaf6e62d6e74df72a050a7b534aca4e6a" prot="private" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int CONCURRENCY_LEVEL</definition>
+        <argsstring></argsstring>
+        <name>CONCURRENCY_LEVEL</name>
+        <initializer>= 4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ac275d2be70a1ea35ee1fee1a24b1e76c" prot="private" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int INITIAL_CAPACITY</definition>
+        <argsstring></argsstring>
+        <name>INITIAL_CAPACITY</name>
+        <initializer>= 1000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ae78f6520c55c00a4ff4bd5cc9062ef5b" prot="private" static="no" mutable="no">
+        <type>readonly ConcurrentDictionary&lt; Tkey, WeakReference &gt;</type>
+        <definition>readonly ConcurrentDictionary&lt;Tkey, WeakReference&gt; _storage</definition>
+        <argsstring></argsstring>
+        <name>_storage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a31691b7ad662a6a4e6d9311fc0f70654" prot="private" static="no" mutable="no">
+        <type>readonly Func&lt; Tkey, Tvalue &gt;</type>
+        <definition>readonly Func&lt;Tkey, Tvalue&gt; _createNew</definition>
+        <argsstring></argsstring>
+        <name>_createNew</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1acc227ea9a698d256b396781015e6da3d" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>abstract void</type>
+        <definition>abstract void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1af2c5c16c7db3039202af11f4f72e08a3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool ContainsKey</definition>
+        <argsstring>(Tkey key, out Tvalue value)</argsstring>
+        <name>ContainsKey</name>
+        <param>
+          <type>Tkey</type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type>out Tvalue</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>Check if the specified key is presented in the repository. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>key</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Key to look for.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Value from the repository stored under specified key or null if key does not exist or the entry under this key has already bee GCed.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if entry exists and alive, false otherwise.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="41" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ac539801a0214e48870b8b8c021646fc0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Tvalue</type>
+        <definition>Tvalue Store</definition>
+        <argsstring>(Tkey key, Tvalue value)</argsstring>
+        <name>Store</name>
+        <param>
+          <type>Tkey</type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type>Tvalue</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>Put the entity into the repository under the specified key if no other entity with the same key is presented. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>key</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Key to identify the entity.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Entity to store.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Entity that is stored in the repository under the specified key (it can be either the <emphasis>value</emphasis>  or another entity that has been added to the repository before.)</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="62" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="62" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1aac3ca7e8cae690ba6ba23b2701993f5c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Tvalue</type>
+        <definition>Tvalue GetOrCreate</definition>
+        <argsstring>(Tkey key)</argsstring>
+        <name>GetOrCreate</name>
+        <param>
+          <type>Tkey</type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="85" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="85" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a95cb948ad0ef107ae1f0a74c5793b807" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Tvalue</type>
+        <definition>Tvalue Replace</definition>
+        <argsstring>(Tkey oldKey, Tkey newKey)</argsstring>
+        <name>Replace</name>
+        <param>
+          <type>Tkey</type>
+          <declname>oldKey</declname>
+        </param>
+        <param>
+          <type>Tkey</type>
+          <declname>newKey</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="104" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ab4a2965ab1e968a39ed0e2eb68cc3a5d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(Tkey key)</argsstring>
+        <name>Remove</name>
+        <param>
+          <type>Tkey</type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="117" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="117" bodyend="121"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a19f6e9e119005114268f68098f143906" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override void</type>
+        <definition>override void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="123" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="123" bodyend="126"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ad0e329d83983501d5af27c946cab9791" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; Tvalue &gt;</type>
+        <definition>IEnumerator&lt;Tvalue&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+<para>Enumerate items in repository removing &quot;dead&quot; entries. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="131" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="131" bodyend="145"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a05280a5f09f1cabd6e59bdf1c6a3147a" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRepositoryBase</definition>
+        <argsstring>(Func&lt; Tkey, Tvalue &gt; createNew)</argsstring>
+        <name>XLRepositoryBase</name>
+        <param>
+          <type>Func&lt; Tkey, Tvalue &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="23" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a7c3d07e6380712edce4060de7622e781" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRepositoryBase</definition>
+        <argsstring>(Func&lt; Tkey, Tvalue &gt; createNew, IEqualityComparer&lt; Tkey &gt; comparer)</argsstring>
+        <name>XLRepositoryBase</name>
+        <param>
+          <type>Func&lt; Tkey, Tvalue &gt;</type>
+          <declname>createNew</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; Tkey &gt;</type>
+          <declname>comparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="28" bodyend="32"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator IEnumerable.</type>
+        <definition>IEnumerator IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="147" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="147" bodyend="150"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1680">
+        <label>IXLRepository&lt; Tkey, Tvalue &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+      </node>
+      <node id="1679">
+        <label>XLRepositoryBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+      <node id="1678">
+        <label>IXLRepository</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+      </node>
+      <node id="1677">
+        <label>XLRepositoryBase&lt; Tkey, Tvalue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+        <childnode refid="1678" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1679" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1680" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1684">
+        <label>IXLRepository&lt; Tkey, Tvalue &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+      </node>
+      <node id="1683">
+        <label>XLRepositoryBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+      </node>
+      <node id="1682">
+        <label>IXLRepository</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+      </node>
+      <node id="1681">
+        <label>XLRepositoryBase&lt; Tkey, Tvalue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base"/>
+        <childnode refid="1682" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1683" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1684" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/XLRepositoryBase.cs" bodystart="14" bodyend="151"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a31691b7ad662a6a4e6d9311fc0f70654" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>_createNew</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ae78f6520c55c00a4ff4bd5cc9062ef5b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>_storage</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1acc227ea9a698d256b396781015e6da3d" prot="public" virt="pure-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a19f6e9e119005114268f68098f143906" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1aaf6e62d6e74df72a050a7b534aca4e6a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>CONCURRENCY_LEVEL</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1af2c5c16c7db3039202af11f4f72e08a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>ContainsKey</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ad0e329d83983501d5af27c946cab9791" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1aac3ca7e8cae690ba6ba23b2701993f5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>GetOrCreate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ac275d2be70a1ea35ee1fee1a24b1e76c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>INITIAL_CAPACITY</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ab4a2965ab1e968a39ed0e2eb68cc3a5d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a95cb948ad0ef107ae1f0a74c5793b807" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>Replace</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1ac539801a0214e48870b8b8c021646fc0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>Store</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a05280a5f09f1cabd6e59bdf1c6a3147a" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>XLRepositoryBase</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base_1a7c3d07e6380712edce4060de7622e781" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::Caching::XLRepositoryBase</scope><name>XLRepositoryBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

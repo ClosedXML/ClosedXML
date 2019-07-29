@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_af5181f642c9e37babdcc113050bb213" kind="dir">
+    <compoundname>Coordinates</compoundname>
+    <innerfile refid="_i_x_l_address_8cs">IXLAddress.cs</innerfile>
+    <innerfile refid="_x_l_address_8cs">XLAddress.cs</innerfile>
+    <innerfile refid="_x_l_sheet_point_8cs">XLSheetPoint.cs</innerfile>
+    <innerfile refid="_x_l_sheet_range_8cs">XLSheetRange.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDictionary</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">Dictionary&lt; Int32, T &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1aca1698ab8040fc9102499cffbf229f35" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDictionary</definition>
+        <argsstring>()</argsstring>
+        <name>XLDictionary</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1a74ce6b9da87f8ca6cea9e50dec56ccb2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDictionary</definition>
+        <argsstring>(XLDictionary&lt; T &gt; other)</argsstring>
+        <name>XLDictionary</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary" kindref="compound">XLDictionary</ref>&lt; T &gt;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" bodystart="14" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1a1b94534a96943b6517f104f05aaf73d3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Initialize</definition>
+        <argsstring>(T value)</argsstring>
+        <name>Initialize</name>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" bodystart="19" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1aca7078a944c4b6fb7f1249777f6e9289" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(T value)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" bodystart="27" bodyend="30"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1235">
+        <label>XLDictionary&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary"/>
+        <childnode refid="1236" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1236">
+        <label>Dictionary&lt; Int32, T &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1237">
+        <label>XLDictionary&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary"/>
+        <childnode refid="1238" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1238">
+        <label>Dictionary&lt; Int32, T &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLDictionary.cs" bodystart="8" bodyend="31"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1aca7078a944c4b6fb7f1249777f6e9289" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDictionary</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1a1b94534a96943b6517f104f05aaf73d3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDictionary</scope><name>Initialize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1aca1698ab8040fc9102499cffbf229f35" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDictionary</scope><name>XLDictionary</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary_1a74ce6b9da87f8ca6cea9e50dec56ccb2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDictionary</scope><name>XLDictionary</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

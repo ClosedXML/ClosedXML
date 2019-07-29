@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLMargins</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" prot="public" virt="non-virtual">IXLMargins</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a571c0477bc19e44c1c9620a88d8fc871" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Left</definition>
+        <argsstring></argsstring>
+        <name>Left</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a7b42e67aad600df817f3620f1baa5b4a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Right</definition>
+        <argsstring></argsstring>
+        <name>Right</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a2e028cd564268aa3c5326e02ea027883" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Top</definition>
+        <argsstring></argsstring>
+        <name>Top</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1aaa523753c175ff43da424d674d27fd3b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Bottom</definition>
+        <argsstring></argsstring>
+        <name>Bottom</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a2edf069cef9ee31b0185fd3dfc4899e7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Header</definition>
+        <argsstring></argsstring>
+        <name>Header</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1aa953b5c17d7789f2601a88951cfdec8f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Footer</definition>
+        <argsstring></argsstring>
+        <name>Footer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1ae4cd4161ae31275a53236252e8c53103" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" kindref="compound">IXLMargins</ref></type>
+        <definition>IXLMargins SetLeft</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetLeft</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins_1ae4cd4161ae31275a53236252e8c53103">SetLeft</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1ac9ebac526993a98bb94b33da4863f2bb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" kindref="compound">IXLMargins</ref></type>
+        <definition>IXLMargins SetRight</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetRight</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins_1ac9ebac526993a98bb94b33da4863f2bb">SetRight</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a4352856f9a9508c8850ecf431c062d96" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" kindref="compound">IXLMargins</ref></type>
+        <definition>IXLMargins SetTop</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetTop</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins_1a4352856f9a9508c8850ecf431c062d96">SetTop</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a1385032cab6a234e344cb869ca0265f0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" kindref="compound">IXLMargins</ref></type>
+        <definition>IXLMargins SetBottom</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetBottom</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins_1a1385032cab6a234e344cb869ca0265f0">SetBottom</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a6f38d982fa6f02a9d1a1270601d5970a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" kindref="compound">IXLMargins</ref></type>
+        <definition>IXLMargins SetHeader</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetHeader</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins_1a6f38d982fa6f02a9d1a1270601d5970a">SetHeader</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a01e20312ce670821b52afa78556c1c17" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" kindref="compound">IXLMargins</ref></type>
+        <definition>IXLMargins SetFooter</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetFooter</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins_1a01e20312ce670821b52afa78556c1c17">SetFooter</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1373">
+        <label>XLMargins</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins"/>
+        <childnode refid="1374" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1374">
+        <label>IXLMargins</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1375">
+        <label>XLMargins</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins"/>
+        <childnode refid="1376" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1376">
+        <label>IXLMargins</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/XLMargins.cs" bodystart="5" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1aaa523753c175ff43da424d674d27fd3b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>Bottom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1aa953b5c17d7789f2601a88951cfdec8f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>Footer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a2edf069cef9ee31b0185fd3dfc4899e7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>Header</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a571c0477bc19e44c1c9620a88d8fc871" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>Left</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a7b42e67aad600df817f3620f1baa5b4a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>Right</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a1385032cab6a234e344cb869ca0265f0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>SetBottom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a01e20312ce670821b52afa78556c1c17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>SetFooter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a6f38d982fa6f02a9d1a1270601d5970a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>SetHeader</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1ae4cd4161ae31275a53236252e8c53103" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>SetLeft</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1ac9ebac526993a98bb94b33da4863f2bb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>SetRight</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a4352856f9a9508c8850ecf431c062d96" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>SetTop</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_margins_1a2e028cd564268aa3c5326e02ea027883" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLMargins</scope><name>Top</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

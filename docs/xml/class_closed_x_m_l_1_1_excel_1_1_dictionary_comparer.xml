@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::DictionaryComparer</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEqualityComparer&lt; Dictionary&lt; TKey, TValue &gt;&gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>TKey</type>
+      </param>
+      <param>
+        <type>TValue</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1aaae0de62247d7c5865464b7e65b5c7cd" prot="private" static="no" mutable="no">
+        <type>readonly IEqualityComparer&lt; TValue &gt;</type>
+        <definition>readonly IEqualityComparer&lt;TValue&gt; _valueComparer</definition>
+        <argsstring></argsstring>
+        <name>_valueComparer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="547" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="547" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1a60f432fced65681152aedc713609407d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>DictionaryComparer</definition>
+        <argsstring>(IEqualityComparer&lt; TValue &gt; valueComparer=null)</argsstring>
+        <name>DictionaryComparer</name>
+        <param>
+          <type>IEqualityComparer&lt; TValue &gt;</type>
+          <declname>valueComparer</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="549" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="549" bodyend="552"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1a61285f4e19671b4774b5abda019dbfe1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(Dictionary&lt; TKey, TValue &gt; x, Dictionary&lt; TKey, TValue &gt; y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>Dictionary&lt; TKey, TValue &gt;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>Dictionary&lt; TKey, TValue &gt;</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="554" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="554" bodyend="566"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1af9c63af407c3c6125da405714beb5fd5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int GetHashCode</definition>
+        <argsstring>(Dictionary&lt; TKey, TValue &gt; obj)</argsstring>
+        <name>GetHashCode</name>
+        <param>
+          <type>Dictionary&lt; TKey, TValue &gt;</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="568" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="568" bodyend="571"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="69">
+        <label>IEqualityComparer&lt; Dictionary&lt; TKey, TValue &gt;&gt;</label>
+      </node>
+      <node id="68">
+        <label>DictionaryComparer&lt; TKey, TValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer"/>
+        <childnode refid="69" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="71">
+        <label>IEqualityComparer&lt; Dictionary&lt; TKey, TValue &gt;&gt;</label>
+      </node>
+      <node id="70">
+        <label>DictionaryComparer&lt; TKey, TValue &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer"/>
+        <childnode refid="71" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="546" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="544" bodyend="572"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1aaae0de62247d7c5865464b7e65b5c7cd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::DictionaryComparer</scope><name>_valueComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1a60f432fced65681152aedc713609407d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DictionaryComparer</scope><name>DictionaryComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1a61285f4e19671b4774b5abda019dbfe1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DictionaryComparer</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_comparer_1af9c63af407c3c6125da405714beb5fd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DictionaryComparer</scope><name>GetHashCode</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

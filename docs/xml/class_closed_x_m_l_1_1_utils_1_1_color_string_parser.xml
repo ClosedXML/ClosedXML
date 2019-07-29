@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_utils_1_1_color_string_parser" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Utils::ColorStringParser</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_utils_1_1_color_string_parser_1af9a1b7db8721392067a47ec321c0c6bc" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Color</type>
+        <definition>static Color ParseFromHtml</definition>
+        <argsstring>(string htmlColor)</argsstring>
+        <name>ParseFromHtml</name>
+        <param>
+          <type>string</type>
+          <declname>htmlColor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/ColorStringParser.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/ColorStringParser.cs" bodystart="8" bodyend="20"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/ColorStringParser.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/ColorStringParser.cs" bodystart="6" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_utils_1_1_color_string_parser_1af9a1b7db8721392067a47ec321c0c6bc" prot="public" virt="non-virtual"><scope>ClosedXML::Utils::ColorStringParser</scope><name>ParseFromHtml</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_decimal_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::DecimalExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_decimal_extensions_1a649594af5f13296b44488251d093a3c4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Decimal</type>
+        <definition>static Decimal SaveRound</definition>
+        <argsstring>(this Decimal value)</argsstring>
+        <name>SaveRound</name>
+        <param>
+          <type>this Decimal</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="183" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="183" bodyend="186"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="182" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="181" bodyend="187"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_decimal_extensions_1a649594af5f13296b44488251d093a3c4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DecimalExtensions</scope><name>SaveRound</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

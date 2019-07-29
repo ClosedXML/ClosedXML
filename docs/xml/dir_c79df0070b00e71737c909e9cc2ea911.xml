@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_c79df0070b00e71737c909e9cc2ea911" kind="dir">
+    <compoundname>CustomProperties</compoundname>
+    <innerfile refid="_i_x_l_custom_properties_8cs">IXLCustomProperties.cs</innerfile>
+    <innerfile refid="_i_x_l_custom_property_8cs">IXLCustomProperty.cs</innerfile>
+    <innerfile refid="_x_l_custom_properties_8cs">XLCustomProperties.cs</innerfile>
+    <innerfile refid="_x_l_custom_property_8cs">XLCustomProperty.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CustomProperties/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_parameters" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLRangeParameters</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_parameters_1a41775220135f45e9b65654f48a144f4e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+        <definition>XLRangeAddress RangeAddress</definition>
+        <argsstring></argsstring>
+        <name>RangeAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_parameters_1adaeb951fcb77daa8fcd21789a30b35c0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle DefaultStyle</definition>
+        <argsstring></argsstring>
+        <name>DefaultStyle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_parameters_1ad8dd8a6d2ff37ec1349a5d6997644b84" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeParameters</definition>
+        <argsstring>(XLRangeAddress rangeAddress, IXLStyle defaultStyle)</argsstring>
+        <name>XLRangeParameters</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+          <declname>defaultStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" bodystart="7" bodyend="11"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" line="4" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeParameters.cs" bodystart="3" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_parameters_1adaeb951fcb77daa8fcd21789a30b35c0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeParameters</scope><name>DefaultStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_parameters_1a41775220135f45e9b65654f48a144f4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeParameters</scope><name>RangeAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_parameters_1ad8dd8a6d2ff37ec1349a5d6997644b84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeParameters</scope><name>XLRangeParameters</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

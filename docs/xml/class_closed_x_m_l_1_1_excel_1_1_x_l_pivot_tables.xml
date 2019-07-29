@@ -1,0 +1,352 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLPivotTables</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables" prot="public" virt="non-virtual">IXLPivotTables</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1ade1d3f7ed7312014b271d53fa70e2fb2" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; String, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table" kindref="compound">XLPivotTable</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;String, XLPivotTable&gt; _pivotTables</definition>
+        <argsstring></argsstring>
+        <name>_pivotTables</name>
+        <initializer>= new Dictionary&lt;string, <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table" kindref="compound">XLPivotTable</ref>&gt;(StringComparer.OrdinalIgnoreCase)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="90" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="90" bodyend="90"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a14c80a077bebde20987c667259946204" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLPivotTables</definition>
+        <argsstring>(IXLWorksheet worksheet)</argsstring>
+        <name>XLPivotTables</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="11" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1ac6c57fdb6c502f96b246d11aa498bba1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref></type>
+        <definition>IXLPivotTable Add</definition>
+        <argsstring>(string name, IXLCell targetCell, IXLRange range)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>targetCell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="21" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1acce29e622d779d4d8fb7dc2ce83eae5b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref></type>
+        <definition>IXLPivotTable Add</definition>
+        <argsstring>(string name, IXLCell targetCell, IXLTable table)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>targetCell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+          <declname>table</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="33" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a2a6752faa41364d977a6d416ddbdcc55" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref></type>
+        <definition>IXLPivotTable AddNew</definition>
+        <argsstring>(string name, IXLCell targetCell, IXLRange range)</argsstring>
+        <name>AddNew</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>targetCell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="45" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1adedd98f662bd7fc530f29ce7952d6701" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref></type>
+        <definition>IXLPivotTable AddNew</definition>
+        <argsstring>(string name, IXLCell targetCell, IXLTable table)</argsstring>
+        <name>AddNew</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>targetCell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+          <declname>table</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="50" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1accb3a92b5560d05951853cefaf8ef44f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Contains</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Contains</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1accb3a92b5560d05951853cefaf8ef44f">Contains</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="55" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1ae7666eaaedc15b21295c02273948bf48" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Delete</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1ae7666eaaedc15b21295c02273948bf48">Delete</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="60" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a693228cfa1dc7ae83b83236c5dc6e4be" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void DeleteAll</definition>
+        <argsstring>()</argsstring>
+        <name>DeleteAll</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1a693228cfa1dc7ae83b83236c5dc6e4be">DeleteAll</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="65" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a5e3aba7b6266e56fac41e4be26d6847c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLPivotTable&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="70" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="70" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a24a580ac56582536296117f370ea87a3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_table" kindref="compound">XLPivotTable</ref></type>
+        <definition>XLPivotTable PivotTable</definition>
+        <argsstring>(String name)</argsstring>
+        <name>PivotTable</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1a88ca52d98f436c18c301a900a66c5da7">PivotTable</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="80" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="80" bodyend="83"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a618fa2d672372c819575320c3ff92fb0" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal void</type>
+        <definition>internal void Add</definition>
+        <argsstring>(String name, IXLPivotTable pivotTable)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref></type>
+          <declname>pivotTable</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="16" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>System.Collections.IEnumerator System.Collections.IEnumerable.</type>
+        <definition>System.Collections.IEnumerator System.Collections.IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="75" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="75" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a2f04197160f6a8133303e4e649d91728" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref> IXLPivotTables.</type>
+        <definition>IXLPivotTable IXLPivotTables. PivotTable</definition>
+        <argsstring>(String name)</argsstring>
+        <name>PivotTable</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1a88ca52d98f436c18c301a900a66c5da7">PivotTable</reimplements>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="85" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="85" bodyend="88"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1480">
+        <label>IEnumerable&lt; IXLPivotTable &gt;</label>
+      </node>
+      <node id="1479">
+        <label>IXLPivotTables</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables"/>
+        <childnode refid="1480" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1478">
+        <label>XLPivotTables</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables"/>
+        <childnode refid="1479" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1483">
+        <label>IEnumerable&lt; IXLPivotTable &gt;</label>
+      </node>
+      <node id="1482">
+        <label>IXLPivotTables</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables"/>
+        <childnode refid="1483" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1481">
+        <label>XLPivotTables</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables"/>
+        <childnode refid="1482" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/XLPivotTables.cs" bodystart="7" bodyend="91"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1ade1d3f7ed7312014b271d53fa70e2fb2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>_pivotTables</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a618fa2d672372c819575320c3ff92fb0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1ac6c57fdb6c502f96b246d11aa498bba1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1acce29e622d779d4d8fb7dc2ce83eae5b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1a631046a54c64644dde45b1680435ed7d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLPivotTables."><scope>ClosedXML::Excel::XLPivotTables</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1a0496c551ca7b75383f84565e02cc9ef1" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLPivotTables."><scope>ClosedXML::Excel::XLPivotTables</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a2a6752faa41364d977a6d416ddbdcc55" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>AddNew</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1adedd98f662bd7fc530f29ce7952d6701" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>AddNew</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1ac9487aebf41a4ac645b6f4676fb9f67e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLPivotTables."><scope>ClosedXML::Excel::XLPivotTables</scope><name>AddNew</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_tables_1ad00aa8f79288d3cdb352ce63c779c231" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLPivotTables."><scope>ClosedXML::Excel::XLPivotTables</scope><name>AddNew</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1accb3a92b5560d05951853cefaf8ef44f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1ae7666eaaedc15b21295c02273948bf48" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a693228cfa1dc7ae83b83236c5dc6e4be" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>DeleteAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a5e3aba7b6266e56fac41e4be26d6847c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a24a580ac56582536296117f370ea87a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>PivotTable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a2f04197160f6a8133303e4e649d91728" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>PivotTable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>Worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_tables_1a14c80a077bebde20987c667259946204" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLPivotTables</scope><name>XLPivotTables</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

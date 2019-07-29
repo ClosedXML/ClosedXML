@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_rows_8cs" kind="file" language="C#">
+    <compoundname>IXLRows.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" prot="public">ClosedXML::Excel::IXLRows</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Collections.Generic;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="6" refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/>:<sp/>IEnumerable&lt;IXLRow&gt;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Double<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a5554d9ddb970ea46ca620bfa405ba2a3" kindref="member">Height</ref><sp/>{<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1ac2e5aab0612d67400354a4fe71278a21" kindref="member">Delete</ref>();</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" kindref="member">AdjustToContents</ref>();</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" kindref="member">AdjustToContents</ref>(Int32<sp/>startColumn);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" kindref="member">AdjustToContents</ref>(Int32<sp/>startColumn,<sp/>Int32<sp/>endColumn);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" kindref="member">AdjustToContents</ref>(Double<sp/>minHeight,<sp/>Double<sp/>maxHeight);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" kindref="member">AdjustToContents</ref>(Int32<sp/>startColumn,<sp/>Double<sp/>minHeight,<sp/>Double<sp/>maxHeight);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" kindref="member">AdjustToContents</ref>(Int32<sp/>startColumn,<sp/>Int32<sp/>endColumn,<sp/>Double<sp/>minHeight,<sp/>Double<sp/>maxHeight);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a130bc36524c72ad408ecd7338f1e0070" kindref="member">Hide</ref>();</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a13c20a60166b3b08db948df1a97261f2" kindref="member">Unhide</ref>();</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a44f0ef74e15e9fadc0c1af8c19bea80d" kindref="member">Group</ref>();</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a44f0ef74e15e9fadc0c1af8c19bea80d" kindref="member">Group</ref>(Boolean<sp/>collapse);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a44f0ef74e15e9fadc0c1af8c19bea80d" kindref="member">Group</ref>(Int32<sp/>outlineLevel);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a44f0ef74e15e9fadc0c1af8c19bea80d" kindref="member">Group</ref>(Int32<sp/>outlineLevel,<sp/>Boolean<sp/>collapse);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1aed19ca0e030469e35f586a1165547e95" kindref="member">Ungroup</ref>();</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1aed19ca0e030469e35f586a1165547e95" kindref="member">Ungroup</ref>(Boolean<sp/>fromAll);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a2f4d9052b2e996267a8fbe2bab2066ed" kindref="member">Collapse</ref>();</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a740071247a178d84b8bf2b17901509b4" kindref="member">Expand</ref>();</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a3a388f07ee977ad805d8f72cc51418c5" kindref="member">Cells</ref>();</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>();</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[Obsolete(</highlight><highlight class="stringliteral">&quot;Use<sp/>the<sp/>overload<sp/>with<sp/>XLCellsUsedOptions&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>(Boolean<sp/>includeFormats);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a6ad63b5f449b6fa15192912119681a06" kindref="member">CellsUsed</ref>(XLCellsUsedOptions<sp/>options);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref><sp/>Style<sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1ae95fc021b66d41bd901112c0603089df" kindref="member">AddHorizontalPageBreaks</ref>();</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/>SetDataType(XLDataType<sp/>dataType);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1adb10c71d76977b6c96d52933cd4c1037" kindref="member">Clear</ref>(XLClearOptions<sp/>clearOptions<sp/>=<sp/>XLClearOptions.All);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Select();</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/IXLRows.cs"/>
+  </compounddef>
+</doxygen>

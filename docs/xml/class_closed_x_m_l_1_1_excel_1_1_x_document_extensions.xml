@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_document_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XDocumentExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_document_extensions_1a62b219beef5add94eabb29b8c8bf934f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XDocument</type>
+        <definition>static XDocument Load</definition>
+        <argsstring>(Stream stream)</argsstring>
+        <name>Load</name>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="258" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="258" bodyend="271"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="257" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="256" bodyend="272"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_document_extensions_1a62b219beef5add94eabb29b8c8bf934f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XDocumentExtensions</scope><name>Load</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

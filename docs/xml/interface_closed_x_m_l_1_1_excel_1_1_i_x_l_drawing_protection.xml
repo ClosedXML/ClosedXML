@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLDrawingProtection</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_protection" prot="public" virt="non-virtual">XLDrawingProtection</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1ad84a90191adc0c6c3a7c13b0b67ce11d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Locked</definition>
+        <argsstring></argsstring>
+        <name>Locked</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1a03056f90626e601202256e3a017f7a63" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean LockText</definition>
+        <argsstring></argsstring>
+        <name>LockText</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1aac94aa1bf2a77f68dbd6775f40f13d05" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLocked</definition>
+        <argsstring>()</argsstring>
+        <name>SetLocked</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_protection_1aac94aa1bf2a77f68dbd6775f40f13d05">SetLocked</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1a2f2a55257022745e3432adc26eeac96c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLocked</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetLocked</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_protection_1a2f2a55257022745e3432adc26eeac96c">SetLocked</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1ad142ef4694cb1d4551f5a44b79cd4f9c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLockText</definition>
+        <argsstring>()</argsstring>
+        <name>SetLockText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_protection_1ad142ef4694cb1d4551f5a44b79cd4f9c">SetLockText</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" line="14" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1af36363c568365fb41125bedd4a2a1a1b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLockText</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetLockText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_protection_1af36363c568365fb41125bedd4a2a1a1b">SetLockText</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" line="14" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="355">
+        <label>XLDrawingProtection</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_protection"/>
+        <childnode refid="354" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="354">
+        <label>IXLDrawingProtection</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection"/>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/IXLDrawingProtection.cs" bodystart="8" bodyend="16"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1ad84a90191adc0c6c3a7c13b0b67ce11d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingProtection</scope><name>Locked</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1a03056f90626e601202256e3a017f7a63" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingProtection</scope><name>LockText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1aac94aa1bf2a77f68dbd6775f40f13d05" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingProtection</scope><name>SetLocked</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1a2f2a55257022745e3432adc26eeac96c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingProtection</scope><name>SetLocked</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1ad142ef4694cb1d4551f5a44b79cd4f9c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingProtection</scope><name>SetLockText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection_1af36363c568365fb41125bedd4a2a1a1b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawingProtection</scope><name>SetLockText</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

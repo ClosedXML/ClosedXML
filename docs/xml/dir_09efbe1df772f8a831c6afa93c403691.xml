@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_09efbe1df772f8a831c6afa93c403691" kind="dir">
+    <compoundname>Utils</compoundname>
+    <innerfile refid="_color_string_parser_8cs">ColorStringParser.cs</innerfile>
+    <innerfile refid="_graphics_utils_8cs">GraphicsUtils.cs</innerfile>
+    <innerfile refid="_open_xml_helper_8cs">OpenXmlHelper.cs</innerfile>
+    <innerfile refid="_xml_encoder_8cs">XmlEncoder.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/"/>
+  </compounddef>
+</doxygen>

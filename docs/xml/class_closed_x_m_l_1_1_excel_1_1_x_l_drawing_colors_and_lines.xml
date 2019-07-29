@@ -1,0 +1,307 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDrawingColorsAndLines</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines" prot="public" virt="non-virtual">IXLDrawingColorsAndLines</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a55572329e5987730aadefb9450e27226" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>readonly IXLDrawingStyle _style</definition>
+        <argsstring></argsstring>
+        <name>_style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a69a1404e9d150e6f8106dd0be8fc4737" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor FillColor</definition>
+        <argsstring></argsstring>
+        <name>FillColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a275b9229c01e5b6c6a3babd7e262d308" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double FillTransparency</definition>
+        <argsstring></argsstring>
+        <name>FillTransparency</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1afc7ad56d158d0e517ac9c8279ae4f741" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor LineColor</definition>
+        <argsstring></argsstring>
+        <name>LineColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a1097ac4731e3ab4d2c77baeb55f0767a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double LineTransparency</definition>
+        <argsstring></argsstring>
+        <name>LineTransparency</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a3aac5707c2ac369367aeb38f29cd8a4b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double LineWeight</definition>
+        <argsstring></argsstring>
+        <name>LineWeight</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a5cfce165a28f81e83fd900be2c6815cd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDashStyle</type>
+        <definition>XLDashStyle LineDash</definition>
+        <argsstring></argsstring>
+        <name>LineDash</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a74f6dc16e94cc5ae8b2b33afcdb3a47c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLLineStyle</type>
+        <definition>XLLineStyle LineStyle</definition>
+        <argsstring></argsstring>
+        <name>LineStyle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1aa4040b8acaf45fb0c4bbbcf4d5cf1fac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDrawingColorsAndLines</definition>
+        <argsstring>(IXLDrawingStyle style)</argsstring>
+        <name>XLDrawingColorsAndLines</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="12" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a7efc92f7ff1cb54f6cfb313037969ca7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetFillColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetFillColor</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines_1a7efc92f7ff1cb54f6cfb313037969ca7">SetFillColor</reimplements>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1adec8a6990641bb384055d3a9f3ba0134" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetFillTransparency</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetFillTransparency</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines_1adec8a6990641bb384055d3a9f3ba0134">SetFillTransparency</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a7e8be38ab6b1807032af81bf7d18e8be" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLineColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetLineColor</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines_1a7e8be38ab6b1807032af81bf7d18e8be">SetLineColor</reimplements>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a85a6eaeaa40d1154c67832fe09ebe704" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLineTransparency</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetLineTransparency</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines_1a85a6eaeaa40d1154c67832fe09ebe704">SetLineTransparency</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a3782cb15e4b493c5fa8197229698f290" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLineWeight</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetLineWeight</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines_1a3782cb15e4b493c5fa8197229698f290">SetLineWeight</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a14999db0c53ceae9e8d29802761a8419" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLineDash</definition>
+        <argsstring>(XLDashStyle value)</argsstring>
+        <name>SetLineDash</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines_1a14999db0c53ceae9e8d29802761a8419">SetLineDash</reimplements>
+        <param>
+          <type>XLDashStyle</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1afb2a53b575e35f306f0e8b5be96a5931" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLineStyle</definition>
+        <argsstring>(XLLineStyle value)</argsstring>
+        <name>SetLineStyle</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines_1afb2a53b575e35f306f0e8b5be96a5931">SetLineStyle</reimplements>
+        <param>
+          <type>XLLineStyle</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1248">
+        <label>IXLDrawingColorsAndLines</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines"/>
+      </node>
+      <node id="1247">
+        <label>XLDrawingColorsAndLines</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines"/>
+        <childnode refid="1248" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1250">
+        <label>IXLDrawingColorsAndLines</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines"/>
+      </node>
+      <node id="1249">
+        <label>XLDrawingColorsAndLines</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines"/>
+        <childnode refid="1250" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingColorsAndLines.cs" bodystart="8" bodyend="24"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a55572329e5987730aadefb9450e27226" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>_style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a69a1404e9d150e6f8106dd0be8fc4737" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>FillColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a275b9229c01e5b6c6a3babd7e262d308" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>FillTransparency</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1afc7ad56d158d0e517ac9c8279ae4f741" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>LineColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a5cfce165a28f81e83fd900be2c6815cd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>LineDash</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a74f6dc16e94cc5ae8b2b33afcdb3a47c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>LineStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a1097ac4731e3ab4d2c77baeb55f0767a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>LineTransparency</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a3aac5707c2ac369367aeb38f29cd8a4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>LineWeight</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a7efc92f7ff1cb54f6cfb313037969ca7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>SetFillColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1adec8a6990641bb384055d3a9f3ba0134" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>SetFillTransparency</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a7e8be38ab6b1807032af81bf7d18e8be" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>SetLineColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a14999db0c53ceae9e8d29802761a8419" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>SetLineDash</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1afb2a53b575e35f306f0e8b5be96a5931" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>SetLineStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a85a6eaeaa40d1154c67832fe09ebe704" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>SetLineTransparency</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1a3782cb15e4b493c5fa8197229698f290" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>SetLineWeight</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_colors_and_lines_1aa4040b8acaf45fb0c4bbbcf4d5cf1fac" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingColorsAndLines</scope><name>XLDrawingColorsAndLines</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

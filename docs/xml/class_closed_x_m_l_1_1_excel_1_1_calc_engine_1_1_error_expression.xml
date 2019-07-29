@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::ErrorExpression</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" prot="public" virt="non-virtual">Expression</basecompoundref>
+      <sectiondef kind="private-type">
+      <memberdef kind="enum" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27" prot="private" static="no" strong="yes">
+        <type></type>
+        <name>ExpressionErrorType</name>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27afedcff5c5b0910ec89da8855f96fd8ad" prot="private">
+          <name>CellReference</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27a9a111e5557dd8d98ec2670eb92b3e223" prot="private">
+          <name>CellValue</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27a34e540e6594987eef203290f0a593bd2" prot="private">
+          <name>DivisionByZero</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27a6d3c462e1e413c9ebcd184eec6d1a007" prot="private">
+          <name>NameNotRecognized</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27a3d5a8bc197ffebd55c337ea13248989f" prot="private">
+          <name>NoValueAvailable</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27ae8d27005eb87501714a8a4fc67b6347a" prot="private">
+          <name>NullValue</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27a8eed4f86b190795deab22d574606a841" prot="private">
+          <name>NumberInvalid</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="541" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="540" bodyend="549"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a3e2a9a63bf4691d9e08200409422702d" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal ErrorExpression</definition>
+        <argsstring>(ExpressionErrorType eet)</argsstring>
+        <name>ErrorExpression</name>
+        <param>
+          <type>ExpressionErrorType</type>
+          <declname>eet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="551" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="551" bodyend="553"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a76b93d4fd4a54c15edf4541bbdbb8e81" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>override object</type>
+        <definition>override object Evaluate</definition>
+        <argsstring>()</argsstring>
+        <name>Evaluate</name>
+        <reimplements refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a95e683b3f90348f4d3ebb47a518cb8d6">Evaluate</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="555" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="555" bodyend="558"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a45d7326985f0c811e43944b85e9c435e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ThrowApplicableException</definition>
+        <argsstring>()</argsstring>
+        <name>ThrowApplicableException</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="560" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="560" bodyend="581"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="107">
+        <label>Expression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression"/>
+        <childnode refid="108" relation="public-inheritance">
+        </childnode>
+        <childnode refid="109" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="109">
+        <label>IComparable&lt; Expression &gt;</label>
+      </node>
+      <node id="108">
+        <label>ExpressionBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base"/>
+      </node>
+      <node id="106">
+        <label>ErrorExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression"/>
+        <childnode refid="107" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="111">
+        <label>Expression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression"/>
+        <childnode refid="112" relation="public-inheritance">
+        </childnode>
+        <childnode refid="113" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="113">
+        <label>IComparable&lt; Expression &gt;</label>
+      </node>
+      <node id="112">
+        <label>ExpressionBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base"/>
+      </node>
+      <node id="110">
+        <label>ErrorExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression"/>
+        <childnode refid="111" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="539" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="538" bodyend="582"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a15a31dcc1f392a5ba4765ac3365efe26" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>CompareTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a3e2a9a63bf4691d9e08200409422702d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>ErrorExpression</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a76b93d4fd4a54c15edf4541bbdbb8e81" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>Evaluate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a911907e12f217c4c22f2e428d727eb27" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>ExpressionErrorType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1adf13c3c3a8a7dd70e504fde46f1edd28" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>LastParseItem</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a4ce654b9e910399fa2090d1225264599" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>operator bool</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a62982685408e14dc20becbbf15ebaf6c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>operator DateTime</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1ac7b54147a502b4e27fb5d01d6c67315b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>operator double</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a06007e3975e1e5ee6a443b4f6c790171" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>operator string</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1afb8dcf602fd5a9fda8c7c828c0f3114a" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>Optimize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression_1a45d7326985f0c811e43944b85e9c435e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ErrorExpression</scope><name>ThrowApplicableException</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

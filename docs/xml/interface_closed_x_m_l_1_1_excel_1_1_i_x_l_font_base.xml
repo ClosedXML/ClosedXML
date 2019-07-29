@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLFontBase</compoundname>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_font" prot="public" virt="non-virtual">IXLDrawingFont</derivedcompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font" prot="public" virt="non-virtual">IXLFont</derivedcompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" prot="public" virt="non-virtual">IXLPhonetics</derivedcompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" prot="public" virt="non-virtual">IXLRichString</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Bold</definition>
+        <argsstring></argsstring>
+        <name>Bold</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Italic</definition>
+        <argsstring></argsstring>
+        <name>Italic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ade07c3e4c3de563a158815ee72f9c421" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontUnderlineValues</type>
+        <definition>XLFontUnderlineValues Underline</definition>
+        <argsstring></argsstring>
+        <name>Underline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Strikethrough</definition>
+        <argsstring></argsstring>
+        <name>Strikethrough</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontVerticalTextAlignmentValues</type>
+        <definition>XLFontVerticalTextAlignmentValues VerticalAlignment</definition>
+        <argsstring></argsstring>
+        <name>VerticalAlignment</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Shadow</definition>
+        <argsstring></argsstring>
+        <name>Shadow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a24703697e0f802836de9316ecfece8f6" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double FontSize</definition>
+        <argsstring></argsstring>
+        <name>FontSize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor FontColor</definition>
+        <argsstring></argsstring>
+        <name>FontColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2f5d45d920f2ac94216aada78cef6486" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String FontName</definition>
+        <argsstring></argsstring>
+        <name>FontName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="23" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLFontFamilyNumberingValues</type>
+        <definition>XLFontFamilyNumberingValues FontFamilyNumbering</definition>
+        <argsstring></argsstring>
+        <name>FontFamilyNumbering</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2e7968d4653cb5742f2eb152ee7eca17" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="namespace_closed_x_m_l_1_1_excel_1a16954fe0e0c237f1f972b2432676c381" kindref="member">XLFontCharSet</ref></type>
+        <definition>XLFontCharSet FontCharSet</definition>
+        <argsstring></argsstring>
+        <name>FontCharSet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="398">
+        <label>XLRichString</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string"/>
+        <childnode refid="397" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="394">
+        <label>XLFont</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font"/>
+        <childnode refid="393" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="393">
+        <label>IXLFont</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font"/>
+        <childnode refid="390" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="397">
+        <label>IXLRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string"/>
+        <childnode refid="390" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="395">
+        <label>IXLPhonetics</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics"/>
+        <childnode refid="390" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="391">
+        <label>IXLDrawingFont</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_font"/>
+        <childnode refid="390" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="396">
+        <label>XLPhonetics</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics"/>
+        <childnode refid="395" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="392">
+        <label>XLDrawingFont</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_font"/>
+        <childnode refid="391" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="390">
+        <label>IXLFontBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base"/>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFontBase.cs" bodystart="5" bodyend="28"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>Bold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2e7968d4653cb5742f2eb152ee7eca17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>FontCharSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>FontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>FontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>FontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>FontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>Italic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>Shadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>Strikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>Underline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFontBase</scope><name>VerticalAlignment</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

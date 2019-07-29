@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFilteredColumn</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filtered_column" prot="public" virt="non-virtual">IXLFilteredColumn</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+        <definition>readonly XLAutoFilter _autoFilter</definition>
+        <argsstring></argsstring>
+        <name>_autoFilter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1a401a6529feffcc7b66481264ab30dc62" prot="private" static="no" mutable="no">
+        <type>readonly Int32</type>
+        <definition>readonly Int32 _column</definition>
+        <argsstring></argsstring>
+        <name>_column</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1ab122d57e4d65a39ba90151969fd86a81" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFilteredColumn</definition>
+        <argsstring>(XLAutoFilter autoFilter, Int32 column)</argsstring>
+        <name>XLFilteredColumn</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_auto_filter" kindref="compound">XLAutoFilter</ref></type>
+          <declname>autoFilter</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" bodystart="10" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1ac5cf4d83feff2ee750ad25f1892684fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filtered_column" kindref="compound">IXLFilteredColumn</ref></type>
+        <definition>IXLFilteredColumn AddFilter&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>AddFilter&lt; T &gt;</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filtered_column_1ac5cf4d83feff2ee750ad25f1892684fc">AddFilter&lt; T &gt;</reimplements>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" bodystart="18" bodyend="53"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1316">
+        <label>IXLFilteredColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filtered_column"/>
+      </node>
+      <node id="1315">
+        <label>XLFilteredColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column"/>
+        <childnode refid="1316" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1318">
+        <label>IXLFilteredColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_filtered_column"/>
+      </node>
+      <node id="1317">
+        <label>XLFilteredColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column"/>
+        <childnode refid="1318" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/XLFilteredColumn.cs" bodystart="5" bodyend="56"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1abb8a2587e1c2a56ccf00d1e4f0d3e478" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilteredColumn</scope><name>_autoFilter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1a401a6529feffcc7b66481264ab30dc62" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFilteredColumn</scope><name>_column</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1ac5cf4d83feff2ee750ad25f1892684fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilteredColumn</scope><name>AddFilter&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_filtered_column_1ab122d57e4d65a39ba90151969fd86a81" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFilteredColumn</scope><name>XLFilteredColumn</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

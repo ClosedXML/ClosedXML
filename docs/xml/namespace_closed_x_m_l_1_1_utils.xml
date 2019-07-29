@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_utils" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Utils</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_utils_1_1_color_string_parser" prot="public">ClosedXML::Utils::ColorStringParser</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_utils_1_1_graphics_utils" prot="public">ClosedXML::Utils::GraphicsUtils</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_utils_1_1_open_xml_helper" prot="public">ClosedXML::Utils::OpenXmlHelper</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_utils_1_1_xml_encoder" prot="public">ClosedXML::Utils::XmlEncoder</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Utils/ColorStringParser.cs" line="5" column="1"/>
+  </compounddef>
+</doxygen>

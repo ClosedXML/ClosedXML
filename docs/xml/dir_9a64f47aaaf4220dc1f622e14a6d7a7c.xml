@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_9a64f47aaaf4220dc1f622e14a6d7a7c" kind="dir">
+    <compoundname>Style</compoundname>
+    <innerfile refid="_i_x_l_drawing_alignment_8cs">IXLDrawingAlignment.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_colors_and_lines_8cs">IXLDrawingColorsAndLines.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_font_8cs">IXLDrawingFont.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_margins_8cs">IXLDrawingMargins.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_properties_8cs">IXLDrawingProperties.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_protection_8cs">IXLDrawingProtection.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_size_8cs">IXLDrawingSize.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_style_8cs">IXLDrawingStyle.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_web_8cs">IXLDrawingWeb.cs</innerfile>
+    <innerfile refid="_x_l_drawing_alignment_8cs">XLDrawingAlignment.cs</innerfile>
+    <innerfile refid="_x_l_drawing_colors_and_lines_8cs">XLDrawingColorsAndLines.cs</innerfile>
+    <innerfile refid="_x_l_drawing_font_8cs">XLDrawingFont.cs</innerfile>
+    <innerfile refid="_x_l_drawing_margins_8cs">XLDrawingMargins.cs</innerfile>
+    <innerfile refid="_x_l_drawing_properties_8cs">XLDrawingProperties.cs</innerfile>
+    <innerfile refid="_x_l_drawing_protection_8cs">XLDrawingProtection.cs</innerfile>
+    <innerfile refid="_x_l_drawing_size_8cs">XLDrawingSize.cs</innerfile>
+    <innerfile refid="_x_l_drawing_style_8cs">XLDrawingStyle.cs</innerfile>
+    <innerfile refid="_x_l_drawing_web_8cs">XLDrawingWeb.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/"/>
+  </compounddef>
+</doxygen>

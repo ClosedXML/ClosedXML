@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLCFColorScaleMid</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_mid" prot="public" virt="non-virtual">XLCFColorScaleMid</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1a388ff8bfcff4c07e49a263efe269b256" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max" kindref="compound">IXLCFColorScaleMax</ref></type>
+        <definition>IXLCFColorScaleMax Midpoint</definition>
+        <argsstring>(XLCFContentType type, String value, XLColor color)</argsstring>
+        <name>Midpoint</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_mid_1a388ff8bfcff4c07e49a263efe269b256">Midpoint</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFColorScaleMid.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1a040ff42c5160443387ddb6d7caeb5436" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_max" kindref="compound">IXLCFColorScaleMax</ref></type>
+        <definition>IXLCFColorScaleMax Midpoint</definition>
+        <argsstring>(XLCFContentType type, Double value, XLColor color)</argsstring>
+        <name>Midpoint</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_mid_1a040ff42c5160443387ddb6d7caeb5436">Midpoint</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFColorScaleMid.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1afcef61594e16967e6a311f1f41705c1d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Maximum</definition>
+        <argsstring>(XLCFContentType type, String value, XLColor color)</argsstring>
+        <name>Maximum</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_mid_1afcef61594e16967e6a311f1f41705c1d">Maximum</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFColorScaleMid.cs" line="12" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1aff149a421559857ee4df43389a12741a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Maximum</definition>
+        <argsstring>(XLCFContentType type, Double value, XLColor color)</argsstring>
+        <name>Maximum</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_mid_1aff149a421559857ee4df43389a12741a">Maximum</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFColorScaleMid.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1a0a883c95ffb4f72b9d4dbe64a48a9f77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void HighestValue</definition>
+        <argsstring>(XLColor color)</argsstring>
+        <name>HighestValue</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_mid_1a0a883c95ffb4f72b9d4dbe64a48a9f77">HighestValue</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFColorScaleMid.cs" line="14" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="237">
+        <label>IXLCFColorScaleMid</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid"/>
+      </node>
+      <node id="238">
+        <label>XLCFColorScaleMid</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_mid"/>
+        <childnode refid="237" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFColorScaleMid.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFColorScaleMid.cs" bodystart="8" bodyend="15"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1a0a883c95ffb4f72b9d4dbe64a48a9f77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFColorScaleMid</scope><name>HighestValue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1afcef61594e16967e6a311f1f41705c1d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFColorScaleMid</scope><name>Maximum</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1aff149a421559857ee4df43389a12741a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFColorScaleMid</scope><name>Maximum</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1a388ff8bfcff4c07e49a263efe269b256" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFColorScaleMid</scope><name>Midpoint</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid_1a040ff42c5160443387ddb6d7caeb5436" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFColorScaleMid</scope><name>Midpoint</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

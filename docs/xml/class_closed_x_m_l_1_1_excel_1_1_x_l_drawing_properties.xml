@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDrawingProperties</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_properties" prot="public" virt="non-virtual">IXLDrawingProperties</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a55572329e5987730aadefb9450e27226" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>readonly IXLDrawingStyle _style</definition>
+        <argsstring></argsstring>
+        <name>_style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a58cf24070a164e842bc0b721d2c5453c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDrawingAnchor</type>
+        <definition>XLDrawingAnchor Positioning</definition>
+        <argsstring></argsstring>
+        <name>Positioning</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a88ca268bd96c9d77eb8350b48282db0b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDrawingProperties</definition>
+        <argsstring>(IXLDrawingStyle style)</argsstring>
+        <name>XLDrawingProperties</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" bodystart="12" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a80811c0f4209a5fc0efb80b7d61a60c0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetPositioning</definition>
+        <argsstring>(XLDrawingAnchor value)</argsstring>
+        <name>SetPositioning</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_properties_1a80811c0f4209a5fc0efb80b7d61a60c0">SetPositioning</reimplements>
+        <param>
+          <type>XLDrawingAnchor</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1265">
+        <label>XLDrawingProperties</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties"/>
+        <childnode refid="1266" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1266">
+        <label>IXLDrawingProperties</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_properties"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1267">
+        <label>XLDrawingProperties</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties"/>
+        <childnode refid="1268" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1268">
+        <label>IXLDrawingProperties</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_properties"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingProperties.cs" bodystart="8" bodyend="18"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a55572329e5987730aadefb9450e27226" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingProperties</scope><name>_style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a58cf24070a164e842bc0b721d2c5453c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingProperties</scope><name>Positioning</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a80811c0f4209a5fc0efb80b7d61a60c0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingProperties</scope><name>SetPositioning</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_properties_1a88ca268bd96c9d77eb8350b48282db0b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingProperties</scope><name>XLDrawingProperties</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_extensions_1_1_guid_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Extensions::GuidExtensions</compoundname>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_extensions_1_1_guid_extensions_1a5c65ccfc3293abeb4705372d67c6916a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal String</type>
+        <definition>static internal String WrapInBraces</definition>
+        <argsstring>(this Guid guid)</argsstring>
+        <name>WrapInBraces</name>
+        <param>
+          <type>this Guid</type>
+          <declname>guid</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/GuidExtensions.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/GuidExtensions.cs" bodystart="7" bodyend="10"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/GuidExtensions.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/GuidExtensions.cs" bodystart="5" bodyend="11"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_extensions_1_1_guid_extensions_1a5c65ccfc3293abeb4705372d67c6916a" prot="private" virt="non-virtual"><scope>ClosedXML::Extensions::GuidExtensions</scope><name>WrapInBraces</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

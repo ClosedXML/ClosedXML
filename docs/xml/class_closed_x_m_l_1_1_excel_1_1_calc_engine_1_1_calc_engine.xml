@@ -1,0 +1,882 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::CalcEngine</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine" prot="public" virt="non-virtual">XLCalcEngine</derivedcompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a5cfa6ec4edb76f973c70ddb95fcd1985" prot="private" static="no" mutable="no">
+        <type>const string</type>
+        <definition>const string defaultFunctionNameSpace</definition>
+        <argsstring></argsstring>
+        <name>defaultFunctionNameSpace</name>
+        <initializer>= &quot;_xlfn&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad6a312c1693bc7d3c158fee543b992fb" prot="private" static="no" mutable="no">
+        <type>string</type>
+        <definition>string _expr</definition>
+        <argsstring></argsstring>
+        <name>_expr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a15bb0da88aacad7596c0967fb4535348" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _len</definition>
+        <argsstring></argsstring>
+        <name>_len</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1acd400e2115e8d0bafab743d12bfe0fb0" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _ptr</definition>
+        <argsstring></argsstring>
+        <name>_ptr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad1feed1c53a8a30c263e1e55d726f92d" prot="private" static="no" mutable="no">
+        <type>char []</type>
+        <definition>char [] _idChars</definition>
+        <argsstring></argsstring>
+        <name>_idChars</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab90eb1a42ade577227b01f70a51b6c40" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kindref="compound">Token</ref></type>
+        <definition>Token _token</definition>
+        <argsstring></argsstring>
+        <name>_token</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a9188ebc2d6702bf755491b9bcd15daa4" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; object, <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kindref="compound">Token</ref> &gt;</type>
+        <definition>Dictionary&lt;object, Token&gt; _tkTbl</definition>
+        <argsstring></argsstring>
+        <name>_tkTbl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a8746b379574523e0270ce528b4796f74" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; string, <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition" kindref="compound">FunctionDefinition</ref> &gt;</type>
+        <definition>Dictionary&lt;string, FunctionDefinition&gt; _fnTbl</definition>
+        <argsstring></argsstring>
+        <name>_fnTbl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a875981f9be8a30ab9e31e1baf73111e9" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; string, object &gt;</type>
+        <definition>Dictionary&lt;string, object&gt; _vars</definition>
+        <argsstring></argsstring>
+        <name>_vars</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a979d137d558538a22af2228d9c338f94" prot="private" static="no" mutable="no">
+        <type>object</type>
+        <definition>object _dataContext</definition>
+        <argsstring></argsstring>
+        <name>_dataContext</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ade30cda9743a873bdafa5db6b1bd0f02" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool _optimize</definition>
+        <argsstring></argsstring>
+        <name>_optimize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aec2dd3da588b138dd38e76534f1ae12e" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache" kindref="compound">ExpressionCache</ref></type>
+        <definition>ExpressionCache _cache</definition>
+        <argsstring></argsstring>
+        <name>_cache</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3c7569c9858ea76f7973a20219d08965" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a14ef55c903dc8c369e88012d7765a7d5" kindref="member">CultureInfo</ref></type>
+        <definition>CultureInfo _ci</definition>
+        <argsstring></argsstring>
+        <name>_ci</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a05ae72d36c823281e2beade813e73795" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char _decimal</definition>
+        <argsstring></argsstring>
+        <name>_decimal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a4331d8f925132fc071d9d5fd221b2977" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char _listSep</definition>
+        <argsstring></argsstring>
+        <name>_listSep</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1adba8c5abadaddd8d2a757a2b8fb70fc4" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char _percent</definition>
+        <argsstring></argsstring>
+        <name>_percent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad87babacb2c55cbb10448255e4b1fd82" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool?</type>
+        <definition>bool? CacheExpressions</definition>
+        <argsstring></argsstring>
+        <name>CacheExpressions</name>
+        <briefdescription>
+<para>Gets or sets whether the calc engine should keep a cache with parsed expressions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="130" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="131" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a180e8034fa1d7414e02ba9072872c65a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool OptimizeExpressions</definition>
+        <argsstring></argsstring>
+        <name>OptimizeExpressions</name>
+        <briefdescription>
+<para>Gets or sets whether the calc engine should optimize expressions when they are parsed. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="149" bodyend="152"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab2fb00dd65042bcd93f26c0180939844" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>char []</type>
+        <definition>char [] IdentifierChars</definition>
+        <argsstring></argsstring>
+        <name>IdentifierChars</name>
+        <briefdescription>
+<para>Gets or sets a string that specifies special characters that are valid for identifiers. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Identifiers must start with a letter or an underscore, which may be followed by additional letters, underscores, or digits. This string allows you to specify additional valid characters such as &apos;:&apos; or &apos;!&apos; (used in <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> range references for example). </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="163" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="164" bodyend="167"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3b1e541fafb6f4dc89588c681083d662" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>object</type>
+        <definition>virtual object DataContext</definition>
+        <argsstring></argsstring>
+        <name>DataContext</name>
+        <briefdescription>
+<para>Gets or sets the DataContext for this <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Once a DataContext is set, all public properties of the object become available to the <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref>, including sub-properties such as &quot;Address.Street&quot;. These may be used with expressions just like any other constant. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="214" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="215" bodyend="218"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a01ed05386fbd39b5ae0034b0a7c92fbe" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Dictionary&lt; string, <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition" kindref="compound">FunctionDefinition</ref> &gt;</type>
+        <definition>Dictionary&lt;string, FunctionDefinition&gt; Functions</definition>
+        <argsstring></argsstring>
+        <name>Functions</name>
+        <briefdescription>
+<para>Gets the dictionary that contains function definitions. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="223" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="224" bodyend="226"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab92b39900eeb1bf2283ada026fefce84" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Dictionary&lt; string, object &gt;</type>
+        <definition>Dictionary&lt;string, object&gt; Variables</definition>
+        <argsstring></argsstring>
+        <name>Variables</name>
+        <briefdescription>
+<para>Gets the dictionary that contains simple variables (not in the DataContext). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="231" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="232" bodyend="234"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a14ef55c903dc8c369e88012d7765a7d5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>CultureInfo</type>
+        <definition>CultureInfo CultureInfo</definition>
+        <argsstring></argsstring>
+        <name>CultureInfo</name>
+        <briefdescription>
+<para>Gets or sets the <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a14ef55c903dc8c369e88012d7765a7d5" kindref="member">CultureInfo</ref> to use when parsing numbers and dates. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="239" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="240" bodyend="250"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a658cc47b40319e8d61ab5f1677ad7507" prot="private" static="yes" mutable="no">
+        <type>readonly IDictionary&lt; string, ErrorExpression.ExpressionErrorType &gt;</type>
+        <definition>readonly IDictionary&lt;string, ErrorExpression.ExpressionErrorType&gt; ErrorMap</definition>
+        <argsstring></argsstring>
+        <name>ErrorMap</name>
+        <initializer>= new Dictionary&lt;string, ErrorExpression.ExpressionErrorType&gt;()
+        {
+            [&quot;#REF!&quot;] = ErrorExpression.ExpressionErrorType.CellReference,
+            [&quot;#VALUE!&quot;] = ErrorExpression.ExpressionErrorType.CellValue,
+            [&quot;#DIV/0!&quot;] = ErrorExpression.ExpressionErrorType.DivisionByZero,
+            [&quot;#NAME?&quot;] = ErrorExpression.ExpressionErrorType.NameNotRecognized,
+            [&quot;#N/A&quot;] = ErrorExpression.ExpressionErrorType.NoValueAvailable,
+            [&quot;#NULL!&quot;] = ErrorExpression.ExpressionErrorType.NullValue,
+            [&quot;#NUM!&quot;] = ErrorExpression.ExpressionErrorType.NumberInvalid
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="258" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="258" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a2c6429987ea050cd6e3642c34cefde9f" prot="private" static="yes" mutable="no">
+        <type>IDictionary&lt; char, char &gt;</type>
+        <definition>IDictionary&lt;char, char&gt; matchingClosingSymbols</definition>
+        <argsstring></argsstring>
+        <name>matchingClosingSymbols</name>
+        <initializer>= new Dictionary&lt;char, char&gt;()
+        {
+            { &apos;\&apos;&apos;, &apos;\&apos;&apos; },
+            { &apos;[&apos;,  &apos;]&apos; }
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="506" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="506" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a5d233e2e53f4e0ffd6d9ab19bfc92bac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CalcEngine</definition>
+        <argsstring>()</argsstring>
+        <name>CalcEngine</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="49" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a858b194717bcb7943b857d196d15db7a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression Parse</definition>
+        <argsstring>(string expression)</argsstring>
+        <name>Parse</name>
+        <param>
+          <type>string</type>
+          <declname>expression</declname>
+        </param>
+        <briefdescription>
+<para>Parses a string into an <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>expression</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>String to parse.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>An <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> object that can be evaluated.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="73" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aca76a6baa09959d08feea2ff16da5035" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>object Evaluate</definition>
+        <argsstring>(string expression)</argsstring>
+        <name>Evaluate</name>
+        <param>
+          <type>string</type>
+          <declname>expression</declname>
+        </param>
+        <briefdescription>
+<para>Evaluates a string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>expression</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> to evaluate.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The value of the expression.</para>
+</simplesect>
+</para>
+<para>If you are going to evaluate the same expression several times, it is more efficient to parse it only once using the <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a858b194717bcb7943b857d196d15db7a" kindref="member">Parse</ref> method and then using the Expression.Evaluate method to evaluate the parsed expression. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="118" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="118" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a6f1d83d439c8d1c7791872d2edf531c0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void RegisterFunction</definition>
+        <argsstring>(string functionName, int parmMin, int parmMax, CalcEngineFunction fn)</argsstring>
+        <name>RegisterFunction</name>
+        <param>
+          <type>string</type>
+          <declname>functionName</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>parmMin</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>parmMax</declname>
+        </param>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a8146529f99f58469466a04ffdee46fef" kindref="member">CalcEngineFunction</ref></type>
+          <declname>fn</declname>
+        </param>
+        <briefdescription>
+<para>Registers a function that can be evaluated by this <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>functionName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Function name.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>parmMin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Minimum parameter count.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>parmMax</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum parameter count.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Delegate that evaluates the function.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="176" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="176" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aa09de85f0768d66c2c90d5e498d6f0d7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void RegisterFunction</definition>
+        <argsstring>(string functionName, int parmCount, CalcEngineFunction fn)</argsstring>
+        <name>RegisterFunction</name>
+        <param>
+          <type>string</type>
+          <declname>functionName</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>parmCount</declname>
+        </param>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a8146529f99f58469466a04ffdee46fef" kindref="member">CalcEngineFunction</ref></type>
+          <declname>fn</declname>
+        </param>
+        <briefdescription>
+<para>Registers a function that can be evaluated by this <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>functionName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Function name.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>parmCount</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Parameter count.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Delegate that evaluates the function.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="187" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="187" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a328877d7c998b9da042413ea7b13cfa6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>object</type>
+        <definition>virtual object GetExternalObject</definition>
+        <argsstring>(string identifier)</argsstring>
+        <name>GetExternalObject</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine_1a51a8fa04aa3a146264c2315814e02534">GetExternalObject</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>identifier</declname>
+        </param>
+        <briefdescription>
+<para>Gets an external object based on an identifier. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This method is useful when the engine needs to create objects dynamically. For example, a spreadsheet calc engine would use this method to dynamically create cell range objects based on identifiers that cannot be enumerated at design time (such as &quot;AB12&quot;, &quot;A1:AB12&quot;, etc.) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="201" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="201" bodyend="204"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab77a73cf79564b1dbe683b2044864e96" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Dictionary&lt; object, <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kindref="compound">Token</ref> &gt;</type>
+        <definition>Dictionary&lt;object, Token&gt; GetSymbolTable</definition>
+        <argsstring>()</argsstring>
+        <name>GetSymbolTable</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="270" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="270" bodyend="297"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1af123d276d67e036dfe18903b5e1f79dc" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddToken</definition>
+        <argsstring>(object symbol, TKID id, TKTYPE type)</argsstring>
+        <name>AddToken</name>
+        <param>
+          <type>object</type>
+          <declname>symbol</declname>
+        </param>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9db" kindref="member">TKID</ref></type>
+          <declname>id</declname>
+        </param>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678" kindref="member">TKTYPE</ref></type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="299" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="299" bodyend="303"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a0a9a27dd08fb05c078be3a5b58f47655" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Dictionary&lt; string, <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition" kindref="compound">FunctionDefinition</ref> &gt;</type>
+        <definition>Dictionary&lt;string, FunctionDefinition&gt; GetFunctionTable</definition>
+        <argsstring>()</argsstring>
+        <name>GetFunctionTable</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="306" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="306" bodyend="323"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3ee46fbf7bc81b57538c34f16286a63b" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression ParseExpression</definition>
+        <argsstring>()</argsstring>
+        <name>ParseExpression</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="331" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="331" bodyend="335"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a7f0e8e132be05fd9592ceca8c38d40b0" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression ParseCompare</definition>
+        <argsstring>()</argsstring>
+        <name>ParseCompare</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="337" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="337" bodyend="348"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a53ed6f725341ac4b06d7bb56fa059ee5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression ParseAddSub</definition>
+        <argsstring>()</argsstring>
+        <name>ParseAddSub</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="350" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="350" bodyend="361"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a5293f8dacbce3665a3c02e16edd1e2f8" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression ParseMulDiv</definition>
+        <argsstring>()</argsstring>
+        <name>ParseMulDiv</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="363" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="363" bodyend="374"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aac39841dfb9a669bfa0a6c82da37a0cc" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression ParsePower</definition>
+        <argsstring>()</argsstring>
+        <name>ParsePower</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="376" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="376" bodyend="387"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a90d866c7692cc43c66304ef31c7d141a" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression ParseUnary</definition>
+        <argsstring>()</argsstring>
+        <name>ParseUnary</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="389" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="389" bodyend="402"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad728ef9cffbd600e193585c1ccdc7aeb" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression ParseAtom</definition>
+        <argsstring>()</argsstring>
+        <name>ParseAtom</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="404" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="404" bodyend="498"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a11c565e45cfd0a197d89848d201f66c4" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void GetToken</definition>
+        <argsstring>()</argsstring>
+        <name>GetToken</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="512" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="512" bodyend="731"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3fb99e65d01628cd651b99f750e8d4cd" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+        <definition>List&lt;Expression&gt; GetParameters</definition>
+        <argsstring>()</argsstring>
+        <name>GetParameters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="743" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="743" bodyend="784"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a316052aedc108753d142e1a16e3cb7d9" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kindref="compound">Token</ref></type>
+        <definition>Token GetMember</definition>
+        <argsstring>()</argsstring>
+        <name>GetMember</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="786" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="786" bodyend="807"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a0b1b3056ae4af1f5ebfcf63326578dd6" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ParseDouble</definition>
+        <argsstring>(string str, CultureInfo ci)</argsstring>
+        <name>ParseDouble</name>
+        <param>
+          <type>string</type>
+          <declname>str</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a14ef55c903dc8c369e88012d7765a7d5" kindref="member">CultureInfo</ref></type>
+          <declname>ci</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="733" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="733" bodyend="741"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aa12f4516ef18b27085fbadffa797e9f5" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Throw</definition>
+        <argsstring>()</argsstring>
+        <name>Throw</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="815" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="815" bodyend="818"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1af287660680caaade277c044813081332" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Throw</definition>
+        <argsstring>(string msg)</argsstring>
+        <name>Throw</name>
+        <param>
+          <type>string</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="820" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="820" bodyend="823"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref> parses strings and returns <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> objects that can be evaluated. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This class has three extensibility points:</para>
+<para>Use the <bold>DataContext</bold> property to add an object&apos;s properties to the engine scope.</para>
+<para>Use the <bold>RegisterFunction</bold> method to define custom functions.</para>
+<para>Override the <bold>GetExternalObject</bold> method to add arbitrary variables to the engine scope.</para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="17">
+        <label>CalcEngine</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine"/>
+      </node>
+      <node id="18">
+        <label>XLCalcEngine</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine"/>
+        <childnode refid="17" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngine.cs" bodystart="19" bodyend="826"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aec2dd3da588b138dd38e76534f1ae12e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_cache</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3c7569c9858ea76f7973a20219d08965" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_ci</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a979d137d558538a22af2228d9c338f94" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_dataContext</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a05ae72d36c823281e2beade813e73795" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_decimal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad6a312c1693bc7d3c158fee543b992fb" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_expr</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a8746b379574523e0270ce528b4796f74" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_fnTbl</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad1feed1c53a8a30c263e1e55d726f92d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_idChars</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a15bb0da88aacad7596c0967fb4535348" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_len</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a4331d8f925132fc071d9d5fd221b2977" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_listSep</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ade30cda9743a873bdafa5db6b1bd0f02" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_optimize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1adba8c5abadaddd8d2a757a2b8fb70fc4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_percent</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1acd400e2115e8d0bafab743d12bfe0fb0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_ptr</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a9188ebc2d6702bf755491b9bcd15daa4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_tkTbl</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab90eb1a42ade577227b01f70a51b6c40" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_token</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a875981f9be8a30ab9e31e1baf73111e9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>_vars</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1af123d276d67e036dfe18903b5e1f79dc" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>AddToken</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad87babacb2c55cbb10448255e4b1fd82" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>CacheExpressions</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a5d233e2e53f4e0ffd6d9ab19bfc92bac" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>CalcEngine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a14ef55c903dc8c369e88012d7765a7d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>CultureInfo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3b1e541fafb6f4dc89588c681083d662" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>DataContext</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a5cfa6ec4edb76f973c70ddb95fcd1985" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>defaultFunctionNameSpace</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a658cc47b40319e8d61ab5f1677ad7507" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ErrorMap</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aca76a6baa09959d08feea2ff16da5035" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>Evaluate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a01ed05386fbd39b5ae0034b0a7c92fbe" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>Functions</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a328877d7c998b9da042413ea7b13cfa6" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>GetExternalObject</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a0a9a27dd08fb05c078be3a5b58f47655" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>GetFunctionTable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a316052aedc108753d142e1a16e3cb7d9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>GetMember</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3fb99e65d01628cd651b99f750e8d4cd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>GetParameters</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab77a73cf79564b1dbe683b2044864e96" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>GetSymbolTable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a11c565e45cfd0a197d89848d201f66c4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>GetToken</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab2fb00dd65042bcd93f26c0180939844" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>IdentifierChars</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a2c6429987ea050cd6e3642c34cefde9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>matchingClosingSymbols</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a180e8034fa1d7414e02ba9072872c65a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>OptimizeExpressions</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a858b194717bcb7943b857d196d15db7a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>Parse</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a53ed6f725341ac4b06d7bb56fa059ee5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParseAddSub</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ad728ef9cffbd600e193585c1ccdc7aeb" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParseAtom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a7f0e8e132be05fd9592ceca8c38d40b0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParseCompare</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a0b1b3056ae4af1f5ebfcf63326578dd6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParseDouble</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a3ee46fbf7bc81b57538c34f16286a63b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParseExpression</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a5293f8dacbce3665a3c02e16edd1e2f8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParseMulDiv</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aac39841dfb9a669bfa0a6c82da37a0cc" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParsePower</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a90d866c7692cc43c66304ef31c7d141a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>ParseUnary</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1a6f1d83d439c8d1c7791872d2edf531c0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>RegisterFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aa09de85f0768d66c2c90d5e498d6f0d7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>RegisterFunction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1aa12f4516ef18b27085fbadffa797e9f5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>Throw</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1af287660680caaade277c044813081332" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>Throw</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_1ab92b39900eeb1bf2283ada026fefce84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngine</scope><name>Variables</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

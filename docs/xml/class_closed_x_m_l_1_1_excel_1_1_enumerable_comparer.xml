@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::EnumerableComparer</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEqualityComparer&lt; IEnumerable&lt; T &gt;&gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1aae7c138a66849b1d93a5bf04766a8682" prot="private" static="no" mutable="no">
+        <type>readonly IEqualityComparer&lt; T &gt;</type>
+        <definition>readonly IEqualityComparer&lt;T&gt; _valueComparer</definition>
+        <argsstring></argsstring>
+        <name>_valueComparer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="576" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="576" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1a61e369a22085b1d9ec5bf38d89cffaf3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>EnumerableComparer</definition>
+        <argsstring>(IEqualityComparer&lt; T &gt; valueComparer=null)</argsstring>
+        <name>EnumerableComparer</name>
+        <param>
+          <type>IEqualityComparer&lt; T &gt;</type>
+          <declname>valueComparer</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="578" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="578" bodyend="581"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1ade0c716ba8f95671e1ff4f91c7a83f42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IEnumerable&lt; T &gt; x, IEnumerable&lt; T &gt; y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>IEnumerable&lt; T &gt;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; T &gt;</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="583" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="583" bodyend="586"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1a2472c3b87da61f8aef9de008c218a968" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int GetHashCode</definition>
+        <argsstring>(IEnumerable&lt; T &gt; obj)</argsstring>
+        <name>GetHashCode</name>
+        <param>
+          <type>IEnumerable&lt; T &gt;</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="588" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="588" bodyend="591"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1a383a01468a265cfcce56443391464959" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool SetEquals</definition>
+        <argsstring>(IEnumerable&lt; T &gt; first, IEnumerable&lt; T &gt; second, IEqualityComparer&lt; T &gt; comparer)</argsstring>
+        <name>SetEquals</name>
+        <param>
+          <type>IEnumerable&lt; T &gt;</type>
+          <declname>first</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; T &gt;</type>
+          <declname>second</declname>
+        </param>
+        <param>
+          <type>IEqualityComparer&lt; T &gt;</type>
+          <declname>comparer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="593" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="593" bodyend="598"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="101">
+        <label>IEqualityComparer&lt; IEnumerable&lt; T &gt;&gt;</label>
+      </node>
+      <node id="100">
+        <label>EnumerableComparer&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer"/>
+        <childnode refid="101" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="103">
+        <label>IEqualityComparer&lt; IEnumerable&lt; T &gt;&gt;</label>
+      </node>
+      <node id="102">
+        <label>EnumerableComparer&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer"/>
+        <childnode refid="103" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" line="575" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLConditionalFormat.cs" bodystart="574" bodyend="599"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1aae7c138a66849b1d93a5bf04766a8682" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::EnumerableComparer</scope><name>_valueComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1a61e369a22085b1d9ec5bf38d89cffaf3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumerableComparer</scope><name>EnumerableComparer</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1ade0c716ba8f95671e1ff4f91c7a83f42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumerableComparer</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1a2472c3b87da61f8aef9de008c218a968" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumerableComparer</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enumerable_comparer_1a383a01468a265cfcce56443391464959" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumerableComparer</scope><name>SetEquals</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

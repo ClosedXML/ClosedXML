@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLRangeConsolidationEngine</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1_1_x_l_range_consolidation_matrix" prot="private">ClosedXML::Excel::XLRangeConsolidationEngine::XLRangeConsolidationMatrix</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1a87b9fe9603ef5150c2e7ee636427628f" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>readonly IXLRanges _allRanges</definition>
+        <argsstring></argsstring>
+        <name>_allRanges</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1ae7ed8e7204d54002b42ffc716ff3fb91" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeConsolidationEngine</definition>
+        <argsstring>(IXLRanges ranges)</argsstring>
+        <name>XLRangeConsolidationEngine</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+          <declname>ranges</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="15" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1a36df3238de1893f7d7812d11217c8b76" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>IXLRanges Consolidate</definition>
+        <argsstring>()</argsstring>
+        <name>Consolidate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="26" bodyend="45"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Engine for ranges consolidation. Supports <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref> including ranges from either one or multiple worksheets. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeConsolidationEngine.cs" bodystart="11" bodyend="216"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1a87b9fe9603ef5150c2e7ee636427628f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine</scope><name>_allRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1a36df3238de1893f7d7812d11217c8b76" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine</scope><name>Consolidate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_consolidation_engine_1ae7ed8e7204d54002b42ffc716ff3fb91" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeConsolidationEngine</scope><name>XLRangeConsolidationEngine</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

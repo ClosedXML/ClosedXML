@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_attributes" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Attributes</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_attributes_1_1_x_l_column_attribute" prot="public">ClosedXML::Attributes::XLColumnAttribute</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Attributes/XLColumnAttribute.cs" line="7" column="1"/>
+  </compounddef>
+</doxygen>

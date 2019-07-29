@@ -1,0 +1,589 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Patterns::Quadrant</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant" prot="public" virt="non-virtual">Quadrant</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1af00b658dc317bbafcea34281424a8e30" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant" kindref="compound">Quadrant</ref> &gt;</type>
+        <definition>IEnumerable&lt;Quadrant&gt; Children</definition>
+        <argsstring></argsstring>
+        <name>Children</name>
+        <briefdescription>
+<para>Smaller quadrants which the current one is splitted to. Is NULL until ranges are added to child quadrants. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a406deaf43fea1614dbec4e67110ea59f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>byte</type>
+        <definition>byte Level</definition>
+        <argsstring></argsstring>
+        <name>Level</name>
+        <briefdescription>
+<para>The level of current quadrant. Top most has level 0, child quadrants has levels (Level + 1). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a0e8f0746abd7feddc0292e4ea7935b49" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int MinimumColumn</definition>
+        <argsstring></argsstring>
+        <name>MinimumColumn</name>
+        <briefdescription>
+<para>Minimum column included in this quadrant. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a0fe651140172a143540fe429cee70d81" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int MinimumRow</definition>
+        <argsstring></argsstring>
+        <name>MinimumRow</name>
+        <briefdescription>
+<para>Minimum row included in this quadrant. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="37" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a7c648e131a7ac8383eb97b84ab7f064c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int MaximumColumn</definition>
+        <argsstring></argsstring>
+        <name>MaximumColumn</name>
+        <briefdescription>
+<para>Maximum column included in this quadrant. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="42" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a292eaaac59a27ce2e54c95ee8909af79" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int MaximumRow</definition>
+        <argsstring></argsstring>
+        <name>MaximumRow</name>
+        <briefdescription>
+<para>Maximum row included in this quadrant. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="47" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="47" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a8360d20db88d1680e2f6c7dc1204aa9b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;?</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt;? Ranges</definition>
+        <argsstring></argsstring>
+        <name>Ranges</name>
+        <briefdescription>
+<para>Collection of ranges belonging to this quadrant (does not include ranges from child quadrants). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="53" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aa79150e97d1ce1f10171e86541b97ad5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>short</type>
+        <definition>short X</definition>
+        <argsstring></argsstring>
+        <name>X</name>
+        <briefdescription>
+<para>The number of current quadrant by horizontal axis. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="60" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a47978df427c498203e04f4bddbcadd37" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>short</type>
+        <definition>short Y</definition>
+        <argsstring></argsstring>
+        <name>Y</name>
+        <briefdescription>
+<para>The number of current quadrant by vertical axis. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="65" bodyend="65"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a70b0926db87641e71257abc79fb86839" prot="private" static="no" mutable="no">
+        <type>const byte</type>
+        <definition>const byte MAX_LEVEL</definition>
+        <argsstring></argsstring>
+        <name>MAX_LEVEL</name>
+        <initializer>= 10</initializer>
+        <briefdescription>
+<para>Maximum depth of the QuadTree. Value 10 corresponds to the smallest quadrants having size 16*16 cells. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="270" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="270" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a04523beefd0fd39995577ac7d06ea14a" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref>, <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>Dictionary&lt;IXLRangeAddress, IXLAddressable&gt; _ranges</definition>
+        <argsstring></argsstring>
+        <name>_ranges</name>
+        <briefdescription>
+<para>Collection of ranges belonging to the current quadrant (that cannot fit into child quadrants). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="275" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="275" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a22c312148a6e693b8ffaf7540b1277eb" prot="public" static="no" mutable="no">
+        <type>new IEnumerable&lt; T &gt;</type>
+        <definition>new IEnumerable&lt;T&gt; Ranges</definition>
+        <argsstring></argsstring>
+        <name>Ranges</name>
+        <initializer>=&gt; base.Ranges.Cast&lt;T&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="360" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="360" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a654a91179480186b2461733fcf7e9bb9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Quadrant</definition>
+        <argsstring>()</argsstring>
+        <name>Quadrant</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="71" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="71" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a869bfd8a1a13079c3c6e74e096250ac5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Add</definition>
+        <argsstring>(IXLAddressable range)</argsstring>
+        <name>Add</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+<para>Add a range to the quadrant or to one of the child quadrants (recursively). </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>True, if range was successfully added, false if it has been added before.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="98" bodyend="121"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1ad60d889b2abd54253b37c33b3fc170d3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt; GetAll</definition>
+        <argsstring>()</argsstring>
+        <name>GetAll</name>
+        <briefdescription>
+<para>Get all ranges from the quadrant and all child quadrants (recursively). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="126" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="126" bodyend="143"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a675ec3bbf32e2225b65c712b639d6c1c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt; GetIntersectedRanges</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Get all ranges from the quadrant and all child quadrants (recursively) that intersect the specified address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="148" bodyend="171"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a431ae87cdb9671ed1f5a3f60c34c2722" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt; GetIntersectedRanges</definition>
+        <argsstring>(IXLAddress address)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+<para>Get all ranges from the quadrant and all child quadrants (recursively) that cover the specified address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="176" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="176" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a7f914663c2e7c73402a4d61fc3b2ade2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Remove</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>Remove</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Remove the range from the quadrant or from child quadrants (recursively). </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>True if the range was removed, false if it does not exist in the QuadTree.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="205" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="205" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a768150b48fbaaa430d9da8d0cc7f9406" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt; RemoveAll</definition>
+        <argsstring>(Predicate&lt; IXLAddressable &gt; predicate)</argsstring>
+        <name>RemoveAll</name>
+        <param>
+          <type>Predicate&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+<para>Remove all the ranges matching specified criteria from the quadrant and its child quadrants (recursively). Don&apos;t use it for searching intersections as it would be much less efficient than GetIntersectedRanges(IXLRangeAddress). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="235" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="235" bodyend="261"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aafe7b93b3a3f3fb7228c4be8b1f137bf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Add</definition>
+        <argsstring>(T range)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>T</type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="362" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="362" bodyend="365"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aaa359b408f4fca0b8bc730f864faa192" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new IEnumerable&lt; T &gt;</type>
+        <definition>new IEnumerable&lt;T&gt; GetAll</definition>
+        <argsstring>()</argsstring>
+        <name>GetAll</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="367" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="367" bodyend="370"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a2a6b853cacc94e7c171bd6255a00109b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new IEnumerable&lt; T &gt;</type>
+        <definition>new IEnumerable&lt;T&gt; GetIntersectedRanges</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="372" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="372" bodyend="375"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a18ce453646695952e4b84ee12d8e7a00" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new IEnumerable&lt; T &gt;</type>
+        <definition>new IEnumerable&lt;T&gt; GetIntersectedRanges</definition>
+        <argsstring>(IXLAddress address)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="377" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="377" bodyend="380"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a40f3977758e9c477a59ceea03dc2a92e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Remove</definition>
+        <argsstring>(T range)</argsstring>
+        <name>Remove</name>
+        <param>
+          <type>T</type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="382" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="382" bodyend="385"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a323fbebdc434fe52a51be6ce64146b50" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; T &gt;</type>
+        <definition>IEnumerable&lt;T&gt; RemoveAll</definition>
+        <argsstring>(Predicate&lt; T &gt; predicate)</argsstring>
+        <name>RemoveAll</name>
+        <param>
+          <type>Predicate&lt; T &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="386" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="386" bodyend="389"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a70efe193b8d85a3f34ce66c1581b3570" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Quadrant</definition>
+        <argsstring>(byte level, short x, short y)</argsstring>
+        <name>Quadrant</name>
+        <param>
+          <type>byte</type>
+          <declname>level</declname>
+        </param>
+        <param>
+          <type>short</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>short</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="74" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="74" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a81dc83d85b475837503668bdb69b6503" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool AddInternal</definition>
+        <argsstring>(IXLAddressable range)</argsstring>
+        <name>AddInternal</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+<para>Add a range to the collection of quadrant&apos;s own ranges. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>True if the range was successfully added, false if it had been added before.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="285" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="285" bodyend="295"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a31d5ab175b7ff0aff93ccdacd1c1e006" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Covers</definition>
+        <argsstring>(in IXLRangeAddress rangeAddress)</argsstring>
+        <name>Covers</name>
+        <param>
+          <type>in <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Check if the current quadrant fully covers the specified address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="300" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="300" bodyend="306"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aaac7bb5bc26c45ef5357ffdf8e8eb412" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Covers</definition>
+        <argsstring>(in IXLAddress address)</argsstring>
+        <name>Covers</name>
+        <param>
+          <type>in <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+<para>Check if the current quadrant covers the specified address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="311" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="311" bodyend="317"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1ab2096a9af3cd7e31c7649029dbc16608" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Intersects</definition>
+        <argsstring>(in IXLRangeAddress rangeAddress)</argsstring>
+        <name>Intersects</name>
+        <param>
+          <type>in <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Check if the current quadrant intersects the specified address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="322" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="322" bodyend="329"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a4d4c681edd7b1ff8ebe8290b023525d4" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant" kindref="compound">Quadrant</ref> &gt;</type>
+        <definition>IEnumerable&lt;Quadrant&gt; CreateChildren</definition>
+        <argsstring>()</argsstring>
+        <name>CreateChildren</name>
+        <briefdescription>
+<para>Create a collection of child quadrants dividing the current one. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="334" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="334" bodyend="349"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A generic version of <ref refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant" kindref="compound">Quadrant</ref> </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="860">
+        <label>Quadrant&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant"/>
+        <childnode refid="861" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="861">
+        <label>Quadrant</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="862">
+        <label>Quadrant&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant"/>
+        <childnode refid="863" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="863">
+        <label>Quadrant</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" line="359" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Patterns/Quadrant.cs" bodystart="357" bodyend="390"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a04523beefd0fd39995577ac7d06ea14a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>_ranges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a869bfd8a1a13079c3c6e74e096250ac5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aafe7b93b3a3f3fb7228c4be8b1f137bf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a81dc83d85b475837503668bdb69b6503" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>AddInternal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1af00b658dc317bbafcea34281424a8e30" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Children</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a31d5ab175b7ff0aff93ccdacd1c1e006" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Covers</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aaac7bb5bc26c45ef5357ffdf8e8eb412" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Covers</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a4d4c681edd7b1ff8ebe8290b023525d4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>CreateChildren</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1ad60d889b2abd54253b37c33b3fc170d3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>GetAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aaa359b408f4fca0b8bc730f864faa192" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>GetAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a675ec3bbf32e2225b65c712b639d6c1c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>GetIntersectedRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a431ae87cdb9671ed1f5a3f60c34c2722" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>GetIntersectedRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a2a6b853cacc94e7c171bd6255a00109b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>GetIntersectedRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a18ce453646695952e4b84ee12d8e7a00" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>GetIntersectedRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1ab2096a9af3cd7e31c7649029dbc16608" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Intersects</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a406deaf43fea1614dbec4e67110ea59f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Level</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a70b0926db87641e71257abc79fb86839" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>MAX_LEVEL</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a7c648e131a7ac8383eb97b84ab7f064c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>MaximumColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a292eaaac59a27ce2e54c95ee8909af79" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>MaximumRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a0e8f0746abd7feddc0292e4ea7935b49" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>MinimumColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a0fe651140172a143540fe429cee70d81" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>MinimumRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a654a91179480186b2461733fcf7e9bb9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Quadrant</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a70efe193b8d85a3f34ce66c1581b3570" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Quadrant</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a8360d20db88d1680e2f6c7dc1204aa9b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Ranges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a22c312148a6e693b8ffaf7540b1277eb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Ranges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a7f914663c2e7c73402a4d61fc3b2ade2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a40f3977758e9c477a59ceea03dc2a92e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a768150b48fbaaa430d9da8d0cc7f9406" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>RemoveAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a323fbebdc434fe52a51be6ce64146b50" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>RemoveAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1aa79150e97d1ce1f10171e86541b97ad5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>X</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_patterns_1_1_quadrant_1a47978df427c498203e04f4bddbcadd37" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Patterns::Quadrant</scope><name>Y</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

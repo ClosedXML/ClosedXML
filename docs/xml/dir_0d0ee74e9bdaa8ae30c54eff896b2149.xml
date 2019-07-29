@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_0d0ee74e9bdaa8ae30c54eff896b2149" kind="dir">
+    <compoundname>PivotStyleFormats</compoundname>
+    <innerfile refid="_abstract_pivot_field_reference_8cs">AbstractPivotFieldReference.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_field_style_formats_8cs">IXLPivotFieldStyleFormats.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_style_format_8cs">IXLPivotStyleFormat.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_style_formats_8cs">IXLPivotStyleFormats.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_table_style_formats_8cs">IXLPivotTableStyleFormats.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_value_style_format_8cs">IXLPivotValueStyleFormat.cs</innerfile>
+    <innerfile refid="_pivot_label_field_reference_8cs">PivotLabelFieldReference.cs</innerfile>
+    <innerfile refid="_pivot_value_field_reference_8cs">PivotValueFieldReference.cs</innerfile>
+    <innerfile refid="_x_l_pivot_field_style_formats_8cs">XLPivotFieldStyleFormats.cs</innerfile>
+    <innerfile refid="_x_l_pivot_style_format_8cs">XLPivotStyleFormat.cs</innerfile>
+    <innerfile refid="_x_l_pivot_style_format_enums_8cs">XLPivotStyleFormatEnums.cs</innerfile>
+    <innerfile refid="_x_l_pivot_style_formats_8cs">XLPivotStyleFormats.cs</innerfile>
+    <innerfile refid="_x_l_pivot_table_style_formats_8cs">XLPivotTableStyleFormats.cs</innerfile>
+    <innerfile refid="_x_l_pivot_value_style_format_8cs">XLPivotValueStyleFormat.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/"/>
+  </compounddef>
+</doxygen>

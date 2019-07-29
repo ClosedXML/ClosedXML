@@ -1,0 +1,268 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLSheetProtection</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">ICloneable</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection" prot="public" virt="non-virtual">XLSheetProtection</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1acf7ddd10c8ac8ef720e8e90e289dde87" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLSheetProtectionElements</type>
+        <definition>XLSheetProtectionElements AllowedElements</definition>
+        <argsstring></argsstring>
+        <name>AllowedElements</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" bodystart="43" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a2cb187c0b86387d3bf17afd06d6cffd1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsProtected</definition>
+        <argsstring></argsstring>
+        <name>IsProtected</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" bodystart="45" bodyend="45"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a8305ed48ccd28b882c42b39425a08399" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection AllowElement</definition>
+        <argsstring>(XLSheetProtectionElements element, Boolean allowed=true)</argsstring>
+        <name>AllowElement</name>
+        <param>
+          <type>XLSheetProtectionElements</type>
+          <declname>element</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>allowed</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+<para>Adds the sheet protection element to the list of allowed elements. Beware that if you pass through XLSheetProtectionElements.None, this will have no effect. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>element</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The sheet protection element to add</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>allowed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Set to <computeroutput>true</computeroutput> to allow the element or <computeroutput>false</computeroutput> to disallow the element</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The current sheet protection</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="54" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a006b215102d5b2749ba8d4c1755eed39" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection AllowEverything</definition>
+        <argsstring>()</argsstring>
+        <name>AllowEverything</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1a006b215102d5b2749ba8d4c1755eed39">AllowEverything</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="56" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1afa6df54a1770b6dfdb99e14de2360aea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection AllowNone</definition>
+        <argsstring>()</argsstring>
+        <name>AllowNone</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1afa6df54a1770b6dfdb99e14de2360aea">AllowNone</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="58" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a18763f00c866ec455be8c55c95682441" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection CopyFrom</definition>
+        <argsstring>(IXLSheetProtection sheetProtection)</argsstring>
+        <name>CopyFrom</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1a18763f00c866ec455be8c55c95682441">CopyFrom</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+          <declname>sheetProtection</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="60" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1adf77e281df758d5cc381065f7cfdbbde" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection DisallowElement</definition>
+        <argsstring>(XLSheetProtectionElements element)</argsstring>
+        <name>DisallowElement</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1adf77e281df758d5cc381065f7cfdbbde">DisallowElement</reimplementedby>
+        <param>
+          <type>XLSheetProtectionElements</type>
+          <declname>element</declname>
+        </param>
+        <briefdescription>
+<para>Removes the sheet protection element to the list of allowed elements. Beware that if you pass through XLSheetProtectionElements.None, this will have no effect. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>element</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The sheet protection element to remove</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The current sheet protection</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="68" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a01617c285ed4b38119eb02cf88044607" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection Protect</definition>
+        <argsstring>()</argsstring>
+        <name>Protect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1a01617c285ed4b38119eb02cf88044607">Protect</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="70" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a21be62205b2799b151247268bf0e2a17" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection Protect</definition>
+        <argsstring>(String password)</argsstring>
+        <name>Protect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1a21be62205b2799b151247268bf0e2a17">Protect</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>password</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="72" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a02ea121427088a2ed6b3f715a738f270" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection Unprotect</definition>
+        <argsstring>()</argsstring>
+        <name>Unprotect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1a02ea121427088a2ed6b3f715a738f270">Unprotect</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="74" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1add76bee414ddf2c31935b427192a85c9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection" kindref="compound">IXLSheetProtection</ref></type>
+        <definition>IXLSheetProtection Unprotect</definition>
+        <argsstring>(String password)</argsstring>
+        <name>Unprotect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection_1add76bee414ddf2c31935b427192a85c9">Unprotect</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>password</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="76" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="653">
+        <label>IXLSheetProtection</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection"/>
+        <childnode refid="654" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="655">
+        <label>XLSheetProtection</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_protection"/>
+        <childnode refid="653" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="654">
+        <label>ICloneable</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="656">
+        <label>IXLSheetProtection</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection"/>
+        <childnode refid="657" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="657">
+        <label>ICloneable</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetProtection.cs" bodystart="41" bodyend="77"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1acf7ddd10c8ac8ef720e8e90e289dde87" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>AllowedElements</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a8305ed48ccd28b882c42b39425a08399" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>AllowElement</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a006b215102d5b2749ba8d4c1755eed39" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>AllowEverything</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1afa6df54a1770b6dfdb99e14de2360aea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>AllowNone</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a18763f00c866ec455be8c55c95682441" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>CopyFrom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1adf77e281df758d5cc381065f7cfdbbde" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>DisallowElement</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a2cb187c0b86387d3bf17afd06d6cffd1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>IsProtected</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a01617c285ed4b38119eb02cf88044607" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>Protect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a21be62205b2799b151247268bf0e2a17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>Protect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1a02ea121427088a2ed6b3f715a738f270" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>Unprotect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_protection_1add76bee414ddf2c31935b427192a85c9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetProtection</scope><name>Unprotect</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

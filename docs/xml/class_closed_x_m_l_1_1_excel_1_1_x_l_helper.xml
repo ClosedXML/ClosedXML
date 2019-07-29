@@ -1,0 +1,797 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLHelper</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a896cafc50a947b859597b95ba8bcae1e" prot="public" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int MinRowNumber</definition>
+        <argsstring></argsstring>
+        <name>MinRowNumber</name>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a46bd61037cba7aa0bd00ecbb4fa1ff8a" prot="public" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int MinColumnNumber</definition>
+        <argsstring></argsstring>
+        <name>MinColumnNumber</name>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a458d79cfdd67ea0b66d4d6813f98591b" prot="public" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int MaxRowNumber</definition>
+        <argsstring></argsstring>
+        <name>MaxRowNumber</name>
+        <initializer>= 1048576</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ade274d7d6d5932f433608e2fd9e100ff" prot="public" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int MaxColumnNumber</definition>
+        <argsstring></argsstring>
+        <name>MaxColumnNumber</name>
+        <initializer>= 16384</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a34565dbad8cb2d9b10ba9683e2587993" prot="public" static="no" mutable="no">
+        <type>const String</type>
+        <definition>const String MaxColumnLetter</definition>
+        <argsstring></argsstring>
+        <name>MaxColumnLetter</name>
+        <initializer>= &quot;XFD&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a2488c3ad261475d1a4d93f4dc914089f" prot="public" static="no" mutable="no">
+        <type>const Double</type>
+        <definition>const Double Epsilon</definition>
+        <argsstring></argsstring>
+        <name>Epsilon</name>
+        <initializer>= 1e-10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ab5125e7c6ec3a02e9e15b58b0b486c42" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String LastCell</definition>
+        <argsstring></argsstring>
+        <name>LastCell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a104b5c25f22a5c2ea5e9e39b455d5fac" prot="private" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>internal Graphics</type>
+        <definition>internal Graphics Graphics</definition>
+        <argsstring></argsstring>
+        <name>Graphics</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a962d3ddf9bd6e6a70689bd892465a7ac" prot="private" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>internal Double</type>
+        <definition>internal Double DpiX</definition>
+        <argsstring></argsstring>
+        <name>DpiX</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="26" bodyend="26"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ac1805264ffead92112873d6bd649d095" prot="private" static="yes" mutable="no">
+        <type>readonly Lazy&lt; Graphics &gt;</type>
+        <definition>readonly Lazy&lt;Graphics&gt; graphics</definition>
+        <argsstring></argsstring>
+        <name>graphics</name>
+        <initializer>= new Lazy&lt;Graphics&gt;(() =&gt; Graphics.FromImage(new Bitmap(200, 200)))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a6ec3d4e9f8bf6cb1b98b8a2edbfa92d6" prot="private" static="yes" mutable="no">
+        <type>internal readonly NumberStyles</type>
+        <definition>internal readonly NumberStyles NumberStyle</definition>
+        <argsstring></argsstring>
+        <name>NumberStyle</name>
+        <initializer>= NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a941131863d911d0a515914acf89efd9b" prot="private" static="yes" mutable="no">
+        <type>internal readonly CultureInfo</type>
+        <definition>internal readonly CultureInfo ParseCulture</definition>
+        <argsstring></argsstring>
+        <name>ParseCulture</name>
+        <initializer>= CultureInfo.InvariantCulture</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aadbe545b5bbef46ff9fac48ac933a8a8" prot="private" static="yes" mutable="no">
+        <type>internal readonly Regex</type>
+        <definition>internal readonly Regex A1SimpleRegex</definition>
+        <argsstring></argsstring>
+        <name>A1SimpleRegex</name>
+        <initializer>= new Regex(
+            @&quot;\A&quot;
+            + @&quot;(?&lt;Reference&gt;&quot; 
+            + @&quot;(?&lt;Sheet&gt;&quot; 
+            + @&quot;(&quot;
+            + @&quot;\&apos;([^\[\]\*/\\\?:\&apos;]+|\&apos;\&apos;)\&apos;&quot;
+            
+            + @&quot;|&quot;
+            + @&quot;\&apos;?\w+\&apos;?&quot; 
+            + @&quot;)&quot;
+            + @&quot;!)?&quot; 
+            + @&quot;(?&lt;Range&gt;&quot; 
+            + @&quot;\$?[a-zA-Z]{1,3}\$?\d{1,7}&quot; 
+            + @&quot;(?&lt;RangeEnd&gt;:\$?[a-zA-Z]{1,3}\$?\d{1,7})?&quot; 
+            + @&quot;|&quot;
+            + @&quot;(?&lt;ColumnNumbers&gt;\$?\d{1,7}:\$?\d{1,7})&quot; 
+            + @&quot;|&quot;
+            + @&quot;(?&lt;ColumnLetters&gt;\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})&quot; 
+            + @&quot;)&quot; 
+            + @&quot;)&quot; 
+            + @&quot;\Z&quot;
+            , RegexOptions.Compiled)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a818764a730385e99a6f1eba21acb9c55" prot="private" static="yes" mutable="no">
+        <type>internal readonly Regex</type>
+        <definition>internal readonly Regex NamedRangeReferenceRegex</definition>
+        <argsstring></argsstring>
+        <name>NamedRangeReferenceRegex</name>
+        <initializer>=
+            new Regex(@&quot;^(&apos;?(?&lt;Sheet&gt;[^&apos;!]+)&apos;?!(?&lt;Range&gt;.+))|((?&lt;Table&gt;[^\[]+)\[(?&lt;Column&gt;[^\]]+)\])$&quot;,
+                      RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture
+                )</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a67e6388729fbf97dc11af75f1b433530" prot="private" static="yes" mutable="no">
+        <type>readonly string []</type>
+        <definition>readonly string [] letters</definition>
+        <argsstring></argsstring>
+        <name>letters</name>
+        <initializer>= new[] { &quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;, &quot;F&quot;, &quot;G&quot;, &quot;H&quot;, &quot;I&quot;, &quot;J&quot;, &quot;K&quot;, &quot;L&quot;, &quot;M&quot;, &quot;N&quot;, &quot;O&quot;, &quot;P&quot;, &quot;Q&quot;, &quot;R&quot;, &quot;S&quot;, &quot;T&quot;, &quot;U&quot;, &quot;V&quot;, &quot;W&quot;, &quot;X&quot;, &quot;Y&quot;, &quot;Z&quot; }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1af4555cc440c1f096e90ffcb8a52efe3d" prot="private" static="yes" mutable="no">
+        <type>readonly string []</type>
+        <definition>readonly string [] allLetters</definition>
+        <argsstring></argsstring>
+        <name>allLetters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="61" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a2a5967d8f2a2ac1b3d2825e6e5478882" prot="private" static="yes" mutable="no">
+        <type>readonly Dictionary&lt; string, int &gt;</type>
+        <definition>readonly Dictionary&lt;string, int&gt; letterIndexes</definition>
+        <argsstring></argsstring>
+        <name>letterIndexes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="62" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a5762b258b471221f787e8fce72858fcc" prot="private" static="yes" mutable="no">
+        <type>readonly Regex</type>
+        <definition>readonly Regex A1RegexRelative</definition>
+        <argsstring></argsstring>
+        <name>A1RegexRelative</name>
+        <initializer>= new Regex(
+      @&quot;(?&lt;=\W)(?&lt;one&gt;\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)&quot; 
+    + @&quot;|(?&lt;=\W)(?&lt;two&gt;\$?\d{1,7}:\$?\d{1,7})(?=\W)&quot; 
+    + @&quot;|(?&lt;=\W)(?&lt;three&gt;\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)&quot;, RegexOptions.Compiled)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="255" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="255" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a8c9c01bcb2b3d2590a7e4fb792bb98bd" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>static</type>
+        <definition>static XLHelper</definition>
+        <argsstring>()</argsstring>
+        <name>XLHelper</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="64" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a0eb0a914d445d3ac936aef773643cc33" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal int</type>
+        <definition>static internal int TrimColumnNumber</definition>
+        <argsstring>(int columnNumber)</argsstring>
+        <name>TrimColumnNumber</name>
+        <param>
+          <type>int</type>
+          <declname>columnNumber</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="119" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="119" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a8c9da332f83a43f3fa03a8d8dc8a8bd5" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal int</type>
+        <definition>static internal int TrimRowNumber</definition>
+        <argsstring>(int rowNumber)</argsstring>
+        <name>TrimRowNumber</name>
+        <param>
+          <type>int</type>
+          <declname>rowNumber</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="124" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="124" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a2997c321ae7a978548db90c710d54be5" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal string []</type>
+        <definition>static internal string [] SplitRange</definition>
+        <argsstring>(string range)</argsstring>
+        <name>SplitRange</name>
+        <param>
+          <type>string</type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="207" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="207" bodyend="210"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a8c4423b9bfb29df01f9146d21cecb1ef" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_rows" kindref="compound">IXLTableRows</ref></type>
+        <definition>static internal IXLTableRows InsertRowsWithoutEvents</definition>
+        <argsstring>(Func&lt; int, bool, IXLRangeRows &gt; insertFunc, XLTableRange tableRange, Int32 numberOfRows, Boolean expandTable)</argsstring>
+        <name>InsertRowsWithoutEvents</name>
+        <param>
+          <type>Func&lt; int, bool, <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref> &gt;</type>
+          <declname>insertFunc</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range" kindref="compound">XLTableRange</ref></type>
+          <declname>tableRange</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>numberOfRows</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>expandTable</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="222" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="222" bodyend="240"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a1d4ef45d46bda2c61bcf5a8c81e5428e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string Evaluator</definition>
+        <argsstring>(Match match, Int32 row, String column)</argsstring>
+        <name>Evaluator</name>
+        <param>
+          <type>Match</type>
+          <declname>match</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>row</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="260" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="260" bodyend="276"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1abf2e04c3fed3e2b45a36dbeca9ddd482" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>static String ReplaceGroup</definition>
+        <argsstring>(String value, String item)</argsstring>
+        <name>ReplaceGroup</name>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>item</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="278" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="278" bodyend="284"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a5090c65ec1678a98066b4fd5f66c41cf" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal String</type>
+        <definition>static internal String ReplaceRelative</definition>
+        <argsstring>(String value, Int32 row, String column)</argsstring>
+        <name>ReplaceRelative</name>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>row</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="286" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="286" bodyend="291"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a4267b89997f984ea5cf77aa326b1d812" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal bool</type>
+        <definition>static internal bool IsValidOADateNumber</definition>
+        <argsstring>(this double d)</argsstring>
+        <name>IsValidOADateNumber</name>
+        <param>
+          <type>this double</type>
+          <declname>d</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="316" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="316" bodyend="319"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a5c397846e3af5b5cce482657a72f3711" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int GetColumnNumberFromLetter</definition>
+        <argsstring>(string columnLetter)</argsstring>
+        <name>GetColumnNumberFromLetter</name>
+        <param>
+          <type>string</type>
+          <declname>columnLetter</declname>
+        </param>
+        <briefdescription>
+<para>Gets the column number of a given column letter. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>columnLetter</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column letter to translate into a column number. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="86" bodyend="100"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a33f8aa07f0debffa3315874284414eaf" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string GetColumnLetterFromNumber</definition>
+        <argsstring>(int columnNumber, bool trimToAllowed=false)</argsstring>
+        <name>GetColumnLetterFromNumber</name>
+        <param>
+          <type>int</type>
+          <declname>columnNumber</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>trimToAllowed</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Gets the column letter of a given column number. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>columnNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column number to translate into a column letter.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>trimToAllowed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if set to <computeroutput>true</computeroutput> the column letter will be restricted to the allowed range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="108" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="108" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a893e8f25f68c1cbc74846acc2913d646" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool IsValidColumn</definition>
+        <argsstring>(string column)</argsstring>
+        <name>IsValidColumn</name>
+        <param>
+          <type>string</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="129" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="129" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aa218ba0710133342f5d01ab6fc232f4f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool IsValidRow</definition>
+        <argsstring>(string rowString)</argsstring>
+        <name>IsValidRow</name>
+        <param>
+          <type>string</type>
+          <declname>rowString</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="160" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="160" bodyend="165"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a72abecbc45c31862952f27dc0c60c348" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool IsValidA1Address</definition>
+        <argsstring>(string address)</argsstring>
+        <name>IsValidA1Address</name>
+        <param>
+          <type>string</type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="167" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="167" bodyend="182"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aff98d8bae616e2f999a9cadffe96988f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean IsValidRangeAddress</definition>
+        <argsstring>(String rangeAddress)</argsstring>
+        <name>IsValidRangeAddress</name>
+        <param>
+          <type>String</type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="184" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="184" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a0fe15f69d2fb2ef6571b3bdea83d1dd9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean IsValidRangeAddress</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>IsValidRangeAddress</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="189" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="189" bodyend="196"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ae191741fac9a57dd99134c45f162ecd7" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int GetColumnNumberFromAddress</definition>
+        <argsstring>(string cellAddressString)</argsstring>
+        <name>GetColumnNumberFromAddress</name>
+        <param>
+          <type>string</type>
+          <declname>cellAddressString</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="198" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="198" bodyend="205"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ac396e134c56a32a22e64330985a3bed8" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Int32</type>
+        <definition>static Int32 GetPtFromPx</definition>
+        <argsstring>(Double px)</argsstring>
+        <name>GetPtFromPx</name>
+        <param>
+          <type>Double</type>
+          <declname>px</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="212" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="212" bodyend="215"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ab24b83b2d2f537d0088348157399e848" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Double</type>
+        <definition>static Double GetPxFromPt</definition>
+        <argsstring>(Int32 pt)</argsstring>
+        <name>GetPxFromPt</name>
+        <param>
+          <type>Int32</type>
+          <declname>pt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="217" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="217" bodyend="220"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aa9363cc959dbb8493e8e72736ebfef1c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean AreEqual</definition>
+        <argsstring>(Double d1, Double d2)</argsstring>
+        <name>AreEqual</name>
+        <param>
+          <type>Double</type>
+          <declname>d1</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>d2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="293" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="293" bodyend="296"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aad13cab3e6d202f37e5f6f5821fb0829" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DateTime</type>
+        <definition>static DateTime GetDate</definition>
+        <argsstring>(Object v)</argsstring>
+        <name>GetDate</name>
+        <param>
+          <type>Object</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="298" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="298" bodyend="314"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ae987893833e76724cf2fb04bdfbdaf71" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean ValidateName</definition>
+        <argsstring>(String objectType, String newName, String oldName, IEnumerable&lt; String &gt; existingNames, out String message)</argsstring>
+        <name>ValidateName</name>
+        <param>
+          <type>String</type>
+          <declname>objectType</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>newName</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>oldName</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; String &gt;</type>
+          <declname>existingNames</declname>
+        </param>
+        <param>
+          <type>out String</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="321" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="321" bodyend="358"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Common methods </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/XLHelper.cs" bodystart="13" bodyend="359"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a5762b258b471221f787e8fce72858fcc" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>A1RegexRelative</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aadbe545b5bbef46ff9fac48ac933a8a8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>A1SimpleRegex</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1af4555cc440c1f096e90ffcb8a52efe3d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>allLetters</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aa9363cc959dbb8493e8e72736ebfef1c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>AreEqual</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a962d3ddf9bd6e6a70689bd892465a7ac" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>DpiX</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a2488c3ad261475d1a4d93f4dc914089f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>Epsilon</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a1d4ef45d46bda2c61bcf5a8c81e5428e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>Evaluator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a33f8aa07f0debffa3315874284414eaf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>GetColumnLetterFromNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ae191741fac9a57dd99134c45f162ecd7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>GetColumnNumberFromAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a5c397846e3af5b5cce482657a72f3711" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>GetColumnNumberFromLetter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aad13cab3e6d202f37e5f6f5821fb0829" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>GetDate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ac396e134c56a32a22e64330985a3bed8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>GetPtFromPx</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ab24b83b2d2f537d0088348157399e848" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>GetPxFromPt</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a104b5c25f22a5c2ea5e9e39b455d5fac" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>Graphics</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ac1805264ffead92112873d6bd649d095" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>graphics</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a8c4423b9bfb29df01f9146d21cecb1ef" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>InsertRowsWithoutEvents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a72abecbc45c31862952f27dc0c60c348" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>IsValidA1Address</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a893e8f25f68c1cbc74846acc2913d646" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>IsValidColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a4267b89997f984ea5cf77aa326b1d812" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>IsValidOADateNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aff98d8bae616e2f999a9cadffe96988f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>IsValidRangeAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a0fe15f69d2fb2ef6571b3bdea83d1dd9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>IsValidRangeAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1aa218ba0710133342f5d01ab6fc232f4f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>IsValidRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ab5125e7c6ec3a02e9e15b58b0b486c42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>LastCell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a2a5967d8f2a2ac1b3d2825e6e5478882" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>letterIndexes</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a67e6388729fbf97dc11af75f1b433530" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>letters</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a34565dbad8cb2d9b10ba9683e2587993" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>MaxColumnLetter</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ade274d7d6d5932f433608e2fd9e100ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>MaxColumnNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a458d79cfdd67ea0b66d4d6813f98591b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>MaxRowNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a46bd61037cba7aa0bd00ecbb4fa1ff8a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>MinColumnNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a896cafc50a947b859597b95ba8bcae1e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>MinRowNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a818764a730385e99a6f1eba21acb9c55" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>NamedRangeReferenceRegex</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a6ec3d4e9f8bf6cb1b98b8a2edbfa92d6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>NumberStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a941131863d911d0a515914acf89efd9b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>ParseCulture</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1abf2e04c3fed3e2b45a36dbeca9ddd482" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>ReplaceGroup</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a5090c65ec1678a98066b4fd5f66c41cf" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>ReplaceRelative</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a2997c321ae7a978548db90c710d54be5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>SplitRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a0eb0a914d445d3ac936aef773643cc33" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>TrimColumnNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a8c9da332f83a43f3fa03a8d8dc8a8bd5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>TrimRowNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1ae987893833e76724cf2fb04bdfbdaf71" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>ValidateName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_helper_1a8c9c01bcb2b3d2590a7e4fb792bb98bd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLHelper</scope><name>XLHelper</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

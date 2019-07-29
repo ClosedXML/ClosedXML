@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFIconSetConverter</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter" prot="public" virt="non-virtual">IXLCFConverter</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormattingRule</type>
+        <definition>ConditionalFormattingRule Convert</definition>
+        <argsstring>(IXLConditionalFormat cf, Int32 priority, XLWorkbook.SaveContext context)</argsstring>
+        <name>Convert</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44">Convert</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>cf</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>priority</declname>
+        </param>
+        <param>
+          <type>XLWorkbook.SaveContext</type>
+          <declname>context</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFIconSetConverter.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFIconSetConverter.cs" bodystart="8" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1065">
+        <label>XLCFIconSetConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter"/>
+        <childnode refid="1066" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1066">
+        <label>IXLCFConverter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1067">
+        <label>XLCFIconSetConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter"/>
+        <childnode refid="1068" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1068">
+        <label>IXLCFConverter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFIconSetConverter.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFIconSetConverter.cs" bodystart="6" bodyend="23"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFIconSetConverter</scope><name>Convert</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

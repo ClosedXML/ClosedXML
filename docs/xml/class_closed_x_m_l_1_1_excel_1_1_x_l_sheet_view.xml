@@ -1,0 +1,321 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLSheetView</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view" prot="public" virt="non-virtual">IXLSheetView</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1aae2d6a9cdd1872e54ec372b1d7f191a5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean FreezePanes</definition>
+        <argsstring></argsstring>
+        <name>FreezePanes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1afb44de5c80ca5af5e6b8aaec95b7419b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 SplitColumn</definition>
+        <argsstring></argsstring>
+        <name>SplitColumn</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="26" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a8127cd8639169fa436cc301848b40fae" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 SplitRow</definition>
+        <argsstring></argsstring>
+        <name>SplitRow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ae2e7b3145449f10b23bc9210918c93e9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLSheetViewOptions</type>
+        <definition>XLSheetViewOptions View</definition>
+        <argsstring></argsstring>
+        <name>View</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="28" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ae02f7f58a19c65c0104911c730702792" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int ZoomScale</definition>
+        <argsstring></argsstring>
+        <name>ZoomScale</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="31" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a8bb1997838bde810abbfc9c57c0378d8" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int ZoomScaleNormal</definition>
+        <argsstring></argsstring>
+        <name>ZoomScaleNormal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a81539906791ebdd19effe617803437bc" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int ZoomScalePageLayoutView</definition>
+        <argsstring></argsstring>
+        <name>ZoomScalePageLayoutView</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="55" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a1ff33d421fd0b7d76d9e5b1ce0457ffb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int ZoomScaleSheetLayoutView</definition>
+        <argsstring></argsstring>
+        <name>ZoomScaleSheetLayoutView</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="57" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac03888e06bcadfaa28813e5228a66094" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int _zoomScale</definition>
+        <argsstring></argsstring>
+        <name>_zoomScale</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="59" bodyend="59"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ad711a434490598536a8e21bb42155bc8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLSheetView</definition>
+        <argsstring>()</argsstring>
+        <name>XLSheetView</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="7" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ae7ea2510bebe641a82b2cf94a26e7a5d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLSheetView</definition>
+        <argsstring>(IXLSheetView sheetView)</argsstring>
+        <name>XLSheetView</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view" kindref="compound">IXLSheetView</ref></type>
+          <declname>sheetView</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="17" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a42164e6bc10aa4680a71e80eb0fe6d50" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Freeze</definition>
+        <argsstring>(Int32 rows, Int32 columns)</argsstring>
+        <name>Freeze</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a42164e6bc10aa4680a71e80eb0fe6d50">Freeze</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>rows</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>columns</declname>
+        </param>
+        <briefdescription>
+<para>Freezes the specified rows and columns. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The rows to freeze.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>columns</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The columns to freeze.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="61" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="61" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac79ab58abe908ea2724ed59673719dc3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void FreezeColumns</definition>
+        <argsstring>(Int32 columns)</argsstring>
+        <name>FreezeColumns</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac79ab58abe908ea2724ed59673719dc3">FreezeColumns</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>columns</declname>
+        </param>
+        <briefdescription>
+<para>Freezes the left X columns. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>columns</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The columns to freeze.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="68" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a9e7b23ba82736240828ba2ec7f0819f2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void FreezeRows</definition>
+        <argsstring>(Int32 rows)</argsstring>
+        <name>FreezeRows</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a9e7b23ba82736240828ba2ec7f0819f2">FreezeRows</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>rows</declname>
+        </param>
+        <briefdescription>
+<para>Freezes the top X rows. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The rows to freeze.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="74" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="74" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac44af831f897767a03a243431d1fbfc0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view" kindref="compound">IXLSheetView</ref></type>
+        <definition>IXLSheetView SetView</definition>
+        <argsstring>(XLSheetViewOptions value)</argsstring>
+        <name>SetView</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac44af831f897767a03a243431d1fbfc0">SetView</reimplements>
+        <param>
+          <type>XLSheetViewOptions</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="80" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="80" bodyend="84"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1750">
+        <label>IXLSheetView</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view"/>
+      </node>
+      <node id="1749">
+        <label>XLSheetView</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view"/>
+        <childnode refid="1750" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1752">
+        <label>IXLSheetView</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view"/>
+      </node>
+      <node id="1751">
+        <label>XLSheetView</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view"/>
+        <childnode refid="1752" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLSheetView.cs" bodystart="5" bodyend="85"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac03888e06bcadfaa28813e5228a66094" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>_zoomScale</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a42164e6bc10aa4680a71e80eb0fe6d50" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>Freeze</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac79ab58abe908ea2724ed59673719dc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>FreezeColumns</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1aae2d6a9cdd1872e54ec372b1d7f191a5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>FreezePanes</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a9e7b23ba82736240828ba2ec7f0819f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>FreezeRows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac44af831f897767a03a243431d1fbfc0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>SetView</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1afb44de5c80ca5af5e6b8aaec95b7419b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>SplitColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a8127cd8639169fa436cc301848b40fae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>SplitRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ae2e7b3145449f10b23bc9210918c93e9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>View</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ad711a434490598536a8e21bb42155bc8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>XLSheetView</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ae7ea2510bebe641a82b2cf94a26e7a5d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>XLSheetView</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ae02f7f58a19c65c0104911c730702792" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>ZoomScale</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a8bb1997838bde810abbfc9c57c0378d8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>ZoomScaleNormal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a81539906791ebdd19effe617803437bc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>ZoomScalePageLayoutView</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a1ff33d421fd0b7d76d9e5b1ce0457ffb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetView</scope><name>ZoomScaleSheetLayoutView</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

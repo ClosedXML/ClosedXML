@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_base_converter" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFBaseConverter</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_base_converter_1a87ffedc2eaf071692e1b43ef4acbbd68" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormattingRule</type>
+        <definition>static ConditionalFormattingRule Convert</definition>
+        <argsstring>(IXLConditionalFormat cf, int priority)</argsstring>
+        <name>Convert</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>cf</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>priority</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFBaseConverter.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFBaseConverter.cs" bodystart="8" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFBaseConverter.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFBaseConverter.cs" bodystart="6" bodyend="17"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_base_converter_1a87ffedc2eaf071692e1b43ef4acbbd68" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFBaseConverter</scope><name>Convert</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

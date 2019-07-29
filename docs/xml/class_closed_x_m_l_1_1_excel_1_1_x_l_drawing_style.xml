@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDrawingStyle</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" prot="public" virt="non-virtual">IXLDrawingStyle</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1aaf168ee23e97bd4760c3f2fb82fe8363" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment" kindref="compound">IXLDrawingAlignment</ref></type>
+        <definition>IXLDrawingAlignment Alignment</definition>
+        <argsstring></argsstring>
+        <name>Alignment</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1a1346f8246c34e459cff38d3d9e96e93c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_colors_and_lines" kindref="compound">IXLDrawingColorsAndLines</ref></type>
+        <definition>IXLDrawingColorsAndLines ColorsAndLines</definition>
+        <argsstring></argsstring>
+        <name>ColorsAndLines</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1acf92fc91855c0564f8d196aa9eee3f83" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_size" kindref="compound">IXLDrawingSize</ref></type>
+        <definition>IXLDrawingSize Size</definition>
+        <argsstring></argsstring>
+        <name>Size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1aeab7ffffd027c1084d29fface8a221e1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_protection" kindref="compound">IXLDrawingProtection</ref></type>
+        <definition>IXLDrawingProtection Protection</definition>
+        <argsstring></argsstring>
+        <name>Protection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1ab4c8896cfce6e8766ea331c2937bcaa1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_properties" kindref="compound">IXLDrawingProperties</ref></type>
+        <definition>IXLDrawingProperties Properties</definition>
+        <argsstring></argsstring>
+        <name>Properties</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="23" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1ad35c50a1928915363716635ac31ea551" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins" kindref="compound">IXLDrawingMargins</ref></type>
+        <definition>IXLDrawingMargins Margins</definition>
+        <argsstring></argsstring>
+        <name>Margins</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="24" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1a712e67dac2313f7d6287d22247d597bd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_web" kindref="compound">IXLDrawingWeb</ref></type>
+        <definition>IXLDrawingWeb Web</definition>
+        <argsstring></argsstring>
+        <name>Web</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1ace1e13e5e12b12b2d33a242bba9bf0b6" prot="public" static="yes" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle DefaultCommentStyle</definition>
+        <argsstring></argsstring>
+        <name>DefaultCommentStyle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="28" bodyend="58"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1a925dc63721316cd83085cd3d5a781ba4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDrawingStyle</definition>
+        <argsstring>()</argsstring>
+        <name>XLDrawingStyle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="5" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="5" bodyend="15"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1278">
+        <label>IXLDrawingStyle</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style"/>
+      </node>
+      <node id="1277">
+        <label>XLDrawingStyle</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style"/>
+        <childnode refid="1278" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1280">
+        <label>IXLDrawingStyle</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style"/>
+      </node>
+      <node id="1279">
+        <label>XLDrawingStyle</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style"/>
+        <childnode refid="1280" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" line="4" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingStyle.cs" bodystart="3" bodyend="59"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1aaf168ee23e97bd4760c3f2fb82fe8363" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>Alignment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1a1346f8246c34e459cff38d3d9e96e93c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>ColorsAndLines</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1ace1e13e5e12b12b2d33a242bba9bf0b6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>DefaultCommentStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1ad35c50a1928915363716635ac31ea551" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>Margins</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1ab4c8896cfce6e8766ea331c2937bcaa1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>Properties</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1aeab7ffffd027c1084d29fface8a221e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>Protection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1acf92fc91855c0564f8d196aa9eee3f83" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>Size</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1a712e67dac2313f7d6287d22247d597bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>Web</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_style_1a925dc63721316cd83085cd3d5a781ba4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingStyle</scope><name>XLDrawingStyle</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,1081 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLTableTheme</compoundname>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aee2560fcf6ba3ecd66fea8d597807241" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme None</definition>
+        <argsstring></argsstring>
+        <name>None</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;None&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1abca5e6a41cf43348505857cb6de36a40" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium28</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium28</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium28&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a46d76b56ee34cebf92cfab15a14a1e81" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium27</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium27</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium27&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1acfd7ad17c183bbe9a9d2e7d832a3b5f5" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium26</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium26</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium26&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a1e22aea849e96ca6a67189c8bbf7e8b5" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium25</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium25</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium25&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a7ebf36e2398b660de9a38758b72f362f" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium24</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium24</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium24&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ad44bae56ceebed741556b22df50e802c" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium23</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium23</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium23&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a5dec91c724695740c497ec41edfdd047" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium22</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium22</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium22&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae53f15cf03c8144392a4454d581953a3" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium21</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium21</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium21&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a3ba93b370f8dcb442c4f096140ee2931" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium20</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium20</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium20&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a04badffd7f609e7414bf6863a13aee82" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium19</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium19</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium19&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0861f30a0e7207fac826ab48958e7938" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium18</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium18</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium18&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae9cb68bf30a97c70f351242a735080ad" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium17</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium17</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium17&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae7707a03ad3e992408bb8e88b1f9e51f" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium16</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium16</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium16&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a618a434e5c75ab87ef657626db2790f6" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium15</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium15</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium15&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a13887b3e9cf8ef6adfb62c4ab51e244f" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium14</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium14</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium14&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a5e22fa4946f60266abceef57924260bb" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium13</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium13</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium13&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1abcc0495557812955e23c358628ec977d" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium12</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium12</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium12&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a20df844962ec23a4051f007f77cfeb78" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium11</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium11</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium11&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a585649dcd91b13a6d9483446ef812a0f" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium10</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium10</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium10&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a75051076610469b2d77b5fa97aea10bb" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium9</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium9</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium9&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a59deaf5389723f727df6fa6f33cb0259" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium8</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium8</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium8&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8e3511c0cde256234f0b5850efc360dc" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium7</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium7</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium7&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae7e853497d0e9a43503994d55e879a69" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium6</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium6</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium6&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a9261ff3f858e07361b8c639548666ea0" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium5</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium5</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium5&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ac194d0def017fd587d15d315d3bfe7aa" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium4</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium4</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium4&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1abe3354ca8ad5ec764240b182e24e4071" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium3</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium3</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium3&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a87c5f26f6255f28a65bcef526a37b734" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium2</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium2</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium2&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ac92c4346ca0c1b0046543435fd2e8a0b" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleMedium1</definition>
+        <argsstring></argsstring>
+        <name>TableStyleMedium1</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleMedium1&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a85fbc24e4c7397fbc56d16be8787dba8" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight21</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight21</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight21&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae36a800ec7cb7de4df07d6f51b9c2873" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight20</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight20</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight20&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8d374fa591203a359128b8c8969fb03a" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight19</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight19</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight19&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aa68a6270d4c0e68650ee4cf361606c35" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight18</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight18</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight18&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a04b50d21aa32c96f061ece0db77601d9" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight17</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight17</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight17&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aa346b73b1ddc0b69673acaa6a605331a" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight16</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight16</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight16&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ad937a34e4e42dc08b02b6f136895b9c0" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight15</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight15</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight15&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="44" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a11935ae034ab14250ed261132329192d" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight14</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight14</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight14&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a36d6c8250bf5c2760227c9af72517eb5" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight13</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight13</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight13&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a67ce9ad9f1a61e63c6c9b6325961af7e" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight12</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight12</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight12&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="47" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a721180e0759ca20b27106e4855c30875" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight11</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight11</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight11&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1af0300435f5a1ef5dc5e35dcf6848d93b" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight10</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight10</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight10&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae5d9f61155192e0b9f7a9f48f114d88a" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight9</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight9</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight9&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae43939d5edf175169c53e72ac8bb31f8" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight8</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight8</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight8&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a481a8927850593341c8bbfb9a8f27b7e" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight7</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight7</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight7&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a6f3ac0615c8a256db29671a86446f686" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight6</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight6</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight6&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a43d700393079cff80a6c99a4a4acb92e" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight5</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight5</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight5&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aec12f1fcfa6c757fa2ee09aec1202ac3" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight4</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight4</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight4&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8a9ef2e7e585bd44a3b01ceba0735d61" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight3</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight3</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight3&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8b9340ceedb89402939a17da70e6316f" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight2</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight2</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight2&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a6d2fc2ac793e62eb438e8c98dff9dfa6" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleLight1</definition>
+        <argsstring></argsstring>
+        <name>TableStyleLight1</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleLight1&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="58" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a44ad2f744a00bdefe55cca14c1053e22" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark11</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark11</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark11&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a55e098a47ad0ff467d8865502deb9dd6" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark10</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark10</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark10&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a3f3747700fcb26a9db13e2da1485e450" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark9</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark9</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark9&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="61" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae45c9edd5126e5c15c022e560580d9d5" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark8</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark8</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark8&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="62" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a2e0f363e2fed8cbaa162bc1a6f392429" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark7</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark7</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark7&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="63" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a9bf743c033524952cadb76fa1c8de68d" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark6</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark6</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark6&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a26ef234438b3b0bdbce79b0ec399eac4" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark5</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark5</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark5&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a474f71bf655278518ba8739bb01cb241" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark4</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark4</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark4&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="66" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0d5f9d19f938c0d3184250b8751732b1" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark3</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark3</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark3&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0d5f6109f6a91aec516e54d40e91a5c5" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark2</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark2</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark2&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ac81b9f023c9ecfd5e5e9822144faa43b" prot="public" static="yes" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>readonly XLTableTheme TableStyleDark1</definition>
+        <argsstring></argsstring>
+        <name>TableStyleDark1</name>
+        <initializer>= new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref>(&quot;TableStyleDark1&quot;)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="69" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a7ee9065718e6628dc7791b756fa6c0f9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>string</type>
+        <definition>string Name</definition>
+        <argsstring></argsstring>
+        <name>Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="71" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="71" bodyend="71"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae51c508c5fc46cd8a37f8ef0fe6b59e8" prot="private" static="yes" mutable="no">
+        <type>IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref> &gt;</type>
+        <definition>IEnumerable&lt;XLTableTheme&gt; allThemes</definition>
+        <argsstring></argsstring>
+        <name>allThemes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="78" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1af1c7ca1a62c594c450e6e35b6b6ddc6a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLTableTheme</definition>
+        <argsstring>(string name)</argsstring>
+        <name>XLTableTheme</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="73" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="95" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="95" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="109" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="109" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="114" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="114" bodyend="117"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a6f5ddf1ae2944e7af82dc57d79d41743" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref> &gt;</type>
+        <definition>static IEnumerable&lt;XLTableTheme&gt; GetAllThemes</definition>
+        <argsstring>()</argsstring>
+        <name>GetAllThemes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="80" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="80" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0756743f76b0126f434c3ef560e22c34" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme" kindref="compound">XLTableTheme</ref></type>
+        <definition>static XLTableTheme FromName</definition>
+        <argsstring>(string name)</argsstring>
+        <name>FromName</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="88" bodyend="91"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1928">
+        <label>XLTableTheme</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme"/>
+        <childnode refid="1928" relation="usage">
+          <edgelabel>TableStyleDark5</edgelabel>
+          <edgelabel>TableStyleLight20</edgelabel>
+          <edgelabel>TableStyleMedium3</edgelabel>
+          <edgelabel>TableStyleMedium11</edgelabel>
+          <edgelabel>TableStyleMedium20</edgelabel>
+          <edgelabel>TableStyleDark6</edgelabel>
+          <edgelabel>TableStyleDark10</edgelabel>
+          <edgelabel>TableStyleLight10</edgelabel>
+          <edgelabel>TableStyleLight21</edgelabel>
+          <edgelabel>TableStyleMedium4</edgelabel>
+          <edgelabel>...</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/XLTableTheme.cs" bodystart="7" bodyend="120"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae51c508c5fc46cd8a37f8ef0fe6b59e8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>allThemes</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0756743f76b0126f434c3ef560e22c34" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>FromName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a6f5ddf1ae2944e7af82dc57d79d41743" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>GetAllThemes</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a7ee9065718e6628dc7791b756fa6c0f9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>Name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aee2560fcf6ba3ecd66fea8d597807241" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>None</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ac81b9f023c9ecfd5e5e9822144faa43b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a55e098a47ad0ff467d8865502deb9dd6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark10</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a44ad2f744a00bdefe55cca14c1053e22" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark11</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0d5f6109f6a91aec516e54d40e91a5c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0d5f9d19f938c0d3184250b8751732b1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark3</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a474f71bf655278518ba8739bb01cb241" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark4</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a26ef234438b3b0bdbce79b0ec399eac4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark5</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a9bf743c033524952cadb76fa1c8de68d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark6</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a2e0f363e2fed8cbaa162bc1a6f392429" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark7</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae45c9edd5126e5c15c022e560580d9d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark8</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a3f3747700fcb26a9db13e2da1485e450" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleDark9</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a6d2fc2ac793e62eb438e8c98dff9dfa6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1af0300435f5a1ef5dc5e35dcf6848d93b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight10</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a721180e0759ca20b27106e4855c30875" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight11</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a67ce9ad9f1a61e63c6c9b6325961af7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight12</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a36d6c8250bf5c2760227c9af72517eb5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight13</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a11935ae034ab14250ed261132329192d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight14</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ad937a34e4e42dc08b02b6f136895b9c0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight15</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aa346b73b1ddc0b69673acaa6a605331a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight16</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a04b50d21aa32c96f061ece0db77601d9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight17</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aa68a6270d4c0e68650ee4cf361606c35" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight18</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8d374fa591203a359128b8c8969fb03a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight19</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8b9340ceedb89402939a17da70e6316f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae36a800ec7cb7de4df07d6f51b9c2873" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight20</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a85fbc24e4c7397fbc56d16be8787dba8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight21</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8a9ef2e7e585bd44a3b01ceba0735d61" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight3</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aec12f1fcfa6c757fa2ee09aec1202ac3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight4</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a43d700393079cff80a6c99a4a4acb92e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight5</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a6f3ac0615c8a256db29671a86446f686" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight6</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a481a8927850593341c8bbfb9a8f27b7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight7</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae43939d5edf175169c53e72ac8bb31f8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight8</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae5d9f61155192e0b9f7a9f48f114d88a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleLight9</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ac92c4346ca0c1b0046543435fd2e8a0b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a585649dcd91b13a6d9483446ef812a0f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium10</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a20df844962ec23a4051f007f77cfeb78" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium11</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1abcc0495557812955e23c358628ec977d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium12</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a5e22fa4946f60266abceef57924260bb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium13</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a13887b3e9cf8ef6adfb62c4ab51e244f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium14</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a618a434e5c75ab87ef657626db2790f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium15</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae7707a03ad3e992408bb8e88b1f9e51f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium16</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae9cb68bf30a97c70f351242a735080ad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium17</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a0861f30a0e7207fac826ab48958e7938" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium18</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a04badffd7f609e7414bf6863a13aee82" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium19</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a87c5f26f6255f28a65bcef526a37b734" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a3ba93b370f8dcb442c4f096140ee2931" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium20</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae53f15cf03c8144392a4454d581953a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium21</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a5dec91c724695740c497ec41edfdd047" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium22</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ad44bae56ceebed741556b22df50e802c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium23</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a7ebf36e2398b660de9a38758b72f362f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium24</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a1e22aea849e96ca6a67189c8bbf7e8b5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium25</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1acfd7ad17c183bbe9a9d2e7d832a3b5f5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium26</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a46d76b56ee34cebf92cfab15a14a1e81" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium27</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1abca5e6a41cf43348505857cb6de36a40" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium28</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1abe3354ca8ad5ec764240b182e24e4071" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium3</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ac194d0def017fd587d15d315d3bfe7aa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium4</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a9261ff3f858e07361b8c639548666ea0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium5</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1ae7e853497d0e9a43503994d55e879a69" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium6</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a8e3511c0cde256234f0b5850efc360dc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium7</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a59deaf5389723f727df6fa6f33cb0259" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium8</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1a75051076610469b2d77b5fa97aea10bb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>TableStyleMedium9</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_theme_1af1c7ca1a62c594c450e6e35b6b6ddc6a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTableTheme</scope><name>XLTableTheme</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,401 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Functions::XLMath</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a4706963aeb3a06d0ea0a3db82b13e07c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double DegreesToRadians</definition>
+        <argsstring>(double degrees)</argsstring>
+        <name>DegreesToRadians</name>
+        <param>
+          <type>double</type>
+          <declname>degrees</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="10" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1ade9d7be1bae7d7f0d6b6ac1a52bcab24" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double RadiansToDegrees</definition>
+        <argsstring>(double radians)</argsstring>
+        <name>RadiansToDegrees</name>
+        <param>
+          <type>double</type>
+          <declname>radians</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a76d9bc059a4a0d9dda0783747424ccad" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double GradsToRadians</definition>
+        <argsstring>(double grads)</argsstring>
+        <name>GradsToRadians</name>
+        <param>
+          <type>double</type>
+          <declname>grads</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="20" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a54a9ade116e58f49b499fc19d80ab493" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double RadiansToGrads</definition>
+        <argsstring>(double radians)</argsstring>
+        <name>RadiansToGrads</name>
+        <param>
+          <type>double</type>
+          <declname>radians</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="25" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a2440f905cfae7ea91fef37e2d1aeeaf3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double DegreesToGrads</definition>
+        <argsstring>(double degrees)</argsstring>
+        <name>DegreesToGrads</name>
+        <param>
+          <type>double</type>
+          <declname>degrees</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="30" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a957cbc8f4ae81b9c9291362bb64d6af1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double GradsToDegrees</definition>
+        <argsstring>(double grads)</argsstring>
+        <name>GradsToDegrees</name>
+        <param>
+          <type>double</type>
+          <declname>grads</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="35" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a0cf35eef93dab8d699a090a8c37a0cc3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ASinh</definition>
+        <argsstring>(double x)</argsstring>
+        <name>ASinh</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="40" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aaa78b7b8bcb8d36219f7a2cc72e8166d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ACosh</definition>
+        <argsstring>(double x)</argsstring>
+        <name>ACosh</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="45" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a004f40d47e336011e7c3c9469678295d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ATanh</definition>
+        <argsstring>(double x)</argsstring>
+        <name>ATanh</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="50" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aeb46772d360477e97e495369d533747f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ACoth</definition>
+        <argsstring>(double x)</argsstring>
+        <name>ACoth</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="55" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a51077ec3e1cd1508ca54bafdd97af928" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ASech</definition>
+        <argsstring>(double x)</argsstring>
+        <name>ASech</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="61" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="61" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a2120b5a5d6c9a7c78c93db94982046c3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ACsch</definition>
+        <argsstring>(double x)</argsstring>
+        <name>ACsch</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="66" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="66" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a03108d68118f628c391e3fe41238be07" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double Sech</definition>
+        <argsstring>(double x)</argsstring>
+        <name>Sech</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="71" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="71" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1ab1efe1f15771da7830eaf3a3f446607e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double Csch</definition>
+        <argsstring>(double x)</argsstring>
+        <name>Csch</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="76" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="76" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a8d24626fb249eb9cc9fb1098ca8bb480" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double Coth</definition>
+        <argsstring>(double x)</argsstring>
+        <name>Coth</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="81" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a99aaa20a40776a38767214ca1a44ed57" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double Combin</definition>
+        <argsstring>(Int32 n, Int32 k)</argsstring>
+        <name>Combin</name>
+        <param>
+          <type>Int32</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>k</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="86" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a423f427fe3100c168bcab4517922968a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean IsEven</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>IsEven</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="92" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="92" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1adaebd64788ed404ecca62b2ec20e7d15" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean IsOdd</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>IsOdd</name>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="96" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="96" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1ae0f4ef0c35d4d0bfa93d715db8029fd4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string ToRoman</definition>
+        <argsstring>(int number)</argsstring>
+        <name>ToRoman</name>
+        <param>
+          <type>int</type>
+          <declname>number</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="101" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="101" bodyend="119"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aa99d62b06498ba403b51d1fabc46ae3e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int RomanToArabic</definition>
+        <argsstring>(string text)</argsstring>
+        <name>RomanToArabic</name>
+        <param>
+          <type>string</type>
+          <declname>text</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="121" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="121" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aa1cbf68b9e97867c692188325db1a96a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string ChangeBase</definition>
+        <argsstring>(long number, int radix)</argsstring>
+        <name>ChangeBase</name>
+        <param>
+          <type>long</type>
+          <declname>number</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>radix</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="155" bodyend="184"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/XLMath.cs" bodystart="8" bodyend="185"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aaa78b7b8bcb8d36219f7a2cc72e8166d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ACosh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aeb46772d360477e97e495369d533747f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ACoth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a2120b5a5d6c9a7c78c93db94982046c3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ACsch</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a51077ec3e1cd1508ca54bafdd97af928" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ASech</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a0cf35eef93dab8d699a090a8c37a0cc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ASinh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a004f40d47e336011e7c3c9469678295d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ATanh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aa1cbf68b9e97867c692188325db1a96a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ChangeBase</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a99aaa20a40776a38767214ca1a44ed57" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>Combin</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a8d24626fb249eb9cc9fb1098ca8bb480" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>Coth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1ab1efe1f15771da7830eaf3a3f446607e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>Csch</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a2440f905cfae7ea91fef37e2d1aeeaf3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>DegreesToGrads</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a4706963aeb3a06d0ea0a3db82b13e07c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>DegreesToRadians</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a957cbc8f4ae81b9c9291362bb64d6af1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>GradsToDegrees</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a76d9bc059a4a0d9dda0783747424ccad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>GradsToRadians</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a423f427fe3100c168bcab4517922968a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>IsEven</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1adaebd64788ed404ecca62b2ec20e7d15" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>IsOdd</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1ade9d7be1bae7d7f0d6b6ac1a52bcab24" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>RadiansToDegrees</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a54a9ade116e58f49b499fc19d80ab493" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>RadiansToGrads</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1aa99d62b06498ba403b51d1fabc46ae3e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>RomanToArabic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1a03108d68118f628c391e3fe41238be07" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>Sech</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_x_l_math_1ae0f4ef0c35d4d0bfa93d715db8029fd4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::XLMath</scope><name>ToRoman</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::CellRangeReference</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_i_value_object" prot="public" virt="non-virtual">IValueObject</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a099dda5cb39d8d62ee110da739a7cf49" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine" kindref="compound">XLCalcEngine</ref></type>
+        <definition>readonly XLCalcEngine _ce</definition>
+        <argsstring></argsstring>
+        <name>_ce</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1ad8856c17251df7f9aed3bc3ed3b0ba2d" prot="private" static="no" mutable="no">
+        <type>Boolean</type>
+        <definition>Boolean _evaluating</definition>
+        <argsstring></argsstring>
+        <name>_evaluating</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a15f2dc39a857059e1a5051660fc49475" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring></argsstring>
+        <name>Range</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1ab2abeb761f01ead5d32b91f48a88f190" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CellRangeReference</definition>
+        <argsstring>(IXLRange range, XLCalcEngine ce)</argsstring>
+        <name>CellRangeReference</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>range</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_l_calc_engine" kindref="compound">XLCalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="10" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1aff6e44a668cbb3edc2ee7e9c4e824959" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>object GetValue</definition>
+        <argsstring>()</argsstring>
+        <name>GetValue</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_i_value_object_1aff6e44a668cbb3edc2ee7e9c4e824959">GetValue</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="19" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a008c8e4a2b3246b30982de4596d98968" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator</type>
+        <definition>IEnumerator GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="25" bodyend="33"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a7597f60bc6f8a98073ede0fceffcaac5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>object GetValue</definition>
+        <argsstring>(IXLCell cell)</argsstring>
+        <name>GetValue</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="38" bodyend="59"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="35">
+        <label>IEnumerable</label>
+      </node>
+      <node id="34">
+        <label>IValueObject</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_i_value_object"/>
+      </node>
+      <node id="33">
+        <label>CellRangeReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference"/>
+        <childnode refid="34" relation="public-inheritance">
+        </childnode>
+        <childnode refid="35" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="38">
+        <label>IEnumerable</label>
+      </node>
+      <node id="37">
+        <label>IValueObject</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_i_value_object"/>
+      </node>
+      <node id="36">
+        <label>CellRangeReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference"/>
+        <childnode refid="37" relation="public-inheritance">
+        </childnode>
+        <childnode refid="38" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CellRangeReference.cs" bodystart="6" bodyend="60"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a099dda5cb39d8d62ee110da739a7cf49" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CellRangeReference</scope><name>_ce</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1ad8856c17251df7f9aed3bc3ed3b0ba2d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CellRangeReference</scope><name>_evaluating</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1ab2abeb761f01ead5d32b91f48a88f190" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CellRangeReference</scope><name>CellRangeReference</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a008c8e4a2b3246b30982de4596d98968" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CellRangeReference</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1aff6e44a668cbb3edc2ee7e9c4e824959" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CellRangeReference</scope><name>GetValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a7597f60bc6f8a98073ede0fceffcaac5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CellRangeReference</scope><name>GetValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_cell_range_reference_1a15f2dc39a857059e1a5051660fc49475" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CellRangeReference</scope><name>Range</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

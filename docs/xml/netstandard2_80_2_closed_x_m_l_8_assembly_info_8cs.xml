@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="netstandard2_80_2_closed_x_m_l_8_assembly_info_8cs" kind="file" language="C#">
+    <compoundname>netstandard2.0/ClosedXML.AssemblyInfo.cs</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//------------------------------------------------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>&lt;auto-generated&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>This<sp/>code<sp/>was<sp/>generated<sp/>by<sp/>a<sp/>tool.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>Runtime<sp/>Version:4.0.30319.42000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>Changes<sp/>to<sp/>this<sp/>file<sp/>may<sp/>cause<sp/>incorrect<sp/>behavior<sp/>and<sp/>will<sp/>be<sp/>lost<sp/>if</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>the<sp/>code<sp/>is<sp/>regenerated.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/>&lt;/auto-generated&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//------------------------------------------------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Reflection;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyCompanyAttribute(</highlight><highlight class="stringliteral">&quot;Francois<sp/>Botha,<sp/>Aleksei<sp/>Pankratev,<sp/>Manuel<sp/>de<sp/>Leon,<sp/>Amir<sp/>Ghezelbash&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="15"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyConfigurationAttribute(</highlight><highlight class="stringliteral">&quot;Debug&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="16"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyCopyrightAttribute(</highlight><highlight class="stringliteral">&quot;MIT&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="17"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyDescriptionAttribute(</highlight><highlight class="stringliteral">&quot;ClosedXML<sp/>is<sp/>a<sp/>.NET<sp/>library<sp/>for<sp/>reading,<sp/>manipulating<sp/>and<sp/>writing<sp/>Excel<sp/>2007+<sp/>(.x&quot;</highlight><highlight class="normal"><sp/>+</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;lsx,<sp/>.xlsm)<sp/>files.<sp/>It<sp/>aims<sp/>to<sp/>provide<sp/>an<sp/>intuitive<sp/>and<sp/>user-friendly<sp/>interface<sp/>t&quot;</highlight><highlight class="normal"><sp/>+</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;o<sp/>dealing<sp/>with<sp/>the<sp/>underlying<sp/>OpenXML<sp/>API.&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="20"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyFileVersionAttribute(</highlight><highlight class="stringliteral">&quot;0.95.0.0&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyInformationalVersionAttribute(</highlight><highlight class="stringliteral">&quot;0.95.0+ce6e23bb2ee2b3a1cf5fee5e00e864311bf5a213&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyProductAttribute(</highlight><highlight class="stringliteral">&quot;ClosedXML&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyTitleAttribute(</highlight><highlight class="stringliteral">&quot;ClosedXML&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">[assembly:<sp/>System.Reflection.AssemblyVersionAttribute(</highlight><highlight class="stringliteral">&quot;0.95.0.0&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Generated<sp/>by<sp/>the<sp/>MSBuild<sp/>WriteCodeFragment<sp/>class.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/obj/Debug/netstandard2.0/ClosedXML.AssemblyInfo.cs"/>
+  </compounddef>
+</doxygen>

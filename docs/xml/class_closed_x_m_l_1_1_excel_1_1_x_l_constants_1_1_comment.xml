@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_comment" kind="class" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLConstants::Comment</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_comment_1a5c367ee9eb802269703806da62f2be46" prot="private" static="no" mutable="no">
+        <type>internal const string</type>
+        <definition>internal const string AlternateShapeTypeId</definition>
+        <argsstring></argsstring>
+        <name>AlternateShapeTypeId</name>
+        <initializer>= &quot;_xssf_cell_comment&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_comment_1a179a68a4d99c2fdee8e0e9fbec38f149" prot="private" static="no" mutable="no">
+        <type>internal const string</type>
+        <definition>internal const string ShapeTypeId</definition>
+        <argsstring></argsstring>
+        <name>ShapeTypeId</name>
+        <initializer>= &quot;_x0000_t202&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="22" bodyend="26"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_comment_1a5c367ee9eb802269703806da62f2be46" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConstants::Comment</scope><name>AlternateShapeTypeId</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_comment_1a179a68a4d99c2fdee8e0e9fbec38f149" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConstants::Comment</scope><name>ShapeTypeId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_55c4f2d321035ce78de0005361fbdec8" kind="dir">
+    <compoundname>RichText</compoundname>
+    <innerfile refid="_i_x_l_formatted_text_8cs">IXLFormattedText.cs</innerfile>
+    <innerfile refid="_i_x_l_phonetic_8cs">IXLPhonetic.cs</innerfile>
+    <innerfile refid="_i_x_l_phonetics_8cs">IXLPhonetics.cs</innerfile>
+    <innerfile refid="_i_x_l_rich_string_8cs">IXLRichString.cs</innerfile>
+    <innerfile refid="_i_x_l_rich_text_8cs">IXLRichText.cs</innerfile>
+    <innerfile refid="_x_l_formatted_text_8cs">XLFormattedText.cs</innerfile>
+    <innerfile refid="_x_l_phonetic_8cs">XLPhonetic.cs</innerfile>
+    <innerfile refid="_x_l_phonetics_8cs">XLPhonetics.cs</innerfile>
+    <innerfile refid="_x_l_rich_string_8cs">XLRichString.cs</innerfile>
+    <innerfile refid="_x_l_rich_text_8cs">XLRichText.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/"/>
+  </compounddef>
+</doxygen>

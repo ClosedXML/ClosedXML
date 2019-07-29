@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_5e006fcea041e3ce90d199ce58f1003f" kind="dir">
+    <compoundname>Exceptions</compoundname>
+    <innerfile refid="_closed_x_m_l_exception_8cs">ClosedXMLException.cs</innerfile>
+    <innerfile refid="_empty_table_exception_8cs">EmptyTableException.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/"/>
+  </compounddef>
+</doxygen>

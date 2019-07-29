@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_15cdf95d61f6e4eb4cdc64e74da7ea24" kind="dir">
+    <compoundname>Extensions</compoundname>
+    <innerfile refid="_format_extensions_8cs">FormatExtensions.cs</innerfile>
+    <innerfile refid="_guid_extensions_8cs">GuidExtensions.cs</innerfile>
+    <innerfile refid="_open_xml_part_container_extensions_8cs">OpenXmlPartContainerExtensions.cs</innerfile>
+    <innerfile refid="_string_extensions_8cs">StringExtensions.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/"/>
+  </compounddef>
+</doxygen>

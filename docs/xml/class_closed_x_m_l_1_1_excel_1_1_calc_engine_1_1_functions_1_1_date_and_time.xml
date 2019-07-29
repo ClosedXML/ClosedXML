@@ -1,0 +1,569 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ad572d5831ec1544c2333017cb75a55df" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Register</definition>
+        <argsstring>(CalcEngine ce)</argsstring>
+        <name>Register</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="10" bodyend="34"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a720bbca63ccbbec24eb2720af4cfcb5a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int BusinessDaysUntil</definition>
+        <argsstring>(DateTime firstDay, DateTime lastDay, IEnumerable&lt; DateTime &gt; bankHolidays)</argsstring>
+        <name>BusinessDaysUntil</name>
+        <param>
+          <type>DateTime</type>
+          <declname>firstDay</declname>
+        </param>
+        <param>
+          <type>DateTime</type>
+          <declname>lastDay</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; DateTime &gt;</type>
+          <declname>bankHolidays</declname>
+        </param>
+        <briefdescription>
+<para>Calculates number of business days, taking into account: </para>
+        </briefdescription>
+        <detaileddescription>
+<para><itemizedlist>
+<listitem><para>weekends (Saturdays and Sundays)</para>
+</listitem><listitem><para>bank holidays in the middle of the week </para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstDay</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>First day in the time interval</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastDay</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Last day in the time interval</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>bankHolidays</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>List of bank holidays excluding weekends</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Number of business days during the &apos;span&apos;</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="45" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a3291c5bee6c75cbf8381ff08f4ef9705" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Date</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Date</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="88" bodyend="114"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a8fee8b9a8a8624910f32470a63862b88" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Datevalue</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Datevalue</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="116" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="116" bodyend="121"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1abd0eede15710a5314ccff111b1a7983b" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Day</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Day</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="123" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="123" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ae7fc95f972c340a8b45873baff5962d1" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Days</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Days</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="130" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="130" bodyend="151"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a99e310ba148a0e40dda2cf6e2b1d37fc" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Days360</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Days360</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="153" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="153" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1aa30f34b71d93d0ce9434ba9efeea49e0" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Int32</type>
+        <definition>static Int32 Days360</definition>
+        <argsstring>(DateTime date1, DateTime date2, Boolean isEuropean)</argsstring>
+        <name>Days360</name>
+        <param>
+          <type>DateTime</type>
+          <declname>date1</declname>
+        </param>
+        <param>
+          <type>DateTime</type>
+          <declname>date2</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>isEuropean</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="162" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="162" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a30bb413763099763303456c6231c15f8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Edate</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Edate</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="185" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="185" bodyend="192"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a2c2e4b52d1ec589de0eef64b000eafcc" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Eomonth</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Eomonth</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="194" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="194" bodyend="201"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a338e482c60b33eb96e1c4495c75c9ce3" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Double</type>
+        <definition>static Double GetYearAverage</definition>
+        <argsstring>(DateTime date1, DateTime date2)</argsstring>
+        <name>GetYearAverage</name>
+        <param>
+          <type>DateTime</type>
+          <declname>date1</declname>
+        </param>
+        <param>
+          <type>DateTime</type>
+          <declname>date2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="203" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="203" bodyend="209"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a059c2a7abe9ba02aceaa5a47b8aace4a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Hour</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Hour</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="211" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="211" bodyend="216"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a662231ab6cccc71440e872dec6e5b405" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object IsoWeekNum</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>IsoWeekNum</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="219" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="219" bodyend="234"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a91619df92ebc3886900d5670709c59a3" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Minute</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Minute</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="236" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="236" bodyend="241"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a9e419928572c00f250d2837a19c17018" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Month</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Month</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="243" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="243" bodyend="248"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a19338bbf270c05d9a50b5ad2e3258180" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Networkdays</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Networkdays</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="250" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="250" bodyend="263"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ac527d17a43cc8aae5bb14788e4d5111f" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Now</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Now</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="265" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="265" bodyend="268"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a490949c465eda3935484eaee6c82191f" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Second</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Second</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="270" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="270" bodyend="275"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a569b9c2bff502807340c7a9509723bda" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Time</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Time</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="277" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="277" bodyend="284"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a30ea8e96fedc890145d8489b2fa587c1" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Timevalue</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Timevalue</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="286" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="286" bodyend="291"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a39619ed2301d1c865549469711ff5c2c" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Today</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Today</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="293" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="293" bodyend="296"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a62e5a24a52516b3c5ad21fe725624762" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Weekday</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Weekday</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="298" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="298" bodyend="307"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a4d04de9c1237f1fa258c99f38bb0213d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Weeknum</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Weeknum</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="309" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="309" bodyend="319"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1aafdba5829367309f409893cd33dd0b9f" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Workday</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Workday</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="321" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="321" bodyend="343"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a191f4c23dcb1afd13fb3cd7cf3f2ba71" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DateTime</type>
+        <definition>static DateTime Workday</definition>
+        <argsstring>(DateTime startDate, DateTime testDate, int daysRequired, IEnumerable&lt; DateTime &gt; bankHolidays)</argsstring>
+        <name>Workday</name>
+        <param>
+          <type>DateTime</type>
+          <declname>startDate</declname>
+        </param>
+        <param>
+          <type>DateTime</type>
+          <declname>testDate</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>daysRequired</declname>
+        </param>
+        <param>
+          <type>IEnumerable&lt; DateTime &gt;</type>
+          <declname>bankHolidays</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="345" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="345" bodyend="354"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ad63215438aca5eb3162d718b617aaf8e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Year</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Year</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="356" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="356" bodyend="361"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1aee8338aaca70b55189e58709932f9ef1" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Yearfrac</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Yearfrac</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="363" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="363" bodyend="379"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/DateAndTime.cs" bodystart="8" bodyend="380"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a720bbca63ccbbec24eb2720af4cfcb5a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>BusinessDaysUntil</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a3291c5bee6c75cbf8381ff08f4ef9705" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Date</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a8fee8b9a8a8624910f32470a63862b88" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Datevalue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1abd0eede15710a5314ccff111b1a7983b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Day</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ae7fc95f972c340a8b45873baff5962d1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Days</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a99e310ba148a0e40dda2cf6e2b1d37fc" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Days360</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1aa30f34b71d93d0ce9434ba9efeea49e0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Days360</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a30bb413763099763303456c6231c15f8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Edate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a2c2e4b52d1ec589de0eef64b000eafcc" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Eomonth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a338e482c60b33eb96e1c4495c75c9ce3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>GetYearAverage</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a059c2a7abe9ba02aceaa5a47b8aace4a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Hour</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a662231ab6cccc71440e872dec6e5b405" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>IsoWeekNum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a91619df92ebc3886900d5670709c59a3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Minute</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a9e419928572c00f250d2837a19c17018" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Month</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a19338bbf270c05d9a50b5ad2e3258180" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Networkdays</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ac527d17a43cc8aae5bb14788e4d5111f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Now</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ad572d5831ec1544c2333017cb75a55df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Register</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a490949c465eda3935484eaee6c82191f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Second</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a569b9c2bff502807340c7a9509723bda" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Time</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a30ea8e96fedc890145d8489b2fa587c1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Timevalue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a39619ed2301d1c865549469711ff5c2c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Today</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a62e5a24a52516b3c5ad21fe725624762" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Weekday</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a4d04de9c1237f1fa258c99f38bb0213d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Weeknum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1aafdba5829367309f409893cd33dd0b9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Workday</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1a191f4c23dcb1afd13fb3cd7cf3f2ba71" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Workday</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1ad63215438aca5eb3162d718b617aaf8e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Year</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_functions_1_1_date_and_time_1aee8338aaca70b55189e58709932f9ef1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Functions::DateAndTime</scope><name>Yearfrac</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

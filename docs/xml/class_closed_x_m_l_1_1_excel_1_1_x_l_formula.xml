@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLFormula</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a895af050bb6b06002d75581276d407ab" prot="private" static="no" mutable="no">
+        <type>internal String</type>
+        <definition>internal String _value</definition>
+        <argsstring></argsstring>
+        <name>_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1aa2df5f5b9057a28b8781e06f80b1ba8f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="36" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a489f555bcbe3859645a56549c21923c9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsFormula</definition>
+        <argsstring></argsstring>
+        <name>IsFormula</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="56" bodyend="56"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a22b338325d57178dc75d6c5210a1851d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormula</definition>
+        <argsstring>()</argsstring>
+        <name>XLFormula</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="10" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1add1b73c14452f77ba774470b8e82d1f2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormula</definition>
+        <argsstring>(XLFormula defaultFormula)</argsstring>
+        <name>XLFormula</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula" kindref="compound">XLFormula</ref></type>
+          <declname>defaultFormula</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="13" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a3be5577706d64fd86e620d6695a74d3d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormula</definition>
+        <argsstring>(String value)</argsstring>
+        <name>XLFormula</name>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="19" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1ac80b41c8dad609926b0bb10ad48df336" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormula</definition>
+        <argsstring>(double value)</argsstring>
+        <name>XLFormula</name>
+        <param>
+          <type>double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="24" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a04a04944cd391b7186fc2529604c67c1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLFormula</definition>
+        <argsstring>(int value)</argsstring>
+        <name>XLFormula</name>
+        <param>
+          <type>int</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="29" bodyend="32"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/XLFormula.cs" bodystart="8" bodyend="57"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a895af050bb6b06002d75581276d407ab" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>_value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a489f555bcbe3859645a56549c21923c9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>IsFormula</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1aa2df5f5b9057a28b8781e06f80b1ba8f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>Value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a22b338325d57178dc75d6c5210a1851d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>XLFormula</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1add1b73c14452f77ba774470b8e82d1f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>XLFormula</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a3be5577706d64fd86e620d6695a74d3d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>XLFormula</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1ac80b41c8dad609926b0bb10ad48df336" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>XLFormula</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula_1a04a04944cd391b7186fc2529604c67c1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLFormula</scope><name>XLFormula</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

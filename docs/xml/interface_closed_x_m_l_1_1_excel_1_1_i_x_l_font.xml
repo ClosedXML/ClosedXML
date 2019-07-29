@@ -1,0 +1,353 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLFont</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" prot="public" virt="non-virtual">IXLFontBase</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLFont &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font" prot="public" virt="non-virtual">XLFont</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a07ab888c7029562004437945d8898554" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetBold</definition>
+        <argsstring>()</argsstring>
+        <name>SetBold</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a07ab888c7029562004437945d8898554">SetBold</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="136" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a6d4208d9480bffcdaf5961441ec2cd99" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetBold</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetBold</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a6d4208d9480bffcdaf5961441ec2cd99">SetBold</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="136" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a255180cfa27d6fa912d23e8010f0b693" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetItalic</definition>
+        <argsstring>()</argsstring>
+        <name>SetItalic</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a255180cfa27d6fa912d23e8010f0b693">SetItalic</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="138" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1aa5144ef154d2334876736c16fb0d05a0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetItalic</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetItalic</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1aa5144ef154d2334876736c16fb0d05a0">SetItalic</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="138" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a8d38b310512d4f2335403feea435c4d2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetUnderline</definition>
+        <argsstring>()</argsstring>
+        <name>SetUnderline</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a8d38b310512d4f2335403feea435c4d2">SetUnderline</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="140" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a570472c8f482ff747fc56c1a2a756ca1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetUnderline</definition>
+        <argsstring>(XLFontUnderlineValues value)</argsstring>
+        <name>SetUnderline</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a570472c8f482ff747fc56c1a2a756ca1">SetUnderline</reimplementedby>
+        <param>
+          <type>XLFontUnderlineValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="140" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a13a082502a0dbe3d08e0b8b9aaa45d2d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetStrikethrough</definition>
+        <argsstring>()</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a13a082502a0dbe3d08e0b8b9aaa45d2d">SetStrikethrough</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="142" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1aeb56e66d643c5a75986aecdaf5281056" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetStrikethrough</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1aeb56e66d643c5a75986aecdaf5281056">SetStrikethrough</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="142" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a9024339ec3d4ade1222fb8e77f08cea6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetVerticalAlignment</definition>
+        <argsstring>(XLFontVerticalTextAlignmentValues value)</argsstring>
+        <name>SetVerticalAlignment</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a9024339ec3d4ade1222fb8e77f08cea6">SetVerticalAlignment</reimplementedby>
+        <param>
+          <type>XLFontVerticalTextAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="144" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1ab5665c685970980076afe5fb4102b0bd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetShadow</definition>
+        <argsstring>()</argsstring>
+        <name>SetShadow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1ab5665c685970980076afe5fb4102b0bd">SetShadow</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="146" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a854121cee40c825db542ccfb5d5055a3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetShadow</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShadow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a854121cee40c825db542ccfb5d5055a3">SetShadow</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="146" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1ac9141e3d19f1b9935fda95e188b0671f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetFontSize</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetFontSize</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1ac9141e3d19f1b9935fda95e188b0671f">SetFontSize</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="148" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a487630220f48d8f690afc2f620958a67" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetFontColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetFontColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a487630220f48d8f690afc2f620958a67">SetFontColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="150" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a0776711a467a0a84308fb2ab70590c76" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetFontName</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetFontName</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a0776711a467a0a84308fb2ab70590c76">SetFontName</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="152" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a899d56f9bbe003d998ae1390bf1de62b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetFontFamilyNumbering</definition>
+        <argsstring>(XLFontFamilyNumberingValues value)</argsstring>
+        <name>SetFontFamilyNumbering</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a899d56f9bbe003d998ae1390bf1de62b">SetFontFamilyNumbering</reimplementedby>
+        <param>
+          <type>XLFontFamilyNumberingValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="154" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a03f25808f04279b8c55457557456d791" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetFontCharSet</definition>
+        <argsstring>(XLFontCharSet value)</argsstring>
+        <name>SetFontCharSet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_1a03f25808f04279b8c55457557456d791">SetFontCharSet</reimplementedby>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1a16954fe0e0c237f1f972b2432676c381" kindref="member">XLFontCharSet</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="156" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="386">
+        <label>XLFont</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font"/>
+        <childnode refid="383" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="383">
+        <label>IXLFont</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font"/>
+        <childnode refid="384" relation="public-inheritance">
+        </childnode>
+        <childnode refid="385" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="385">
+        <label>IEquatable&lt; IXLFont &gt;</label>
+      </node>
+      <node id="384">
+        <label>IXLFontBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="387">
+        <label>IXLFont</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font"/>
+        <childnode refid="388" relation="public-inheritance">
+        </childnode>
+        <childnode refid="389" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="389">
+        <label>IEquatable&lt; IXLFont &gt;</label>
+      </node>
+      <node id="388">
+        <label>IXLFontBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" line="135" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLFont.cs" bodystart="134" bodyend="157"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>Bold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2e7968d4653cb5742f2eb152ee7eca17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>FontCharSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>FontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>FontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>FontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>FontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>Italic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a07ab888c7029562004437945d8898554" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a6d4208d9480bffcdaf5961441ec2cd99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a03f25808f04279b8c55457557456d791" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetFontCharSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a487630220f48d8f690afc2f620958a67" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetFontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a899d56f9bbe003d998ae1390bf1de62b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetFontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a0776711a467a0a84308fb2ab70590c76" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetFontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1ac9141e3d19f1b9935fda95e188b0671f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetFontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a255180cfa27d6fa912d23e8010f0b693" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1aa5144ef154d2334876736c16fb0d05a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1ab5665c685970980076afe5fb4102b0bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a854121cee40c825db542ccfb5d5055a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a13a082502a0dbe3d08e0b8b9aaa45d2d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1aeb56e66d643c5a75986aecdaf5281056" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a8d38b310512d4f2335403feea435c4d2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a570472c8f482ff747fc56c1a2a756ca1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_1a9024339ec3d4ade1222fb8e77f08cea6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>SetVerticalAlignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>Shadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>Strikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>Underline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLFont</scope><name>VerticalAlignment</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

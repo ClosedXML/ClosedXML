@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_excel_1_1_caching" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Excel::Caching</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" prot="public">ClosedXML::Excel::Caching::IXLRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_alignment_repository" prot="public">ClosedXML::Excel::Caching::XLAlignmentRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_border_repository" prot="public">ClosedXML::Excel::Caching::XLBorderRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_color_repository" prot="public">ClosedXML::Excel::Caching::XLColorRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_fill_repository" prot="public">ClosedXML::Excel::Caching::XLFillRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_font_repository" prot="public">ClosedXML::Excel::Caching::XLFontRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_number_format_repository" prot="public">ClosedXML::Excel::Caching::XLNumberFormatRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_protection_repository" prot="public">ClosedXML::Excel::Caching::XLProtectionRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_range_repository" prot="public">ClosedXML::Excel::Caching::XLRangeRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_repository_base" prot="public">ClosedXML::Excel::Caching::XLRepositoryBase</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_style_repository" prot="public">ClosedXML::Excel::Caching::XLStyleRepository</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_caching_1_1_x_l_workbook_element_repository_base" prot="public">ClosedXML::Excel::Caching::XLWorkbookElementRepositoryBase</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/IXLRepository.cs" line="5" column="1"/>
+  </compounddef>
+</doxygen>

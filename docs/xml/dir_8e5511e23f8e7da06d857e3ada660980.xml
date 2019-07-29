@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_8e5511e23f8e7da06d857e3ada660980" kind="dir">
+    <compoundname>Ranges</compoundname>
+    <innerdir refid="dir_846c71a7cef7b0cc790f0d4eadd8be01">Index</innerdir>
+    <innerdir refid="dir_2da665cc31c78110bc869ea551a97894">Sort</innerdir>
+    <innerfile refid="_i_x_l_addressable_8cs">IXLAddressable.cs</innerfile>
+    <innerfile refid="_i_x_l_base_collection_8cs">IXLBaseCollection.cs</innerfile>
+    <innerfile refid="_i_x_l_range_8cs">IXLRange.cs</innerfile>
+    <innerfile refid="_i_x_l_range_address_8cs">IXLRangeAddress.cs</innerfile>
+    <innerfile refid="_i_x_l_range_base_8cs">IXLRangeBase.cs</innerfile>
+    <innerfile refid="_i_x_l_range_column_8cs">IXLRangeColumn.cs</innerfile>
+    <innerfile refid="_i_x_l_range_columns_8cs">IXLRangeColumns.cs</innerfile>
+    <innerfile refid="_i_x_l_range_row_8cs">IXLRangeRow.cs</innerfile>
+    <innerfile refid="_i_x_l_range_rows_8cs">IXLRangeRows.cs</innerfile>
+    <innerfile refid="_i_x_l_ranges_8cs">IXLRanges.cs</innerfile>
+    <innerfile refid="_x_l_range_8cs">XLRange.cs</innerfile>
+    <innerfile refid="_x_l_range_address_8cs">XLRangeAddress.cs</innerfile>
+    <innerfile refid="_x_l_range_base_8cs">XLRangeBase.cs</innerfile>
+    <innerfile refid="_x_l_range_column_8cs">XLRangeColumn.cs</innerfile>
+    <innerfile refid="_x_l_range_columns_8cs">XLRangeColumns.cs</innerfile>
+    <innerfile refid="_x_l_range_consolidation_engine_8cs">XLRangeConsolidationEngine.cs</innerfile>
+    <innerfile refid="_x_l_range_factory_8cs">XLRangeFactory.cs</innerfile>
+    <innerfile refid="_x_l_range_key_8cs">XLRangeKey.cs</innerfile>
+    <innerfile refid="_x_l_range_parameters_8cs">XLRangeParameters.cs</innerfile>
+    <innerfile refid="_x_l_range_row_8cs">XLRangeRow.cs</innerfile>
+    <innerfile refid="_x_l_range_rows_8cs">XLRangeRows.cs</innerfile>
+    <innerfile refid="_x_l_ranges_8cs">XLRanges.cs</innerfile>
+    <innerfile refid="_x_l_range_type_8cs">XLRangeType.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/"/>
+  </compounddef>
+</doxygen>

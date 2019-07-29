@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_77dbb2854d5abd7e585f00508245d762" kind="dir">
+    <compoundname>PivotValues</compoundname>
+    <innerfile refid="_i_x_l_pivot_value_8cs">IXLPivotValue.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_value_combination_8cs">IXLPivotValueCombination.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_value_format_8cs">IXLPivotValueFormat.cs</innerfile>
+    <innerfile refid="_i_x_l_pivot_values_8cs">IXLPivotValues.cs</innerfile>
+    <innerfile refid="_x_l_pivot_value_8cs">XLPivotValue.cs</innerfile>
+    <innerfile refid="_x_l_pivot_value_combination_8cs">XLPivotValueCombination.cs</innerfile>
+    <innerfile refid="_x_l_pivot_value_format_8cs">XLPivotValueFormat.cs</innerfile>
+    <innerfile refid="_x_l_pivot_values_8cs">XLPivotValues.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/"/>
+  </compounddef>
+</doxygen>

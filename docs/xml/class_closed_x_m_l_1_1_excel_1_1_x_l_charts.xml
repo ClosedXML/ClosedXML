@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_charts" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCharts</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts" prot="public" virt="non-virtual">IXLCharts</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a492e402ca069c47475565f660ea6226a" prot="private" static="no" mutable="no">
+        <type>List&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref> &gt;</type>
+        <definition>List&lt;IXLChart&gt; charts</definition>
+        <argsstring></argsstring>
+        <name>charts</name>
+        <initializer>= new List&lt;<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a29783df655fbbee382fb488d716d128b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLChart&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" bodystart="8" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a69a0ba27178af614918caa32ed4829f1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(IXLChart chart)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts_1a69a0ba27178af614918caa32ed4829f1">Add</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_chart" kindref="compound">IXLChart</ref></type>
+          <declname>chart</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" bodystart="18" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>System.Collections.IEnumerator System.Collections.IEnumerable.</type>
+        <definition>System.Collections.IEnumerator System.Collections.IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" bodystart="13" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1111">
+        <label>IEnumerable&lt; IXLChart &gt;</label>
+      </node>
+      <node id="1110">
+        <label>IXLCharts</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts"/>
+        <childnode refid="1111" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1109">
+        <label>XLCharts</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts"/>
+        <childnode refid="1110" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1114">
+        <label>IEnumerable&lt; IXLChart &gt;</label>
+      </node>
+      <node id="1113">
+        <label>IXLCharts</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_charts"/>
+        <childnode refid="1114" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1112">
+        <label>XLCharts</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts"/>
+        <childnode refid="1113" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Charts/XLCharts.cs" bodystart="5" bodyend="22"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a69a0ba27178af614918caa32ed4829f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCharts</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a492e402ca069c47475565f660ea6226a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCharts</scope><name>charts</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a29783df655fbbee382fb488d716d128b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCharts</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_charts_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCharts</scope><name>GetEnumerator</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_info" kind="struct" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::PivotTableInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_info_1a16be0a6ffdc0f58335ccb4eac87e5f8c" prot="public" static="no" mutable="no">
+        <type>IDictionary&lt; String, PivotTableFieldInfo &gt;</type>
+        <definition>IDictionary&lt;String, PivotTableFieldInfo&gt; Fields</definition>
+        <argsstring></argsstring>
+        <name>Fields</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="162" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="162" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_info_1abb7f90ce4c795befafbe39ca8136b2c2" prot="public" static="no" mutable="no">
+        <type>Guid</type>
+        <definition>Guid Guid</definition>
+        <argsstring></argsstring>
+        <name>Guid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="163" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="161" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="160" bodyend="164"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_info_1a16be0a6ffdc0f58335ccb4eac87e5f8c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::PivotTableInfo</scope><name>Fields</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_pivot_table_info_1abb7f90ce4c795befafbe39ca8136b2c2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::PivotTableInfo</scope><name>Guid</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

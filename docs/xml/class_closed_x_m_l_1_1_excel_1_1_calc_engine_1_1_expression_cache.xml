@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::ExpressionCache</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a5f16f2ea2ce156404c5a078494fbb47d" prot="private" static="no" mutable="no">
+        <type>Dictionary&lt; string, WeakReference &gt;</type>
+        <definition>Dictionary&lt;string, WeakReference&gt; _dct</definition>
+        <argsstring></argsstring>
+        <name>_dct</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1afc20aaf83385b9f2cd7beeecf62936fe" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+        <definition>CalcEngine _ce</definition>
+        <argsstring></argsstring>
+        <name>_ce</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a0a6f241696b45f88f538287ab31cea6c" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int _hitCount</definition>
+        <argsstring></argsstring>
+        <name>_hitCount</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a6dae3b29dc769babcb9ae1cf009c98c7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression this[string expression]</definition>
+        <argsstring></argsstring>
+        <name>this[string expression]</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" bodystart="28" bodyend="51"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1ad7dc7bfe0bccd098252949d30aa46754" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ExpressionCache</definition>
+        <argsstring>(CalcEngine ce)</argsstring>
+        <name>ExpressionCache</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" bodystart="20" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a158749f97cc2fe791a7b2ed4c908a74d" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void RemoveDeadReferences</definition>
+        <argsstring>()</argsstring>
+        <name>RemoveDeadReferences</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" bodystart="54" bodyend="69"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Caches expressions based on their string representation. This saves parsing time. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Uses weak references to avoid accumulating unused expressions. </para>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/ExpressionCache.cs" bodystart="14" bodyend="70"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1afc20aaf83385b9f2cd7beeecf62936fe" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionCache</scope><name>_ce</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a5f16f2ea2ce156404c5a078494fbb47d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionCache</scope><name>_dct</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a0a6f241696b45f88f538287ab31cea6c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionCache</scope><name>_hitCount</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1ad7dc7bfe0bccd098252949d30aa46754" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionCache</scope><name>ExpressionCache</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a158749f97cc2fe791a7b2ed4c908a74d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionCache</scope><name>RemoveDeadReferences</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_cache_1a6dae3b29dc769babcb9ae1cf009c98c7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionCache</scope><name>this[string expression]</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

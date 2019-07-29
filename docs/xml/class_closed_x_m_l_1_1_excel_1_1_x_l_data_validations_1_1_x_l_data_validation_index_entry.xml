@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1_1_x_l_data_validation_index_entry" kind="class" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLDataValidations::XLDataValidationIndexEntry</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" prot="public" virt="non-virtual">IXLAddressable</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1_1_x_l_data_validation_index_entry_1a693283492d6857ae738dee06f80bb42d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+        <definition>IXLRangeAddress RangeAddress</definition>
+        <argsstring></argsstring>
+        <name>RangeAddress</name>
+        <briefdescription>
+<para>Gets an object with the boundaries of this range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" line="268" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" bodystart="268" bodyend="268"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1_1_x_l_data_validation_index_entry_1a6f7b406c671454eb29406bb663309629" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validation" kindref="compound">XLDataValidation</ref></type>
+        <definition>XLDataValidation DataValidation</definition>
+        <argsstring></argsstring>
+        <name>DataValidation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" line="270" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" bodystart="270" bodyend="270"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1_1_x_l_data_validation_index_entry_1a55fad17de9da4f4b4ed8c1bb83925fc2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDataValidationIndexEntry</definition>
+        <argsstring>(IXLRangeAddress rangeAddress, XLDataValidation dataValidation)</argsstring>
+        <name>XLDataValidationIndexEntry</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validation" kindref="compound">XLDataValidation</ref></type>
+          <declname>dataValidation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" line="272" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" bodystart="272" bodyend="276"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Class used for indexing data validation rules. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1207">
+        <label>XLDataValidations.XLDataValidationIndexEntry</label>
+        <childnode refid="1208" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1208">
+        <label>IXLAddressable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1209">
+        <label>XLDataValidations.XLDataValidationIndexEntry</label>
+        <childnode refid="1210" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1210">
+        <label>IXLAddressable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" line="264" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDataValidations.cs" bodystart="263" bodyend="277"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1_1_x_l_data_validation_index_entry_1a6f7b406c671454eb29406bb663309629" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDataValidations::XLDataValidationIndexEntry</scope><name>DataValidation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1_1_x_l_data_validation_index_entry_1a693283492d6857ae738dee06f80bb42d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDataValidations::XLDataValidationIndexEntry</scope><name>RangeAddress</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1_1_x_l_data_validation_index_entry_1a55fad17de9da4f4b4ed8c1bb83925fc2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDataValidations::XLDataValidationIndexEntry</scope><name>XLDataValidationIndexEntry</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

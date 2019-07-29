@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::FontBaseExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a86cc00900040770a0276d9cdcb946484" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Double</type>
+        <definition>static Double GetWidth</definition>
+        <argsstring>(this IXLFontBase fontBase, String text, Dictionary&lt; IXLFontBase, Font &gt; fontCache)</argsstring>
+        <name>GetWidth</name>
+        <param>
+          <type>this <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>fontBase</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type>Dictionary&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref>, Font &gt;</type>
+          <declname>fontCache</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="199" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="199" bodyend="211"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a3404873118f853bd583166edd859703a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Double</type>
+        <definition>static Double GetHeight</definition>
+        <argsstring>(this IXLFontBase fontBase, Dictionary&lt; IXLFontBase, Font &gt; fontCache)</argsstring>
+        <name>GetHeight</name>
+        <param>
+          <type>this <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>fontBase</declname>
+        </param>
+        <param>
+          <type>Dictionary&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref>, Font &gt;</type>
+          <declname>fontCache</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="213" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="213" bodyend="218"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a27e10159ff582394be915a839c24fa47" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void CopyFont</definition>
+        <argsstring>(this IXLFontBase font, IXLFontBase sourceFont)</argsstring>
+        <name>CopyFont</name>
+        <param>
+          <type>this <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>font</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>sourceFont</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="220" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="220" bodyend="233"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a23755aaedfe9d07f21dbb6ad2811c85e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Font</type>
+        <definition>static Font GetCachedFont</definition>
+        <argsstring>(IXLFontBase fontBase, Dictionary&lt; IXLFontBase, Font &gt; fontCache)</argsstring>
+        <name>GetCachedFont</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>fontBase</declname>
+        </param>
+        <param>
+          <type>Dictionary&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref>, Font &gt;</type>
+          <declname>fontCache</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="235" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="235" bodyend="243"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1ad4fa54c1da16ae00f39f17dc1ba979f4" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>FontStyle</type>
+        <definition>static FontStyle GetFontStyle</definition>
+        <argsstring>(IXLFontBase font)</argsstring>
+        <name>GetFontStyle</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>font</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="245" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="245" bodyend="253"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="198" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="197" bodyend="254"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a27e10159ff582394be915a839c24fa47" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::FontBaseExtensions</scope><name>CopyFont</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a23755aaedfe9d07f21dbb6ad2811c85e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::FontBaseExtensions</scope><name>GetCachedFont</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1ad4fa54c1da16ae00f39f17dc1ba979f4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::FontBaseExtensions</scope><name>GetFontStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a3404873118f853bd583166edd859703a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::FontBaseExtensions</scope><name>GetHeight</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_font_base_extensions_1a86cc00900040770a0276d9cdcb946484" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::FontBaseExtensions</scope><name>GetWidth</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

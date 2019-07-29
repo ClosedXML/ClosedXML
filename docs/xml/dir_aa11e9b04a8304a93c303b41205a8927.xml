@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_aa11e9b04a8304a93c303b41205a8927" kind="dir">
+    <compoundname>Columns</compoundname>
+    <innerfile refid="_i_x_l_column_8cs">IXLColumn.cs</innerfile>
+    <innerfile refid="_i_x_l_columns_8cs">IXLColumns.cs</innerfile>
+    <innerfile refid="_x_l_column_8cs">XLColumn.cs</innerfile>
+    <innerfile refid="_x_l_column_collection_8cs">XLColumnCollection.cs</innerfile>
+    <innerfile refid="_x_l_column_parameters_8cs">XLColumnParameters.cs</innerfile>
+    <innerfile refid="_x_l_columns_8cs">XLColumns.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/"/>
+  </compounddef>
+</doxygen>

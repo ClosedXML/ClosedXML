@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_double_value_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::DoubleValueExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_double_value_extensions_1a4588a8d3147af15392393b470d493372" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DoubleValue</type>
+        <definition>static DoubleValue SaveRound</definition>
+        <argsstring>(this DoubleValue value)</argsstring>
+        <name>SaveRound</name>
+        <param>
+          <type>this DoubleValue</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="302" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="302" bodyend="305"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="301" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="300" bodyend="306"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_double_value_extensions_1a4588a8d3147af15392393b470d493372" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DoubleValueExtensions</scope><name>SaveRound</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

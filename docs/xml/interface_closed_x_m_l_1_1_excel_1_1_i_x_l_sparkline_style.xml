@@ -1,0 +1,261 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLSparklineStyle</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" prot="public" virt="non-virtual">XLSparklineStyle</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a45b4db9b66d2702b59a620f14549d8d6" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor FirstMarkerColor</definition>
+        <argsstring></argsstring>
+        <name>FirstMarkerColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a8cf02da4ee4dd9a594638b90ecaf00a9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor HighMarkerColor</definition>
+        <argsstring></argsstring>
+        <name>HighMarkerColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1ac099664dba8670be49ba2f6d39672dc1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor LastMarkerColor</definition>
+        <argsstring></argsstring>
+        <name>LastMarkerColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a93fd9c64b311f2e250f65ebf164acb71" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor LowMarkerColor</definition>
+        <argsstring></argsstring>
+        <name>LowMarkerColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1aa3a004d6b8c066183ff09bf9c5da8b79" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor MarkersColor</definition>
+        <argsstring></argsstring>
+        <name>MarkersColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1ab9d2aeb52182cbea5e0ca56b828d8674" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor NegativeColor</definition>
+        <argsstring></argsstring>
+        <name>NegativeColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a045e416bda2b9515ef0b9c7a6081db49" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor SeriesColor</definition>
+        <argsstring></argsstring>
+        <name>SeriesColor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a5fb6901f077690ccef7327694269d035" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle SetFirstMarkerColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetFirstMarkerColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style_1a5fb6901f077690ccef7327694269d035">SetFirstMarkerColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a17b84b5a2d4ab4b7aa9a196e08e63ce6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle SetHighMarkerColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetHighMarkerColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style_1a17b84b5a2d4ab4b7aa9a196e08e63ce6">SetHighMarkerColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="29" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a1731e4a6b28b813df1d8c21bc095f62b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle SetLastMarkerColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetLastMarkerColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style_1a1731e4a6b28b813df1d8c21bc095f62b">SetLastMarkerColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="31" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1adce9dbc1c2c14e694049f69f108ba1ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle SetLowMarkerColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetLowMarkerColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style_1adce9dbc1c2c14e694049f69f108ba1ef">SetLowMarkerColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="33" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1acd38339a091b1274e2455d9fc8e415a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle SetMarkersColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetMarkersColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style_1acd38339a091b1274e2455d9fc8e415a5">SetMarkersColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="35" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a7eaed9a9854017a4e5e8e2be98ce9f32" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle SetNegativeColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetNegativeColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style_1a7eaed9a9854017a4e5e8e2be98ce9f32">SetNegativeColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="37" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a8e8ac79f073ad8cd313025ff9de22c00" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle SetSeriesColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetSeriesColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style_1a8e8ac79f073ad8cd313025ff9de22c00">SetSeriesColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="39" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="686">
+        <label>XLSparklineStyle</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style"/>
+        <childnode refid="685" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="685">
+        <label>IXLSparklineStyle</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style"/>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineStyle.cs" bodystart="5" bodyend="42"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a45b4db9b66d2702b59a620f14549d8d6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>FirstMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a8cf02da4ee4dd9a594638b90ecaf00a9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>HighMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1ac099664dba8670be49ba2f6d39672dc1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>LastMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a93fd9c64b311f2e250f65ebf164acb71" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>LowMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1aa3a004d6b8c066183ff09bf9c5da8b79" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>MarkersColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1ab9d2aeb52182cbea5e0ca56b828d8674" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>NegativeColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a045e416bda2b9515ef0b9c7a6081db49" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SeriesColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a5fb6901f077690ccef7327694269d035" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SetFirstMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a17b84b5a2d4ab4b7aa9a196e08e63ce6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SetHighMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a1731e4a6b28b813df1d8c21bc095f62b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SetLastMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1adce9dbc1c2c14e694049f69f108ba1ef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SetLowMarkerColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1acd38339a091b1274e2455d9fc8e415a5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SetMarkersColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a7eaed9a9854017a4e5e8e2be98ce9f32" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SetNegativeColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style_1a8e8ac79f073ad8cd313025ff9de22c00" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineStyle</scope><name>SetSeriesColor</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

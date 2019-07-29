@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator" kind="class" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::RelIdGenerator</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1ae87c2d1ee15ddc86ad64cadd1a60c16f" prot="private" static="no" mutable="no">
+        <type>readonly Dictionary&lt; RelType, List&lt; String &gt; &gt;</type>
+        <definition>readonly Dictionary&lt;RelType, List&lt;String&gt; &gt; _relIds</definition>
+        <argsstring></argsstring>
+        <name>_relIds</name>
+        <initializer>= new Dictionary&lt;RelType, List&lt;String&gt;&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1a6cf2e1d8de774999fca47b92315008e0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddValues</definition>
+        <argsstring>(IEnumerable&lt; String &gt; values, RelType relType)</argsstring>
+        <name>AddValues</name>
+        <param>
+          <type>IEnumerable&lt; String &gt;</type>
+          <declname>values</declname>
+        </param>
+        <param>
+          <type>RelType</type>
+          <declname>relType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="52" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1adddf7195c751c4e452c73b991e56a394" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String GetNext</definition>
+        <argsstring>()</argsstring>
+        <name>GetNext</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="61" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="61" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1a01d597d63b38d37df050fa915aa5f036" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String GetNext</definition>
+        <argsstring>(RelType relType)</argsstring>
+        <name>GetNext</name>
+        <param>
+          <type>RelType</type>
+          <declname>relType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="66" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="66" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1a5794a31b1a38a34843d3c9a7a445b677" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Reset</definition>
+        <argsstring>(RelType relType)</argsstring>
+        <name>Reset</name>
+        <param>
+          <type>RelType</type>
+          <declname>relType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="86" bodyend="90"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="48" bodyend="91"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1ae87c2d1ee15ddc86ad64cadd1a60c16f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::RelIdGenerator</scope><name>_relIds</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1a6cf2e1d8de774999fca47b92315008e0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::RelIdGenerator</scope><name>AddValues</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1adddf7195c751c4e452c73b991e56a394" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::RelIdGenerator</scope><name>GetNext</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1a01d597d63b38d37df050fa915aa5f036" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::RelIdGenerator</scope><name>GetNext</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_rel_id_generator_1a5794a31b1a38a34843d3c9a7a445b677" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::RelIdGenerator</scope><name>Reset</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

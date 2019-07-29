@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_used_options_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCellsUsedOptionsExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_used_options_extensions_1ae72128ba36eb27f9b6ee16829f1973cc" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLClearOptions</type>
+        <definition>static XLClearOptions ToClearOptions</definition>
+        <argsstring>(this XLCellsUsedOptions options)</argsstring>
+        <name>ToClearOptions</name>
+        <param>
+          <type>this XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLCellsUsedOptions.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLCellsUsedOptions.cs" bodystart="24" bodyend="27"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLCellsUsedOptions.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLCellsUsedOptions.cs" bodystart="22" bodyend="28"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_used_options_extensions_1ae72128ba36eb27f9b6ee16829f1973cc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCellsUsedOptionsExtensions</scope><name>ToClearOptions</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFConvertersExtension</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1a41edeeda13cc655e088e2c538e0cfac5" prot="private" static="yes" mutable="no">
+        <type>readonly Dictionary&lt; XLConditionalFormatType, <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_extension" kindref="compound">IXLCFConverterExtension</ref> &gt;</type>
+        <definition>readonly Dictionary&lt;XLConditionalFormatType, IXLCFConverterExtension&gt; Converters</definition>
+        <argsstring></argsstring>
+        <name>Converters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1a0fbf132dd63119fd1558d19a15923606" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>static</type>
+        <definition>static XLCFConvertersExtension</definition>
+        <argsstring>()</argsstring>
+        <name>XLCFConvertersExtension</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" bodystart="11" bodyend="17"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1a45f66bb513f57679285c51a947164b4d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCFConvertersExtension</definition>
+        <argsstring>()</argsstring>
+        <name>XLCFConvertersExtension</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" bodystart="19" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1aea0bff0a3dba1620921dbff0c12700f3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormattingRule</type>
+        <definition>static ConditionalFormattingRule Convert</definition>
+        <argsstring>(IXLConditionalFormat conditionalFormat, XLWorkbook.SaveContext context)</argsstring>
+        <name>Convert</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>conditionalFormat</declname>
+        </param>
+        <param>
+          <type>XLWorkbook.SaveContext</type>
+          <declname>context</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" bodystart="23" bodyend="26"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFConvertersExtension.cs" bodystart="7" bodyend="27"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1aea0bff0a3dba1620921dbff0c12700f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFConvertersExtension</scope><name>Convert</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1a41edeeda13cc655e088e2c538e0cfac5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCFConvertersExtension</scope><name>Converters</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1a0fbf132dd63119fd1558d19a15923606" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCFConvertersExtension</scope><name>XLCFConvertersExtension</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_converters_extension_1a45f66bb513f57679285c51a947164b4d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFConvertersExtension</scope><name>XLCFConvertersExtension</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

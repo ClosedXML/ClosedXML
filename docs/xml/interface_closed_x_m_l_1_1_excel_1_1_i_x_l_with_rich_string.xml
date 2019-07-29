@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLWithRichString</compoundname>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" prot="public" virt="non-virtual">IXLFormattedText&lt; T &gt;</derivedcompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" prot="public" virt="non-virtual">IXLHFItem</derivedcompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" prot="public" virt="non-virtual">IXLRichString</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(String text)</argsstring>
+        <name>AddText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a5023e57f9f8ea89097e384bfc7db7ae4">AddText</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a5023e57f9f8ea89097e384bfc7db7ae4">AddText</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5023e57f9f8ea89097e384bfc7db7ae4">AddText</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="7" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddNewLine</definition>
+        <argsstring>()</argsstring>
+        <name>AddNewLine</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string_1a18121cd759e5c2ba19b97ac27dea6bba">AddNewLine</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a18121cd759e5c2ba19b97ac27dea6bba">AddNewLine</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a18121cd759e5c2ba19b97ac27dea6bba">AddNewLine</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="8" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="775">
+        <label>XLHFItem</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item"/>
+        <childnode refid="774" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="777">
+        <label>XLRichString</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_string"/>
+        <childnode refid="776" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="776">
+        <label>IXLRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string"/>
+        <childnode refid="771" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="771">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="774">
+        <label>IXLHFItem</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item"/>
+        <childnode refid="771" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="772">
+        <label>IXLFormattedText&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text"/>
+        <childnode refid="771" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="773">
+        <label>XLFormattedText&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text"/>
+        <childnode refid="772" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichString.cs" bodystart="5" bodyend="9"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWithRichString</scope><name>AddNewLine</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWithRichString</scope><name>AddText</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference" kind="class" language="C#" prot="public" abstract="yes">
+    <compoundname>ClosedXML::Excel::AbstractPivotFieldReference</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference" prot="public" virt="non-virtual">PivotLabelFieldReference</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_pivot_value_field_reference" prot="public" virt="non-virtual">PivotValueFieldReference</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1ad0652d20eb233ee135db387d7fb33d95" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultSubtotal</definition>
+        <argsstring></argsstring>
+        <name>DefaultSubtotal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/AbstractPivotFieldReference.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/AbstractPivotFieldReference.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1afe44076678a036ed3fef169f3910271d" prot="private" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>abstract internal UInt32Value</type>
+        <definition>abstract internal UInt32Value GetFieldOffset</definition>
+        <argsstring>()</argsstring>
+        <name>GetFieldOffset</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_pivot_value_field_reference_1a7feb49abc4dcef5baf5d84f3e53f03dc">GetFieldOffset</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1a7feb49abc4dcef5baf5d84f3e53f03dc">GetFieldOffset</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/AbstractPivotFieldReference.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1aaf0ef802dd2bcc5de12b2e73ba15e393" prot="private" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>abstract internal IEnumerable&lt; Int32 &gt;</type>
+        <definition>abstract internal IEnumerable&lt;Int32&gt; Match</definition>
+        <argsstring>(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)</argsstring>
+        <name>Match</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_pivot_value_field_reference_1aacadc03b91699b45b50da3676e50f24b">Match</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1aacadc03b91699b45b50da3676e50f24b">Match</reimplementedby>
+        <param>
+          <type>XLWorkbook.PivotTableInfo</type>
+          <declname>pti</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref></type>
+          <declname>pt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Helper function used during saving to calculate the indices of the filtered values</para>
+<para><simplesect kind="return"><para>Indices of the filtered values</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/AbstractPivotFieldReference.cs" line="17" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="0">
+        <label>AbstractPivotFieldReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference"/>
+      </node>
+      <node id="1">
+        <label>PivotLabelFieldReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference"/>
+        <childnode refid="0" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>PivotValueFieldReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_pivot_value_field_reference"/>
+        <childnode refid="0" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/AbstractPivotFieldReference.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/AbstractPivotFieldReference.cs" bodystart="7" bodyend="18"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1ad0652d20eb233ee135db387d7fb33d95" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::AbstractPivotFieldReference</scope><name>DefaultSubtotal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1afe44076678a036ed3fef169f3910271d" prot="private" virt="pure-virtual"><scope>ClosedXML::Excel::AbstractPivotFieldReference</scope><name>GetFieldOffset</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1aaf0ef802dd2bcc5de12b2e73ba15e393" prot="private" virt="pure-virtual"><scope>ClosedXML::Excel::AbstractPivotFieldReference</scope><name>Match</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

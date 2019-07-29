@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_attribute_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::AttributeExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attribute_extensions_1a03cdcccb0c9b203547a00895fb6a8992" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>TAttribute []</type>
+        <definition>static TAttribute [] GetAttributes&lt; TAttribute &gt;</definition>
+        <argsstring>(this MemberInfo member)</argsstring>
+        <name>GetAttributes&lt; TAttribute &gt;</name>
+        <param>
+          <type>this MemberInfo</type>
+          <declname>member</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" bodystart="10" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attribute_extensions_1a9400a08cef510d2dad6e874edda0685e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>MethodInfo</type>
+        <definition>static MethodInfo GetMethod&lt; T &gt;</definition>
+        <argsstring>(this T instance, Expression&lt; Func&lt; T, object &gt;&gt; methodSelector)</argsstring>
+        <name>GetMethod&lt; T &gt;</name>
+        <param>
+          <type>this T</type>
+          <declname>instance</declname>
+        </param>
+        <param>
+          <type>Expression&lt; Func&lt; T, object &gt;&gt;</type>
+          <declname>methodSelector</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" bodystart="19" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attribute_extensions_1a2cdbd1ad97f5fede4638bece4e41954f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>MethodInfo</type>
+        <definition>static MethodInfo GetMethod&lt; T &gt;</definition>
+        <argsstring>(this T instance, Expression&lt; Action&lt; T &gt;&gt; methodSelector)</argsstring>
+        <name>GetMethod&lt; T &gt;</name>
+        <param>
+          <type>this T</type>
+          <declname>instance</declname>
+        </param>
+        <param>
+          <type>Expression&lt; Action&lt; T &gt;&gt;</type>
+          <declname>methodSelector</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" bodystart="24" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_attribute_extensions_1ab5d9abd52b942a42f4943a3b7dd739df" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool HasAttribute&lt; TAttribute &gt;</definition>
+        <argsstring>(this MemberInfo member)</argsstring>
+        <name>HasAttribute&lt; TAttribute &gt;</name>
+        <param>
+          <type>this MemberInfo</type>
+          <declname>member</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" bodystart="29" bodyend="34"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/AttributeExtensions.cs" bodystart="8" bodyend="35"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_attribute_extensions_1a03cdcccb0c9b203547a00895fb6a8992" prot="public" virt="non-virtual"><scope>ClosedXML::AttributeExtensions</scope><name>GetAttributes&lt; TAttribute &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_attribute_extensions_1a9400a08cef510d2dad6e874edda0685e" prot="public" virt="non-virtual"><scope>ClosedXML::AttributeExtensions</scope><name>GetMethod&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_attribute_extensions_1a2cdbd1ad97f5fede4638bece4e41954f" prot="public" virt="non-virtual"><scope>ClosedXML::AttributeExtensions</scope><name>GetMethod&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_attribute_extensions_1ab5d9abd52b942a42f4943a3b7dd739df" prot="public" virt="non-virtual"><scope>ClosedXML::AttributeExtensions</scope><name>HasAttribute&lt; TAttribute &gt;</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

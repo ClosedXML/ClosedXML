@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLRangeFactory</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a19a616becd18467a8471ea0059589add" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+        <definition>XLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1aff464d6dde77046dda04984730325329" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRangeFactory</definition>
+        <argsstring>(XLWorksheet worksheet)</argsstring>
+        <name>XLRangeFactory</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="15" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1ad75ed42e9257ae8509d8a404d6e56d70" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base" kindref="compound">XLRangeBase</ref></type>
+        <definition>XLRangeBase Create</definition>
+        <argsstring>(XLRangeKey key)</argsstring>
+        <name>Create</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_key" kindref="compound">XLRangeKey</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="26" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a25d02ab33ab2f074ccc12e0c872f50d1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range" kindref="compound">XLRange</ref></type>
+        <definition>XLRange CreateRange</definition>
+        <argsstring>(XLRangeAddress rangeAddress)</argsstring>
+        <name>CreateRange</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="54" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1ad372e1b513019a04cec916ab9777a886" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column" kindref="compound">XLColumn</ref></type>
+        <definition>XLColumn CreateColumn</definition>
+        <argsstring>(int columnNumber)</argsstring>
+        <name>CreateColumn</name>
+        <param>
+          <type>int</type>
+          <declname>columnNumber</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="60" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1ab0c97f1cdbc27a3ae9f1dace484cb861" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_row" kindref="compound">XLRow</ref></type>
+        <definition>XLRow CreateRow</definition>
+        <argsstring>(int rowNumber)</argsstring>
+        <name>CreateRow</name>
+        <param>
+          <type>int</type>
+          <declname>rowNumber</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="65" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a60b7c60920b943f1f358b2912263b1b3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_column" kindref="compound">XLRangeColumn</ref></type>
+        <definition>XLRangeColumn CreateRangeColumn</definition>
+        <argsstring>(XLRangeAddress rangeAddress)</argsstring>
+        <name>CreateRangeColumn</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="70" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="70" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1aa7a7dda77d392cb47e4210864b2b4b15" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row" kindref="compound">XLRangeRow</ref></type>
+        <definition>XLRangeRow CreateRangeRow</definition>
+        <argsstring>(XLRangeAddress rangeAddress)</argsstring>
+        <name>CreateRangeRow</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="76" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="76" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a92d55f5d58fe0c1f5ac188f5a0605eea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table" kindref="compound">XLTable</ref></type>
+        <definition>XLTable CreateTable</definition>
+        <argsstring>(XLRangeAddress rangeAddress)</argsstring>
+        <name>CreateTable</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="82" bodyend="85"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/XLRangeFactory.cs" bodystart="5" bodyend="88"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1ad75ed42e9257ae8509d8a404d6e56d70" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>Create</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1ad372e1b513019a04cec916ab9777a886" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>CreateColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a25d02ab33ab2f074ccc12e0c872f50d1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>CreateRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a60b7c60920b943f1f358b2912263b1b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>CreateRangeColumn</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1aa7a7dda77d392cb47e4210864b2b4b15" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>CreateRangeRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1ab0c97f1cdbc27a3ae9f1dace484cb861" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>CreateRow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a92d55f5d58fe0c1f5ac188f5a0605eea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>CreateTable</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1a19a616becd18467a8471ea0059589add" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>Worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_factory_1aff464d6dde77046dda04984730325329" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRangeFactory</scope><name>XLRangeFactory</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

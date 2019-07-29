@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_load_options" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::LoadOptions</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_load_options_1a56a55f09d15526a978537d7d7896d949" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLEventTracking</type>
+        <definition>XLEventTracking EventTracking</definition>
+        <argsstring></argsstring>
+        <name>EventTracking</name>
+        <initializer>= XLEventTracking.Enabled</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/LoadOptions.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/LoadOptions.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_load_options_1ae338cdd5e5089fbf28f3ea03bcfbcfee" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean RecalculateAllFormulas</definition>
+        <argsstring></argsstring>
+        <name>RecalculateAllFormulas</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/LoadOptions.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/LoadOptions.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/LoadOptions.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/LoadOptions.cs" bodystart="6" bodyend="10"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_load_options_1a56a55f09d15526a978537d7d7896d949" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::LoadOptions</scope><name>EventTracking</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_load_options_1ae338cdd5e5089fbf28f3ea03bcfbcfee" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::LoadOptions</scope><name>RecalculateAllFormulas</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

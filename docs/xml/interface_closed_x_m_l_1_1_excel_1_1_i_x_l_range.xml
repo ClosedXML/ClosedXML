@@ -1,0 +1,2095 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLRange</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" prot="public" virt="non-virtual">IXLRangeBase</basecompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" prot="public" virt="non-virtual">IXLTable</derivedcompoundref>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range" prot="public" virt="non-virtual">IXLTableRange</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range" prot="public" virt="non-virtual">XLRange</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a047031e3be7970b84cacb27d0ab272ff" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements" kindref="compound">IXLSortElements</ref></type>
+        <definition>IXLSortElements SortRows</definition>
+        <argsstring></argsstring>
+        <name>SortRows</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="280" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" bodystart="280" bodyend="280"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aed56a3611bc94b0ba69f9154efe56c9b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_elements" kindref="compound">IXLSortElements</ref></type>
+        <definition>IXLSortElements SortColumns</definition>
+        <argsstring></argsstring>
+        <name>SortColumns</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="281" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" bodystart="281" bodyend="281"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a2d98c0e37696aa2e64aadce2c35e6a21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Cell</definition>
+        <argsstring>(int row, int column)</argsstring>
+        <name>Cell</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a2c64ba085748e31a5e6152940572fa78">Cell</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>row</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+<para>Gets the cell at the specified row and column. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The cell address is relative to the parent range.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>row</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell&apos;s row.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>column</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell&apos;s column.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a51c9a46beb18bb3b88ac8af2b4493337" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Cell</definition>
+        <argsstring>(string cellAddressInRange)</argsstring>
+        <name>Cell</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a7149e6a4200f5f1e9cd536caa21036ac">Cell</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>cellAddressInRange</declname>
+        </param>
+        <briefdescription>
+<para>Gets the cell at the specified address. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The cell address is relative to the parent range.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cellAddressInRange</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell address in the parent range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a7c38dd70c492244b198c18ad456e1f8c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Cell</definition>
+        <argsstring>(int row, string column)</argsstring>
+        <name>Cell</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a8fd2b2e1d2fb60f0b3b6ae1174a9a98e">Cell</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>row</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+<para>Gets the cell at the specified row and column. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The cell address is relative to the parent range.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>row</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell&apos;s row.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>column</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell&apos;s column.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="32" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ade818cbbfa2d4327920e2296e370d2ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Cell</definition>
+        <argsstring>(IXLAddress cellAddressInRange)</argsstring>
+        <name>Cell</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ad10c832540055ea31eb2815da8986291">Cell</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>cellAddressInRange</declname>
+        </param>
+        <briefdescription>
+<para>Gets the cell at the specified address. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The cell address is relative to the parent range.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cellAddressInRange</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell address in the parent range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="37" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a80c9a0970b8a999cf037f597e7ebc211" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn Column</definition>
+        <argsstring>(int columnNumber)</argsstring>
+        <name>Column</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_1a69037f9a79b527d7fa8f45f84fa928fb">Column</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>columnNumber</declname>
+        </param>
+        <briefdescription>
+<para>Gets the specified column of the range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>columnNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>1-based column number relative to the first column of this range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The relevant column</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="44" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afdd8f06c6a247f63d753f5d21a5a49a0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn Column</definition>
+        <argsstring>(string columnLetter)</argsstring>
+        <name>Column</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_1a4ade08b29166f258c0c20971d5b6a199">Column</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>columnLetter</declname>
+        </param>
+        <briefdescription>
+<para>Gets the specified column of the range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>columnLetter</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Column letter.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="50" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a08625360625d2840caacc01242ed7c49" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn FirstColumn</definition>
+        <argsstring>(Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstColumn</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a842ff7b00eb6151104b9e821467b5e51">FirstColumn</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a48109996c71b4a0486f2e24112a40a17">FirstColumn</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the first column of the range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="55" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a2d8e7f5728636c3d56ab90a27a951a43" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn FirstColumnUsed</definition>
+        <argsstring>(Boolean includeFormats, Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstColumnUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a67638d37ee11ceaac88274c817d1500e">FirstColumnUsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the first column of the range that contains a cell with a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="61" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afebc58fe672d691134d497f00d8fafe7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn FirstColumnUsed</definition>
+        <argsstring>(XLCellsUsedOptions options, Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstColumnUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a218428d3db5ba359a0ff7e2f2be03381">FirstColumnUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a8eebf71f3513781d6bed6c13fb513d2b">FirstColumnUsed</reimplementedby>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="63" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afaab4c6fca9b1b4e66670761e31355a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn FirstColumnUsed</definition>
+        <argsstring>(Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstColumnUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ab08a4f80245fc9f0c1ec7f1ed0b25d8a">FirstColumnUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ac6f65d990f5cad2e8fcfcc2dd46f3b88">FirstColumnUsed</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="65" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a91e9dfca2f6c41935b99ab202f9f6edd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn LastColumn</definition>
+        <argsstring>(Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>LastColumn</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a445b94e8e02fd081f37add855823a594">LastColumn</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a342bf6ec969dc56e03700f085e67e974">LastColumn</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the last column of the range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="70" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a07da79e8822c429d14446a2b9a349b1d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn LastColumnUsed</definition>
+        <argsstring>(Boolean includeFormats, Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>LastColumnUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1afdb382d887d53ca9de18a611dc87d837">LastColumnUsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the last column of the range that contains a cell with a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="76" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ae35ee38ecd79f74337e8e191c34ded67" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn LastColumnUsed</definition>
+        <argsstring>(XLCellsUsedOptions options, Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>LastColumnUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a772df9d56a9f2883f1329a17ef104b2a">LastColumnUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a79e72270e81b394a8ec80fea0e8bf0d6">LastColumnUsed</reimplementedby>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="78" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a5dfa4558bb8602b369dbedcd74cbda77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn LastColumnUsed</definition>
+        <argsstring>(Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>LastColumnUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a7c6c0c0fabced8176045830fdb817b35">LastColumnUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a2f0030af74b6304cca91e24a6e08652b">LastColumnUsed</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="80" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1adfa1525e5a0ed79d2a28c34f59d143f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns Columns</definition>
+        <argsstring>(Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>Columns</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1acc121f05f610b5380df42137383f3c0b">Columns</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets a collection of all columns in this range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="85" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a7da81030b5304ca9383776bbd394cd2c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns Columns</definition>
+        <argsstring>(int firstColumn, int lastColumn)</argsstring>
+        <name>Columns</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_1a5837ecbb968559bf39f93da4f4938060">Columns</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>firstColumn</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lastColumn</declname>
+        </param>
+        <briefdescription>
+<para>Gets a collection of the specified columns in this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first column to return. 1-based column number relative to the first column of this range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last column to return. 1-based column number relative to the first column of this range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="92" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac9bea8d8c9d09df8169b60139b841dc3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns Columns</definition>
+        <argsstring>(string firstColumn, string lastColumn)</argsstring>
+        <name>Columns</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_1a02d05ab6d57d91c3dc4258984e36877b">Columns</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>firstColumn</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>lastColumn</declname>
+        </param>
+        <briefdescription>
+<para>Gets a collection of the specified columns in this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first column to return.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last column to return.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The relevant columns</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="100" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ad21f6ddb4a353075fe6fcf3e0e36444b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns Columns</definition>
+        <argsstring>(string columns)</argsstring>
+        <name>Columns</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_1a3b67b30b898cd4a2ca961e7dc296ac63">Columns</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>columns</declname>
+        </param>
+        <briefdescription>
+<para>Gets a collection of the specified columns in this range, separated by commas. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>e.g. Columns(&quot;G:H&quot;), Columns(&quot;10:11,13:14&quot;), Columns(&quot;P:Q,S:T&quot;), Columns(&quot;V&quot;)</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>columns</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The columns to return.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="107" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a56413fec8e55589371cdf5863af9bdea" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref></type>
+        <definition>IXLRangeColumn FindColumn</definition>
+        <argsstring>(Func&lt; IXLRangeColumn, Boolean &gt; predicate)</argsstring>
+        <name>FindColumn</name>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+<para>Returns the first row that matches the given predicate </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="112" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aec883c4f9775b82743f564007255a067" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow FindRow</definition>
+        <argsstring>(Func&lt; IXLRangeRow, Boolean &gt; predicate)</argsstring>
+        <name>FindRow</name>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+<para>Returns the first row that matches the given predicate </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="117" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8faa178d2dec96866cddffc19d601392" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow FirstRow</definition>
+        <argsstring>(Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstRow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a38f421e94e3cdb1077b714bdc1b0d6ad">FirstRow</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a3a28c52791d6d31ace2f5d5304c58a00">FirstRow</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the first row of the range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="122" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a363270134a384fce092e52ade576ad09" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow FirstRowUsed</definition>
+        <argsstring>(Boolean includeFormats, Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstRowUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ae23ccfd31bbfb6730866cac88fdc2456">FirstRowUsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the first row of the range that contains a cell with a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="128" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8019ab3b3ef3b0e06b5be1d27e2a18c6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow FirstRowUsed</definition>
+        <argsstring>(XLCellsUsedOptions options, Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstRowUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a255a0c516febb3dd5294d29934a9ef91">FirstRowUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1aa26316808f2bf46e8a0ad896f64ec09e">FirstRowUsed</reimplementedby>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="130" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a2b4036162c7e2674a129ae239522e21c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow FirstRowUsed</definition>
+        <argsstring>(Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>FirstRowUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a18ac21256faa406c45d2902d1827d2f6">FirstRowUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ae67965e4dc63c58bca51afa59ff78cfe">FirstRowUsed</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="132" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1af4cb0823ecf1efd7949e2fe164f927f4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow LastRow</definition>
+        <argsstring>(Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>LastRow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a567f545118407bcacf0af453f8ad2dcd">LastRow</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a8229772f80434dd6ca3a26f998de80f9">LastRow</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the last row of the range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="137" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a65609fc6ce54437d242e3ab9bbed8d13" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow LastRowUsed</definition>
+        <argsstring>(Boolean includeFormats, Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>LastRowUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a4ada1ef4c263aff92afca16838e046d0">LastRowUsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Gets the last row of the range that contains a cell with a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="143" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8e257248c0465a984092faac236116e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow LastRowUsed</definition>
+        <argsstring>(XLCellsUsedOptions options, Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>LastRowUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a9d5ee078faa03b4a5d7881d21abbc710">LastRowUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1adadf69f570a4828c6802a127d4dad243">LastRowUsed</reimplementedby>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="145" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a56a86bb837cceb29a8392891c2b4a53e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow LastRowUsed</definition>
+        <argsstring>(Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>LastRowUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1af894ee504a6f1d1f49ce8de63e38083d">LastRowUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a0459c409d59ea720b3dbe6fbdfd722aa">LastRowUsed</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="147" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afe5c47eb96701cf427d7e41ecd4a4cdb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref></type>
+        <definition>IXLRangeRow Row</definition>
+        <argsstring>(int row)</argsstring>
+        <name>Row</name>
+        <reimplementedby refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range_1a05b9b590ea54670408892309fe1f89e2">Row</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range_1a6a2dfbdead395e13a53db7f3bbab2082">Row</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range_1ab2ef83738202a5e63c800da6a40fcef1">Row</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>row</declname>
+        </param>
+        <briefdescription>
+<para>Gets the specified row of the range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>row</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>1-based row number relative to the first row of this range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The relevant row</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="154" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a02e03c83d12caf35f08d1b100392a2f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows Rows</definition>
+        <argsstring>(Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>Rows</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a02e03c83d12caf35f08d1b100392a2f1">Rows</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="156" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1add465cf80e5157c2bb3b84fe4c309ab2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows Rows</definition>
+        <argsstring>(int firstRow, int lastRow)</argsstring>
+        <name>Rows</name>
+        <reimplementedby refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range_1a534205ef5ea33ed9c3fe069ebdad74e4">Rows</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range_1a534205ef5ea33ed9c3fe069ebdad74e4">Rows</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>firstRow</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lastRow</declname>
+        </param>
+        <briefdescription>
+<para>Gets a collection of the specified rows in this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstRow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first row to return. 1-based row number relative to the first row of this range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastRow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last row to return. 1-based row number relative to the first row of this range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="164" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aab925e89cbdd8cca65edb25555d940c8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows Rows</definition>
+        <argsstring>(string rows)</argsstring>
+        <name>Rows</name>
+        <reimplementedby refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range_1a24b6dbf878bb3672965e575235f3f878">Rows</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range_1a24b6dbf878bb3672965e575235f3f878">Rows</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>rows</declname>
+        </param>
+        <briefdescription>
+<para>Gets a collection of the specified rows in this range, separated by commas. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>e.g. Rows(&quot;4:5&quot;), Rows(&quot;7:8,10:11&quot;), Rows(&quot;13&quot;)</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The rows to return.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="171" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aec7439cbfc059cd51ac45a5a9e0ca823" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>Range</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a6658a033c614bf038cef4e08a35afc37">Range</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Returns the specified range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rangeAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The range boundaries.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="177" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac33278ec11f9de6d4c1177744fa8f479" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring>(string rangeAddress)</argsstring>
+        <name>Range</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a86af87d89cfe6b5e9bd8dd1ba7120434">Range</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Returns the specified range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>e.g. Range(&quot;A1&quot;), Range(&quot;A1:C2&quot;)</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rangeAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The range boundaries.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="182" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a76c37c460ed4e5ddce2ede619c9e1dc2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring>(IXLCell firstCell, IXLCell lastCell)</argsstring>
+        <name>Range</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a8e9e643bc20037adc7beb22bcdc32402">Range</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>firstCell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>lastCell</declname>
+        </param>
+        <briefdescription>
+<para>Returns the specified range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstCell</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first cell in the range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastCell</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last cell in the range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="187" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a6c8edf59211cacef4f2862b7b7e26112" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring>(string firstCellAddress, string lastCellAddress)</argsstring>
+        <name>Range</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a00a6283ad563a4a1ad5607debcab4b9b">Range</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>firstCellAddress</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>lastCellAddress</declname>
+        </param>
+        <briefdescription>
+<para>Returns the specified range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstCellAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first cell address in the range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastCellAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last cell address in the range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="192" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a23178402df7eeb5384e28e01c66548f2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring>(IXLAddress firstCellAddress, IXLAddress lastCellAddress)</argsstring>
+        <name>Range</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a47f59f601b3efb6e3b04417ba8708514">Range</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>firstCellAddress</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>lastCellAddress</declname>
+        </param>
+        <briefdescription>
+<para>Returns the specified range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstCellAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first cell address in the range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastCellAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last cell address in the range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="197" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac2ba2c6447da5bf80d6bd15a280cb524" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>IXLRanges Ranges</definition>
+        <argsstring>(string ranges)</argsstring>
+        <name>Ranges</name>
+        <param>
+          <type>string</type>
+          <declname>ranges</declname>
+        </param>
+        <briefdescription>
+<para>Returns a collection of ranges, separated by commas. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>e.g. <ref refid="namespace_closed_x_m_l_1_1_excel_1_1_ranges" kindref="compound">Ranges</ref>(&quot;A1&quot;), <ref refid="namespace_closed_x_m_l_1_1_excel_1_1_ranges" kindref="compound">Ranges</ref>(&quot;A1:C2&quot;), <ref refid="namespace_closed_x_m_l_1_1_excel_1_1_ranges" kindref="compound">Ranges</ref>(&quot;A1:B2,D1:D4&quot;)</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>ranges</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The ranges to return.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="202" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afedb579cbd0986fedb7a2f6eb3bae96a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring>(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn)</argsstring>
+        <name>Range</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a2595ae1e93535b988e9619dec6992b54">Range</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>firstCellRow</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>firstCellColumn</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lastCellRow</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lastCellColumn</declname>
+        </param>
+        <briefdescription>
+<para>Returns the specified range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstCellRow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first cell&apos;s row of the range to return.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>firstCellColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first cell&apos;s column of the range to return.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastCellRow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last cell&apos;s row of the range to return.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastCellColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last cell&apos;s column of the range to return.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="210" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac1881ee9fa2092103e22825bff295293" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int RowCount</definition>
+        <argsstring>()</argsstring>
+        <name>RowCount</name>
+        <briefdescription>
+<para>Gets the number of rows in this range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="213" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aacbd4cd849e821fb4c2d8a50807d4e30" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int ColumnCount</definition>
+        <argsstring>()</argsstring>
+        <name>ColumnCount</name>
+        <briefdescription>
+<para>Gets the number of columns in this range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="216" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aeba33c13dda1a858aaaeb7b7598a44cd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns InsertColumnsAfter</definition>
+        <argsstring>(int numberOfColumns)</argsstring>
+        <name>InsertColumnsAfter</name>
+        <param>
+          <type>int</type>
+          <declname>numberOfColumns</declname>
+        </param>
+        <briefdescription>
+<para>Inserts X number of columns to the right of this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All cells to the right of this range will be shifted X number of columns.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>numberOfColumns</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of columns to insert.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="223" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a83dbf49d024cd6b66269daecfa917cb0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns InsertColumnsAfter</definition>
+        <argsstring>(int numberOfColumns, Boolean expandRange)</argsstring>
+        <name>InsertColumnsAfter</name>
+        <param>
+          <type>int</type>
+          <declname>numberOfColumns</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>expandRange</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="225" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ad05f3f30564029b775ae32395fea1531" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns InsertColumnsBefore</definition>
+        <argsstring>(int numberOfColumns)</argsstring>
+        <name>InsertColumnsBefore</name>
+        <param>
+          <type>int</type>
+          <declname>numberOfColumns</declname>
+        </param>
+        <briefdescription>
+<para>Inserts X number of columns to the left of this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This range and all cells to the right of this range will be shifted X number of columns.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>numberOfColumns</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of columns to insert.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="232" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a333ce00548aa4d953f153bc4e70d883e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns InsertColumnsBefore</definition>
+        <argsstring>(int numberOfColumns, Boolean expandRange)</argsstring>
+        <name>InsertColumnsBefore</name>
+        <param>
+          <type>int</type>
+          <declname>numberOfColumns</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>expandRange</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="234" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a139a273d244946636ddd66a021bbb492" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows InsertRowsAbove</definition>
+        <argsstring>(int numberOfRows)</argsstring>
+        <name>InsertRowsAbove</name>
+        <reimplementedby refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range_1ab253761f4b35c3bad37af344483ac113">InsertRowsAbove</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range_1ab253761f4b35c3bad37af344483ac113">InsertRowsAbove</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>numberOfRows</declname>
+        </param>
+        <briefdescription>
+<para>Inserts X number of rows on top of this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This range and all cells below this range will be shifted X number of rows.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>numberOfRows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of rows to insert.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="241" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8092b320d98ac4fd3bb25d4d0802ceac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows InsertRowsAbove</definition>
+        <argsstring>(int numberOfRows, Boolean expandRange)</argsstring>
+        <name>InsertRowsAbove</name>
+        <param>
+          <type>int</type>
+          <declname>numberOfRows</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>expandRange</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="243" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8e0571b160d1bf1ce859ebc1847f512f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows InsertRowsBelow</definition>
+        <argsstring>(int numberOfRows)</argsstring>
+        <name>InsertRowsBelow</name>
+        <reimplementedby refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range_1a063ebdbb1d7281cca3652383e9689674">InsertRowsBelow</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range_1a063ebdbb1d7281cca3652383e9689674">InsertRowsBelow</reimplementedby>
+        <param>
+          <type>int</type>
+          <declname>numberOfRows</declname>
+        </param>
+        <briefdescription>
+<para>Inserts X number of rows below this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All cells below this range will be shifted X number of rows.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>numberOfRows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of rows to insert.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="250" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a89d3e1772520e7ce926205007da9c94d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows InsertRowsBelow</definition>
+        <argsstring>(int numberOfRows, Boolean expandRange)</argsstring>
+        <name>InsertRowsBelow</name>
+        <param>
+          <type>int</type>
+          <declname>numberOfRows</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>expandRange</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="252" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a010dacb77980f49e3ac716014c2a3da1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(XLShiftDeletedCells shiftDeleteCells)</argsstring>
+        <name>Delete</name>
+        <param>
+          <type>XLShiftDeletedCells</type>
+          <declname>shiftDeleteCells</declname>
+        </param>
+        <briefdescription>
+<para>Deletes this range and shifts the surrounding cells accordingly. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>shiftDeleteCells</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>How to shift the surrounding cells.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="258" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a519ef092836bc1151bf20d3f97be6268" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Transpose</definition>
+        <argsstring>(XLTransposeOptions transposeOption)</argsstring>
+        <name>Transpose</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a519ef092836bc1151bf20d3f97be6268">Transpose</reimplementedby>
+        <param>
+          <type>XLTransposeOptions</type>
+          <declname>transposeOption</declname>
+        </param>
+        <briefdescription>
+<para>Transposes the contents and styles of all cells in this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>transposeOption</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>How to handle the surrounding cells when transposing the range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="264" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afa248293607e664e4744d6a3dca94748" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable AsTable</definition>
+        <argsstring>()</argsstring>
+        <name>AsTable</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1afa248293607e664e4744d6a3dca94748">AsTable</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="266" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aed481ac3c4889134f91782164ea58617" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable AsTable</definition>
+        <argsstring>(String name)</argsstring>
+        <name>AsTable</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1aed481ac3c4889134f91782164ea58617">AsTable</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="268" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a59b37b5db4fa8b1b6c487899746ba448" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable CreateTable</definition>
+        <argsstring>()</argsstring>
+        <name>CreateTable</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a7a07c11044baa22c4821da5d45be43dd">CreateTable</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a3a4875b9ac5af552b597a3eafdf913f9">CreateTable</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="270" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a7c9c899bd77ca9c02530deeb6785524e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable CreateTable</definition>
+        <argsstring>(String name)</argsstring>
+        <name>CreateTable</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1abb43f153eb16aee772cfd4e304787707">CreateTable</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a86605078a8cfe8e0d20907a7b9174e28">CreateTable</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="272" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a874742bb1da1a75d1ab929e6d5a185ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange RangeUsed</definition>
+        <argsstring>()</argsstring>
+        <name>RangeUsed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="274" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a237c24e4039042f4c37180830606c0e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange CopyTo</definition>
+        <argsstring>(IXLCell target)</argsstring>
+        <name>CopyTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1accb0255be99ca26d69a41f619939f59d">CopyTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>target</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="276" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a9ce5197b20bc14ccac44a50fd01dd30e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange CopyTo</definition>
+        <argsstring>(IXLRangeBase target)</argsstring>
+        <name>CopyTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1aaef348f4969d5032b815ded290807187">CopyTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref></type>
+          <declname>target</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="278" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a5ab8c2a35dbcf055f1f8d92f4e2a3851" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Sort</definition>
+        <argsstring>()</argsstring>
+        <name>Sort</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1aa0f28e340302228cc52a5d02bf8eea54">Sort</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="283" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1adfbbb8f1dcfa4cec03f9e68fd7f96355" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Sort</definition>
+        <argsstring>(String columnsToSortBy, XLSortOrder sortOrder=XLSortOrder.Ascending, Boolean matchCase=false, Boolean ignoreBlanks=true)</argsstring>
+        <name>Sort</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ae808ddabe3e4c6760ab6bff6f7f7ee09">Sort</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_1ae808ddabe3e4c6760ab6bff6f7f7ee09">Sort</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>columnsToSortBy</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+          <defval>XLSortOrder.Ascending</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>matchCase</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="285" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1af77f7f1e6cc8a48c10109fd2973d9126" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Sort</definition>
+        <argsstring>(Int32 columnToSortBy, XLSortOrder sortOrder=XLSortOrder.Ascending, Boolean matchCase=false, Boolean ignoreBlanks=true)</argsstring>
+        <name>Sort</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a7fcf90342257e40b45312be375551488">Sort</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>columnToSortBy</declname>
+        </param>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+          <defval>XLSortOrder.Ascending</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>matchCase</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="287" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a6c1c317457e8af22a70c479b32d5272a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange SortLeftToRight</definition>
+        <argsstring>(XLSortOrder sortOrder=XLSortOrder.Ascending, Boolean matchCase=false, Boolean ignoreBlanks=true)</argsstring>
+        <name>SortLeftToRight</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ad473d0317e12d189eb3096bfab433e3e">SortLeftToRight</reimplementedby>
+        <param>
+          <type>XLSortOrder</type>
+          <declname>sortOrder</declname>
+          <defval>XLSortOrder.Ascending</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>matchCase</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>ignoreBlanks</declname>
+          <defval>true</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="289" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aaa50865910e8b03f6ec8464517b71cf2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange SetDataType</definition>
+        <argsstring>(XLDataType dataType)</argsstring>
+        <name>SetDataType</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1aaa50865910e8b03f6ec8464517b71cf2">SetDataType</reimplementedby>
+        <param>
+          <type>XLDataType</type>
+          <declname>dataType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="291" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1af3b0714d48a15075cf940d99ae58b791" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>new <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>new IXLRange Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1afe16fa3cc753ee7bbd7de0f6a70c95b4">Clear</reimplements>
+        <reimplementedby refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_1ae64952e7ad07d73e0c6222f13cecdf51">Clear</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_1ae64952e7ad07d73e0c6222f13cecdf51">Clear</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1af3b0714d48a15075cf940d99ae58b791">Clear</reimplementedby>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of this range. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="297" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac9651ba101a2e8893250443619cdd357" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows RowsUsed</definition>
+        <argsstring>(Boolean includeFormats, Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>RowsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a53ed743e084787728b41e0c2a91b62ce">RowsUsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="300" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac63c182c2bf83a601b209d24ace398ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows RowsUsed</definition>
+        <argsstring>(XLCellsUsedOptions options, Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>RowsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a58ce0f5dced2a26376edfb0000b81c85">RowsUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a5e02bec2580b691b7fec6424103fba22">RowsUsed</reimplementedby>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="302" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ad8ea9744a6d715f95262b32248c249b8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_rows" kindref="compound">IXLRangeRows</ref></type>
+        <definition>IXLRangeRows RowsUsed</definition>
+        <argsstring>(Func&lt; IXLRangeRow, Boolean &gt; predicate=null)</argsstring>
+        <name>RowsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1aa919dcfe46b57e553dc52e46d542ce7e">RowsUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a994152468669f7e895212e4c748976a4">RowsUsed</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row" kindref="compound">IXLRangeRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="304" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a73a90aab3d952225315ffcd7abc6afb3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns ColumnsUsed</definition>
+        <argsstring>(Boolean includeFormats, Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>ColumnsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1a0a3b7ebb06ce640d79945ad111644da5">ColumnsUsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="307" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a3796b2a944c7cf206b6676ad02bd2cf9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns ColumnsUsed</definition>
+        <argsstring>(XLCellsUsedOptions options, Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>ColumnsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1af53bd02de5f2daa7d429e6f120e70ff9">ColumnsUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1ac5d1b2d2b6d94d0b72ff3ef9aef0b2da">ColumnsUsed</reimplementedby>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="309" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aa8fc75e833852af5d7e951ee4da5a38c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref></type>
+        <definition>IXLRangeColumns ColumnsUsed</definition>
+        <argsstring>(Func&lt; IXLRangeColumn, Boolean &gt; predicate=null)</argsstring>
+        <name>ColumnsUsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1af213f0258b1a5821c548384e0d7adaf8">ColumnsUsed</reimplementedby>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_1aa8e7080aa6766397975ea5a2c562642f">ColumnsUsed</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="311" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="544">
+        <label>IXLTable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table"/>
+        <childnode refid="541" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="542">
+        <label>IXLRangeBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base"/>
+        <childnode refid="543" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="546">
+        <label>IXLTableRange</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range"/>
+        <childnode refid="541" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="541">
+        <label>IXLRange</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range"/>
+        <childnode refid="542" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="547">
+        <label>XLTableRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+        <childnode refid="548" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="548">
+        <label>XLRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range"/>
+        <childnode refid="541" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="545">
+        <label>XLTable</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table"/>
+        <childnode refid="544" relation="public-inheritance">
+        </childnode>
+        <childnode refid="548" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="543">
+        <label>IXLAddressable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="550">
+        <label>IXLRangeBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base"/>
+        <childnode refid="551" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="549">
+        <label>IXLRange</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range"/>
+        <childnode refid="550" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="551">
+        <label>IXLAddressable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLRange.cs" bodystart="11" bodyend="312"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a045ed9e7df80ac03b71478b8f92a3ba0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>AddConditionalFormat</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a0693772c450e4364874433bea8a76c2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>AddToNamed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aabd4e1b796a30968e5dbdc8e2b8dc3bc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>AddToNamed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af248f5a36ed604861a6e6dfd9361f1f0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>AddToNamed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a7ab606dd801924c03c4ba2d7799d470f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>AsRange</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afa248293607e664e4744d6a3dca94748" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>AsTable</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aed481ac3c4889134f91782164ea58617" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>AsTable</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a2d98c0e37696aa2e64aadce2c35e6a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a51c9a46beb18bb3b88ac8af2b4493337" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a7c38dd70c492244b198c18ad456e1f8c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ade818cbbfa2d4327920e2296e370d2ce" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a59c3686be1cb61dcf252eb7afa0f500d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ae36d8c7ef410f92fd34d5b99ad0a1beb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ab38b528fc2532b468140d7ad51032159" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a0c7d460179d1a5a4893f6c3640b188a8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a2e40f4a09794cdf812201151d5d9cb05" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a6ad63b5f449b6fa15192912119681a06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a0d9f76bdbd85d9afc39c70ad41040e5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aa2fd743972ab0481f301859745e455d3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1abc22a5cf6219117653418e2f996f1b0c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1af3b0714d48a15075cf940d99ae58b791" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a80c9a0970b8a999cf037f597e7ebc211" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Column</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afdd8f06c6a247f63d753f5d21a5a49a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Column</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aacbd4cd849e821fb4c2d8a50807d4e30" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>ColumnCount</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1adfa1525e5a0ed79d2a28c34f59d143f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Columns</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a7da81030b5304ca9383776bbd394cd2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Columns</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac9bea8d8c9d09df8169b60139b841dc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Columns</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ad21f6ddb4a353075fe6fcf3e0e36444b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Columns</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a73a90aab3d952225315ffcd7abc6afb3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>ColumnsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a3796b2a944c7cf206b6676ad02bd2cf9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>ColumnsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aa8fc75e833852af5d7e951ee4da5a38c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>ColumnsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aa1bd4a18af31756b725d3e0a6ba87f00" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a8fd927502a94a26f6338d15dd26df1aa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a0520a4ebb5551bbd6f55a53c121e6224" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a237c24e4039042f4c37180830606c0e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CopyTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a9ce5197b20bc14ccac44a50fd01dd30e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CopyTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ad8861d4213a851b4a1ec35f23e908ec8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CreatePivotTable</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a59b37b5db4fa8b1b6c487899746ba448" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CreateTable</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a7c9c899bd77ca9c02530deeb6785524e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>CreateTable</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a0244a76d7e0bdd9e9e07b596b162345a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>DataType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a010dacb77980f49e3ac716014c2a3da1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a1dd58bbf54f3c4cb61687dad16b6b35f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>DeleteComments</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a5d944882d18a6bc7fd910ba8e26a40d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Difference</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a56413fec8e55589371cdf5863af9bdea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FindColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aec883c4f9775b82743f564007255a067" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FindRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af7ebb65dd41af70c5d1be23629b19f84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstCell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ad22088a7fc90d6cedb1b996a62635e33" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a7ab6f2748cd2050272f354cd4d171d29" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a93c0f3572a5e2ea46de521183a5e7fd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a93b02c997bbc5642f67c11791129e840" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a1512279cbbe176b4a4fe22b8e806de7c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a8e99eedfb37a11890a4aa5b7d8e9c468" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a08625360625d2840caacc01242ed7c49" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a2d8e7f5728636c3d56ab90a27a951a43" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstColumnUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afebc58fe672d691134d497f00d8fafe7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstColumnUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afaab4c6fca9b1b4e66670761e31355a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstColumnUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8faa178d2dec96866cddffc19d601392" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a363270134a384fce092e52ade576ad09" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstRowUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8019ab3b3ef3b0e06b5be1d27e2a18c6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstRowUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a2b4036162c7e2674a129ae239522e21c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FirstRowUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ae2f4e1e71fd07b7a1e543e1ff1714928" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FormulaA1</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a8fb301b8d8608c02e861f131f65eba79" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>FormulaR1C1</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a32d7dc02e62c5bd7d17d976b62e5b13b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Grow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aceddc6292c640c47b3455fc906912733" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Grow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ad9b1d6da7d234c2ced9dd41d01886071" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Hyperlinks</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aeba33c13dda1a858aaaeb7b7598a44cd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertColumnsAfter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a83dbf49d024cd6b66269daecfa917cb0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertColumnsAfter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ad05f3f30564029b775ae32395fea1531" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertColumnsBefore</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a333ce00548aa4d953f153bc4e70d883e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertColumnsBefore</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a139a273d244946636ddd66a021bbb492" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertRowsAbove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8092b320d98ac4fd3bb25d4d0802ceac" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertRowsAbove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8e0571b160d1bf1ce859ebc1847f512f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertRowsBelow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a89d3e1772520e7ce926205007da9c94d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>InsertRowsBelow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af4540841bb274b197b66c588b2d6b3b8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Intersection</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a9dfc70116289387e0f8fc25d9e178fd4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Intersects</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aa2dcde5e2476e5213a95b0827ee98e48" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Intersects</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a144734f2dc1abe25a3d97b04f1425f61" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>IsEmpty</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a0870be16ecf26f2d8f6dc18561ca9def" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>IsEmpty</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ae8d49098c028f65b944a13cc2ccc99ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>IsEmpty</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a0c01ae3e8b076d4d357a35c75846308f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>IsEntireColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a032290a268e87e37c8067e91b123c176" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>IsEntireRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a9c38a38c2e325c49d8113bad8b329afb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>IsEntireSheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ac508d3d23160e437ba169b5f5efad943" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>IsMerged</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a2e4ed23199ddb2c366bb3213537cad09" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastCell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a3a0db70658e2655c3a530343df13b825" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af1dd49086ef48804c6c3802fa8a8cf48" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a1b272563b26364b91d9a567c8e20d9e7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af08964bfcf5dcc5c2d8c8270911c77b4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a7a3ff08a48c48be8effb0ec491e69c58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a83038328f70eaf73feaa401c1e6bf798" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastCellUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a91e9dfca2f6c41935b99ab202f9f6edd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a07da79e8822c429d14446a2b9a349b1d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastColumnUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ae35ee38ecd79f74337e8e191c34ded67" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastColumnUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a5dfa4558bb8602b369dbedcd74cbda77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastColumnUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1af4cb0823ecf1efd7949e2fe164f927f4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a65609fc6ce54437d242e3ab9bbed8d13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastRowUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a8e257248c0465a984092faac236116e8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastRowUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a56a86bb837cceb29a8392891c2b4a53e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>LastRowUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a9ec137bf8a2ec4986f791f77b40e46e8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Merge</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aefd902805e28264a17f013da1af0628f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Merge</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aec7439cbfc059cd51ac45a5a9e0ca823" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac33278ec11f9de6d4c1177744fa8f479" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a76c37c460ed4e5ddce2ede619c9e1dc2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a6c8edf59211cacef4f2862b7b7e26112" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a23178402df7eeb5384e28e01c66548f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afedb579cbd0986fedb7a2f6eb3bae96a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable_1a693283492d6857ae738dee06f80bb42d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>RangeAddress</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac2ba2c6447da5bf80d6bd15a280cb524" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Ranges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a874742bb1da1a75d1ab929e6d5a185ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>RangeUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a5f93cb981ce40dfe4454ff1a8134a417" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Relative</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1afe5c47eb96701cf427d7e41ecd4a4cdb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Row</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac1881ee9fa2092103e22825bff295293" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>RowCount</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a02e03c83d12caf35f08d1b100392a2f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Rows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1add465cf80e5157c2bb3b84fe4c309ab2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Rows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aab925e89cbdd8cca65edb25555d940c8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Rows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac9651ba101a2e8893250443619cdd357" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>RowsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ac63c182c2bf83a601b209d24ace398ef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>RowsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1ad8ea9744a6d715f95262b32248c249b8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>RowsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a900537cc87664f566790192b42088169" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Search</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1aae6b677d47187a8187e734714222240b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Select</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a958d6e3dc40e406ebe59e0dba89f42a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SetAutoFilter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a33f579c790bafaf5187bf949e9b8d6a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SetAutoFilter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aaa50865910e8b03f6ec8464517b71cf2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SetDataType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ac2cf6fc38d414bd2729f7e5a9e1f5a69" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SetDataValidation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a892298839e9c7107a7436b560709af9a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SetValue&lt; T &gt;</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a2308e53a5e41ad078dee5c46117ebf96" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>ShareString</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af7b512edf1d60b96ab51e026a4c8ac6c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Shrink</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a302f6fde2044d7d5bb00e51c41ff466e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Shrink</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a5ab8c2a35dbcf055f1f8d92f4e2a3851" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Sort</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1adfbbb8f1dcfa4cec03f9e68fd7f96355" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Sort</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1af77f7f1e6cc8a48c10109fd2973d9126" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Sort</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1aed56a3611bc94b0ba69f9154efe56c9b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SortColumns</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a6c1c317457e8af22a70c479b32d5272a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SortLeftToRight</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a047031e3be7970b84cacb27d0ab272ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SortRows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a4f9710191bbdace5b2a7dcdb65b9388d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>SurroundingCells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_1a519ef092836bc1151bf20d3f97be6268" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Transpose</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ab03d6b686702baec2cbb71b665a6a691" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Union</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1ad0ad45fa40a5b8b61707196b3f65b370" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Unmerge</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Value</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRange</scope><name>Worksheet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

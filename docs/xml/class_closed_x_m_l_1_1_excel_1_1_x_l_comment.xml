@@ -1,0 +1,750 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLComment</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text" prot="public" virt="non-virtual">XLFormattedText&lt; IXLComment &gt;</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" prot="public" virt="non-virtual">IXLComment</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a8f537862706f1709ed6fbbf3dc95f1a0" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cell" kindref="compound">XLCell</ref></type>
+        <definition>XLCell _cell</definition>
+        <argsstring></argsstring>
+        <name>_cell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aca9f76df1e60f93e7a7c5d1a0d4a3fc5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Author</definition>
+        <argsstring></argsstring>
+        <name>Author</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="29" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a934fa09ba291a97f43720640e4d83f25" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Name</definition>
+        <argsstring></argsstring>
+        <name>Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="52" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a2a9d7649174c82227bf52a8053cf5032" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Description</definition>
+        <argsstring></argsstring>
+        <name>Description</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a07290efd1e0c18745a26ccae1ae6d697" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDrawingAnchor</type>
+        <definition>XLDrawingAnchor Anchor</definition>
+        <argsstring></argsstring>
+        <name>Anchor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="54" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1acdd17375793c5d3af830d499a287945f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean HorizontalFlip</definition>
+        <argsstring></argsstring>
+        <name>HorizontalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="55" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aaf18b4f902b6cbd703241fd68ca76a68" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean VerticalFlip</definition>
+        <argsstring></argsstring>
+        <name>VerticalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="56" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1a236f7d89ff2b5e8f9161f46bdddcf2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Rotation</definition>
+        <argsstring></argsstring>
+        <name>Rotation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="57" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a3d4dd7b8b87b956ddb5c55eb6b592cab" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ExtentLength</definition>
+        <argsstring></argsstring>
+        <name>ExtentLength</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="58" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="58" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1abc26e75b63f2646b7504e795c5be367a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ExtentWidth</definition>
+        <argsstring></argsstring>
+        <name>ExtentWidth</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="59" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ac827c63b86b0f22e4ebbb6e27f0bf49a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ShapeId</definition>
+        <argsstring></argsstring>
+        <name>ShapeId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="60" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Visible</definition>
+        <argsstring></argsstring>
+        <name>Visible</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="61" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="61" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1af5e8d258ee4f537352f49fff306e05a2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kindref="compound">IXLDrawingPosition</ref></type>
+        <definition>IXLDrawingPosition Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="75" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="75" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a66fddb5599abf78b920d997931202409" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ZOrder</definition>
+        <argsstring></argsstring>
+        <name>ZOrder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="77" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="77" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1abda7b1e0511530b36bbb471a3ecbbd0a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="85" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="85" bodyend="85"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1a86f0c3de41fadf891e56cbeec3f3a2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLComment??</definition>
+        <argsstring>(XLCell cell, IXLFontBase defaultFont=null, int? shapeId=null)</argsstring>
+        <name>XLComment??</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cell" kindref="compound">XLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>defaultFont</declname>
+          <defval>null</defval>
+        </param>
+        <param>
+          <type>int?</type>
+          <declname>shapeId</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="9" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a885877be0885484c6e5e8ca75b1b1282" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLComment</definition>
+        <argsstring>(XLCell cell, XLFormattedText&lt; IXLComment &gt; defaultComment, IXLFontBase defaultFont, IXLDrawingStyle style)</argsstring>
+        <name>XLComment</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cell" kindref="compound">XLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text" kindref="compound">XLFormattedText</ref>&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref> &gt;</type>
+          <declname>defaultComment</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>defaultFont</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="15" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a28d76dd786be76f1efe1ca586683a619" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLComment</definition>
+        <argsstring>(XLCell cell, String text, IXLFontBase defaultFont)</argsstring>
+        <name>XLComment</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cell" kindref="compound">XLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" kindref="compound">IXLFontBase</ref></type>
+          <declname>defaultFont</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="21" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aab2b1e49fb90ddf289d1ee1ca91a417b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetAuthor</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetAuthor</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment_1aab2b1e49fb90ddf289d1ee1ca91a417b">SetAuthor</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>Sets the name of the comment&apos;s author </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Author&apos;s name</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="31" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a495e9f1462d7d3bdf4ac3242b0d81655" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddSignature</definition>
+        <argsstring>()</argsstring>
+        <name>AddSignature</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment_1a495e9f1462d7d3bdf4ac3242b0d81655">AddSignature</reimplements>
+        <briefdescription>
+<para>Adds a bolded line with the author&apos;s name </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="37" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ac2e5aab0612d67400354a4fe71278a21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment_1ac2e5aab0612d67400354a4fe71278a21">Delete</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="43" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a5f1fd621c69524459ef32abc7b98d056" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetVisible</definition>
+        <argsstring>()</argsstring>
+        <name>SetVisible</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="63" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="63" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a261e636fa06663023e08c1276f46e2b7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetVisible</definition>
+        <argsstring>(Boolean hidden)</argsstring>
+        <name>SetVisible</name>
+        <param>
+          <type>Boolean</type>
+          <declname>hidden</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="69" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="69" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1516535bf62c69225a3c3dd81e60b9e4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetZOrder</definition>
+        <argsstring>(Int32 zOrder)</argsstring>
+        <name>SetZOrder</name>
+        <param>
+          <type>Int32</type>
+          <declname>zOrder</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="79" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="79" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1aa8d0274944ff95c1061ccfd77803db" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetName</definition>
+        <argsstring>(String name)</argsstring>
+        <name>SetName</name>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="87" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="87" bodyend="91"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ab6c5399f8157d4cd1d1f0702cf0b4666" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetDescription</definition>
+        <argsstring>(String description)</argsstring>
+        <name>SetDescription</name>
+        <param>
+          <type>String</type>
+          <declname>description</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="93" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="93" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a5124f861140a4856fe19f7a7182228d6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetHorizontalFlip</definition>
+        <argsstring>()</argsstring>
+        <name>SetHorizontalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="99" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="99" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a46fb5b19b63a2bc665f91f78d87f38d9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetHorizontalFlip</definition>
+        <argsstring>(Boolean horizontalFlip)</argsstring>
+        <name>SetHorizontalFlip</name>
+        <param>
+          <type>Boolean</type>
+          <declname>horizontalFlip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="105" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="105" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ac7bc66844c5907a0455685391a16c1b6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetVerticalFlip</definition>
+        <argsstring>()</argsstring>
+        <name>SetVerticalFlip</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="111" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="111" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aad99017f4f19ef17c9ca865c7202caf6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetVerticalFlip</definition>
+        <argsstring>(Boolean verticalFlip)</argsstring>
+        <name>SetVerticalFlip</name>
+        <param>
+          <type>Boolean</type>
+          <declname>verticalFlip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="117" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="117" bodyend="121"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a68d5a425a7be99d8bb6df2d81d6eff49" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetRotation</definition>
+        <argsstring>(Int32 rotation)</argsstring>
+        <name>SetRotation</name>
+        <param>
+          <type>Int32</type>
+          <declname>rotation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="123" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="123" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a746323f57138c25d6afe3232d3a91b58" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetExtentLength</definition>
+        <argsstring>(Int32 extentLength)</argsstring>
+        <name>SetExtentLength</name>
+        <param>
+          <type>Int32</type>
+          <declname>extentLength</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="129" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="129" bodyend="133"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aba2d56a04de63322825280a9bcf4fd29" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment" kindref="compound">IXLComment</ref></type>
+        <definition>IXLComment SetExtentWidth</definition>
+        <argsstring>(Int32 extentWidth)</argsstring>
+        <name>SetExtentWidth</name>
+        <param>
+          <type>Int32</type>
+          <declname>extentWidth</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="135" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="135" bodyend="139"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a53e2b6d142ac3fb4169123de087135a2" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Initialize</definition>
+        <argsstring>(XLCell cell, IXLDrawingStyle style=null, int? shapeId=null)</argsstring>
+        <name>Initialize</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cell" kindref="compound">XLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+          <declname>style</declname>
+          <defval>null</defval>
+        </param>
+        <param>
+          <type>int?</type>
+          <declname>shapeId</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="143" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="143" bodyend="200"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1166">
+        <label>IXLFormattedText&lt; IXLComment &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text"/>
+      </node>
+      <node id="1163">
+        <label>XLComment</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment"/>
+        <childnode refid="1164" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1165" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1167">
+        <label>IXLDrawing&lt; IXLComment &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing"/>
+      </node>
+      <node id="1165">
+        <label>IXLComment</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment"/>
+        <childnode refid="1166" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1167" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1164">
+        <label>XLFormattedText&lt; IXLComment &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1171">
+        <label>IXLFormattedText&lt; IXLComment &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text"/>
+      </node>
+      <node id="1168">
+        <label>XLComment</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment"/>
+        <childnode refid="1169" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1170" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1172">
+        <label>IXLDrawing&lt; IXLComment &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing"/>
+      </node>
+      <node id="1170">
+        <label>IXLComment</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_comment"/>
+        <childnode refid="1171" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1172" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1169">
+        <label>XLFormattedText&lt; IXLComment &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Comments/XLComment.cs" bodystart="5" bodyend="201"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a8f537862706f1709ed6fbbf3dc95f1a0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>_cell</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>AddNewLine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a495e9f1462d7d3bdf4ac3242b0d81655" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>AddSignature</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a39999f7b5368945b92ee8e6222486faf" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a696f43c35527053a865f4c6839efb0fc" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>AddText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a39999f7b5368945b92ee8e6222486faf" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>AddText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a07290efd1e0c18745a26ccae1ae6d697" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Anchor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aca9f76df1e60f93e7a7c5d1a0d4a3fc5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Author</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Bold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Bold</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1af8579f54f0b976d3bf00b7b1568aef17" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>ClearFont</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1af8579f54f0b976d3bf00b7b1568aef17" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>ClearFont</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a94149a05873dbd833b4332ecdf8e3e2c" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>ClearText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a94149a05873dbd833b4332ecdf8e3e2c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>ClearText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab5513473566233ebcc80af68e63221d1" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Container</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Count</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Count</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a2a9d7649174c82227bf52a8053cf5032" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Description</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a56479f6a1ebc6edaf80e7a256b0cb0ae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a3d4dd7b8b87b956ddb5c55eb6b592cab" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>ExtentLength</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1abc26e75b63f2646b7504e795c5be367a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>ExtentWidth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>FontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>FontColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>FontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>FontFamilyNumbering</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>FontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>FontName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>FontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>FontSize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a94c9eb6b882a7995306d54364cfa898f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a5327a161110bcc94676d17df2d302298" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>HasPhonetics</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a5327a161110bcc94676d17df2d302298" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>HasPhonetics</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1acdd17375793c5d3af830d499a287945f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>HorizontalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a53e2b6d142ac3fb4169123de087135a2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Initialize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Italic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Italic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9fde862c8bc443d7a6872a487ec265a3" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Length</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a51fbe247d60b604c56eac2cacc2b2f99" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Length</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a934fa09ba291a97f43720640e4d83f25" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad53a2353d840f45425ce50baa1cdf0c4" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Phonetics</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1af64567258339cfd3c414edbb9437e2bf" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Phonetics</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1af5e8d258ee4f537352f49fff306e05a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Position</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1a236f7d89ff2b5e8f9161f46bdddcf2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Rotation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aab2b1e49fb90ddf289d1ee1ca91a417b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetAuthor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad92281012307e59756d4fb1809df4c89" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetBold</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3b248f2dbf026e966f8ef4dfa02b7a10" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ad92281012307e59756d4fb1809df4c89" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3b248f2dbf026e966f8ef4dfa02b7a10" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetBold</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ab6c5399f8157d4cd1d1f0702cf0b4666" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetDescription</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a746323f57138c25d6afe3232d3a91b58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetExtentLength</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aba2d56a04de63322825280a9bcf4fd29" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetExtentWidth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab28576f1b0357fe67862f430b331eabc" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ab28576f1b0357fe67862f430b331eabc" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1afff78ff77b7a0e3861042177c6bdfce8" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1afff78ff77b7a0e3861042177c6bdfce8" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontFamilyNumbering</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ab69cd25d22e0f495f156667499bb84f9" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ab69cd25d22e0f495f156667499bb84f9" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a24740d5cd42be5b3fd66d0275e7cb106" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a24740d5cd42be5b3fd66d0275e7cb106" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetFontSize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a5124f861140a4856fe19f7a7182228d6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetHorizontalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a46fb5b19b63a2bc665f91f78d87f38d9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetHorizontalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a2cb535f226b8c6dd3a79dfe11d01fc03" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetItalic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a65fbee7a2038903bfd856c793c6a271d" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a2cb535f226b8c6dd3a79dfe11d01fc03" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a65fbee7a2038903bfd856c793c6a271d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetItalic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1aa8d0274944ff95c1061ccfd77803db" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a68d5a425a7be99d8bb6df2d81d6eff49" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetRotation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a749417cc932575dee7471f8c963bdab1" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetShadow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3a16ee5c007a38ce6f89a62aab721677" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a749417cc932575dee7471f8c963bdab1" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3a16ee5c007a38ce6f89a62aab721677" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetShadow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aab501c7e9bf73d4d4e3bbb1d21bb3f5c" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetStrikethrough</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a331a3f17e74b57beff3ab3e43720bfbb" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1aab501c7e9bf73d4d4e3bbb1d21bb3f5c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a331a3f17e74b57beff3ab3e43720bfbb" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetStrikethrough</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a224ab04198f32fa7fe9fdc3546257980" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetUnderline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a37d04151ab31f7bcb2f92adeb53eacff" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a224ab04198f32fa7fe9fdc3546257980" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a37d04151ab31f7bcb2f92adeb53eacff" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetUnderline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aa2c3716de5c579a23e6ffbdafb40196e" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>SetVerticalAlignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1aa2c3716de5c579a23e6ffbdafb40196e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>SetVerticalAlignment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ac7bc66844c5907a0455685391a16c1b6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetVerticalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aad99017f4f19ef17c9ca865c7202caf6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetVerticalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a5f1fd621c69524459ef32abc7b98d056" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetVisible</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a261e636fa06663023e08c1276f46e2b7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetVisible</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1516535bf62c69225a3c3dd81e60b9e4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>SetZOrder</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Shadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Shadow</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1ac827c63b86b0f22e4ebbb6e27f0bf49a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>ShapeId</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Strikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Strikethrough</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1abda7b1e0511530b36bbb471a3ecbbd0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ae7b755b98b500bbd52e4bc264575790b" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Substring</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a3c1fbaae30b42bf0e1621ddb9e11848c" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Substring</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ae7b755b98b500bbd52e4bc264575790b" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Substring</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3c1fbaae30b42bf0e1621ddb9e11848c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Substring</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Text</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Text</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>Underline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>Underline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual" ambiguityscope="XLFormattedText&lt; IXLComment &gt;."><scope>ClosedXML::Excel::XLComment</scope><name>VerticalAlignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLComment."><scope>ClosedXML::Excel::XLComment</scope><name>VerticalAlignment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1aaf18b4f902b6cbd703241fd68ca76a68" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>VerticalFlip</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>Visible</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a885877be0885484c6e5e8ca75b1b1282" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>XLComment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a28d76dd786be76f1efe1ca586683a619" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>XLComment</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a1a86f0c3de41fadf891e56cbeec3f3a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>XLComment??</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1aadb75636402a224ab286f1246d447a0c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>XLFormattedText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1ad6b2fff7b0c7bd5b77bd007ea268af96" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>XLFormattedText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formatted_text_1a9bd22a2f60eb36b12fec9348b7475130" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>XLFormattedText</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_comment_1a66fddb5599abf78b920d997931202409" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLComment</scope><name>ZOrder</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

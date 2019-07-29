@@ -1,0 +1,256 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDrawingAlignment</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment" prot="public" virt="non-virtual">IXLDrawingAlignment</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a55572329e5987730aadefb9450e27226" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>readonly IXLDrawingStyle _style</definition>
+        <argsstring></argsstring>
+        <name>_style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a1c4ea76a7dc77c318e11a2b4c6c390f2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDrawingHorizontalAlignment</type>
+        <definition>XLDrawingHorizontalAlignment Horizontal</definition>
+        <argsstring></argsstring>
+        <name>Horizontal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a96fbd58661560b0bde7ddda39b2238c5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDrawingVerticalAlignment</type>
+        <definition>XLDrawingVerticalAlignment Vertical</definition>
+        <argsstring></argsstring>
+        <name>Vertical</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a13094acc5b183eaf4c76fc4b2d2073a2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean AutomaticSize</definition>
+        <argsstring></argsstring>
+        <name>AutomaticSize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a3ff678e4c597466d9b53b851872bd283" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDrawingTextDirection</type>
+        <definition>XLDrawingTextDirection Direction</definition>
+        <argsstring></argsstring>
+        <name>Direction</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a90f970ac3a7ab22f5fb112a7ec2dd652" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLDrawingTextOrientation</type>
+        <definition>XLDrawingTextOrientation Orientation</definition>
+        <argsstring></argsstring>
+        <name>Orientation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a167852fbe4981320a1eaf74eede4a6c9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDrawingAlignment</definition>
+        <argsstring>(IXLDrawingStyle style)</argsstring>
+        <name>XLDrawingAlignment</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="12" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1af0fc80fed08a6f5ec4e92045b7b13b20" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetHorizontal</definition>
+        <argsstring>(XLDrawingHorizontalAlignment value)</argsstring>
+        <name>SetHorizontal</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment_1af0fc80fed08a6f5ec4e92045b7b13b20">SetHorizontal</reimplements>
+        <param>
+          <type>XLDrawingHorizontalAlignment</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1abf7b37752210215dbef7d7a0f66e802a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetVertical</definition>
+        <argsstring>(XLDrawingVerticalAlignment value)</argsstring>
+        <name>SetVertical</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment_1abf7b37752210215dbef7d7a0f66e802a">SetVertical</reimplements>
+        <param>
+          <type>XLDrawingVerticalAlignment</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a40fba5486c16a6d542311bade09935a1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAutomaticSize</definition>
+        <argsstring>()</argsstring>
+        <name>SetAutomaticSize</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment_1a40fba5486c16a6d542311bade09935a1">SetAutomaticSize</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a9c0e1f4cea7f37d0142b2f2e29649fde" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAutomaticSize</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetAutomaticSize</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment_1a9c0e1f4cea7f37d0142b2f2e29649fde">SetAutomaticSize</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1ad239382d470d272ca6924aeb5adc5b74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetDirection</definition>
+        <argsstring>(XLDrawingTextDirection value)</argsstring>
+        <name>SetDirection</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment_1ad239382d470d272ca6924aeb5adc5b74">SetDirection</reimplements>
+        <param>
+          <type>XLDrawingTextDirection</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1abf9678772345236fc185117d62d9d376" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetOrientation</definition>
+        <argsstring>(XLDrawingTextOrientation value)</argsstring>
+        <name>SetOrientation</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment_1abf9678772345236fc185117d62d9d376">SetOrientation</reimplements>
+        <param>
+          <type>XLDrawingTextOrientation</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1244">
+        <label>IXLDrawingAlignment</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment"/>
+      </node>
+      <node id="1243">
+        <label>XLDrawingAlignment</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment"/>
+        <childnode refid="1244" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1246">
+        <label>IXLDrawingAlignment</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_alignment"/>
+      </node>
+      <node id="1245">
+        <label>XLDrawingAlignment</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment"/>
+        <childnode refid="1246" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingAlignment.cs" bodystart="8" bodyend="22"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a55572329e5987730aadefb9450e27226" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>_style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a13094acc5b183eaf4c76fc4b2d2073a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>AutomaticSize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a3ff678e4c597466d9b53b851872bd283" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>Direction</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a1c4ea76a7dc77c318e11a2b4c6c390f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>Horizontal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a90f970ac3a7ab22f5fb112a7ec2dd652" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>Orientation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a40fba5486c16a6d542311bade09935a1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>SetAutomaticSize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a9c0e1f4cea7f37d0142b2f2e29649fde" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>SetAutomaticSize</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1ad239382d470d272ca6924aeb5adc5b74" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>SetDirection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1af0fc80fed08a6f5ec4e92045b7b13b20" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>SetHorizontal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1abf9678772345236fc185117d62d9d376" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>SetOrientation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1abf7b37752210215dbef7d7a0f66e802a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>SetVertical</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a96fbd58661560b0bde7ddda39b2238c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>Vertical</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_alignment_1a167852fbe4981320a1eaf74eede4a6c9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingAlignment</scope><name>XLDrawingAlignment</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

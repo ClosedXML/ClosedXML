@@ -1,0 +1,362 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLBaseCollection</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; TSingle &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>TSingle</type>
+      </param>
+      <param>
+        <type>TMultiple</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Count</definition>
+        <argsstring></argsstring>
+        <name>Count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6cef8de98f05983f520efefc334e6b13" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Object</type>
+        <definition>Object Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+<para>Sets the cells&apos; value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the object is an IEnumerable <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> will copy the collection&apos;s data into a table starting from each cell.</para>
+<para>If the object is a range <ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> will copy the range starting from each cell.</para>
+<para>Setting the value to an object (not IEnumerable/range) will call the object&apos;s ToString() method.</para>
+<para><ref refid="namespace_closed_x_m_l" kindref="compound">ClosedXML</ref> will try to translate it to the corresponding type, if it can&apos;t then the value will be left as a string.</para>
+<para>The object containing the value(s) to set. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" bodystart="49" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1ac2cf6fc38d414bd2729f7e5a9e1f5a69" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref></type>
+        <definition>IXLDataValidation SetDataValidation</definition>
+        <argsstring>()</argsstring>
+        <name>SetDataValidation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="12" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a46a46f8e2190f4b50d21ba02f0c62183" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>TMultiple</type>
+        <definition>TMultiple AddToNamed</definition>
+        <argsstring>(String rangeName)</argsstring>
+        <name>AddToNamed</name>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <briefdescription>
+<para>Creates a named range out of these ranges. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the named range exists, it will add these ranges to that named range.</para>
+<para>The default scope for the named range is Workbook.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rangeName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="20" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a013e27d0e7718bd1236e036eb6345b5d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>TMultiple</type>
+        <definition>TMultiple AddToNamed</definition>
+        <argsstring>(String rangeName, XLScope scope)</argsstring>
+        <name>AddToNamed</name>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <param>
+          <type>XLScope</type>
+          <declname>scope</declname>
+        </param>
+        <briefdescription>
+<para>Creates a named range out of these ranges. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the named range exists, it will add these ranges to that named range.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rangeName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>scope</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The scope for the named range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="28" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1ac0fdb05d375468c5870ce54b43d085d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>TMultiple</type>
+        <definition>TMultiple AddToNamed</definition>
+        <argsstring>(String rangeName, XLScope scope, String comment)</argsstring>
+        <name>AddToNamed</name>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <param>
+          <type>XLScope</type>
+          <declname>scope</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>comment</declname>
+        </param>
+        <briefdescription>
+<para>Creates a named range out of these ranges. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the named range exists, it will add these ranges to that named range.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rangeName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>scope</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The scope for the named range.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>comment</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The comments for the named range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="37" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a456de7b4021ea9a1857e5cef0abe1739" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>TMultiple</type>
+        <definition>TMultiple SetValue&lt; T &gt;</definition>
+        <argsstring>(T value)</argsstring>
+        <name>SetValue&lt; T &gt;</name>
+        <param>
+          <type>T</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="51" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells Cells</definition>
+        <argsstring>()</argsstring>
+        <name>Cells</name>
+        <briefdescription>
+<para>Returns the collection of cells. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="56" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6ad63b5f449b6fa15192912119681a06" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>()</argsstring>
+        <name>CellsUsed</name>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="61" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>(Boolean includeFormats)</argsstring>
+        <name>CellsUsed</name>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>includeFormats</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if set to <computeroutput>true</computeroutput> will return all cells with a value or a style different than the default.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="67" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6529b4f571f7ba79d7850c773bfb8f93" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>TMultiple</type>
+        <definition>TMultiple SetDataType</definition>
+        <argsstring>(XLDataType dataType)</argsstring>
+        <name>SetDataType</name>
+        <param>
+          <type>XLDataType</type>
+          <declname>dataType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="69" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a7669414bb25e06dff8ead708563c72cf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>TMultiple</type>
+        <definition>TMultiple Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of these ranges. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="75" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="217">
+        <label>IXLBaseCollection&lt; TSingle, TMultiple &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection"/>
+        <childnode refid="218" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="218">
+        <label>IEnumerable&lt; TSingle &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="219">
+        <label>IXLBaseCollection&lt; TSingle, TMultiple &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection"/>
+        <childnode refid="220" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="220">
+        <label>IEnumerable&lt; TSingle &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLBaseCollection.cs" bodystart="6" bodyend="76"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a46a46f8e2190f4b50d21ba02f0c62183" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>AddToNamed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a013e27d0e7718bd1236e036eb6345b5d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>AddToNamed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1ac0fdb05d375468c5870ce54b43d085d0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>AddToNamed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6ad63b5f449b6fa15192912119681a06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>CellsUsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a7669414bb25e06dff8ead708563c72cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>Count</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6529b4f571f7ba79d7850c773bfb8f93" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>SetDataType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1ac2cf6fc38d414bd2729f7e5a9e1f5a69" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>SetDataValidation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a456de7b4021ea9a1857e5cef0abe1739" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>SetValue&lt; T &gt;</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_base_collection_1af92ee5154cd05483efe2109f7f9b7b58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLBaseCollection</scope><name>Value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_save_options" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::SaveOptions</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_save_options_1aafc60426c4dd68fa95f68a2376d272c3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ConsolidateConditionalFormatRanges</definition>
+        <argsstring></argsstring>
+        <name>ConsolidateConditionalFormatRanges</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_save_options_1ad2b041dff4ca96d9cb5693dbbbacf499" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ConsolidateDataValidationRanges</definition>
+        <argsstring></argsstring>
+        <name>ConsolidateDataValidationRanges</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_save_options_1aee3cca62701f97d2b608ba15d602896a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean EvaluateFormulasBeforeSaving</definition>
+        <argsstring></argsstring>
+        <name>EvaluateFormulasBeforeSaving</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_save_options_1aa080eaf95c7623b8ca3736dd2b8d629f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean GenerateCalculationChain</definition>
+        <argsstring></argsstring>
+        <name>GenerateCalculationChain</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_save_options_1a77712d3efef567bc026a30806667c2a1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ValidatePackage</definition>
+        <argsstring></argsstring>
+        <name>ValidatePackage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_save_options_1ab10cc2798c0699c2cba6515f8f7b133d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>SaveOptions</definition>
+        <argsstring>()</argsstring>
+        <name>SaveOptions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" bodystart="8" bodyend="15"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/SaveOptions.cs" bodystart="6" bodyend="22"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_save_options_1aafc60426c4dd68fa95f68a2376d272c3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::SaveOptions</scope><name>ConsolidateConditionalFormatRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_save_options_1ad2b041dff4ca96d9cb5693dbbbacf499" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::SaveOptions</scope><name>ConsolidateDataValidationRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_save_options_1aee3cca62701f97d2b608ba15d602896a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::SaveOptions</scope><name>EvaluateFormulasBeforeSaving</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_save_options_1aa080eaf95c7623b8ca3736dd2b8d629f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::SaveOptions</scope><name>GenerateCalculationChain</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_save_options_1ab10cc2798c0699c2cba6515f8f7b133d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::SaveOptions</scope><name>SaveOptions</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_save_options_1a77712d3efef567bc026a30806667c2a1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::SaveOptions</scope><name>ValidatePackage</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_i_x_l_column_8cs" kind="file" language="C#">
+    <compoundname>IXLColumn.cs</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" prot="public">ClosedXML::Excel::IXLColumn</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="4"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="5" refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">interface<sp/></highlight><highlight class="normal"><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>:<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Double<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a05425db48f3352d6f85b7e66a95d0a79" kindref="member">Width</ref><sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1ac2e5aab0612d67400354a4fe71278a21" kindref="member">Delete</ref>();</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Int32<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a54dcc6aea50fdc7e7e3b6e9df8930e78" kindref="member">ColumnNumber</ref>();</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>String<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a6d0664427bf1ce2b4637690fef97b8f5" kindref="member">ColumnLetter</ref>();</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_columns" kindref="compound">IXLColumns</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1ab4678c36df1dfa70b9364619b18aece8" kindref="member">InsertColumnsAfter</ref>(Int32<sp/>numberOfColumns);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_columns" kindref="compound">IXLColumns</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a353b1dbac291eb18282f1d2edde2a8c0" kindref="member">InsertColumnsBefore</ref>(Int32<sp/>numberOfColumns);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1aef4585af0907843aa735aae61f991dd4" kindref="member">Cell</ref>(Int32<sp/>rowNumber);</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a3a388f07ee977ad805d8f72cc51418c5" kindref="member">Cells</ref>(String<sp/>cellsInColumn);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base_1a3a388f07ee977ad805d8f72cc51418c5" kindref="member">Cells</ref>(Int32<sp/>firstRow,<sp/>Int32<sp/>lastRow);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a1ea36af7aaa24c17e2b535a407df3264" kindref="member">AdjustToContents</ref>();</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a1ea36af7aaa24c17e2b535a407df3264" kindref="member">AdjustToContents</ref>(Int32<sp/>startRow);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a1ea36af7aaa24c17e2b535a407df3264" kindref="member">AdjustToContents</ref>(Int32<sp/>startRow,<sp/>Int32<sp/>endRow);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a1ea36af7aaa24c17e2b535a407df3264" kindref="member">AdjustToContents</ref>(Double<sp/>minWidth,<sp/>Double<sp/>maxWidth);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a1ea36af7aaa24c17e2b535a407df3264" kindref="member">AdjustToContents</ref>(Int32<sp/>startRow,<sp/>Double<sp/>minWidth,<sp/>Double<sp/>maxWidth);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a1ea36af7aaa24c17e2b535a407df3264" kindref="member">AdjustToContents</ref>(Int32<sp/>startRow,<sp/>Int32<sp/>endRow,<sp/>Double<sp/>minWidth,<sp/>Double<sp/>maxWidth);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a2300a897edc4fd70cf10431dd288b524" kindref="member">Hide</ref>();</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a74e2c9cba406332adb5893019cab721c" kindref="member">Unhide</ref>();</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Boolean<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1ad2141afee66b84c68ca2ddd11274364b" kindref="member">IsHidden</ref><sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Int32<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a8886adab0f0540bd085a5c141628afd7" kindref="member">OutlineLevel</ref><sp/>{<sp/></highlight><highlight class="keyword">get</highlight><highlight class="normal">;<sp/></highlight><highlight class="keyword">set</highlight><highlight class="normal">;<sp/>}</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1adc099a99d327aa8cd817cc80b3869f7e" kindref="member">Group</ref>();</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1adc099a99d327aa8cd817cc80b3869f7e" kindref="member">Group</ref>(Boolean<sp/>collapse);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1adc099a99d327aa8cd817cc80b3869f7e" kindref="member">Group</ref>(Int32<sp/>outlineLevel);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1adc099a99d327aa8cd817cc80b3869f7e" kindref="member">Group</ref>(Int32<sp/>outlineLevel,<sp/>Boolean<sp/>collapse);</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a943ba8c5f4cf730608965e92986fe90d" kindref="member">Ungroup</ref>();</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a943ba8c5f4cf730608965e92986fe90d" kindref="member">Ungroup</ref>(Boolean<sp/>fromAll);</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a33dd52ff53fc48bdb351fc5407405bc9" kindref="member">Collapse</ref>();</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a7c7748c77aa23ca93bb6fe724ee79dd6" kindref="member">Expand</ref>();</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Int32<sp/>CellCount();</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref><sp/>CopyTo(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref><sp/>cell);</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref><sp/>CopyTo(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref><sp/>range);</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>CopyTo(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>column);</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>Sort(XLSortOrder<sp/>sortOrder<sp/>=<sp/>XLSortOrder.Ascending,<sp/>Boolean<sp/>matchCase<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,<sp/>Boolean<sp/>ignoreBlanks<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref><sp/>Column(Int32<sp/>start,<sp/>Int32<sp/>end);</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref><sp/>Column(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref><sp/>start,<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref><sp/>end);</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_columns" kindref="compound">IXLRangeColumns</ref><sp/>Columns(String<sp/>columns);</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a0232151f88b0421fa5f5d6439367f74c" kindref="member">AddVerticalPageBreak</ref>();</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>SetDataType(XLDataType<sp/>dataType);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>ColumnLeft();</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>ColumnLeft(Int32<sp/>step);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>ColumnRight();</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/>ColumnRight(Int32<sp/>step);</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column_1a39c96e144095b93d3f3dfe380e18740a" kindref="member">Clear</ref>(XLClearOptions<sp/>clearOptions<sp/>=<sp/>XLClearOptions.All);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[Obsolete(</highlight><highlight class="stringliteral">&quot;Use<sp/>the<sp/>overload<sp/>with<sp/>XLCellsUsedOptions&quot;</highlight><highlight class="normal">)]</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref><sp/>ColumnUsed(Boolean<sp/>includeFormats);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column" kindref="compound">IXLRangeColumn</ref><sp/>ColumnUsed(XLCellsUsedOptions<sp/>options<sp/>=<sp/>XLCellsUsedOptions.AllContents);</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="197"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Columns/IXLColumn.cs"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,388 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPivotValue</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value" prot="public" virt="non-virtual">XLPivotValue</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a877410f5312a07c8970a103b85c476e1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String SourceName</definition>
+        <argsstring></argsstring>
+        <name>SourceName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="42" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a33478aed9f7538fb9ea8f2b6363eb314" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String CustomName</definition>
+        <argsstring></argsstring>
+        <name>CustomName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="43" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a038d8338c45e547da279341c3228b2e2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_format" kindref="compound">IXLPivotValueFormat</ref></type>
+        <definition>IXLPivotValueFormat NumberFormat</definition>
+        <argsstring></argsstring>
+        <name>NumberFormat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="45" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a0d09725142db3088fe9455b72b182795" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPivotSummary</type>
+        <definition>XLPivotSummary SummaryFormula</definition>
+        <argsstring></argsstring>
+        <name>SummaryFormula</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="47" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="47" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ac42a9a023da9f7550132c7f728e8218d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPivotCalculation</type>
+        <definition>XLPivotCalculation Calculation</definition>
+        <argsstring></argsstring>
+        <name>Calculation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="48" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a78ba0efdfa3a9d7440f36a0660f97161" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String BaseField</definition>
+        <argsstring></argsstring>
+        <name>BaseField</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="49" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a8c6a1877181c9eda01eb07d0ea606994" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String BaseItem</definition>
+        <argsstring></argsstring>
+        <name>BaseItem</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="50" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ac1f41867b66ca047af78d2c6e2ce9acf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPivotCalculationItem</type>
+        <definition>XLPivotCalculationItem CalculationItem</definition>
+        <argsstring></argsstring>
+        <name>CalculationItem</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="51" bodyend="51"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a7e695a6e2668346f896a56f4962d85aa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue SetSummaryFormula</definition>
+        <argsstring>(XLPivotSummary value)</argsstring>
+        <name>SetSummaryFormula</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a7e695a6e2668346f896a56f4962d85aa">SetSummaryFormula</reimplementedby>
+        <param>
+          <type>XLPivotSummary</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="53" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a3b840499d9230bf05be54651d63629e4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue SetCalculation</definition>
+        <argsstring>(XLPivotCalculation value)</argsstring>
+        <name>SetCalculation</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a3b840499d9230bf05be54651d63629e4">SetCalculation</reimplementedby>
+        <param>
+          <type>XLPivotCalculation</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="54" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1abbf989ecab233deba27a94bac110d52f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue SetBaseField</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetBaseField</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1abbf989ecab233deba27a94bac110d52f">SetBaseField</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="55" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1aa390788ecd97456f6507805b568c8b02" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue SetBaseItem</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetBaseItem</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1aa390788ecd97456f6507805b568c8b02">SetBaseItem</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="56" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a3141d0e971f9908859a6ff01ebb54247" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue SetCalculationItem</definition>
+        <argsstring>(XLPivotCalculationItem value)</argsstring>
+        <name>SetCalculationItem</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a3141d0e971f9908859a6ff01ebb54247">SetCalculationItem</reimplementedby>
+        <param>
+          <type>XLPivotCalculationItem</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="57" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a33ffa93360948854760d7a84387e5820" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue ShowAsNormal</definition>
+        <argsstring>()</argsstring>
+        <name>ShowAsNormal</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a33ffa93360948854760d7a84387e5820">ShowAsNormal</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="60" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a18867a4d007c9c19e190e86ca0b9e938" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination" kindref="compound">IXLPivotValueCombination</ref></type>
+        <definition>IXLPivotValueCombination ShowAsDifferenceFrom</definition>
+        <argsstring>(String fieldSourceName)</argsstring>
+        <name>ShowAsDifferenceFrom</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a18867a4d007c9c19e190e86ca0b9e938">ShowAsDifferenceFrom</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>fieldSourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="61" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a1d025ad32aadcd8681c1434504f48e15" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination" kindref="compound">IXLPivotValueCombination</ref></type>
+        <definition>IXLPivotValueCombination ShowAsPercentageFrom</definition>
+        <argsstring>(String fieldSourceName)</argsstring>
+        <name>ShowAsPercentageFrom</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a1d025ad32aadcd8681c1434504f48e15">ShowAsPercentageFrom</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>fieldSourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="62" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ae4d9908c3b50dbee91e5adec97423c58" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_combination" kindref="compound">IXLPivotValueCombination</ref></type>
+        <definition>IXLPivotValueCombination ShowAsPercentageDifferenceFrom</definition>
+        <argsstring>(String fieldSourceName)</argsstring>
+        <name>ShowAsPercentageDifferenceFrom</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1ae4d9908c3b50dbee91e5adec97423c58">ShowAsPercentageDifferenceFrom</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>fieldSourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="63" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1acc86744bf09b5002d1ffae3ab8558a39" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue ShowAsRunningTotalIn</definition>
+        <argsstring>(String fieldSourceName)</argsstring>
+        <name>ShowAsRunningTotalIn</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1acc86744bf09b5002d1ffae3ab8558a39">ShowAsRunningTotalIn</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>fieldSourceName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="64" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ae6b8a20b99799833dc8bf249b66a923f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue ShowAsPercentageOfRow</definition>
+        <argsstring>()</argsstring>
+        <name>ShowAsPercentageOfRow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1ae6b8a20b99799833dc8bf249b66a923f">ShowAsPercentageOfRow</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="65" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a489a8c4579df683a2b0c5e41c61b787b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue ShowAsPercentageOfColumn</definition>
+        <argsstring>()</argsstring>
+        <name>ShowAsPercentageOfColumn</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a489a8c4579df683a2b0c5e41c61b787b">ShowAsPercentageOfColumn</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="66" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a7b700ac2bc4a21c7c942ac14544262fc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue ShowAsPercentageOfTotal</definition>
+        <argsstring>()</argsstring>
+        <name>ShowAsPercentageOfTotal</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a7b700ac2bc4a21c7c942ac14544262fc">ShowAsPercentageOfTotal</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="67" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a62ccb461f5b11ff323f9bda9c1413fb0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+        <definition>IXLPivotValue ShowAsIndex</definition>
+        <argsstring>()</argsstring>
+        <name>ShowAsIndex</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_1a62ccb461f5b11ff323f9bda9c1413fb0">ShowAsIndex</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="68" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="508">
+        <label>IXLPivotValue</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value"/>
+      </node>
+      <node id="509">
+        <label>XLPivotValue</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value"/>
+        <childnode refid="508" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotValues/IXLPivotValue.cs" bodystart="40" bodyend="70"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a78ba0efdfa3a9d7440f36a0660f97161" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>BaseField</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a8c6a1877181c9eda01eb07d0ea606994" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>BaseItem</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ac42a9a023da9f7550132c7f728e8218d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>Calculation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ac1f41867b66ca047af78d2c6e2ce9acf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>CalculationItem</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a33478aed9f7538fb9ea8f2b6363eb314" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>CustomName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a038d8338c45e547da279341c3228b2e2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>NumberFormat</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1abbf989ecab233deba27a94bac110d52f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>SetBaseField</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1aa390788ecd97456f6507805b568c8b02" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>SetBaseItem</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a3b840499d9230bf05be54651d63629e4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>SetCalculation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a3141d0e971f9908859a6ff01ebb54247" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>SetCalculationItem</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a7e695a6e2668346f896a56f4962d85aa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>SetSummaryFormula</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a18867a4d007c9c19e190e86ca0b9e938" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsDifferenceFrom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a62ccb461f5b11ff323f9bda9c1413fb0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsIndex</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a33ffa93360948854760d7a84387e5820" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsNormal</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ae4d9908c3b50dbee91e5adec97423c58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsPercentageDifferenceFrom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a1d025ad32aadcd8681c1434504f48e15" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsPercentageFrom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a489a8c4579df683a2b0c5e41c61b787b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsPercentageOfColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1ae6b8a20b99799833dc8bf249b66a923f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsPercentageOfRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a7b700ac2bc4a21c7c942ac14544262fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsPercentageOfTotal</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1acc86744bf09b5002d1ffae3ab8558a39" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>ShowAsRunningTotalIn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a877410f5312a07c8970a103b85c476e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>SourceName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_1a0d09725142db3088fe9455b72b182795" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValue</scope><name>SummaryFormula</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLSortElement</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_element" prot="public" virt="non-virtual">XLSortElement</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1a7ee9eece651d1e297fa1f9170ab2c30f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ElementNumber</definition>
+        <argsstring></argsstring>
+        <name>ElementNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1ae9d0bb5f7d228544a764fa87a14b022a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLSortOrder</type>
+        <definition>XLSortOrder SortOrder</definition>
+        <argsstring></argsstring>
+        <name>SortOrder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1ad0caa748762dda3a3e5c11d2b624e75b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IgnoreBlanks</definition>
+        <argsstring></argsstring>
+        <name>IgnoreBlanks</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1a5b33c1ae70ccae2ae5d8abb98c0403e0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean MatchCase</definition>
+        <argsstring></argsstring>
+        <name>MatchCase</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="661">
+        <label>IXLSortElement</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element"/>
+      </node>
+      <node id="662">
+        <label>XLSortElement</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sort_element"/>
+        <childnode refid="661" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Sort/IXLSortElement.cs" bodystart="7" bodyend="13"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1a7ee9eece651d1e297fa1f9170ab2c30f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSortElement</scope><name>ElementNumber</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1ad0caa748762dda3a3e5c11d2b624e75b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSortElement</scope><name>IgnoreBlanks</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1a5b33c1ae70ccae2ae5d8abb98c0403e0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSortElement</scope><name>MatchCase</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sort_element_1ae9d0bb5f7d228544a764fa87a14b022a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSortElement</scope><name>SortOrder</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

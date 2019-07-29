@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLWorksheetInternals</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IDisposable</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1aa8af361e9ac770f7330e835bf69f6eff" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_collection" kindref="compound">XLCellsCollection</ref></type>
+        <definition>XLCellsCollection CellsCollection</definition>
+        <argsstring></argsstring>
+        <name>CellsCollection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a599bc9fdab143bcd63140a6f2a54df9c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection" kindref="compound">XLColumnsCollection</ref></type>
+        <definition>XLColumnsCollection ColumnsCollection</definition>
+        <argsstring></argsstring>
+        <name>ColumnsCollection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a3d5fa479bacb8e10b9deecc178116893" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_collection" kindref="compound">XLRowsCollection</ref></type>
+        <definition>XLRowsCollection RowsCollection</definition>
+        <argsstring></argsstring>
+        <name>RowsCollection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1ace4c56513cef40056fc6d76ef770ec74" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_ranges" kindref="compound">XLRanges</ref></type>
+        <definition>XLRanges MergedRanges</definition>
+        <argsstring></argsstring>
+        <name>MergedRanges</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" bodystart="23" bodyend="23"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a167983a1d9eb26c39d7b0480d0073c4c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLWorksheetInternals</definition>
+        <argsstring>(XLCellsCollection cellsCollection, XLColumnsCollection columnsCollection, XLRowsCollection rowsCollection, XLRanges mergedRanges)</argsstring>
+        <name>XLWorksheetInternals</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_cells_collection" kindref="compound">XLCellsCollection</ref></type>
+          <declname>cellsCollection</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_columns_collection" kindref="compound">XLColumnsCollection</ref></type>
+          <declname>columnsCollection</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_collection" kindref="compound">XLRowsCollection</ref></type>
+          <declname>rowsCollection</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_ranges" kindref="compound">XLRanges</ref></type>
+          <declname>mergedRanges</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" bodystart="7" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a6e2d745cdb7a7b983f861ed6a9a541a7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Dispose</definition>
+        <argsstring>()</argsstring>
+        <name>Dispose</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" bodystart="25" bodyend="30"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1995">
+        <label>IDisposable</label>
+      </node>
+      <node id="1994">
+        <label>XLWorksheetInternals</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals"/>
+        <childnode refid="1995" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1997">
+        <label>IDisposable</label>
+      </node>
+      <node id="1996">
+        <label>XLWorksheetInternals</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals"/>
+        <childnode refid="1997" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorksheetInternals.cs" bodystart="5" bodyend="31"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1aa8af361e9ac770f7330e835bf69f6eff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorksheetInternals</scope><name>CellsCollection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a599bc9fdab143bcd63140a6f2a54df9c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorksheetInternals</scope><name>ColumnsCollection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a6e2d745cdb7a7b983f861ed6a9a541a7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorksheetInternals</scope><name>Dispose</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1ace4c56513cef40056fc6d76ef770ec74" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorksheetInternals</scope><name>MergedRanges</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a3d5fa479bacb8e10b9deecc178116893" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorksheetInternals</scope><name>RowsCollection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet_internals_1a167983a1d9eb26c39d7b0480d0073c4c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorksheetInternals</scope><name>XLWorksheetInternals</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

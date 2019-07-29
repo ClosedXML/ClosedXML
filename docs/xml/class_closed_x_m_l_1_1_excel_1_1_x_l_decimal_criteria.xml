@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDecimalCriteria</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria" prot="public" virt="non-virtual">XLValidationCriteria</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a6cf875208b55a2e0b85fd8343b41eba3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDecimalCriteria</definition>
+        <argsstring>(IXLDataValidation dataValidation)</argsstring>
+        <name>XLDecimalCriteria</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref></type>
+          <declname>dataValidation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="7" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1ae58f2a363ab3759f377de1d240b05be7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualTo</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>EqualTo</name>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="12" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a0f063e6ac8e04a3bbbca716d18abd9b0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void NotEqualTo</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>NotEqualTo</name>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="18" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a7e3bd7f25cf02c8f97077cb119ac407b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void GreaterThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>GreaterThan</name>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="24" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1aa7ce6269ff8f292ecb7a5e6901f050fb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void LessThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>LessThan</name>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="30" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a7547ab31cc9faf3b0673821e0959bf58" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualOrGreaterThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>EqualOrGreaterThan</name>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="36" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a4ae2171f7ec243af184993311242ccd6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualOrLessThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>EqualOrLessThan</name>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="42" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a07817f483ee2c26b5e91926667b9b6ea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Between</definition>
+        <argsstring>(Double minValue, Double maxValue)</argsstring>
+        <name>Between</name>
+        <param>
+          <type>Double</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="48" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="48" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1af2611e483baf1eea40efaf00d61c5b4b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void NotBetween</definition>
+        <argsstring>(Double minValue, Double maxValue)</argsstring>
+        <name>NotBetween</name>
+        <param>
+          <type>Double</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="55" bodyend="60"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1228">
+        <label>XLDecimalCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria"/>
+        <childnode refid="1229" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1229">
+        <label>XLValidationCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria"/>
+        <childnode refid="1230" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1230">
+        <label>IXLValidationCriteria</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_validation_criteria"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1231">
+        <label>XLDecimalCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria"/>
+        <childnode refid="1232" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1232">
+        <label>XLValidationCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria"/>
+        <childnode refid="1233" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1234" relation="usage">
+          <edgelabel>dataValidation</edgelabel>
+        </childnode>
+      </node>
+      <node id="1233">
+        <label>IXLValidationCriteria</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_validation_criteria"/>
+      </node>
+      <node id="1234">
+        <label>IXLDataValidation</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDecimalCriteria.cs" bodystart="5" bodyend="61"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a07817f483ee2c26b5e91926667b9b6ea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a1b4b471d753a1ec9c94b2edc96bb4ca3" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a944d6ab868611e49eef1d5dbae095abb" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a7f145200d57b45232e20f6714ef1c216" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a27bed2459018e83c630123bbc3de7c9c" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>dataValidation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a7547ab31cc9faf3b0673821e0959bf58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a1657cdc1017788eea48aee0c2ace7ab4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a999abc5d3bd371f6b29668a84f5e614b" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ae283b94d9762868ccbc6f03e26111700" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a4ae2171f7ec243af184993311242ccd6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a18c33137d2fc51c66638114ab3b35302" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aca166048aa8a13efe3160c3c7162a692" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1afab31c05a5802b8fe44709a50f9454aa" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1ae58f2a363ab3759f377de1d240b05be7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a93c5873b6751ba6ab1a2c31ef2891cdc" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aa48c759f9cea1e79ac3e206fc3a87a41" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a45836061369690242cd64ef3a694a8d4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a7e3bd7f25cf02c8f97077cb119ac407b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a451590a4efe4e6ccde37725a6eec14b7" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a6a63c5ae76ca330236e4535baefca838" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a87d34644ab63f6aa4aba7c2d07beeb2d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1aa7ce6269ff8f292ecb7a5e6901f050fb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ac5f002f39a7c9860d2ab13fd696f8f83" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ae2875209c796cf07d11522068bbb0e13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a8888a8b25db529a78beb343ff09d451d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1af2611e483baf1eea40efaf00d61c5b4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ade37755e22ebc67469f1ed77c9b89aa1" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a7b5bf0b665bb8c5ba0abdc428da15779" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1abcce28a500a7f213e7cfd52b23b43b8c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a0f063e6ac8e04a3bbbca716d18abd9b0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a13684d69b413aa68493506428f58a6bc" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aca4c1323fe1e543d833d8e1e98b11927" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1acbeb77dd62e5070b71cf5654accf1714" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_decimal_criteria_1a6cf875208b55a2e0b85fd8343b41eba3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDecimalCriteria</scope><name>XLDecimalCriteria</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

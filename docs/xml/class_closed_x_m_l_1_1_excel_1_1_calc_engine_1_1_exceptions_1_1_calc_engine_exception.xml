@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Exceptions::CalcEngineException</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">ArgumentException</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_reference_exception" prot="public" virt="non-virtual">CellReferenceException</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception" prot="public" virt="non-virtual">CellValueException</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception" prot="public" virt="non-virtual">DivisionByZeroException</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_name_not_recognized_exception" prot="public" virt="non-virtual">NameNotRecognizedException</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception" prot="public" virt="non-virtual">NoValueAvailableException</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_null_value_exception" prot="public" virt="non-virtual">NullValueException</derivedcompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_number_exception" prot="public" virt="non-virtual">NumberException</derivedcompoundref>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1af165d26040b4d3695b2f0ad82ba577b4" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CalcEngineException</definition>
+        <argsstring>()</argsstring>
+        <name>CalcEngineException</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" bodystart="7" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a601146d0629d5fb5b4e1252be25fdb57" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CalcEngineException</definition>
+        <argsstring>(string message)</argsstring>
+        <name>CalcEngineException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" bodystart="10" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a220f839bf265c4484fb9574093ea8dd6" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CalcEngineException</definition>
+        <argsstring>(string message, Exception innerException)</argsstring>
+        <name>CalcEngineException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>Exception</type>
+          <declname>innerException</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" bodystart="14" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="28">
+        <label>NumberException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_number_exception"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>CellReferenceException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_reference_exception"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>NameNotRecognizedException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_name_not_recognized_exception"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="26">
+        <label>NoValueAvailableException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>CellValueException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>DivisionByZeroException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="21" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>NullValueException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_null_value_exception"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>ArgumentException</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="29">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="30" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="30">
+        <label>ArgumentException</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" bodystart="5" bodyend="17"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1af165d26040b4d3695b2f0ad82ba577b4" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CalcEngineException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a601146d0629d5fb5b4e1252be25fdb57" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CalcEngineException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a220f839bf265c4484fb9574093ea8dd6" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::CalcEngineException</scope><name>CalcEngineException</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_x_l_worksheet_content_manager_8cs" kind="file" language="C#">
+    <compoundname>XLWorksheetContentManager.cs</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager" prot="public">ClosedXML::Excel::ContentManagers::XLWorksheetContentManager</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel_1_1_content_managers">ClosedXML::Excel::ContentManagers</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>DocumentFormat.OpenXml;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>DocumentFormat.OpenXml.Spreadsheet;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System.Linq;</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_content_managers" kindref="compound">ClosedXML.Excel.ContentManagers</ref></highlight></codeline>
+<codeline lineno="6"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">internal</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>XLWorksheetContents</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SheetProperties<sp/>=<sp/>1,</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SheetDimension<sp/>=<sp/>2,</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SheetViews<sp/>=<sp/>3,</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SheetFormatProperties<sp/>=<sp/>4,</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Columns<sp/>=<sp/>5,</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SheetData<sp/>=<sp/>6,</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SheetCalculationProperties<sp/>=<sp/>7,</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SheetProtection<sp/>=<sp/>8,</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ProtectedRanges<sp/>=<sp/>9,</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Scenarios<sp/>=<sp/>10,</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>AutoFilter<sp/>=<sp/>11,</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SortState<sp/>=<sp/>12,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>DataConsolidate<sp/>=<sp/>13,</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>CustomSheetViews<sp/>=<sp/>14,</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>MergeCells<sp/>=<sp/>15,</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PhoneticProperties<sp/>=<sp/>16,</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ConditionalFormatting<sp/>=<sp/>17,</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>DataValidations<sp/>=<sp/>18,</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Hyperlinks<sp/>=<sp/>19,</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PrintOptions<sp/>=<sp/>20,</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PageMargins<sp/>=<sp/>21,</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PageSetup<sp/>=<sp/>22,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>HeaderFooter<sp/>=<sp/>23,</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RowBreaks<sp/>=<sp/>24,</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ColumnBreaks<sp/>=<sp/>25,</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>CustomProperties<sp/>=<sp/>26,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>CellWatches<sp/>=<sp/>27,</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>IgnoredErrors<sp/>=<sp/>28,</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SmartTags<sp/>=<sp/>29,</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Drawing<sp/>=<sp/>30,</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>LegacyDrawing<sp/>=<sp/>31,</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>LegacyDrawingHeaderFooter<sp/>=<sp/>32,</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>DrawingHeaderFooter<sp/>=<sp/>33,</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Picture<sp/>=<sp/>34,</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>OleObjects<sp/>=<sp/>35,</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Controls<sp/>=<sp/>36,</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>AlternateContent<sp/>=<sp/>37,</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>WebPublishItems<sp/>=<sp/>38,</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>TableParts<sp/>=<sp/>39,</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>WorksheetExtensionList<sp/>=<sp/>40</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51" refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">internal</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager" kindref="compound">XLWorksheetContentManager</ref><sp/>:<sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager" kindref="compound">XLBaseContentManager</ref>&lt;XLWorksheetContents&gt;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_worksheet_content_manager" kindref="compound">XLWorksheetContentManager</ref>(Worksheet<sp/>opWorksheet)</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SheetProperties,<sp/>opWorksheet.Elements&lt;SheetProperties&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SheetDimension,<sp/>opWorksheet.Elements&lt;SheetDimension&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SheetViews,<sp/>opWorksheet.Elements&lt;SheetViews&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SheetFormatProperties,<sp/>opWorksheet.Elements&lt;SheetFormatProperties&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.Columns,<sp/>opWorksheet.Elements&lt;Columns&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SheetData,<sp/>opWorksheet.Elements&lt;SheetData&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SheetCalculationProperties,<sp/>opWorksheet.Elements&lt;SheetCalculationProperties&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SheetProtection,<sp/>opWorksheet.Elements&lt;SheetProtection&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.ProtectedRanges,<sp/>opWorksheet.Elements&lt;ProtectedRanges&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.Scenarios,<sp/>opWorksheet.Elements&lt;Scenarios&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.AutoFilter,<sp/>opWorksheet.Elements&lt;AutoFilter&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.SortState,<sp/>opWorksheet.Elements&lt;SortState&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.DataConsolidate,<sp/>opWorksheet.Elements&lt;DataConsolidate&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.CustomSheetViews,<sp/>opWorksheet.Elements&lt;CustomSheetViews&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.MergeCells,<sp/>opWorksheet.Elements&lt;MergeCells&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.PhoneticProperties,<sp/>opWorksheet.Elements&lt;PhoneticProperties&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.ConditionalFormatting,<sp/>opWorksheet.Elements&lt;ConditionalFormatting&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.DataValidations,<sp/>opWorksheet.Elements&lt;DataValidations&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.Hyperlinks,<sp/>opWorksheet.Elements&lt;Hyperlinks&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.PrintOptions,<sp/>opWorksheet.Elements&lt;PrintOptions&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.PageMargins,<sp/>opWorksheet.Elements&lt;PageMargins&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.PageSetup,<sp/>opWorksheet.Elements&lt;PageSetup&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.HeaderFooter,<sp/>opWorksheet.Elements&lt;HeaderFooter&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.RowBreaks,<sp/>opWorksheet.Elements&lt;RowBreaks&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.ColumnBreaks,<sp/>opWorksheet.Elements&lt;ColumnBreaks&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.CustomProperties,<sp/>opWorksheet.Elements&lt;CustomProperties&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.CellWatches,<sp/>opWorksheet.Elements&lt;CellWatches&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.IgnoredErrors,<sp/>opWorksheet.Elements&lt;IgnoredErrors&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//contents.Add(XLWSContents.SmartTags,<sp/>opWorksheet.Elements&lt;SmartTags&gt;().LastOrDefault());</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.Drawing,<sp/>opWorksheet.Elements&lt;Drawing&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.LegacyDrawing,<sp/>opWorksheet.Elements&lt;LegacyDrawing&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.LegacyDrawingHeaderFooter,<sp/>opWorksheet.Elements&lt;LegacyDrawingHeaderFooter&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.DrawingHeaderFooter,<sp/>opWorksheet.Elements&lt;DrawingHeaderFooter&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.Picture,<sp/>opWorksheet.Elements&lt;Picture&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.OleObjects,<sp/>opWorksheet.Elements&lt;OleObjects&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.Controls,<sp/>opWorksheet.Elements&lt;Controls&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.AlternateContent,<sp/>opWorksheet.Elements&lt;AlternateContent&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.WebPublishItems,<sp/>opWorksheet.Elements&lt;WebPublishItems&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.TableParts,<sp/>opWorksheet.Elements&lt;TableParts&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contents.Add(XLWorksheetContents.WorksheetExtensionList,<sp/>opWorksheet.Elements&lt;WorksheetExtensionList&gt;().LastOrDefault());</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLWorksheetContentManager.cs"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLSparklineVerticalAxis</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_vertical_axis" prot="public" virt="non-virtual">XLSparklineVerticalAxis</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a6363f06ae640976fbf8c5bda814bc9bf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double?</type>
+        <definition>Double? ManualMax</definition>
+        <argsstring></argsstring>
+        <name>ManualMax</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a07574553ba4852b68b2be0475b65df48" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double?</type>
+        <definition>Double? ManualMin</definition>
+        <argsstring></argsstring>
+        <name>ManualMin</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a3049d4dd3e168bf1fc8e215783bd875c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLSparklineAxisMinMax</type>
+        <definition>XLSparklineAxisMinMax MaxAxisType</definition>
+        <argsstring></argsstring>
+        <name>MaxAxisType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a4fe6513d9213212ec871c01177108c4e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLSparklineAxisMinMax</type>
+        <definition>XLSparklineAxisMinMax MinAxisType</definition>
+        <argsstring></argsstring>
+        <name>MinAxisType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a73ac21272048b89ce6fb3f4486fc2f2c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis" kindref="compound">IXLSparklineVerticalAxis</ref></type>
+        <definition>IXLSparklineVerticalAxis SetManualMax</definition>
+        <argsstring>(Double? value)</argsstring>
+        <name>SetManualMax</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_vertical_axis_1a966741a079fcf2d9ec9191af4e00f1c1">SetManualMax</reimplementedby>
+        <param>
+          <type>Double?</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="22" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a6b536015cd642ab78d24ec29ec3c3633" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis" kindref="compound">IXLSparklineVerticalAxis</ref></type>
+        <definition>IXLSparklineVerticalAxis SetManualMin</definition>
+        <argsstring>(Double? value)</argsstring>
+        <name>SetManualMin</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_vertical_axis_1a6ceb7aab6f43c84c928b06d128a7e79d">SetManualMin</reimplementedby>
+        <param>
+          <type>Double?</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a15e5fd53577d0e15631e6792b9cda7ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis" kindref="compound">IXLSparklineVerticalAxis</ref></type>
+        <definition>IXLSparklineVerticalAxis SetMaxAxisType</definition>
+        <argsstring>(XLSparklineAxisMinMax value)</argsstring>
+        <name>SetMaxAxisType</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_vertical_axis_1a8c39908aaef452b7ff5f332a20a36ee1">SetMaxAxisType</reimplementedby>
+        <param>
+          <type>XLSparklineAxisMinMax</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a47b4952a760bb1c40e3c37dc9cc5028a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis" kindref="compound">IXLSparklineVerticalAxis</ref></type>
+        <definition>IXLSparklineVerticalAxis SetMinAxisType</definition>
+        <argsstring>(XLSparklineAxisMinMax value)</argsstring>
+        <name>SetMinAxisType</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_vertical_axis_1a2ab3e7fe7751949de8014a78c9be6c32">SetMinAxisType</reimplementedby>
+        <param>
+          <type>XLSparklineAxisMinMax</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="28" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="688">
+        <label>IXLSparklineVerticalAxis</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis"/>
+      </node>
+      <node id="689">
+        <label>XLSparklineVerticalAxis</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_vertical_axis"/>
+        <childnode refid="688" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineVerticalAxis.cs" bodystart="6" bodyend="31"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a6363f06ae640976fbf8c5bda814bc9bf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>ManualMax</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a07574553ba4852b68b2be0475b65df48" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>ManualMin</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a3049d4dd3e168bf1fc8e215783bd875c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>MaxAxisType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a4fe6513d9213212ec871c01177108c4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>MinAxisType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a73ac21272048b89ce6fb3f4486fc2f2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>SetManualMax</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a6b536015cd642ab78d24ec29ec3c3633" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>SetManualMin</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a15e5fd53577d0e15631e6792b9cda7ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>SetMaxAxisType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_vertical_axis_1a47b4952a760bb1c40e3c37dc9cc5028a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineVerticalAxis</scope><name>SetMinAxisType</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

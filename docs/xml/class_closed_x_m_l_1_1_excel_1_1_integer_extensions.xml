@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_integer_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IntegerExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_integer_extensions_1afa8f5d04eed18eec739ca0bac8205717" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool Between</definition>
+        <argsstring>(this int val, int from, int to)</argsstring>
+        <name>Between</name>
+        <param>
+          <type>this int</type>
+          <declname>val</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>from</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>to</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="175" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="175" bodyend="178"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="174" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="173" bodyend="179"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_integer_extensions_1afa8f5d04eed18eec739ca0bac8205717" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IntegerExtensions</scope><name>Between</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFIconSet</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set" prot="public" virt="non-virtual">IXLCFIconSet</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1aae2cd3dcd495588de23bdd50c14f7842" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" kindref="compound">XLConditionalFormat</ref></type>
+        <definition>readonly XLConditionalFormat _conditionalFormat</definition>
+        <argsstring></argsstring>
+        <name>_conditionalFormat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1a2221634ee00581dba91d0cc5b588b88c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCFIconSet</definition>
+        <argsstring>(XLConditionalFormat conditionalFormat)</argsstring>
+        <name>XLCFIconSet</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" kindref="compound">XLConditionalFormat</ref></type>
+          <declname>conditionalFormat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" bodystart="8" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1a6c5cba66025dd4fa8b86508f586fcfb9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set" kindref="compound">IXLCFIconSet</ref></type>
+        <definition>IXLCFIconSet AddValue</definition>
+        <argsstring>(XLCFIconSetOperator setOperator, String value, XLCFContentType type)</argsstring>
+        <name>AddValue</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set_1a6c5cba66025dd4fa8b86508f586fcfb9">AddValue</reimplements>
+        <param>
+          <type>XLCFIconSetOperator</type>
+          <declname>setOperator</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" bodystart="12" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1af4857954007a643dab1749668b699c2f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set" kindref="compound">IXLCFIconSet</ref></type>
+        <definition>IXLCFIconSet AddValue</definition>
+        <argsstring>(XLCFIconSetOperator setOperator, Double value, XLCFContentType type)</argsstring>
+        <name>AddValue</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set_1af4857954007a643dab1749668b699c2f">AddValue</reimplements>
+        <param>
+          <type>XLCFIconSetOperator</type>
+          <declname>setOperator</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" bodystart="19" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1062">
+        <label>IXLCFIconSet</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set"/>
+      </node>
+      <node id="1061">
+        <label>XLCFIconSet</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set"/>
+        <childnode refid="1062" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1064">
+        <label>IXLCFIconSet</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set"/>
+      </node>
+      <node id="1063">
+        <label>XLCFIconSet</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set"/>
+        <childnode refid="1064" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFIconSet.cs" bodystart="5" bodyend="23"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1aae2cd3dcd495588de23bdd50c14f7842" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCFIconSet</scope><name>_conditionalFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1a6c5cba66025dd4fa8b86508f586fcfb9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFIconSet</scope><name>AddValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1af4857954007a643dab1749668b699c2f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFIconSet</scope><name>AddValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_icon_set_1a2221634ee00581dba91d0cc5b588b88c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFIconSet</scope><name>XLCFIconSet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

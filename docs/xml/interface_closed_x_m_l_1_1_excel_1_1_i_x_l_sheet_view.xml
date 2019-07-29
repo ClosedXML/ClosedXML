@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLSheetView</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view" prot="public" virt="non-virtual">XLSheetView</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1afb44de5c80ca5af5e6b8aaec95b7419b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 SplitColumn</definition>
+        <argsstring></argsstring>
+        <name>SplitColumn</name>
+        <briefdescription>
+<para>Gets or sets the column after which the horizontal split should take place. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a8127cd8639169fa436cc301848b40fae" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 SplitRow</definition>
+        <argsstring></argsstring>
+        <name>SplitRow</name>
+        <briefdescription>
+<para>Gets or sets the row after which the vertical split should take place. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ae2e7b3145449f10b23bc9210918c93e9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLSheetViewOptions</type>
+        <definition>XLSheetViewOptions View</definition>
+        <argsstring></argsstring>
+        <name>View</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a4e568678682316e99c486393c5b3665d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ZoomScale</definition>
+        <argsstring></argsstring>
+        <name>ZoomScale</name>
+        <briefdescription>
+<para>Window zoom magnification for current view representing percent values. Horizontal and vertical scale together. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Representing percent values ranging from 10 to 400.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac2345c0732176fb6d50c2fcdacc37ac4" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ZoomScaleNormal</definition>
+        <argsstring></argsstring>
+        <name>ZoomScaleNormal</name>
+        <briefdescription>
+<para>Zoom magnification to use when in normal view. Horizontal and vertical scale together </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Representing percent values ranging from 10 to 400.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="31" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a03b88fd4269d1a2baab12132a654f8af" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ZoomScalePageLayoutView</definition>
+        <argsstring></argsstring>
+        <name>ZoomScalePageLayoutView</name>
+        <briefdescription>
+<para>Zoom magnification to use when in page layout view. Horizontal and vertical scale together. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Representing percent values ranging from 10 to 400.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="37" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a2900f31a633bb6a7d5a98586330e568b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ZoomScaleSheetLayoutView</definition>
+        <argsstring></argsstring>
+        <name>ZoomScaleSheetLayoutView</name>
+        <briefdescription>
+<para>Zoom magnification to use when in page break preview. Horizontal and vertical scale together. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Representing percent values ranging from 10 to 400.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="43" bodyend="43"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a42164e6bc10aa4680a71e80eb0fe6d50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Freeze</definition>
+        <argsstring>(Int32 rows, Int32 columns)</argsstring>
+        <name>Freeze</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a42164e6bc10aa4680a71e80eb0fe6d50">Freeze</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>rows</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>columns</declname>
+        </param>
+        <briefdescription>
+<para>Freezes the specified rows and columns. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The rows to freeze.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>columns</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The columns to freeze.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="50" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac79ab58abe908ea2724ed59673719dc3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void FreezeColumns</definition>
+        <argsstring>(Int32 columns)</argsstring>
+        <name>FreezeColumns</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac79ab58abe908ea2724ed59673719dc3">FreezeColumns</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>columns</declname>
+        </param>
+        <briefdescription>
+<para>Freezes the left X columns. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>columns</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The columns to freeze.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="56" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a9e7b23ba82736240828ba2ec7f0819f2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void FreezeRows</definition>
+        <argsstring>(Int32 rows)</argsstring>
+        <name>FreezeRows</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1a9e7b23ba82736240828ba2ec7f0819f2">FreezeRows</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>rows</declname>
+        </param>
+        <briefdescription>
+<para>Freezes the top X rows. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rows</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The rows to freeze.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="63" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac44af831f897767a03a243431d1fbfc0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view" kindref="compound">IXLSheetView</ref></type>
+        <definition>IXLSheetView SetView</definition>
+        <argsstring>(XLSheetViewOptions value)</argsstring>
+        <name>SetView</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view_1ac44af831f897767a03a243431d1fbfc0">SetView</reimplementedby>
+        <param>
+          <type>XLSheetViewOptions</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="65" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="658">
+        <label>IXLSheetView</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view"/>
+      </node>
+      <node id="659">
+        <label>XLSheetView</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sheet_view"/>
+        <childnode refid="658" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLSheetView.cs" bodystart="7" bodyend="66"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a42164e6bc10aa4680a71e80eb0fe6d50" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>Freeze</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac79ab58abe908ea2724ed59673719dc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>FreezeColumns</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a9e7b23ba82736240828ba2ec7f0819f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>FreezeRows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac44af831f897767a03a243431d1fbfc0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>SetView</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1afb44de5c80ca5af5e6b8aaec95b7419b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>SplitColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a8127cd8639169fa436cc301848b40fae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>SplitRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ae2e7b3145449f10b23bc9210918c93e9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>View</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a4e568678682316e99c486393c5b3665d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>ZoomScale</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1ac2345c0732176fb6d50c2fcdacc37ac4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>ZoomScaleNormal</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a03b88fd4269d1a2baab12132a654f8af" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>ZoomScalePageLayoutView</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sheet_view_1a2900f31a633bb6a7d5a98586330e568b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSheetView</scope><name>ZoomScaleSheetLayoutView</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

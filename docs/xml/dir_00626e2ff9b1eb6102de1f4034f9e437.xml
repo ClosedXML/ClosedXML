@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_00626e2ff9b1eb6102de1f4034f9e437" kind="dir">
+    <compoundname>NamedRanges</compoundname>
+    <innerfile refid="_i_x_l_named_range_8cs">IXLNamedRange.cs</innerfile>
+    <innerfile refid="_i_x_l_named_ranges_8cs">IXLNamedRanges.cs</innerfile>
+    <innerfile refid="_x_l_named_range_8cs">XLNamedRange.cs</innerfile>
+    <innerfile refid="_x_l_named_ranges_8cs">XLNamedRanges.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/"/>
+  </compounddef>
+</doxygen>

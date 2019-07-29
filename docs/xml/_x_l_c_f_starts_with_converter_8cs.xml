@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="_x_l_c_f_starts_with_converter_8cs" kind="file" language="C#">
+    <compoundname>XLCFStartsWithConverter.cs</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_starts_with_converter" prot="public">ClosedXML::Excel::XLCFStartsWithConverter</innerclass>
+    <innernamespace refid="namespace_closed_x_m_l">ClosedXML</innernamespace>
+    <innernamespace refid="namespace_closed_x_m_l_1_1_excel">ClosedXML::Excel</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="keyword">using</highlight><highlight class="normal"><sp/>DocumentFormat.OpenXml.Spreadsheet;</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>System;</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">ClosedXML.Excel</ref></highlight></codeline>
+<codeline lineno="5"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="6" refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_starts_with_converter" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">internal</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_starts_with_converter" kindref="compound">XLCFStartsWithConverter</ref><sp/>:<sp/><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter" kindref="compound">IXLCFConverter</ref></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>ConditionalFormattingRule<sp/>Convert(<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref><sp/>cf,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>priority,<sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref>.<ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context" kindref="compound">SaveContext</ref><sp/>context)</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>String<sp/>val<sp/>=<sp/>cf.Values[1].Value;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var<sp/>conditionalFormattingRule<sp/>=<sp/>XLCFBaseConverter.Convert(cf,<sp/>priority);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var<sp/>cfStyle<sp/>=<sp/>(cf.Style<sp/>as<sp/><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref>).Value;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!cfStyle.Equals(<ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref>.DefaultStyleValue))</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conditionalFormattingRule.FormatId<sp/>=<sp/>(UInt32)context.DifferentialFormats[cfStyle.Key];</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conditionalFormattingRule.Operator<sp/>=<sp/>ConditionalFormattingOperatorValues.BeginsWith;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conditionalFormattingRule.Text<sp/>=<sp/>val;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var<sp/>formula<sp/>=<sp/></highlight><highlight class="keyword">new</highlight><highlight class="normal"><sp/>Formula<sp/>{<sp/>Text<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;LEFT(&quot;</highlight><highlight class="normal"><sp/>+<sp/>cf.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a15f2dc39a857059e1a5051660fc49475" kindref="member">Range</ref>.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable_1a693283492d6857ae738dee06f80bb42d" kindref="member">RangeAddress</ref>.<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address_1a68106121f807d13591fb080ec4243f1e" kindref="member">FirstAddress</ref>.ToStringRelative(</highlight><highlight class="keyword">false</highlight><highlight class="normal">)<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;,&quot;</highlight><highlight class="normal"><sp/>+<sp/>val.Length.ToString()<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;)=\&quot;&quot;</highlight><highlight class="normal"><sp/>+<sp/>val<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;\&quot;&quot;</highlight><highlight class="normal"><sp/>};</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>conditionalFormattingRule.Append(formula);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>conditionalFormattingRule;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFStartsWithConverter.cs"/>
+  </compounddef>
+</doxygen>

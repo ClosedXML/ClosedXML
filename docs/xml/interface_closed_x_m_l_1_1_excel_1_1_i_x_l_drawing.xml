@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLDrawing</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing" prot="public" virt="non-virtual">XLDrawing&lt; T &gt;</derivedcompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1ac827c63b86b0f22e4ebbb6e27f0bf49a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ShapeId</definition>
+        <argsstring></argsstring>
+        <name>ShapeId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Visible</definition>
+        <argsstring></argsstring>
+        <name>Visible</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1af5e8d258ee4f537352f49fff306e05a2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_position" kindref="compound">IXLDrawingPosition</ref></type>
+        <definition>IXLDrawingPosition Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a66fddb5599abf78b920d997931202409" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ZOrder</definition>
+        <argsstring></argsstring>
+        <name>ZOrder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1abda7b1e0511530b36bbb471a3ecbbd0a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" bodystart="42" bodyend="42"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a5415ed97e41fc084469d1ea3e318c4f4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetVisible</definition>
+        <argsstring>()</argsstring>
+        <name>SetVisible</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1a5415ed97e41fc084469d1ea3e318c4f4">SetVisible</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1acba3f890571b5838d9e7cf7d4db507cf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetVisible</definition>
+        <argsstring>(Boolean hidden)</argsstring>
+        <name>SetVisible</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1acba3f890571b5838d9e7cf7d4db507cf">SetVisible</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>hidden</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="12" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1af529763152938ee3329b94c1a50de55c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>T</type>
+        <definition>T SetZOrder</definition>
+        <argsstring>(Int32 zOrder)</argsstring>
+        <name>SetZOrder</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_1af529763152938ee3329b94c1a50de55c">SetZOrder</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>zOrder</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="23" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="331">
+        <label>IXLDrawing&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing"/>
+      </node>
+      <node id="332">
+        <label>XLDrawing&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing"/>
+        <childnode refid="331" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLDrawing.cs" bodystart="6" bodyend="44"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1af5e8d258ee4f537352f49fff306e05a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>Position</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a5415ed97e41fc084469d1ea3e318c4f4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>SetVisible</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1acba3f890571b5838d9e7cf7d4db507cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>SetVisible</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1af529763152938ee3329b94c1a50de55c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>SetZOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1ac827c63b86b0f22e4ebbb6e27f0bf49a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>ShapeId</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1abda7b1e0511530b36bbb471a3ecbbd0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>Visible</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_1a66fddb5599abf78b920d997931202409" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDrawing</scope><name>ZOrder</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,388 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_path_helper" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::PathHelper</compoundname>
+      <sectiondef kind="public-type">
+      <memberdef kind="enum" id="class_closed_x_m_l_1_1_path_helper_1af20ecb3c215b0837623ae6e50da12f6f" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>PathTypes</name>
+        <enumvalue id="class_closed_x_m_l_1_1_path_helper_1af20ecb3c215b0837623ae6e50da12f6fa6adf97f83acf6453d4a6a4b1070f3754" prot="public">
+          <name>None</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_path_helper_1af20ecb3c215b0837623ae6e50da12f6fab51ca26c6c89cfc9bec338f7a0d3e0c8" prot="public">
+          <name>Absolute</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="class_closed_x_m_l_1_1_path_helper_1af20ecb3c215b0837623ae6e50da12f6fa2ca9469819fb0fb61ff98e914a7ccca0" prot="public">
+          <name>Relative</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="237" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="236" bodyend="241"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_path_helper_1abf14a6bff70484959a566080f7623cd4" prot="private" static="yes" mutable="no">
+        <type>readonly Regex</type>
+        <definition>readonly Regex ms_checkValidAbsolutePathRegEx</definition>
+        <argsstring></argsstring>
+        <name>ms_checkValidAbsolutePathRegEx</name>
+        <initializer>= new Regex(
+                &quot;^(([a-zA-Z]\\:)|\\\\)(\\\\|(\\\\[^\\n\\r\\t/:*?&lt;&gt;\\\&quot;|]*)+)$&quot;,
+                RegexOptions.IgnoreCase
+                | RegexOptions.Singleline
+                | RegexOptions.CultureInvariant
+                | RegexOptions.Compiled
+                )</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_path_helper_1af0e25734d5ac04588b7cb4103220ed33" prot="private" static="yes" mutable="no">
+        <type>readonly Regex</type>
+        <definition>readonly Regex ms_checkValidRelativePathRegEx</definition>
+        <argsstring></argsstring>
+        <name>ms_checkValidRelativePathRegEx</name>
+        <initializer>= new Regex(
+                &quot;^(\\.\\.|\\.)(\\\\|(\\\\[^\\n\\r\\t/:*?&lt;&gt;\\\&quot;|]*)+)$&quot;,
+                RegexOptions.IgnoreCase
+                | RegexOptions.Multiline
+                | RegexOptions.CultureInvariant
+                | RegexOptions.Compiled
+                )</initializer>
+        <briefdescription>
+<para>Can check only .\dfdfd\dfdf\dfdf or ....\gfhfgh\fghfh </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_path_helper_1a2977987e39793a122eda959af4e9325f" prot="private" static="yes" mutable="no">
+        <type>readonly object</type>
+        <definition>readonly object ms_syncAbsolutePathObj</definition>
+        <argsstring></argsstring>
+        <name>ms_syncAbsolutePathObj</name>
+        <initializer>= new object()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1aca1d329b9d2aa5ddaab8fc6317ff4b2d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string GetTimeStamp</definition>
+        <argsstring>()</argsstring>
+        <name>GetTimeStamp</name>
+        <briefdescription>
+<para>Gets data and time string stamp for file name </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="38" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1a5eb005b55d77362ad98229c8cc15846a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string GetTimeStamp</definition>
+        <argsstring>(DateTime dateTime)</argsstring>
+        <name>GetTimeStamp</name>
+        <param>
+          <type>DateTime</type>
+          <declname>dateTime</declname>
+        </param>
+        <briefdescription>
+<para>Gets data and time string stamp for file name </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="46" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1a347cb02a0a06134451b84f14e412d9d1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void SafetyDeleteFile</definition>
+        <argsstring>(string fileName)</argsstring>
+        <name>SafetyDeleteFile</name>
+        <param>
+          <type>string</type>
+          <declname>fileName</declname>
+        </param>
+        <briefdescription>
+<para>Safety delete file(with try block) </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fileName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>file name</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="54" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1a5f9a9cfabca992a228795ae35939d293" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string NormalizeFileName</definition>
+        <argsstring>(string fileName)</argsstring>
+        <name>NormalizeFileName</name>
+        <param>
+          <type>string</type>
+          <declname>fileName</declname>
+        </param>
+        <briefdescription>
+<para>Replace all not implemented symbols to &apos;_&apos; </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fileName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>input filename</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="73" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1aa5ba4c4682c5ffe6a480bc4157c884c2" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string NormalizePathName</definition>
+        <argsstring>(string fileName)</argsstring>
+        <name>NormalizePathName</name>
+        <param>
+          <type>string</type>
+          <declname>fileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="90" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="90" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1a32ad029023c4c9c3946d6cbfec614368" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool ValidatePath</definition>
+        <argsstring>(string path, PathTypes type)</argsstring>
+        <name>ValidatePath</name>
+        <param>
+          <type>string</type>
+          <declname>path</declname>
+        </param>
+        <param>
+          <type>PathTypes</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+<para>ValidatePath file or diretory path </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>path</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>path type</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="106" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="106" bodyend="118"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1ae6139e3d360b528a30cc4979616cb8ce" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool ValidateFileName</definition>
+        <argsstring>(string fileName)</argsstring>
+        <name>ValidateFileName</name>
+        <param>
+          <type>string</type>
+          <declname>fileName</declname>
+        </param>
+        <briefdescription>
+<para>ValidatePath file or diretory path </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fileName</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="125" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="125" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1ac9172164fa236363ad6e51b9a6a0be07" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string EvaluateRelativePath</definition>
+        <argsstring>(string mainDirPath, string absoluteFilePath)</argsstring>
+        <name>EvaluateRelativePath</name>
+        <param>
+          <type>string</type>
+          <declname>mainDirPath</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>absoluteFilePath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="130" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="130" bodyend="170"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1aafeb73606217c624c525b76521b890be" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string EvaluateAbsolutePath</definition>
+        <argsstring>(string rootPath, string relativePath)</argsstring>
+        <name>EvaluateAbsolutePath</name>
+        <param>
+          <type>string</type>
+          <declname>rootPath</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>relativePath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="172" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="172" bodyend="182"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1a7ba94782d73a0d985abcae9ef4775363" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool TryCreateFile</definition>
+        <argsstring>(string filePath, out string message)</argsstring>
+        <name>TryCreateFile</name>
+        <param>
+          <type>string</type>
+          <declname>filePath</declname>
+        </param>
+        <param>
+          <type>out string</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="184" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="184" bodyend="217"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_path_helper_1a5f4271ce9626715aaec32632bf16c9e0" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string CreateDirectory</definition>
+        <argsstring>(string path)</argsstring>
+        <name>CreateDirectory</name>
+        <param>
+          <type>string</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="219" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="219" bodyend="233"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Help methods for work with files </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/PathHelper.cs" bodystart="12" bodyend="242"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1a5f4271ce9626715aaec32632bf16c9e0" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>CreateDirectory</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1aafeb73606217c624c525b76521b890be" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>EvaluateAbsolutePath</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1ac9172164fa236363ad6e51b9a6a0be07" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>EvaluateRelativePath</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1aca1d329b9d2aa5ddaab8fc6317ff4b2d" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>GetTimeStamp</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1a5eb005b55d77362ad98229c8cc15846a" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>GetTimeStamp</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1abf14a6bff70484959a566080f7623cd4" prot="private" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>ms_checkValidAbsolutePathRegEx</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1af0e25734d5ac04588b7cb4103220ed33" prot="private" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>ms_checkValidRelativePathRegEx</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1a2977987e39793a122eda959af4e9325f" prot="private" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>ms_syncAbsolutePathObj</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1a5f9a9cfabca992a228795ae35939d293" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>NormalizeFileName</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1aa5ba4c4682c5ffe6a480bc4157c884c2" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>NormalizePathName</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1af20ecb3c215b0837623ae6e50da12f6f" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>PathTypes</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1a347cb02a0a06134451b84f14e412d9d1" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>SafetyDeleteFile</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1a7ba94782d73a0d985abcae9ef4775363" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>TryCreateFile</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1ae6139e3d360b528a30cc4979616cb8ce" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>ValidateFileName</name></member>
+      <member refid="class_closed_x_m_l_1_1_path_helper_1a32ad029023c4c9c3946d6cbfec614368" prot="public" virt="non-virtual"><scope>ClosedXML::PathHelper</scope><name>ValidatePath</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

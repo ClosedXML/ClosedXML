@@ -1,0 +1,1383 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_enum_converter" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::EnumConverter</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aadedb5ed05ba981a5c2ac25cf2d99dc6" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>UnderlineValues</type>
+        <definition>static UnderlineValues ToOpenXml</definition>
+        <argsstring>(this XLFontUnderlineValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLFontUnderlineValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="15" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a46fed32e31030a3bd3d4b36750de1f9d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>OrientationValues</type>
+        <definition>static OrientationValues ToOpenXml</definition>
+        <argsstring>(this XLPageOrientation value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPageOrientation</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="39" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aabef8b70a8b16838632b1dae61f5817b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>VerticalAlignmentRunValues</type>
+        <definition>static VerticalAlignmentRunValues ToOpenXml</definition>
+        <argsstring>(this XLFontVerticalTextAlignmentValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLFontVerticalTextAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="57" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ae8aacbb86f0d8c4846987f784bed18c9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>PatternValues</type>
+        <definition>static PatternValues ToOpenXml</definition>
+        <argsstring>(this XLFillPatternValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLFillPatternValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="75" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="75" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac2dacc48d666ad4ad6055fb97a8c8316" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>BorderStyleValues</type>
+        <definition>static BorderStyleValues ToOpenXml</definition>
+        <argsstring>(this XLBorderStyleValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLBorderStyleValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="141" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="141" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a2bb65a12473e7967775d13e4e28fa53b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>HorizontalAlignmentValues</type>
+        <definition>static HorizontalAlignmentValues ToOpenXml</definition>
+        <argsstring>(this XLAlignmentHorizontalValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLAlignmentHorizontalValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="192" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="192" bodyend="223"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a68be1da36d19241cd40159dca7cbae7a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>VerticalAlignmentValues</type>
+        <definition>static VerticalAlignmentValues ToOpenXml</definition>
+        <argsstring>(this XLAlignmentVerticalValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLAlignmentVerticalValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="225" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="225" bodyend="247"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aae27ea2f1d067e4a981e997f880c33e5" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>PageOrderValues</type>
+        <definition>static PageOrderValues ToOpenXml</definition>
+        <argsstring>(this XLPageOrderValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPageOrderValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="249" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="249" bodyend="262"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a379930d18d82f09bc6a4e309d3a93d7e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>CellCommentsValues</type>
+        <definition>static CellCommentsValues ToOpenXml</definition>
+        <argsstring>(this XLShowCommentsValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLShowCommentsValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="264" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="264" bodyend="280"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a006a559423cec73c089739279b80bc81" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>PrintErrorValues</type>
+        <definition>static PrintErrorValues ToOpenXml</definition>
+        <argsstring>(this XLPrintErrorValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPrintErrorValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="282" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="282" bodyend="301"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ae97b0149f0f7d1742384f2c00c8a47cb" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>CalculateModeValues</type>
+        <definition>static CalculateModeValues ToOpenXml</definition>
+        <argsstring>(this XLCalculateMode value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLCalculateMode</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="303" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="303" bodyend="319"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a84161755b477fc0fba48280a91e1df54" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ReferenceModeValues</type>
+        <definition>static ReferenceModeValues ToOpenXml</definition>
+        <argsstring>(this XLReferenceStyle value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLReferenceStyle</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="321" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="321" bodyend="334"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a5e279debcf74df028684ae6e9618f110" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>uint</type>
+        <definition>static uint ToOpenXml</definition>
+        <argsstring>(this XLAlignmentReadingOrderValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLAlignmentReadingOrderValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="336" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="336" bodyend="352"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a0791259e18613a431daf8337c1457b75" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>TotalsRowFunctionValues</type>
+        <definition>static TotalsRowFunctionValues ToOpenXml</definition>
+        <argsstring>(this XLTotalsRowFunction value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLTotalsRowFunction</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="354" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="354" bodyend="391"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a884a39cdf4b897c32ee374f1141bf1f1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DataValidationValues</type>
+        <definition>static DataValidationValues ToOpenXml</definition>
+        <argsstring>(this XLAllowedValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLAllowedValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="393" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="393" bodyend="424"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6371b51ca0e482fd074d9ed72006d715" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DataValidationErrorStyleValues</type>
+        <definition>static DataValidationErrorStyleValues ToOpenXml</definition>
+        <argsstring>(this XLErrorStyle value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLErrorStyle</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="426" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="426" bodyend="442"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a73bdda214bfa3142fc649d3ab4f8597c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DataValidationOperatorValues</type>
+        <definition>static DataValidationOperatorValues ToOpenXml</definition>
+        <argsstring>(this XLOperator value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLOperator</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="444" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="444" bodyend="475"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ab12ec26ceb18b60f30bda1ac9cec8e98" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>SheetStateValues</type>
+        <definition>static SheetStateValues ToOpenXml</definition>
+        <argsstring>(this XLWorksheetVisibility value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLWorksheetVisibility</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="477" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="477" bodyend="493"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a24d1f793c73c06ea93d69b754e518d52" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>PhoneticAlignmentValues</type>
+        <definition>static PhoneticAlignmentValues ToOpenXml</definition>
+        <argsstring>(this XLPhoneticAlignment value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPhoneticAlignment</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="495" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="495" bodyend="514"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a117e9adb38d97b5b42338551ef53268d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>PhoneticValues</type>
+        <definition>static PhoneticValues ToOpenXml</definition>
+        <argsstring>(this XLPhoneticType value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPhoneticType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="516" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="516" bodyend="535"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aab2e91afaa068b93677a0cdc83ae51bd" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DataConsolidateFunctionValues</type>
+        <definition>static DataConsolidateFunctionValues ToOpenXml</definition>
+        <argsstring>(this XLPivotSummary value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPivotSummary</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="537" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="537" bodyend="556"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a4e30d5bea45adaa43097b7f1a7ede4fd" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ShowDataAsValues</type>
+        <definition>static ShowDataAsValues ToOpenXml</definition>
+        <argsstring>(this XLPivotCalculation value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPivotCalculation</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="558" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="558" bodyend="575"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a61eb99e6ca058cf5263e59759db45557" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>FilterOperatorValues</type>
+        <definition>static FilterOperatorValues ToOpenXml</definition>
+        <argsstring>(this XLFilterOperator value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLFilterOperator</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="577" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="577" bodyend="591"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1af9912e59743014fb9dab6dc5e14e7703" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DynamicFilterValues</type>
+        <definition>static DynamicFilterValues ToOpenXml</definition>
+        <argsstring>(this XLFilterDynamicType value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLFilterDynamicType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="593" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="593" bodyend="603"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8363888a178088c9e45961b442cbc349" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DateTimeGroupingValues</type>
+        <definition>static DateTimeGroupingValues ToOpenXml</definition>
+        <argsstring>(this XLDateTimeGrouping value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLDateTimeGrouping</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="605" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="605" bodyend="619"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a0e63e0a9ff17506f7f6be0d9f5e0a802" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>SheetViewValues</type>
+        <definition>static SheetViewValues ToOpenXml</definition>
+        <argsstring>(this XLSheetViewOptions value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLSheetViewOptions</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="621" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="621" bodyend="632"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1adff594355e6e3b777fd86d90c4b83e16" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Vml.StrokeLineStyleValues</type>
+        <definition>static Vml.StrokeLineStyleValues ToOpenXml</definition>
+        <argsstring>(this XLLineStyle value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLLineStyle</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="634" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="634" bodyend="647"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a9a934b5cb457ba93741882ce05c574a9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormatValues</type>
+        <definition>static ConditionalFormatValues ToOpenXml</definition>
+        <argsstring>(this XLConditionalFormatType value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLConditionalFormatType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="649" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="649" bodyend="675"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a4822ad06e54dad4f29f988abca6461da" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormatValueObjectValues</type>
+        <definition>static ConditionalFormatValueObjectValues ToOpenXml</definition>
+        <argsstring>(this XLCFContentType value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLCFContentType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="677" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="677" bodyend="691"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aeeeb30e5391023d4831f30260f3adffb" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormattingOperatorValues</type>
+        <definition>static ConditionalFormattingOperatorValues ToOpenXml</definition>
+        <argsstring>(this XLCFOperator value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLCFOperator</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="693" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="693" bodyend="713"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a04f14f6fa8445646e80771d47258fb2c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IconSetValues</type>
+        <definition>static IconSetValues ToOpenXml</definition>
+        <argsstring>(this XLIconSetStyle value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLIconSetStyle</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="715" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="715" bodyend="740"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a35237baa77c3b704d6018e1567f66cb3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>TimePeriodValues</type>
+        <definition>static TimePeriodValues ToOpenXml</definition>
+        <argsstring>(this XLTimePeriod value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLTimePeriod</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="742" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="742" bodyend="760"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a1620b97b0bc1f8e308c647ab9b639e54" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ImagePartType</type>
+        <definition>static ImagePartType ToOpenXml</definition>
+        <argsstring>(this XLPictureFormat value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPictureFormat</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="762" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="762" bodyend="765"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aa7272c0f17cdf9b2d4eaeafe088acbae" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Xdr.EditAsValues</type>
+        <definition>static Xdr.EditAsValues ToOpenXml</definition>
+        <argsstring>(this XLPicturePlacement value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPicturePlacement</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="767" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="767" bodyend="783"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac5ee0221063f40ae7241a7ea64d82c46" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>PivotAreaValues</type>
+        <definition>static PivotAreaValues ToOpenXml</definition>
+        <argsstring>(this XLPivotAreaValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLPivotAreaValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="785" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="785" bodyend="816"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1adcfefd6fa5b77985df5c6fb00676e48f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>X14.SparklineTypeValues</type>
+        <definition>static X14.SparklineTypeValues ToOpenXml</definition>
+        <argsstring>(this XLSparklineType value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLSparklineType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="818" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="818" bodyend="829"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a3117e414483f191f3ecf8ac2114d9517" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>X14.SparklineAxisMinMaxValues</type>
+        <definition>static X14.SparklineAxisMinMaxValues ToOpenXml</definition>
+        <argsstring>(this XLSparklineAxisMinMax value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLSparklineAxisMinMax</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="831" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="831" bodyend="842"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac2ebac6a52456ed47df594bd87a0e538" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>X14.DisplayBlanksAsValues</type>
+        <definition>static X14.DisplayBlanksAsValues ToOpenXml</definition>
+        <argsstring>(this XLDisplayBlanksAsValues value)</argsstring>
+        <name>ToOpenXml</name>
+        <param>
+          <type>this XLDisplayBlanksAsValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="844" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="844" bodyend="855"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8c00c439f81ad883fa8280ac21a11a47" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLFontUnderlineValues</type>
+        <definition>static XLFontUnderlineValues ToClosedXml</definition>
+        <argsstring>(this UnderlineValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this UnderlineValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="861" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="861" bodyend="883"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a13f8214fe74c4472cadddab083d373f3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPageOrientation</type>
+        <definition>static XLPageOrientation ToClosedXml</definition>
+        <argsstring>(this OrientationValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this OrientationValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="885" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="885" bodyend="901"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a3f902b4c2a2c145115d2ef036c1f618b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLFontVerticalTextAlignmentValues</type>
+        <definition>static XLFontVerticalTextAlignmentValues ToClosedXml</definition>
+        <argsstring>(this VerticalAlignmentRunValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this VerticalAlignmentRunValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="903" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="903" bodyend="919"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a1620c73f3f7458dfb897e2342b34b5b8" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLFillPatternValues</type>
+        <definition>static XLFillPatternValues ToClosedXml</definition>
+        <argsstring>(this PatternValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this PatternValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="921" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="921" bodyend="985"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1adea25cb4d34efa864938a60ff752623c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLBorderStyleValues</type>
+        <definition>static XLBorderStyleValues ToClosedXml</definition>
+        <argsstring>(this BorderStyleValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this BorderStyleValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="987" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="987" bodyend="1036"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac9c4cb443010b160187a00bb792ccd04" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLAlignmentHorizontalValues</type>
+        <definition>static XLAlignmentHorizontalValues ToClosedXml</definition>
+        <argsstring>(this HorizontalAlignmentValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this HorizontalAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1038" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1038" bodyend="1069"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a25c02a7c79350463203949f77a57ffec" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLAlignmentVerticalValues</type>
+        <definition>static XLAlignmentVerticalValues ToClosedXml</definition>
+        <argsstring>(this VerticalAlignmentValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this VerticalAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1071" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1071" bodyend="1093"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8929ad6f7e63f1d32d3b9caabb715011" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPageOrderValues</type>
+        <definition>static XLPageOrderValues ToClosedXml</definition>
+        <argsstring>(this PageOrderValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this PageOrderValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1095" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1095" bodyend="1108"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ae034d9a06c3e4fcb44bd1882385c46fa" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLShowCommentsValues</type>
+        <definition>static XLShowCommentsValues ToClosedXml</definition>
+        <argsstring>(this CellCommentsValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this CellCommentsValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1110" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1110" bodyend="1126"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a91918139c3c1e75530ddc5d3db412b69" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPrintErrorValues</type>
+        <definition>static XLPrintErrorValues ToClosedXml</definition>
+        <argsstring>(this PrintErrorValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this PrintErrorValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1128" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1128" bodyend="1147"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a030bd0d5549076efec132ad9958f2860" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLCalculateMode</type>
+        <definition>static XLCalculateMode ToClosedXml</definition>
+        <argsstring>(this CalculateModeValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this CalculateModeValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1149" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1149" bodyend="1165"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a639c02a5678b7a1f5c2f9e616193608e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLReferenceStyle</type>
+        <definition>static XLReferenceStyle ToClosedXml</definition>
+        <argsstring>(this ReferenceModeValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this ReferenceModeValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1167" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1167" bodyend="1180"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1af5213041b55ca69fce4c8c9b95af6ed1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLAlignmentReadingOrderValues</type>
+        <definition>static XLAlignmentReadingOrderValues ToClosedXml</definition>
+        <argsstring>(this uint value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this uint</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1182" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1182" bodyend="1198"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a4138c9344440bd64ddb6d4b4eede1c5d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLTotalsRowFunction</type>
+        <definition>static XLTotalsRowFunction ToClosedXml</definition>
+        <argsstring>(this TotalsRowFunctionValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this TotalsRowFunctionValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1200" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1200" bodyend="1237"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8e4bfba84a344190e90b3d96b18159d4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLAllowedValues</type>
+        <definition>static XLAllowedValues ToClosedXml</definition>
+        <argsstring>(this DataValidationValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this DataValidationValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1239" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1239" bodyend="1270"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8dc9129db5067f2a3c132a65760856e6" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLErrorStyle</type>
+        <definition>static XLErrorStyle ToClosedXml</definition>
+        <argsstring>(this DataValidationErrorStyleValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this DataValidationErrorStyleValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1272" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1272" bodyend="1288"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aca9c5b500b8049955b0b80fa42b7d10d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLOperator</type>
+        <definition>static XLOperator ToClosedXml</definition>
+        <argsstring>(this DataValidationOperatorValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this DataValidationOperatorValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1290" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1290" bodyend="1321"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ad12991402200b44dca2f398976db7404" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLWorksheetVisibility</type>
+        <definition>static XLWorksheetVisibility ToClosedXml</definition>
+        <argsstring>(this SheetStateValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this SheetStateValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1323" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1323" bodyend="1339"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a671f8efa42d4fa6e26f459a57ed9e76d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPhoneticAlignment</type>
+        <definition>static XLPhoneticAlignment ToClosedXml</definition>
+        <argsstring>(this PhoneticAlignmentValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this PhoneticAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1341" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1341" bodyend="1360"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aa610b6be79ed5e1afecb08eb6fa7cd62" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPhoneticType</type>
+        <definition>static XLPhoneticType ToClosedXml</definition>
+        <argsstring>(this PhoneticValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this PhoneticValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1362" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1362" bodyend="1379"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aafcec9b26a07f00c0107f0523b904c99" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPivotSummary</type>
+        <definition>static XLPivotSummary ToClosedXml</definition>
+        <argsstring>(this DataConsolidateFunctionValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this DataConsolidateFunctionValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1381" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1381" bodyend="1400"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a41dab718985bd4d160ec41209ae62e47" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPivotCalculation</type>
+        <definition>static XLPivotCalculation ToClosedXml</definition>
+        <argsstring>(this ShowDataAsValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this ShowDataAsValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1402" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1402" bodyend="1419"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a7553bc4b51299e2ec23878bfca882472" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLFilterOperator</type>
+        <definition>static XLFilterOperator ToClosedXml</definition>
+        <argsstring>(this FilterOperatorValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this FilterOperatorValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1421" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1421" bodyend="1435"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8cefe5c55678b9587171af4bab1d0e58" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLFilterDynamicType</type>
+        <definition>static XLFilterDynamicType ToClosedXml</definition>
+        <argsstring>(this DynamicFilterValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this DynamicFilterValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1437" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1437" bodyend="1447"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ad52cb5a44fd1908aaf5f48fda71c61d0" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLDateTimeGrouping</type>
+        <definition>static XLDateTimeGrouping ToClosedXml</definition>
+        <argsstring>(this DateTimeGroupingValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this DateTimeGroupingValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1449" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1449" bodyend="1463"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8007353751907da1c632486f8d2d1fd5" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLSheetViewOptions</type>
+        <definition>static XLSheetViewOptions ToClosedXml</definition>
+        <argsstring>(this SheetViewValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this SheetViewValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1465" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1465" bodyend="1476"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a3ab62512d18371014355719c405fb726" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLLineStyle</type>
+        <definition>static XLLineStyle ToClosedXml</definition>
+        <argsstring>(this Vml.StrokeLineStyleValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this Vml.StrokeLineStyleValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1478" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1478" bodyend="1491"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a913ce2f34b16e7228719e7b0faca0097" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLConditionalFormatType</type>
+        <definition>static XLConditionalFormatType ToClosedXml</definition>
+        <argsstring>(this ConditionalFormatValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this ConditionalFormatValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1493" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1493" bodyend="1519"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6511331c2d7ea5ddf2a5030a47d52d6b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLCFContentType</type>
+        <definition>static XLCFContentType ToClosedXml</definition>
+        <argsstring>(this ConditionalFormatValueObjectValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this ConditionalFormatValueObjectValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1521" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1521" bodyend="1535"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6cc8e1fe390979377055b92b079b4d8f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLCFOperator</type>
+        <definition>static XLCFOperator ToClosedXml</definition>
+        <argsstring>(this ConditionalFormattingOperatorValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this ConditionalFormattingOperatorValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1537" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1537" bodyend="1557"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a71652c7bc8b3c24de0c7e109e301d2d5" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLIconSetStyle</type>
+        <definition>static XLIconSetStyle ToClosedXml</definition>
+        <argsstring>(this IconSetValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this IconSetValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1559" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1559" bodyend="1584"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a7a862df5a54c54993912368c02ea021a" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLTimePeriod</type>
+        <definition>static XLTimePeriod ToClosedXml</definition>
+        <argsstring>(this TimePeriodValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this TimePeriodValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1586" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1586" bodyend="1604"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6d74896f5f2c67e9f888e7d8c983103d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPictureFormat</type>
+        <definition>static XLPictureFormat ToClosedXml</definition>
+        <argsstring>(this ImagePartType value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this ImagePartType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1606" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1606" bodyend="1609"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8dcaffca51c59eaf6d78722faddf2cc7" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPicturePlacement</type>
+        <definition>static XLPicturePlacement ToClosedXml</definition>
+        <argsstring>(this Xdr.EditAsValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this Xdr.EditAsValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1611" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1611" bodyend="1627"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aa7b4f17a1827d52420cdcd2c26681531" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLPivotAreaValues</type>
+        <definition>static XLPivotAreaValues ToClosedXml</definition>
+        <argsstring>(this PivotAreaValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this PivotAreaValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1629" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1629" bodyend="1660"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a1d345578af12b1eee9887e4706971d01" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLSparklineType</type>
+        <definition>static XLSparklineType ToClosedXml</definition>
+        <argsstring>(this X14.SparklineTypeValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this X14.SparklineTypeValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1662" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1662" bodyend="1673"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a04ff9884d1af47a05f890f6bee0f4522" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLSparklineAxisMinMax</type>
+        <definition>static XLSparklineAxisMinMax ToClosedXml</definition>
+        <argsstring>(this X14.SparklineAxisMinMaxValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this X14.SparklineAxisMinMaxValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1675" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1675" bodyend="1686"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a856a000898c1ba591bb2f381d33641f0" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>XLDisplayBlanksAsValues</type>
+        <definition>static XLDisplayBlanksAsValues ToClosedXml</definition>
+        <argsstring>(this X14.DisplayBlanksAsValues value)</argsstring>
+        <name>ToClosedXml</name>
+        <param>
+          <type>this X14.DisplayBlanksAsValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="1688" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="1688" bodyend="1699"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/EnumConverter.cs" bodystart="11" bodyend="1702"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8c00c439f81ad883fa8280ac21a11a47" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a13f8214fe74c4472cadddab083d373f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a3f902b4c2a2c145115d2ef036c1f618b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a1620c73f3f7458dfb897e2342b34b5b8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1adea25cb4d34efa864938a60ff752623c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac9c4cb443010b160187a00bb792ccd04" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a25c02a7c79350463203949f77a57ffec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8929ad6f7e63f1d32d3b9caabb715011" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ae034d9a06c3e4fcb44bd1882385c46fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a91918139c3c1e75530ddc5d3db412b69" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a030bd0d5549076efec132ad9958f2860" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a639c02a5678b7a1f5c2f9e616193608e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1af5213041b55ca69fce4c8c9b95af6ed1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a4138c9344440bd64ddb6d4b4eede1c5d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8e4bfba84a344190e90b3d96b18159d4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8dc9129db5067f2a3c132a65760856e6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aca9c5b500b8049955b0b80fa42b7d10d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ad12991402200b44dca2f398976db7404" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a671f8efa42d4fa6e26f459a57ed9e76d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aa610b6be79ed5e1afecb08eb6fa7cd62" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aafcec9b26a07f00c0107f0523b904c99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a41dab718985bd4d160ec41209ae62e47" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a7553bc4b51299e2ec23878bfca882472" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8cefe5c55678b9587171af4bab1d0e58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ad52cb5a44fd1908aaf5f48fda71c61d0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8007353751907da1c632486f8d2d1fd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a3ab62512d18371014355719c405fb726" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a913ce2f34b16e7228719e7b0faca0097" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6511331c2d7ea5ddf2a5030a47d52d6b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6cc8e1fe390979377055b92b079b4d8f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a71652c7bc8b3c24de0c7e109e301d2d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a7a862df5a54c54993912368c02ea021a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6d74896f5f2c67e9f888e7d8c983103d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8dcaffca51c59eaf6d78722faddf2cc7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aa7b4f17a1827d52420cdcd2c26681531" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a1d345578af12b1eee9887e4706971d01" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a04ff9884d1af47a05f890f6bee0f4522" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a856a000898c1ba591bb2f381d33641f0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToClosedXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aadedb5ed05ba981a5c2ac25cf2d99dc6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a46fed32e31030a3bd3d4b36750de1f9d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aabef8b70a8b16838632b1dae61f5817b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ae8aacbb86f0d8c4846987f784bed18c9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac2dacc48d666ad4ad6055fb97a8c8316" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a2bb65a12473e7967775d13e4e28fa53b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a68be1da36d19241cd40159dca7cbae7a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aae27ea2f1d067e4a981e997f880c33e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a379930d18d82f09bc6a4e309d3a93d7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a006a559423cec73c089739279b80bc81" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ae97b0149f0f7d1742384f2c00c8a47cb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a84161755b477fc0fba48280a91e1df54" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a5e279debcf74df028684ae6e9618f110" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a0791259e18613a431daf8337c1457b75" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a884a39cdf4b897c32ee374f1141bf1f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a6371b51ca0e482fd074d9ed72006d715" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a73bdda214bfa3142fc649d3ab4f8597c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ab12ec26ceb18b60f30bda1ac9cec8e98" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a24d1f793c73c06ea93d69b754e518d52" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a117e9adb38d97b5b42338551ef53268d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aab2e91afaa068b93677a0cdc83ae51bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a4e30d5bea45adaa43097b7f1a7ede4fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a61eb99e6ca058cf5263e59759db45557" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1af9912e59743014fb9dab6dc5e14e7703" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a8363888a178088c9e45961b442cbc349" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a0e63e0a9ff17506f7f6be0d9f5e0a802" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1adff594355e6e3b777fd86d90c4b83e16" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a9a934b5cb457ba93741882ce05c574a9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a4822ad06e54dad4f29f988abca6461da" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aeeeb30e5391023d4831f30260f3adffb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a04f14f6fa8445646e80771d47258fb2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a35237baa77c3b704d6018e1567f66cb3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a1620b97b0bc1f8e308c647ab9b639e54" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1aa7272c0f17cdf9b2d4eaeafe088acbae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac5ee0221063f40ae7241a7ea64d82c46" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1adcfefd6fa5b77985df5c6fb00676e48f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1a3117e414483f191f3ecf8ac2114d9517" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_enum_converter_1ac2ebac6a52456ed47df594bd87a0e538" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::EnumConverter</scope><name>ToOpenXml</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

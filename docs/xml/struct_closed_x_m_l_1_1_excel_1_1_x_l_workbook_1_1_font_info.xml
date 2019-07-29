@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_font_info" kind="struct" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::FontInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_font_info_1ac2e06a8eea667ee3d5ae388c1f3e0261" prot="public" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_value" kindref="compound">XLFontValue</ref></type>
+        <definition>XLFontValue Font</definition>
+        <argsstring></argsstring>
+        <name>Font</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="99" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_font_info_1aa77a391af46e441f9e13d74ed9691e8b" prot="public" static="no" mutable="no">
+        <type>UInt32</type>
+        <definition>UInt32 FontId</definition>
+        <argsstring></argsstring>
+        <name>FontId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="151">
+        <label>XLWorkbook.FontInfo</label>
+        <childnode refid="152" relation="usage">
+          <edgelabel>Font</edgelabel>
+        </childnode>
+      </node>
+      <node id="152">
+        <label>XLFontValue</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_value"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="97" bodyend="101"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_font_info_1ac2e06a8eea667ee3d5ae388c1f3e0261" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::FontInfo</scope><name>Font</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_font_info_1aa77a391af46e441f9e13d74ed9691e8b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::FontInfo</scope><name>FontId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

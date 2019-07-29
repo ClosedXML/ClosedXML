@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_extensions_1_1_open_xml_part_container_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Extensions::OpenXmlPartContainerExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_extensions_1_1_open_xml_part_container_extensions_1aca7858fb0deb8a3f6d191f50323eae27" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean HasPartWithId</definition>
+        <argsstring>(this OpenXmlPartContainer container, String relId)</argsstring>
+        <name>HasPartWithId</name>
+        <param>
+          <type>this OpenXmlPartContainer</type>
+          <declname>container</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>relId</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/OpenXmlPartContainerExtensions.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/OpenXmlPartContainerExtensions.cs" bodystart="9" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/OpenXmlPartContainerExtensions.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/OpenXmlPartContainerExtensions.cs" bodystart="7" bodyend="13"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_extensions_1_1_open_xml_part_container_extensions_1aca7858fb0deb8a3f6d191f50323eae27" prot="public" virt="non-virtual"><scope>ClosedXML::Extensions::OpenXmlPartContainerExtensions</scope><name>HasPartWithId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

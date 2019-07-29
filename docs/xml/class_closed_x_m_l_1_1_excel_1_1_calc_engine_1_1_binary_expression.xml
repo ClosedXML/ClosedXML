@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::BinaryExpression</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" prot="public" virt="non-virtual">Expression</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a226ea7ec002c15dbc441f6786fd71ca8" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression _lft</definition>
+        <argsstring></argsstring>
+        <name>_lft</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="312" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="312" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a93ce8828b9527de60f62721edb47f649" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>Expression _rgt</definition>
+        <argsstring></argsstring>
+        <name>_rgt</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="314" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="314" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1ab2f80f076db930ec0eda03dd1d715240" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override string</type>
+        <definition>override string LastParseItem</definition>
+        <argsstring></argsstring>
+        <name>LastParseItem</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="397" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="398" bodyend="400"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a2e51b2164720d30eb005c04f5e436ff9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>BinaryExpression</definition>
+        <argsstring>(Token tk, Expression exprLeft, Expression exprRight)</argsstring>
+        <name>BinaryExpression</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kindref="compound">Token</ref></type>
+          <declname>tk</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+          <declname>exprLeft</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+          <declname>exprRight</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="317" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="317" bodyend="321"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a76b93d4fd4a54c15edf4541bbdbb8e81" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>override object</type>
+        <definition>override object Evaluate</definition>
+        <argsstring>()</argsstring>
+        <name>Evaluate</name>
+        <reimplements refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a95e683b3f90348f4d3ebb47a518cb8d6">Evaluate</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="324" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="324" bodyend="386"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a5d5dbc5b7f033c2d224692fe32f7dee9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>override <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+        <definition>override Expression Optimize</definition>
+        <argsstring>()</argsstring>
+        <name>Optimize</name>
+        <reimplements refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1afb8dcf602fd5a9fda8c7c828c0f3114a">Optimize</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="388" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="388" bodyend="395"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Binary expression, e.g. 1+2 </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="6">
+        <label>BinaryExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression"/>
+        <childnode refid="7" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>Expression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression"/>
+        <childnode refid="8" relation="public-inheritance">
+        </childnode>
+        <childnode refid="9" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>IComparable&lt; Expression &gt;</label>
+      </node>
+      <node id="8">
+        <label>ExpressionBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="10">
+        <label>BinaryExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression"/>
+        <childnode refid="11" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>Expression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression"/>
+        <childnode refid="12" relation="public-inheritance">
+        </childnode>
+        <childnode refid="13" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>IComparable&lt; Expression &gt;</label>
+      </node>
+      <node id="12">
+        <label>ExpressionBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="310" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="309" bodyend="401"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a226ea7ec002c15dbc441f6786fd71ca8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>_lft</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a93ce8828b9527de60f62721edb47f649" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>_rgt</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a2e51b2164720d30eb005c04f5e436ff9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>BinaryExpression</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a15a31dcc1f392a5ba4765ac3365efe26" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>CompareTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a76b93d4fd4a54c15edf4541bbdbb8e81" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>Evaluate</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1ab2f80f076db930ec0eda03dd1d715240" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>LastParseItem</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a4ce654b9e910399fa2090d1225264599" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>operator bool</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a62982685408e14dc20becbbf15ebaf6c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>operator DateTime</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1ac7b54147a502b4e27fb5d01d6c67315b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>operator double</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_1a06007e3975e1e5ee6a443b4f6c790171" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>operator string</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression_1a5d5dbc5b7f033c2d224692fe32f7dee9" prot="public" virt="virtual"><scope>ClosedXML::Excel::CalcEngine::BinaryExpression</scope><name>Optimize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

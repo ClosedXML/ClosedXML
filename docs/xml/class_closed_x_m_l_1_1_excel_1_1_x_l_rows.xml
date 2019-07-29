@@ -1,0 +1,840 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLRows</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" prot="public" virt="non-virtual">XLStylizedBase</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" prot="public" virt="non-virtual">IXLRows</basecompoundref>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized" prot="public" virt="non-virtual">IXLStylized</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a9914f7cc8090987ab689469f621e481c" prot="private" static="no" mutable="no">
+        <type>readonly List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_row" kindref="compound">XLRow</ref> &gt;</type>
+        <definition>readonly List&lt;XLRow&gt; _rows</definition>
+        <argsstring></argsstring>
+        <name>_rows</name>
+        <initializer>= new List&lt;<ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_row" kindref="compound">XLRow</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a59ac373545fa507a5063f74a83f348ab" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+        <definition>readonly XLWorksheet _worksheet</definition>
+        <argsstring></argsstring>
+        <name>_worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a18ece2127f70c26ead73bc24856a5c57" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>double</type>
+        <definition>double Height</definition>
+        <argsstring></argsstring>
+        <name>Height</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="40" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a0e7c8a7cd654858c658a13cfc711d47e" prot="protected" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override IEnumerable&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base" kindref="compound">XLStylizedBase</ref> &gt;</type>
+        <definition>override IEnumerable&lt;XLStylizedBase&gt; Children</definition>
+        <argsstring></argsstring>
+        <name>Children</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="210" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="211" bodyend="222"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a828e67d067323eaae0298ac984fb1b38" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref> &gt;</type>
+        <definition>override IEnumerable&lt;IXLStyle&gt; Styles</definition>
+        <argsstring></argsstring>
+        <name>Styles</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="224" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="225" bodyend="239"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a4ce46e5cf51436fee040eb080347cd4b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>override <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>override IXLRanges RangesUsed</definition>
+        <argsstring></argsstring>
+        <name>RangesUsed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="241" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="242" bodyend="249"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a4e8cc3ac9bf0f826041690e545f090b3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLRows</definition>
+        <argsstring>(XLWorksheet worksheet, XLStyleValue defaultStyle=null)</argsstring>
+        <name>XLRows</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+          <declname>defaultStyle</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+<para>Create a new instance of <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows" kindref="compound">XLRows</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>worksheet</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If worksheet is specified it means that the created instance represents all rows on a worksheet so changing its height will affect all rows.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>defaultStyle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Default style to use when initializing child entries.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="21" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2673f9387b3b7fcaeb53b561bf9a8956" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_row" kindref="compound">IXLRow</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLRow&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="29" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ac2e5aab0612d67400354a4fe71278a21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1ac2e5aab0612d67400354a4fe71278a21">Delete</reimplements>
+        <briefdescription>
+<para>Deletes all rows and shifts the rows below them accordingly. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="50" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows AdjustToContents</definition>
+        <argsstring>()</argsstring>
+        <name>AdjustToContents</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afbcfc636990d709fa1936a25297d58a8">AdjustToContents</reimplements>
+        <briefdescription>
+<para>Adjusts the height of all rows based on its contents. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="76" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="76" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1acd7c725c940abab1f031fc4577e592ae" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows AdjustToContents</definition>
+        <argsstring>(Int32 startColumn)</argsstring>
+        <name>AdjustToContents</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1acd7c725c940abab1f031fc4577e592ae">AdjustToContents</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>startColumn</declname>
+        </param>
+        <briefdescription>
+<para>Adjusts the height of all rows based on its contents, starting from the startColumn. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>startColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column to start calculating the row height.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="82" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ab565983a5d43db4f55344953a8b2fbf7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows AdjustToContents</definition>
+        <argsstring>(Int32 startColumn, Int32 endColumn)</argsstring>
+        <name>AdjustToContents</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1ab565983a5d43db4f55344953a8b2fbf7">AdjustToContents</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>startColumn</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>endColumn</declname>
+        </param>
+        <briefdescription>
+<para>Adjusts the height of all rows based on its contents, starting from the startColumn and ending at endColumn. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>startColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column to start calculating the row height.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>endColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column to end calculating the row height.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="88" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a9c6f123e89dbb37c986d9281c07e42c1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows AdjustToContents</definition>
+        <argsstring>(Double minHeight, Double maxHeight)</argsstring>
+        <name>AdjustToContents</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a9c6f123e89dbb37c986d9281c07e42c1">AdjustToContents</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>minHeight</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>maxHeight</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="94" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="94" bodyend="98"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1acc2281fbca9eb0ec066957dd876a11eb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows AdjustToContents</definition>
+        <argsstring>(Int32 startColumn, Double minHeight, Double maxHeight)</argsstring>
+        <name>AdjustToContents</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1acc2281fbca9eb0ec066957dd876a11eb">AdjustToContents</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>startColumn</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>minHeight</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>maxHeight</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="100" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1aee9479dbfcf10d0053b69e8e7cc455e0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows AdjustToContents</definition>
+        <argsstring>(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)</argsstring>
+        <name>AdjustToContents</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1aee9479dbfcf10d0053b69e8e7cc455e0">AdjustToContents</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>startColumn</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>endColumn</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>minHeight</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>maxHeight</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="106" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="106" bodyend="110"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a130bc36524c72ad408ecd7338f1e0070" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Hide</definition>
+        <argsstring>()</argsstring>
+        <name>Hide</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a130bc36524c72ad408ecd7338f1e0070">Hide</reimplements>
+        <briefdescription>
+<para>Hides all rows. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="112" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="112" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a13c20a60166b3b08db948df1a97261f2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Unhide</definition>
+        <argsstring>()</argsstring>
+        <name>Unhide</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a13c20a60166b3b08db948df1a97261f2">Unhide</reimplements>
+        <briefdescription>
+<para>Unhides all rows. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="117" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="117" bodyend="120"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a44f0ef74e15e9fadc0c1af8c19bea80d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Group</definition>
+        <argsstring>()</argsstring>
+        <name>Group</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a44f0ef74e15e9fadc0c1af8c19bea80d">Group</reimplements>
+        <briefdescription>
+<para>Increments the outline level of all rows by 1. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="122" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="122" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1afe5ab5182231e9d9a6ecad99077717cd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Group</definition>
+        <argsstring>(Int32 outlineLevel)</argsstring>
+        <name>Group</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afe5ab5182231e9d9a6ecad99077717cd">Group</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>outlineLevel</declname>
+        </param>
+        <briefdescription>
+<para>Sets outline level for all rows. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>outlineLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The outline level.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="127" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="127" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1aed19ca0e030469e35f586a1165547e95" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Ungroup</definition>
+        <argsstring>()</argsstring>
+        <name>Ungroup</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1aed19ca0e030469e35f586a1165547e95">Ungroup</reimplements>
+        <briefdescription>
+<para>Decrements the outline level of all rows by 1. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="132" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="132" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2f1fbba12930349657a4997569214ae3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Group</definition>
+        <argsstring>(Boolean collapse)</argsstring>
+        <name>Group</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a2f1fbba12930349657a4997569214ae3">Group</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>collapse</declname>
+        </param>
+        <briefdescription>
+<para>Increments the outline level of all rows by 1. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>collapse</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If set to <computeroutput>true</computeroutput> the rows will be shown collapsed.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="137" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="137" bodyend="140"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2d61c92cb3c6c705e298b07f5317f983" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Group</definition>
+        <argsstring>(Int32 outlineLevel, Boolean collapse)</argsstring>
+        <name>Group</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a2d61c92cb3c6c705e298b07f5317f983">Group</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>outlineLevel</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>collapse</declname>
+        </param>
+        <briefdescription>
+<para>Sets outline level for all rows. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>outlineLevel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The outline level.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>collapse</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If set to <computeroutput>true</computeroutput> the rows will be shown collapsed.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="142" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="142" bodyend="145"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a5dc4887c65d7fefa7ae4b901bf00706d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Ungroup</definition>
+        <argsstring>(Boolean ungroupFromAll)</argsstring>
+        <name>Ungroup</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1afd526f4a591247aadeb2d2522070332d">Ungroup</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>fromAll</declname>
+        </param>
+        <briefdescription>
+<para>Decrements the outline level of all rows by 1. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fromAll</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If set to <computeroutput>true</computeroutput> it will remove the rows from all outline levels.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="147" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="147" bodyend="150"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2f4d9052b2e996267a8fbe2bab2066ed" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Collapse</definition>
+        <argsstring>()</argsstring>
+        <name>Collapse</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a2f4d9052b2e996267a8fbe2bab2066ed">Collapse</reimplements>
+        <briefdescription>
+<para>Show all rows as collapsed. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="152" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="152" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a740071247a178d84b8bf2b17901509b4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Expand</definition>
+        <argsstring>()</argsstring>
+        <name>Expand</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a740071247a178d84b8bf2b17901509b4">Expand</reimplements>
+        <briefdescription>
+<para>Expands all rows (if they&apos;re collapsed). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="157" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="157" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells Cells</definition>
+        <argsstring>()</argsstring>
+        <name>Cells</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a3a388f07ee977ad805d8f72cc51418c5">Cells</reimplements>
+        <briefdescription>
+<para>Returns the collection of cells. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="162" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="162" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a6ad63b5f449b6fa15192912119681a06" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>()</argsstring>
+        <name>CellsUsed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a6ad63b5f449b6fa15192912119681a06">CellsUsed</reimplements>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="170" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="170" bodyend="176"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>(Boolean includeFormats)</argsstring>
+        <name>CellsUsed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3">CellsUsed</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>includeFormats</declname>
+        </param>
+        <briefdescription>
+<para>Returns the collection of cells that have a value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>includeFormats</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if set to <computeroutput>true</computeroutput> will return all cells with a value or a style different than the default.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="179" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="179" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells CellsUsed</definition>
+        <argsstring>(XLCellsUsedOptions options)</argsstring>
+        <name>CellsUsed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5">CellsUsed</reimplements>
+        <param>
+          <type>XLCellsUsedOptions</type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="186" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="186" bodyend="192"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ae95fc021b66d41bd901112c0603089df" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows AddHorizontalPageBreaks</definition>
+        <argsstring>()</argsstring>
+        <name>AddHorizontalPageBreaks</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1ae95fc021b66d41bd901112c0603089df">AddHorizontalPageBreaks</reimplements>
+        <briefdescription>
+<para>Adds a horizontal page break after these rows. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="194" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="194" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ae32ba2ecf93ba41f0f494bfca37272b6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows SetDataType</definition>
+        <argsstring>(XLDataType dataType)</argsstring>
+        <name>SetDataType</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1ae32ba2ecf93ba41f0f494bfca37272b6">SetDataType</reimplements>
+        <param>
+          <type>XLDataType</type>
+          <declname>dataType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="201" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="201" bodyend="205"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1add7ea63b6b31d57e74526c2bbb9f96a1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Add</definition>
+        <argsstring>(XLRow row)</argsstring>
+        <name>Add</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_row" kindref="compound">XLRow</ref></type>
+          <declname>row</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="253" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="253" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1adb10c71d76977b6c96d52933cd4c1037" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows Clear</definition>
+        <argsstring>(XLClearOptions clearOptions=XLClearOptions.All)</argsstring>
+        <name>Clear</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1adb10c71d76977b6c96d52933cd4c1037">Clear</reimplements>
+        <param>
+          <type>XLClearOptions</type>
+          <declname>clearOptions</declname>
+          <defval>XLClearOptions.All</defval>
+        </param>
+        <briefdescription>
+<para>Clears the contents of these rows. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>clearOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specify what you want to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="258" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="258" bodyend="262"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1aae6b677d47187a8187e734714222240b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Select</definition>
+        <argsstring>()</argsstring>
+        <name>Select</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1aae6b677d47187a8187e734714222240b">Select</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="264" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="264" bodyend="268"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator IEnumerable.</type>
+        <definition>IEnumerator IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="34" bodyend="37"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1722">
+        <label>IXLRows</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows"/>
+        <childnode refid="1723" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1720">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1721" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1721">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+      <node id="1719">
+        <label>XLRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows"/>
+        <childnode refid="1720" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1722" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1721" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1723">
+        <label>IEnumerable&lt; IXLRow &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1727">
+        <label>IXLRows</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows"/>
+        <childnode refid="1728" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1725">
+        <label>XLStylizedBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base"/>
+        <childnode refid="1726" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1726">
+        <label>IXLStylized</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized"/>
+      </node>
+      <node id="1724">
+        <label>XLRows</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows"/>
+        <childnode refid="1725" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1727" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1726" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1728">
+        <label>IEnumerable&lt; IXLRow &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Rows/XLRows.cs" bodystart="9" bodyend="269"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a9914f7cc8090987ab689469f621e481c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>_rows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a59ac373545fa507a5063f74a83f348ab" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>_worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1add7ea63b6b31d57e74526c2bbb9f96a1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ae95fc021b66d41bd901112c0603089df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>AddHorizontalPageBreaks</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1afbcfc636990d709fa1936a25297d58a8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>AdjustToContents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1acd7c725c940abab1f031fc4577e592ae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>AdjustToContents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ab565983a5d43db4f55344953a8b2fbf7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>AdjustToContents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a9c6f123e89dbb37c986d9281c07e42c1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>AdjustToContents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1acc2281fbca9eb0ec066957dd876a11eb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>AdjustToContents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1aee9479dbfcf10d0053b69e8e7cc455e0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>AdjustToContents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a3a388f07ee977ad805d8f72cc51418c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Cells</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a6ad63b5f449b6fa15192912119681a06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a7a0f53bd3c2e661fe0ba7c909cd34ee3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a8512c5121f6b7d9dcad221f0fa6dcbd5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>CellsUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a0e7c8a7cd654858c658a13cfc711d47e" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Children</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1adb10c71d76977b6c96d52933cd4c1037" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Clear</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2f4d9052b2e996267a8fbe2bab2066ed" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Collapse</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a740071247a178d84b8bf2b17901509b4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Expand</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2673f9387b3b7fcaeb53b561bf9a8956" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a44f0ef74e15e9fadc0c1af8c19bea80d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Group</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1afe5ab5182231e9d9a6ecad99077717cd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Group</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2f1fbba12930349657a4997569214ae3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Group</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a2d61c92cb3c6c705e298b07f5317f983" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Group</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a18ece2127f70c26ead73bc24856a5c57" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Height</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a130bc36524c72ad408ecd7338f1e0070" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Hide</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1ae6ee4236123731a11e2d26675428cb6f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>InnerStyle</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized_1a5373ddcfb7ecde9c9eb5b9ef6bc1e132" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>ModifyStyle</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a4ce46e5cf51436fee040eb080347cd4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>RangesUsed</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1aae6b677d47187a8187e734714222240b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Select</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1ae32ba2ecf93ba41f0f494bfca37272b6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>SetDataType</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLStylizedBase."><scope>ClosedXML::Excel::XLRows</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLRows."><scope>ClosedXML::Excel::XLRows</scope><name>Style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a828e67d067323eaae0298ac984fb1b38" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Styles</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_stylized_1ab73e3cfe4bba81a18e0d0320c26f8bbd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>StyleValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1aed19ca0e030469e35f586a1165547e95" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Ungroup</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a5dc4887c65d7fefa7ae4b901bf00706d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Ungroup</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a13c20a60166b3b08db948df1a97261f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>Unhide</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rows_1a4e8cc3ac9bf0f826041690e545f090b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>XLRows</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1aecdc64299b389c824504360946a93b16" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLRows</scope><name>XLStylizedBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

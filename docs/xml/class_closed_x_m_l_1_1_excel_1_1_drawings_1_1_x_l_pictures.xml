@@ -1,0 +1,499 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Drawings::XLPictures</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures" prot="public" virt="non-virtual">IXLPictures</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; XLPicture &gt;</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a94dd4439159b030f22fbdfed4624ccd4" prot="private" static="no" mutable="no">
+        <type>readonly List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture" kindref="compound">XLPicture</ref> &gt;</type>
+        <definition>readonly List&lt;XLPicture&gt; _pictures</definition>
+        <argsstring></argsstring>
+        <name>_pictures</name>
+        <initializer>= new List&lt;<ref refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture" kindref="compound">XLPicture</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a59ac373545fa507a5063f74a83f348ab" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+        <definition>readonly XLWorksheet _worksheet</definition>
+        <argsstring></argsstring>
+        <name>_worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aad462966ed963f892117056de1eba502" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>int</type>
+        <definition>int Count</definition>
+        <argsstring></argsstring>
+        <name>Count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="23" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a97a65afc4eac157848242b096ff21f05" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>internal ICollection&lt; String &gt;</type>
+        <definition>internal ICollection&lt;String&gt; Deleted</definition>
+        <argsstring></argsstring>
+        <name>Deleted</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="28" bodyend="28"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a0e5bb671a165e5208030f58fc222f28e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLPictures</definition>
+        <argsstring>(XLWorksheet worksheet)</argsstring>
+        <name>XLPictures</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="16" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a52da4e27c4196033f5771f0c37bd19c7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(Stream stream)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a52da4e27c4196033f5771f0c37bd19c7">Add</reimplements>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="30" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1af2ee9a117d6c6a6cf6ef3654e3b4cec2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(Stream stream, string name)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="38" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1ab9e2c81edccf09e99ae42489aeda2e65" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(Stream stream, XLPictureFormat format)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1ab9e2c81edccf09e99ae42489aeda2e65">Add</reimplements>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type>XLPictureFormat</type>
+          <declname>format</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="45" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aaf7bd947a100e39cafe4709230e304e1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(Stream stream, XLPictureFormat format, string name)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type>XLPictureFormat</type>
+          <declname>format</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="53" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a66407feba6f14af68777318dcdcd8223" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(Bitmap bitmap)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a66407feba6f14af68777318dcdcd8223">Add</reimplements>
+        <param>
+          <type>Bitmap</type>
+          <declname>bitmap</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="60" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="60" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1abe95c59856fa2d9518a57611ecf2dc23" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(Bitmap bitmap, string name)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>Bitmap</type>
+          <declname>bitmap</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="68" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1ad8754ec99668187afd80c0c8116dd4d5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(string imageFile)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>string</type>
+          <declname>imageFile</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="75" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="75" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a7e3feeb12f8ba61a3683b269387430f4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Add</definition>
+        <argsstring>(string imageFile, string name)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>string</type>
+          <declname>imageFile</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="86" bodyend="91"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aaa6d0db980a8701bfe46e5f26c84db30" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Contains</definition>
+        <argsstring>(string pictureName)</argsstring>
+        <name>Contains</name>
+        <param>
+          <type>string</type>
+          <declname>pictureName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="93" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="93" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a116bd8ef3ec576dd383d630ac027dff7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(IXLPicture picture)</argsstring>
+        <name>Delete</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a116bd8ef3ec576dd383d630ac027dff7">Delete</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+          <declname>picture</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="98" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a3df9aebe9d3ffef9a03e0265d8bfdd4e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(string pictureName)</argsstring>
+        <name>Delete</name>
+        <param>
+          <type>string</type>
+          <declname>pictureName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="103" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="103" bodyend="119"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a180100adefd8ecbba0c5d0c99ac4e1a0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture" kindref="compound">XLPicture</ref> &gt;</type>
+        <definition>IEnumerator&lt;XLPicture&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="126" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="126" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1af5ea376a6ac33799a23650ed05e840c7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Picture</definition>
+        <argsstring>(string pictureName)</argsstring>
+        <name>Picture</name>
+        <param>
+          <type>string</type>
+          <declname>pictureName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="136" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="136" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1ac48ce7b0fde876ad882951b43763a283" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool TryGetPicture</definition>
+        <argsstring>(string pictureName, out IXLPicture picture)</argsstring>
+        <name>TryGetPicture</name>
+        <param>
+          <type>string</type>
+          <declname>pictureName</declname>
+        </param>
+        <param>
+          <type>out <ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+          <declname>picture</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="144" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="144" bodyend="154"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a490b83ca6713db220e76a7745d8872ad" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref> &gt; IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref> &gt;.</type>
+        <definition>IEnumerator&lt;IXLPicture&gt; IEnumerable&lt;IXLPicture&gt;. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="121" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="121" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator IEnumerable.</type>
+        <definition>IEnumerator IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="131" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="131" bodyend="134"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a00eb05a5a53242f098b2d83c65373197" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>internal IXLPicture Add</definition>
+        <argsstring>(Stream stream, string name, int Id)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>Id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="156" bodyend="162"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aa45b8cd44f93595e60b6528f8ef072c2" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String GetNextPictureName</definition>
+        <argsstring>()</argsstring>
+        <name>GetNextPictureName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="164" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="164" bodyend="172"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1444">
+        <label>IEnumerable&lt; XLPicture &gt;</label>
+      </node>
+      <node id="1441">
+        <label>XLPictures</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures"/>
+        <childnode refid="1442" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1444" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1443">
+        <label>IEnumerable&lt; IXLPicture &gt;</label>
+      </node>
+      <node id="1442">
+        <label>IXLPictures</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures"/>
+        <childnode refid="1443" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1448">
+        <label>IEnumerable&lt; XLPicture &gt;</label>
+      </node>
+      <node id="1445">
+        <label>XLPictures</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures"/>
+        <childnode refid="1446" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1448" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1447">
+        <label>IEnumerable&lt; IXLPicture &gt;</label>
+      </node>
+      <node id="1446">
+        <label>IXLPictures</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures"/>
+        <childnode refid="1447" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/XLPictures.cs" bodystart="11" bodyend="173"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a94dd4439159b030f22fbdfed4624ccd4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>_pictures</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a59ac373545fa507a5063f74a83f348ab" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>_worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a52da4e27c4196033f5771f0c37bd19c7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1af2ee9a117d6c6a6cf6ef3654e3b4cec2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1ab9e2c81edccf09e99ae42489aeda2e65" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aaf7bd947a100e39cafe4709230e304e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a66407feba6f14af68777318dcdcd8223" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1abe95c59856fa2d9518a57611ecf2dc23" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1ad8754ec99668187afd80c0c8116dd4d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a7e3feeb12f8ba61a3683b269387430f4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a00eb05a5a53242f098b2d83c65373197" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a0dc0fb00483115810c2f392adf7c3817" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1af668dcb9e8d76d11b1fea55d9c588bc9" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a5fed176cc2269e06174d7e1c8e32f36e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1ade22c6387c66a8897ef5f047c724306a" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a0cd1b0d99da15523649700ba3f5305d9" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aaa6d0db980a8701bfe46e5f26c84db30" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1ada9726b7b617b5aed5490be34e69aa1e" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Contains</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aad462966ed963f892117056de1eba502" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Count</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a116bd8ef3ec576dd383d630ac027dff7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a3df9aebe9d3ffef9a03e0265d8bfdd4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a67606f59e84c910a04fe24c858436feb" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a97a65afc4eac157848242b096ff21f05" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Deleted</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a490b83ca6713db220e76a7745d8872ad" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a180100adefd8ecbba0c5d0c99ac4e1a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a7d819d2ba8ffadd29113c811ce043c9f" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1aa45b8cd44f93595e60b6528f8ef072c2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>GetNextPictureName</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1af5ea376a6ac33799a23650ed05e840c7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Picture</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a5931aa60c5781826113eca8d024cd1f5" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>Picture</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1ac48ce7b0fde876ad882951b43763a283" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>TryGetPicture</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures_1a82adb3efb4c7bbd3db27fa534be3d0fa" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::Drawings::IXLPictures."><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>TryGetPicture</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures_1a0e5bb671a165e5208030f58fc222f28e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::XLPictures</scope><name>XLPictures</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info" kind="struct" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::StyleInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a4e45bebca604c0ff559280af5985fe0a" prot="public" static="no" mutable="no">
+        <type>UInt32</type>
+        <definition>UInt32 BorderId</definition>
+        <argsstring></argsstring>
+        <name>BorderId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="139" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="139" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a20bb21fc039b8f4daf78050632c1c1b3" prot="public" static="no" mutable="no">
+        <type>UInt32</type>
+        <definition>UInt32 FillId</definition>
+        <argsstring></argsstring>
+        <name>FillId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="140" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1aa77a391af46e441f9e13d74ed9691e8b" prot="public" static="no" mutable="no">
+        <type>UInt32</type>
+        <definition>UInt32 FontId</definition>
+        <argsstring></argsstring>
+        <name>FontId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="141" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a7ef7ca6f3189ee27b3b9ad0a13436be3" prot="public" static="no" mutable="no">
+        <type>Boolean</type>
+        <definition>Boolean IncludeQuotePrefix</definition>
+        <argsstring></argsstring>
+        <name>IncludeQuotePrefix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="142" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" static="no" mutable="no">
+        <type>Int32</type>
+        <definition>Int32 NumberFormatId</definition>
+        <argsstring></argsstring>
+        <name>NumberFormatId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="143" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1acc7e0bcdd0b5b1c4ff061f25303d020b" prot="public" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value" kindref="compound">XLStyleValue</ref></type>
+        <definition>XLStyleValue Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="144" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1aa22b50ed24a786723cc448448c0d713a" prot="public" static="no" mutable="no">
+        <type>UInt32</type>
+        <definition>UInt32 StyleId</definition>
+        <argsstring></argsstring>
+        <name>StyleId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="145" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="145" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="890">
+        <label>XLStyleValue</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style_value"/>
+      </node>
+      <node id="889">
+        <label>XLWorkbook.StyleInfo</label>
+        <childnode refid="890" relation="usage">
+          <edgelabel>Style</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="138" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="137" bodyend="146"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a4e45bebca604c0ff559280af5985fe0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::StyleInfo</scope><name>BorderId</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a20bb21fc039b8f4daf78050632c1c1b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::StyleInfo</scope><name>FillId</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1aa77a391af46e441f9e13d74ed9691e8b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::StyleInfo</scope><name>FontId</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a7ef7ca6f3189ee27b3b9ad0a13436be3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::StyleInfo</scope><name>IncludeQuotePrefix</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::StyleInfo</scope><name>NumberFormatId</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1acc7e0bcdd0b5b1c4ff061f25303d020b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::StyleInfo</scope><name>Style</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_style_info_1aa22b50ed24a786723cc448448c0d713a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::StyleInfo</scope><name>StyleId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

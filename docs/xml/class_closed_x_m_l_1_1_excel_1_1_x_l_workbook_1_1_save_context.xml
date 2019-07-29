@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context" kind="class" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::SaveContext</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a54f2a5180f896e59c31333eab1493f10" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>Dictionary&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref>, Int32 &gt;</type>
+        <definition>Dictionary&lt;XLStyleKey, Int32&gt; DifferentialFormats</definition>
+        <argsstring></argsstring>
+        <name>DifferentialFormats</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a245becd343ab9db0c77f79f03b12b7f1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>IDictionary&lt; Guid, PivotTableInfo &gt;</type>
+        <definition>IDictionary&lt;Guid, PivotTableInfo&gt; PivotTables</definition>
+        <argsstring></argsstring>
+        <name>PivotTables</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="26" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1abbea8729c02ba39a3d9acb727abf8ed2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>RelIdGenerator</type>
+        <definition>RelIdGenerator RelIdGenerator</definition>
+        <argsstring></argsstring>
+        <name>RelIdGenerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1ae3f466969ddc1cb0f56764816d5ff853" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>Dictionary&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_font_value" kindref="compound">XLFontValue</ref>, FontInfo &gt;</type>
+        <definition>Dictionary&lt;XLFontValue, FontInfo&gt; SharedFonts</definition>
+        <argsstring></argsstring>
+        <name>SharedFonts</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="28" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1ae4424c365729c12119b110ad0a624d55" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>Dictionary&lt; Int32, NumberFormatInfo &gt;</type>
+        <definition>Dictionary&lt;Int32, NumberFormatInfo&gt; SharedNumberFormats</definition>
+        <argsstring></argsstring>
+        <name>SharedNumberFormats</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="29" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a1eadbc61a65d98539c0a94cde85f03a0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>Dictionary&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_style_key" kindref="compound">XLStyleKey</ref>, StyleInfo &gt;</type>
+        <definition>Dictionary&lt;XLStyleKey, StyleInfo&gt; SharedStyles</definition>
+        <argsstring></argsstring>
+        <name>SharedStyles</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="30" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a84763247a8aa381364be9045d9664ccf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>uint</type>
+        <definition>uint TableId</definition>
+        <argsstring></argsstring>
+        <name>TableId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="31" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a302828eacf3fe988969e6d23e06c6a1a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>HashSet&lt; string &gt;</type>
+        <definition>HashSet&lt;string&gt; TableNames</definition>
+        <argsstring></argsstring>
+        <name>TableNames</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="32" bodyend="32"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a96362b86d0a4818b34d30df5fe06ea0f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>SaveContext</definition>
+        <argsstring>()</argsstring>
+        <name>SaveContext</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="13" bodyend="23"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="11" bodyend="33"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a54f2a5180f896e59c31333eab1493f10" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>DifferentialFormats</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a245becd343ab9db0c77f79f03b12b7f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>PivotTables</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1abbea8729c02ba39a3d9acb727abf8ed2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>RelIdGenerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a96362b86d0a4818b34d30df5fe06ea0f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>SaveContext</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1ae3f466969ddc1cb0f56764816d5ff853" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>SharedFonts</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1ae4424c365729c12119b110ad0a624d55" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>SharedNumberFormats</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a1eadbc61a65d98539c0a94cde85f03a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>SharedStyles</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a84763247a8aa381364be9045d9664ccf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>TableId</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_save_context_1a302828eacf3fe988969e6d23e06c6a1a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::SaveContext</scope><name>TableNames</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

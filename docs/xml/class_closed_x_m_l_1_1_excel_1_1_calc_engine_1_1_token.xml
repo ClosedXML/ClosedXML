@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Token</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1acc5da5cc2a094c3a57187502bbe7ca5b" prot="public" static="no" mutable="no">
+        <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9db" kindref="member">TKID</ref></type>
+        <definition>TKID ID</definition>
+        <argsstring></argsstring>
+        <name>ID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1a68f160f29f5d31dd9f9360565a287a32" prot="public" static="no" mutable="no">
+        <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678" kindref="member">TKTYPE</ref></type>
+        <definition>TKTYPE Type</definition>
+        <argsstring></argsstring>
+        <name>Type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1a2d7e8cd2081ad3db5aa8e597557123e9" prot="public" static="no" mutable="no">
+        <type>object</type>
+        <definition>object Value</definition>
+        <argsstring></argsstring>
+        <name>Value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1ab268b84d3db301a07ae9aaf0508d990b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Token</definition>
+        <argsstring>(object value, TKID id, TKTYPE type)</argsstring>
+        <name>Token</name>
+        <param>
+          <type>object</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1aacf6a76e294b69b5c57f7dbbd579b9db" kindref="member">TKID</ref></type>
+          <declname>id</declname>
+        </param>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a80e3b93283c52b243ebc508158ccc678" kindref="member">TKTYPE</ref></type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" bodystart="15" bodyend="20"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Represents a node in the expression tree. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Token.cs" bodystart="6" bodyend="21"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1acc5da5cc2a094c3a57187502bbe7ca5b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Token</scope><name>ID</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1ab268b84d3db301a07ae9aaf0508d990b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Token</scope><name>Token</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1a68f160f29f5d31dd9f9360565a287a32" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Token</scope><name>Type</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_token_1a2d7e8cd2081ad3db5aa8e597557123e9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Token</scope><name>Value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

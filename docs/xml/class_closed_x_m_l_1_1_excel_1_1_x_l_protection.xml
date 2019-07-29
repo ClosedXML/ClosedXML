@@ -1,0 +1,383 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLProtection</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection" prot="public" virt="non-virtual">IXLProtection</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a840ee70b5bae341dd5e7fdec21dac91e" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+        <definition>readonly XLStyle _style</definition>
+        <argsstring></argsstring>
+        <name>_style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a840800b3a2c7ea5ea2a86f939eaec3e2" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_value" kindref="compound">XLProtectionValue</ref></type>
+        <definition>XLProtectionValue _value</definition>
+        <argsstring></argsstring>
+        <name>_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1aa46fff4e929dc64fd78352d6ec245193" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>internal <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref></type>
+        <definition>internal XLProtectionKey Key</definition>
+        <argsstring></argsstring>
+        <name>Key</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="32" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1ad84a90191adc0c6c3a7c13b0b67ce11d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Locked</definition>
+        <argsstring></argsstring>
+        <name>Locked</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="64" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="65" bodyend="71"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a75cfbb11c7fececedbb320334188fac7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Hidden</definition>
+        <argsstring></argsstring>
+        <name>Hidden</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="73" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="74" bodyend="80"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a6f74359c0925ac56a4c06c1ff87958f1" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref></type>
+        <definition>static internal XLProtectionKey GenerateKey</definition>
+        <argsstring>(IXLProtection defaultProtection)</argsstring>
+        <name>GenerateKey</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection" kindref="compound">IXLProtection</ref></type>
+          <declname>defaultProtection</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="9" bodyend="21"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1ae2c6fba606978217f13e1afb4c5e46a7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLProtection</definition>
+        <argsstring>(XLStyle style, XLProtectionValue value)</argsstring>
+        <name>XLProtection</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_value" kindref="compound">XLProtectionValue</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>Create an instance of <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection" kindref="compound">XLProtection</ref> initializing it with the specified value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>style</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Style to attach the new instance to.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Style value to use.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="46" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="46" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a4e1b3c7e4e3544c564a105349a09cc2e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLProtection</definition>
+        <argsstring>(XLStyle style, XLProtectionKey key)</argsstring>
+        <name>XLProtection</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="52" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="52" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a2b1cdcd2e7f48bdcaa5ec777bbf3f54c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLProtection</definition>
+        <argsstring>(XLStyle style=null, IXLProtection d=null)</argsstring>
+        <name>XLProtection</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+          <declname>style</declname>
+          <defval>null</defval>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection" kindref="compound">IXLProtection</ref></type>
+          <declname>d</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="56" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a11051ccef0e8dabb6dee242eb90a110a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetLocked</definition>
+        <argsstring>()</argsstring>
+        <name>SetLocked</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection_1a11051ccef0e8dabb6dee242eb90a110a">SetLocked</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="82" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a91386f2ed45bbc087dcf39bb8e9f2642" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetLocked</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetLocked</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection_1a91386f2ed45bbc087dcf39bb8e9f2642">SetLocked</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="88" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1ac105be080751af9448beb9d3c86ece18" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetHidden</definition>
+        <argsstring>()</argsstring>
+        <name>SetHidden</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection_1ac105be080751af9448beb9d3c86ece18">SetHidden</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="94" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="94" bodyend="98"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a40abd53b1a96349daa8e022d5d140f7e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetHidden</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetHidden</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection_1a40abd53b1a96349daa8e022d5d140f7e">SetHidden</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="100" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="122" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="122" bodyend="125"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a6ad5372d9d19d9abb327a9787ef66625" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLProtection other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection" kindref="compound">IXLProtection</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="127" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="127" bodyend="134"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="136" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="136" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="144" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="144" bodyend="149"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a8fba6daafcd9c9de641e4cd798954459" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Modify</definition>
+        <argsstring>(Func&lt; XLProtectionKey, XLProtectionKey &gt; modification)</argsstring>
+        <name>Modify</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref>, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_protection_key" kindref="compound">XLProtectionKey</ref> &gt;</type>
+          <declname>modification</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="108" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="108" bodyend="118"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1527">
+        <label>IXLProtection</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection"/>
+        <childnode refid="1528" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1528">
+        <label>IEquatable&lt; IXLProtection &gt;</label>
+      </node>
+      <node id="1526">
+        <label>XLProtection</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection"/>
+        <childnode refid="1527" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1530">
+        <label>IXLProtection</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_protection"/>
+        <childnode refid="1531" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1531">
+        <label>IEquatable&lt; IXLProtection &gt;</label>
+      </node>
+      <node id="1529">
+        <label>XLProtection</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection"/>
+        <childnode refid="1530" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLProtection.cs" bodystart="5" bodyend="152"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a840ee70b5bae341dd5e7fdec21dac91e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>_style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a840800b3a2c7ea5ea2a86f939eaec3e2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>_value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a6ad5372d9d19d9abb327a9787ef66625" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a6f74359c0925ac56a4c06c1ff87958f1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>GenerateKey</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a75cfbb11c7fececedbb320334188fac7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>Hidden</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1aa46fff4e929dc64fd78352d6ec245193" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>Key</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1ad84a90191adc0c6c3a7c13b0b67ce11d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>Locked</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a8fba6daafcd9c9de641e4cd798954459" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>Modify</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1ac105be080751af9448beb9d3c86ece18" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>SetHidden</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a40abd53b1a96349daa8e022d5d140f7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>SetHidden</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a11051ccef0e8dabb6dee242eb90a110a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>SetLocked</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a91386f2ed45bbc087dcf39bb8e9f2642" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>SetLocked</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1ae2c6fba606978217f13e1afb4c5e46a7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>XLProtection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a4e1b3c7e4e3544c564a105349a09cc2e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>XLProtection</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_protection_1a2b1cdcd2e7f48bdcaa5ec777bbf3f54c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLProtection</scope><name>XLProtection</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

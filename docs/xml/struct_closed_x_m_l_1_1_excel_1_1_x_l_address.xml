@@ -1,0 +1,1068 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kind="struct" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLAddress</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" prot="public" virt="non-virtual">IXLAddress</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; XLAddress &gt;</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a8590e5f947c596d214297cbeb04a9c5c" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool _fixedRow</definition>
+        <argsstring></argsstring>
+        <name>_fixedRow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="76" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a215226c5aff4e1883709b389ae2759b2" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool _fixedColumn</definition>
+        <argsstring></argsstring>
+        <name>_fixedColumn</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="79" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1adc668f1e8399604c77307ca6f2639f0a" prot="private" static="no" mutable="no">
+        <type>readonly int</type>
+        <definition>readonly int _rowNumber</definition>
+        <argsstring></argsstring>
+        <name>_rowNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a4f0e28f96bc6c00ec2ecec094f05f2a4" prot="private" static="no" mutable="no">
+        <type>readonly int</type>
+        <definition>readonly int _columnNumber</definition>
+        <argsstring></argsstring>
+        <name>_columnNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="85" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ac2153cbac5ad28fc3faf3787adfb1da1" prot="private" static="no" mutable="no">
+        <type>string</type>
+        <definition>string _trimmedAddress</definition>
+        <argsstring></argsstring>
+        <name>_trimmedAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="87" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a8146e0b80535f11b1c16b372d3ab77f1" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool WorksheetIsDeleted</definition>
+        <argsstring></argsstring>
+        <name>WorksheetIsDeleted</name>
+        <initializer>=&gt; Worksheet?.IsDeleted == true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="463" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="463" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a19a616becd18467a8471ea0059589add" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+        <definition>XLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="153" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="153" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a3b76e00040c62f60d2c33fdad32f39a5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref> IXLAddress.</type>
+        <definition>IXLWorksheet IXLAddress. Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="156" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a3865e828ba4cee55777df5530c6f5548" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool HasWorksheet</definition>
+        <argsstring></argsstring>
+        <name>HasWorksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="161" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="162" bodyend="165"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a07ae072be3088854271b7dd38eda9305" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool FixedRow</definition>
+        <argsstring></argsstring>
+        <name>FixedRow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="167" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="168" bodyend="170"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a68987671b43d666473ac9aa4b8e2a910" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool FixedColumn</definition>
+        <argsstring></argsstring>
+        <name>FixedColumn</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="172" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="173" bodyend="175"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a85981da2dad289efd77a175a8b477b07" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 RowNumber</definition>
+        <argsstring></argsstring>
+        <name>RowNumber</name>
+        <briefdescription>
+<para>Gets the row number of this address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="180" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="181" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ad357c8cd4e6e03d9163aeb9cdf8210c7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ColumnNumber</definition>
+        <argsstring></argsstring>
+        <name>ColumnNumber</name>
+        <briefdescription>
+<para>Gets the column number of this address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="188" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="189" bodyend="191"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1abbe7d556a03acaa463b31d0586dfd6fa" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String ColumnLetter</definition>
+        <argsstring></argsstring>
+        <name>ColumnLetter</name>
+        <briefdescription>
+<para>Gets the column letter(s) of this address. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="196" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="197" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1abbaeb5ab0290421ac2e00335617a389c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String UniqueId</definition>
+        <argsstring></argsstring>
+        <name>UniqueId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="452" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="452" bodyend="452"/>
+      </memberdef>
+      <memberdef kind="property" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a62885a2911b2c21274564c3d9e407c2c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool IsValid</definition>
+        <argsstring></argsstring>
+        <name>IsValid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="454" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="455" bodyend="461"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a5d5dc97af4c644ea5eac3bcad2f6663f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+        <definition>static XLAddress Create</definition>
+        <argsstring>(string cellAddressString)</argsstring>
+        <name>Create</name>
+        <param>
+          <type>string</type>
+          <declname>cellAddressString</declname>
+        </param>
+        <briefdescription>
+<para>Create address without worksheet. For calculation only! </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cellAddressString</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a5b627d699c5e2c3919a0e73207765749" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+        <definition>static XLAddress Create</definition>
+        <argsstring>(XLWorksheet worksheet, string cellAddressString)</argsstring>
+        <name>Create</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>cellAddressString</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="20" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1add1225780399fd8faccd953ca7f481f7" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+        <definition>static XLAddress operator+</definition>
+        <argsstring>(XLAddress left, XLAddress right)</argsstring>
+        <name>operator+</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="263" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="263" bodyend="270"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aa8d0dd36389649109b4193de5cbb45f1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+        <definition>static XLAddress operator -</definition>
+        <argsstring>(XLAddress left, XLAddress right)</argsstring>
+        <name>operator -</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="272" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="272" bodyend="279"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aed8459d326fb4262fd17f3017ca01e47" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+        <definition>static XLAddress operator+</definition>
+        <argsstring>(XLAddress left, Int32 right)</argsstring>
+        <name>operator+</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="281" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="281" bodyend="288"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a1c92bec53ee814b2c7bd0891c724255c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+        <definition>static XLAddress operator -</definition>
+        <argsstring>(XLAddress left, Int32 right)</argsstring>
+        <name>operator -</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="290" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="290" bodyend="297"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a06c5ccf0059a2befde32cc7c87e404be" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean operator==</definition>
+        <argsstring>(XLAddress left, XLAddress right)</argsstring>
+        <name>operator==</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="299" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="299" bodyend="306"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a20e7b7ad2673ccd4609cf61259cbdb9b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean operator !=</definition>
+        <argsstring>(XLAddress left, XLAddress right)</argsstring>
+        <name>operator !=</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>right</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="308" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="308" bodyend="311"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a3b311bc50fb7b2ce71228fbac59250b4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLAddress</definition>
+        <argsstring>(int rowNumber, string columnLetter, bool fixedRow, bool fixedColumn)</argsstring>
+        <name>XLAddress</name>
+        <param>
+          <type>int</type>
+          <declname>rowNumber</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>columnLetter</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedRow</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedColumn</declname>
+        </param>
+        <briefdescription>
+<para>Initializes a new <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref> struct using a mixed notation. Attention: without worksheet for calculation only! </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rowNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The row number of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>columnLetter</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column letter of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedRow</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="100" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a1a8921bd2f5c2449c143ee02cd29508d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLAddress</definition>
+        <argsstring>(XLWorksheet worksheet, int rowNumber, string columnLetter, bool fixedRow, bool fixedColumn)</argsstring>
+        <name>XLAddress</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>rowNumber</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>columnLetter</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedRow</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedColumn</declname>
+        </param>
+        <briefdescription>
+<para>Initializes a new <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref> struct using a mixed notation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>worksheet</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>rowNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The row number of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>columnLetter</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column letter of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedRow</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="113" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="113" bodyend="116"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a35f091f33e77c6eddf2a6badff1e517b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLAddress</definition>
+        <argsstring>(int rowNumber, int columnNumber, bool fixedRow, bool fixedColumn)</argsstring>
+        <name>XLAddress</name>
+        <param>
+          <type>int</type>
+          <declname>rowNumber</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>columnNumber</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedRow</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedColumn</declname>
+        </param>
+        <briefdescription>
+<para>Initializes a new <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref> struct using R1C1 notation. Attention: without worksheet for calculation only! </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rowNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The row number of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>columnNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column number of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedRow</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="125" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="125" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a6f1b8747374cfc3abdb3dc5c7f031f06" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLAddress</definition>
+        <argsstring>(XLWorksheet worksheet, int rowNumber, int columnNumber, bool fixedRow, bool fixedColumn)</argsstring>
+        <name>XLAddress</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet" kindref="compound">XLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>rowNumber</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>columnNumber</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedRow</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>fixedColumn</declname>
+        </param>
+        <briefdescription>
+<para>Initializes a new <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref> struct using R1C1 notation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>worksheet</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>rowNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The row number of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>columnNumber</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column number of the cell address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedRow</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fixedColumn</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="138" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="138" bodyend="147"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="205" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="205" bodyend="221"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a74cf90567b0011f2443b05cb59cc9f70" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>string ToString</definition>
+        <argsstring>(XLReferenceStyle referenceStyle)</argsstring>
+        <name>ToString</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a83d2064d7137620932e9629a30558358">ToString</reimplements>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="223" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="223" bodyend="226"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a27febe64be0b365c38b187a4b55ce0fc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>string ToString</definition>
+        <argsstring>(XLReferenceStyle referenceStyle, bool includeSheet)</argsstring>
+        <name>ToString</name>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="228" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="228" bodyend="248"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aa1a4e75205a92d28660dfcc59441ffc6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>string GetTrimmedAddress</definition>
+        <argsstring>()</argsstring>
+        <name>GetTrimmedAddress</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="254" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="254" bodyend="257"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a083672339e7f62ac82c4a72d872a2c9b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean Equals</definition>
+        <argsstring>(IXLAddress x, IXLAddress y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="319" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="319" bodyend="322"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a056c4c407b8f5776f7ef573103277cc7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>new Boolean</type>
+        <definition>new Boolean Equals</definition>
+        <argsstring>(object x, object y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>object</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="324" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="324" bodyend="327"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a0764ef4827bae622f035617dedf4214f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLAddress other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="333" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="333" bodyend="342"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aec5d3d3db735cfe367abc7574867166c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(XLAddress other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="344" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="344" bodyend="350"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a59ad86e3add010ae4cf985cd7415fc49" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override Boolean</type>
+        <definition>override Boolean Equals</definition>
+        <argsstring>(Object other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>Object</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="352" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="352" bodyend="355"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="357" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="357" bodyend="365"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a42bf1d772dd0f76ed83d6b2f7877c05c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int GetHashCode</definition>
+        <argsstring>(IXLAddress obj)</argsstring>
+        <name>GetHashCode</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kindref="compound">IXLAddress</ref></type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="367" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="367" bodyend="370"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a36c99e076eac2caee32a25180de6f541" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringRelative</definition>
+        <argsstring>()</argsstring>
+        <name>ToStringRelative</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a36c99e076eac2caee32a25180de6f541">ToStringRelative</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="376" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="376" bodyend="379"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ac654148aad0cfbe0d77d39083a53f91c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>()</argsstring>
+        <name>ToStringFixed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ac654148aad0cfbe0d77d39083a53f91c">ToStringFixed</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="381" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="381" bodyend="384"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ab1c7e586256e93648062b22d14d4abc4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringRelative</definition>
+        <argsstring>(Boolean includeSheet)</argsstring>
+        <name>ToStringRelative</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ab1c7e586256e93648062b22d14d4abc4">ToStringRelative</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="386" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="386" bodyend="398"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a1a6d0024b5ae4c1940fef15d99405be0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+        <definition>internal XLAddress WithoutWorksheet</definition>
+        <argsstring>()</argsstring>
+        <name>WithoutWorksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="400" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="400" bodyend="403"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a96b7f9afb9feaec21e9e16b2ad57776f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>(XLReferenceStyle referenceStyle)</argsstring>
+        <name>ToStringFixed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a96b7f9afb9feaec21e9e16b2ad57776f">ToStringFixed</reimplements>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="405" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="405" bodyend="408"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a46c320f16f8a856fb5b98f043dadb131" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>(XLReferenceStyle referenceStyle, Boolean includeSheet)</argsstring>
+        <name>ToStringFixed</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a46c320f16f8a856fb5b98f043dadb131">ToStringFixed</reimplements>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="410" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="410" bodyend="450"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="922">
+        <label>IXLAddress</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address"/>
+        <childnode refid="923" relation="public-inheritance">
+        </childnode>
+        <childnode refid="924" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="923">
+        <label>IEqualityComparer&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="924">
+        <label>IEquatable&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="925">
+        <label>IEquatable&lt; XLAddress &gt;</label>
+      </node>
+      <node id="921">
+        <label>XLAddress</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address"/>
+        <childnode refid="922" relation="public-inheritance">
+        </childnode>
+        <childnode refid="925" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="927">
+        <label>IXLAddress</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address"/>
+        <childnode refid="928" relation="public-inheritance">
+        </childnode>
+        <childnode refid="929" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="928">
+        <label>IEqualityComparer&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="929">
+        <label>IEquatable&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="930">
+        <label>IEquatable&lt; XLAddress &gt;</label>
+      </node>
+      <node id="926">
+        <label>XLAddress</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address"/>
+        <childnode refid="927" relation="public-inheritance">
+        </childnode>
+        <childnode refid="930" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLAddress.cs" bodystart="7" bodyend="464"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a4f0e28f96bc6c00ec2ecec094f05f2a4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>_columnNumber</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a215226c5aff4e1883709b389ae2759b2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>_fixedColumn</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a8590e5f947c596d214297cbeb04a9c5c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>_fixedRow</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1adc668f1e8399604c77307ca6f2639f0a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>_rowNumber</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ac2153cbac5ad28fc3faf3787adfb1da1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>_trimmedAddress</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1abbe7d556a03acaa463b31d0586dfd6fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ColumnLetter</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ad357c8cd4e6e03d9163aeb9cdf8210c7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ColumnNumber</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a5d5dc97af4c644ea5eac3bcad2f6663f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Create</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a5b627d699c5e2c3919a0e73207765749" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Create</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a083672339e7f62ac82c4a72d872a2c9b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a056c4c407b8f5776f7ef573103277cc7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a0764ef4827bae622f035617dedf4214f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aec5d3d3db735cfe367abc7574867166c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a59ad86e3add010ae4cf985cd7415fc49" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a68987671b43d666473ac9aa4b8e2a910" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>FixedColumn</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a07ae072be3088854271b7dd38eda9305" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>FixedRow</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a42bf1d772dd0f76ed83d6b2f7877c05c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aa1a4e75205a92d28660dfcc59441ffc6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>GetTrimmedAddress</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a3865e828ba4cee55777df5530c6f5548" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>HasWorksheet</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a62885a2911b2c21274564c3d9e407c2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>IsValid</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a20e7b7ad2673ccd4609cf61259cbdb9b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>operator !=</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aa8d0dd36389649109b4193de5cbb45f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>operator -</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a1c92bec53ee814b2c7bd0891c724255c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>operator -</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1add1225780399fd8faccd953ca7f481f7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>operator+</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aed8459d326fb4262fd17f3017ca01e47" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>operator+</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a06c5ccf0059a2befde32cc7c87e404be" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>operator==</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a85981da2dad289efd77a175a8b477b07" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>RowNumber</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToString</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a74cf90567b0011f2443b05cb59cc9f70" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToString</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a27febe64be0b365c38b187a4b55ce0fc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToString</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1addc19aa7475b6e5835dac7d5d25303fa" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLAddress."><scope>ClosedXML::Excel::XLAddress</scope><name>ToString</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ac654148aad0cfbe0d77d39083a53f91c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToStringFixed</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a96b7f9afb9feaec21e9e16b2ad57776f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToStringFixed</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a46c320f16f8a856fb5b98f043dadb131" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToStringFixed</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a36c99e076eac2caee32a25180de6f541" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToStringRelative</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ab1c7e586256e93648062b22d14d4abc4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>ToStringRelative</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1abbaeb5ab0290421ac2e00335617a389c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>UniqueId</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a1a6d0024b5ae4c1940fef15d99405be0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>WithoutWorksheet</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a19a616becd18467a8471ea0059589add" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Worksheet</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a3b76e00040c62f60d2c33fdad32f39a5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>Worksheet</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a8146e0b80535f11b1c16b372d3ab77f1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>WorksheetIsDeleted</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a3b311bc50fb7b2ce71228fbac59250b4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>XLAddress</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a1a8921bd2f5c2449c143ee02cd29508d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>XLAddress</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a35f091f33e77c6eddf2a6badff1e517b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>XLAddress</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a6f1b8747374cfc3abdb3dc5c7f031f06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLAddress</scope><name>XLAddress</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

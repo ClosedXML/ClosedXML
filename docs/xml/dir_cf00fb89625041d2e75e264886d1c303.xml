@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_cf00fb89625041d2e75e264886d1c303" kind="dir">
+    <compoundname>Excel</compoundname>
+    <innerdir refid="dir_7e3b833fb54a50f692aba554ddb7e656">AutoFilters</innerdir>
+    <innerdir refid="dir_178983e010a0507a087419d2fab82c66">Caching</innerdir>
+    <innerdir refid="dir_d5765884b4142d3a0792e08f6b8664b7">CalcEngine</innerdir>
+    <innerdir refid="dir_ee836a51f91e3466b4ff4c9be0b8ea8e">Cells</innerdir>
+    <innerdir refid="dir_789128c2154f3c53749de626c701b665">Charts</innerdir>
+    <innerdir refid="dir_aa11e9b04a8304a93c303b41205a8927">Columns</innerdir>
+    <innerdir refid="dir_5681f86d08a5c57b6b81041cecd3cb48">Comments</innerdir>
+    <innerdir refid="dir_2c355a8198a3181dbe9a11394c45329f">ConditionalFormats</innerdir>
+    <innerdir refid="dir_cf3434c66a7a7b2702c78f20460761fe">ContentManagers</innerdir>
+    <innerdir refid="dir_af5181f642c9e37babdcc113050bb213">Coordinates</innerdir>
+    <innerdir refid="dir_c79df0070b00e71737c909e9cc2ea911">CustomProperties</innerdir>
+    <innerdir refid="dir_e2bbbd7e88a6451b630e2dee9e8f429d">DataValidation</innerdir>
+    <innerdir refid="dir_4fc67956b8a53f5e5c3d7ea81b862da6">Drawings</innerdir>
+    <innerdir refid="dir_5e006fcea041e3ce90d199ce58f1003f">Exceptions</innerdir>
+    <innerdir refid="dir_776ec6101bd1c1caba863fd32eb0e85f">Hyperlinks</innerdir>
+    <innerdir refid="dir_bcb9b6a9eb7aa36527f56e624822e387">Misc</innerdir>
+    <innerdir refid="dir_00626e2ff9b1eb6102de1f4034f9e437">NamedRanges</innerdir>
+    <innerdir refid="dir_0001ef2ad24b90c52ddb9808b2ae013e">PageSetup</innerdir>
+    <innerdir refid="dir_15a6143f6e5be414db7ae1cd79b54b58">Patterns</innerdir>
+    <innerdir refid="dir_dec35897fa859d7d29bc7c9f4c7e1f69">PivotTables</innerdir>
+    <innerdir refid="dir_8e5511e23f8e7da06d857e3ada660980">Ranges</innerdir>
+    <innerdir refid="dir_55c4f2d321035ce78de0005361fbdec8">RichText</innerdir>
+    <innerdir refid="dir_84ab2162f7e8c7345e6eedc2838b9e12">Rows</innerdir>
+    <innerdir refid="dir_7ff51bb2376b3a5c19824e76b88fc391">Sparkline</innerdir>
+    <innerdir refid="dir_a68b19f2eaa0ffb486ec27dcd7dcf42e">Style</innerdir>
+    <innerdir refid="dir_3e8b8fc666c0d09040a58c62133a9391">Tables</innerdir>
+    <innerfile refid="_enum_converter_8cs">EnumConverter.cs</innerfile>
+    <innerfile refid="_i_x_l_file_sharing_8cs">IXLFileSharing.cs</innerfile>
+    <innerfile refid="_i_x_l_outline_8cs">IXLOutline.cs</innerfile>
+    <innerfile refid="_i_x_l_sheet_protection_8cs">IXLSheetProtection.cs</innerfile>
+    <innerfile refid="_i_x_l_sheet_view_8cs">IXLSheetView.cs</innerfile>
+    <innerfile refid="_i_x_l_theme_8cs">IXLTheme.cs</innerfile>
+    <innerfile refid="_i_x_l_workbook_8cs">IXLWorkbook.cs</innerfile>
+    <innerfile refid="_i_x_l_worksheet_8cs">IXLWorksheet.cs</innerfile>
+    <innerfile refid="_i_x_l_worksheets_8cs">IXLWorksheets.cs</innerfile>
+    <innerfile refid="_load_options_8cs">LoadOptions.cs</innerfile>
+    <innerfile refid="_save_options_8cs">SaveOptions.cs</innerfile>
+    <innerfile refid="_x_l_cells_used_options_8cs">XLCellsUsedOptions.cs</innerfile>
+    <innerfile refid="_x_l_clear_options_8cs">XLClearOptions.cs</innerfile>
+    <innerfile refid="_x_l_constants_8cs">XLConstants.cs</innerfile>
+    <innerfile refid="_x_l_file_sharing_8cs">XLFileSharing.cs</innerfile>
+    <innerfile refid="_x_l_outline_8cs">XLOutline.cs</innerfile>
+    <innerfile refid="_x_l_sheet_protection_8cs">XLSheetProtection.cs</innerfile>
+    <innerfile refid="_x_l_sheet_view_8cs">XLSheetView.cs</innerfile>
+    <innerfile refid="_x_l_theme_8cs">XLTheme.cs</innerfile>
+    <innerfile refid="_x_l_workbook_8cs">XLWorkbook.cs</innerfile>
+    <innerfile refid="_x_l_workbook___image_handling_8cs">XLWorkbook_ImageHandling.cs</innerfile>
+    <innerfile refid="_x_l_workbook___load_8cs">XLWorkbook_Load.cs</innerfile>
+    <innerfile refid="_x_l_workbook___save_8cs">XLWorkbook_Save.cs</innerfile>
+    <innerfile refid="_x_l_workbook___save_8_nested_types_8cs">XLWorkbook_Save.NestedTypes.cs</innerfile>
+    <innerfile refid="_x_l_workbook_properties_8cs">XLWorkbookProperties.cs</innerfile>
+    <innerfile refid="_x_l_worksheet_8cs">XLWorksheet.cs</innerfile>
+    <innerfile refid="_x_l_worksheet_internals_8cs">XLWorksheetInternals.cs</innerfile>
+    <innerfile refid="_x_l_worksheets_8cs">XLWorksheets.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/"/>
+  </compounddef>
+</doxygen>

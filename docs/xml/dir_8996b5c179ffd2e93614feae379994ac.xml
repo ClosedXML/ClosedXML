@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_8996b5c179ffd2e93614feae379994ac" kind="dir">
+    <compoundname>Save</compoundname>
+    <innerfile refid="_i_x_l_c_f_converter_8cs">IXLCFConverter.cs</innerfile>
+    <innerfile refid="_i_x_l_c_f_converter_extension_8cs">IXLCFConverterExtension.cs</innerfile>
+    <innerfile refid="_x_l_c_f_base_converter_8cs">XLCFBaseConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_cell_is_converter_8cs">XLCFCellIsConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_color_scale_converter_8cs">XLCFColorScaleConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_contains_converter_8cs">XLCFContainsConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_converters_8cs">XLCFConverters.cs</innerfile>
+    <innerfile refid="_x_l_c_f_converters_extension_8cs">XLCFConvertersExtension.cs</innerfile>
+    <innerfile refid="_x_l_c_f_data_bar_converter_8cs">XLCFDataBarConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_data_bar_converter_extension_8cs">XLCFDataBarConverterExtension.cs</innerfile>
+    <innerfile refid="_x_l_c_f_dates_occuring_converter_8cs">XLCFDatesOccuringConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_ends_with_converter_8cs">XLCFEndsWithConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_icon_set_converter_8cs">XLCFIconSetConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_is_blank_converter_8cs">XLCFIsBlankConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_is_error_converter_8cs">XLCFIsErrorConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_not_blank_converter_8cs">XLCFNotBlankConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_not_contains_converter_8cs">XLCFNotContainsConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_not_error_converter_8cs">XLCFNotErrorConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_starts_with_converter_8cs">XLCFStartsWithConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_top_converter_8cs">XLCFTopConverter.cs</innerfile>
+    <innerfile refid="_x_l_c_f_unique_converter_8cs">XLCFUniqueConverter.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/"/>
+  </compounddef>
+</doxygen>

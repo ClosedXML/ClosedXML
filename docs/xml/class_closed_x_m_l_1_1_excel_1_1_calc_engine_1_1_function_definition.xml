@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::FunctionDefinition</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a125317f967cc37d051aa0e8a0c6ff488" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int ParmMin</definition>
+        <argsstring></argsstring>
+        <name>ParmMin</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a166587e2f041586925e5543cde3ce6c6" prot="public" static="no" mutable="no">
+        <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a8146529f99f58469466a04ffdee46fef" kindref="member">CalcEngineFunction</ref></type>
+        <definition>CalcEngineFunction Function</definition>
+        <argsstring></argsstring>
+        <name>Function</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a67dbf48c6521f693e692b109889d9641" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int ParmMax</definition>
+        <argsstring></argsstring>
+        <name>ParmMax</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a675557b184ff9e00f6102bc570f82f35" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>FunctionDefinition</definition>
+        <argsstring>(int parmMin, int parmMax, CalcEngineFunction function)</argsstring>
+        <name>FunctionDefinition</name>
+        <param>
+          <type>int</type>
+          <declname>parmMin</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>parmMax</declname>
+        </param>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1a8146529f99f58469466a04ffdee46fef" kindref="member">CalcEngineFunction</ref></type>
+          <declname>function</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" bodystart="17" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Function definition class (keeps function name, parameter counts, and delegate). </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/FunctionDefinition.cs" bodystart="10" bodyend="23"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a166587e2f041586925e5543cde3ce6c6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::FunctionDefinition</scope><name>Function</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a675557b184ff9e00f6102bc570f82f35" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::FunctionDefinition</scope><name>FunctionDefinition</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a67dbf48c6521f693e692b109889d9641" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::FunctionDefinition</scope><name>ParmMax</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_definition_1a125317f967cc37d051aa0e8a0c6ff488" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::FunctionDefinition</scope><name>ParmMin</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

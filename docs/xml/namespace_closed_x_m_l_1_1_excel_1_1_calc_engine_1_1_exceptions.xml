@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Excel::CalcEngine::Exceptions</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::CalcEngineException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_reference_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::CellReferenceException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_cell_value_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::CellValueException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_name_not_recognized_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::NameNotRecognizedException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_no_value_available_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::NoValueAvailableException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_null_value_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::NullValueException</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_number_exception" prot="public">ClosedXML::Excel::CalcEngine::Exceptions::NumberException</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/CalcEngineException.cs" line="4" column="1"/>
+  </compounddef>
+</doxygen>

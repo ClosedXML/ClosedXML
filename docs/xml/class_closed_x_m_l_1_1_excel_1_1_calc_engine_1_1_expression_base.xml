@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::ExpressionBase</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" prot="public" virt="non-virtual">Expression</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base_1adc826700166d2735cabcfe7bd5e3cc43" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>abstract string</type>
+        <definition>abstract string LastParseItem</definition>
+        <argsstring></argsstring>
+        <name>LastParseItem</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="129">
+        <label>BinaryExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_binary_expression"/>
+        <childnode refid="128" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="128">
+        <label>Expression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression"/>
+        <childnode refid="127" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="133">
+        <label>UnaryExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_unary_expression"/>
+        <childnode refid="128" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="132">
+        <label>FunctionExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_function_expression"/>
+        <childnode refid="128" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="135">
+        <label>XObjectExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression"/>
+        <childnode refid="128" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="134">
+        <label>VariableExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_variable_expression"/>
+        <childnode refid="128" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="130">
+        <label>EmptyValueExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_empty_value_expression"/>
+        <childnode refid="128" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="127">
+        <label>ExpressionBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base"/>
+      </node>
+      <node id="131">
+        <label>ErrorExpression</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_error_expression"/>
+        <childnode refid="128" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Expression.cs" bodystart="11" bodyend="14"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression_base_1adc826700166d2735cabcfe7bd5e3cc43" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::ExpressionBase</scope><name>LastParseItem</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

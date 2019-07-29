@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Exceptions::ClosedXMLException</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">Exception</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_empty_table_exception" prot="public" virt="non-virtual">EmptyTableException</derivedcompoundref>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception_1acebd75f605e4c7d22e6c7a85df83e836" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ClosedXMLException</definition>
+        <argsstring>()</argsstring>
+        <name>ClosedXMLException</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" bodystart="7" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception_1aaa6cef50ab7f519d1a69a33f1a55457b" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ClosedXMLException</definition>
+        <argsstring>(String message)</argsstring>
+        <name>ClosedXMLException</name>
+        <param>
+          <type>String</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" bodystart="11" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception_1ae7b680d22dfe33a301988a11282504dd" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ClosedXMLException</definition>
+        <argsstring>(String message, Exception innerException)</argsstring>
+        <name>ClosedXMLException</name>
+        <param>
+          <type>String</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>Exception</type>
+          <declname>innerException</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" bodystart="15" bodyend="17"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="51">
+        <label>ClosedXMLException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception"/>
+        <childnode refid="52" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="53">
+        <label>EmptyTableException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_empty_table_exception"/>
+        <childnode refid="51" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="52">
+        <label>Exception</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="54">
+        <label>ClosedXMLException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception"/>
+        <childnode refid="55" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="55">
+        <label>Exception</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Exceptions/ClosedXMLException.cs" bodystart="5" bodyend="18"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception_1acebd75f605e4c7d22e6c7a85df83e836" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::Exceptions::ClosedXMLException</scope><name>ClosedXMLException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception_1aaa6cef50ab7f519d1a69a33f1a55457b" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::Exceptions::ClosedXMLException</scope><name>ClosedXMLException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_exceptions_1_1_closed_x_m_l_exception_1ae7b680d22dfe33a301988a11282504dd" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::Exceptions::ClosedXMLException</scope><name>ClosedXMLException</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

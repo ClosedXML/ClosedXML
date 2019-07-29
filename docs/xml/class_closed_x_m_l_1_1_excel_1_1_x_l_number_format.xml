@@ -1,0 +1,365 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLNumberFormat</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format" prot="public" virt="non-virtual">IXLNumberFormat</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a840ee70b5bae341dd5e7fdec21dac91e" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+        <definition>readonly XLStyle _style</definition>
+        <argsstring></argsstring>
+        <name>_style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a8aa06f3a3b594b9eb953aa6d9248c62e" prot="private" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_value" kindref="compound">XLNumberFormatValue</ref></type>
+        <definition>XLNumberFormatValue _value</definition>
+        <argsstring></argsstring>
+        <name>_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a619076be165d3a98be705a07409be4a4" prot="private" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="yes" protectedsettable="no">
+        <type>internal <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+        <definition>internal XLNumberFormatKey Key</definition>
+        <argsstring></argsstring>
+        <name>Key</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="33" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 NumberFormatId</definition>
+        <argsstring></argsstring>
+        <name>NumberFormatId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="66" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1ab01475eb537fcb588741220d82a8f0ff" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Format</definition>
+        <argsstring></argsstring>
+        <name>Format</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="79" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="80" bodyend="94"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aa320f9898d60ec5507ec2711dd921ffe" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+        <definition>static internal XLNumberFormatKey GenerateKey</definition>
+        <argsstring>(IXLNumberFormat defaultNumberFormat)</argsstring>
+        <name>GenerateKey</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format" kindref="compound">IXLNumberFormat</ref></type>
+          <declname>defaultNumberFormat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="9" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aadc8a483a9361dd1ac210bc4a8446bf5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLNumberFormat</definition>
+        <argsstring>(XLStyle style, XLNumberFormatValue value)</argsstring>
+        <name>XLNumberFormat</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_value" kindref="compound">XLNumberFormatValue</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>Create an instance of <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format" kindref="compound">XLNumberFormat</ref> initializing it with the specified value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>style</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Style to attach the new instance to.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Style value to use.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="47" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="47" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a657ca19b60cb67589b2557da328f9970" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLNumberFormat</definition>
+        <argsstring>(XLStyle style, XLNumberFormatKey key)</argsstring>
+        <name>XLNumberFormat</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="53" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a86a04e8faa497277ba15ce0b1808706b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLNumberFormat</definition>
+        <argsstring>(XLStyle style=null, IXLNumberFormat d=null)</argsstring>
+        <name>XLNumberFormat</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_style" kindref="compound">XLStyle</ref></type>
+          <declname>style</declname>
+          <defval>null</defval>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format" kindref="compound">IXLNumberFormat</ref></type>
+          <declname>d</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="57" bodyend="59"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a0e7c3ffb0381009e5c7da73c2649418c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetNumberFormatId</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetNumberFormatId</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_1a0e7c3ffb0381009e5c7da73c2649418c">SetNumberFormatId</reimplements>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="96" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="96" bodyend="100"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a3524ae1e2f892923e360415221a53d06" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetFormat</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetFormat</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_1a3524ae1e2f892923e360415221a53d06">SetFormat</reimplements>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="102" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="102" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override string</type>
+        <definition>override string ToString</definition>
+        <argsstring>()</argsstring>
+        <name>ToString</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="124" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="124" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override bool</type>
+        <definition>override bool Equals</definition>
+        <argsstring>(object obj)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>object</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="129" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="129" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1ab3f799a108ecb32b04ea33aebf71371a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(IXLNumberFormatBase other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base" kindref="compound">IXLNumberFormatBase</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="134" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="134" bodyend="141"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="143" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="143" bodyend="148"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a95d51e5f9a5b2fc3731c3358492ea9e6" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Modify</definition>
+        <argsstring>(Func&lt; XLNumberFormatKey, XLNumberFormatKey &gt; modification)</argsstring>
+        <name>Modify</name>
+        <param>
+          <type>Func&lt; <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref>, <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_number_format_key" kindref="compound">XLNumberFormatKey</ref> &gt;</type>
+          <declname>modification</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="110" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="110" bodyend="120"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1394">
+        <label>IXLNumberFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format"/>
+        <childnode refid="1395" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1396" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1393">
+        <label>XLNumberFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format"/>
+        <childnode refid="1394" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1395">
+        <label>IXLNumberFormatBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base"/>
+      </node>
+      <node id="1396">
+        <label>IEquatable&lt; IXLNumberFormatBase &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1398">
+        <label>IXLNumberFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format"/>
+        <childnode refid="1399" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1400" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1397">
+        <label>XLNumberFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format"/>
+        <childnode refid="1398" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1399">
+        <label>IXLNumberFormatBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base"/>
+      </node>
+      <node id="1400">
+        <label>IEquatable&lt; IXLNumberFormatBase &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLNumberFormat.cs" bodystart="5" bodyend="151"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a840ee70b5bae341dd5e7fdec21dac91e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>_style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a8aa06f3a3b594b9eb953aa6d9248c62e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>_value</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aadf763f0213fc2f3875230b06bb0b6cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1ab3f799a108ecb32b04ea33aebf71371a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1ab01475eb537fcb588741220d82a8f0ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>Format</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aa320f9898d60ec5507ec2711dd921ffe" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>GenerateKey</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>GetHashCode</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a619076be165d3a98be705a07409be4a4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>Key</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a95d51e5f9a5b2fc3731c3358492ea9e6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>Modify</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>NumberFormatId</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a3524ae1e2f892923e360415221a53d06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>SetFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a0e7c3ffb0381009e5c7da73c2649418c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>SetNumberFormatId</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aa73e7c4dd1df5fd5fbf81c7764ee1533" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>ToString</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1aadc8a483a9361dd1ac210bc4a8446bf5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>XLNumberFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a657ca19b60cb67589b2557da328f9970" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>XLNumberFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a86a04e8faa497277ba15ce0b1808706b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNumberFormat</scope><name>XLNumberFormat</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

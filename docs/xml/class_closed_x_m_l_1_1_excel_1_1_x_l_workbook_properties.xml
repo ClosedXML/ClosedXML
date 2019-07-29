@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLWorkbookProperties</compoundname>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1aca9f76df1e60f93e7a7c5d1a0d4a3fc5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Author</definition>
+        <argsstring></argsstring>
+        <name>Author</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1ab2cd177dd6c3c9b4e127e1b2a37c7ef7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Title</definition>
+        <argsstring></argsstring>
+        <name>Title</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1add6a814af8025e66fadea5fe80bf52c5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Subject</definition>
+        <argsstring></argsstring>
+        <name>Subject</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1ace42ec1911bd3b00414175a3e9df0a01" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Category</definition>
+        <argsstring></argsstring>
+        <name>Category</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a916c02c95b983c8e0ada2823e49c4986" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Keywords</definition>
+        <argsstring></argsstring>
+        <name>Keywords</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a0902946a25415a8b2b6d8a6157290cac" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Comments</definition>
+        <argsstring></argsstring>
+        <name>Comments</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a64fa89b31c9d73f9a274d0008a550b1c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Status</definition>
+        <argsstring></argsstring>
+        <name>Status</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a2b1182051f11024e919d393e9520ed16" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>DateTime</type>
+        <definition>DateTime Created</definition>
+        <argsstring></argsstring>
+        <name>Created</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a5f465846017747693df8d72a0f5341f0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>DateTime</type>
+        <definition>DateTime Modified</definition>
+        <argsstring></argsstring>
+        <name>Modified</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a05cc5b70a8db915adcb2923136a6906a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String LastModifiedBy</definition>
+        <argsstring></argsstring>
+        <name>LastModifiedBy</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="21" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a70a5a4027377e2e433c7eb8a9e189635" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Company</definition>
+        <argsstring></argsstring>
+        <name>Company</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a12a11ad6d7d10b426a4238467abf0b15" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Manager</definition>
+        <argsstring></argsstring>
+        <name>Manager</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="23" bodyend="23"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a03f9354c0391f5b305f702b7f56151d5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLWorkbookProperties</definition>
+        <argsstring>()</argsstring>
+        <name>XLWorkbookProperties</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="7" bodyend="11"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbookProperties.cs" bodystart="5" bodyend="24"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1aca9f76df1e60f93e7a7c5d1a0d4a3fc5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Author</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1ace42ec1911bd3b00414175a3e9df0a01" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Category</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a0902946a25415a8b2b6d8a6157290cac" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Comments</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a70a5a4027377e2e433c7eb8a9e189635" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Company</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a2b1182051f11024e919d393e9520ed16" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Created</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a916c02c95b983c8e0ada2823e49c4986" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Keywords</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a05cc5b70a8db915adcb2923136a6906a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>LastModifiedBy</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a12a11ad6d7d10b426a4238467abf0b15" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Manager</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a5f465846017747693df8d72a0f5341f0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Modified</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a64fa89b31c9d73f9a274d0008a550b1c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Status</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1add6a814af8025e66fadea5fe80bf52c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Subject</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1ab2cd177dd6c3c9b4e127e1b2a37c7ef7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>Title</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties_1a03f9354c0391f5b305f702b7f56151d5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbookProperties</scope><name>XLWorkbookProperties</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

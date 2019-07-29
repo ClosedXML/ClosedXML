@@ -1,0 +1,1344 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPageSetup</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup" prot="public" virt="non-virtual">XLPageSetup</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afbc5918a8a6ba970a90f49332c4c924c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_print_areas" kindref="compound">IXLPrintAreas</ref></type>
+        <definition>IXLPrintAreas PrintAreas</definition>
+        <argsstring></argsstring>
+        <name>PrintAreas</name>
+        <briefdescription>
+<para>Gets an object to manage the print areas of the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="85" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="85" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afe78830cadb69064bcc0f1d833fd586e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 FirstRowToRepeatAtTop</definition>
+        <argsstring></argsstring>
+        <name>FirstRowToRepeatAtTop</name>
+        <briefdescription>
+<para>Gets the first row that will repeat on the top of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Use <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2d2fa3a6018fd3f14a246472570b0494" kindref="member">SetRowsToRepeatAtTop()</ref> to set the rows that will be repeated on the top of the printed pages.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="90" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="90" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a9c238479b2f9ff8c48c9b1eb9d6b113a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 LastRowToRepeatAtTop</definition>
+        <argsstring></argsstring>
+        <name>LastRowToRepeatAtTop</name>
+        <briefdescription>
+<para>Gets the last row that will repeat on the top of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Use <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2d2fa3a6018fd3f14a246472570b0494" kindref="member">SetRowsToRepeatAtTop()</ref> to set the rows that will be repeated on the top of the printed pages.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="95" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="95" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ad9b8b899725acdb18c00e7426eb8f88b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 FirstColumnToRepeatAtLeft</definition>
+        <argsstring></argsstring>
+        <name>FirstColumnToRepeatAtLeft</name>
+        <briefdescription>
+<para>Gets the first column to repeat on the left of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The first column to repeat on the left of the printed pages.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="110" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="110" bodyend="110"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a932ab4473cca00c12982ea635e9e7402" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 LastColumnToRepeatAtLeft</definition>
+        <argsstring></argsstring>
+        <name>LastColumnToRepeatAtLeft</name>
+        <briefdescription>
+<para>Gets the last column to repeat on the left of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The last column to repeat on the left of the printed pages.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="113" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="113" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ad9cc284b1d7ef9480f600d2afbba27a0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPageOrientation</type>
+        <definition>XLPageOrientation PageOrientation</definition>
+        <argsstring></argsstring>
+        <name>PageOrientation</name>
+        <briefdescription>
+<para>Gets or sets the page orientation for printing. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The page orientation.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="128" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="128" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a48d90f39cb1604ae923b828c26c2ffd2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 PagesWide</definition>
+        <argsstring></argsstring>
+        <name>PagesWide</name>
+        <briefdescription>
+<para>Gets or sets the number of pages wide (horizontal) the worksheet will be printed on. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If you don&apos;t specify the PagesTall, <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> will adjust that value</para>
+<para>based on the contents of the worksheet and the PagesWide number.</para>
+<para>Setting this value will override the Scale value.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="135" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="135" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3de8546ab5a3e2f861fbb4cf22bc0f2c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 PagesTall</definition>
+        <argsstring></argsstring>
+        <name>PagesTall</name>
+        <briefdescription>
+<para>Gets or sets the number of pages tall (vertical) the worksheet will be printed on. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If you don&apos;t specify the PagesWide, <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> will adjust that value</para>
+<para>based on the contents of the worksheet and the PagesTall number.</para>
+<para>Setting this value will override the Scale value.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="142" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="142" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a126f327f65ff0e361404bf61bc5a9725" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Scale</definition>
+        <argsstring></argsstring>
+        <name>Scale</name>
+        <briefdescription>
+<para>Gets or sets the scale at which the worksheet will be printed. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The worksheet will be printed on as many pages as necessary to print at the given scale.</para>
+<para>Setting this value will override the PagesWide and PagesTall values.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="148" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a42d838e721193d7cb5c9569a0c2f0b9b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 HorizontalDpi</definition>
+        <argsstring></argsstring>
+        <name>HorizontalDpi</name>
+        <briefdescription>
+<para>Gets or sets the horizontal dpi for printing the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="152" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="152" bodyend="152"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac5d4d2c7bee43950ca61ded1c908d838" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 VerticalDpi</definition>
+        <argsstring></argsstring>
+        <name>VerticalDpi</name>
+        <briefdescription>
+<para>Gets or sets the vertical dpi for printing the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="156" bodyend="156"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a65e025372c614ecd548551832ebb1819" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int64</type>
+        <definition>Int64 FirstPageNumber</definition>
+        <argsstring></argsstring>
+        <name>FirstPageNumber</name>
+        <briefdescription>
+<para>Gets or sets the page number that will begin the printout. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For example, the first page of your printout could be numbered page 5.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="161" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="161" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a446aa96945873c0457f92261b46c0f1c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean CenterHorizontally</definition>
+        <argsstring></argsstring>
+        <name>CenterHorizontally</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether the worksheet will be centered on the page horizontally. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if the worksheet will be centered on the page horizontally; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="168" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="168" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ae1e07f6d85e4c5098cdfc317b07b22b1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean CenterVertically</definition>
+        <argsstring></argsstring>
+        <name>CenterVertically</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether the worksheet will be centered on the page vertically. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if the worksheet will be centered on the page vartically; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="175" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="175" bodyend="175"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac37ae926486a84c53922930b9566a13a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPaperSize</type>
+        <definition>XLPaperSize PaperSize</definition>
+        <argsstring></argsstring>
+        <name>PaperSize</name>
+        <briefdescription>
+<para>Gets or sets the size of the paper to print the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="194" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="194" bodyend="194"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1aa4b24c8e6bd33d9aaef61950fd9afb6a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_margins" kindref="compound">IXLMargins</ref></type>
+        <definition>IXLMargins Margins</definition>
+        <argsstring></argsstring>
+        <name>Margins</name>
+        <briefdescription>
+<para>Gets an object to work with the page margins. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="198" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="198" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3105b81e9ad1533e7904b9a1e3d15c8a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer" kindref="compound">IXLHeaderFooter</ref></type>
+        <definition>IXLHeaderFooter Header</definition>
+        <argsstring></argsstring>
+        <name>Header</name>
+        <briefdescription>
+<para>Gets an object to work with the page headers. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="203" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="203" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ad2398aff11ce936424d70ea489a037f3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_header_footer" kindref="compound">IXLHeaderFooter</ref></type>
+        <definition>IXLHeaderFooter Footer</definition>
+        <argsstring></argsstring>
+        <name>Footer</name>
+        <briefdescription>
+<para>Gets an object to work with the page footers. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="207" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="207" bodyend="207"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ae18906a6354c6ab87aaaef4450a1b187" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ScaleHFWithDocument</definition>
+        <argsstring></argsstring>
+        <name>ScaleHFWithDocument</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> will automatically adjust the font size to the scale of the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> will automatically adjust the font size to the scale of the worksheet; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="214" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="214" bodyend="214"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a6f6f690db4c39b44cb369535ee818c38" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean AlignHFWithMargins</definition>
+        <argsstring></argsstring>
+        <name>AlignHFWithMargins</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether the header and footer margins are aligned with the left and right margins of the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if the header and footer margins are aligned with the left and right margins of the worksheet; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="221" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="221" bodyend="221"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3724352120d42748ab3186366b321baf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowGridlines</definition>
+        <argsstring></argsstring>
+        <name>ShowGridlines</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether the gridlines will be printed. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if the gridlines will be printed; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="229" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="229" bodyend="229"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3b156ed2eeeb7ad79fc08c44c022b3f3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowRowAndColumnHeadings</definition>
+        <argsstring></argsstring>
+        <name>ShowRowAndColumnHeadings</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether to show row numbers and column letters/numbers. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> to show row numbers and column letters/numbers; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="236" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="236" bodyend="236"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a546103994f63faf6993e8df874f385c5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean BlackAndWhite</definition>
+        <argsstring></argsstring>
+        <name>BlackAndWhite</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether the worksheet will be printed in black and white. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if the worksheet will be printed in black and white; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="243" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="243" bodyend="243"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a303520b50c82883bcce6954c42fdc40f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DraftQuality</definition>
+        <argsstring></argsstring>
+        <name>DraftQuality</name>
+        <briefdescription>
+<para>Gets or sets a value indicating whether the worksheet will be printed in draft quality. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><computeroutput>true</computeroutput> if the worksheet will be printed in draft quality; otherwise, <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="250" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="250" bodyend="250"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a36ee41696e52ed11913716599bd614cf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPageOrderValues</type>
+        <definition>XLPageOrderValues PageOrder</definition>
+        <argsstring></argsstring>
+        <name>PageOrder</name>
+        <briefdescription>
+<para>Gets or sets the page order for printing. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="254" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="254" bodyend="254"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a1fb4de2b014b9fe8b1a44fee0dd3dbb7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLShowCommentsValues</type>
+        <definition>XLShowCommentsValues ShowComments</definition>
+        <argsstring></argsstring>
+        <name>ShowComments</name>
+        <briefdescription>
+<para>Gets or sets how the comments will be printed. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="258" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="258" bodyend="258"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1af5b0243924dad80b1b9f745282d65799" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>List&lt; Int32 &gt;</type>
+        <definition>List&lt;Int32&gt; RowBreaks</definition>
+        <argsstring></argsstring>
+        <name>RowBreaks</name>
+        <briefdescription>
+<para>Gets a list with the row breaks (for printing). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="263" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="263" bodyend="263"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3ee1456d323ab3716b638266eb3b560e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>List&lt; Int32 &gt;</type>
+        <definition>List&lt;Int32&gt; ColumnBreaks</definition>
+        <argsstring></argsstring>
+        <name>ColumnBreaks</name>
+        <briefdescription>
+<para>Gets a list with the column breaks (for printing). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="267" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="267" bodyend="267"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ab1fdd722ffa826962d1dff591a6bc87c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPrintErrorValues</type>
+        <definition>XLPrintErrorValues PrintErrorValue</definition>
+        <argsstring></argsstring>
+        <name>PrintErrorValue</name>
+        <briefdescription>
+<para>Gets or sets how error values will be printed. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="283" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="283" bodyend="283"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1abe26bf69fe1fe874643aeb47102fa7ab" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DifferentFirstPageOnHF</definition>
+        <argsstring></argsstring>
+        <name>DifferentFirstPageOnHF</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="306" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="306" bodyend="306"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a7f9235111f696a9d0105d17743008a43" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DifferentOddEvenPagesOnHF</definition>
+        <argsstring></argsstring>
+        <name>DifferentOddEvenPagesOnHF</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="308" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="308" bodyend="308"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2d2fa3a6018fd3f14a246472570b0494" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetRowsToRepeatAtTop</definition>
+        <argsstring>(String range)</argsstring>
+        <name>SetRowsToRepeatAtTop</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a2d2fa3a6018fd3f14a246472570b0494">SetRowsToRepeatAtTop</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+<para>Sets the rows to repeat on the top of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>range</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The range of rows to repeat on the top of the printed pages.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="100" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a22e36970fe89b1b4cc7a124c87e154d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetRowsToRepeatAtTop</definition>
+        <argsstring>(Int32 firstRowToRepeatAtTop, Int32 lastRowToRepeatAtTop)</argsstring>
+        <name>SetRowsToRepeatAtTop</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a22e36970fe89b1b4cc7a124c87e154d4">SetRowsToRepeatAtTop</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>firstRowToRepeatAtTop</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>lastRowToRepeatAtTop</declname>
+        </param>
+        <briefdescription>
+<para>Sets the rows to repeat on the top of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstRowToRepeatAtTop</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first row to repeat at top.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastRowToRepeatAtTop</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last row to repeat at top.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="106" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a31da83bd80eab3b69311f3596ec1f74e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetColumnsToRepeatAtLeft</definition>
+        <argsstring>(Int32 firstColumnToRepeatAtLeft, Int32 lastColumnToRepeatAtLeft)</argsstring>
+        <name>SetColumnsToRepeatAtLeft</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a31da83bd80eab3b69311f3596ec1f74e">SetColumnsToRepeatAtLeft</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>firstColumnToRepeatAtLeft</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>lastColumnToRepeatAtLeft</declname>
+        </param>
+        <briefdescription>
+<para>Sets the rows to repeat on the left of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>firstColumnToRepeatAtLeft</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first column to repeat at left.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>lastColumnToRepeatAtLeft</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The last column to repeat at left.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="119" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1af17269497a16c56fc508576b577bfd53" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetColumnsToRepeatAtLeft</definition>
+        <argsstring>(String range)</argsstring>
+        <name>SetColumnsToRepeatAtLeft</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1af17269497a16c56fc508576b577bfd53">SetColumnsToRepeatAtLeft</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+<para>Sets the rows to repeat on the left of the printed pages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>range</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The range of rows to repeat on the left of the printed pages.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="124" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a46253129a2d6bade44bd91c79d9595b5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void AdjustTo</definition>
+        <argsstring>(Int32 percentageOfNormalSize)</argsstring>
+        <name>AdjustTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a46253129a2d6bade44bd91c79d9595b5">AdjustTo</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>percentageOfNormalSize</declname>
+        </param>
+        <briefdescription>
+<para>Sets the scale at which the worksheet will be printed. This is equivalent to setting the Scale property. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The worksheet will be printed on as many pages as necessary to print at the given scale.</para>
+<para>Setting this value will override the PagesWide and PagesTall values.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>percentageOfNormalSize</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The scale at which the worksheet will be printed.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="182" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afa11b2a63fc63f5f7bfb20fec4ee5f25" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void FitToPages</definition>
+        <argsstring>(Int32 pagesWide, Int32 pagesTall)</argsstring>
+        <name>FitToPages</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1afa11b2a63fc63f5f7bfb20fec4ee5f25">FitToPages</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>pagesWide</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>pagesTall</declname>
+        </param>
+        <briefdescription>
+<para>Gets or sets the number of pages the worksheet will be printed on. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is equivalent to setting both PagesWide and PagesTall properties.</para>
+<para>Setting this value will override the Scale value.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pagesWide</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The pages wide.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>pagesTall</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The pages tall.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="190" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a7d723be6cf9acc48cdcaac5430a7c019" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddHorizontalPageBreak</definition>
+        <argsstring>(Int32 row)</argsstring>
+        <name>AddHorizontalPageBreak</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a7d723be6cf9acc48cdcaac5430a7c019">AddHorizontalPageBreak</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>row</declname>
+        </param>
+        <briefdescription>
+<para>Adds a horizontal page break after the given row. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>row</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The row to insert the break.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="272" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1adae2692c221f502787d16a1a5a847547" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddVerticalPageBreak</definition>
+        <argsstring>(Int32 column)</argsstring>
+        <name>AddVerticalPageBreak</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1adae2692c221f502787d16a1a5a847547">AddVerticalPageBreak</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+<para>Adds a vertical page break after the given column. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>column</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The column to insert the break.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="278" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a4e2b5b2c837875d7eb37cc1ba14a46a2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetPageOrientation</definition>
+        <argsstring>(XLPageOrientation value)</argsstring>
+        <name>SetPageOrientation</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a4e2b5b2c837875d7eb37cc1ba14a46a2">SetPageOrientation</reimplementedby>
+        <param>
+          <type>XLPageOrientation</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="285" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a01d852cd3066879666723f9c68adc70b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetPagesWide</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetPagesWide</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a01d852cd3066879666723f9c68adc70b">SetPagesWide</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="286" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a927600b0c24fabab3702dde2d5fe2c73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetPagesTall</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetPagesTall</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a927600b0c24fabab3702dde2d5fe2c73">SetPagesTall</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="287" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac497cb4a22f18775e6b0b6eafa2bbdc5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetScale</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetScale</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1ac497cb4a22f18775e6b0b6eafa2bbdc5">SetScale</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="288" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1aa108a76b0dfb3613ab9bafd937a3c4d9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetHorizontalDpi</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetHorizontalDpi</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1aa108a76b0dfb3613ab9bafd937a3c4d9">SetHorizontalDpi</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="289" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac52b90fdfc9ae3df70ccb86fb185039d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetVerticalDpi</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetVerticalDpi</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1ac52b90fdfc9ae3df70ccb86fb185039d">SetVerticalDpi</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="290" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac749e90c57c0b0991b2f84f6555d3dcc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetFirstPageNumber</definition>
+        <argsstring>(Int64 value)</argsstring>
+        <name>SetFirstPageNumber</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1ac749e90c57c0b0991b2f84f6555d3dcc">SetFirstPageNumber</reimplementedby>
+        <param>
+          <type>Int64</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="291" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2f055cf2d5bed3975cf8ac66cb42a48e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetCenterHorizontally</definition>
+        <argsstring>()</argsstring>
+        <name>SetCenterHorizontally</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a2f055cf2d5bed3975cf8ac66cb42a48e">SetCenterHorizontally</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="292" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a0b2e8670a44baac95baa04deda35af60" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetCenterHorizontally</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetCenterHorizontally</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a0b2e8670a44baac95baa04deda35af60">SetCenterHorizontally</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="292" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a24aa3757152e2c0a5ca4107fd86a2a24" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetCenterVertically</definition>
+        <argsstring>()</argsstring>
+        <name>SetCenterVertically</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a24aa3757152e2c0a5ca4107fd86a2a24">SetCenterVertically</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="293" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a62af830d84b40039267e253c7c4ef88a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetCenterVertically</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetCenterVertically</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a62af830d84b40039267e253c7c4ef88a">SetCenterVertically</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="293" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a8869035b0693f71e5af7ca320d3d52fa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetPaperSize</definition>
+        <argsstring>(XLPaperSize value)</argsstring>
+        <name>SetPaperSize</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a8869035b0693f71e5af7ca320d3d52fa">SetPaperSize</reimplementedby>
+        <param>
+          <type>XLPaperSize</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="294" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2b05bc9d513cd6ddd8e291a4607de944" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetScaleHFWithDocument</definition>
+        <argsstring>()</argsstring>
+        <name>SetScaleHFWithDocument</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a2b05bc9d513cd6ddd8e291a4607de944">SetScaleHFWithDocument</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="295" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a82790eaab6ce23dd7ff76d198ff9fb98" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetScaleHFWithDocument</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetScaleHFWithDocument</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a82790eaab6ce23dd7ff76d198ff9fb98">SetScaleHFWithDocument</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="295" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a50f3ca571918bc945f4793cc94fbbc1e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetAlignHFWithMargins</definition>
+        <argsstring>()</argsstring>
+        <name>SetAlignHFWithMargins</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a50f3ca571918bc945f4793cc94fbbc1e">SetAlignHFWithMargins</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="296" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ae9097d4c526669c544ec3c37fc70cd7e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetAlignHFWithMargins</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetAlignHFWithMargins</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1ae9097d4c526669c544ec3c37fc70cd7e">SetAlignHFWithMargins</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="296" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a23581df36329c57f7d45d463cb99bf45" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetShowGridlines</definition>
+        <argsstring>()</argsstring>
+        <name>SetShowGridlines</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a23581df36329c57f7d45d463cb99bf45">SetShowGridlines</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="297" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a645ecf6a97791ee974561c365fcfdb14" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetShowGridlines</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShowGridlines</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a645ecf6a97791ee974561c365fcfdb14">SetShowGridlines</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="297" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1aa14298c93008d034e35f91e730c3d080" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetShowRowAndColumnHeadings</definition>
+        <argsstring>()</argsstring>
+        <name>SetShowRowAndColumnHeadings</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1aa14298c93008d034e35f91e730c3d080">SetShowRowAndColumnHeadings</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="298" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afe72ebbab9456da2a48793a73f96866f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetShowRowAndColumnHeadings</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShowRowAndColumnHeadings</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1afe72ebbab9456da2a48793a73f96866f">SetShowRowAndColumnHeadings</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="298" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a9d5b70a6e7fe2947b8c0af6772de2e0a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetBlackAndWhite</definition>
+        <argsstring>()</argsstring>
+        <name>SetBlackAndWhite</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a9d5b70a6e7fe2947b8c0af6772de2e0a">SetBlackAndWhite</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="299" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ab2da5fe444551451bb93f327036af403" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetBlackAndWhite</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetBlackAndWhite</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1ab2da5fe444551451bb93f327036af403">SetBlackAndWhite</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="299" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a86ac32e8defb1f3a9321105ce1d3b408" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetDraftQuality</definition>
+        <argsstring>()</argsstring>
+        <name>SetDraftQuality</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a86ac32e8defb1f3a9321105ce1d3b408">SetDraftQuality</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="300" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a6c91fb3b4c3c96b7694d388a90a79d15" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetDraftQuality</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetDraftQuality</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a6c91fb3b4c3c96b7694d388a90a79d15">SetDraftQuality</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="300" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a36f073a8bc93bdf374a9078667b0d9e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetPageOrder</definition>
+        <argsstring>(XLPageOrderValues value)</argsstring>
+        <name>SetPageOrder</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a36f073a8bc93bdf374a9078667b0d9e3">SetPageOrder</reimplementedby>
+        <param>
+          <type>XLPageOrderValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="301" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ab5afc63eea40308fae710a3c30c0dbdd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetShowComments</definition>
+        <argsstring>(XLShowCommentsValues value)</argsstring>
+        <name>SetShowComments</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1ab5afc63eea40308fae710a3c30c0dbdd">SetShowComments</reimplementedby>
+        <param>
+          <type>XLShowCommentsValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="302" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a42732d6b12fc5826f1d7ccd04632f150" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetPrintErrorValue</definition>
+        <argsstring>(XLPrintErrorValues value)</argsstring>
+        <name>SetPrintErrorValue</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a42732d6b12fc5826f1d7ccd04632f150">SetPrintErrorValue</reimplementedby>
+        <param>
+          <type>XLPrintErrorValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="303" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2dfc7ce40724c435e9a39ef46f597ac3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetDifferentFirstPageOnHF</definition>
+        <argsstring>()</argsstring>
+        <name>SetDifferentFirstPageOnHF</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a2dfc7ce40724c435e9a39ef46f597ac3">SetDifferentFirstPageOnHF</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="307" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a5cfe3f461841931bb471b0ea67311846" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetDifferentFirstPageOnHF</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetDifferentFirstPageOnHF</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a5cfe3f461841931bb471b0ea67311846">SetDifferentFirstPageOnHF</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="307" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a87b8a452fa5714991e9d2d02b27a724b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetDifferentOddEvenPagesOnHF</definition>
+        <argsstring>()</argsstring>
+        <name>SetDifferentOddEvenPagesOnHF</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a87b8a452fa5714991e9d2d02b27a724b">SetDifferentOddEvenPagesOnHF</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="309" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a8f96a81d63abbde6ba2cc66d70f8d25a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup SetDifferentOddEvenPagesOnHF</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetDifferentOddEvenPagesOnHF</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup_1a8f96a81d63abbde6ba2cc66d70f8d25a">SetDifferentOddEvenPagesOnHF</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="309" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="449">
+        <label>IXLPageSetup</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup"/>
+      </node>
+      <node id="450">
+        <label>XLPageSetup</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_page_setup"/>
+        <childnode refid="449" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLPageSetup.cs" bodystart="80" bodyend="310"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a7d723be6cf9acc48cdcaac5430a7c019" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>AddHorizontalPageBreak</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1adae2692c221f502787d16a1a5a847547" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>AddVerticalPageBreak</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a46253129a2d6bade44bd91c79d9595b5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>AdjustTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a6f6f690db4c39b44cb369535ee818c38" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>AlignHFWithMargins</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a546103994f63faf6993e8df874f385c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>BlackAndWhite</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a446aa96945873c0457f92261b46c0f1c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>CenterHorizontally</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ae1e07f6d85e4c5098cdfc317b07b22b1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>CenterVertically</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3ee1456d323ab3716b638266eb3b560e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>ColumnBreaks</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1abe26bf69fe1fe874643aeb47102fa7ab" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>DifferentFirstPageOnHF</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a7f9235111f696a9d0105d17743008a43" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>DifferentOddEvenPagesOnHF</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a303520b50c82883bcce6954c42fdc40f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>DraftQuality</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ad9b8b899725acdb18c00e7426eb8f88b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>FirstColumnToRepeatAtLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a65e025372c614ecd548551832ebb1819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>FirstPageNumber</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afe78830cadb69064bcc0f1d833fd586e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>FirstRowToRepeatAtTop</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afa11b2a63fc63f5f7bfb20fec4ee5f25" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>FitToPages</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ad2398aff11ce936424d70ea489a037f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>Footer</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3105b81e9ad1533e7904b9a1e3d15c8a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>Header</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a42d838e721193d7cb5c9569a0c2f0b9b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>HorizontalDpi</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a932ab4473cca00c12982ea635e9e7402" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>LastColumnToRepeatAtLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a9c238479b2f9ff8c48c9b1eb9d6b113a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>LastRowToRepeatAtTop</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1aa4b24c8e6bd33d9aaef61950fd9afb6a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>Margins</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a36ee41696e52ed11913716599bd614cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>PageOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ad9cc284b1d7ef9480f600d2afbba27a0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>PageOrientation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3de8546ab5a3e2f861fbb4cf22bc0f2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>PagesTall</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a48d90f39cb1604ae923b828c26c2ffd2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>PagesWide</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac37ae926486a84c53922930b9566a13a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>PaperSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afbc5918a8a6ba970a90f49332c4c924c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>PrintAreas</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ab1fdd722ffa826962d1dff591a6bc87c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>PrintErrorValue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1af5b0243924dad80b1b9f745282d65799" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>RowBreaks</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a126f327f65ff0e361404bf61bc5a9725" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>Scale</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ae18906a6354c6ab87aaaef4450a1b187" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>ScaleHFWithDocument</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a50f3ca571918bc945f4793cc94fbbc1e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetAlignHFWithMargins</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ae9097d4c526669c544ec3c37fc70cd7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetAlignHFWithMargins</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a9d5b70a6e7fe2947b8c0af6772de2e0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetBlackAndWhite</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ab2da5fe444551451bb93f327036af403" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetBlackAndWhite</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2f055cf2d5bed3975cf8ac66cb42a48e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetCenterHorizontally</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a0b2e8670a44baac95baa04deda35af60" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetCenterHorizontally</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a24aa3757152e2c0a5ca4107fd86a2a24" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetCenterVertically</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a62af830d84b40039267e253c7c4ef88a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetCenterVertically</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a31da83bd80eab3b69311f3596ec1f74e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetColumnsToRepeatAtLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1af17269497a16c56fc508576b577bfd53" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetColumnsToRepeatAtLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2dfc7ce40724c435e9a39ef46f597ac3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetDifferentFirstPageOnHF</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a5cfe3f461841931bb471b0ea67311846" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetDifferentFirstPageOnHF</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a87b8a452fa5714991e9d2d02b27a724b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetDifferentOddEvenPagesOnHF</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a8f96a81d63abbde6ba2cc66d70f8d25a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetDifferentOddEvenPagesOnHF</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a86ac32e8defb1f3a9321105ce1d3b408" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetDraftQuality</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a6c91fb3b4c3c96b7694d388a90a79d15" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetDraftQuality</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac749e90c57c0b0991b2f84f6555d3dcc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetFirstPageNumber</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1aa108a76b0dfb3613ab9bafd937a3c4d9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetHorizontalDpi</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a36f073a8bc93bdf374a9078667b0d9e3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetPageOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a4e2b5b2c837875d7eb37cc1ba14a46a2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetPageOrientation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a927600b0c24fabab3702dde2d5fe2c73" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetPagesTall</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a01d852cd3066879666723f9c68adc70b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetPagesWide</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a8869035b0693f71e5af7ca320d3d52fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetPaperSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a42732d6b12fc5826f1d7ccd04632f150" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetPrintErrorValue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2d2fa3a6018fd3f14a246472570b0494" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetRowsToRepeatAtTop</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a22e36970fe89b1b4cc7a124c87e154d4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetRowsToRepeatAtTop</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac497cb4a22f18775e6b0b6eafa2bbdc5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetScale</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a2b05bc9d513cd6ddd8e291a4607de944" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetScaleHFWithDocument</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a82790eaab6ce23dd7ff76d198ff9fb98" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetScaleHFWithDocument</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ab5afc63eea40308fae710a3c30c0dbdd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetShowComments</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a23581df36329c57f7d45d463cb99bf45" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetShowGridlines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a645ecf6a97791ee974561c365fcfdb14" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetShowGridlines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1aa14298c93008d034e35f91e730c3d080" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetShowRowAndColumnHeadings</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1afe72ebbab9456da2a48793a73f96866f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetShowRowAndColumnHeadings</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac52b90fdfc9ae3df70ccb86fb185039d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>SetVerticalDpi</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a1fb4de2b014b9fe8b1a44fee0dd3dbb7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>ShowComments</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3724352120d42748ab3186366b321baf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>ShowGridlines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1a3b156ed2eeeb7ad79fc08c44c022b3f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>ShowRowAndColumnHeadings</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup_1ac5d4d2c7bee43950ca61ded1c908d838" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPageSetup</scope><name>VerticalDpi</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

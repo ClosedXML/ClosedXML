@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPivotStyleFormats</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLPivotStyleFormat &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_formats" prot="public" virt="non-virtual">XLPivotStyleFormats</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats_1a06b8fa0085d306fa4ebc273790b489d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format" kindref="compound">IXLPivotStyleFormat</ref></type>
+        <definition>IXLPivotStyleFormat ForElement</definition>
+        <argsstring>(XLPivotStyleFormatElement element)</argsstring>
+        <name>ForElement</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_formats_1a06b8fa0085d306fa4ebc273790b489d7">ForElement</reimplementedby>
+        <param>
+          <type>XLPivotStyleFormatElement</type>
+          <declname>element</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotStyleFormats.cs" line="8" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="494">
+        <label>XLPivotStyleFormats</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_style_formats"/>
+        <childnode refid="492" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="493">
+        <label>IEnumerable&lt; IXLPivotStyleFormat &gt;</label>
+      </node>
+      <node id="492">
+        <label>IXLPivotStyleFormats</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats"/>
+        <childnode refid="493" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="496">
+        <label>IEnumerable&lt; IXLPivotStyleFormat &gt;</label>
+      </node>
+      <node id="495">
+        <label>IXLPivotStyleFormats</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats"/>
+        <childnode refid="496" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotStyleFormats.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotStyleFormats.cs" bodystart="6" bodyend="9"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_formats_1a06b8fa0085d306fa4ebc273790b489d7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotStyleFormats</scope><name>ForElement</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

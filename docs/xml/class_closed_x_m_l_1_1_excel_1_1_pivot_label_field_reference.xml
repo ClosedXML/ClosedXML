@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::PivotLabelFieldReference</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference" prot="public" virt="non-virtual">AbstractPivotFieldReference</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1aeb664aa047c56f4729a4257052aa449b" prot="private" static="no" mutable="no">
+        <type>readonly Predicate&lt; Object &gt;</type>
+        <definition>readonly Predicate&lt;Object&gt; predicate</definition>
+        <argsstring></argsstring>
+        <name>predicate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1aa445b54d7d0a94157a36f1501545e31a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField PivotField</definition>
+        <argsstring></argsstring>
+        <name>PivotField</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1a5cfcce6f8b79273de5dd1e891c8f3cc0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>PivotLabelFieldReference</definition>
+        <argsstring>(IXLPivotField pivotField)</argsstring>
+        <name>PivotLabelFieldReference</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+          <declname>pivotField</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" bodystart="12" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1a5f958657ca63f634a1525f840c6ab611" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>PivotLabelFieldReference</definition>
+        <argsstring>(IXLPivotField pivotField, Predicate&lt; Object &gt; predicate)</argsstring>
+        <name>PivotLabelFieldReference</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+          <declname>pivotField</declname>
+        </param>
+        <param>
+          <type>Predicate&lt; Object &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" bodystart="16" bodyend="20"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1a7feb49abc4dcef5baf5d84f3e53f03dc" prot="private" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>internal override UInt32Value</type>
+        <definition>internal override UInt32Value GetFieldOffset</definition>
+        <argsstring>()</argsstring>
+        <name>GetFieldOffset</name>
+        <reimplements refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1afe44076678a036ed3fef169f3910271d">GetFieldOffset</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" bodystart="24" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1aacadc03b91699b45b50da3676e50f24b" prot="private" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>internal override IEnumerable&lt; Int32 &gt;</type>
+        <definition>internal override IEnumerable&lt;Int32&gt; Match</definition>
+        <argsstring>(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)</argsstring>
+        <name>Match</name>
+        <reimplements refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1aaf0ef802dd2bcc5de12b2e73ba15e393">Match</reimplements>
+        <param>
+          <type>XLWorkbook.PivotTableInfo</type>
+          <declname>pti</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_table" kindref="compound">IXLPivotTable</ref></type>
+          <declname>pt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Helper function used during saving to calculate the indices of the filtered values</para>
+<para><simplesect kind="return"><para>Indices of the filtered values</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" bodystart="29" bodyend="40"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="844">
+        <label>AbstractPivotFieldReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference"/>
+      </node>
+      <node id="843">
+        <label>PivotLabelFieldReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference"/>
+        <childnode refid="844" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="846">
+        <label>AbstractPivotFieldReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference"/>
+      </node>
+      <node id="845">
+        <label>PivotLabelFieldReference</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference"/>
+        <childnode refid="846" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/PivotLabelFieldReference.cs" bodystart="8" bodyend="41"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_abstract_pivot_field_reference_1ad0652d20eb233ee135db387d7fb33d95" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::PivotLabelFieldReference</scope><name>DefaultSubtotal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1a7feb49abc4dcef5baf5d84f3e53f03dc" prot="private" virt="virtual"><scope>ClosedXML::Excel::PivotLabelFieldReference</scope><name>GetFieldOffset</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1aacadc03b91699b45b50da3676e50f24b" prot="private" virt="virtual"><scope>ClosedXML::Excel::PivotLabelFieldReference</scope><name>Match</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1aa445b54d7d0a94157a36f1501545e31a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::PivotLabelFieldReference</scope><name>PivotField</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1a5cfcce6f8b79273de5dd1e891c8f3cc0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::PivotLabelFieldReference</scope><name>PivotLabelFieldReference</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1a5f958657ca63f634a1525f840c6ab611" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::PivotLabelFieldReference</scope><name>PivotLabelFieldReference</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_pivot_label_field_reference_1aeb664aa047c56f4729a4257052aa449b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::PivotLabelFieldReference</scope><name>predicate</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

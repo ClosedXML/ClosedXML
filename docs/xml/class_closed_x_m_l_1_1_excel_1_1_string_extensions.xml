@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_string_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::StringExtensions</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1aa3c02725e4d45e766afc3c8162640f2d" prot="private" static="yes" mutable="no">
+        <type>readonly Regex</type>
+        <definition>readonly Regex RegexNewLine</definition>
+        <argsstring></argsstring>
+        <name>RegexNewLine</name>
+        <initializer>= new Regex(@&quot;((?&lt;!\r)\n|\r\n)&quot;, RegexOptions.Compiled)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="102" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1a133a0c9e09ffa69762c63cc8e9f13ea8" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>static String FixNewLines</definition>
+        <argsstring>(this String value)</argsstring>
+        <name>FixNewLines</name>
+        <param>
+          <type>this String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="104" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1a23f0c667f7b8efeb7967280d124510ae" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean PreserveSpaces</definition>
+        <argsstring>(this String value)</argsstring>
+        <name>PreserveSpaces</name>
+        <param>
+          <type>this String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="109" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="109" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1a0d3877c73a251a2fffd698b2eb3a22e1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>static String ToCamel</definition>
+        <argsstring>(this String value)</argsstring>
+        <name>ToCamel</name>
+        <param>
+          <type>this String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="114" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="114" bodyend="123"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1ac918776dfa29950ce72b44ee30ee7a29" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>static String ToProper</definition>
+        <argsstring>(this String value)</argsstring>
+        <name>ToProper</name>
+        <param>
+          <type>this String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="125" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="125" bodyend="134"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="101" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="100" bodyend="135"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1a133a0c9e09ffa69762c63cc8e9f13ea8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::StringExtensions</scope><name>FixNewLines</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1a23f0c667f7b8efeb7967280d124510ae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::StringExtensions</scope><name>PreserveSpaces</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1aa3c02725e4d45e766afc3c8162640f2d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::StringExtensions</scope><name>RegexNewLine</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1a0d3877c73a251a2fffd698b2eb3a22e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::StringExtensions</scope><name>ToCamel</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_string_extensions_1ac918776dfa29950ce72b44ee30ee7a29" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::StringExtensions</scope><name>ToProper</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

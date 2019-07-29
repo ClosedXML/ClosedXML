@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_extensions" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Extensions</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_extensions_1_1_format_extensions" prot="public">ClosedXML::Extensions::FormatExtensions</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_extensions_1_1_guid_extensions" prot="public">ClosedXML::Extensions::GuidExtensions</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_extensions_1_1_open_xml_part_container_extensions" prot="public">ClosedXML::Extensions::OpenXmlPartContainerExtensions</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_extensions_1_1_string_extensions" prot="public">ClosedXML::Extensions::StringExtensions</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/FormatExtensions.cs" line="5" column="1"/>
+  </compounddef>
+</doxygen>

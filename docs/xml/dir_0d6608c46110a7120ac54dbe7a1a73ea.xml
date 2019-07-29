@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_0d6608c46110a7120ac54dbe7a1a73ea" kind="dir">
+    <compoundname>netstandard2.0</compoundname>
+    <innerfile refid="netstandard2_80_2_closed_x_m_l_8_assembly_info_8cs">netstandard2.0/ClosedXML.AssemblyInfo.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/obj/Debug/netstandard2.0/"/>
+  </compounddef>
+</doxygen>

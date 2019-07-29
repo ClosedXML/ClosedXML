@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPivotValueStyleFormat</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format" prot="public" virt="non-virtual">IXLPivotStyleFormat</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_style_format" prot="public" virt="non-virtual">XLPivotValueStyleFormat</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format_1a8f52dba71613c967369846201849eaae" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format" kindref="compound">IXLPivotValueStyleFormat</ref></type>
+        <definition>IXLPivotValueStyleFormat AndWith</definition>
+        <argsstring>(IXLPivotField field)</argsstring>
+        <name>AndWith</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_style_format_1a8f52dba71613c967369846201849eaae">AndWith</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+          <declname>field</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotValueStyleFormat.cs" line="8" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format_1aa46544764c2e1957c61013d54751cfcb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format" kindref="compound">IXLPivotValueStyleFormat</ref></type>
+        <definition>IXLPivotValueStyleFormat AndWith</definition>
+        <argsstring>(IXLPivotField field, Predicate&lt; Object &gt; predicate)</argsstring>
+        <name>AndWith</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_style_format_1aa46544764c2e1957c61013d54751cfcb">AndWith</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+          <declname>field</declname>
+        </param>
+        <param>
+          <type>Predicate&lt; Object &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotValueStyleFormat.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format_1a3c8f6e30ecb1a19c72d610723e85c05d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format" kindref="compound">IXLPivotValueStyleFormat</ref></type>
+        <definition>IXLPivotValueStyleFormat ForValueField</definition>
+        <argsstring>(IXLPivotValue valueField)</argsstring>
+        <name>ForValueField</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_style_format_1a3c8f6e30ecb1a19c72d610723e85c05d">ForValueField</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value" kindref="compound">IXLPivotValue</ref></type>
+          <declname>valueField</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotValueStyleFormat.cs" line="12" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="527">
+        <label>IXLPivotStyleFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format"/>
+      </node>
+      <node id="526">
+        <label>IXLPivotValueStyleFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format"/>
+        <childnode refid="527" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="528">
+        <label>XLPivotValueStyleFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_value_style_format"/>
+        <childnode refid="526" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="530">
+        <label>IXLPivotStyleFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format"/>
+      </node>
+      <node id="529">
+        <label>IXLPivotValueStyleFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format"/>
+        <childnode refid="530" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotValueStyleFormat.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/PivotStyleFormats/IXLPivotValueStyleFormat.cs" bodystart="6" bodyend="13"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format_1a8f52dba71613c967369846201849eaae" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueStyleFormat</scope><name>AndWith</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format_1aa46544764c2e1957c61013d54751cfcb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueStyleFormat</scope><name>AndWith</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format_1a7e797bf9750201cbd176689a2be39f83" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueStyleFormat</scope><name>AppliesTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_value_style_format_1a3c8f6e30ecb1a19c72d610723e85c05d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueStyleFormat</scope><name>ForValueField</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format_1aa445b54d7d0a94157a36f1501545e31a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueStyleFormat</scope><name>PivotField</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_style_format_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotValueStyleFormat</scope><name>Style</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

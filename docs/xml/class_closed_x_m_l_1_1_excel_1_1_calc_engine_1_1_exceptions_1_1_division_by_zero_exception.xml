@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception" prot="public" virt="non-virtual">CalcEngineException</basecompoundref>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception_1a37b9eddf73b3149fd7829cbffccb16d3" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal DivisionByZeroException</definition>
+        <argsstring>()</argsstring>
+        <name>DivisionByZeroException</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" bodystart="13" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception_1ac6a25fe3a6f7ad07d5b26fe072f7f717" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal DivisionByZeroException</definition>
+        <argsstring>(string message)</argsstring>
+        <name>DivisionByZeroException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" bodystart="17" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception_1ad49d40abf3d5b423af49f795cc1851d4" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal DivisionByZeroException</definition>
+        <argsstring>(string message, Exception innerException)</argsstring>
+        <name>DivisionByZeroException</name>
+        <param>
+          <type>string</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>Exception</type>
+          <declname>innerException</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" bodystart="21" bodyend="23"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>The division operation in your formula refers to a cell that contains the value 0 or is blank. Corresponds to the #DIV/0! error in <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> </para>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="see"><para>System.DivideByZeroException</para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="74">
+        <label>DivisionByZeroException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception"/>
+        <childnode refid="75" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="75">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="76" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="76">
+        <label>ArgumentException</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="77">
+        <label>DivisionByZeroException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception"/>
+        <childnode refid="78" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="78">
+        <label>CalcEngineException</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception"/>
+        <childnode refid="79" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="79">
+        <label>ArgumentException</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Exceptions/DivisionByZeroException.cs" bodystart="11" bodyend="25"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1af165d26040b4d3695b2f0ad82ba577b4" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a601146d0629d5fb5b4e1252be25fdb57" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_calc_engine_exception_1a220f839bf265c4484fb9574093ea8dd6" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</scope><name>CalcEngineException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception_1a37b9eddf73b3149fd7829cbffccb16d3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</scope><name>DivisionByZeroException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception_1ac6a25fe3a6f7ad07d5b26fe072f7f717" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</scope><name>DivisionByZeroException</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_exceptions_1_1_division_by_zero_exception_1ad49d40abf3d5b423af49f795cc1851d4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::Exceptions::DivisionByZeroException</scope><name>DivisionByZeroException</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range" kind="struct" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLSheetRange</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; XLSheetRange &gt;</basecompoundref>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1ab8cf91a9afdf5fb0ed4e1044c574ade0" prot="public" static="no" mutable="no">
+        <type>readonly <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_point" kindref="compound">XLSheetPoint</ref></type>
+        <definition>readonly XLSheetPoint FirstPoint</definition>
+        <argsstring></argsstring>
+        <name>FirstPoint</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1a2d5292bcb752fda0ee2eac9723f348a8" prot="public" static="no" mutable="no">
+        <type>readonly <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_point" kindref="compound">XLSheetPoint</ref></type>
+        <definition>readonly XLSheetPoint LastPoint</definition>
+        <argsstring></argsstring>
+        <name>LastPoint</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1ab9684732db5d8b7334bbcb32d18b585e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLSheetRange</definition>
+        <argsstring>(XLSheetPoint firstPoint, XLSheetPoint lastPoint)</argsstring>
+        <name>XLSheetRange</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_point" kindref="compound">XLSheetPoint</ref></type>
+          <declname>firstPoint</declname>
+        </param>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_point" kindref="compound">XLSheetPoint</ref></type>
+          <declname>lastPoint</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" bodystart="7" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1a58f3ce978221451faffb917fb72b57a4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(XLSheetRange other)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range" kindref="compound">XLSheetRange</ref></type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" bodystart="16" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>override int</type>
+        <definition>override int GetHashCode</definition>
+        <argsstring>()</argsstring>
+        <name>GetHashCode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" bodystart="21" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1743">
+        <label>XLSheetRange</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range"/>
+        <childnode refid="1744" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1744">
+        <label>IEquatable&lt; XLSheetRange &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1747">
+        <label>XLSheetPoint</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_point"/>
+        <childnode refid="1748" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1745">
+        <label>XLSheetRange</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range"/>
+        <childnode refid="1746" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1747" relation="usage">
+          <edgelabel>FirstPoint</edgelabel>
+          <edgelabel>LastPoint</edgelabel>
+        </childnode>
+      </node>
+      <node id="1746">
+        <label>IEquatable&lt; XLSheetRange &gt;</label>
+      </node>
+      <node id="1748">
+        <label>IEquatable&lt; XLSheetPoint &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/XLSheetRange.cs" bodystart="5" bodyend="25"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1a58f3ce978221451faffb917fb72b57a4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetRange</scope><name>Equals</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1ab8cf91a9afdf5fb0ed4e1044c574ade0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetRange</scope><name>FirstPoint</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1a77e1afa2b6dee1ed3640da81d7407b42" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetRange</scope><name>GetHashCode</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1a2d5292bcb752fda0ee2eac9723f348a8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetRange</scope><name>LastPoint</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_sheet_range_1ab9684732db5d8b7334bbcb32d18b585e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSheetRange</scope><name>XLSheetRange</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

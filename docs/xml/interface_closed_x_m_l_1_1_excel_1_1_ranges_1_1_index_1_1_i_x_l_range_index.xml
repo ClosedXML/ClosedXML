@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index" prot="public" virt="non-virtual">IXLRangeIndex</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a869bfd8a1a13079c3c6e74e096250ac5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Add</definition>
+        <argsstring>(IXLAddressable range)</argsstring>
+        <name>Add</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a7f914663c2e7c73402a4d61fc3b2ade2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Remove</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>Remove</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1ab3bb658cfd366d75ecc37a09b28e8383" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int RemoveAll</definition>
+        <argsstring>(Predicate&lt; IXLAddressable &gt; predicate=null)</argsstring>
+        <name>RemoveAll</name>
+        <param>
+          <type>Predicate&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a33705917e89f75585ede09f0bc91c694" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt; GetIntersectedRanges</definition>
+        <argsstring>(XLRangeAddress rangeAddress)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="17" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a3daebb5576e7390bff5466a8628794e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt; GetIntersectedRanges</definition>
+        <argsstring>(XLAddress address)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1ad60d889b2abd54253b37c33b3fc170d3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kindref="compound">IXLAddressable</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLAddressable&gt; GetAll</definition>
+        <argsstring>()</argsstring>
+        <name>GetAll</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a656864c401d20aaea849b97b973e68b7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Intersects</definition>
+        <argsstring>(in XLRangeAddress rangeAddress)</argsstring>
+        <name>Intersects</name>
+        <param>
+          <type>in <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1af64ed901c0c9edcd5e53b97fd453df9d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Contains</definition>
+        <argsstring>(in XLAddress address)</argsstring>
+        <name>Contains</name>
+        <param>
+          <type>in <ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a856067756c545f43def7d8939047e9c4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool MatchesType</definition>
+        <argsstring>(XLRangeType rangeType)</argsstring>
+        <name>MatchesType</name>
+        <param>
+          <type>XLRangeType</type>
+          <declname>rangeType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1aafe7b93b3a3f3fb7228c4be8b1f137bf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Add</definition>
+        <argsstring>(T range)</argsstring>
+        <name>Add</name>
+        <param>
+          <type>T</type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="33" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a3b25226cef91f8f6c58a8564308f8d49" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int RemoveAll</definition>
+        <argsstring>(Predicate&lt; T &gt; predicate=null)</argsstring>
+        <name>RemoveAll</name>
+        <param>
+          <type>Predicate&lt; T &gt;</type>
+          <declname>predicate</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="35" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a25304b6dc265b17d3abe4c33ded957b9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>new IEnumerable&lt; T &gt;</type>
+        <definition>new IEnumerable&lt;T&gt; GetIntersectedRanges</definition>
+        <argsstring>(XLRangeAddress rangeAddress)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_range_address" kindref="compound">XLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="37" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a9891c6ec398064c7fd0596701240703c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>new IEnumerable&lt; T &gt;</type>
+        <definition>new IEnumerable&lt;T&gt; GetIntersectedRanges</definition>
+        <argsstring>(XLAddress address)</argsstring>
+        <name>GetIntersectedRanges</name>
+        <param>
+          <type><ref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" kindref="compound">XLAddress</ref></type>
+          <declname>address</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="39" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1aaa359b408f4fca0b8bc730f864faa192" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>new IEnumerable&lt; T &gt;</type>
+        <definition>new IEnumerable&lt;T&gt; GetAll</definition>
+        <argsstring>()</argsstring>
+        <name>GetAll</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="41" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="594">
+        <label>IXLRangeIndex&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index"/>
+        <childnode refid="595" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="595">
+        <label>IXLRangeIndex</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="596">
+        <label>IXLRangeIndex&lt; T &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index"/>
+        <childnode refid="597" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="597">
+        <label>IXLRangeIndex</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/Index/IXLRangeIndex.cs" bodystart="30" bodyend="42"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a869bfd8a1a13079c3c6e74e096250ac5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1aafe7b93b3a3f3fb7228c4be8b1f137bf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1af64ed901c0c9edcd5e53b97fd453df9d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>Contains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1ad60d889b2abd54253b37c33b3fc170d3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>GetAll</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1aaa359b408f4fca0b8bc730f864faa192" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>GetAll</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a33705917e89f75585ede09f0bc91c694" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>GetIntersectedRanges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a3daebb5576e7390bff5466a8628794e8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>GetIntersectedRanges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a25304b6dc265b17d3abe4c33ded957b9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>GetIntersectedRanges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a9891c6ec398064c7fd0596701240703c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>GetIntersectedRanges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a656864c401d20aaea849b97b973e68b7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>Intersects</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a856067756c545f43def7d8939047e9c4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>MatchesType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a7f914663c2e7c73402a4d61fc3b2ade2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>Remove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1ab3bb658cfd366d75ecc37a09b28e8383" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>RemoveAll</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_ranges_1_1_index_1_1_i_x_l_range_index_1a3b25226cef91f8f6c58a8564308f8d49" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Ranges::Index::IXLRangeIndex</scope><name>RemoveAll</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

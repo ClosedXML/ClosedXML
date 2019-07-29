@@ -1,0 +1,503 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPhonetics</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base" prot="public" virt="non-virtual">IXLFontBase</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLPhonetic &gt;</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLPhonetics &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics" prot="public" virt="non-virtual">XLPhonetics</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Count</definition>
+        <argsstring></argsstring>
+        <name>Count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a8a2960fddf7af3dd31c84140593b3594" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPhoneticAlignment</type>
+        <definition>XLPhoneticAlignment Alignment</definition>
+        <argsstring></argsstring>
+        <name>Alignment</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1ac019609f878485a2d9a8da78853bc60f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPhoneticType</type>
+        <definition>XLPhoneticType Type</definition>
+        <argsstring></argsstring>
+        <name>Type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" bodystart="28" bodyend="28"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a087c0ab30c2c9047fb61f09b7094be8d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetBold</definition>
+        <argsstring>()</argsstring>
+        <name>SetBold</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a087c0ab30c2c9047fb61f09b7094be8d">SetBold</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1ad72f6027ed7ac35a12fc890928a436cf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetBold</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetBold</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1ad72f6027ed7ac35a12fc890928a436cf">SetBold</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1aa142f6174fb9ae7864d2274a3f6457bf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetItalic</definition>
+        <argsstring>()</argsstring>
+        <name>SetItalic</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1aa142f6174fb9ae7864d2274a3f6457bf">SetItalic</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a07461a9c9400d879c33da8177cc9c235" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetItalic</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetItalic</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a07461a9c9400d879c33da8177cc9c235">SetItalic</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a649d3b3a012cbd4290e256034fff03ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetUnderline</definition>
+        <argsstring>()</argsstring>
+        <name>SetUnderline</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a649d3b3a012cbd4290e256034fff03ef">SetUnderline</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="12" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a922a5766dfd38344be6c7d8173902c71" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetUnderline</definition>
+        <argsstring>(XLFontUnderlineValues value)</argsstring>
+        <name>SetUnderline</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a922a5766dfd38344be6c7d8173902c71">SetUnderline</reimplementedby>
+        <param>
+          <type>XLFontUnderlineValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="12" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a9ba888969a56682e9bc5f2cc24a35f22" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetStrikethrough</definition>
+        <argsstring>()</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a9ba888969a56682e9bc5f2cc24a35f22">SetStrikethrough</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a7f4f6c9b6d81fa1969c1bfcd3eb62db6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetStrikethrough</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetStrikethrough</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a7f4f6c9b6d81fa1969c1bfcd3eb62db6">SetStrikethrough</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="13" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a618de0ce0be650bfd08d8ff8b1590414" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetVerticalAlignment</definition>
+        <argsstring>(XLFontVerticalTextAlignmentValues value)</argsstring>
+        <name>SetVerticalAlignment</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a618de0ce0be650bfd08d8ff8b1590414">SetVerticalAlignment</reimplementedby>
+        <param>
+          <type>XLFontVerticalTextAlignmentValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="14" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a815a1245bcfba55db065bf45b1b2f8e4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetShadow</definition>
+        <argsstring>()</argsstring>
+        <name>SetShadow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a815a1245bcfba55db065bf45b1b2f8e4">SetShadow</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a150d4d9e2c385f1c597d7ca9fef01cd1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetShadow</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShadow</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a150d4d9e2c385f1c597d7ca9fef01cd1">SetShadow</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a3be52ef425e6f3548eb44b915b0ed4ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetFontSize</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetFontSize</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a3be52ef425e6f3548eb44b915b0ed4ff">SetFontSize</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="16" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a0d7480efab817cd7406606ee73cd4771" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetFontColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetFontColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a0d7480efab817cd7406606ee73cd4771">SetFontColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="17" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a7c828d70aa7405b0f15c9bac4588de51" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetFontName</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetFontName</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a7c828d70aa7405b0f15c9bac4588de51">SetFontName</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="18" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1af298a5873175ce5c52fd658f71001c33" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetFontFamilyNumbering</definition>
+        <argsstring>(XLFontFamilyNumberingValues value)</argsstring>
+        <name>SetFontFamilyNumbering</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1af298a5873175ce5c52fd658f71001c33">SetFontFamilyNumbering</reimplementedby>
+        <param>
+          <type>XLFontFamilyNumberingValues</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a9f00ea474500bf799536f89872303b1a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetFontCharSet</definition>
+        <argsstring>(XLFontCharSet value)</argsstring>
+        <name>SetFontCharSet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a9f00ea474500bf799536f89872303b1a">SetFontCharSet</reimplementedby>
+        <param>
+          <type><ref refid="namespace_closed_x_m_l_1_1_excel_1a16954fe0e0c237f1f972b2432676c381" kindref="member">XLFontCharSet</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="20" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a94d2b544cf7fae3f8111c73fb318ec5c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics Add</definition>
+        <argsstring>(String text, Int32 start, Int32 end)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a94d2b544cf7fae3f8111c73fb318ec5c">Add</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>start</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>end</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="22" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1af2239485faa1700d44901acfc6d1100f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics ClearText</definition>
+        <argsstring>()</argsstring>
+        <name>ClearText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1af2239485faa1700d44901acfc6d1100f">ClearText</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1aa4b034b522337d995a170e8cd3e88fe5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics ClearFont</definition>
+        <argsstring>()</argsstring>
+        <name>ClearFont</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1aa4b034b522337d995a170e8cd3e88fe5">ClearFont</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1aaa098ad8450c04fb710f27c98088c031" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetAlignment</definition>
+        <argsstring>(XLPhoneticAlignment phoneticAlignment)</argsstring>
+        <name>SetAlignment</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1aaa098ad8450c04fb710f27c98088c031">SetAlignment</reimplementedby>
+        <param>
+          <type>XLPhoneticAlignment</type>
+          <declname>phoneticAlignment</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="30" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a8eca3afb94c1b8b9c49f060baaf9358f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics" kindref="compound">IXLPhonetics</ref></type>
+        <definition>IXLPhonetics SetType</definition>
+        <argsstring>(XLPhoneticType phoneticType)</argsstring>
+        <name>SetType</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics_1a8eca3afb94c1b8b9c49f060baaf9358f">SetType</reimplementedby>
+        <param>
+          <type>XLPhoneticType</type>
+          <declname>phoneticType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="31" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="457">
+        <label>IXLPhonetics</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics"/>
+        <childnode refid="458" relation="public-inheritance">
+        </childnode>
+        <childnode refid="459" relation="public-inheritance">
+        </childnode>
+        <childnode refid="460" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="460">
+        <label>IEquatable&lt; IXLPhonetics &gt;</label>
+      </node>
+      <node id="461">
+        <label>XLPhonetics</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_phonetics"/>
+        <childnode refid="457" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="458">
+        <label>IXLFontBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base"/>
+      </node>
+      <node id="459">
+        <label>IEnumerable&lt; IXLPhonetic &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="462">
+        <label>IXLPhonetics</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics"/>
+        <childnode refid="463" relation="public-inheritance">
+        </childnode>
+        <childnode refid="464" relation="public-inheritance">
+        </childnode>
+        <childnode refid="465" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="465">
+        <label>IEquatable&lt; IXLPhonetics &gt;</label>
+      </node>
+      <node id="463">
+        <label>IXLFontBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base"/>
+      </node>
+      <node id="464">
+        <label>IEnumerable&lt; IXLPhonetic &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLPhonetics.cs" bodystart="8" bodyend="32"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a94d2b544cf7fae3f8111c73fb318ec5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a8a2960fddf7af3dd31c84140593b3594" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Alignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Bold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1aa4b034b522337d995a170e8cd3e88fe5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>ClearFont</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1af2239485faa1700d44901acfc6d1100f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>ClearText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Count</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2e7968d4653cb5742f2eb152ee7eca17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>FontCharSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>FontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>FontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>FontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>FontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Italic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1aaa098ad8450c04fb710f27c98088c031" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetAlignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a087c0ab30c2c9047fb61f09b7094be8d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1ad72f6027ed7ac35a12fc890928a436cf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a9f00ea474500bf799536f89872303b1a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetFontCharSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a0d7480efab817cd7406606ee73cd4771" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetFontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1af298a5873175ce5c52fd658f71001c33" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetFontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a7c828d70aa7405b0f15c9bac4588de51" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetFontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a3be52ef425e6f3548eb44b915b0ed4ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetFontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1aa142f6174fb9ae7864d2274a3f6457bf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a07461a9c9400d879c33da8177cc9c235" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a815a1245bcfba55db065bf45b1b2f8e4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a150d4d9e2c385f1c597d7ca9fef01cd1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a9ba888969a56682e9bc5f2cc24a35f22" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a7f4f6c9b6d81fa1969c1bfcd3eb62db6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a8eca3afb94c1b8b9c49f060baaf9358f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a649d3b3a012cbd4290e256034fff03ef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a922a5766dfd38344be6c7d8173902c71" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1a618de0ce0be650bfd08d8ff8b1590414" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>SetVerticalAlignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Shadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Strikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_phonetics_1ac019609f878485a2d9a8da78853bc60f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Type</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>Underline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_font_base_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPhonetics</scope><name>VerticalAlignment</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

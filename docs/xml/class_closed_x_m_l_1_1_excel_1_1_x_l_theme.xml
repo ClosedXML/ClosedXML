@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLTheme</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_theme" prot="public" virt="non-virtual">IXLTheme</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1aa7e155374964c6032de050aa08df92ad" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Background1</definition>
+        <argsstring></argsstring>
+        <name>Background1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a4b75e2e5e0b02463de457d77b7084682" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Text1</definition>
+        <argsstring></argsstring>
+        <name>Text1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ab6ce3d1cccde79bb3990d6ccb76eb2f1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Background2</definition>
+        <argsstring></argsstring>
+        <name>Background2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1af53c6c665798d62074754399f4f40b74" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Text2</definition>
+        <argsstring></argsstring>
+        <name>Text2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ae429b7adbf97e63e683421c546381132" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Accent1</definition>
+        <argsstring></argsstring>
+        <name>Accent1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a8a9bfd78f7460e9782bc230495dddd83" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Accent2</definition>
+        <argsstring></argsstring>
+        <name>Accent2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1aa02a890dd3f76c0656d1144fad4d465a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Accent3</definition>
+        <argsstring></argsstring>
+        <name>Accent3</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a9d02ee82e724ef9677d8233102b9d28e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Accent4</definition>
+        <argsstring></argsstring>
+        <name>Accent4</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ae501ba96ba54aeafe16a57c7be1f32ca" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Accent5</definition>
+        <argsstring></argsstring>
+        <name>Accent5</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ae61c7563e781f438857716be7b8053be" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Accent6</definition>
+        <argsstring></argsstring>
+        <name>Accent6</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1aaed76df0aebdd195b1a1f099cdafe746" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Hyperlink</definition>
+        <argsstring></argsstring>
+        <name>Hyperlink</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a94adec2b1efc49e31fb4dcfcb7bb6f77" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor FollowedHyperlink</definition>
+        <argsstring></argsstring>
+        <name>FollowedHyperlink</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a37016cc57808da332f1a258571750b69" prot="private" static="no" mutable="no">
+        <type>TypeAccessor</type>
+        <definition>TypeAccessor accessor</definition>
+        <argsstring></argsstring>
+        <name>accessor</name>
+        <initializer>= TypeAccessor.Create(typeof(<ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme" kindref="compound">XLTheme</ref>))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a31e4366795aa7c1cca25c4820f42bd53" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor ResolveThemeColor</definition>
+        <argsstring>(XLThemeColor themeColor)</argsstring>
+        <name>ResolveThemeColor</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_theme_1a31e4366795aa7c1cca25c4820f42bd53">ResolveThemeColor</reimplements>
+        <param>
+          <type>XLThemeColor</type>
+          <declname>themeColor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="23" bodyend="31"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1936">
+        <label>XLTheme</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme"/>
+        <childnode refid="1937" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1937">
+        <label>IXLTheme</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_theme"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1938">
+        <label>XLTheme</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme"/>
+        <childnode refid="1939" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1939">
+        <label>IXLTheme</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_theme"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLTheme.cs" bodystart="6" bodyend="32"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ae429b7adbf97e63e683421c546381132" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Accent1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a8a9bfd78f7460e9782bc230495dddd83" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Accent2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1aa02a890dd3f76c0656d1144fad4d465a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Accent3</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a9d02ee82e724ef9677d8233102b9d28e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Accent4</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ae501ba96ba54aeafe16a57c7be1f32ca" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Accent5</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ae61c7563e781f438857716be7b8053be" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Accent6</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a37016cc57808da332f1a258571750b69" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>accessor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1aa7e155374964c6032de050aa08df92ad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Background1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1ab6ce3d1cccde79bb3990d6ccb76eb2f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Background2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a94adec2b1efc49e31fb4dcfcb7bb6f77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>FollowedHyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1aaed76df0aebdd195b1a1f099cdafe746" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Hyperlink</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a31e4366795aa7c1cca25c4820f42bd53" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>ResolveThemeColor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1a4b75e2e5e0b02463de457d77b7084682" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Text1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_theme_1af53c6c665798d62074754399f4f40b74" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLTheme</scope><name>Text2</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

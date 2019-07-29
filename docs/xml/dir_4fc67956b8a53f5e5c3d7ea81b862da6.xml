@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_4fc67956b8a53f5e5c3d7ea81b862da6" kind="dir">
+    <compoundname>Drawings</compoundname>
+    <innerdir refid="dir_9a64f47aaaf4220dc1f622e14a6d7a7c">Style</innerdir>
+    <innerfile refid="_i_x_l_drawing_8cs">IXLDrawing.cs</innerfile>
+    <innerfile refid="_i_x_l_drawing_position_8cs">IXLDrawingPosition.cs</innerfile>
+    <innerfile refid="_i_x_l_picture_8cs">IXLPicture.cs</innerfile>
+    <innerfile refid="_i_x_l_pictures_8cs">IXLPictures.cs</innerfile>
+    <innerfile refid="_picture_enums_8cs">PictureEnums.cs</innerfile>
+    <innerfile refid="_x_l_drawing_8cs">XLDrawing.cs</innerfile>
+    <innerfile refid="_x_l_drawing_position_8cs">XLDrawingPosition.cs</innerfile>
+    <innerfile refid="_x_l_marker_8cs">XLMarker.cs</innerfile>
+    <innerfile refid="_x_l_picture_8cs">XLPicture.cs</innerfile>
+    <innerfile refid="_x_l_pictures_8cs">XLPictures.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/"/>
+  </compounddef>
+</doxygen>

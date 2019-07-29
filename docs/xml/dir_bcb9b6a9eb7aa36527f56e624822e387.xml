@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_bcb9b6a9eb7aa36527f56e624822e387" kind="dir">
+    <compoundname>Misc</compoundname>
+    <innerfile refid="_x_l_dictionary_8cs">XLDictionary.cs</innerfile>
+    <innerfile refid="_x_l_formula_8cs">XLFormula.cs</innerfile>
+    <innerfile refid="_x_l_id_manager_8cs">XLIdManager.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Misc/"/>
+  </compounddef>
+</doxygen>

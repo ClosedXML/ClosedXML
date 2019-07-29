@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_3e8b8fc666c0d09040a58c62133a9391" kind="dir">
+    <compoundname>Tables</compoundname>
+    <innerfile refid="_i_x_l_table_8cs">IXLTable.cs</innerfile>
+    <innerfile refid="_i_x_l_table_field_8cs">IXLTableField.cs</innerfile>
+    <innerfile refid="_i_x_l_table_range_8cs">IXLTableRange.cs</innerfile>
+    <innerfile refid="_i_x_l_table_row_8cs">IXLTableRow.cs</innerfile>
+    <innerfile refid="_i_x_l_table_rows_8cs">IXLTableRows.cs</innerfile>
+    <innerfile refid="_i_x_l_tables_8cs">IXLTables.cs</innerfile>
+    <innerfile refid="_x_l_table_8cs">XLTable.cs</innerfile>
+    <innerfile refid="_x_l_table_field_8cs">XLTableField.cs</innerfile>
+    <innerfile refid="_x_l_table_range_8cs">XLTableRange.cs</innerfile>
+    <innerfile refid="_x_l_table_row_8cs">XLTableRow.cs</innerfile>
+    <innerfile refid="_x_l_table_rows_8cs">XLTableRows.cs</innerfile>
+    <innerfile refid="_x_l_tables_8cs">XLTables.cs</innerfile>
+    <innerfile refid="_x_l_table_theme_8cs">XLTableTheme.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Tables/"/>
+  </compounddef>
+</doxygen>

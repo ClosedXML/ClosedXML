@@ -1,0 +1,345 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDrawingMargins</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins" prot="public" virt="non-virtual">IXLDrawingMargins</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a55572329e5987730aadefb9450e27226" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>readonly IXLDrawingStyle _style</definition>
+        <argsstring></argsstring>
+        <name>_style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a993a4aa701d10e6b0473c8eb70193e2b" prot="private" static="no" mutable="no">
+        <type>Double</type>
+        <definition>Double _left</definition>
+        <argsstring></argsstring>
+        <name>_left</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1afaa2c08cb3a2fd7504436b1b07df9e10" prot="private" static="no" mutable="no">
+        <type>Double</type>
+        <definition>Double _right</definition>
+        <argsstring></argsstring>
+        <name>_right</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ac4ae999dfab79a67dd804ff546583e23" prot="private" static="no" mutable="no">
+        <type>Double</type>
+        <definition>Double _top</definition>
+        <argsstring></argsstring>
+        <name>_top</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="21" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a71b777a62244cc93152e830ec2ec6af7" prot="private" static="no" mutable="no">
+        <type>Double</type>
+        <definition>Double _bottom</definition>
+        <argsstring></argsstring>
+        <name>_bottom</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1afaae07f7db08bce7a4e2888a08a8decb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Automatic</definition>
+        <argsstring></argsstring>
+        <name>Automatic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a571c0477bc19e44c1c9620a88d8fc871" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Left</definition>
+        <argsstring></argsstring>
+        <name>Left</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a7b42e67aad600df817f3620f1baa5b4a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Right</definition>
+        <argsstring></argsstring>
+        <name>Right</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a2e028cd564268aa3c5326e02ea027883" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Top</definition>
+        <argsstring></argsstring>
+        <name>Top</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1aaa523753c175ff43da424d674d27fd3b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double Bottom</definition>
+        <argsstring></argsstring>
+        <name>Bottom</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="24" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1addaaa806dff93e9f10f9bc87e1b031af" prot="public" static="no" readable="no" writable="no" gettable="no" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double All</definition>
+        <argsstring></argsstring>
+        <name>All</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="26" bodyend="35"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a2937d66aaf7cd50ff72c12eb7bb7e93e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDrawingMargins</definition>
+        <argsstring>(IXLDrawingStyle style)</argsstring>
+        <name>XLDrawingMargins</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+          <declname>style</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="11" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ab572ffa8492c868025e6bf113a185c28" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAutomatic</definition>
+        <argsstring>()</argsstring>
+        <name>SetAutomatic</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins_1ab572ffa8492c868025e6bf113a185c28">SetAutomatic</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ab7530dc3af3b403816b70e9ca404bbe5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAutomatic</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetAutomatic</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins_1ab7530dc3af3b403816b70e9ca404bbe5">SetAutomatic</reimplements>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="15" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ab7de0f230587154a569ce2c4c9358625" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetLeft</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetLeft</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins_1ab7de0f230587154a569ce2c4c9358625">SetLeft</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a73f66b2b7025d0d936199d3f63fb7e2c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetRight</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetRight</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins_1a73f66b2b7025d0d936199d3f63fb7e2c">SetRight</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1abea872ebd67def44e961507ecd3ce409" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetTop</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetTop</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins_1abea872ebd67def44e961507ecd3ce409">SetTop</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a712f5ee07b11e1cd800a92a62dd28786" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetBottom</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetBottom</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins_1a712f5ee07b11e1cd800a92a62dd28786">SetBottom</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="24" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a88fcf26629845dfb1dce3a4e5456b021" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_style" kindref="compound">IXLDrawingStyle</ref></type>
+        <definition>IXLDrawingStyle SetAll</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>SetAll</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins_1a88fcf26629845dfb1dce3a4e5456b021">SetAll</reimplements>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="36" bodyend="36"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1257">
+        <label>XLDrawingMargins</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins"/>
+        <childnode refid="1258" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1258">
+        <label>IXLDrawingMargins</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1259">
+        <label>XLDrawingMargins</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins"/>
+        <childnode refid="1260" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1260">
+        <label>IXLDrawingMargins</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_drawing_margins"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/Style/XLDrawingMargins.cs" bodystart="8" bodyend="37"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a71b777a62244cc93152e830ec2ec6af7" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>_bottom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a993a4aa701d10e6b0473c8eb70193e2b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>_left</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1afaa2c08cb3a2fd7504436b1b07df9e10" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>_right</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a55572329e5987730aadefb9450e27226" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>_style</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ac4ae999dfab79a67dd804ff546583e23" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>_top</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1addaaa806dff93e9f10f9bc87e1b031af" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>All</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1afaae07f7db08bce7a4e2888a08a8decb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>Automatic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1aaa523753c175ff43da424d674d27fd3b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>Bottom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a571c0477bc19e44c1c9620a88d8fc871" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>Left</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a7b42e67aad600df817f3620f1baa5b4a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>Right</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a88fcf26629845dfb1dce3a4e5456b021" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>SetAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ab572ffa8492c868025e6bf113a185c28" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>SetAutomatic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ab7530dc3af3b403816b70e9ca404bbe5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>SetAutomatic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a712f5ee07b11e1cd800a92a62dd28786" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>SetBottom</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1ab7de0f230587154a569ce2c4c9358625" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>SetLeft</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a73f66b2b7025d0d936199d3f63fb7e2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>SetRight</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1abea872ebd67def44e961507ecd3ce409" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>SetTop</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a2e028cd564268aa3c5326e02ea027883" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>Top</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_drawing_margins_1a2937d66aaf7cd50ff72c12eb7bb7e93e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDrawingMargins</scope><name>XLDrawingMargins</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,988 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLConditionalFormat</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" prot="public" virt="non-virtual">XLConditionalFormat</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a6cef8de98f05983f520efefc334e6b13" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="66" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="66" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a0fdca5ed26cb5d9c15dcc644d827c59d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLConditionalFormatType</type>
+        <definition>XLConditionalFormatType ConditionalFormatType</definition>
+        <argsstring></argsstring>
+        <name>ConditionalFormatType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="136" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="136" bodyend="136"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aa24dfe57bd4c845741c4cf9b13729af7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLIconSetStyle</type>
+        <definition>XLIconSetStyle IconSetStyle</definition>
+        <argsstring></argsstring>
+        <name>IconSetStyle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="138" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="138" bodyend="138"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a5554d0652e92076caf4b6a9f11a37426" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLTimePeriod</type>
+        <definition>XLTimePeriod TimePeriod</definition>
+        <argsstring></argsstring>
+        <name>TimePeriod</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="140" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="140" bodyend="140"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7fa065ad887a502881ef69f34dcd93a7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ReverseIconOrder</definition>
+        <argsstring></argsstring>
+        <name>ReverseIconOrder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="142" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="142" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a9d343d7f163b22fa2564dbe87be8c98b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowIconOnly</definition>
+        <argsstring></argsstring>
+        <name>ShowIconOnly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="144" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="144" bodyend="144"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1af7ba867ba36776c473cb327b97e83d11" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowBarOnly</definition>
+        <argsstring></argsstring>
+        <name>ShowBarOnly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="146" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="146" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a87b6ff8c95ab3adbefae7fc9bc68293f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean StopIfTrue</definition>
+        <argsstring></argsstring>
+        <name>StopIfTrue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="148" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="148" bodyend="148"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a15f2dc39a857059e1a5051660fc49475" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring></argsstring>
+        <name>Range</name>
+        <briefdescription>
+<para>The first of the <ref refid="namespace_closed_x_m_l_1_1_excel_1_1_ranges" kindref="compound">Ranges</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="153" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="153" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1af6163616e66bacc512895da51aa7323a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>IXLRanges Ranges</definition>
+        <argsstring></argsstring>
+        <name>Ranges</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="155" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a2ac2a6121f96a641191265f8ee8d4c2a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary" kindref="compound">XLDictionary</ref>&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_formula" kindref="compound">XLFormula</ref> &gt;</type>
+        <definition>XLDictionary&lt;XLFormula&gt; Values</definition>
+        <argsstring></argsstring>
+        <name>Values</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="157" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="157" bodyend="157"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4b39e9b804004a41ee8833a469cf06ac" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary" kindref="compound">XLDictionary</ref>&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref> &gt;</type>
+        <definition>XLDictionary&lt;XLColor&gt; Colors</definition>
+        <argsstring></argsstring>
+        <name>Colors</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="159" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="159" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a295722f9c94de84bbb1adf4545810fb0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary" kindref="compound">XLDictionary</ref>&lt; XLCFContentType &gt;</type>
+        <definition>XLDictionary&lt;XLCFContentType&gt; ContentTypes</definition>
+        <argsstring></argsstring>
+        <name>ContentTypes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="161" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="161" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4de2ffa6968930c314ac9b3f242c0f69" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_dictionary" kindref="compound">XLDictionary</ref>&lt; XLCFIconSetOperator &gt;</type>
+        <definition>XLDictionary&lt;XLCFIconSetOperator&gt; IconSetOperators</definition>
+        <argsstring></argsstring>
+        <name>IconSetOperators</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="163" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="163" bodyend="163"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a730d6adfd2810c342cc67b68ef49754f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLCFOperator</type>
+        <definition>XLCFOperator Operator</definition>
+        <argsstring></argsstring>
+        <name>Operator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="165" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="165" bodyend="165"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ac37c540c1cd21dfddc9a29452bbec7ca" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Bottom</definition>
+        <argsstring></argsstring>
+        <name>Bottom</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="167" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="167" bodyend="167"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a5f27f3c7774824103344804230a33534" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Percent</definition>
+        <argsstring></argsstring>
+        <name>Percent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="169" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="169" bodyend="169"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a0633be31ece895acbeef25cc540b7a32" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenIsBlank</definition>
+        <argsstring>()</argsstring>
+        <name>WhenIsBlank</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a0633be31ece895acbeef25cc540b7a32">WhenIsBlank</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="68" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a9a33602844255b690cbdedc0f971dcfa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenNotBlank</definition>
+        <argsstring>()</argsstring>
+        <name>WhenNotBlank</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a9a33602844255b690cbdedc0f971dcfa">WhenNotBlank</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="70" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a9dee3be150c5d2270a9f0b846021b44b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenIsError</definition>
+        <argsstring>()</argsstring>
+        <name>WhenIsError</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a9dee3be150c5d2270a9f0b846021b44b">WhenIsError</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="72" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ad46362de33965cd3bd6d19716ce1cb28" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenNotError</definition>
+        <argsstring>()</argsstring>
+        <name>WhenNotError</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1ad46362de33965cd3bd6d19716ce1cb28">WhenNotError</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="74" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a1cd9bb60298c5fd9bcb2e9647f15ea77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenDateIs</definition>
+        <argsstring>(XLTimePeriod timePeriod)</argsstring>
+        <name>WhenDateIs</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a1cd9bb60298c5fd9bcb2e9647f15ea77">WhenDateIs</reimplementedby>
+        <param>
+          <type>XLTimePeriod</type>
+          <declname>timePeriod</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="76" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a231b35e5aac439747f69b24e8351be97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenContains</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenContains</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a231b35e5aac439747f69b24e8351be97">WhenContains</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="78" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4f53efab4a379d3a0e5b4c7c49b45155" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenNotContains</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenNotContains</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a4f53efab4a379d3a0e5b4c7c49b45155">WhenNotContains</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="80" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1afca2e8cccecba8fa0754c3bf30254678" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenStartsWith</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenStartsWith</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1afca2e8cccecba8fa0754c3bf30254678">WhenStartsWith</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="82" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ae05bf7582876751b8da3eef3debf781b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenEndsWith</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenEndsWith</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1ae05bf7582876751b8da3eef3debf781b">WhenEndsWith</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="84" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a3e74cfe75e1c5216bc3d9901102e1a18" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenEquals</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenEquals</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a3e74cfe75e1c5216bc3d9901102e1a18">WhenEquals</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="86" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4c4d0d75ecd18048d3a4cd7a9a782d8b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenNotEquals</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenNotEquals</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a4c4d0d75ecd18048d3a4cd7a9a782d8b">WhenNotEquals</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="88" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7e73eb85de77071b7fd8e5f19207dbd3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenGreaterThan</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenGreaterThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a7e73eb85de77071b7fd8e5f19207dbd3">WhenGreaterThan</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="90" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a31588ecb91e1e4fddfa5cc68e7442b0c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenLessThan</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenLessThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a31588ecb91e1e4fddfa5cc68e7442b0c">WhenLessThan</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="92" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aebcaa4e9e27f0baf8fca619bbaff2a15" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenEqualOrGreaterThan</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenEqualOrGreaterThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1aebcaa4e9e27f0baf8fca619bbaff2a15">WhenEqualOrGreaterThan</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="94" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ae80cc8cfed5813893d93084350b429b0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenEqualOrLessThan</definition>
+        <argsstring>(String value)</argsstring>
+        <name>WhenEqualOrLessThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1ae80cc8cfed5813893d93084350b429b0">WhenEqualOrLessThan</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="96" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aeafa50bb81b2f98131e9cd7c27cfe49a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenBetween</definition>
+        <argsstring>(String minValue, String maxValue)</argsstring>
+        <name>WhenBetween</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1aeafa50bb81b2f98131e9cd7c27cfe49a">WhenBetween</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="98" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aa399ee6d39a6b0be8a2732f5c1d8db8b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenNotBetween</definition>
+        <argsstring>(String minValue, String maxValue)</argsstring>
+        <name>WhenNotBetween</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1aa399ee6d39a6b0be8a2732f5c1d8db8b">WhenNotBetween</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="100" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a66ae6e6a5e617441ce1063589bc06324" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenEquals</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>WhenEquals</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a66ae6e6a5e617441ce1063589bc06324">WhenEquals</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="102" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a1191c6c23df392bdd96717393182f151" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenNotEquals</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>WhenNotEquals</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a1191c6c23df392bdd96717393182f151">WhenNotEquals</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="104" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a310f76cccae0bdcda2d4fe1da4f569b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenGreaterThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>WhenGreaterThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a310f76cccae0bdcda2d4fe1da4f569b1">WhenGreaterThan</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="106" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aafebefcab8db8fb4c47908308ec8759c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenLessThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>WhenLessThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1aafebefcab8db8fb4c47908308ec8759c">WhenLessThan</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="108" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a068c79df5a4ea8abec216eb666724a98" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenEqualOrGreaterThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>WhenEqualOrGreaterThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a068c79df5a4ea8abec216eb666724a98">WhenEqualOrGreaterThan</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="110" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aeef0615b5953792d0d0c179e8750606d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenEqualOrLessThan</definition>
+        <argsstring>(Double value)</argsstring>
+        <name>WhenEqualOrLessThan</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1aeef0615b5953792d0d0c179e8750606d">WhenEqualOrLessThan</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="112" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a02e644caccec928e657b4ea4cdb202f7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenBetween</definition>
+        <argsstring>(Double minValue, Double maxValue)</argsstring>
+        <name>WhenBetween</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a02e644caccec928e657b4ea4cdb202f7">WhenBetween</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="114" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ab61726a43bf681d2f964b3bbe8d2a8dd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenNotBetween</definition>
+        <argsstring>(Double minValue, Double maxValue)</argsstring>
+        <name>WhenNotBetween</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1ab61726a43bf681d2f964b3bbe8d2a8dd">WhenNotBetween</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="116" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a06dadfe10ce4cfcd91e52c025c283b53" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenIsDuplicate</definition>
+        <argsstring>()</argsstring>
+        <name>WhenIsDuplicate</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a06dadfe10ce4cfcd91e52c025c283b53">WhenIsDuplicate</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="118" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a95aaa0c88edb2969d6073f39c3f4576e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenIsUnique</definition>
+        <argsstring>()</argsstring>
+        <name>WhenIsUnique</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a95aaa0c88edb2969d6073f39c3f4576e">WhenIsUnique</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="120" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ab6f2a80c5d6f0a7d5be3e11ac80b6c35" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenIsTrue</definition>
+        <argsstring>(String formula)</argsstring>
+        <name>WhenIsTrue</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1ab6f2a80c5d6f0a7d5be3e11ac80b6c35">WhenIsTrue</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>formula</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="122" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a24ce9ad57769220d8b8e569c282894a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenIsTop</definition>
+        <argsstring>(Int32 value, XLTopBottomType topBottomType=XLTopBottomType.Items)</argsstring>
+        <name>WhenIsTop</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a24ce9ad57769220d8b8e569c282894a8">WhenIsTop</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLTopBottomType</type>
+          <declname>topBottomType</declname>
+          <defval>XLTopBottomType.Items</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="124" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ab5366ee2801f5d69ecaad5c687904b19" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle WhenIsBottom</definition>
+        <argsstring>(Int32 value, XLTopBottomType topBottomType)</argsstring>
+        <name>WhenIsBottom</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a5e5a499ffba6a004224384c56035f05c">WhenIsBottom</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>XLTopBottomType</type>
+          <declname>topBottomType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="126" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a20ea0aa743487beb993b446e33b3d922" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_min" kindref="compound">IXLCFColorScaleMin</ref></type>
+        <definition>IXLCFColorScaleMin ColorScale</definition>
+        <argsstring>()</argsstring>
+        <name>ColorScale</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a20ea0aa743487beb993b446e33b3d922">ColorScale</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="128" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a1c4b38cb78934eaac987ed87a777ad3d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min" kindref="compound">IXLCFDataBarMin</ref></type>
+        <definition>IXLCFDataBarMin DataBar</definition>
+        <argsstring>(XLColor color, Boolean showBarOnly=false)</argsstring>
+        <name>DataBar</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a1c4b38cb78934eaac987ed87a777ad3d">DataBar</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>showBarOnly</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="130" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1af2923badd2e20ebfd6dfb6fcb9020757" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_min" kindref="compound">IXLCFDataBarMin</ref></type>
+        <definition>IXLCFDataBarMin DataBar</definition>
+        <argsstring>(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly=false)</argsstring>
+        <name>DataBar</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1af2923badd2e20ebfd6dfb6fcb9020757">DataBar</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>positiveColor</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>negativeColor</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>showBarOnly</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="132" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a41913fc2be21766784550d2fb89acfcf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_icon_set" kindref="compound">IXLCFIconSet</ref></type>
+        <definition>IXLCFIconSet IconSet</definition>
+        <argsstring>(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder=false, Boolean showIconOnly=false)</argsstring>
+        <name>IconSet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a41913fc2be21766784550d2fb89acfcf">IconSet</reimplementedby>
+        <param>
+          <type>XLIconSetStyle</type>
+          <declname>iconSetStyle</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>reverseIconOrder</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>showIconOnly</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="134" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7c7296c55eebdbf45a7b5665fa4448ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+        <definition>IXLConditionalFormat SetStopIfTrue</definition>
+        <argsstring>()</argsstring>
+        <name>SetStopIfTrue</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a7c7296c55eebdbf45a7b5665fa4448ef">SetStopIfTrue</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="171" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7fff528a0b8bf68c453d3a5191f07795" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+        <definition>IXLConditionalFormat SetStopIfTrue</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetStopIfTrue</name>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="173" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a204579c5aabf50de4c1d4c631ea5d0f7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+        <definition>IXLConditionalFormat CopyTo</definition>
+        <argsstring>(IXLWorksheet targetSheet)</argsstring>
+        <name>CopyTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format_1a204579c5aabf50de4c1d4c631ea5d0f7">CopyTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>targetSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="175" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="302">
+        <label>XLConditionalFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format"/>
+        <childnode refid="301" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="301">
+        <label>IXLConditionalFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format"/>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" line="65" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLConditionalFormat.cs" bodystart="64" bodyend="176"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ac37c540c1cd21dfddc9a29452bbec7ca" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Bottom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4b39e9b804004a41ee8833a469cf06ac" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Colors</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a20ea0aa743487beb993b446e33b3d922" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>ColorScale</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a0fdca5ed26cb5d9c15dcc644d827c59d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>ConditionalFormatType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a295722f9c94de84bbb1adf4545810fb0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>ContentTypes</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a204579c5aabf50de4c1d4c631ea5d0f7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>CopyTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a1c4b38cb78934eaac987ed87a777ad3d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>DataBar</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1af2923badd2e20ebfd6dfb6fcb9020757" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>DataBar</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a41913fc2be21766784550d2fb89acfcf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>IconSet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4de2ffa6968930c314ac9b3f242c0f69" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>IconSetOperators</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aa24dfe57bd4c845741c4cf9b13729af7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>IconSetStyle</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a730d6adfd2810c342cc67b68ef49754f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Operator</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a5f27f3c7774824103344804230a33534" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Percent</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a15f2dc39a857059e1a5051660fc49475" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1af6163616e66bacc512895da51aa7323a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Ranges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7fa065ad887a502881ef69f34dcd93a7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>ReverseIconOrder</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7c7296c55eebdbf45a7b5665fa4448ef" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>SetStopIfTrue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7fff528a0b8bf68c453d3a5191f07795" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>SetStopIfTrue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1af7ba867ba36776c473cb327b97e83d11" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>ShowBarOnly</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a9d343d7f163b22fa2564dbe87be8c98b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>ShowIconOnly</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a87b6ff8c95ab3adbefae7fc9bc68293f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>StopIfTrue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a5554d0652e92076caf4b6a9f11a37426" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>TimePeriod</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a2ac2a6121f96a641191265f8ee8d4c2a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>Values</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aeafa50bb81b2f98131e9cd7c27cfe49a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenBetween</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a02e644caccec928e657b4ea4cdb202f7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenBetween</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a231b35e5aac439747f69b24e8351be97" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenContains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a1cd9bb60298c5fd9bcb2e9647f15ea77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenDateIs</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ae05bf7582876751b8da3eef3debf781b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenEndsWith</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aebcaa4e9e27f0baf8fca619bbaff2a15" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenEqualOrGreaterThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a068c79df5a4ea8abec216eb666724a98" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenEqualOrGreaterThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ae80cc8cfed5813893d93084350b429b0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenEqualOrLessThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aeef0615b5953792d0d0c179e8750606d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenEqualOrLessThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a3e74cfe75e1c5216bc3d9901102e1a18" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenEquals</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a66ae6e6a5e617441ce1063589bc06324" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenEquals</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a7e73eb85de77071b7fd8e5f19207dbd3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenGreaterThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a310f76cccae0bdcda2d4fe1da4f569b1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenGreaterThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a0633be31ece895acbeef25cc540b7a32" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenIsBlank</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ab5366ee2801f5d69ecaad5c687904b19" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenIsBottom</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a06dadfe10ce4cfcd91e52c025c283b53" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenIsDuplicate</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a9dee3be150c5d2270a9f0b846021b44b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenIsError</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a24ce9ad57769220d8b8e569c282894a8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenIsTop</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ab6f2a80c5d6f0a7d5be3e11ac80b6c35" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenIsTrue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a95aaa0c88edb2969d6073f39c3f4576e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenIsUnique</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a31588ecb91e1e4fddfa5cc68e7442b0c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenLessThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aafebefcab8db8fb4c47908308ec8759c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenLessThan</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1aa399ee6d39a6b0be8a2732f5c1d8db8b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenNotBetween</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ab61726a43bf681d2f964b3bbe8d2a8dd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenNotBetween</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a9a33602844255b690cbdedc0f971dcfa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenNotBlank</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4f53efab4a379d3a0e5b4c7c49b45155" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenNotContains</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a4c4d0d75ecd18048d3a4cd7a9a782d8b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenNotEquals</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1a1191c6c23df392bdd96717393182f151" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenNotEquals</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1ad46362de33965cd3bd6d19716ce1cb28" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenNotError</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format_1afca2e8cccecba8fa0754c3bf30254678" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLConditionalFormat</scope><name>WhenStartsWith</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

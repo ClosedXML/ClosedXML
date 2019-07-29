@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLConstants</compoundname>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_comment" prot="private">ClosedXML::Excel::XLConstants::Comment</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1_1_pivot_table" prot="public">ClosedXML::Excel::XLConstants::PivotTable</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1a9a9072419f608ef5c7189f0dd9632e40" prot="private" static="no" mutable="no">
+        <type>internal const int</type>
+        <definition>internal const int NumberOfBuiltInStyles</definition>
+        <argsstring></argsstring>
+        <name>NumberOfBuiltInStyles</name>
+        <initializer>= 164</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLConstants.cs" bodystart="5" bodyend="27"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_constants_1a9a9072419f608ef5c7189f0dd9632e40" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLConstants</scope><name>NumberOfBuiltInStyles</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

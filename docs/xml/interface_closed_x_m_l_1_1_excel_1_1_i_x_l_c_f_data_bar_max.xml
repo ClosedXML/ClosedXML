@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLCFDataBarMax</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_max" prot="public" virt="non-virtual">XLCFDataBarMax</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max_1a797c2fe84b32f363ab2b16419c9a0b3f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Maximum</definition>
+        <argsstring>(XLCFContentType type, String value)</argsstring>
+        <name>Maximum</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_max_1a797c2fe84b32f363ab2b16419c9a0b3f">Maximum</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMax.cs" line="10" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max_1a33e86b17e6d536257a35fc61da0a1d7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Maximum</definition>
+        <argsstring>(XLCFContentType type, Double value)</argsstring>
+        <name>Maximum</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_max_1a33e86b17e6d536257a35fc61da0a1d7a">Maximum</reimplementedby>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMax.cs" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max_1a0a7464d1942d30127690517fb234eb3f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void HighestValue</definition>
+        <argsstring>()</argsstring>
+        <name>HighestValue</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_max_1a0a7464d1942d30127690517fb234eb3f">HighestValue</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMax.cs" line="12" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="263">
+        <label>IXLCFDataBarMax</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max"/>
+      </node>
+      <node id="264">
+        <label>XLCFDataBarMax</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_max"/>
+        <childnode refid="263" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMax.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/IXLCFDataBarMax.cs" bodystart="8" bodyend="13"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max_1a0a7464d1942d30127690517fb234eb3f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFDataBarMax</scope><name>HighestValue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max_1a797c2fe84b32f363ab2b16419c9a0b3f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFDataBarMax</scope><name>Maximum</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_data_bar_max_1a33e86b17e6d536257a35fc61da0a1d7a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLCFDataBarMax</scope><name>Maximum</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

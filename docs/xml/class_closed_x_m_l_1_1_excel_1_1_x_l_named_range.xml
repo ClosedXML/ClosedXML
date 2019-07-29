@@ -1,0 +1,279 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLNamedRange</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" prot="public" virt="non-virtual">IXLNamedRange</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1aa8f67613be47ea583c3d6303aa5e3168" prot="private" static="no" mutable="no">
+        <type>String</type>
+        <definition>String _name</definition>
+        <argsstring></argsstring>
+        <name>_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a2bf3645f1d622bfd0f30aa32e02b9a17" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_ranges" kindref="compound">XLNamedRanges</ref></type>
+        <definition>readonly XLNamedRanges _namedRanges</definition>
+        <argsstring></argsstring>
+        <name>_namedRanges</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a48f7e3e8dc7a1af250edf451fde5f8f0" prot="private" static="no" mutable="no">
+        <type>internal <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>internal XLWorkbook Workbook</definition>
+        <argsstring></argsstring>
+        <name>Workbook</name>
+        <initializer>=&gt; _namedRanges.Workbook</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a62885a2911b2c21274564c3d9e407c2c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>bool</type>
+        <definition>bool IsValid</definition>
+        <argsstring></argsstring>
+        <name>IsValid</name>
+        <briefdescription>
+<para>Checks if the named range contains invalid references (#REF!). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="50" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a09e43c6563078dbeb94d3763ea0e8f2c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String??</type>
+        <definition>String?? Name</definition>
+        <argsstring></argsstring>
+        <name>Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="60" bodyend="88"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a64ffff754f7c0507a0f26f29369eda21" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLNamedRange</definition>
+        <argsstring>(XLNamedRanges namedRanges, String rangeName, String range, String comment=null)</argsstring>
+        <name>XLNamedRange</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_ranges" kindref="compound">XLNamedRanges</ref></type>
+          <declname>namedRanges</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>range</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>comment</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="15" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a558d801ee9a119e77a1cf59978f81ed4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLNamedRange</definition>
+        <argsstring>(XLNamedRanges namedRanges, String rangeName, IXLRanges ranges, String comment=null)</argsstring>
+        <name>XLNamedRange</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_ranges" kindref="compound">XLNamedRanges</ref></type>
+          <declname>namedRanges</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+          <declname>ranges</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>comment</declname>
+          <defval>null</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="20" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1ad920b61487e62b935bd4643954b1718a" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XLNamedRange</definition>
+        <argsstring>(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String range, String comment)</argsstring>
+        <name>XLNamedRange</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_ranges" kindref="compound">XLNamedRanges</ref></type>
+          <declname>namedRanges</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>validateName</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>range</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>comment</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="26" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1abcd59685ec34dccbf11c7d0bb92ac15a" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal</type>
+        <definition>internal XLNamedRange</definition>
+        <argsstring>(XLNamedRanges namedRanges, String rangeName, Boolean validateName, String comment)</argsstring>
+        <name>XLNamedRange</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_ranges" kindref="compound">XLNamedRanges</ref></type>
+          <declname>namedRanges</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>validateName</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>comment</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="33" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1aaca35059374b1c6d4352b2e5ddc13d04" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetNameWithoutValidation</definition>
+        <argsstring>(string value)</argsstring>
+        <name>SetNameWithoutValidation</name>
+        <param>
+          <type>string</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="90" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="90" bodyend="93"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1384">
+        <label>IXLNamedRange</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range"/>
+      </node>
+      <node id="1383">
+        <label>XLNamedRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range"/>
+        <childnode refid="1384" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1386">
+        <label>IXLNamedRange</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range"/>
+      </node>
+      <node id="1385">
+        <label>XLNamedRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range"/>
+        <childnode refid="1386" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/NamedRanges/XLNamedRange.cs" bodystart="8" bodyend="240"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1aa8f67613be47ea583c3d6303aa5e3168" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>_name</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a2bf3645f1d622bfd0f30aa32e02b9a17" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>_namedRanges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a0fb0e68ca0fe14700b5e3874203f608c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a10ebf200bf95ae76396c094162e7a471" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a1715b889e2dbec8a1899784fd1a89d50" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a36045105b983bf50ee9cb8600dd12139" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Comment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a1f700d0338da57dfbc15d33d9d757387" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>CopyTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Delete</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a62885a2911b2c21274564c3d9e407c2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>IsValid</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a09e43c6563078dbeb94d3763ea0e8f2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Name</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1af6163616e66bacc512895da51aa7323a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Ranges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a0fc4c873ab69288d64cb2c9ed31b1c84" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>RefersTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1aa18beebe122bbd14a4ea2b5b1eb1a5e6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Remove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a2192d021b1a34713b8cba09f76f5bc16" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Remove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1ab15f928df9500529d8b24cd086296a9f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Remove</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a675dbbbbf60d94f3f43b353cfbc59ef6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Scope</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1aaca35059374b1c6d4352b2e5ddc13d04" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>SetNameWithoutValidation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a8eaf48a3c713cead93cf28216f62a6d4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>SetRefersTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a419d25380cae34bbc613eacd083c4779" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>SetRefersTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1ad85e5f79a20c2d11929f201d5902a0c6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>SetRefersTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range_1a2045abdb38bdfdcab9f67b93de0acc2e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Visible</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a48f7e3e8dc7a1af250edf451fde5f8f0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>Workbook</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a64ffff754f7c0507a0f26f29369eda21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>XLNamedRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1a558d801ee9a119e77a1cf59978f81ed4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>XLNamedRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1ad920b61487e62b935bd4643954b1718a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>XLNamedRange</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_named_range_1abcd59685ec34dccbf11c7d0bb92ac15a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLNamedRange</scope><name>XLNamedRange</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

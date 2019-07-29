@@ -1,0 +1,1518 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::MathTrig</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a1f81d0ea9a08678bd0074a121f8422a5" prot="private" static="yes" mutable="no">
+        <type>readonly Random</type>
+        <definition>readonly Random _rnd</definition>
+        <argsstring></argsstring>
+        <name>_rnd</name>
+        <initializer>= new Random()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad572d5831ec1544c2333017cb75a55df" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Register</definition>
+        <argsstring>(CalcEngine ce)</argsstring>
+        <name>Register</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="15" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a4706963aeb3a06d0ea0a3db82b13e07c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double DegreesToRadians</definition>
+        <argsstring>(double degrees)</argsstring>
+        <name>DegreesToRadians</name>
+        <param>
+          <type>double</type>
+          <declname>degrees</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="490" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="490" bodyend="493"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ade9d7be1bae7d7f0d6b6ac1a52bcab24" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double RadiansToDegrees</definition>
+        <argsstring>(double radians)</argsstring>
+        <name>RadiansToDegrees</name>
+        <param>
+          <type>double</type>
+          <declname>radians</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="495" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="495" bodyend="498"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a76d9bc059a4a0d9dda0783747424ccad" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double GradsToRadians</definition>
+        <argsstring>(double grads)</argsstring>
+        <name>GradsToRadians</name>
+        <param>
+          <type>double</type>
+          <declname>grads</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="500" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="500" bodyend="503"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a54a9ade116e58f49b499fc19d80ab493" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double RadiansToGrads</definition>
+        <argsstring>(double radians)</argsstring>
+        <name>RadiansToGrads</name>
+        <param>
+          <type>double</type>
+          <declname>radians</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="505" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="505" bodyend="508"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2440f905cfae7ea91fef37e2d1aeeaf3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double DegreesToGrads</definition>
+        <argsstring>(double degrees)</argsstring>
+        <name>DegreesToGrads</name>
+        <param>
+          <type>double</type>
+          <declname>degrees</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="510" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="510" bodyend="513"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a957cbc8f4ae81b9c9291362bb64d6af1" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double GradsToDegrees</definition>
+        <argsstring>(double grads)</argsstring>
+        <name>GradsToDegrees</name>
+        <param>
+          <type>double</type>
+          <declname>grads</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="515" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="515" bodyend="518"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a0cf35eef93dab8d699a090a8c37a0cc3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double ASinh</definition>
+        <argsstring>(double x)</argsstring>
+        <name>ASinh</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="520" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="520" bodyend="523"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a6d3e98f3f9a66059f3ea65c97c73cca2" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Abs</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Abs</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="92" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="92" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a6dfa68d7cf3e2ce18943c2ddbcb113a4" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Acos</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Acos</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="97" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="97" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a33871434c0ce33a7042549ec2769eba3" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Asin</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Asin</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="106" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="106" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1afaa55976d7bdfd1539d368fb33a5d179" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Atan</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Atan</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="115" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="115" bodyend="118"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af2e511d8a72373bfa54403fe9448a02e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Atan2</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Atan2</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="120" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="120" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2e3979ac1f689d031cda4ff28857fdd6" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Ceiling</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Ceiling</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="130" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="130" bodyend="133"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a4ce3947fe941d9bb76af28507b222114" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Cos</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Cos</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="135" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="135" bodyend="138"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3f2a73e223d54bef1c239a22bd815e72" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Cosh</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Cosh</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="140" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="140" bodyend="143"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2d03a18b7ceab7f8f2f772e0641cbb55" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Cot</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Cot</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="145" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="145" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aca4e8990223070e38990939f4a88c9fe" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Coth</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Coth</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="155" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="155" bodyend="162"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a240e708a27c8a519ae8a3fdfcf951141" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Csc</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Csc</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="164" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="164" bodyend="171"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a348c8c06e4d35a868a532eff7eb824ce" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Csch</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Csch</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="173" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="173" bodyend="179"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a01386603ca4846290627864ce807f149" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Decimal</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Decimal</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="181" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="181" bodyend="213"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3a3c4581afc1cafbb549ed08bcb7703d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Exp</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Exp</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="215" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="215" bodyend="218"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a69042ef0ef16b7b69cf53e57bbf514c4" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Floor</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Floor</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="220" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="220" bodyend="238"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2badbf300ff7d5aafa6691693012a4fe" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object FloorMath</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>FloorMath</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="240" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="240" bodyend="255"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a401c46d13870d0051c4bb1a272000386" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Int</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Int</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="257" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="257" bodyend="260"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a763cf3db76c74a58d178a09215d8052b" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Ln</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Ln</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="262" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="262" bodyend="265"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af37dd9d9ce8eca8121068b7d35bbdb86" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Log</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Log</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="267" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="267" bodyend="271"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad3945dfe852a74ed06d3985248857aeb" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Log10</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Log10</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="273" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="273" bodyend="276"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a7c9b5b7be53042a6c6c8099949b96f16" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Pi</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Pi</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="278" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="278" bodyend="281"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a988d14602116d8166c3fc0f385a00b79" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Power</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Power</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="283" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="283" bodyend="286"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a71a7ceb52a68bed398d9382eb29b122a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Rand</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Rand</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="288" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="288" bodyend="291"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a94ccddb7dd8d61f9fca1b6ce48555ff8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object RandBetween</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>RandBetween</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="293" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="293" bodyend="296"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ae3e1044ba5c8fa0334e3d792fdba9c75" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Sign</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Sign</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="298" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="298" bodyend="301"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1acb21c0f6d313e79c875513773efeab18" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Sin</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Sin</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="303" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="303" bodyend="306"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa745ca57e361cdb2ce7a773d56a44841" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Sinh</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Sinh</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="308" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="308" bodyend="311"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3420a70d3f5b07e2bcd716b16115e7f3" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Sqrt</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Sqrt</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="313" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="313" bodyend="316"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af211ab44289f1595cad650bed6ada1d8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Sum</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Sum</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="318" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="318" bodyend="326"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a26516a04bfe36599b1dccb0cc47c569c" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object SumIf</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>SumIf</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="328" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="328" bodyend="364"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa588fd7e45b25ddaf601606adf826ce2" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object SumIfs</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>SumIfs</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="366" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="366" bodyend="421"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af31efb45a0287cd4bd85e6345389b811" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object SumProduct</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>SumProduct</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="423" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="423" bodyend="464"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a8866f0a7a5a9051688a99c334140d647" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Tan</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Tan</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="466" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="466" bodyend="469"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad063b08be8043e10a585f4a61628aca2" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Tanh</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Tanh</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="471" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="471" bodyend="474"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a55a297d865109c5a11a212fcfe0534cf" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Trunc</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Trunc</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="476" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="476" bodyend="488"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a67ef8ba761d40718abcb598340574a41" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Acosh</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Acosh</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="525" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="525" bodyend="532"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a4ee5ae55934917f9141508ccf32daddd" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Acot</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Acot</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="534" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="534" bodyend="544"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a17eae3264d53fc166721d4ceef99c4f2" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Acoth</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Acoth</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="546" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="546" bodyend="553"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a5dc03276dee1478a1a8abd760532adb3" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Arabic</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Arabic</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="555" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="555" bodyend="578"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa5e9216d2cc18fed18fa1eb9a783020a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Asinh</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Asinh</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="580" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="580" bodyend="583"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a735ac8d3e2490a5254b8a6c276a63f49" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Atanh</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Atanh</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="585" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="585" bodyend="592"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa8ebe7e00076c39b93a346951cd37ae6" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Base</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Base</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="594" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="594" bodyend="625"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ab79191d676d0fd5d98f65432d9d2b7b0" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Combin</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Combin</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="627" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="627" bodyend="651"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aad750cc0fc1077bf44dd82feabb93d72" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object CombinA</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>CombinA</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="653" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="653" bodyend="669"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad88b131eaf7a6b080ca04483ee37d502" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Degrees</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Degrees</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="671" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="671" bodyend="674"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a868abf915ce80fdeffc67247b25e2b67" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Fact</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Fact</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="676" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="676" bodyend="693"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a62bcf563ea111dffef55d3102829c3cc" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object FactDouble</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>FactDouble</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="695" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="695" bodyend="715"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a842aa2afcb744426b0acd9fad01a2bd5" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Gcd</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Gcd</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="717" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="717" bodyend="720"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a81acb5e19d9369c9aac40ec5fee64d6a" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int Gcd</definition>
+        <argsstring>(int a, int b)</argsstring>
+        <name>Gcd</name>
+        <param>
+          <type>int</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="722" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="722" bodyend="725"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ae444d9ce253407fb9d96b514774e82d3" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Lcm</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Lcm</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="727" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="727" bodyend="730"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa200664ffa71eae9b96ae904ce734f0b" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int Lcm</definition>
+        <argsstring>(int a, int b)</argsstring>
+        <name>Lcm</name>
+        <param>
+          <type>int</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="732" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="732" bodyend="736"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ade6130e00f3f9f4f438a70e0b1b826d8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Mod</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Mod</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="738" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="738" bodyend="744"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a35bf8fbd330efca4f8c2eb69e7acbafc" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object MRound</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>MRound</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="746" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="746" bodyend="758"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a1524dab73327cd709612a28c97ac3238" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Multinomial</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Multinomial</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="760" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="760" bodyend="763"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a0576341e2bed12181e073a0d0849f379" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double Multinomial</definition>
+        <argsstring>(List&lt; double &gt; numbers)</argsstring>
+        <name>Multinomial</name>
+        <param>
+          <type>List&lt; double &gt;</type>
+          <declname>numbers</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="765" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="765" bodyend="802"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ac25aa5cb1c1a4f540395581505af295c" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Odd</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Odd</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="804" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="804" bodyend="809"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a0cd8665265e26eb2dc76d7235572a8f5" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Even</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Even</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="811" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="811" bodyend="816"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1afbb5537850886c9f9a44ad2e6070fcac" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Product</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Product</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="818" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="818" bodyend="824"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a005cc2432a9245f80545891395833ac2" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Quotient</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Quotient</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="826" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="826" bodyend="832"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a51505ad0e9225c8a9ea04a8d6210d2c8" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Radians</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Radians</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="834" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="834" bodyend="837"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2a6a94a34d321f52c9f5f78350d9c8a9" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Roman</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Roman</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="839" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="839" bodyend="847"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a9fca65b60291f198ba714859fe748d0d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Round</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Round</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="849" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="849" bodyend="864"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a1541c233345c0432566e1bc3783aa773" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object RoundDown</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>RoundDown</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="866" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="866" bodyend="875"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a466f36577b1779418e3ef9ebed7207ae" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object RoundUp</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>RoundUp</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="877" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="877" bodyend="886"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a548786560cb3876a3abfcb370d789290" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Sec</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Sec</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="888" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="888" bodyend="894"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a59904800759fedadc47cd4adb4e38d5e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Sech</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Sech</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="896" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="896" bodyend="899"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ab1b5ca89fb803050276c77a267b68fe7" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object SeriesSum</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>SeriesSum</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="901" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="901" bodyend="920"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a7189374ab24e99a18b4a6c226073044e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object SqrtPi</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>SqrtPi</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="922" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="922" bodyend="926"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ac107c6d77aa42a2a78930a0fa2477ba1" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object Subtotal</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>Subtotal</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="928" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="928" bodyend="971"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a110ea499cf1a7c307d9631974dcc13cd" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object SumSq</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>SumSq</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="973" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="973" bodyend="977"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a7d138887cc8cdd77a9a76ca1376f0e21" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object MMult</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>MMult</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="979" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="979" bodyend="1000"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a8edbb9ff3f293a24d5b36d3d36fdf458" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double [,]</type>
+        <definition>static double [,] GetArray</definition>
+        <argsstring>(Expression expression)</argsstring>
+        <name>GetArray</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref></type>
+          <declname>expression</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="1002" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="1002" bodyend="1021"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3f8ea7a9d120e2dbb5fa2e4cfe697907" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object MDeterm</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>MDeterm</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="1023" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="1023" bodyend="1029"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a453124e2a13b304c6e4a79ee5c68deb5" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>object</type>
+        <definition>static object MInverse</definition>
+        <argsstring>(List&lt; Expression &gt; p)</argsstring>
+        <name>MInverse</name>
+        <param>
+          <type>List&lt; <ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> &gt;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="1031" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="1031" bodyend="1037"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/Functions/MathTrig.cs" bodystart="11" bodyend="1038"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a1f81d0ea9a08678bd0074a121f8422a5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>_rnd</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a6d3e98f3f9a66059f3ea65c97c73cca2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Abs</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a6dfa68d7cf3e2ce18943c2ddbcb113a4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Acos</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a67ef8ba761d40718abcb598340574a41" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Acosh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a4ee5ae55934917f9141508ccf32daddd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Acot</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a17eae3264d53fc166721d4ceef99c4f2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Acoth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a5dc03276dee1478a1a8abd760532adb3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Arabic</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a33871434c0ce33a7042549ec2769eba3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Asin</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a0cf35eef93dab8d699a090a8c37a0cc3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>ASinh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa5e9216d2cc18fed18fa1eb9a783020a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Asinh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1afaa55976d7bdfd1539d368fb33a5d179" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Atan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af2e511d8a72373bfa54403fe9448a02e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Atan2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a735ac8d3e2490a5254b8a6c276a63f49" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Atanh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa8ebe7e00076c39b93a346951cd37ae6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Base</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2e3979ac1f689d031cda4ff28857fdd6" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Ceiling</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ab79191d676d0fd5d98f65432d9d2b7b0" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Combin</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aad750cc0fc1077bf44dd82feabb93d72" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>CombinA</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a4ce3947fe941d9bb76af28507b222114" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Cos</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3f2a73e223d54bef1c239a22bd815e72" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Cosh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2d03a18b7ceab7f8f2f772e0641cbb55" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Cot</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aca4e8990223070e38990939f4a88c9fe" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Coth</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a240e708a27c8a519ae8a3fdfcf951141" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Csc</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a348c8c06e4d35a868a532eff7eb824ce" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Csch</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a01386603ca4846290627864ce807f149" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Decimal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad88b131eaf7a6b080ca04483ee37d502" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Degrees</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2440f905cfae7ea91fef37e2d1aeeaf3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>DegreesToGrads</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a4706963aeb3a06d0ea0a3db82b13e07c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>DegreesToRadians</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a0cd8665265e26eb2dc76d7235572a8f5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Even</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3a3c4581afc1cafbb549ed08bcb7703d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Exp</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a868abf915ce80fdeffc67247b25e2b67" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Fact</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a62bcf563ea111dffef55d3102829c3cc" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>FactDouble</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a69042ef0ef16b7b69cf53e57bbf514c4" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Floor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2badbf300ff7d5aafa6691693012a4fe" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>FloorMath</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a842aa2afcb744426b0acd9fad01a2bd5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Gcd</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a81acb5e19d9369c9aac40ec5fee64d6a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Gcd</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a8edbb9ff3f293a24d5b36d3d36fdf458" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>GetArray</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a957cbc8f4ae81b9c9291362bb64d6af1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>GradsToDegrees</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a76d9bc059a4a0d9dda0783747424ccad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>GradsToRadians</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a401c46d13870d0051c4bb1a272000386" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Int</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ae444d9ce253407fb9d96b514774e82d3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Lcm</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa200664ffa71eae9b96ae904ce734f0b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Lcm</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a763cf3db76c74a58d178a09215d8052b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Ln</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af37dd9d9ce8eca8121068b7d35bbdb86" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Log</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad3945dfe852a74ed06d3985248857aeb" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Log10</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3f8ea7a9d120e2dbb5fa2e4cfe697907" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>MDeterm</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a453124e2a13b304c6e4a79ee5c68deb5" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>MInverse</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a7d138887cc8cdd77a9a76ca1376f0e21" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>MMult</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ade6130e00f3f9f4f438a70e0b1b826d8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Mod</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a35bf8fbd330efca4f8c2eb69e7acbafc" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>MRound</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a1524dab73327cd709612a28c97ac3238" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Multinomial</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a0576341e2bed12181e073a0d0849f379" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Multinomial</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ac25aa5cb1c1a4f540395581505af295c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Odd</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a7c9b5b7be53042a6c6c8099949b96f16" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Pi</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a988d14602116d8166c3fc0f385a00b79" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Power</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1afbb5537850886c9f9a44ad2e6070fcac" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Product</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a005cc2432a9245f80545891395833ac2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Quotient</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a51505ad0e9225c8a9ea04a8d6210d2c8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Radians</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ade9d7be1bae7d7f0d6b6ac1a52bcab24" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>RadiansToDegrees</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a54a9ade116e58f49b499fc19d80ab493" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>RadiansToGrads</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a71a7ceb52a68bed398d9382eb29b122a" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Rand</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a94ccddb7dd8d61f9fca1b6ce48555ff8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>RandBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad572d5831ec1544c2333017cb75a55df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Register</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a2a6a94a34d321f52c9f5f78350d9c8a9" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Roman</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a9fca65b60291f198ba714859fe748d0d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Round</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a1541c233345c0432566e1bc3783aa773" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>RoundDown</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a466f36577b1779418e3ef9ebed7207ae" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>RoundUp</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a548786560cb3876a3abfcb370d789290" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Sec</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a59904800759fedadc47cd4adb4e38d5e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Sech</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ab1b5ca89fb803050276c77a267b68fe7" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>SeriesSum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ae3e1044ba5c8fa0334e3d792fdba9c75" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Sign</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1acb21c0f6d313e79c875513773efeab18" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Sin</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa745ca57e361cdb2ce7a773d56a44841" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Sinh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a3420a70d3f5b07e2bcd716b16115e7f3" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Sqrt</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a7189374ab24e99a18b4a6c226073044e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>SqrtPi</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ac107c6d77aa42a2a78930a0fa2477ba1" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Subtotal</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af211ab44289f1595cad650bed6ada1d8" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Sum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a26516a04bfe36599b1dccb0cc47c569c" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>SumIf</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1aa588fd7e45b25ddaf601606adf826ce2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>SumIfs</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1af31efb45a0287cd4bd85e6345389b811" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>SumProduct</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a110ea499cf1a7c307d9631974dcc13cd" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>SumSq</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a8866f0a7a5a9051688a99c334140d647" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Tan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1ad063b08be8043e10a585f4a61628aca2" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Tanh</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_math_trig_1a55a297d865109c5a11a212fcfe0534cf" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::MathTrig</scope><name>Trunc</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

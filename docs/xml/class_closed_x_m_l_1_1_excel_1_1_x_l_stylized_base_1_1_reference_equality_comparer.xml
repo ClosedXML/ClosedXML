@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLStylizedBase::ReferenceEqualityComparer</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEqualityComparer&lt; T &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer_1a71879bf5f10963c6e88ac273e04acfb1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Equals</definition>
+        <argsstring>(T x, T y)</argsstring>
+        <name>Equals</name>
+        <param>
+          <type>T</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="116" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer_1a6426ef32c559dee4f36924cbe78c0952" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int GetHashCode</definition>
+        <argsstring>(T obj)</argsstring>
+        <name>GetHashCode</name>
+        <param>
+          <type>T</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="118" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="868">
+        <label>XLStylizedBase.ReferenceEqualityComparer&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer"/>
+        <childnode refid="869" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="869">
+        <label>IEqualityComparer&lt; T &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="870">
+        <label>XLStylizedBase.ReferenceEqualityComparer&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer"/>
+        <childnode refid="871" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="871">
+        <label>IEqualityComparer&lt; T &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" line="115" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/XLStylizedBase.cs" bodystart="114" bodyend="119"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer_1a71879bf5f10963c6e88ac273e04acfb1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase::ReferenceEqualityComparer</scope><name>Equals</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_stylized_base_1_1_reference_equality_comparer_1a6426ef32c559dee4f36924cbe78c0952" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLStylizedBase::ReferenceEqualityComparer</scope><name>GetHashCode</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

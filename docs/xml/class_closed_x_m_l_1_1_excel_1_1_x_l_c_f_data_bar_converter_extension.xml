@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFDataBarConverterExtension</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_extension" prot="public" virt="non-virtual">IXLCFConverterExtension</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension_1a900882efc7b1e87cd59637825bf3152f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCFDataBarConverterExtension</definition>
+        <argsstring>()</argsstring>
+        <name>XLCFDataBarConverterExtension</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" bodystart="11" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension_1ac7da79b97e9c4c0a975dd48927fe6e36" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormattingRule</type>
+        <definition>ConditionalFormattingRule Convert</definition>
+        <argsstring>(IXLConditionalFormat cf, XLWorkbook.SaveContext context)</argsstring>
+        <name>Convert</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_extension_1ac7da79b97e9c4c0a975dd48927fe6e36">Convert</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>cf</declname>
+        </param>
+        <param>
+          <type>XLWorkbook.SaveContext</type>
+          <declname>context</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" bodystart="15" bodyend="65"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension_1ab145440c4d98e7cfa460beeaeb4c1747" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormattingValueObjectTypeValues</type>
+        <definition>ConditionalFormattingValueObjectTypeValues Convert</definition>
+        <argsstring>(DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues obj)</argsstring>
+        <name>Convert</name>
+        <param>
+          <type>DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues</type>
+          <declname>obj</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" bodystart="67" bodyend="86"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1041">
+        <label>XLCFDataBarConverterExtension</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension"/>
+        <childnode refid="1042" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1042">
+        <label>IXLCFConverterExtension</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_extension"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1043">
+        <label>XLCFDataBarConverterExtension</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension"/>
+        <childnode refid="1044" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1044">
+        <label>IXLCFConverterExtension</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_extension"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDataBarConverterExtension.cs" bodystart="9" bodyend="87"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension_1ac7da79b97e9c4c0a975dd48927fe6e36" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFDataBarConverterExtension</scope><name>Convert</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension_1ab145440c4d98e7cfa460beeaeb4c1747" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCFDataBarConverterExtension</scope><name>Convert</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_data_bar_converter_extension_1a900882efc7b1e87cd59637825bf3152f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFDataBarConverterExtension</scope><name>XLCFDataBarConverterExtension</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

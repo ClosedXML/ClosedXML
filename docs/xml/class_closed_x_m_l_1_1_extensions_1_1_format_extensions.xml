@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_extensions_1_1_format_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Extensions::FormatExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_extensions_1_1_format_extensions_1a5dd5959748bfc81e8fb64e5dd0d983be" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string ToExcelFormat</definition>
+        <argsstring>(this object o, string format)</argsstring>
+        <name>ToExcelFormat</name>
+        <param>
+          <type>this object</type>
+          <declname>o</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>format</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/FormatExtensions.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/FormatExtensions.cs" bodystart="8" bodyend="15"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/FormatExtensions.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions/FormatExtensions.cs" bodystart="6" bodyend="16"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_extensions_1_1_format_extensions_1a5dd5959748bfc81e8fb64e5dd0d983be" prot="public" virt="non-virtual"><scope>ClosedXML::Extensions::FormatExtensions</scope><name>ToExcelFormat</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

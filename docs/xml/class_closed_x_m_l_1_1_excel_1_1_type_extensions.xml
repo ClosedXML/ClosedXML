@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_type_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::TypeExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_type_extensions_1aa5ec777e3a36b0a2064cfa5d3e0276ea" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool IsNumber</definition>
+        <argsstring>(this Type type)</argsstring>
+        <name>IsNumber</name>
+        <param>
+          <type>this Type</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="310" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="310" bodyend="323"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_type_extensions_1a339f3c8fc661afb715e91c8879de5e23" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool IsSimpleType</definition>
+        <argsstring>(this Type type)</argsstring>
+        <name>IsSimpleType</name>
+        <param>
+          <type>this Type</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="325" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="325" bodyend="332"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="309" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="308" bodyend="333"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_type_extensions_1aa5ec777e3a36b0a2064cfa5d3e0276ea" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::TypeExtensions</scope><name>IsNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_type_extensions_1a339f3c8fc661afb715e91c8879de5e23" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::TypeExtensions</scope><name>IsSimpleType</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

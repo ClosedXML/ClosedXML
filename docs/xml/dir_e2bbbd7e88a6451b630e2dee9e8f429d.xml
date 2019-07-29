@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_e2bbbd7e88a6451b630e2dee9e8f429d" kind="dir">
+    <compoundname>DataValidation</compoundname>
+    <innerfile refid="_i_x_l_data_validation_8cs">IXLDataValidation.cs</innerfile>
+    <innerfile refid="_i_x_l_data_validations_8cs">IXLDataValidations.cs</innerfile>
+    <innerfile refid="_i_x_l_validation_criteria_8cs">IXLValidationCriteria.cs</innerfile>
+    <innerfile refid="_x_l_data_validation_8cs">XLDataValidation.cs</innerfile>
+    <innerfile refid="_x_l_data_validations_8cs">XLDataValidations.cs</innerfile>
+    <innerfile refid="_x_l_date_criteria_8cs">XLDateCriteria.cs</innerfile>
+    <innerfile refid="_x_l_decimal_criteria_8cs">XLDecimalCriteria.cs</innerfile>
+    <innerfile refid="_x_l_text_length_criteria_8cs">XLTextLengthCriteria.cs</innerfile>
+    <innerfile refid="_x_l_time_criteria_8cs">XLTimeCriteria.cs</innerfile>
+    <innerfile refid="_x_l_validation_criteria_8cs">XLValidationCriteria.cs</innerfile>
+    <innerfile refid="_x_l_whole_number_criteria_8cs">XLWholeNumberCriteria.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/"/>
+  </compounddef>
+</doxygen>

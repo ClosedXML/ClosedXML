@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLSparklineHorizontalAxis</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_horizontal_axis" prot="public" virt="non-virtual">XLSparklineHorizontalAxis</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a96bc85c64c6aeffbae0b60b3ec673eaf" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+        <definition>XLColor Color</definition>
+        <argsstring></argsstring>
+        <name>Color</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a367059abeb0c41d1505a9e6c50d39067" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DateAxis</definition>
+        <argsstring></argsstring>
+        <name>DateAxis</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1ae182bcaae2fe662a302b888e7b64a8f9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsVisible</definition>
+        <argsstring></argsstring>
+        <name>IsVisible</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a969cd5b761fcee8a05e36bc805800f0a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean RightToLeft</definition>
+        <argsstring></argsstring>
+        <name>RightToLeft</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a0ad5a49f6f400d9f6fc638b3aa88ceb6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis" kindref="compound">IXLSparklineHorizontalAxis</ref></type>
+        <definition>IXLSparklineHorizontalAxis SetColor</definition>
+        <argsstring>(XLColor value)</argsstring>
+        <name>SetColor</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_horizontal_axis_1a0ad5a49f6f400d9f6fc638b3aa88ceb6">SetColor</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="22" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1aeb1371b977ab517578b6ddbf8c5644e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis" kindref="compound">IXLSparklineHorizontalAxis</ref></type>
+        <definition>IXLSparklineHorizontalAxis SetRightToLeft</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetRightToLeft</name>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a845438f6c5734903840b8b5bd00f8546" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis" kindref="compound">IXLSparklineHorizontalAxis</ref></type>
+        <definition>IXLSparklineHorizontalAxis SetVisible</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetVisible</name>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="26" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="683">
+        <label>XLSparklineHorizontalAxis</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_horizontal_axis"/>
+        <childnode refid="682" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="682">
+        <label>IXLSparklineHorizontalAxis</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis"/>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/IXLSparklineHorizontalAxis.cs" bodystart="6" bodyend="29"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a96bc85c64c6aeffbae0b60b3ec673eaf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineHorizontalAxis</scope><name>Color</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a367059abeb0c41d1505a9e6c50d39067" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineHorizontalAxis</scope><name>DateAxis</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1ae182bcaae2fe662a302b888e7b64a8f9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineHorizontalAxis</scope><name>IsVisible</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a969cd5b761fcee8a05e36bc805800f0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineHorizontalAxis</scope><name>RightToLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a0ad5a49f6f400d9f6fc638b3aa88ceb6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineHorizontalAxis</scope><name>SetColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1aeb1371b977ab517578b6ddbf8c5644e8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineHorizontalAxis</scope><name>SetRightToLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_horizontal_axis_1a845438f6c5734903840b8b5bd00f8546" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLSparklineHorizontalAxis</scope><name>SetVisible</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_text" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLRichText</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text" prot="public" virt="non-virtual">IXLFormattedText&lt; IXLRichText &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_text" prot="public" virt="non-virtual">XLRichText</derivedcompoundref>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="636">
+        <label>IXLRichText</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_text"/>
+        <childnode refid="637" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="637">
+        <label>IXLFormattedText&lt; IXLRichText &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text"/>
+      </node>
+      <node id="638">
+        <label>XLRichText</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_rich_text"/>
+        <childnode refid="636" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="639">
+        <label>IXLRichText</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_text"/>
+        <childnode refid="640" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="640">
+        <label>IXLFormattedText&lt; IXLRichText &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichText.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/RichText/IXLRichText.cs" bodystart="6" bodyend="8"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a39999f7b5368945b92ee8e6222486faf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>AddText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a9ad733fcd315bdda3e613f5d7c3f5b3e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Bold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1af8579f54f0b976d3bf00b7b1568aef17" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>ClearFont</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a94149a05873dbd833b4332ecdf8e3e2c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>ClearText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ac5e5b8bbada57da14817a8bcc77351bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Count</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ae0ed3ed4f1f7433ddf934b1c106c3547" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>FontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a5bd75834c1b7dbb28bfc42830d540819" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>FontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a2f5d45d920f2ac94216aada78cef6486" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>FontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a24703697e0f802836de9316ecfece8f6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>FontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a5327a161110bcc94676d17df2d302298" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>HasPhonetics</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a93900b09ff2cd399031f1c162c5c11e5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Italic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a51fbe247d60b604c56eac2cacc2b2f99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Length</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1af64567258339cfd3c414edbb9437e2bf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Phonetics</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ad92281012307e59756d4fb1809df4c89" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3b248f2dbf026e966f8ef4dfa02b7a10" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetBold</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ab28576f1b0357fe67862f430b331eabc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetFontColor</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1afff78ff77b7a0e3861042177c6bdfce8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetFontFamilyNumbering</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ab69cd25d22e0f495f156667499bb84f9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetFontName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a24740d5cd42be5b3fd66d0275e7cb106" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetFontSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a2cb535f226b8c6dd3a79dfe11d01fc03" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a65fbee7a2038903bfd856c793c6a271d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetItalic</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a749417cc932575dee7471f8c963bdab1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3a16ee5c007a38ce6f89a62aab721677" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetShadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1aab501c7e9bf73d4d4e3bbb1d21bb3f5c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a331a3f17e74b57beff3ab3e43720bfbb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetStrikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a224ab04198f32fa7fe9fdc3546257980" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a37d04151ab31f7bcb2f92adeb53eacff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetUnderline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1aa2c3716de5c579a23e6ffbdafb40196e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>SetVerticalAlignment</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a1bc4b2d15daad950cb10c8bcb6de7f7e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Shadow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ad140d5d3744cfc3b23372fb0b0532123" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Strikethrough</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ae7b755b98b500bbd52e4bc264575790b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Substring</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a3c1fbaae30b42bf0e1621ddb9e11848c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Substring</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a77c3dc3cd51816d77a5742efbfa3d55c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Text</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1ade07c3e4c3de563a158815ee72f9c421" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>Underline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_formatted_text_1a0f4070625bcaf1de8d3d7cc709159e7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLRichText</scope><name>VerticalAlignment</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_number_format_info" kind="struct" language="C#" prot="private">
+    <compoundname>ClosedXML::Excel::XLWorkbook::NumberFormatInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_number_format_info_1a251f42926d25ed800376b2c0982e462d" prot="public" static="no" mutable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_value" kindref="compound">XLNumberFormatValue</ref></type>
+        <definition>XLNumberFormatValue NumberFormat</definition>
+        <argsstring></argsstring>
+        <name>NumberFormat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="129" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="129" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_number_format_info_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" static="no" mutable="no">
+        <type>Int32</type>
+        <definition>Int32 NumberFormatId</definition>
+        <argsstring></argsstring>
+        <name>NumberFormatId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="130" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="832">
+        <label>XLNumberFormatValue</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_value"/>
+      </node>
+      <node id="831">
+        <label>XLWorkbook.NumberFormatInfo</label>
+        <childnode refid="832" relation="usage">
+          <edgelabel>NumberFormat</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" line="128" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/XLWorkbook_Save.NestedTypes.cs" bodystart="127" bodyend="131"/>
+    <listofallmembers>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_number_format_info_1a251f42926d25ed800376b2c0982e462d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::NumberFormatInfo</scope><name>NumberFormat</name></member>
+      <member refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1_1_number_format_info_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLWorkbook::NumberFormatInfo</scope><name>NumberFormatId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

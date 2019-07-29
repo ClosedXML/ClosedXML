@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLDataValidations</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; IXLDataValidation &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations" prot="public" virt="non-virtual">XLDataValidations</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1a659920aba00a74920f992d7e91779a77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref></type>
+        <definition>IXLDataValidation Add</definition>
+        <argsstring>(IXLDataValidation dataValidation)</argsstring>
+        <name>Add</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1a659920aba00a74920f992d7e91779a77">Add</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref></type>
+          <declname>dataValidation</declname>
+        </param>
+        <briefdescription>
+<para>Add data validation rule to the collection. If the specified rule refers to another worksheet than the collection, the copy will be created and its ranges will refer to the worksheet of the collection. Otherwise the original instance will be placed in the collection. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dataValidation</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A data validation rule to add.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The instance that has actually been added in the collection (may be a copy of the specified one).</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1ad9fe97688684504ebdfd8ba7ba0bf980" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean ContainsSingle</definition>
+        <argsstring>(IXLRange range)</argsstring>
+        <name>ContainsSingle</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1ad9fe97688684504ebdfd8ba7ba0bf980">ContainsSingle</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1aff7265f9eee0a212944f23f3e02cb9db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>(Predicate&lt; IXLDataValidation &gt; predicate)</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1aff7265f9eee0a212944f23f3e02cb9db">Delete</reimplementedby>
+        <param>
+          <type>Predicate&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref> &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1add8eecf6637d80f5a02dc7d5263d1517" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool TryGet</definition>
+        <argsstring>(IXLRangeAddress rangeAddress, out IXLDataValidation dataValidation)</argsstring>
+        <name>TryGet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1add8eecf6637d80f5a02dc7d5263d1517">TryGet</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <param>
+          <type>out <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref></type>
+          <declname>dataValidation</declname>
+        </param>
+        <briefdescription>
+<para>Get the data validation rule for the range with the specified address if it exists. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rangeAddress</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A range address.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dataValidation</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Data validation rule which ranges collection includes the specified address. The specified range should be fully covered with the data validation rule. For example, if the rule is applied to ranges A1:A3,C1:C3 then this method will return True for ranges A1:A3, C1:C2, A2:A3, and False for ranges A1:C3, A1:C1, etc.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True is the data validation rule was found, false otherwise.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" line="34" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1aacd636c982238bca53714d5184f1bb37" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLDataValidation&gt; GetAllInRange</definition>
+        <argsstring>(IXLRangeAddress rangeAddress)</argsstring>
+        <name>GetAllInRange</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations_1aacd636c982238bca53714d5184f1bb37">GetAllInRange</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+          <declname>rangeAddress</declname>
+        </param>
+        <briefdescription>
+<para>Get all data validation rules applied to ranges that intersect the specified range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" line="39" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="324">
+        <label>IEnumerable&lt; IXLDataValidation &gt;</label>
+      </node>
+      <node id="323">
+        <label>IXLDataValidations</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations"/>
+        <childnode refid="324" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="325">
+        <label>XLDataValidations</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_data_validations"/>
+        <childnode refid="323" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="327">
+        <label>IEnumerable&lt; IXLDataValidation &gt;</label>
+      </node>
+      <node id="326">
+        <label>IXLDataValidations</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations"/>
+        <childnode refid="327" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/IXLDataValidations.cs" bodystart="6" bodyend="40"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1a659920aba00a74920f992d7e91779a77" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDataValidations</scope><name>Add</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1ad9fe97688684504ebdfd8ba7ba0bf980" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDataValidations</scope><name>ContainsSingle</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1aff7265f9eee0a212944f23f3e02cb9db" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDataValidations</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1aacd636c982238bca53714d5184f1bb37" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDataValidations</scope><name>GetAllInRange</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1add8eecf6637d80f5a02dc7d5263d1517" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDataValidations</scope><name>TryGet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validations_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLDataValidations</scope><name>Worksheet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLAddressable</compoundname>
+    <derivedcompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" prot="public" virt="non-virtual">IXLRangeBase</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable_1a693283492d6857ae738dee06f80bb42d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_address" kindref="compound">IXLRangeAddress</ref></type>
+        <definition>IXLRangeAddress RangeAddress</definition>
+        <argsstring></argsstring>
+        <name>RangeAddress</name>
+        <briefdescription>
+<para>Gets an object with the boundaries of this range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLAddressable.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLAddressable.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>A very lightweight interface for entities that have an address as a rectangular range. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="192">
+        <label>IXLTable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table"/>
+        <childnode refid="191" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="188">
+        <label>IXLRangeBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base"/>
+        <childnode refid="187" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="189">
+        <label>IXLColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column"/>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="190">
+        <label>XLColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_column"/>
+        <childnode refid="189" relation="public-inheritance">
+        </childnode>
+        <childnode refid="207" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="205">
+        <label>IXLWorksheet</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet"/>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="203">
+        <label>IXLRow</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_row"/>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="202">
+        <label>XLRangeRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_row"/>
+        <childnode refid="199" relation="public-inheritance">
+        </childnode>
+        <childnode refid="207" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="197">
+        <label>IXLRangeColumn</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_column"/>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="207">
+        <label>XLRangeBase</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_base"/>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="200">
+        <label>IXLTableRow</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_row"/>
+        <childnode refid="199" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="198">
+        <label>XLRangeColumn</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range_column"/>
+        <childnode refid="197" relation="public-inheritance">
+        </childnode>
+        <childnode refid="207" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="194">
+        <label>IXLTableRange</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table_range"/>
+        <childnode refid="191" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="199">
+        <label>IXLRangeRow</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_row"/>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="191">
+        <label>IXLRange</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range"/>
+        <childnode refid="188" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="195">
+        <label>XLTableRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_range"/>
+        <childnode refid="194" relation="public-inheritance">
+        </childnode>
+        <childnode refid="196" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="201">
+        <label>XLTableRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table_row"/>
+        <childnode refid="200" relation="public-inheritance">
+        </childnode>
+        <childnode refid="202" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="206">
+        <label>XLWorksheet</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_worksheet"/>
+        <childnode refid="205" relation="public-inheritance">
+        </childnode>
+        <childnode refid="207" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="196">
+        <label>XLRange</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_range"/>
+        <childnode refid="191" relation="public-inheritance">
+        </childnode>
+        <childnode refid="207" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="204">
+        <label>XLRow</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_row"/>
+        <childnode refid="203" relation="public-inheritance">
+        </childnode>
+        <childnode refid="207" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="193">
+        <label>XLTable</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_table"/>
+        <childnode refid="192" relation="public-inheritance">
+        </childnode>
+        <childnode refid="196" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="187">
+        <label>IXLAddressable</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable"/>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLAddressable.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Ranges/IXLAddressable.cs" bodystart="7" bodyend="14"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_addressable_1a693283492d6857ae738dee06f80bb42d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddressable</scope><name>RangeAddress</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

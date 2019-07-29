@@ -1,0 +1,508 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLSparklineGroups</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups" prot="public" virt="non-virtual">IXLSparklineGroups</basecompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aa97d45f221a4357bf87c6d75ac0ab43d" prot="private" static="no" mutable="no">
+        <type>readonly List&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref> &gt;</type>
+        <definition>readonly List&lt;IXLSparklineGroup&gt; _sparklineGroups</definition>
+        <argsstring></argsstring>
+        <name>_sparklineGroups</name>
+        <initializer>= new List&lt;<ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref>&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="173" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="173" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1af8e890253ed866e35b357da41fe0f8ba" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLSparklineGroups</definition>
+        <argsstring>(IXLWorksheet worksheet)</argsstring>
+        <name>XLSparklineGroups</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="18" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a021e327736f2cdebec569be74281f902" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+        <definition>IXLSparklineGroup Add</definition>
+        <argsstring>(IXLSparklineGroup sparklineGroup)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a021e327736f2cdebec569be74281f902">Add</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+          <declname>sparklineGroup</declname>
+        </param>
+        <briefdescription>
+<para>Add the sparkline group to the collection. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sparklineGroup</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The sparkline group to add to the collection</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The same sparkline group</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="40" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a78cd4c8cf41e97cf4a57fa38ec2efda0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+        <definition>IXLSparklineGroup Add</definition>
+        <argsstring>(string locationAddress, string sourceDataAddress)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a78cd4c8cf41e97cf4a57fa38ec2efda0">Add</reimplements>
+        <param>
+          <type>string</type>
+          <declname>locationAddress</declname>
+        </param>
+        <param>
+          <type>string</type>
+          <declname>sourceDataAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="49" bodyend="52"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a34c7c5a7c95df9088808f9ae9bbd12cb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+        <definition>IXLSparklineGroup Add</definition>
+        <argsstring>(IXLCell location, IXLRange sourceData)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a34c7c5a7c95df9088808f9ae9bbd12cb">Add</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>location</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>sourceData</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="54" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="54" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aa16fadb6e4f42c24cf5bd723433d9886" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+        <definition>IXLSparklineGroup Add</definition>
+        <argsstring>(IXLRange locationRange, IXLRange sourceDataRange)</argsstring>
+        <name>Add</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1aa16fadb6e4f42c24cf5bd723433d9886">Add</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>locationRange</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+          <declname>sourceDataRange</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="59" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="59" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a8f5b96bb86070f897c65dc4cd8ed5fa1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+        <definition>IXLSparklineGroup AddCopy</definition>
+        <argsstring>(IXLSparklineGroup sparklineGroupToCopy, IXLWorksheet targetWorksheet)</argsstring>
+        <name>AddCopy</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+          <declname>sparklineGroupToCopy</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>targetWorksheet</declname>
+        </param>
+        <briefdescription>
+<para>Add a copy of an existing sparkline group to the specified worksheet </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sparklineGroupToCopy</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The sparkline group to copy</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>targetWorksheet</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The worksheet the sparkline group is being added to</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The new sparkline group added</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="70" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="70" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aa86bc087c8c01093b0456704402a01b5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CopyTo</definition>
+        <argsstring>(IXLWorksheet targetSheet)</argsstring>
+        <name>CopyTo</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1aa86bc087c8c01093b0456704402a01b5">CopyTo</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>targetSheet</declname>
+        </param>
+        <briefdescription>
+<para>Copy this sparkline group to a different worksheet </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>targetSheet</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The worksheet to copy the sparkline group to</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="81" bodyend="87"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a6643a5dd136b0d8daeacfd834480c36d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline" kindref="compound">IXLSparkline</ref></type>
+        <definition>IXLSparkline GetSparkline</definition>
+        <argsstring>(IXLCell cell)</argsstring>
+        <name>GetSparkline</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a6643a5dd136b0d8daeacfd834480c36d">GetSparkline</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <briefdescription>
+<para>Search for the first sparkline that is in the specified cell </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cell</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell to find the sparkline for</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The sparkline in the cell or null if no sparklines are found</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="94" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="94" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a3ad5ac6be19789e96e2a173880424ff4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline" kindref="compound">IXLSparkline</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLSparkline&gt; GetSparklines</definition>
+        <argsstring>(IXLRangeBase searchRange)</argsstring>
+        <name>GetSparklines</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a2d4880056af02ccf765a4a5f70a038ba">GetSparklines</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref></type>
+          <declname>searchRange</declname>
+        </param>
+        <briefdescription>
+<para>Find all sparklines located in a given range </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>searchRange</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The range to search</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The sparkline in the cell or null if no sparklines are found</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="106" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="106" bodyend="110"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1abfa05e64d3bbc10bf07e09b6dddd1e6c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>IEnumerator&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref> &gt;</type>
+        <definition>IEnumerator&lt;IXLSparklineGroup&gt; GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="112" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="112" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a92d918deae6790a75bed4a0ae945f13b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(IXLCell cell)</argsstring>
+        <name>Remove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a92d918deae6790a75bed4a0ae945f13b">Remove</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <briefdescription>
+<para>Remove all sparklines in the specified cell </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cell</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The cell to remove sparklines from</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="126" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="126" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1af085273b9b0295f5b06221552166d8ad" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(IXLRangeBase range)</argsstring>
+        <name>Remove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1af085273b9b0295f5b06221552166d8ad">Remove</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range_base" kindref="compound">IXLRangeBase</ref></type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="133" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="133" bodyend="141"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a61cf4298ad89b89e7950558fa75a168e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(IXLSparklineGroup sparklineGroup)</argsstring>
+        <name>Remove</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a61cf4298ad89b89e7950558fa75a168e">Remove</reimplements>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+          <declname>sparklineGroup</declname>
+        </param>
+        <briefdescription>
+<para>Remove the sparkline group from the worksheet </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sparklineGroup</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The sparkline group to remove</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="147" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="147" bodyend="150"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a9aa9f847832ca5467851014a0d73e9bc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void RemoveAll</definition>
+        <argsstring>()</argsstring>
+        <name>RemoveAll</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups_1a9aa9f847832ca5467851014a0d73e9bc">RemoveAll</reimplements>
+        <briefdescription>
+<para>Remove all sparkline groups and their contents from the worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="164" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="164" bodyend="167"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a5a794a45afd24469c0708e25d85436e7" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_group" kindref="compound">IXLSparklineGroup</ref></type>
+        <definition>internal IXLSparklineGroup Add</definition>
+        <argsstring>()</argsstring>
+        <name>Add</name>
+        <briefdescription>
+<para>Add empty sparkline group. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="30" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>System.Collections.IEnumerator System.Collections.IEnumerable.</type>
+        <definition>System.Collections.IEnumerator System.Collections.IEnumerable. GetEnumerator</definition>
+        <argsstring>()</argsstring>
+        <name>GetEnumerator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="117" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="117" bodyend="120"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aeadf567745b62edf45548da5d84e5898" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Remove</definition>
+        <argsstring>(IXLSparkline sparkline)</argsstring>
+        <name>Remove</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline" kindref="compound">IXLSparkline</ref></type>
+          <declname>sparkline</declname>
+        </param>
+        <briefdescription>
+<para>Remove the sparkline from the worksheet </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sparkline</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The sparkline to remove</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="156" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="156" bodyend="159"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1777">
+        <label>XLSparklineGroups</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups"/>
+        <childnode refid="1778" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1778">
+        <label>IXLSparklineGroups</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups"/>
+        <childnode refid="1779" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1779">
+        <label>IEnumerable&lt; IXLSparklineGroup &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1780">
+        <label>XLSparklineGroups</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups"/>
+        <childnode refid="1781" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1781">
+        <label>IXLSparklineGroups</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_groups"/>
+        <childnode refid="1782" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1782">
+        <label>IEnumerable&lt; IXLSparklineGroup &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparkLineGroups.cs" bodystart="8" bodyend="176"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aa97d45f221a4357bf87c6d75ac0ab43d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>_sparklineGroups</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a5a794a45afd24469c0708e25d85436e7" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a021e327736f2cdebec569be74281f902" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a78cd4c8cf41e97cf4a57fa38ec2efda0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a34c7c5a7c95df9088808f9ae9bbd12cb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aa16fadb6e4f42c24cf5bd723433d9886" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Add</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a8f5b96bb86070f897c65dc4cd8ed5fa1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>AddCopy</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aa86bc087c8c01093b0456704402a01b5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>CopyTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1abfa05e64d3bbc10bf07e09b6dddd1e6c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a2fd0e344660e43ec66feaf6d63f1fb98" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>GetEnumerator</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a6643a5dd136b0d8daeacfd834480c36d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>GetSparkline</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a3ad5ac6be19789e96e2a173880424ff4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>GetSparklines</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a92d918deae6790a75bed4a0ae945f13b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1af085273b9b0295f5b06221552166d8ad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a61cf4298ad89b89e7950558fa75a168e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1aeadf567745b62edf45548da5d84e5898" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Remove</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a9aa9f847832ca5467851014a0d73e9bc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>RemoveAll</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>Worksheet</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_groups_1af8e890253ed866e35b357da41fe0f8ba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineGroups</scope><name>XLSparklineGroups</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

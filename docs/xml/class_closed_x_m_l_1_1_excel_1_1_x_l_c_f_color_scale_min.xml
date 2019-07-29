@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFColorScaleMin</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_min" prot="public" virt="non-virtual">IXLCFColorScaleMin</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1aae2cd3dcd495588de23bdd50c14f7842" prot="private" static="no" mutable="no">
+        <type>readonly <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" kindref="compound">XLConditionalFormat</ref></type>
+        <definition>readonly XLConditionalFormat _conditionalFormat</definition>
+        <argsstring></argsstring>
+        <name>_conditionalFormat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1ac5e9ed76d9af75c14b825c624bc33ada" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLCFColorScaleMin</definition>
+        <argsstring>(XLConditionalFormat conditionalFormat)</argsstring>
+        <name>XLCFColorScaleMin</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_conditional_format" kindref="compound">XLConditionalFormat</ref></type>
+          <declname>conditionalFormat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" bodystart="11" bodyend="14"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1a4d06500332ba40956470bf6a4d9d417b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid" kindref="compound">IXLCFColorScaleMid</ref></type>
+        <definition>IXLCFColorScaleMid Minimum</definition>
+        <argsstring>(XLCFContentType type, String value, XLColor color)</argsstring>
+        <name>Minimum</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_min_1a4d06500332ba40956470bf6a4d9d417b">Minimum</reimplements>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" bodystart="16" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1a2485de3a4eb1f5dc3ffc8fb0910cee48" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid" kindref="compound">IXLCFColorScaleMid</ref></type>
+        <definition>IXLCFColorScaleMid Minimum</definition>
+        <argsstring>(XLCFContentType type, Double value, XLColor color)</argsstring>
+        <name>Minimum</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_min_1a2485de3a4eb1f5dc3ffc8fb0910cee48">Minimum</reimplements>
+        <param>
+          <type>XLCFContentType</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>Double</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" bodystart="23" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1aad0b8cfc5e3e38866411f95b1cc3f3f9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_mid" kindref="compound">IXLCFColorScaleMid</ref></type>
+        <definition>IXLCFColorScaleMid LowestValue</definition>
+        <argsstring>(XLColor color)</argsstring>
+        <name>LowestValue</name>
+        <reimplements refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_min_1aad0b8cfc5e3e38866411f95b1cc3f3f9">LowestValue</reimplements>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_color" kindref="compound">XLColor</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" bodystart="28" bodyend="34"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1026">
+        <label>IXLCFColorScaleMin</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_min"/>
+      </node>
+      <node id="1025">
+        <label>XLCFColorScaleMin</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min"/>
+        <childnode refid="1026" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1028">
+        <label>IXLCFColorScaleMin</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_color_scale_min"/>
+      </node>
+      <node id="1027">
+        <label>XLCFColorScaleMin</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min"/>
+        <childnode refid="1028" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/XLCFColorScaleMin.cs" bodystart="8" bodyend="35"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1aae2cd3dcd495588de23bdd50c14f7842" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMin</scope><name>_conditionalFormat</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1aad0b8cfc5e3e38866411f95b1cc3f3f9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMin</scope><name>LowestValue</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1a4d06500332ba40956470bf6a4d9d417b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMin</scope><name>Minimum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1a2485de3a4eb1f5dc3ffc8fb0910cee48" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMin</scope><name>Minimum</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_color_scale_min_1ac5e9ed76d9af75c14b825c624bc33ada" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFColorScaleMin</scope><name>XLCFColorScaleMin</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_object_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::ObjectExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_object_extensions_1a551f332b200bcde8d70443cd53311724" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>static bool IsNumber</definition>
+        <argsstring>(this object value)</argsstring>
+        <name>IsNumber</name>
+        <param>
+          <type>this object</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="337" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="337" bodyend="350"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_object_extensions_1a5a5a3147b13299beb286acb1a3947887" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>static string ToInvariantString</definition>
+        <argsstring>(this object value)</argsstring>
+        <name>ToInvariantString</name>
+        <param>
+          <type>this object</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="352" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="352" bodyend="401"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="336" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="335" bodyend="402"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_object_extensions_1a551f332b200bcde8d70443cd53311724" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::ObjectExtensions</scope><name>IsNumber</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_object_extensions_1a5a5a3147b13299beb286acb1a3947887" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::ObjectExtensions</scope><name>ToInvariantString</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

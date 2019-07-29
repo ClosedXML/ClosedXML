@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_7e3b833fb54a50f692aba554ddb7e656" kind="dir">
+    <compoundname>AutoFilters</compoundname>
+    <innerfile refid="_i_x_l_auto_filter_8cs">IXLAutoFilter.cs</innerfile>
+    <innerfile refid="_i_x_l_custom_filtered_column_8cs">IXLCustomFilteredColumn.cs</innerfile>
+    <innerfile refid="_i_x_l_filter_column_8cs">IXLFilterColumn.cs</innerfile>
+    <innerfile refid="_i_x_l_filter_connector_8cs">IXLFilterConnector.cs</innerfile>
+    <innerfile refid="_i_x_l_filtered_column_8cs">IXLFilteredColumn.cs</innerfile>
+    <innerfile refid="_x_l_auto_filter_8cs">XLAutoFilter.cs</innerfile>
+    <innerfile refid="_x_l_custom_filtered_column_8cs">XLCustomFilteredColumn.cs</innerfile>
+    <innerfile refid="_x_l_date_time_group_filtered_column_8cs">XLDateTimeGroupFilteredColumn.cs</innerfile>
+    <innerfile refid="_x_l_filter_8cs">XLFilter.cs</innerfile>
+    <innerfile refid="_x_l_filter_column_8cs">XLFilterColumn.cs</innerfile>
+    <innerfile refid="_x_l_filter_connector_8cs">XLFilterConnector.cs</innerfile>
+    <innerfile refid="_x_l_filtered_column_8cs">XLFilteredColumn.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/AutoFilters/"/>
+  </compounddef>
+</doxygen>

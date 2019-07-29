@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::CalcEngine::CalcEngineHelpers</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1ace33827caa514169ff9df1c0d04b3be7" prot="private" static="yes" mutable="no">
+        <type>Lazy&lt; Dictionary&lt; string, Tuple&lt; string, string &gt; &gt; &gt;</type>
+        <definition>Lazy&lt;Dictionary&lt;string, Tuple&lt;string, string&gt; &gt; &gt; patternReplacements</definition>
+        <argsstring></argsstring>
+        <name>patternReplacements</name>
+        <initializer>=
+            new Lazy&lt;Dictionary&lt;string, Tuple&lt;string, string&gt;&gt;&gt;(() =&gt;
+            {
+                var patternReplacements = new Dictionary&lt;string, Tuple&lt;string, string&gt;&gt;();
+                
+                
+                patternReplacements.Add(@&quot;~~&quot;, new Tuple&lt;string, string&gt;(@&quot;~~&quot;, &quot;~&quot;));
+                patternReplacements.Add(@&quot;~*&quot;, new Tuple&lt;string, string&gt;(@&quot;~\*&quot;, @&quot;\*&quot;));
+                patternReplacements.Add(@&quot;~?&quot;, new Tuple&lt;string, string&gt;(@&quot;~\?&quot;, @&quot;\?&quot;));
+                patternReplacements.Add(@&quot;?&quot;, new Tuple&lt;string, string&gt;(@&quot;\?&quot;, &quot;.?&quot;));
+                patternReplacements.Add(@&quot;*&quot;, new Tuple&lt;string, string&gt;(@&quot;\*&quot;, &quot;.*&quot;));
+
+                return patternReplacements;
+            })</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1ac10d5dd9cfb16a011ee88e9991399d2d" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal bool</type>
+        <definition>static internal bool ValueSatisfiesCriteria</definition>
+        <argsstring>(object value, object criteria, CalcEngine ce)</argsstring>
+        <name>ValueSatisfiesCriteria</name>
+        <param>
+          <type>object</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>object</type>
+          <declname>criteria</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine" kindref="compound">CalcEngine</ref></type>
+          <declname>ce</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" bodystart="26" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1a57650fcb2f594c93180b00ecb5452b47" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal bool</type>
+        <definition>static internal bool ValueIsBlank</definition>
+        <argsstring>(object value)</argsstring>
+        <name>ValueIsBlank</name>
+        <param>
+          <type>object</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" line="103" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" bodystart="103" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1aac27be49c4568b6343d7c56fd7b0886e" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>internal long</type>
+        <definition>static internal long GetTotalCellsCount</definition>
+        <argsstring>(XObjectExpression rangeExpression)</argsstring>
+        <name>GetTotalCellsCount</name>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_x_object_expression" kindref="compound">XObjectExpression</ref></type>
+          <declname>rangeExpression</declname>
+        </param>
+        <briefdescription>
+<para>Get total count of cells in the specified range without initalizing them all (which might cause serious performance issues on column-wide calculations). </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>rangeExpression</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><ref refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_expression" kindref="compound">Expression</ref> referring to the cell range.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Total number of cells in the range.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" line="116" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" bodystart="116" bodyend="123"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/CalcEngineHelpers.cs" bodystart="9" bodyend="124"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1aac27be49c4568b6343d7c56fd7b0886e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngineHelpers</scope><name>GetTotalCellsCount</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1ace33827caa514169ff9df1c0d04b3be7" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngineHelpers</scope><name>patternReplacements</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1a57650fcb2f594c93180b00ecb5452b47" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngineHelpers</scope><name>ValueIsBlank</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_calc_engine_1_1_calc_engine_helpers_1ac10d5dd9cfb16a011ee88e9991399d2d" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::CalcEngine::CalcEngineHelpers</scope><name>ValueSatisfiesCriteria</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

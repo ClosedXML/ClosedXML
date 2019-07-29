@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_sheet_view_content_manager" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::ContentManagers::XLSheetViewContentManager</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager" prot="public" virt="non-virtual">XLBaseContentManager&lt; XLSheetViewContents &gt;</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_sheet_view_content_manager_1a2afaafe15bad17d7cce7f53e79b5f847" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLSheetViewContentManager</definition>
+        <argsstring>(SheetView sheetView)</argsstring>
+        <name>XLSheetViewContentManager</name>
+        <param>
+          <type>SheetView</type>
+          <declname>sheetView</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLSheetViewContentManager.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLSheetViewContentManager.cs" bodystart="16" bodyend="22"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1753">
+        <label>XLSheetViewContentManager</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_sheet_view_content_manager"/>
+        <childnode refid="1754" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1754">
+        <label>XLBaseContentManager&lt; XLSheetViewContents &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1755">
+        <label>XLSheetViewContentManager</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_sheet_view_content_manager"/>
+        <childnode refid="1756" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1756">
+        <label>XLBaseContentManager&lt; XLSheetViewContents &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLSheetViewContentManager.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLSheetViewContentManager.cs" bodystart="14" bodyend="23"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_sheet_view_content_manager_1a2afaafe15bad17d7cce7f53e79b5f847" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::ContentManagers::XLSheetViewContentManager</scope><name>XLSheetViewContentManager</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

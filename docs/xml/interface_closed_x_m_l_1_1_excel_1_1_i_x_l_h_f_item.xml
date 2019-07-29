@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLHFItem</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string" prot="public" virt="non-virtual">IXLWithRichString</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item" prot="public" virt="non-virtual">XLHFItem</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a95fd239705953e4074fc48ec2b697965" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String GetText</definition>
+        <argsstring>(XLHFOccurrence occurrence)</argsstring>
+        <name>GetText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a95fd239705953e4074fc48ec2b697965">GetText</reimplementedby>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Gets the text of the specified header/footer occurrence. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" line="20" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a64782963a9d70bf23e6dbf4ce3be529f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(XLHFPredefinedText predefinedText)</argsstring>
+        <name>AddText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a64782963a9d70bf23e6dbf4ce3be529f">AddText</reimplementedby>
+        <param>
+          <type>XLHFPredefinedText</type>
+          <declname>predefinedText</declname>
+        </param>
+        <briefdescription>
+<para>Adds the given predefined text to this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>predefinedText</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The predefined text to add to this header/footer item.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a4f6b29fd1430b090b2f9930b8b8df44a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(String text, XLHFOccurrence occurrence)</argsstring>
+        <name>AddText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a4f6b29fd1430b090b2f9930b8b8df44a">AddText</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Adds the given text to this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>text</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The text to add to this header/footer item.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence for the text.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" line="33" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a1eaaf16ca62122d6ae7b95be2a2e1fa4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddText</definition>
+        <argsstring>(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)</argsstring>
+        <name>AddText</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a1eaaf16ca62122d6ae7b95be2a2e1fa4">AddText</reimplementedby>
+        <param>
+          <type>XLHFPredefinedText</type>
+          <declname>predefinedText</declname>
+        </param>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+        </param>
+        <briefdescription>
+<para>Adds the given predefined text to this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>predefinedText</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The predefined text to add to this header/footer item.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence for the predefined text.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" line="40" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a3f53ca22e8ac4c9675ea1b9a15c5161f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>(XLHFOccurrence occurrence=XLHFOccurrence.AllPages)</argsstring>
+        <name>Clear</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a3f53ca22e8ac4c9675ea1b9a15c5161f">Clear</reimplementedby>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+          <defval>XLHFOccurrence.AllPages</defval>
+        </param>
+        <briefdescription>
+<para>Clears the text/formats of this header/footer item. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>occurrence</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The occurrence to clear.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" line="44" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a9fd34712793253acf4664b05590adc46" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rich_string" kindref="compound">IXLRichString</ref></type>
+        <definition>IXLRichString AddImage</definition>
+        <argsstring>(String imagePath, XLHFOccurrence occurrence=XLHFOccurrence.AllPages)</argsstring>
+        <name>AddImage</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item_1a9fd34712793253acf4664b05590adc46">AddImage</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>imagePath</declname>
+        </param>
+        <param>
+          <type>XLHFOccurrence</type>
+          <declname>occurrence</declname>
+          <defval>XLHFOccurrence.AllPages</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" line="46" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="414">
+        <label>XLHFItem</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_h_f_item"/>
+        <childnode refid="412" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="413">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="412">
+        <label>IXLHFItem</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item"/>
+        <childnode refid="413" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="416">
+        <label>IXLWithRichString</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string"/>
+      </node>
+      <node id="415">
+        <label>IXLHFItem</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item"/>
+        <childnode refid="416" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" line="15" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/IXLHFItem.cs" bodystart="14" bodyend="47"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a9fd34712793253acf4664b05590adc46" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHFItem</scope><name>AddImage</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a18121cd759e5c2ba19b97ac27dea6bba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHFItem</scope><name>AddNewLine</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a64782963a9d70bf23e6dbf4ce3be529f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHFItem</scope><name>AddText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a4f6b29fd1430b090b2f9930b8b8df44a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHFItem</scope><name>AddText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a1eaaf16ca62122d6ae7b95be2a2e1fa4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHFItem</scope><name>AddText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_with_rich_string_1a5023e57f9f8ea89097e384bfc7db7ae4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLWithRichString."><scope>ClosedXML::Excel::IXLHFItem</scope><name>AddText</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a3f53ca22e8ac4c9675ea1b9a15c5161f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHFItem</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_h_f_item_1a95fd239705953e4074fc48ec2b697965" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLHFItem</scope><name>GetText</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

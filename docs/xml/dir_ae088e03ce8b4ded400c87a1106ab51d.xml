@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_ae088e03ce8b4ded400c87a1106ab51d" kind="dir">
+    <compoundname>Debug</compoundname>
+    <innerdir refid="dir_5c3e5a9066f8c1d1af9ac806c32e954d">net40</innerdir>
+    <innerdir refid="dir_45ac1388ddc21655ddb8b776894063db">net46</innerdir>
+    <innerdir refid="dir_0d6608c46110a7120ac54dbe7a1a73ea">netstandard2.0</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/obj/Debug/"/>
+  </compounddef>
+</doxygen>

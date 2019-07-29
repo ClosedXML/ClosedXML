@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_71d99b29a63fc3092e89d8ddb68ba21b" kind="dir">
+    <compoundname>Colors</compoundname>
+    <innerfile refid="_x_l_color___internal_8cs">XLColor_Internal.cs</innerfile>
+    <innerfile refid="_x_l_color___public_8cs">XLColor_Public.cs</innerfile>
+    <innerfile refid="_x_l_color___static_8cs">XLColor_Static.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/Colors/"/>
+  </compounddef>
+</doxygen>

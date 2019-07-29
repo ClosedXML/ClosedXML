@@ -1,0 +1,629 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Drawings::IXLPicture</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IDisposable</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture" prot="public" virt="non-virtual">XLPicture</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1aae8771cd59a3fe20ab46ca9659c40b7f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell BottomRightCell</definition>
+        <argsstring></argsstring>
+        <name>BottomRightCell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ae15a8c4a885e04d46dc70c6ae16079ec" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>XLPictureFormat</type>
+        <definition>XLPictureFormat Format</definition>
+        <argsstring></argsstring>
+        <name>Format</name>
+        <briefdescription>
+<para>Type of image. The supported formats are defined by OpenXML&apos;s ImagePartType. Default value is &quot;jpeg&quot; </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="16" bodyend="16"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ad54c3bce323cb8a56b6145bc5b324e56" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Height</definition>
+        <argsstring></argsstring>
+        <name>Height</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="18" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="18" bodyend="18"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a4e03217f9cb34049f79623f23c7235df" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Id</definition>
+        <argsstring></argsstring>
+        <name>Id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a0cae1d26558decd6e7504dd0acb379cc" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>MemoryStream</type>
+        <definition>MemoryStream ImageStream</definition>
+        <argsstring></argsstring>
+        <name>ImageStream</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a1585df8e554e21ee87d295f70ad09809" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Left</definition>
+        <argsstring></argsstring>
+        <name>Left</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="24" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a934fa09ba291a97f43720640e4d83f25" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Name</definition>
+        <argsstring></argsstring>
+        <name>Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="26" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ad89ee3387799f03c7224259cb9883fd1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 OriginalHeight</definition>
+        <argsstring></argsstring>
+        <name>OriginalHeight</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="28" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a1d60d2abed0abf9655f8da36c0a79afd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 OriginalWidth</definition>
+        <argsstring></argsstring>
+        <name>OriginalWidth</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="30" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="30" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a37b121dec58b3268c774c2dba1d234bb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPicturePlacement</type>
+        <definition>XLPicturePlacement Placement</definition>
+        <argsstring></argsstring>
+        <name>Placement</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a7b3e06bcc09291f8db7e755fbf965f4f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Top</definition>
+        <argsstring></argsstring>
+        <name>Top</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="34" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1acab4c37d2a50d891d4cb87a084e42711" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell TopLeftCell</definition>
+        <argsstring></argsstring>
+        <name>TopLeftCell</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="36" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a9b255a3cdaa167189b9c4bcf59a74a33" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Width</definition>
+        <argsstring></argsstring>
+        <name>Width</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="40" bodyend="40"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ace6d4db01aefbbe3c8a5df1118c56025" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture CopyTo</definition>
+        <argsstring>(IXLWorksheet targetSheet)</argsstring>
+        <name>CopyTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1ace6d4db01aefbbe3c8a5df1118c56025">CopyTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>targetSheet</declname>
+        </param>
+        <briefdescription>
+<para>Create a copy of the picture on a different worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>targetSheet</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The worksheet to which the picture will be copied.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A created copy of the picture.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="47" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ac2e5aab0612d67400354a4fe71278a21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Delete</definition>
+        <argsstring>()</argsstring>
+        <name>Delete</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1ac2e5aab0612d67400354a4fe71278a21">Delete</reimplementedby>
+        <briefdescription>
+<para>Deletes this picture. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="52" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a31a44048b5251cba682dcb008b2bb514" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Duplicate</definition>
+        <argsstring>()</argsstring>
+        <name>Duplicate</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a31a44048b5251cba682dcb008b2bb514">Duplicate</reimplementedby>
+        <briefdescription>
+<para>Create a copy of the picture on the same worksheet. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>A created copy of the picture.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="58" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1acbdc53ad949afb5f833fb1fef8508b38" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Point</type>
+        <definition>Point GetOffset</definition>
+        <argsstring>(XLMarkerPosition position)</argsstring>
+        <name>GetOffset</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1acbdc53ad949afb5f833fb1fef8508b38">GetOffset</reimplementedby>
+        <param>
+          <type>XLMarkerPosition</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="60" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ab350d20c1f4c777e1e5396876ea99cda" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture MoveTo</definition>
+        <argsstring>(Int32 left, Int32 top)</argsstring>
+        <name>MoveTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1ab350d20c1f4c777e1e5396876ea99cda">MoveTo</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>left</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>top</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="62" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a3380408a8195075f0b418217aae5e72f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture MoveTo</definition>
+        <argsstring>(IXLCell cell)</argsstring>
+        <name>MoveTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a3380408a8195075f0b418217aae5e72f">MoveTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="64" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a3e289d6cb59c8a95117ab1289c6ec2d6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture MoveTo</definition>
+        <argsstring>(IXLCell cell, Int32 xOffset, Int32 yOffset)</argsstring>
+        <name>MoveTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a3e289d6cb59c8a95117ab1289c6ec2d6">MoveTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>xOffset</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>yOffset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="66" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1abb9adacf2c4d44cd4a8724a3e9834261" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture MoveTo</definition>
+        <argsstring>(IXLCell cell, Point offset)</argsstring>
+        <name>MoveTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1abb9adacf2c4d44cd4a8724a3e9834261">MoveTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>cell</declname>
+        </param>
+        <param>
+          <type>Point</type>
+          <declname>offset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="68" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ae0c8a5959ea2bfa62d00097511eac6b8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture MoveTo</definition>
+        <argsstring>(IXLCell fromCell, IXLCell toCell)</argsstring>
+        <name>MoveTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1ae0c8a5959ea2bfa62d00097511eac6b8">MoveTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>fromCell</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>toCell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="70" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a0ec408124ea23aa484f849fcb7003e45" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture MoveTo</definition>
+        <argsstring>(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset)</argsstring>
+        <name>MoveTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a0ec408124ea23aa484f849fcb7003e45">MoveTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>fromCell</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>fromCellXOffset</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>fromCellYOffset</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>toCell</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>toCellXOffset</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>toCellYOffset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="72" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a2e7db7001e01ba1a9d67bf6f950aa5a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture MoveTo</definition>
+        <argsstring>(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset)</argsstring>
+        <name>MoveTo</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a2e7db7001e01ba1a9d67bf6f950aa5a5">MoveTo</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>fromCell</declname>
+        </param>
+        <param>
+          <type>Point</type>
+          <declname>fromOffset</declname>
+        </param>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+          <declname>toCell</declname>
+        </param>
+        <param>
+          <type>Point</type>
+          <declname>toOffset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="74" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ac5e991ddf7dde61ec7631901c572daf7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture Scale</definition>
+        <argsstring>(Double factor, Boolean relativeToOriginal=false)</argsstring>
+        <name>Scale</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1ac5e991ddf7dde61ec7631901c572daf7">Scale</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>factor</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>relativeToOriginal</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="76" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a4f358d9fc4190935a7ed0d286ea5e892" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture ScaleHeight</definition>
+        <argsstring>(Double factor, Boolean relativeToOriginal=false)</argsstring>
+        <name>ScaleHeight</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a4f358d9fc4190935a7ed0d286ea5e892">ScaleHeight</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>factor</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>relativeToOriginal</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="78" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a62974e318d3b7fd1ec9e7d76836863f7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture ScaleWidth</definition>
+        <argsstring>(Double factor, Boolean relativeToOriginal=false)</argsstring>
+        <name>ScaleWidth</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a62974e318d3b7fd1ec9e7d76836863f7">ScaleWidth</reimplementedby>
+        <param>
+          <type>Double</type>
+          <declname>factor</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>relativeToOriginal</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="80" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a7ac971ff3a16812444dc1a99c0b5fbf7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture WithPlacement</definition>
+        <argsstring>(XLPicturePlacement value)</argsstring>
+        <name>WithPlacement</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1a7ac971ff3a16812444dc1a99c0b5fbf7">WithPlacement</reimplementedby>
+        <param>
+          <type>XLPicturePlacement</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="82" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1acee945c16abc57cbd5d59e84abb7eb5b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" kindref="compound">IXLPicture</ref></type>
+        <definition>IXLPicture WithSize</definition>
+        <argsstring>(Int32 width, Int32 height)</argsstring>
+        <name>WithSize</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture_1acee945c16abc57cbd5d59e84abb7eb5b">WithSize</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>width</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>height</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="84" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="467">
+        <label>IDisposable</label>
+      </node>
+      <node id="468">
+        <label>XLPicture</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture"/>
+        <childnode refid="466" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="466">
+        <label>IXLPicture</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture"/>
+        <childnode refid="467" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="470">
+        <label>IDisposable</label>
+      </node>
+      <node id="469">
+        <label>IXLPicture</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture"/>
+        <childnode refid="470" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" bodystart="8" bodyend="85"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1aae8771cd59a3fe20ab46ca9659c40b7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>BottomRightCell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ace6d4db01aefbbe3c8a5df1118c56025" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>CopyTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ac2e5aab0612d67400354a4fe71278a21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Delete</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a31a44048b5251cba682dcb008b2bb514" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Duplicate</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ae15a8c4a885e04d46dc70c6ae16079ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Format</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1acbdc53ad949afb5f833fb1fef8508b38" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>GetOffset</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ad54c3bce323cb8a56b6145bc5b324e56" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Height</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a4e03217f9cb34049f79623f23c7235df" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Id</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a0cae1d26558decd6e7504dd0acb379cc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>ImageStream</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a1585df8e554e21ee87d295f70ad09809" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Left</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ab350d20c1f4c777e1e5396876ea99cda" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>MoveTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a3380408a8195075f0b418217aae5e72f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>MoveTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a3e289d6cb59c8a95117ab1289c6ec2d6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>MoveTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1abb9adacf2c4d44cd4a8724a3e9834261" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>MoveTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ae0c8a5959ea2bfa62d00097511eac6b8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>MoveTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a0ec408124ea23aa484f849fcb7003e45" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>MoveTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a2e7db7001e01ba1a9d67bf6f950aa5a5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>MoveTo</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a934fa09ba291a97f43720640e4d83f25" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Name</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ad89ee3387799f03c7224259cb9883fd1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>OriginalHeight</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a1d60d2abed0abf9655f8da36c0a79afd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>OriginalWidth</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a37b121dec58b3268c774c2dba1d234bb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Placement</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1ac5e991ddf7dde61ec7631901c572daf7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Scale</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a4f358d9fc4190935a7ed0d286ea5e892" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>ScaleHeight</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a62974e318d3b7fd1ec9e7d76836863f7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>ScaleWidth</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a7b3e06bcc09291f8db7e755fbf965f4f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Top</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1acab4c37d2a50d891d4cb87a084e42711" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>TopLeftCell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a9b255a3cdaa167189b9c4bcf59a74a33" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Width</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a7ac971ff3a16812444dc1a99c0b5fbf7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>WithPlacement</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1acee945c16abc57cbd5d59e84abb7eb5b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>WithSize</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Drawings::IXLPicture</scope><name>Worksheet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

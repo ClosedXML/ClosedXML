@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_ee836a51f91e3466b4ff4c9be0b8ea8e" kind="dir">
+    <compoundname>Cells</compoundname>
+    <innerfile refid="_i_x_l_cell_8cs">IXLCell.cs</innerfile>
+    <innerfile refid="_i_x_l_cells_8cs">IXLCells.cs</innerfile>
+    <innerfile refid="_x_l_cell_8cs">XLCell.cs</innerfile>
+    <innerfile refid="_x_l_cell_copy_options_8cs">XLCellCopyOptions.cs</innerfile>
+    <innerfile refid="_x_l_cells_8cs">XLCells.cs</innerfile>
+    <innerfile refid="_x_l_cells_collection_8cs">XLCellsCollection.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Cells/"/>
+  </compounddef>
+</doxygen>

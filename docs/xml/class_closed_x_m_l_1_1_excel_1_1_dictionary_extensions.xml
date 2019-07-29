@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_dictionary_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::DictionaryExtensions</compoundname>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_dictionary_extensions_1a3ab38c4546303849f1bebe859913f519" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void RemoveAll&lt; TKey, TValue &gt;</definition>
+        <argsstring>(this Dictionary&lt; TKey, TValue &gt; dic, Func&lt; TValue, bool &gt; predicate)</argsstring>
+        <name>RemoveAll&lt; TKey, TValue &gt;</name>
+        <param>
+          <type>this Dictionary&lt; TKey, TValue &gt;</type>
+          <declname>dic</declname>
+        </param>
+        <param>
+          <type>Func&lt; TValue, bool &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="89" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="89" bodyend="97"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="88" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="87" bodyend="98"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_dictionary_extensions_1a3ab38c4546303849f1bebe859913f519" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::DictionaryExtensions</scope><name>RemoveAll&lt; TKey, TValue &gt;</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

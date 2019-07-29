@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_d5765884b4142d3a0792e08f6b8664b7" kind="dir">
+    <compoundname>CalcEngine</compoundname>
+    <innerdir refid="dir_2c2909975182dfc59d5869ceff17972a">Exceptions</innerdir>
+    <innerdir refid="dir_89160a75d6431e9420c38ba08c8c31ed">Functions</innerdir>
+    <innerfile refid="_calc_engine_8cs">CalcEngine.cs</innerfile>
+    <innerfile refid="_calc_engine_helpers_8cs">CalcEngineHelpers.cs</innerfile>
+    <innerfile refid="_cell_range_reference_8cs">CellRangeReference.cs</innerfile>
+    <innerfile refid="_expression_8cs">Expression.cs</innerfile>
+    <innerfile refid="_expression_cache_8cs">ExpressionCache.cs</innerfile>
+    <innerfile refid="_expression_parse_exception_8cs">ExpressionParseException.cs</innerfile>
+    <innerfile refid="_function_definition_8cs">FunctionDefinition.cs</innerfile>
+    <innerfile refid="_token_8cs">Token.cs</innerfile>
+    <innerfile refid="_x_l_address_comparer_8cs">XLAddressComparer.cs</innerfile>
+    <innerfile refid="_x_l_calc_engine_8cs">XLCalcEngine.cs</innerfile>
+    <innerfile refid="_x_l_range_address_comparer_8cs">XLRangeAddressComparer.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/CalcEngine/"/>
+  </compounddef>
+</doxygen>

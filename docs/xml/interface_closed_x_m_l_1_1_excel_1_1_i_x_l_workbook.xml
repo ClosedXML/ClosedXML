@@ -1,0 +1,1566 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLWorkbook</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IDisposable</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" prot="public" virt="non-virtual">XLWorkbook</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aca9f76df1e60f93e7a7c5d1a0d4a3fc5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String Author</definition>
+        <argsstring></argsstring>
+        <name>Author</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9a24d229a5296008063844ffe5287ee3" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLCalculateMode</type>
+        <definition>XLCalculateMode CalculateMode</definition>
+        <argsstring></argsstring>
+        <name>CalculateMode</name>
+        <briefdescription>
+<para>Gets or sets the workbook&apos;s calculation mode. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a1d58b03bdfe2be0bf8e1b3770e18717c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean CalculationOnSave</definition>
+        <argsstring></argsstring>
+        <name>CalculationOnSave</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="19" bodyend="19"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a2adf2577a045ca6e58efbb86182c92ed" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double ColumnWidth</definition>
+        <argsstring></argsstring>
+        <name>ColumnWidth</name>
+        <briefdescription>
+<para>Gets or sets the default column width for the workbook. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All new worksheets will use this column width.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="25" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a62672e300acdae60d70c72e33918f5e7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_properties" kindref="compound">IXLCustomProperties</ref></type>
+        <definition>IXLCustomProperties CustomProperties</definition>
+        <argsstring></argsstring>
+        <name>CustomProperties</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa3495dc7ec2f6fa1f82e4b93c27ced43" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultRightToLeft</definition>
+        <argsstring></argsstring>
+        <name>DefaultRightToLeft</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="29" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a725ad09c2aafc3cbbd82eea09956b7f2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultShowFormulas</definition>
+        <argsstring></argsstring>
+        <name>DefaultShowFormulas</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="31" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a4fcf23bdbff73cdc4d2a810f8a4431c8" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultShowGridLines</definition>
+        <argsstring></argsstring>
+        <name>DefaultShowGridLines</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="33" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a461fd670a9a289ef30c2c4ef56422c88" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultShowOutlineSymbols</definition>
+        <argsstring></argsstring>
+        <name>DefaultShowOutlineSymbols</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="35" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5b60ff1ed37853919e39e6bd9ca45978" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultShowRowColHeaders</definition>
+        <argsstring></argsstring>
+        <name>DefaultShowRowColHeaders</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="37" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a514e50f6fcabd2540da894328ef70cb8" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultShowRuler</definition>
+        <argsstring></argsstring>
+        <name>DefaultShowRuler</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="39" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a3882e30c1073213415f325a12dff112f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultShowWhiteSpace</definition>
+        <argsstring></argsstring>
+        <name>DefaultShowWhiteSpace</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="41" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6311b55a059295a40423485b4f47389a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean DefaultShowZeros</definition>
+        <argsstring></argsstring>
+        <name>DefaultShowZeros</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="43" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa3bc5734666a1674509fd0d60f7c9f32" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_file_sharing" kindref="compound">IXLFileSharing</ref></type>
+        <definition>IXLFileSharing FileSharing</definition>
+        <argsstring></argsstring>
+        <name>FileSharing</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="45" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a93e7cb84c58128fa7663273f3cafed4b" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ForceFullCalculation</definition>
+        <argsstring></argsstring>
+        <name>ForceFullCalculation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="47" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="47" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a914390a5c962b890c3e759b1e4e2f4ba" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean FullCalculationOnLoad</definition>
+        <argsstring></argsstring>
+        <name>FullCalculationOnLoad</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="49" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a89cdcd3669af133a90d156f68e62bf32" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean FullPrecision</definition>
+        <argsstring></argsstring>
+        <name>FullPrecision</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="51" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="51" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a18250407a0e11abfcf14df9c0c0aed8c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsPasswordProtected</definition>
+        <argsstring></argsstring>
+        <name>IsPasswordProtected</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="53" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="53" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1af68b298411ca5aaf87002744aa87f9ad" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean LockStructure</definition>
+        <argsstring></argsstring>
+        <name>LockStructure</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="55" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="55" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a77fb407a3bd52d877329f5ebbbf80e0c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean LockWindows</definition>
+        <argsstring></argsstring>
+        <name>LockWindows</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="57" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="57" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a55444d9b08742a9f73186b07e2d7cb1a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_ranges" kindref="compound">IXLNamedRanges</ref></type>
+        <definition>IXLNamedRanges NamedRanges</definition>
+        <argsstring></argsstring>
+        <name>NamedRanges</name>
+        <briefdescription>
+<para>Gets an object to manipulate this workbook&apos;s named ranges. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="62" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="62" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ad28f64e6be625c248fbb5bf8e1fb2ee6" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_outline" kindref="compound">IXLOutline</ref></type>
+        <definition>IXLOutline Outline</definition>
+        <argsstring></argsstring>
+        <name>Outline</name>
+        <briefdescription>
+<para>Gets or sets the default outline options for the workbook. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All new worksheets will use these outline options.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="68" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a313079d1765db2621431f59514a9ce21" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_page_setup" kindref="compound">IXLPageSetup</ref></type>
+        <definition>IXLPageSetup PageOptions</definition>
+        <argsstring></argsstring>
+        <name>PageOptions</name>
+        <briefdescription>
+<para>Gets or sets the default page options for the workbook. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All new worksheets will use these page options.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="74" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="74" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aed1298d6e02c3c24aba85a3e5ba98012" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_properties" kindref="compound">XLWorkbookProperties</ref></type>
+        <definition>XLWorkbookProperties Properties</definition>
+        <argsstring></argsstring>
+        <name>Properties</name>
+        <briefdescription>
+<para>Gets or sets the workbook&apos;s properties. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="79" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="79" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a7b8ca7a7c84a76a3e9119a4e078c4b83" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLReferenceStyle</type>
+        <definition>XLReferenceStyle ReferenceStyle</definition>
+        <argsstring></argsstring>
+        <name>ReferenceStyle</name>
+        <briefdescription>
+<para>Gets or sets the workbook&apos;s reference style. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="84" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="84" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a969cd5b761fcee8a05e36bc805800f0a" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean RightToLeft</definition>
+        <argsstring></argsstring>
+        <name>RightToLeft</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="86" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="86" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ade229c36163a4fdebf8bd1853a1b2d7f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Double</type>
+        <definition>Double RowHeight</definition>
+        <argsstring></argsstring>
+        <name>RowHeight</name>
+        <briefdescription>
+<para>Gets or sets the default row height for the workbook. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All new worksheets will use this row height.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="92" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="92" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a47b620d6e6b0784ff45c2df1be95c0e6" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowFormulas</definition>
+        <argsstring></argsstring>
+        <name>ShowFormulas</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="94" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="94" bodyend="94"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ae9c17a2cc85020f3f310b82f1e2d7292" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowGridLines</definition>
+        <argsstring></argsstring>
+        <name>ShowGridLines</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="96" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="96" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a13cf1a2a41ce2a0674c1d1e1eb90a7b2" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowOutlineSymbols</definition>
+        <argsstring></argsstring>
+        <name>ShowOutlineSymbols</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="98" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="98" bodyend="98"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5f0c91d18b33e672780d8c9960e0a8eb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowRowColHeaders</definition>
+        <argsstring></argsstring>
+        <name>ShowRowColHeaders</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="100" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="100" bodyend="100"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a533d4ee6bfaa3243a222bb671cf46252" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowRuler</definition>
+        <argsstring></argsstring>
+        <name>ShowRuler</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="102" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="102" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a36bea6682157c6e324aae86f50d78530" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowWhiteSpace</definition>
+        <argsstring></argsstring>
+        <name>ShowWhiteSpace</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="104" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a80294c0960348c2092096a29e2caddeb" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowZeros</definition>
+        <argsstring></argsstring>
+        <name>ShowZeros</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="106" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="106" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6cef8de98f05983f520efefc334e6b13" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle Style</definition>
+        <argsstring></argsstring>
+        <name>Style</name>
+        <briefdescription>
+<para>Gets or sets the default style for the workbook. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>All new worksheets will use this style.</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="112" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="112" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1af817897ac6ec66ba321a3b6416272ede" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_theme" kindref="compound">IXLTheme</ref></type>
+        <definition>IXLTheme Theme</definition>
+        <argsstring></argsstring>
+        <name>Theme</name>
+        <briefdescription>
+<para>Gets an object to manipulate this workbook&apos;s theme. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="117" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="117" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a95a4bb0b572df28e4a3c8d6c62981869" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Use1904DateSystem</definition>
+        <argsstring></argsstring>
+        <name>Use1904DateSystem</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="119" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="119" bodyend="119"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1af5f3cde2cc822da604ae415ac289f4db" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheets" kindref="compound">IXLWorksheets</ref></type>
+        <definition>IXLWorksheets Worksheets</definition>
+        <argsstring></argsstring>
+        <name>Worksheets</name>
+        <briefdescription>
+<para>Gets an object to manipulate the worksheets. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="124" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="124" bodyend="124"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a571e6c54d620b5fe4c6da2da98a86921" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet AddWorksheet</definition>
+        <argsstring>()</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a571e6c54d620b5fe4c6da2da98a86921">AddWorksheet</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="126" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a77d0561a6b8d2651b3d173b907ab744f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet AddWorksheet</definition>
+        <argsstring>(Int32 position)</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a77d0561a6b8d2651b3d173b907ab744f">AddWorksheet</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="128" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a59132267154a09dbff0994b6696ff76d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet AddWorksheet</definition>
+        <argsstring>(String sheetName)</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a59132267154a09dbff0994b6696ff76d">AddWorksheet</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="130" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a2f8c76cca1c59687201a1ea1ad37d528" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet AddWorksheet</definition>
+        <argsstring>(String sheetName, Int32 position)</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a2f8c76cca1c59687201a1ea1ad37d528">AddWorksheet</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <param>
+          <type>Int32</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="132" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a072495948f874cf5a2897c752d3712a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet AddWorksheet</definition>
+        <argsstring>(DataTable dataTable)</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a072495948f874cf5a2897c752d3712a8">AddWorksheet</reimplementedby>
+        <param>
+          <type>DataTable</type>
+          <declname>dataTable</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="134" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a0ce07eae1c2a18a14a105737bb50eccc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddWorksheet</definition>
+        <argsstring>(DataSet dataSet)</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a0ce07eae1c2a18a14a105737bb50eccc">AddWorksheet</reimplementedby>
+        <param>
+          <type>DataSet</type>
+          <declname>dataSet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="136" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ab73fe8cbe319a4b5ce0c2102c6f09b7d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void AddWorksheet</definition>
+        <argsstring>(IXLWorksheet worksheet)</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1ab73fe8cbe319a4b5ce0c2102c6f09b7d">AddWorksheet</reimplementedby>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="138" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ac6990434dc0a8ade0422dccbe3b0766b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet AddWorksheet</definition>
+        <argsstring>(DataTable dataTable, String sheetName)</argsstring>
+        <name>AddWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1ac6990434dc0a8ade0422dccbe3b0766b">AddWorksheet</reimplementedby>
+        <param>
+          <type>DataTable</type>
+          <declname>dataTable</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>sheetName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="140" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a4ef3605d624cc7c7f85ce88961d8be1a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref></type>
+        <definition>IXLCell Cell</definition>
+        <argsstring>(String namedCell)</argsstring>
+        <name>Cell</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a4ef3605d624cc7c7f85ce88961d8be1a">Cell</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>namedCell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="142" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a589bfdf14d4595f3cb6079f99d65bc61" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells Cells</definition>
+        <argsstring>(String namedCells)</argsstring>
+        <name>Cells</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a589bfdf14d4595f3cb6079f99d65bc61">Cells</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>namedCells</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="144" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9690a51c3f6a17648fd51e4de815d9cd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_custom_property" kindref="compound">IXLCustomProperty</ref></type>
+        <definition>IXLCustomProperty CustomProperty</definition>
+        <argsstring>(String name)</argsstring>
+        <name>CustomProperty</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a9690a51c3f6a17648fd51e4de815d9cd">CustomProperty</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="146" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a7a4bf5bdd14ddefb70310639fbad9ea6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Object</type>
+        <definition>Object Evaluate</definition>
+        <argsstring>(String expression)</argsstring>
+        <name>Evaluate</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a7a4bf5bdd14ddefb70310639fbad9ea6">Evaluate</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>expression</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="148" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a468f4414c5c1e524fd47859b9ecb2899" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cells" kindref="compound">IXLCells</ref></type>
+        <definition>IXLCells FindCells</definition>
+        <argsstring>(Func&lt; IXLCell, Boolean &gt; predicate)</argsstring>
+        <name>FindCells</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a468f4414c5c1e524fd47859b9ecb2899">FindCells</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="150" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ab08787625bad189f7878988ee3704ab3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_columns" kindref="compound">IXLColumns</ref></type>
+        <definition>IXLColumns FindColumns</definition>
+        <argsstring>(Func&lt; IXLColumn, Boolean &gt; predicate)</argsstring>
+        <name>FindColumns</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1ab08787625bad189f7878988ee3704ab3">FindColumns</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_column" kindref="compound">IXLColumn</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="152" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a3ce1da083c9537e9dc056e1834926ab5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_rows" kindref="compound">IXLRows</ref></type>
+        <definition>IXLRows FindRows</definition>
+        <argsstring>(Func&lt; IXLRow, Boolean &gt; predicate)</argsstring>
+        <name>FindRows</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a3ce1da083c9537e9dc056e1834926ab5">FindRows</reimplementedby>
+        <param>
+          <type>Func&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_row" kindref="compound">IXLRow</ref>, Boolean &gt;</type>
+          <declname>predicate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="154" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a4e20e13790a5d55d37a3733b414d261c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_named_range" kindref="compound">IXLNamedRange</ref></type>
+        <definition>IXLNamedRange NamedRange</definition>
+        <argsstring>(String rangeName)</argsstring>
+        <name>NamedRange</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a4e20e13790a5d55d37a3733b414d261c">NamedRange</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>rangeName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="156" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a0ae2cdcd120c7eaa1704434609144c9c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Protect</definition>
+        <argsstring>(Boolean lockStructure, Boolean lockWindows, String workbookPassword)</argsstring>
+        <name>Protect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a0ae2cdcd120c7eaa1704434609144c9c">Protect</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>lockStructure</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>lockWindows</declname>
+        </param>
+        <param>
+          <type>String</type>
+          <declname>workbookPassword</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="158" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a1de8a05cc42a5d36344c9e6fea45169e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Protect</definition>
+        <argsstring>()</argsstring>
+        <name>Protect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a1de8a05cc42a5d36344c9e6fea45169e">Protect</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="160" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a83b391d015187708572340abc6c7d915" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Protect</definition>
+        <argsstring>(string workbookPassword)</argsstring>
+        <name>Protect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a83b391d015187708572340abc6c7d915">Protect</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>workbookPassword</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="162" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a1598fb74679bb39e964eeb1599feacb1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Protect</definition>
+        <argsstring>(Boolean lockStructure)</argsstring>
+        <name>Protect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a1598fb74679bb39e964eeb1599feacb1">Protect</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>lockStructure</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="164" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aef8179b2ed2f7fd0df40d247fcc05597" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Protect</definition>
+        <argsstring>(Boolean lockStructure, Boolean lockWindows)</argsstring>
+        <name>Protect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1aef8179b2ed2f7fd0df40d247fcc05597">Protect</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>lockStructure</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>lockWindows</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="166" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a58247f21fb0bffbd4a7204e04c64ddcf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange Range</definition>
+        <argsstring>(String range)</argsstring>
+        <name>Range</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a58247f21fb0bffbd4a7204e04c64ddcf">Range</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>range</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="168" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa650910be2b8aaf6a4a2b59345b2ce9a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_range" kindref="compound">IXLRange</ref></type>
+        <definition>IXLRange RangeFromFullAddress</definition>
+        <argsstring>(String rangeAddress, out IXLWorksheet ws)</argsstring>
+        <name>RangeFromFullAddress</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1aa650910be2b8aaf6a4a2b59345b2ce9a">RangeFromFullAddress</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>rangeAddress</declname>
+        </param>
+        <param>
+          <type>out <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>ws</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="170" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5cf23fa75d422e342dc7729d43eed73e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_ranges" kindref="compound">IXLRanges</ref></type>
+        <definition>IXLRanges Ranges</definition>
+        <argsstring>(String ranges)</argsstring>
+        <name>Ranges</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a5cf23fa75d422e342dc7729d43eed73e">Ranges</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>ranges</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="172" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a849714ea7c112ca23d30c13a307d27ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void RecalculateAllFormulas</definition>
+        <argsstring>()</argsstring>
+        <name>RecalculateAllFormulas</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a849714ea7c112ca23d30c13a307d27ba">RecalculateAllFormulas</reimplementedby>
+        <briefdescription>
+<para>Force recalculation of all cell formulas. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="177" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5df140c1ee51aadf7fe88ce3fb9cac33" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Save</definition>
+        <argsstring>()</argsstring>
+        <name>Save</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a5df140c1ee51aadf7fe88ce3fb9cac33">Save</reimplementedby>
+        <briefdescription>
+<para>Saves the current workbook. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="182" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ac23d9f56e0dd0e1a2a745130be525a0d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Save</definition>
+        <argsstring>(Boolean validate, Boolean evaluateFormulae=false)</argsstring>
+        <name>Save</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1ac23d9f56e0dd0e1a2a745130be525a0d">Save</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>validate</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>evaluateFormulae</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Saves the current workbook and optionally performs validation </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="187" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa644c388acf70a151c2b827c8b241388" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Save</definition>
+        <argsstring>(SaveOptions options)</argsstring>
+        <name>Save</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1aa644c388acf70a151c2b827c8b241388">Save</reimplementedby>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_save_options" kindref="compound">SaveOptions</ref></type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="189" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1acfd6e902176a5d65ca26b8e99458fa0e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveAs</definition>
+        <argsstring>(String file)</argsstring>
+        <name>SaveAs</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1acfd6e902176a5d65ca26b8e99458fa0e">SaveAs</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>file</declname>
+        </param>
+        <briefdescription>
+<para>Saves the current workbook to a file. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="194" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9d1023bac353eae03753e202c05d5873" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveAs</definition>
+        <argsstring>(String file, Boolean validate, Boolean evaluateFormulae=false)</argsstring>
+        <name>SaveAs</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a9d1023bac353eae03753e202c05d5873">SaveAs</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>validate</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>evaluateFormulae</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Saves the current workbook to a file and optionally validates it. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="199" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a23a4e9ba62d0b0959e287fa437b7d653" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveAs</definition>
+        <argsstring>(String file, SaveOptions options)</argsstring>
+        <name>SaveAs</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a23a4e9ba62d0b0959e287fa437b7d653">SaveAs</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_save_options" kindref="compound">SaveOptions</ref></type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="201" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a746d849d3cbba6f73ca522373d2b6373" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveAs</definition>
+        <argsstring>(Stream stream)</argsstring>
+        <name>SaveAs</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a746d849d3cbba6f73ca522373d2b6373">SaveAs</reimplementedby>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <briefdescription>
+<para>Saves the current workbook to a stream. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="206" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a49f49e94e2d618583f61a946fcb78239" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveAs</definition>
+        <argsstring>(Stream stream, Boolean validate, Boolean evaluateFormulae=false)</argsstring>
+        <name>SaveAs</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a49f49e94e2d618583f61a946fcb78239">SaveAs</reimplementedby>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>validate</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>evaluateFormulae</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Saves the current workbook to a stream and optionally validates it. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="211" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a85bf46bf0b54afcba4a7f6d5ee905ef9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void SaveAs</definition>
+        <argsstring>(Stream stream, SaveOptions options)</argsstring>
+        <name>SaveAs</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a85bf46bf0b54afcba4a7f6d5ee905ef9">SaveAs</reimplementedby>
+        <param>
+          <type>Stream</type>
+          <declname>stream</declname>
+        </param>
+        <param>
+          <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_save_options" kindref="compound">SaveOptions</ref></type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="213" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a8186e1862f3d94863e7ce219224beddd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>IEnumerable&lt; <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_cell" kindref="compound">IXLCell</ref> &gt;</type>
+        <definition>IEnumerable&lt;IXLCell&gt; Search</definition>
+        <argsstring>(String searchText, CompareOptions compareOptions=CompareOptions.Ordinal, Boolean searchFormulae=false)</argsstring>
+        <name>Search</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a8186e1862f3d94863e7ce219224beddd">Search</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>searchText</declname>
+        </param>
+        <param>
+          <type>CompareOptions</type>
+          <declname>compareOptions</declname>
+          <defval>CompareOptions.Ordinal</defval>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>searchFormulae</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Searches the cells&apos; contents for a given piece of text </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>searchText</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The search text.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>compareOptions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The compare options.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>searchFormulae</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if set to <computeroutput>true</computeroutput> search formulae instead of cell values.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="222" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ab0cc977ebcc54c3a9836a3405bd992f3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>XLWorkbook SetLockStructure</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetLockStructure</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1ab0cc977ebcc54c3a9836a3405bd992f3">SetLockStructure</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="224" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6c9c6e2bcd49d3cc860e26046aa29c6a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>XLWorkbook SetLockWindows</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetLockWindows</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a6c9c6e2bcd49d3cc860e26046aa29c6a">SetLockWindows</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="226" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9430645eb394bbaa1058168729aae170" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>XLWorkbook SetUse1904DateSystem</definition>
+        <argsstring>()</argsstring>
+        <name>SetUse1904DateSystem</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a9430645eb394bbaa1058168729aae170">SetUse1904DateSystem</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="228" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a400c50beca78afbd656edc3f89d86d3d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook" kindref="compound">XLWorkbook</ref></type>
+        <definition>XLWorkbook SetUse1904DateSystem</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetUse1904DateSystem</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a400c50beca78afbd656edc3f89d86d3d">SetUse1904DateSystem</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="230" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a7b2eb85cda532a91c6b9e64012696fa5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_table" kindref="compound">IXLTable</ref></type>
+        <definition>IXLTable Table</definition>
+        <argsstring>(string tableName, StringComparison comparisonType=StringComparison.OrdinalIgnoreCase)</argsstring>
+        <name>Table</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a7b2eb85cda532a91c6b9e64012696fa5">Table</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>tableName</declname>
+        </param>
+        <param>
+          <type>StringComparison</type>
+          <declname>comparisonType</declname>
+          <defval>StringComparison.OrdinalIgnoreCase</defval>
+        </param>
+        <briefdescription>
+<para>Gets the <ref refid="namespace_closed_x_m_l_1_1_excel" kindref="compound">Excel</ref> table of the given name </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tableName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the table to return.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>comparisonType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>One of the enumeration values that specifies how the strings will be compared.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The table with given name</para>
+</simplesect>
+<parameterlist kind="exception"><parameteritem>
+<parameternamelist>
+<parametername>ArgumentOutOfRangeException</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If no tables with this name could be found in the workbook.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="239" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6997952cec8e84dd6f73fc54046f17c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>Boolean TryGetWorksheet</definition>
+        <argsstring>(String name, out IXLWorksheet worksheet)</argsstring>
+        <name>TryGetWorksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a6997952cec8e84dd6f73fc54046f17c3">TryGetWorksheet</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>out <ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+          <declname>worksheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="241" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a99b8fb731a78f388f6c05da3ec2b36bd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Unprotect</definition>
+        <argsstring>()</argsstring>
+        <name>Unprotect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1a99b8fb731a78f388f6c05da3ec2b36bd">Unprotect</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="243" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1acce79604374201a19c5cb2128d6ed1aa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Unprotect</definition>
+        <argsstring>(string workbookPassword)</argsstring>
+        <name>Unprotect</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1acce79604374201a19c5cb2128d6ed1aa">Unprotect</reimplementedby>
+        <param>
+          <type>string</type>
+          <declname>workbookPassword</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="245" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ad2dba684100b3af8463e724d5471f995" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring>(String name)</argsstring>
+        <name>Worksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1ad2dba684100b3af8463e724d5471f995">Worksheet</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="247" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ade9295d6ce3ce40866f428bce83cdea1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring>(Int32 position)</argsstring>
+        <name>Worksheet</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook_1ade9295d6ce3ce40866f428bce83cdea1">Worksheet</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="249" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="781">
+        <label>XLWorkbook</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_workbook"/>
+        <childnode refid="779" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="780">
+        <label>IDisposable</label>
+      </node>
+      <node id="779">
+        <label>IXLWorkbook</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook"/>
+        <childnode refid="780" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="783">
+        <label>IDisposable</label>
+      </node>
+      <node id="782">
+        <label>IXLWorkbook</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook"/>
+        <childnode refid="783" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/IXLWorkbook.cs" bodystart="10" bodyend="250"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a571e6c54d620b5fe4c6da2da98a86921" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a77d0561a6b8d2651b3d173b907ab744f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a59132267154a09dbff0994b6696ff76d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a2f8c76cca1c59687201a1ea1ad37d528" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a072495948f874cf5a2897c752d3712a8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a0ce07eae1c2a18a14a105737bb50eccc" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ab73fe8cbe319a4b5ce0c2102c6f09b7d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ac6990434dc0a8ade0422dccbe3b0766b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>AddWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aca9f76df1e60f93e7a7c5d1a0d4a3fc5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Author</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9a24d229a5296008063844ffe5287ee3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>CalculateMode</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a1d58b03bdfe2be0bf8e1b3770e18717c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>CalculationOnSave</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a4ef3605d624cc7c7f85ce88961d8be1a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Cell</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a589bfdf14d4595f3cb6079f99d65bc61" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Cells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a2adf2577a045ca6e58efbb86182c92ed" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ColumnWidth</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a62672e300acdae60d70c72e33918f5e7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>CustomProperties</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9690a51c3f6a17648fd51e4de815d9cd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>CustomProperty</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa3495dc7ec2f6fa1f82e4b93c27ced43" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultRightToLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a725ad09c2aafc3cbbd82eea09956b7f2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultShowFormulas</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a4fcf23bdbff73cdc4d2a810f8a4431c8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultShowGridLines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a461fd670a9a289ef30c2c4ef56422c88" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultShowOutlineSymbols</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5b60ff1ed37853919e39e6bd9ca45978" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultShowRowColHeaders</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a514e50f6fcabd2540da894328ef70cb8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultShowRuler</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a3882e30c1073213415f325a12dff112f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultShowWhiteSpace</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6311b55a059295a40423485b4f47389a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>DefaultShowZeros</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a7a4bf5bdd14ddefb70310639fbad9ea6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Evaluate</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa3bc5734666a1674509fd0d60f7c9f32" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>FileSharing</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a468f4414c5c1e524fd47859b9ecb2899" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>FindCells</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ab08787625bad189f7878988ee3704ab3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>FindColumns</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a3ce1da083c9537e9dc056e1834926ab5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>FindRows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a93e7cb84c58128fa7663273f3cafed4b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ForceFullCalculation</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a914390a5c962b890c3e759b1e4e2f4ba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>FullCalculationOnLoad</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a89cdcd3669af133a90d156f68e62bf32" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>FullPrecision</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a18250407a0e11abfcf14df9c0c0aed8c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>IsPasswordProtected</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1af68b298411ca5aaf87002744aa87f9ad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>LockStructure</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a77fb407a3bd52d877329f5ebbbf80e0c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>LockWindows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a4e20e13790a5d55d37a3733b414d261c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>NamedRange</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a55444d9b08742a9f73186b07e2d7cb1a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>NamedRanges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ad28f64e6be625c248fbb5bf8e1fb2ee6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Outline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a313079d1765db2621431f59514a9ce21" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>PageOptions</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aed1298d6e02c3c24aba85a3e5ba98012" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Properties</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a0ae2cdcd120c7eaa1704434609144c9c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Protect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a1de8a05cc42a5d36344c9e6fea45169e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Protect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a83b391d015187708572340abc6c7d915" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Protect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a1598fb74679bb39e964eeb1599feacb1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Protect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aef8179b2ed2f7fd0df40d247fcc05597" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Protect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a58247f21fb0bffbd4a7204e04c64ddcf" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Range</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa650910be2b8aaf6a4a2b59345b2ce9a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>RangeFromFullAddress</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5cf23fa75d422e342dc7729d43eed73e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Ranges</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a849714ea7c112ca23d30c13a307d27ba" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>RecalculateAllFormulas</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a7b8ca7a7c84a76a3e9119a4e078c4b83" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ReferenceStyle</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a969cd5b761fcee8a05e36bc805800f0a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>RightToLeft</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ade229c36163a4fdebf8bd1853a1b2d7f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>RowHeight</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5df140c1ee51aadf7fe88ce3fb9cac33" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Save</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ac23d9f56e0dd0e1a2a745130be525a0d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Save</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1aa644c388acf70a151c2b827c8b241388" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Save</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1acfd6e902176a5d65ca26b8e99458fa0e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SaveAs</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9d1023bac353eae03753e202c05d5873" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SaveAs</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a23a4e9ba62d0b0959e287fa437b7d653" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SaveAs</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a746d849d3cbba6f73ca522373d2b6373" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SaveAs</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a49f49e94e2d618583f61a946fcb78239" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SaveAs</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a85bf46bf0b54afcba4a7f6d5ee905ef9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SaveAs</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a8186e1862f3d94863e7ce219224beddd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Search</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ab0cc977ebcc54c3a9836a3405bd992f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SetLockStructure</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6c9c6e2bcd49d3cc860e26046aa29c6a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SetLockWindows</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a9430645eb394bbaa1058168729aae170" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SetUse1904DateSystem</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a400c50beca78afbd656edc3f89d86d3d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>SetUse1904DateSystem</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a47b620d6e6b0784ff45c2df1be95c0e6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ShowFormulas</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ae9c17a2cc85020f3f310b82f1e2d7292" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ShowGridLines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a13cf1a2a41ce2a0674c1d1e1eb90a7b2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ShowOutlineSymbols</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a5f0c91d18b33e672780d8c9960e0a8eb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ShowRowColHeaders</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a533d4ee6bfaa3243a222bb671cf46252" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ShowRuler</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a36bea6682157c6e324aae86f50d78530" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ShowWhiteSpace</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a80294c0960348c2092096a29e2caddeb" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>ShowZeros</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6cef8de98f05983f520efefc334e6b13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Style</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a7b2eb85cda532a91c6b9e64012696fa5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Table</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1af817897ac6ec66ba321a3b6416272ede" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Theme</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a6997952cec8e84dd6f73fc54046f17c3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>TryGetWorksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a99b8fb731a78f388f6c05da3ec2b36bd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Unprotect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1acce79604374201a19c5cb2128d6ed1aa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Unprotect</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1a95a4bb0b572df28e4a3c8d6c62981869" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Use1904DateSystem</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ad2dba684100b3af8463e724d5471f995" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Worksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1ade9295d6ce3ce40866f428bce83cdea1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Worksheet</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_workbook_1af5f3cde2cc822da604ae415ac289f4db" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLWorkbook</scope><name>Worksheets</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

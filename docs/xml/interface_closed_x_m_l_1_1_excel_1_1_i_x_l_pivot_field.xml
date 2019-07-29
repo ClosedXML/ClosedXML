@@ -1,0 +1,662 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLPivotField</compoundname>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field" prot="public" virt="non-virtual">XLPivotField</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a877410f5312a07c8970a103b85c476e1" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String SourceName</definition>
+        <argsstring></argsstring>
+        <name>SourceName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="27" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="27" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a33478aed9f7538fb9ea8f2b6363eb314" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String CustomName</definition>
+        <argsstring></argsstring>
+        <name>CustomName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="28" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="28" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1033bc9486e9f1ecf2d80c6e191f7b06" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String SubtotalCaption</definition>
+        <argsstring></argsstring>
+        <name>SubtotalCaption</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="29" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="29" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a27ec588a3b95a99d861b78c8c3da376d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>List&lt; XLSubtotalFunction &gt;</type>
+        <definition>List&lt;XLSubtotalFunction&gt; Subtotals</definition>
+        <argsstring></argsstring>
+        <name>Subtotals</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="31" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a925f6468bbbee47af4bd5e159401a322" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IncludeNewItemsInFilter</definition>
+        <argsstring></argsstring>
+        <name>IncludeNewItemsInFilter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="32" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a27d98f7b5c915e85097c5f1d96936f95" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Outline</definition>
+        <argsstring></argsstring>
+        <name>Outline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="34" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae7568116c43d4c296324742167f452e4" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Compact</definition>
+        <argsstring></argsstring>
+        <name>Compact</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="35" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="35" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0991abe595c2f46cddf81bba70df9d26" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean?</type>
+        <definition>Boolean? SubtotalsAtTop</definition>
+        <argsstring></argsstring>
+        <name>SubtotalsAtTop</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="36" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="36" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a5ffe038af90a97e1f3e38ab00ee77fd7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean RepeatItemLabels</definition>
+        <argsstring></argsstring>
+        <name>RepeatItemLabels</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="37" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae2494dd4d19eb75ae875a9cb77cebba6" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean InsertBlankLines</definition>
+        <argsstring></argsstring>
+        <name>InsertBlankLines</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="38" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="38" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a710b332e1c684cfa323151c4a86d61ac" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean ShowBlankItems</definition>
+        <argsstring></argsstring>
+        <name>ShowBlankItems</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="39" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="39" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae99226d874b92a42c23b1f555fb74f58" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean InsertPageBreaks</definition>
+        <argsstring></argsstring>
+        <name>InsertPageBreaks</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="40" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="40" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a65376c511a2fb8e61ae49e1e1a8ab020" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean Collapsed</definition>
+        <argsstring></argsstring>
+        <name>Collapsed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="41" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="41" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1aee39b9e460bb6e797584d9838e7b84a9" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="yes" privatesettable="no" protectedsettable="no">
+        <type>XLPivotSortType</type>
+        <definition>XLPivotSortType SortType</definition>
+        <argsstring></argsstring>
+        <name>SortType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="42" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="42" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1bee54d3779c9722b6869a1825a3519c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>IList&lt; Object &gt;</type>
+        <definition>IList&lt;Object&gt; SelectedValues</definition>
+        <argsstring></argsstring>
+        <name>SelectedValues</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="68" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a8fc436a14066da6c5b12c6b2b6a3ff1f" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_style_formats" kindref="compound">IXLPivotFieldStyleFormats</ref></type>
+        <definition>IXLPivotFieldStyleFormats StyleFormats</definition>
+        <argsstring></argsstring>
+        <name>StyleFormats</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="72" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="72" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a2f9f3bfe8227d28523fffcee48c1f1c5" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsOnRowAxis</definition>
+        <argsstring></argsstring>
+        <name>IsOnRowAxis</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="74" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="74" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ac74fb90719f0d948851acd34ccbe565e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsOnColumnAxis</definition>
+        <argsstring></argsstring>
+        <name>IsOnColumnAxis</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="75" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="75" bodyend="75"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0fd493bb82af2369b0d53e4df42f8cf0" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean IsInFilterList</definition>
+        <argsstring></argsstring>
+        <name>IsInFilterList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="76" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="76" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1f4c533a819fe4535099b06555d3d376" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 Offset</definition>
+        <argsstring></argsstring>
+        <name>Offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="78" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="78" bodyend="78"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1aef69230413a12d227c730e81bdd50525" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetCustomName</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetCustomName</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1aef69230413a12d227c730e81bdd50525">SetCustomName</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="44" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1a0093501eb65c7ccea8584c651ff83d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetSubtotalCaption</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetSubtotalCaption</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a1a0093501eb65c7ccea8584c651ff83d">SetSubtotalCaption</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="46" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a5f9005496ea22778494500e26bb81e86" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField AddSubtotal</definition>
+        <argsstring>(XLSubtotalFunction value)</argsstring>
+        <name>AddSubtotal</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a5f9005496ea22778494500e26bb81e86">AddSubtotal</reimplementedby>
+        <param>
+          <type>XLSubtotalFunction</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="48" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a42184017ac6b1742225ffaa8de164735" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetIncludeNewItemsInFilter</definition>
+        <argsstring>()</argsstring>
+        <name>SetIncludeNewItemsInFilter</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a42184017ac6b1742225ffaa8de164735">SetIncludeNewItemsInFilter</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="50" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ad553c9d77b3b3f70214255a666fda1ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetIncludeNewItemsInFilter</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetIncludeNewItemsInFilter</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1ad553c9d77b3b3f70214255a666fda1ec">SetIncludeNewItemsInFilter</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="50" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0acf9df10a129c1c6238939d51596bf4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetLayout</definition>
+        <argsstring>(XLPivotLayout value)</argsstring>
+        <name>SetLayout</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a0acf9df10a129c1c6238939d51596bf4">SetLayout</reimplementedby>
+        <param>
+          <type>XLPivotLayout</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="52" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a77733fc065e06e4570a48fcd673deb50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetSubtotalsAtTop</definition>
+        <argsstring>()</argsstring>
+        <name>SetSubtotalsAtTop</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a77733fc065e06e4570a48fcd673deb50">SetSubtotalsAtTop</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="54" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a8a5111cebbccf9a6793b9f9a6c01c4b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetSubtotalsAtTop</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetSubtotalsAtTop</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a8a5111cebbccf9a6793b9f9a6c01c4b3">SetSubtotalsAtTop</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="54" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a9064c435bd997e9301083234d47c7987" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetRepeatItemLabels</definition>
+        <argsstring>()</argsstring>
+        <name>SetRepeatItemLabels</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a9064c435bd997e9301083234d47c7987">SetRepeatItemLabels</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="56" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae70e700ff6c965ca271ad59126e6771f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetRepeatItemLabels</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetRepeatItemLabels</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1ae70e700ff6c965ca271ad59126e6771f">SetRepeatItemLabels</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="56" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a4091e21dafb59d27aafb6cb88c2d6054" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetInsertBlankLines</definition>
+        <argsstring>()</argsstring>
+        <name>SetInsertBlankLines</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a4091e21dafb59d27aafb6cb88c2d6054">SetInsertBlankLines</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="58" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ade32e8c6bd31ab3cf7a6c74d451ef011" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetInsertBlankLines</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetInsertBlankLines</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1ade32e8c6bd31ab3cf7a6c74d451ef011">SetInsertBlankLines</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="58" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae2ca1fd97011e56084b4dd2023b8f0f3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetShowBlankItems</definition>
+        <argsstring>()</argsstring>
+        <name>SetShowBlankItems</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1ae2ca1fd97011e56084b4dd2023b8f0f3">SetShowBlankItems</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="60" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a172655cf544fa730810c281bbd27880a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetShowBlankItems</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetShowBlankItems</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a172655cf544fa730810c281bbd27880a">SetShowBlankItems</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="60" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0ea2559e7e5325ab6efaafce5e9e055b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetInsertPageBreaks</definition>
+        <argsstring>()</argsstring>
+        <name>SetInsertPageBreaks</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a0ea2559e7e5325ab6efaafce5e9e055b">SetInsertPageBreaks</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="62" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1aae54bb98c1047db8eca62dd495936c3b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetInsertPageBreaks</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetInsertPageBreaks</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1aae54bb98c1047db8eca62dd495936c3b">SetInsertPageBreaks</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="62" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ac553304e47f222ba1da999540212fd10" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetCollapsed</definition>
+        <argsstring>()</argsstring>
+        <name>SetCollapsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1ac553304e47f222ba1da999540212fd10">SetCollapsed</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="64" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a9b642f6313c46d24687d63a4c052f52a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetCollapsed</definition>
+        <argsstring>(Boolean value)</argsstring>
+        <name>SetCollapsed</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a9b642f6313c46d24687d63a4c052f52a">SetCollapsed</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="64" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a18b891e3f286063d9e33d19573e23f12" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField SetSort</definition>
+        <argsstring>(XLPivotSortType value)</argsstring>
+        <name>SetSort</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a18b891e3f286063d9e33d19573e23f12">SetSort</reimplementedby>
+        <param>
+          <type>XLPivotSortType</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="66" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a3dfff955b665621cecc9899cb1ce662a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field" kindref="compound">IXLPivotField</ref></type>
+        <definition>IXLPivotField AddSelectedValue</definition>
+        <argsstring>(Object value)</argsstring>
+        <name>AddSelectedValue</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field_1a3dfff955b665621cecc9899cb1ce662a">AddSelectedValue</reimplementedby>
+        <param>
+          <type>Object</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="70" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="476">
+        <label>IXLPivotField</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field"/>
+      </node>
+      <node id="477">
+        <label>XLPivotField</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_pivot_field"/>
+        <childnode refid="476" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" line="26" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PivotTables/IXLPivotField.cs" bodystart="25" bodyend="79"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a3dfff955b665621cecc9899cb1ce662a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>AddSelectedValue</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a5f9005496ea22778494500e26bb81e86" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>AddSubtotal</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a65376c511a2fb8e61ae49e1e1a8ab020" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>Collapsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae7568116c43d4c296324742167f452e4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>Compact</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a33478aed9f7538fb9ea8f2b6363eb314" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>CustomName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a925f6468bbbee47af4bd5e159401a322" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>IncludeNewItemsInFilter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae2494dd4d19eb75ae875a9cb77cebba6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>InsertBlankLines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae99226d874b92a42c23b1f555fb74f58" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>InsertPageBreaks</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0fd493bb82af2369b0d53e4df42f8cf0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>IsInFilterList</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ac74fb90719f0d948851acd34ccbe565e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>IsOnColumnAxis</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a2f9f3bfe8227d28523fffcee48c1f1c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>IsOnRowAxis</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1f4c533a819fe4535099b06555d3d376" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>Offset</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a27d98f7b5c915e85097c5f1d96936f95" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>Outline</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a5ffe038af90a97e1f3e38ab00ee77fd7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>RepeatItemLabels</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1bee54d3779c9722b6869a1825a3519c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SelectedValues</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ac553304e47f222ba1da999540212fd10" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetCollapsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a9b642f6313c46d24687d63a4c052f52a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetCollapsed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1aef69230413a12d227c730e81bdd50525" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetCustomName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a42184017ac6b1742225ffaa8de164735" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetIncludeNewItemsInFilter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ad553c9d77b3b3f70214255a666fda1ec" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetIncludeNewItemsInFilter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a4091e21dafb59d27aafb6cb88c2d6054" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetInsertBlankLines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ade32e8c6bd31ab3cf7a6c74d451ef011" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetInsertBlankLines</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0ea2559e7e5325ab6efaafce5e9e055b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetInsertPageBreaks</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1aae54bb98c1047db8eca62dd495936c3b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetInsertPageBreaks</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0acf9df10a129c1c6238939d51596bf4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetLayout</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a9064c435bd997e9301083234d47c7987" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetRepeatItemLabels</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae70e700ff6c965ca271ad59126e6771f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetRepeatItemLabels</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1ae2ca1fd97011e56084b4dd2023b8f0f3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetShowBlankItems</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a172655cf544fa730810c281bbd27880a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetShowBlankItems</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a18b891e3f286063d9e33d19573e23f12" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetSort</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1a0093501eb65c7ccea8584c651ff83d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetSubtotalCaption</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a77733fc065e06e4570a48fcd673deb50" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetSubtotalsAtTop</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a8a5111cebbccf9a6793b9f9a6c01c4b3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SetSubtotalsAtTop</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a710b332e1c684cfa323151c4a86d61ac" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>ShowBlankItems</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1aee39b9e460bb6e797584d9838e7b84a9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SortType</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a877410f5312a07c8970a103b85c476e1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SourceName</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a8fc436a14066da6c5b12c6b2b6a3ff1f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>StyleFormats</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a1033bc9486e9f1ecf2d80c6e191f7b06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SubtotalCaption</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a27ec588a3b95a99d861b78c8c3da376d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>Subtotals</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_pivot_field_1a0991abe595c2f46cddf81bba70df9d26" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLPivotField</scope><name>SubtotalsAtTop</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

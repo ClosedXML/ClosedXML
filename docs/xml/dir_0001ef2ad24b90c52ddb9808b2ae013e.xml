@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_0001ef2ad24b90c52ddb9808b2ae013e" kind="dir">
+    <compoundname>PageSetup</compoundname>
+    <innerfile refid="_i_x_l_header_footer_8cs">IXLHeaderFooter.cs</innerfile>
+    <innerfile refid="_i_x_l_h_f_item_8cs">IXLHFItem.cs</innerfile>
+    <innerfile refid="_i_x_l_margins_8cs">IXLMargins.cs</innerfile>
+    <innerfile refid="_i_x_l_page_setup_8cs">IXLPageSetup.cs</innerfile>
+    <innerfile refid="_i_x_l_print_areas_8cs">IXLPrintAreas.cs</innerfile>
+    <innerfile refid="_x_l_header_footer_8cs">XLHeaderFooter.cs</innerfile>
+    <innerfile refid="_x_l_h_f_item_8cs">XLHFItem.cs</innerfile>
+    <innerfile refid="_x_l_h_f_text_8cs">XLHFText.cs</innerfile>
+    <innerfile refid="_x_l_margins_8cs">XLMargins.cs</innerfile>
+    <innerfile refid="_x_l_page_setup_8cs">XLPageSetup.cs</innerfile>
+    <innerfile refid="_x_l_print_areas_8cs">XLPrintAreas.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/PageSetup/"/>
+  </compounddef>
+</doxygen>

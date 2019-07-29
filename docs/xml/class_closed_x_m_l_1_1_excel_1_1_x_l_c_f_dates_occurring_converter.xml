@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLCFDatesOccurringConverter</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter" prot="public" virt="non-virtual">IXLCFConverter</basecompoundref>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter_1a25b9d99cd230a6563830643926de791e" prot="private" static="yes" mutable="no">
+        <type>readonly IDictionary&lt; XLTimePeriod, string &gt;</type>
+        <definition>readonly IDictionary&lt;XLTimePeriod, string&gt; formulaTemplates</definition>
+        <argsstring></argsstring>
+        <name>formulaTemplates</name>
+        <initializer>= new Dictionary&lt;XLTimePeriod, string&gt;()
+        {
+            [XLTimePeriod.Today] = &quot;FLOOR({0},1)=TODAY()&quot;,
+            [XLTimePeriod.Yesterday] = &quot;FLOOR({0},1)=TODAY()-1&quot;,
+            [XLTimePeriod.Tomorrow] = &quot;FLOOR({0},1)=TODAY()+1&quot;,
+            [XLTimePeriod.InTheLast7Days] = &quot;AND(TODAY()-FLOOR({0},1)&lt;=6,FLOOR({0},1)&lt;=TODAY())&quot;,
+            [XLTimePeriod.ThisMonth] = &quot;AND(MONTH({0})=MONTH(TODAY()),YEAR({0})=YEAR(TODAY()))&quot;,
+            [XLTimePeriod.LastMonth] = &quot;AND(MONTH({0})=MONTH(EDATE(TODAY(),0-1)),YEAR({0})=YEAR(EDATE(TODAY(),0-1)))&quot;,
+            [XLTimePeriod.NextMonth] = &quot;AND(MONTH({0})=MONTH(EDATE(TODAY(),0+1)),YEAR({0})=YEAR(EDATE(TODAY(),0+1)))&quot;,
+            [XLTimePeriod.ThisWeek] = &quot;AND(TODAY()-ROUNDDOWN({0},0)&lt;=WEEKDAY(TODAY())-1,ROUNDDOWN({0},0)-TODAY()&lt;=7-WEEKDAY(TODAY()))&quot;,
+            [XLTimePeriod.LastWeek] = &quot;AND(TODAY()-ROUNDDOWN({0},0)&lt;=WEEKDAY(TODAY())-1,ROUNDDOWN({0},0)-TODAY()&lt;=7-WEEKDAY(TODAY()))&quot;,
+            [XLTimePeriod.NextWeek] = &quot;AND(ROUNDDOWN({0},0)-TODAY()&gt;(7-WEEKDAY(TODAY())),ROUNDDOWN({0},0)-TODAY()&lt;(15-WEEKDAY(TODAY())))&quot;
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDatesOccuringConverter.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDatesOccuringConverter.cs" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter_1a2293751e1e1e272d83cf462e9f8942c5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>ConditionalFormattingRule</type>
+        <definition>ConditionalFormattingRule Convert</definition>
+        <argsstring>(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)</argsstring>
+        <name>Convert</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_conditional_format" kindref="compound">IXLConditionalFormat</ref></type>
+          <declname>cf</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>priority</declname>
+        </param>
+        <param>
+          <type>XLWorkbook.SaveContext</type>
+          <declname>context</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDatesOccuringConverter.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDatesOccuringConverter.cs" bodystart="23" bodyend="38"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1054">
+        <label>IXLCFConverter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter"/>
+      </node>
+      <node id="1053">
+        <label>XLCFDatesOccurringConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter"/>
+        <childnode refid="1054" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1056">
+        <label>IXLCFConverter</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter"/>
+      </node>
+      <node id="1055">
+        <label>XLCFDatesOccurringConverter</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter"/>
+        <childnode refid="1056" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDatesOccuringConverter.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ConditionalFormats/Save/XLCFDatesOccuringConverter.cs" bodystart="7" bodyend="39"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter_1a2293751e1e1e272d83cf462e9f8942c5" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLCFDatesOccurringConverter</scope><name>Convert</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_c_f_converter_1a360db87bdf5cfcaf0a59cea8c9ee0b44" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::IXLCFConverter."><scope>ClosedXML::Excel::XLCFDatesOccurringConverter</scope><name>Convert</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_c_f_dates_occurring_converter_1a25b9d99cd230a6563830643926de791e" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::XLCFDatesOccurringConverter</scope><name>formulaTemplates</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

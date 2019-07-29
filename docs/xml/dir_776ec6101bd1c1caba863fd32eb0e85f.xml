@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="dir_776ec6101bd1c1caba863fd32eb0e85f" kind="dir">
+    <compoundname>Hyperlinks</compoundname>
+    <innerfile refid="_i_x_l_hyperlinks_8cs">IXLHyperlinks.cs</innerfile>
+    <innerfile refid="_x_l_hyperlink___internal_8cs">XLHyperlink_Internal.cs</innerfile>
+    <innerfile refid="_x_l_hyperlink__public_8cs">XLHyperlink_public.cs</innerfile>
+    <innerfile refid="_x_l_hyperlinks_8cs">XLHyperlinks.cs</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Hyperlinks/"/>
+  </compounddef>
+</doxygen>

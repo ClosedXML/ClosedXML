@@ -1,0 +1,916 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLSparklineTheme</compoundname>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a2539b24918213203bf3818065299121c" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Default</definition>
+        <argsstring></argsstring>
+        <name>Default</name>
+        <initializer>=&gt; Dark5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a4c331e81caf109aaea91df7189e0d575" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Dark1</definition>
+        <argsstring></argsstring>
+        <name>Dark1</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Text1, 0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Text1, 0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a7305f8617c36d09708280c24df1ae20b" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Dark2</definition>
+        <argsstring></argsstring>
+        <name>Dark2</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Text1, 0.34998626667073579),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Background1, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a4ba93cfb6c57713c7be76a0e92e3a505" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Dark3</definition>
+        <argsstring></argsstring>
+        <name>Dark3</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FF323232&quot;),
+            NegativeColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            MarkersColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            HighMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            LowMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            FirstMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            LastMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="34" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a758aaf77b08823abe717f26c83ba3739" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Dark4</definition>
+        <argsstring></argsstring>
+        <name>Dark4</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FF000000&quot;),
+            NegativeColor = XLColor.FromHtml(&quot;FF0070C0&quot;),
+            MarkersColor = XLColor.FromHtml(&quot;FF0070C0&quot;),
+            HighMarkerColor = XLColor.FromHtml(&quot;FF0070C0&quot;),
+            LowMarkerColor = XLColor.FromHtml(&quot;FF0070C0&quot;),
+            FirstMarkerColor = XLColor.FromHtml(&quot;FF0070C0&quot;),
+            LastMarkerColor = XLColor.FromHtml(&quot;FF0070C0&quot;)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="45" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1afbcedeb4bf15131b7f7e2806508996ad" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Dark5</definition>
+        <argsstring></argsstring>
+        <name>Dark5</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FF376092&quot;),
+            NegativeColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            MarkersColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            HighMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            LowMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            FirstMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;),
+            LastMarkerColor = XLColor.FromHtml(&quot;FFD00000&quot;)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1ae0f5226cacaf855e7365b00aead0227f" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Dark6</definition>
+        <argsstring></argsstring>
+        <name>Dark6</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FF0070C0&quot;),
+            NegativeColor = XLColor.Black,
+            MarkersColor = XLColor.Black,
+            HighMarkerColor = XLColor.Black,
+            LowMarkerColor = XLColor.Black,
+            FirstMarkerColor = XLColor.Black,
+            LastMarkerColor = XLColor.Black
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="67" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1abfc5e6ccd755e2d892bbabababbc7164" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Colorful1</definition>
+        <argsstring></argsstring>
+        <name>Colorful1</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FF5F5F5F&quot;),
+            NegativeColor = XLColor.FromHtml(&quot;FFFFB620&quot;),
+            MarkersColor = XLColor.FromHtml(&quot;FFD70077&quot;),
+            HighMarkerColor = XLColor.FromHtml(&quot;FF56BE79&quot;),
+            LowMarkerColor = XLColor.FromHtml(&quot;FFFF5055&quot;),
+            FirstMarkerColor = XLColor.FromHtml(&quot;FF5687C2&quot;),
+            LastMarkerColor = XLColor.FromHtml(&quot;FF359CEB&quot;)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="82" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a2902771a97df88cf95dba4e83e1f5394" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Colorful2</definition>
+        <argsstring></argsstring>
+        <name>Colorful2</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FF5687C2&quot;),
+            NegativeColor = XLColor.FromHtml(&quot;FFFFB620&quot;),
+            MarkersColor = XLColor.FromHtml(&quot;FFD70077&quot;),
+            HighMarkerColor = XLColor.FromHtml(&quot;FF56BE79&quot;),
+            LowMarkerColor = XLColor.FromHtml(&quot;FFFF5055&quot;),
+            FirstMarkerColor = XLColor.FromHtml(&quot;FF777777&quot;),
+            LastMarkerColor = XLColor.FromHtml(&quot;FF359CEB&quot;)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="93" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a813d8e08f38d1405388c2899d67e9a24" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Colorful3</definition>
+        <argsstring></argsstring>
+        <name>Colorful3</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FFC6EFCE&quot;),
+            NegativeColor = XLColor.FromHtml(&quot;FFFFC7CE&quot;),
+            MarkersColor = XLColor.FromHtml(&quot;FF8CADD6&quot;),
+            HighMarkerColor = XLColor.FromHtml(&quot;FF60D276&quot;),
+            LowMarkerColor = XLColor.FromHtml(&quot;FFFF5367&quot;),
+            FirstMarkerColor = XLColor.FromHtml(&quot;FFFFDC47&quot;),
+            LastMarkerColor = XLColor.FromHtml(&quot;FFFFEB9C&quot;)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="104" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a005b8e45fdce3e3527c9b03d4b5338f1" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Colorful4</definition>
+        <argsstring></argsstring>
+        <name>Colorful4</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromHtml(&quot;FF00B050&quot;),
+            NegativeColor = XLColor.FromHtml(&quot;FFFF0000&quot;),
+            MarkersColor = XLColor.FromHtml(&quot;FF0070C0&quot;),
+            HighMarkerColor = XLColor.FromHtml(&quot;FF00B050&quot;),
+            LowMarkerColor = XLColor.FromHtml(&quot;FFFF0000&quot;),
+            FirstMarkerColor = XLColor.FromHtml(&quot;FFFFC000&quot;),
+            LastMarkerColor = XLColor.FromHtml(&quot;FFFFC000&quot;)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="115" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a451350e70a162fd3a8528c3afae67d9a" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Colorful5</definition>
+        <argsstring></argsstring>
+        <name>Colorful5</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Text2),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="126" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a1f8bcba9d5d4aa544bc3392b26f242a3" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Colorful6</definition>
+        <argsstring></argsstring>
+        <name>Colorful6</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Text1),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="137" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1ab28580478be138821f21c60da2032996" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent1</definition>
+        <argsstring></argsstring>
+        <name>Accent1</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent2),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="152" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="152" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1abc0ca0994c1f4f0c8b8096e7181024c2" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent2</definition>
+        <argsstring></argsstring>
+        <name>Accent2</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="163" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a94b660af5bd5c630fc101bc5d3b9698c" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent3</definition>
+        <argsstring></argsstring>
+        <name>Accent3</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="174" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="174" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a651a743692ff05d94ba067ec71b0933c" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent4</definition>
+        <argsstring></argsstring>
+        <name>Accent4</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="185" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a8bd3cdef5527d1e504893bdbd6c9fcb2" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent5</definition>
+        <argsstring></argsstring>
+        <name>Accent5</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="196" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="196" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1abcd70ebb690dd03ae2645fa7bfb0d934" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent6</definition>
+        <argsstring></argsstring>
+        <name>Accent6</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="207" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="207" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a936260722a4617f7233cb16b146ed11a" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent1Darker25</definition>
+        <argsstring></argsstring>
+        <name>Accent1Darker25</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent2),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="222" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="222" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a5f20ecfc141c459e83bce2279cf0cb0f" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent2Darker25</definition>
+        <argsstring></argsstring>
+        <name>Accent2Darker25</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="233" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="233" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a08840c193fb8235ef091dfcdd550d530" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent3Darker25</definition>
+        <argsstring></argsstring>
+        <name>Accent3Darker25</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="244" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="244" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a0fbe131bb802625ba7289c42608064dd" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent4Darker25</definition>
+        <argsstring></argsstring>
+        <name>Accent4Darker25</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="255" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="255" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a0cf162a59f01c4080a0f8ae87c9fc9a4" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent5Darker25</definition>
+        <argsstring></argsstring>
+        <name>Accent5Darker25</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="266" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="266" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a1e96856535ccfeee8f6cd0ee2e282420" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent6Darker25</definition>
+        <argsstring></argsstring>
+        <name>Accent6Darker25</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="277" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="277" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a3eee6e38d8dbf30a9b58d08dbd7a1301" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent1Darker50</definition>
+        <argsstring></argsstring>
+        <name>Accent1Darker50</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent2),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.39997558519241921)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="292" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="292" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a296def97aedf305b0dcb5f33dbd7bd8f" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent2Darker50</definition>
+        <argsstring></argsstring>
+        <name>Accent2Darker50</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.39997558519241921)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="303" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="303" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1aa2961bdc4201cdcef1decc972e9ce92b" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent3Darker50</definition>
+        <argsstring></argsstring>
+        <name>Accent3Darker50</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.39997558519241921)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="314" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="314" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a4dc9130c0927a6a31e2f4b3799e4f259" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent4Darker50</definition>
+        <argsstring></argsstring>
+        <name>Accent4Darker50</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.39997558519241921)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="325" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="325" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1aaa8879d29716c8f438168a2e0362389e" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent5Darker50</definition>
+        <argsstring></argsstring>
+        <name>Accent5Darker50</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.39997558519241921)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="336" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="336" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a31cdf6903cf76a38568a020068d312a9" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent6Darker50</definition>
+        <argsstring></argsstring>
+        <name>Accent6Darker50</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Accent1),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.39997558519241921),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.39997558519241921)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="347" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="347" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1ac98d7dbcb5918f1e7acb58a17edcc52f" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent1Lighter40</definition>
+        <argsstring></argsstring>
+        <name>Accent1Lighter40</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent1, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="362" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="362" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a759b9524a90fe36f7a4dd67b8ba8255a" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent2Lighter40</definition>
+        <argsstring></argsstring>
+        <name>Accent2Lighter40</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent2, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent2, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="373" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="373" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a1bda57e44d236b6252af20276bdb2613" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent3Lighter40</definition>
+        <argsstring></argsstring>
+        <name>Accent3Lighter40</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent3, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent3, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="384" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="384" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a0893e23d7554763bf0de3fe82ecf3fd1" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent4Lighter40</definition>
+        <argsstring></argsstring>
+        <name>Accent4Lighter40</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent4, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent4, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="395" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="395" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a870dd9f4363b2668464b6a377209ee99" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent5Lighter40</definition>
+        <argsstring></argsstring>
+        <name>Accent5Lighter40</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent5, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent5, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="406" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="406" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a40d5155ee009f31c7baa33dd17c78183" prot="public" static="yes" mutable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style" kindref="compound">IXLSparklineStyle</ref></type>
+        <definition>IXLSparklineStyle Accent6Lighter40</definition>
+        <argsstring></argsstring>
+        <name>Accent6Lighter40</name>
+        <initializer>=&gt; new <ref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_style" kindref="compound">XLSparklineStyle</ref>
+        {
+            SeriesColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.39997558519241921),
+            NegativeColor = XLColor.FromTheme(XLThemeColor.Background1, -0.499984740745262),
+            MarkersColor = XLColor.FromTheme(XLThemeColor.Accent6, 0.79998168889431442),
+            HighMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
+            LowMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.499984740745262),
+            FirstMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893),
+            LastMarkerColor = XLColor.FromTheme(XLThemeColor.Accent6, -0.249977111117893)
+        }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="417" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="417" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1795">
+        <label>IXLSparklineStyle</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_sparkline_style"/>
+      </node>
+      <node id="1794">
+        <label>XLSparklineTheme</label>
+        <childnode refid="1795" relation="usage">
+          <edgelabel>Accent3Lighter40</edgelabel>
+          <edgelabel>Accent3</edgelabel>
+          <edgelabel>Accent4Darker50</edgelabel>
+          <edgelabel>Accent4</edgelabel>
+          <edgelabel>Accent5Darker50</edgelabel>
+          <edgelabel>Accent5</edgelabel>
+          <edgelabel>Accent6</edgelabel>
+          <edgelabel>Accent2Darker25</edgelabel>
+          <edgelabel>Accent4Lighter40</edgelabel>
+          <edgelabel>Accent3Darker25</edgelabel>
+          <edgelabel>...</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" line="5" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Sparkline/XLSparklineTheme.cs" bodystart="4" bodyend="431"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1ab28580478be138821f21c60da2032996" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a936260722a4617f7233cb16b146ed11a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent1Darker25</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a3eee6e38d8dbf30a9b58d08dbd7a1301" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent1Darker50</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1ac98d7dbcb5918f1e7acb58a17edcc52f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent1Lighter40</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1abc0ca0994c1f4f0c8b8096e7181024c2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a5f20ecfc141c459e83bce2279cf0cb0f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent2Darker25</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a296def97aedf305b0dcb5f33dbd7bd8f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent2Darker50</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a759b9524a90fe36f7a4dd67b8ba8255a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent2Lighter40</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a94b660af5bd5c630fc101bc5d3b9698c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent3</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a08840c193fb8235ef091dfcdd550d530" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent3Darker25</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1aa2961bdc4201cdcef1decc972e9ce92b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent3Darker50</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a1bda57e44d236b6252af20276bdb2613" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent3Lighter40</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a651a743692ff05d94ba067ec71b0933c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent4</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a0fbe131bb802625ba7289c42608064dd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent4Darker25</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a4dc9130c0927a6a31e2f4b3799e4f259" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent4Darker50</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a0893e23d7554763bf0de3fe82ecf3fd1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent4Lighter40</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a8bd3cdef5527d1e504893bdbd6c9fcb2" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent5</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a0cf162a59f01c4080a0f8ae87c9fc9a4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent5Darker25</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1aaa8879d29716c8f438168a2e0362389e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent5Darker50</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a870dd9f4363b2668464b6a377209ee99" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent5Lighter40</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1abcd70ebb690dd03ae2645fa7bfb0d934" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent6</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a1e96856535ccfeee8f6cd0ee2e282420" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent6Darker25</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a31cdf6903cf76a38568a020068d312a9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent6Darker50</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a40d5155ee009f31c7baa33dd17c78183" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Accent6Lighter40</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1abfc5e6ccd755e2d892bbabababbc7164" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Colorful1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a2902771a97df88cf95dba4e83e1f5394" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Colorful2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a813d8e08f38d1405388c2899d67e9a24" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Colorful3</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a005b8e45fdce3e3527c9b03d4b5338f1" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Colorful4</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a451350e70a162fd3a8528c3afae67d9a" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Colorful5</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a1f8bcba9d5d4aa544bc3392b26f242a3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Colorful6</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a4c331e81caf109aaea91df7189e0d575" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Dark1</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a7305f8617c36d09708280c24df1ae20b" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Dark2</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a4ba93cfb6c57713c7be76a0e92e3a505" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Dark3</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a758aaf77b08823abe717f26c83ba3739" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Dark4</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1afbcedeb4bf15131b7f7e2806508996ad" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Dark5</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1ae0f5226cacaf855e7365b00aead0227f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Dark6</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_sparkline_theme_1a2539b24918213203bf3818065299121c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLSparklineTheme</scope><name>Default</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

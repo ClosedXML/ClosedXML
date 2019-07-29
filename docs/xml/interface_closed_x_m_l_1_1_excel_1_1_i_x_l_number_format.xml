@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLNumberFormat</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base" prot="public" virt="non-virtual">IXLNumberFormatBase</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLNumberFormatBase &gt;</basecompoundref>
+    <derivedcompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format" prot="public" virt="non-virtual">XLNumberFormat</derivedcompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_1a0e7c3ffb0381009e5c7da73c2649418c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetNumberFormatId</definition>
+        <argsstring>(Int32 value)</argsstring>
+        <name>SetNumberFormatId</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a0e7c3ffb0381009e5c7da73c2649418c">SetNumberFormatId</reimplementedby>
+        <param>
+          <type>Int32</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormat.cs" line="7" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_1a3524ae1e2f892923e360415221a53d06" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_style" kindref="compound">IXLStyle</ref></type>
+        <definition>IXLStyle SetFormat</definition>
+        <argsstring>(String value)</argsstring>
+        <name>SetFormat</name>
+        <reimplementedby refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format_1a3524ae1e2f892923e360415221a53d06">SetFormat</reimplementedby>
+        <param>
+          <type>String</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormat.cs" line="9" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="433">
+        <label>IXLNumberFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format"/>
+        <childnode refid="434" relation="public-inheritance">
+        </childnode>
+        <childnode refid="435" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="436">
+        <label>XLNumberFormat</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_number_format"/>
+        <childnode refid="433" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="434">
+        <label>IXLNumberFormatBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base"/>
+      </node>
+      <node id="435">
+        <label>IEquatable&lt; IXLNumberFormatBase &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="437">
+        <label>IXLNumberFormat</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format"/>
+        <childnode refid="438" relation="public-inheritance">
+        </childnode>
+        <childnode refid="439" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="438">
+        <label>IXLNumberFormatBase</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base"/>
+      </node>
+      <node id="439">
+        <label>IEquatable&lt; IXLNumberFormatBase &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormat.cs" line="6" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Style/IXLNumberFormat.cs" bodystart="5" bodyend="10"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1ab01475eb537fcb588741220d82a8f0ff" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLNumberFormat</scope><name>Format</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_base_1a08d4036f13d14fe13c9d5da4fcc0dbe3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLNumberFormat</scope><name>NumberFormatId</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_1a3524ae1e2f892923e360415221a53d06" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLNumberFormat</scope><name>SetFormat</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_number_format_1a0e7c3ffb0381009e5c7da73c2649418c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLNumberFormat</scope><name>SetNumberFormatId</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

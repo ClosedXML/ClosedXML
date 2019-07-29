@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="namespace_closed_x_m_l_1_1_excel_1_1_drawings" kind="namespace" language="C#">
+    <compoundname>ClosedXML::Excel::Drawings</compoundname>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_picture" prot="public">ClosedXML::Excel::Drawings::IXLPicture</innerclass>
+    <innerclass refid="interface_closed_x_m_l_1_1_excel_1_1_drawings_1_1_i_x_l_pictures" prot="public">ClosedXML::Excel::Drawings::IXLPictures</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_marker" prot="public">ClosedXML::Excel::Drawings::XLMarker</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_picture" prot="public">ClosedXML::Excel::Drawings::XLPicture</innerclass>
+    <innerclass refid="class_closed_x_m_l_1_1_excel_1_1_drawings_1_1_x_l_pictures" prot="public">ClosedXML::Excel::Drawings::XLPictures</innerclass>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1adbd26de1d69670c518ccf3daa3815618" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>XLMarkerPosition</name>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1adbd26de1d69670c518ccf3daa3815618ab32beb056fbfe36afbabc6c88c81ab36" prot="public">
+          <name>TopLeft</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1adbd26de1d69670c518ccf3daa3815618a9146bfc669fddc88db2c4d89297d0e9a" prot="public">
+          <name>BottomRight</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/PictureEnums.cs" line="4" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/PictureEnums.cs" bodystart="3" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="enum" id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>XLPictureFormat</name>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8a021d8346462df53d4272607b0f41a8d8" prot="public">
+          <name>Bmp</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8ab28f315fa877ea6a840b6a4ea5401256" prot="public">
+          <name>Gif</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8af8fd4f1b5b05c6b1cc6a661141fd4f54" prot="public">
+          <name>Png</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8a72ab34b91787bd01f445189e04fef4ce" prot="public">
+          <name>Tiff</name>
+          <initializer>= 3</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8a817434295a673aed431435658b65d9a7" prot="public">
+          <name>Icon</name>
+          <initializer>= 4</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8ae6faa49d1196313af11f2b651214b914" prot="public">
+          <name>Pcx</name>
+          <initializer>= 5</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a88f36a7d3fad4d8abf7d58fe20ac52c8a5023eac1d7fffa77b37c0e6797c97773" prot="public">
+          <name>Jpeg</name>
+          <initializer>= 6</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/PictureEnums.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/PictureEnums.cs" bodystart="9" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="enum" id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a9b68c17d9745cdd2945eaacb5c0fe925" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>XLPicturePlacement</name>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a9b68c17d9745cdd2945eaacb5c0fe925ae3e07e695dca6b6528ad03016eeb1437" prot="public">
+          <name>MoveAndSize</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a9b68c17d9745cdd2945eaacb5c0fe925a6bc362dbf494c61ea117fe3c71ca48a5" prot="public">
+          <name>Move</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespace_closed_x_m_l_1_1_excel_1_1_drawings_1a9b68c17d9745cdd2945eaacb5c0fe925a8e30fc4fd5557f52dbbe372c44e611a5" prot="public">
+          <name>FreeFloating</name>
+          <initializer>= 2</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/PictureEnums.cs" line="23" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/PictureEnums.cs" bodystart="22" bodyend="27"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Drawings/IXLPicture.cs" line="7" column="1"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,288 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::IXLAddress</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">IEqualityComparer&lt; IXLAddress &gt;</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEquatable&lt; IXLAddress &gt;</basecompoundref>
+    <derivedcompoundref refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address" prot="public" virt="non-virtual">XLAddress</derivedcompoundref>
+      <sectiondef kind="property">
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1abbe7d556a03acaa463b31d0586dfd6fa" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String ColumnLetter</definition>
+        <argsstring></argsstring>
+        <name>ColumnLetter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="8" bodyend="8"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ad357c8cd4e6e03d9163aeb9cdf8210c7" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 ColumnNumber</definition>
+        <argsstring></argsstring>
+        <name>ColumnNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="9" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="9" bodyend="9"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a936d14afea88975aa7e2ffd10c85b65d" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean FixedColumn</definition>
+        <argsstring></argsstring>
+        <name>FixedColumn</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="10" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="10" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ab996491d012df8b98c48b46402d6cb4e" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Boolean</type>
+        <definition>Boolean FixedRow</definition>
+        <argsstring></argsstring>
+        <name>FixedRow</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="11" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="11" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a85981da2dad289efd77a175a8b477b07" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>Int32</type>
+        <definition>Int32 RowNumber</definition>
+        <argsstring></argsstring>
+        <name>RowNumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="12" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="12" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1abbaeb5ab0290421ac2e00335617a389c" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type>String</type>
+        <definition>String UniqueId</definition>
+        <argsstring></argsstring>
+        <name>UniqueId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="property" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" static="no" readable="no" writable="no" gettable="yes" privategettable="no" protectedgettable="no" settable="no" privatesettable="no" protectedsettable="no">
+        <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_worksheet" kindref="compound">IXLWorksheet</ref></type>
+        <definition>IXLWorksheet Worksheet</definition>
+        <argsstring></argsstring>
+        <name>Worksheet</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="14" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="14" bodyend="14"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a83d2064d7137620932e9629a30558358" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToString</definition>
+        <argsstring>(XLReferenceStyle referenceStyle)</argsstring>
+        <name>ToString</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a74cf90567b0011f2443b05cb59cc9f70">ToString</reimplementedby>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="16" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1addc19aa7475b6e5835dac7d5d25303fa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToString</definition>
+        <argsstring>(XLReferenceStyle referenceStyle, Boolean includeSheet)</argsstring>
+        <name>ToString</name>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="18" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ac654148aad0cfbe0d77d39083a53f91c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>()</argsstring>
+        <name>ToStringFixed</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ac654148aad0cfbe0d77d39083a53f91c">ToStringFixed</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="20" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a96b7f9afb9feaec21e9e16b2ad57776f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>(XLReferenceStyle referenceStyle)</argsstring>
+        <name>ToStringFixed</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a96b7f9afb9feaec21e9e16b2ad57776f">ToStringFixed</reimplementedby>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="22" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a46c320f16f8a856fb5b98f043dadb131" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringFixed</definition>
+        <argsstring>(XLReferenceStyle referenceStyle, Boolean includeSheet)</argsstring>
+        <name>ToStringFixed</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a46c320f16f8a856fb5b98f043dadb131">ToStringFixed</reimplementedby>
+        <param>
+          <type>XLReferenceStyle</type>
+          <declname>referenceStyle</declname>
+        </param>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a36c99e076eac2caee32a25180de6f541" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringRelative</definition>
+        <argsstring>()</argsstring>
+        <name>ToStringRelative</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1a36c99e076eac2caee32a25180de6f541">ToStringRelative</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ab1c7e586256e93648062b22d14d4abc4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>String</type>
+        <definition>String ToStringRelative</definition>
+        <argsstring>(Boolean includeSheet)</argsstring>
+        <name>ToStringRelative</name>
+        <reimplementedby refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address_1ab1c7e586256e93648062b22d14d4abc4">ToStringRelative</reimplementedby>
+        <param>
+          <type>Boolean</type>
+          <declname>includeSheet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="29" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="180">
+        <label>IXLAddress</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address"/>
+        <childnode refid="181" relation="public-inheritance">
+        </childnode>
+        <childnode refid="182" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="181">
+        <label>IEqualityComparer&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="182">
+        <label>IEquatable&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="183">
+        <label>XLAddress</label>
+        <link refid="struct_closed_x_m_l_1_1_excel_1_1_x_l_address"/>
+        <childnode refid="180" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="184">
+        <label>IXLAddress</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address"/>
+        <childnode refid="185" relation="public-inheritance">
+        </childnode>
+        <childnode refid="186" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="185">
+        <label>IEqualityComparer&lt; IXLAddress &gt;</label>
+      </node>
+      <node id="186">
+        <label>IEquatable&lt; IXLAddress &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Coordinates/IXLAddress.cs" bodystart="6" bodyend="30"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1abbe7d556a03acaa463b31d0586dfd6fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ColumnLetter</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ad357c8cd4e6e03d9163aeb9cdf8210c7" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ColumnNumber</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a936d14afea88975aa7e2ffd10c85b65d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>FixedColumn</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ab996491d012df8b98c48b46402d6cb4e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>FixedRow</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a85981da2dad289efd77a175a8b477b07" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>RowNumber</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a83d2064d7137620932e9629a30558358" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ToString</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1addc19aa7475b6e5835dac7d5d25303fa" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ToString</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ac654148aad0cfbe0d77d39083a53f91c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ToStringFixed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a96b7f9afb9feaec21e9e16b2ad57776f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ToStringFixed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a46c320f16f8a856fb5b98f043dadb131" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ToStringFixed</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a36c99e076eac2caee32a25180de6f541" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ToStringRelative</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1ab1c7e586256e93648062b22d14d4abc4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>ToStringRelative</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1abbaeb5ab0290421ac2e00335617a389c" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>UniqueId</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_address_1a5714fd802c7feda41a118b5cccbfc2fd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::IXLAddress</scope><name>Worksheet</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

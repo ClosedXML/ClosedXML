@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" kind="interface" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Caching::IXLRepository</compoundname>
+    <basecompoundref refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository" prot="public" virt="non-virtual">IXLRepository</basecompoundref>
+    <basecompoundref prot="public" virt="non-virtual">IEnumerable&lt; Tvalue &gt;</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>Tkey</type>
+      </param>
+      <param>
+        <type>Tvalue</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Clear</definition>
+        <argsstring>()</argsstring>
+        <name>Clear</name>
+        <briefdescription>
+<para>Clear the repository; </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/IXLRepository.cs" line="14" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository_1ac539801a0214e48870b8b8c021646fc0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>Tvalue</type>
+        <definition>Tvalue Store</definition>
+        <argsstring>(Tkey key, Tvalue value)</argsstring>
+        <name>Store</name>
+        <param>
+          <type>Tkey</type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type>Tvalue</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+<para>Put the <emphasis>value</emphasis>  into the repository under the specified <emphasis>key</emphasis>  if there is no such key present. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>key</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Key to identify the value.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Value to put into the repository if key does not exist.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Value stored in the repository under the specified <emphasis>key</emphasis> . If key already existed returned value may differ from the input one.</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/IXLRepository.cs" line="29" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="621">
+        <label>IXLRepository&lt; Tkey, Tvalue &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+        <childnode refid="622" relation="public-inheritance">
+        </childnode>
+        <childnode refid="623" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="622">
+        <label>IXLRepository</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+      </node>
+      <node id="623">
+        <label>IEnumerable&lt; Tvalue &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="624">
+        <label>IXLRepository&lt; Tkey, Tvalue &gt;</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+        <childnode refid="625" relation="public-inheritance">
+        </childnode>
+        <childnode refid="626" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="625">
+        <label>IXLRepository</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository"/>
+      </node>
+      <node id="626">
+        <label>IEnumerable&lt; Tvalue &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/IXLRepository.cs" line="20" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/Caching/IXLRepository.cs" bodystart="17" bodyend="30"/>
+    <listofallmembers>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository_1aa71d36872f416feaa853788a7a7a7ef8" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::IXLRepository</scope><name>Clear</name></member>
+      <member refid="interface_closed_x_m_l_1_1_excel_1_1_caching_1_1_i_x_l_repository_1ac539801a0214e48870b8b8c021646fc0" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Caching::IXLRepository</scope><name>Store</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

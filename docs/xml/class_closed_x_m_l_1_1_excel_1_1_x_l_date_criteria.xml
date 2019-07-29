@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::XLDateCriteria</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria" prot="public" virt="non-virtual">XLValidationCriteria</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1ab4517a2942a80ccb481d6e061b5e4e19" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>XLDateCriteria</definition>
+        <argsstring>(IXLDataValidation dataValidation)</argsstring>
+        <name>XLDateCriteria</name>
+        <param>
+          <type><ref refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation" kindref="compound">IXLDataValidation</ref></type>
+          <declname>dataValidation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="8" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="8" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a761e6a33a2de6e885b72efec499a8e04" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualTo</definition>
+        <argsstring>(DateTime value)</argsstring>
+        <name>EqualTo</name>
+        <param>
+          <type>DateTime</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="13" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="13" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a75d954c7d7fb8da7274d5720b544247d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void NotEqualTo</definition>
+        <argsstring>(DateTime value)</argsstring>
+        <name>NotEqualTo</name>
+        <param>
+          <type>DateTime</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="19" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a3543c91e29ad2d644912349cbdb8ec0f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void GreaterThan</definition>
+        <argsstring>(DateTime value)</argsstring>
+        <name>GreaterThan</name>
+        <param>
+          <type>DateTime</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="25" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="25" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a76a9b1e6eb9c23c81b4e641571284ecd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void LessThan</definition>
+        <argsstring>(DateTime value)</argsstring>
+        <name>LessThan</name>
+        <param>
+          <type>DateTime</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="31" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="31" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1ab3337790a5adfb6293037da6b775c6d9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualOrGreaterThan</definition>
+        <argsstring>(DateTime value)</argsstring>
+        <name>EqualOrGreaterThan</name>
+        <param>
+          <type>DateTime</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="37" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="37" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1ac9528e6a97dd107061bde140689e9505" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void EqualOrLessThan</definition>
+        <argsstring>(DateTime value)</argsstring>
+        <name>EqualOrLessThan</name>
+        <param>
+          <type>DateTime</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="43" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="43" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1aa2c7e6b00bafde4d57a91e30a0a1337e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Between</definition>
+        <argsstring>(DateTime minValue, DateTime maxValue)</argsstring>
+        <name>Between</name>
+        <param>
+          <type>DateTime</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>DateTime</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="49" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="49" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a31d35a4c4771260976f7abb730d19cd3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void NotBetween</definition>
+        <argsstring>(DateTime minValue, DateTime maxValue)</argsstring>
+        <name>NotBetween</name>
+        <param>
+          <type>DateTime</type>
+          <declname>minValue</declname>
+        </param>
+        <param>
+          <type>DateTime</type>
+          <declname>maxValue</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="56" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="56" bodyend="61"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1218">
+        <label>XLValidationCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria"/>
+        <childnode refid="1219" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1219">
+        <label>IXLValidationCriteria</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_validation_criteria"/>
+      </node>
+      <node id="1217">
+        <label>XLDateCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria"/>
+        <childnode refid="1218" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1221">
+        <label>XLValidationCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria"/>
+        <childnode refid="1222" relation="public-inheritance">
+        </childnode>
+        <childnode refid="1223" relation="usage">
+          <edgelabel>dataValidation</edgelabel>
+        </childnode>
+      </node>
+      <node id="1222">
+        <label>IXLValidationCriteria</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_validation_criteria"/>
+      </node>
+      <node id="1220">
+        <label>XLDateCriteria</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria"/>
+        <childnode refid="1221" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1223">
+        <label>IXLDataValidation</label>
+        <link refid="interface_closed_x_m_l_1_1_excel_1_1_i_x_l_data_validation"/>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" line="7" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/DataValidation/XLDateCriteria.cs" bodystart="6" bodyend="62"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1aa2c7e6b00bafde4d57a91e30a0a1337e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a1b4b471d753a1ec9c94b2edc96bb4ca3" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a944d6ab868611e49eef1d5dbae095abb" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a7f145200d57b45232e20f6714ef1c216" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>Between</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a27bed2459018e83c630123bbc3de7c9c" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>dataValidation</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1ab3337790a5adfb6293037da6b775c6d9" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a1657cdc1017788eea48aee0c2ace7ab4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a999abc5d3bd371f6b29668a84f5e614b" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ae283b94d9762868ccbc6f03e26111700" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrGreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1ac9528e6a97dd107061bde140689e9505" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a18c33137d2fc51c66638114ab3b35302" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aca166048aa8a13efe3160c3c7162a692" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1afab31c05a5802b8fe44709a50f9454aa" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualOrLessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a761e6a33a2de6e885b72efec499a8e04" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a93c5873b6751ba6ab1a2c31ef2891cdc" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aa48c759f9cea1e79ac3e206fc3a87a41" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a45836061369690242cd64ef3a694a8d4" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>EqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a3543c91e29ad2d644912349cbdb8ec0f" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a451590a4efe4e6ccde37725a6eec14b7" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a6a63c5ae76ca330236e4535baefca838" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a87d34644ab63f6aa4aba7c2d07beeb2d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>GreaterThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a76a9b1e6eb9c23c81b4e641571284ecd" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ac5f002f39a7c9860d2ab13fd696f8f83" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ae2875209c796cf07d11522068bbb0e13" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a8888a8b25db529a78beb343ff09d451d" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>LessThan</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a31d35a4c4771260976f7abb730d19cd3" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1ade37755e22ebc67469f1ed77c9b89aa1" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a7b5bf0b665bb8c5ba0abdc428da15779" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1abcce28a500a7f213e7cfd52b23b43b8c" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotBetween</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1a75d954c7d7fb8da7274d5720b544247d" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1a13684d69b413aa68493506428f58a6bc" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1aca4c1323fe1e543d833d8e1e98b11927" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_validation_criteria_1acbeb77dd62e5070b71cf5654accf1714" prot="public" virt="non-virtual" ambiguityscope="ClosedXML::Excel::XLValidationCriteria."><scope>ClosedXML::Excel::XLDateCriteria</scope><name>NotEqualTo</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_x_l_date_criteria_1ab4517a2942a80ccb481d6e061b5e4e19" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::XLDateCriteria</scope><name>XLDateCriteria</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::ContentManagers::XLBaseContentManager</compoundname>
+    <basecompoundref refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager" prot="public" virt="non-virtual">XLBaseContentManager</basecompoundref>
+    <templateparamlist>
+      <param>
+        <type>T</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager_1a6084332e3ea07c1a41f10c45d3884397" prot="protected" static="no" mutable="no">
+        <type>readonly IDictionary&lt; T, OpenXmlElement &gt;</type>
+        <definition>readonly IDictionary&lt;T, OpenXmlElement&gt; contents</definition>
+        <argsstring></argsstring>
+        <name>contents</name>
+        <initializer>= new Dictionary&lt;T, OpenXmlElement&gt;()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" line="17" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager_1a6de196b324cbce55a861bac365df86c6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>OpenXmlElement</type>
+        <definition>OpenXmlElement GetPreviousElementFor</definition>
+        <argsstring>(T content)</argsstring>
+        <name>GetPreviousElementFor</name>
+        <param>
+          <type>T</type>
+          <declname>content</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" bodystart="19" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager_1a7cc04406926587debab8a880d56aacb4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void SetElement</definition>
+        <argsstring>(T content, OpenXmlElement element)</argsstring>
+        <name>SetElement</name>
+        <param>
+          <type>T</type>
+          <declname>content</declname>
+        </param>
+        <param>
+          <type>OpenXmlElement</type>
+          <declname>element</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" line="33" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" bodystart="33" bodyend="36"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="959">
+        <label>XLBaseContentManager</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+      </node>
+      <node id="958">
+        <label>XLBaseContentManager&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+        <childnode refid="959" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="961">
+        <label>XLBaseContentManager</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+      </node>
+      <node id="960">
+        <label>XLBaseContentManager&lt; T &gt;</label>
+        <link refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager"/>
+        <childnode refid="961" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" line="16" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Excel/ContentManagers/XLBaseContentManager.cs" bodystart="13" bodyend="37"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager_1a6084332e3ea07c1a41f10c45d3884397" prot="protected" virt="non-virtual"><scope>ClosedXML::Excel::ContentManagers::XLBaseContentManager</scope><name>contents</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager_1a6de196b324cbce55a861bac365df86c6" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::ContentManagers::XLBaseContentManager</scope><name>GetPreviousElementFor</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_content_managers_1_1_x_l_base_content_manager_1a7cc04406926587debab8a880d56aacb4" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::ContentManagers::XLBaseContentManager</scope><name>SetElement</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

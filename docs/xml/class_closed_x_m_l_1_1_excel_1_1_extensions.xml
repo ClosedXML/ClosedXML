@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.15">
+  <compounddef id="class_closed_x_m_l_1_1_excel_1_1_extensions" kind="class" language="C#" prot="public">
+    <compoundname>ClosedXML::Excel::Extensions</compoundname>
+      <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="class_closed_x_m_l_1_1_excel_1_1_extensions_1acfad506a99d96e99d3d610119fabcd7b" prot="private" static="yes" mutable="no">
+        <type>readonly char []</type>
+        <definition>readonly char [] hexDigits</definition>
+        <argsstring></argsstring>
+        <name>hexDigits</name>
+        <initializer>= { &apos;0&apos;, &apos;1&apos;, &apos;2&apos;, &apos;3&apos;, &apos;4&apos;, &apos;5&apos;, &apos;6&apos;, &apos;7&apos;, &apos;8&apos;, &apos;9&apos;, &apos;A&apos;, &apos;B&apos;, &apos;C&apos;, &apos;D&apos;, &apos;E&apos;, &apos;F&apos; }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="22" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_extensions_1af616d4ef4dd713e87e3a952b827fd030" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>static String ToHex</definition>
+        <argsstring>(this Color color)</argsstring>
+        <name>ToHex</name>
+        <param>
+          <type>this Color</type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="24" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="24" bodyend="48"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_extensions_1a0729b59cba5e334d32c91e5da4a2173e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>String</type>
+        <definition>static String RemoveSpecialCharacters</definition>
+        <argsstring>(this String str)</argsstring>
+        <name>RemoveSpecialCharacters</name>
+        <param>
+          <type>this String</type>
+          <declname>str</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="50" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="50" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_extensions_1a9434fc5f1c6a2a28a21c1221471fc015" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Int32</type>
+        <definition>static Int32 CharCount</definition>
+        <argsstring>(this String instance, Char c)</argsstring>
+        <name>CharCount</name>
+        <param>
+          <type>this String</type>
+          <declname>instance</declname>
+        </param>
+        <param>
+          <type>Char</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="63" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="63" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_extensions_1a2b9c89bb4d3dd74438f2b6885e4b7512" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>Boolean</type>
+        <definition>static Boolean HasDuplicates&lt; T &gt;</definition>
+        <argsstring>(this IEnumerable&lt; T &gt; source)</argsstring>
+        <name>HasDuplicates&lt; T &gt;</name>
+        <param>
+          <type>this IEnumerable&lt; T &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="68" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="68" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="function" id="class_closed_x_m_l_1_1_excel_1_1_extensions_1a23729b332c33565ce1ab902c7d906e13" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>T</type>
+        <definition>static T CastTo&lt; T &gt;</definition>
+        <argsstring>(this Object o)</argsstring>
+        <name>CastTo&lt; T &gt;</name>
+        <param>
+          <type>this Object</type>
+          <declname>o</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="81" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="81" bodyend="84"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" line="19" column="1" bodyfile="C:/Users/cverhaar/Coding/ClosedXML/ClosedXML/Extensions.cs" bodystart="18" bodyend="85"/>
+    <listofallmembers>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_extensions_1a23729b332c33565ce1ab902c7d906e13" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Extensions</scope><name>CastTo&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_extensions_1a9434fc5f1c6a2a28a21c1221471fc015" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Extensions</scope><name>CharCount</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_extensions_1a2b9c89bb4d3dd74438f2b6885e4b7512" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Extensions</scope><name>HasDuplicates&lt; T &gt;</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_extensions_1acfad506a99d96e99d3d610119fabcd7b" prot="private" virt="non-virtual"><scope>ClosedXML::Excel::Extensions</scope><name>hexDigits</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_extensions_1a0729b59cba5e334d32c91e5da4a2173e" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Extensions</scope><name>RemoveSpecialCharacters</name></member>
+      <member refid="class_closed_x_m_l_1_1_excel_1_1_extensions_1af616d4ef4dd713e87e3a952b827fd030" prot="public" virt="non-virtual"><scope>ClosedXML::Excel::Extensions</scope><name>ToHex</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
