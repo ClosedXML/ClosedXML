@@ -7,5 +7,6 @@ On this page you'll find our tutorials. We have designed them to flow naturally 
    :maxdepth: 2
    :caption: Tutorials:
 
-   SimpleWorkbookExample
-   IntroToStyling
+   simpleWorkbookExample
+   introToStyling
+   datatypes

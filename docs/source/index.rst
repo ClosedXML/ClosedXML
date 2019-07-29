@@ -6,12 +6,12 @@ Welcome to ClosedXML's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   GettingStarted
-   tutorialsindex
+   gettingStarted
+   tutorialsIndex
    workbook
    worksheet
    cell
-   doxygenindex
+   doxygenIndex
 
 Contribute
 ----------
