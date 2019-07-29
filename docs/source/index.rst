@@ -1,13 +1,13 @@
+*************************************
 Welcome to ClosedXML's documentation!
-=====================================
+*************************************
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
    
    GettingStarted
-   SimpleWorkbookExample
-   IntroToStyling
+   tutorialsindex
    workbook
    worksheet
    cell
