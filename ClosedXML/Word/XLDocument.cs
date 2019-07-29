@@ -8,12 +8,33 @@ namespace ClosedXML.Word
 {
     public class XLDocument : IXLDocument
     {
-        private string file;
+        public string FileName
+        {
+            get
+            {
+                return String.Empty;
+            }
+            set
+            {
+            }
+        }
+
+        public MainDocumentPart Main
+        {
+            get
+            {
+                MainDocumentPart main = new MainDocumentPart( );
+                return main;
+            }
+            set
+            {
+            }
+        }
 
         public XLDocument( string file )
         {
-            this.file = file;
-            Load( this.file );
+            FileName = file;
+            Load( FileName );
         }
 
         public XLDocument( )
