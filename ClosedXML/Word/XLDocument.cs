@@ -8,6 +8,8 @@ namespace ClosedXML.Word
 {
     public class XLDocument : IXLDocument
     {
+        public WordprocessingDocument document;
+
         public string FileName
         {
             get
@@ -23,14 +25,14 @@ namespace ClosedXML.Word
         {
             get
             {
-                MainDocumentPart main = new MainDocumentPart( );
-                return main;
+                return Main;
             }
             set
             {
             }
         }
 
+        //TODO Check whether the specified file exists, if it does open it, else create a new document
         public XLDocument( string file )
         {
             FileName = file;
@@ -39,24 +41,24 @@ namespace ClosedXML.Word
 
         public XLDocument( )
         {
+            CreateNewWordDocument( );
         }
 
         //Temporary method
-        public void CreateNewWordDocument( )
+        private void CreateNewWordDocument( )
         {
             string path = Path.Combine( Path.GetTempPath( ), "test.docx" );
+            FileName = path;
 
-            using ( FileStream fs = File.Create( path ) )
+            using ( MemoryStream ms = new MemoryStream( ) )
             {
-                using ( WordprocessingDocument document = WordprocessingDocument.Create( fs, WordprocessingDocumentType.Document, true ) )
-                {
-                    MainDocumentPart main = document.AddMainDocumentPart( );
-                    main.Document = new Document( );
-                    Body body = new Body( );
-                    main.Document.Body = body;
-                    AddTextToBody( body, "ClosedXML Word Test" );
-                    document.Close( );
-                }
+                WordprocessingDocument document = WordprocessingDocument.Create( ms, WordprocessingDocumentType.Document, true );
+                MainDocumentPart main = document.AddMainDocumentPart( );
+                main.Document = new Document( );
+                Body body = new Body( );
+                main.Document.Body = body;
+
+                this.document = document;
             }
         }
 
@@ -73,7 +75,11 @@ namespace ClosedXML.Word
         public void SaveAs(
             string file )
         {
-            throw new NotImplementedException( );
+            this.document.SaveAs(
+                file != FileName
+                    ? file
+                    : FileName );
+            //this.document.Close( );
         }
 
         //Temporary method
@@ -95,6 +101,14 @@ namespace ClosedXML.Word
             Body body = document.MainDocumentPart.Document.Body;
             AddTextToBody( body, "ClosedXML Word Test" );
             document.Close( );
+        }
+
+        public void AddBlock( IXLTextBlock textBlock )
+        {
+            Body body = this.document.MainDocumentPart.Document.Body;
+            Paragraph para = body.AppendChild( new Paragraph( ) );
+            Run run = para.AppendChild( new Run( ) );
+            run.AppendChild( new Text( textBlock.text ) );
         }
     }
 }

@@ -20,5 +20,7 @@ namespace ClosedXML.Word
         MainDocumentPart Main { get; set; }
 
         string FileName { get; set; }
+
+        void AddBlock( IXLTextBlock textBlock );
     }
 }
