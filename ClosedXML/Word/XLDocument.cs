@@ -21,16 +21,7 @@ namespace ClosedXML.Word
             }
         }
 
-        public MainDocumentPart Main
-        {
-            get
-            {
-                return Main;
-            }
-            set
-            {
-            }
-        }
+        public MainDocumentPart Main { get; set; }
 
         //TODO Check whether the specified file exists, if it does open it, else create a new document
         public XLDocument( string file )
@@ -54,9 +45,14 @@ namespace ClosedXML.Word
             {
                 WordprocessingDocument document = WordprocessingDocument.Create( ms, WordprocessingDocumentType.Document, true );
                 MainDocumentPart main = document.AddMainDocumentPart( );
+                Main = main;
                 main.Document = new Document( );
                 Body body = new Body( );
                 main.Document.Body = body;
+
+                StyleDefinitionsPart part = document.MainDocumentPart.AddNewPart<StyleDefinitionsPart>( );
+                Styles root = new Styles( );
+                root.Save( part );
 
                 this.document = document;
             }
@@ -103,12 +99,18 @@ namespace ClosedXML.Word
             document.Close( );
         }
 
-        public void AddBlock( IXLTextBlock textBlock )
+        public void AddTextBlock( IXLTextBlock textBlock )
         {
             Body body = this.document.MainDocumentPart.Document.Body;
             Paragraph para = body.AppendChild( new Paragraph( ) );
             Run run = para.AppendChild( new Run( ) );
             run.AppendChild( new Text( textBlock.text ) );
+        }
+
+        public void AddTextBlock( string text )
+        {
+            IXLTextBlock textBlock = new TextBlock( text );
+            AddTextBlock( textBlock );
         }
     }
 }

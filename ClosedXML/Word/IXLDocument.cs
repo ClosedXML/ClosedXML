@@ -21,6 +21,8 @@ namespace ClosedXML.Word
 
         string FileName { get; set; }
 
-        void AddBlock( IXLTextBlock textBlock );
+        void AddTextBlock( IXLTextBlock textBlock );
+
+        void AddTextBlock( string text );
     }
 }

@@ -1,6 +1,5 @@
-﻿using System.IO;
-
-using ClosedXML.Word;
+﻿using ClosedXML.Word;
+using System.IO;
 
 namespace ClosedXML_Sandbox
 {
@@ -10,7 +9,8 @@ namespace ClosedXML_Sandbox
         {
             IXLDocument document = new XLDocument( );
             IXLTextBlock p1 = new TextBlock( "This is a test textblock" );
-            document.AddBlock( p1 );
+            document.AddTextBlock( p1 );
+            XLDocStyle.CreateAndAddCharacterStyle( document.Main.StyleDefinitionsPart, "testId", "test" );
             document.SaveAs( Path.GetTempPath( ) + "test.docx" );
         }
     }
