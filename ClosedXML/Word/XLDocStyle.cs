@@ -22,7 +22,7 @@ namespace ClosedXML.Word
             // Create and add the child elements (properties of the style).
             Aliases aliases1 = new Aliases( ) { Val = aliases };
             StyleName styleName1 = new StyleName( ) { Val = stylename };
-            LinkedStyle linkedStyle1 = new LinkedStyle( ) { Val = "OverdueAmountPara" };
+            LinkedStyle linkedStyle1 = new LinkedStyle( ) { Val = "Test" };
             if ( aliases != "" )
                 style.Append( aliases1 );
             style.Append( styleName1 );

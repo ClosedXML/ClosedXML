@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace ClosedXML.Word
 {
@@ -105,6 +106,13 @@ namespace ClosedXML.Word
             Paragraph para = body.AppendChild( new Paragraph( ) );
             Run run = para.AppendChild( new Run( ) );
             run.AppendChild( new Text( textBlock.text ) );
+
+            XLDocStyle.CreateAndAddCharacterStyle( Main.StyleDefinitionsPart, "testId", "test" );
+            run.PrependChild( new RunProperties( ) );
+            RunProperties rPr = run.RunProperties;
+            RunStyle rStyle = new RunStyle( );
+            rStyle.Val = "Test";
+            run.RunProperties.AppendChild( rStyle );
         }
 
         public void AddTextBlock( string text )
