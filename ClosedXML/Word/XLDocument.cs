@@ -107,7 +107,7 @@ namespace ClosedXML.Word
             Run run = para.AppendChild( new Run( ) );
             run.AppendChild( new Text( textBlock.text ) );
 
-            XLDocStyle.CreateAndAddCharacterStyle( Main.StyleDefinitionsPart, "testId", "test" );
+            XLDocumentStyle.CreateAndAddCharacterStyle( Main.StyleDefinitionsPart, "testId", "test" );
             run.PrependChild( new RunProperties( ) );
             RunProperties rPr = run.RunProperties;
             RunStyle rStyle = new RunStyle( );

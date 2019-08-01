@@ -1,6 +1,6 @@
 ﻿namespace ClosedXML.Word
 {
-    public interface IXLDocStyle
+    public interface IXLDocumentStyle
     {
         
     }

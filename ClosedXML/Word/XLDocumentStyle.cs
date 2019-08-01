@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace ClosedXML.Word
 {
-    public class XLDocStyle : IXLDocStyle
+    public class XLDocumentStyle : IXLDocumentStyle
     {
         public static void CreateAndAddCharacterStyle( StyleDefinitionsPart styleDefinitionsPart,
         string styleid, string stylename, string aliases = "" )
