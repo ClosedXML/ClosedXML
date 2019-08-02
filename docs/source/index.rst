@@ -15,7 +15,6 @@ Welcome to the official ClosedXML Docs. On here you can find a bunch of tutorial
    workbook
    worksheet
    cell
-   doxygenIndex
 
 Contribute
 ----------
