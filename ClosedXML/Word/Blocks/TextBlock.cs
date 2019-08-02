@@ -1,13 +1,17 @@
-﻿namespace ClosedXML.Word
+﻿using DocumentFormat.OpenXml.Drawing;
+
+namespace ClosedXML.Word
 {
     public class TextBlock : IXLTextBlock
     {
         public TextBlock( string text )
         {
-            this.text = text;
+            Text = text;
         }
 
-        public string text { get; set; }
+        public string Text { get; set; }
+
+        public RunProperties RunProperties { get; set; }
 
         public void Dispose( )
         {

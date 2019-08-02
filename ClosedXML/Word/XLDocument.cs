@@ -3,32 +3,39 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace ClosedXML.Word
 {
     public class XLDocument : IXLDocument
     {
-        public WordprocessingDocument document;
-
         public string FileName
         {
             get
             {
-                return String.Empty;
+                return string.Empty;
             }
             set
             {
             }
         }
 
-        public MainDocumentPart Main { get; set; }
-
-        //TODO Check whether the specified file exists, if it does open it, else create a new document
+        public WordprocessingDocument Document { get; set; }
+        public MainDocumentPart MainDocumentPart { get; set; }
+        public Document DocumentPart { get; set; }
+        public Body BodyPart { get; set; }
+        
         public XLDocument( string file )
         {
             FileName = file;
-            Load( FileName );
+
+            if ( File.Exists( FileName ) )
+            {
+                Load( FileName );
+            }
+            else
+            {
+                CreateNewWordDocument( );
+            }
         }
 
         public XLDocument( )
@@ -39,14 +46,14 @@ namespace ClosedXML.Word
         //Temporary method
         private void CreateNewWordDocument( )
         {
-            string path = Path.Combine( Path.GetTempPath( ), "test.docx" );
-            FileName = path;
+            //string path = Path.Combine( Path.GetTempPath( ), "test.docx" );
+            //FileName = path;
 
             using ( MemoryStream ms = new MemoryStream( ) )
             {
                 WordprocessingDocument document = WordprocessingDocument.Create( ms, WordprocessingDocumentType.Document, true );
                 MainDocumentPart main = document.AddMainDocumentPart( );
-                Main = main;
+                MainDocumentPart = main;
                 main.Document = new Document( );
                 Body body = new Body( );
                 main.Document.Body = body;
@@ -55,7 +62,7 @@ namespace ClosedXML.Word
                 Styles root = new Styles( );
                 root.Save( part );
 
-                this.document = document;
+                Document = document;
             }
         }
 
@@ -72,7 +79,7 @@ namespace ClosedXML.Word
         public void SaveAs(
             string file )
         {
-            this.document.SaveAs(
+            Document.SaveAs(
                 file != FileName
                     ? file
                     : FileName );
@@ -102,12 +109,13 @@ namespace ClosedXML.Word
 
         public void AddTextBlock( IXLTextBlock textBlock )
         {
-            Body body = this.document.MainDocumentPart.Document.Body;
+            //TODO Refactor code
+            Body body = Document.MainDocumentPart.Document.Body;
             Paragraph para = body.AppendChild( new Paragraph( ) );
             Run run = para.AppendChild( new Run( ) );
-            run.AppendChild( new Text( textBlock.text ) );
+            run.AppendChild( new Text( textBlock.Text ) );
 
-            XLDocumentStyle.CreateAndAddCharacterStyle( Main.StyleDefinitionsPart, "testId", "test" );
+            XLDocumentStyle.CreateAndAddCharacterStyle( MainDocumentPart.StyleDefinitionsPart, "testId", "test" );
             run.PrependChild( new RunProperties( ) );
             RunProperties rPr = run.RunProperties;
             RunStyle rStyle = new RunStyle( );
@@ -119,6 +127,16 @@ namespace ClosedXML.Word
         {
             IXLTextBlock textBlock = new TextBlock( text );
             AddTextBlock( textBlock );
+        }
+
+        public void AddBlock( )
+        {
+            throw new NotImplementedException( );
+        }
+
+        public IXLBlocks Blocks( )
+        {
+            throw new NotImplementedException( );
         }
     }
 }

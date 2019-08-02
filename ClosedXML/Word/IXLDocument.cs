@@ -1,6 +1,7 @@
-﻿using System;
-
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System;
+using System.Collections.Generic;
 
 namespace ClosedXML.Word
 {
@@ -17,12 +18,22 @@ namespace ClosedXML.Word
         /// <param name="file"></param>
         void SaveAs( string file );
 
-        MainDocumentPart Main { get; set; }
+        /// <summary>
+        /// The word document
+        /// </summary>
+        WordprocessingDocument Document { get; set; }
+        MainDocumentPart MainDocumentPart { get; set; }
+        Document DocumentPart { get; set; }
+        Body BodyPart { get; set; }
 
         string FileName { get; set; }
 
         void AddTextBlock( IXLTextBlock textBlock );
 
         void AddTextBlock( string text );
+
+        void AddBlock( );
+				
+				IXLBlocks Blocks();
     }
 }
