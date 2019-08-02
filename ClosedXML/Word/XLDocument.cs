@@ -14,16 +14,14 @@ namespace ClosedXML.Word
             {
                 return string.Empty;
             }
-            set
-            {
-            }
+            set { }
         }
 
         public WordprocessingDocument Document { get; set; }
         public MainDocumentPart MainDocumentPart { get; set; }
         public Document DocumentPart { get; set; }
         public Body BodyPart { get; set; }
-        
+
         public XLDocument( string file )
         {
             FileName = file;
@@ -51,18 +49,17 @@ namespace ClosedXML.Word
 
             using ( MemoryStream ms = new MemoryStream( ) )
             {
-                WordprocessingDocument document = WordprocessingDocument.Create( ms, WordprocessingDocumentType.Document, true );
-                MainDocumentPart main = document.AddMainDocumentPart( );
-                MainDocumentPart = main;
-                main.Document = new Document( );
-                Body body = new Body( );
-                main.Document.Body = body;
+                Document = WordprocessingDocument.Create( ms, WordprocessingDocumentType.Document, true );
+                MainDocumentPart = Document.AddMainDocumentPart( );
+                DocumentPart = new Document( );
+                MainDocumentPart.Document = DocumentPart;
+                BodyPart = new Body( );
+                DocumentPart.Body = BodyPart;
 
-                StyleDefinitionsPart part = document.MainDocumentPart.AddNewPart<StyleDefinitionsPart>( );
+                //TODO Add styling to document elsewhere
+                StyleDefinitionsPart part = MainDocumentPart.AddNewPart<StyleDefinitionsPart>( );
                 Styles root = new Styles( );
                 root.Save( part );
-
-                Document = document;
             }
         }
 
@@ -109,17 +106,17 @@ namespace ClosedXML.Word
 
         public void AddTextBlock( IXLTextBlock textBlock )
         {
-            //TODO Refactor code
-            Body body = Document.MainDocumentPart.Document.Body;
-            Paragraph para = body.AppendChild( new Paragraph( ) );
+            Paragraph para = BodyPart.AppendChild( new Paragraph( ) );
             Run run = para.AppendChild( new Run( ) );
             run.AppendChild( new Text( textBlock.Text ) );
 
+            //TODO Move styling elsewhere
             XLDocumentStyle.CreateAndAddCharacterStyle( MainDocumentPart.StyleDefinitionsPart, "testId", "test" );
             run.PrependChild( new RunProperties( ) );
-            RunProperties rPr = run.RunProperties;
-            RunStyle rStyle = new RunStyle( );
-            rStyle.Val = "Test";
+            RunStyle rStyle = new RunStyle
+            {
+                Val = "Test"
+            };
             run.RunProperties.AppendChild( rStyle );
         }
 
@@ -129,7 +126,7 @@ namespace ClosedXML.Word
             AddTextBlock( textBlock );
         }
 
-        public void AddBlock( )
+        public void AddBlock( IXLBlock block )
         {
             throw new NotImplementedException( );
         }

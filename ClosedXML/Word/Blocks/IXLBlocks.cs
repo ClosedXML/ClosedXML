@@ -4,6 +4,5 @@ namespace ClosedXML.Word
 {
     public interface IXLBlocks : IEnumerable<IXLBlock>
     {
-        
     }
 }

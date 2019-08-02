@@ -17,10 +17,13 @@ namespace ClosedXML_Sandbox
 
             //Add blocks: they are used to construct the document
             IXLTextBlock p1 = new TextBlock( "This is a test textblock" );
+            IXLTextBlock p2 = new TextBlock( "This is a second textblock" );
 
             //Add the blocks to the document
             //TODO Create method to add blocks from collection to document at once
-            document.AddTextBlock( p1 );
+            document.Blocks( ).Add( p1 );
+            document.Blocks( ).Add( p2 );
+            document.Blocks( ).AddBlocksToDocument( );
 
             //TODO Create way to access a text block by id or name
             //IXLTextBlock testTextBlock = document.TextBlock( p1 );
