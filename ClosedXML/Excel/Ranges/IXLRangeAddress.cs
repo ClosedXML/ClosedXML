@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 
 namespace ClosedXML.Excel
@@ -11,6 +12,38 @@ namespace ClosedXML.Excel
         /// The first address.
         /// </value>
         IXLAddress FirstAddress { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this range is valid.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
+        /// </value>
+        Boolean IsValid { get; }
+
+        /// <summary>
+        /// Gets or sets the last address in the range.
+        /// </summary>
+        /// <value>
+        /// The last address.
+        /// </value>
+        IXLAddress LastAddress { get; }
+
+        IXLWorksheet Worksheet { get; }
+
+        /// <summary>Allocates the current range address in the internal range repository and returns it</summary>
+        IXLRange AsRange();
+
+        Boolean Contains(IXLAddress address);
+
+        /// <summary>
+        /// Returns the intersection of this range address with another range address on the same worksheet.
+        /// </summary>
+        /// <param name="otherRangeAddress">The other range address.</param>
+        /// <returns>The intersection's range address</returns>
+        IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress);
+
+        Boolean Intersects(IXLRangeAddress otherAddress);
 
         /// <summary>
         /// Determines whether range address spans the entire column.
@@ -37,22 +70,13 @@ namespace ClosedXML.Excel
         Boolean IsEntireSheet();
 
         /// <summary>
-        /// Gets or sets a value indicating whether this range is valid.
+        /// Returns a range address so that its offset from the target base address is equal to the offset of the current range address to the source base address.
+        /// For example, if the current range address is D4:E4, the source base address is A1:C3, then the relative address to the target base address B10:D13 is E14:F14
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
-        /// </value>
-        Boolean IsValid { get; }
-
-        /// <summary>
-        /// Gets or sets the last address in the range.
-        /// </summary>
-        /// <value>
-        /// The last address.
-        /// </value>
-        IXLAddress LastAddress { get; }
-
-        IXLWorksheet Worksheet { get; }
+        /// <param name="sourceRangeAddress">The source base range address.</param>
+        /// <param name="targetRangeAddress">The target base range address.</param>
+        /// <returns>The relative range</returns>
+        IXLRangeAddress Relative(IXLRangeAddress sourceRangeAddress, IXLRangeAddress targetRangeAddress);
 
         String ToString(XLReferenceStyle referenceStyle);
 
@@ -67,28 +91,5 @@ namespace ClosedXML.Excel
         String ToStringRelative();
 
         String ToStringRelative(Boolean includeSheet);
-
-        Boolean Intersects(IXLRangeAddress otherAddress);
-
-        Boolean Contains(IXLAddress address);
-
-        /// <summary>
-        /// Returns the intersection of this range address with another range address on the same worksheet.
-        /// </summary>
-        /// <param name="otherRangeAddress">The other range address.</param>
-        /// <returns>The intersection's range address</returns>
-        IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress);
-
-        /// <summary>
-        /// Returns a range address so that its offset from the target base address is equal to the offset of the current range address to the source base address.
-        /// For example, if the current range address is D4:E4, the source base address is A1:C3, then the relative address to the target base address B10:D13 is E14:F14
-        /// </summary>
-        /// <param name="sourceRangeAddress">The source base range address.</param>
-        /// <param name="targetRangeAddress">The target base range address.</param>
-        /// <returns>The relative range</returns>
-        IXLRangeAddress Relative(IXLRangeAddress sourceRangeAddress, IXLRangeAddress targetRangeAddress);
-
-        /// <summary>Allocates the current range address in the internal range repository and returns it</summary>
-        IXLRange AsRange();
     }
 }
