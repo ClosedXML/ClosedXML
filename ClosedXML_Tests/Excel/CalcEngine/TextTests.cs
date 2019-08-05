@@ -100,14 +100,47 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             actual = XLWorkbook.EvaluateExpr(@"Concatenate("""", ""123"")");
             Assert.AreEqual("123", actual);
 
+            // TODO: Fix CONCATENATE when calling cell references are available
+            // In Excel, it seems that if the parameter is a range,
+            // CONCATENATE will return the cell in the range that is the same row number as the calling cell,
+            // i.e. the cell with the CONCATENATE function.
+            // Therefore we need reference info about the calling cell to solve this.
+            // If we can solve ROW(), then we can solve this too.
+            // For the example below, the calling cell doesn't share any
+
             var ws = new XLWorkbook().AddWorksheet();
 
             ws.FirstCell().SetValue(20)
                 .CellBelow().SetValue("AB")
-                .CellBelow().SetFormulaA1("=DATE(2019,1,1)")
-                .CellBelow().SetFormulaA1("=CONCATENATE(A1:A3)");
+                .CellBelow().SetFormulaA1("=DATE(2019,1,1)");
 
-            Assert.Throws<CellValueException>(() => ws.RecalculateAllFormulas());
+            // Calling cell is 1st row, so formula should return A1
+            //ws.Cell("B1").SetFormulaA1("=CONCATENATE(A1:A3)");
+            //Assert.AreEqual("20", ws.Cell("B1").Value);
+
+            // Calling cell is 2nd row, so formula should return A2
+            //ws.Cell("B2").SetFormulaA1("=CONCATENATE(A1:A3)");
+            //Assert.AreEqual("AB", ws.Cell("B2").Value);
+
+            // Calling cell is 3rd row, so formula should return A3's textual representation
+            //ws.Cell("B3").SetFormulaA1("=CONCATENATE(A1:A3)");
+            //Assert.AreEqual("43466", ws.Cell("B3").Value);
+
+            // Calling cell doesn't share row with any cell in parameter range. Throw CellValueException
+            //ws.Cell("A4").SetFormulaA1("=CONCATENATE(A1:A3)");
+            //Assert.Throws<CellValueException>(() => ws.Cell("A4").GetString());
+        }
+
+        [Test]
+        public void Concatenate_with_references()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+
+            ws.Cell("A1").Value = "Hello";
+            ws.Cell("B1").Value = "World";
+
+            Assert.AreEqual("Hello World", ws.Evaluate(@"=CONCATENATE(A1, "" "", B1)"));
+            Assert.Throws<CellValueException>(() => ws.Evaluate(@"=CONCATENATE(A1:A2, "" "", B1:B2)"));
         }
 
         [Test]

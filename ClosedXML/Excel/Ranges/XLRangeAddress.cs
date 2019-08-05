@@ -120,7 +120,7 @@ namespace ClosedXML.Excel
                 if (!IsValid)
                     throw new InvalidOperationException("Range address is invalid.");
 
-                return LastAddress.ColumnNumber - FirstAddress.ColumnNumber + 1;
+                return Math.Abs(LastAddress.ColumnNumber - FirstAddress.ColumnNumber) + 1;
             }
         }
 
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
                 if (!IsValid)
                     throw new InvalidOperationException("Range address is invalid.");
 
-                return LastAddress.RowNumber - FirstAddress.RowNumber + 1;
+                return Math.Abs(LastAddress.RowNumber - FirstAddress.RowNumber) + 1;
             }
         }
 
