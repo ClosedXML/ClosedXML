@@ -84,7 +84,20 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var x in p)
             {
                 if (x is XObjectExpression objectExpression)
-                    throw new CellValueException("This function does not accept cell ranges as parameters.");
+                {
+                    if (objectExpression.Value is CellRangeReference cellRangeReference)
+                    {
+                        if (!cellRangeReference.Range.RangeAddress.IsValid)
+                            throw new CellReferenceException();
+
+                        // Only single cell range references allows at this stage. See unit test for more details
+                        if (cellRangeReference.Range.RangeAddress.NumberOfCells > 1)
+                            throw new CellValueException("This function does not accept cell ranges as parameters.");
+                    }
+                    else
+                        // I'm unsure about what else objectExpression.Value could be, but let's throw CellReferenceException
+                        throw new CellReferenceException();
+                }
 
                 sb.Append((string)x);
             }
@@ -316,8 +329,8 @@ namespace ClosedXML.Excel.CalcEngine
             bool ignoreEmptyStrings;
             try
             {
-                delimiter = (string) p[0];
-                ignoreEmptyStrings = (bool) p[1];
+                delimiter = (string)p[0];
+                ignoreEmptyStrings = (bool)p[1];
             }
             catch (Exception e)
             {
@@ -385,7 +398,7 @@ namespace ClosedXML.Excel.CalcEngine
             numberFormatInfo.NumberGroupSeparator = p.Count > 2 ? p[2] : CultureInfo.InvariantCulture.NumberFormat.NumberGroupSeparator;
             numberFormatInfo.CurrencyGroupSeparator = numberFormatInfo.NumberGroupSeparator;
 
-            if(numberFormatInfo.NumberDecimalSeparator == numberFormatInfo.NumberGroupSeparator)
+            if (numberFormatInfo.NumberDecimalSeparator == numberFormatInfo.NumberGroupSeparator)
             {
                 throw new CellValueException("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.");
             }
