@@ -9,4 +9,5 @@ On this page you'll find our tutorials. We have designed them to flow naturally 
 
    simpleWorkbookExample
    introToStyling
+   organizingWorksheets
    datatypes
