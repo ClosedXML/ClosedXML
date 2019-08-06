@@ -7,11 +7,24 @@ Welcome to the official ClosedXML Docs. On here you can find a bunch of tutorial
    These docs are still very much a work in progress. If you're looking for something but can't find it, let us know on our `issuetracker <https://github.com/ClosedXML/ClosedXML/issues>`_. Alternatively, if you'd like to contribute, that is also possible by logging a pull request on our `Github page <https://github.com/ClosedXML/ClosedXML>`_
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :caption: Installation Guide:
    
    gettingStarted
-   tutorialsIndex
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials:
+   
+   simpleWorkbookExample
+   introToStyling
+   organizingWorksheets
+   datatypes
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference:
+   
+   doxygenIndex
    workbook
    worksheet
    cell
