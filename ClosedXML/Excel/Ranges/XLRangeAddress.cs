@@ -113,6 +113,30 @@ namespace ClosedXML.Excel
 
         public bool IsValid => FirstAddress.IsValid && LastAddress.IsValid;
 
+        public int ColumnSpan
+        {
+            get
+            {
+                if (!IsValid)
+                    throw new InvalidOperationException("Range address is invalid.");
+
+                return LastAddress.ColumnNumber - FirstAddress.ColumnNumber + 1;
+            }
+        }
+
+        public int NumberOfCells => ColumnSpan * RowSpan;
+
+        public int RowSpan
+        {
+            get
+            {
+                if (!IsValid)
+                    throw new InvalidOperationException("Range address is invalid.");
+
+                return LastAddress.RowNumber - FirstAddress.RowNumber + 1;
+            }
+        }
+
         private bool WorksheetIsDeleted => Worksheet?.IsDeleted == true;
 
         #endregion Public properties
