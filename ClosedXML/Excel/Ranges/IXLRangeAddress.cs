@@ -6,6 +6,11 @@ namespace ClosedXML.Excel
     public interface IXLRangeAddress
     {
         /// <summary>
+        /// Gets the number of columns in the area covered by the range address.
+        /// </summary>
+        int ColumnSpan { get; }
+
+        /// <summary>
         /// Gets or sets the first address in the range.
         /// </summary>
         /// <value>
@@ -28,6 +33,16 @@ namespace ClosedXML.Excel
         /// The last address.
         /// </value>
         IXLAddress LastAddress { get; }
+
+        /// <summary>
+        /// Gets the number of cells in the area covered by the range address.
+        /// </summary>
+        int NumberOfCells { get; }
+
+        /// <summary>
+        /// Gets the number of rows in the area covered by the range address.
+        /// </summary>
+        int RowSpan { get; }
 
         IXLWorksheet Worksheet { get; }
 

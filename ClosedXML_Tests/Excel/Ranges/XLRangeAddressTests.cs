@@ -289,6 +289,28 @@ namespace ClosedXML_Tests
             Assert.AreEqual("#REF!", rangeAddress.ToString());
         }
 
+        [Test]
+        public void TestSpanProperties()
+        {
+            var ws = new XLWorkbook().AddWorksheet() as XLWorksheet;
+
+            var range = ws.Range("B3:E5");
+            var rangeAddress = range.RangeAddress as IXLRangeAddress;
+            Assert.AreEqual(4, rangeAddress.ColumnSpan);
+            Assert.AreEqual(3, rangeAddress.RowSpan);
+            Assert.AreEqual(12, rangeAddress.NumberOfCells);
+
+            rangeAddress = ProduceAddressOnDeletedWorksheet();
+            Assert.AreEqual(2, rangeAddress.ColumnSpan);
+            Assert.AreEqual(2, rangeAddress.RowSpan);
+            Assert.AreEqual(4, rangeAddress.NumberOfCells);
+
+            rangeAddress = ProduceInvalidAddress();
+            Assert.Throws<InvalidOperationException>(() => { var x = rangeAddress.ColumnSpan; });
+            Assert.Throws<InvalidOperationException>(() => { var x = rangeAddress.RowSpan; });
+            Assert.Throws<InvalidOperationException>(() => { var x = rangeAddress.NumberOfCells; });
+        }
+
         #region Private Methods
 
         private IXLRangeAddress ProduceInvalidAddress()
