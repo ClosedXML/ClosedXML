@@ -2,10 +2,9 @@
 
 namespace ClosedXML.Word
 {
-    public interface IXLTextBlock : IDisposable,
-																		IXLBlock
+    public interface IXLTextBlock : IDisposable, IXLBlock
     {
-        string Text { get; set; }
+        string Text { get; }
 
         //TODO Implement style class for textblocks
         //IXLTextBlockStyle Style;

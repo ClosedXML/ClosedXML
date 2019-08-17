@@ -34,10 +34,10 @@ namespace ClosedXML.Word
 
         void AddBlock( IXLBlock block );
 
-				/// <summary>
+        /// <summary>
         /// All the blocks in the document
         /// </summary>
         /// <returns></returns>
-				IXLBlocks Blocks();
+        IXLBlocks Blocks();
     }
 }

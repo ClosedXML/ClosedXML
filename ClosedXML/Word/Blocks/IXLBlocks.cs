@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
 
 namespace ClosedXML.Word
 {
-    public interface IXLBlocks : IEnumerable<IXLBlock>
+    public interface IXLBlocks : IEnumerable
     {
+        IXLDocument Document { get; set; }
     }
 }

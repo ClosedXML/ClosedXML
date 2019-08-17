@@ -4,6 +4,11 @@ namespace ClosedXML.Word
 {
     public class TextBlock : IXLTextBlock
     {
+        public XLBlockTypes BlockType
+        {
+            get { return XLBlockTypes.TextBlock; }
+        }
+
         public TextBlock( string text )
         {
             Text = text;

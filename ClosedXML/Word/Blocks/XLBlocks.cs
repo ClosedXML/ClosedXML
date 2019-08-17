@@ -1,35 +1,85 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ClosedXML.Word
 {
     public class XLBlocks : IXLBlocks
     {
-        IEnumerator IEnumerable.GetEnumerator( )
+        private readonly List<IXLBlock> _blocks = new List<IXLBlock>();
+        public IXLDocument Document { get; set; }
+
+        public XLBlocks(IXLDocument document)
         {
-            return GetEnumerator( );
+            Document = document;
         }
 
-        public IEnumerator<IXLBlock> GetEnumerator( )
+        IEnumerator IEnumerable.GetEnumerator( )
         {
-            throw new System.NotImplementedException( );
+            return new BlocksEnum(_blocks);
+        }
+
+        public BlocksEnum GetEnumerator( )
+        {
+            return new BlocksEnum(_blocks);
+        }
+    }
+
+    public class BlocksEnum : IEnumerator
+    {
+        private int position = -1;
+        public readonly List<IXLBlock> Blocks;
+
+        public BlocksEnum(List<IXLBlock> blocks)
+        {
+            this.Blocks = blocks;
+        }
+
+        public bool MoveNext()
+        {
+            position++;
+            return (position < Blocks.Count);
+        }
+
+        public void Reset()
+        {
+            position = -1;
+        }
+
+        public object Current
+        {
+            get
+            {
+                try
+                {
+                    return Blocks[position];
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+            }
         }
     }
 
     public static class XLBlocksExtensions
     {
-        public static IEnumerable<IXLBlock> Add( this IEnumerable<IXLBlock> source, IXLBlock block )
+        public static IXLBlock Add( this IXLBlocks blocks, IXLBlock block)
         {
-            foreach ( IXLBlock b in source )
-            {
-                yield return b;
-            }
-            yield return block;
+            blocks.Document.AddBlock(block);
+            return block;
         }
 
-        public static IEnumerable<IXLBlock> AddBlocksToDocument( this IEnumerable<IXLBlock> source )
+        public static IXLBlock AddBlocksToDocument( this IXLBlocks blocks )
         {
-            throw new System.NotImplementedException( );
+            foreach (IXLBlock block in blocks)
+            {
+                Console.WriteLine(block.ToString());
+                return block;
+            }
+
+            return null;
+
             //TODO Add blocks to document
         }
     }

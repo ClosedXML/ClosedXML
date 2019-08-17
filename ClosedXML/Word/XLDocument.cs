@@ -128,12 +128,17 @@ namespace ClosedXML.Word
 
         public void AddBlock( IXLBlock block )
         {
-            throw new NotImplementedException( );
+            if (block.BlockType == XLBlockTypes.TextBlock)
+            {
+                IXLTextBlock TextBlock = block as IXLTextBlock;
+                AddTextBlock(TextBlock);
+            }
         }
 
         public IXLBlocks Blocks( )
         {
-            throw new NotImplementedException( );
+            var retVal = new XLBlocks(this);
+            return retVal;
         }
     }
 }
