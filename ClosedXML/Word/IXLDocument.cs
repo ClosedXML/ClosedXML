@@ -35,6 +35,14 @@ namespace ClosedXML.Word
         void AddBlock( IXLBlock block );
 
         /// <summary>
+        /// Gets the block with the given id
+        /// </summary>
+        /// <param name="blockId"></param>
+        /// <returns></returns>
+        /// /// <exception cref="InvalidOperationException">Thrown when there is no Block with the given id</exception>
+        IXLBlock Block(int blockId);
+
+        /// <summary>
         /// All the blocks in the document
         /// </summary>
         /// <returns></returns>

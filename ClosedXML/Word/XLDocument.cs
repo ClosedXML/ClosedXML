@@ -10,10 +10,7 @@ namespace ClosedXML.Word
     {
         public string FileName
         {
-            get
-            {
-                return string.Empty;
-            }
+            get => string.Empty;
             set { }
         }
 
@@ -22,6 +19,7 @@ namespace ClosedXML.Word
         public Document DocumentPart { get; set; }
         public Body BodyPart { get; set; }
 
+        #region Constructors
         public XLDocument( string file )
         {
             FileName = file;
@@ -40,6 +38,7 @@ namespace ClosedXML.Word
         {
             CreateNewWordDocument( );
         }
+        #endregion Constructors
 
         //Temporary method
         private void CreateNewWordDocument( )
@@ -70,7 +69,7 @@ namespace ClosedXML.Word
 
         public void Save( )
         {
-            throw new NotImplementedException( );
+            Document.Save();
         }
 
         public void SaveAs(
@@ -139,6 +138,26 @@ namespace ClosedXML.Word
         {
             var retVal = new XLBlocks(this);
             return retVal;
+        }
+
+        public IXLBlock Block(int blockId)
+        {
+            try
+            {
+                foreach (IXLBlock block in Blocks())
+                {
+                    if (block.BlockId == blockId)
+                    {
+                        return block;
+                    }
+                }
+
+                throw new NullReferenceException();
+            }
+            catch (NullReferenceException)
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }

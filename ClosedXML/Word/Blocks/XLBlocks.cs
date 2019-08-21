@@ -7,6 +7,8 @@ namespace ClosedXML.Word
     public class XLBlocks : IXLBlocks
     {
         private readonly List<IXLBlock> _blocks = new List<IXLBlock>();
+        private readonly Dictionary<string, IXLBlock> _blockNames = new Dictionary<string, IXLBlock>();
+        private readonly Dictionary<int, IXLBlock> _blockIds = new Dictionary<int, IXLBlock>();
         public IXLDocument Document { get; set; }
 
         public XLBlocks(IXLDocument document)
@@ -23,12 +25,57 @@ namespace ClosedXML.Word
         {
             return new BlocksEnum(_blocks);
         }
+
+        public bool TryGetBlock(int blockId, out IXLBlock block)
+        {
+            if (_blockIds.Count != 0)
+            {
+                if (_blockIds.TryGetValue(blockId, out IXLBlock b))
+                {
+                    block = b;
+                    return true;
+                }
+            }
+
+            block = null;
+            return false;
+        }
+
+        public bool TryGetBlock(string blockName, out IXLBlock block)
+        {
+            if (_blockNames.Count != 0)
+            {
+                if (_blockNames.TryGetValue(blockName, out IXLBlock b))
+                {
+                    block = b;
+                    return true;
+                }
+            }
+
+            block = null;
+            return false;
+        }
+
+        public int GenerateBlockIds(bool fromLoadedDocument = false)
+        {
+            if (fromLoadedDocument)
+            {
+                throw new NotImplementedException();
+            }
+
+            if (_blocks.Count != 0)
+            {
+                return _blocks.Count + 1;
+            }
+
+            return 0;
+        }
     }
 
     public class BlocksEnum : IEnumerator
     {
         private int position = -1;
-        public readonly List<IXLBlock> Blocks;
+        private readonly List<IXLBlock> Blocks;
 
         public BlocksEnum(List<IXLBlock> blocks)
         {
@@ -72,9 +119,9 @@ namespace ClosedXML.Word
 
         public static IXLBlock AddBlocksToDocument( this IXLBlocks blocks )
         {
-            foreach (IXLBlock block in blocks)
+            foreach (IXLBlock block in blocks.Document.Blocks())
             {
-                Console.WriteLine(block.ToString());
+                block.BlockId = blocks.GenerateBlockIds();
                 return block;
             }
 
