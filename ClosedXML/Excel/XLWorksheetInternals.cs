@@ -24,6 +24,7 @@ namespace ClosedXML.Excel
 
         public void Dispose()
         {
+            CellsCollection.Clear();
             ColumnsCollection.Clear();
             RowsCollection.Clear();
             MergedRanges.RemoveAll();
