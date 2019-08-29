@@ -10,7 +10,7 @@ namespace ClosedXML.Word
     {
         public string FileName
         {
-            get => string.Empty;
+            get { return string.Empty; }
             set { }
         }
 
@@ -19,7 +19,10 @@ namespace ClosedXML.Word
         public Document DocumentPart { get; set; }
         public Body BodyPart { get; set; }
 
+        private int _counter = 0;
+
         #region Constructors
+
         public XLDocument( string file )
         {
             FileName = file;
@@ -38,6 +41,7 @@ namespace ClosedXML.Word
         {
             CreateNewWordDocument( );
         }
+
         #endregion Constructors
 
         //Temporary method
@@ -69,17 +73,19 @@ namespace ClosedXML.Word
 
         public void Save( )
         {
-            Document.Save();
+            //GenerateBlockIds( );
+
+            Document.Save( );
         }
 
-        public void SaveAs(
-            string file )
+        public void SaveAs( string file )
         {
+            //GenerateBlockIds( );
+
             Document.SaveAs(
                 file != FileName
                     ? file
                     : FileName );
-            //this.document.Close( );
         }
 
         //Temporary method
@@ -93,7 +99,9 @@ namespace ClosedXML.Word
         private void Load( string file )
         {
             using ( WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open( file, true ) )
+            {
                 LoadWordDocument( wordprocessingDocument );
+            }
         }
 
         private void LoadWordDocument( WordprocessingDocument document )
@@ -127,36 +135,56 @@ namespace ClosedXML.Word
 
         public void AddBlock( IXLBlock block )
         {
-            if (block.BlockType == XLBlockTypes.TextBlock)
+            if ( null == block )
             {
-                IXLTextBlock TextBlock = block as IXLTextBlock;
-                AddTextBlock(TextBlock);
+                throw new NullReferenceException( "A block cannot be null" );
             }
+
+            _counter++;
+
+            //TODO Implement Add method
+            //Blocks( ).Add( block );
+
+            switch ( block.BlockType )
+            {
+                case XLBlockTypes.TextBlock:
+                    IXLTextBlock textBlock = block as IXLTextBlock;
+                    AddTextBlock( textBlock );
+                    textBlock.BlockId = $"{block.BlockType.ToString( )}{_counter}";
+                    break;
+                default:
+                    throw new IndexOutOfRangeException( $"The block type {block.BlockType} is not a valid block type" );
+            }
+        }
+
+        public string GenerateBlockIds( )
+        {
+            throw new NotImplementedException( );
         }
 
         public IXLBlocks Blocks( )
         {
-            var retVal = new XLBlocks(this);
+            XLBlocks retVal = new XLBlocks( this );
             return retVal;
         }
 
-        public IXLBlock Block(int blockId)
+        public IXLBlock Block( string blockId )
         {
             try
             {
-                foreach (IXLBlock block in Blocks())
+                foreach ( IXLBlock block in Blocks( ) )
                 {
-                    if (block.BlockId == blockId)
+                    if ( block.BlockId == blockId )
                     {
                         return block;
                     }
                 }
 
-                throw new NullReferenceException();
+                throw new NullReferenceException( );
             }
-            catch (NullReferenceException)
+            catch ( NullReferenceException )
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException( );
             }
         }
     }

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Linq;
-
 using ClosedXML.Word;
-
-using DocumentFormat.OpenXml.Wordprocessing;
-
 using Path = System.IO.Path;
 
 namespace ClosedXML_Sandbox
@@ -17,25 +12,28 @@ namespace ClosedXML_Sandbox
             IXLDocument document = new XLDocument( );
 
             //Add blocks: they are used to construct the document
-            IXLTextBlock p1 = new TextBlock( "This is a test textblock" );
-            IXLTextBlock p2 = new TextBlock( "This is a second textblock" );
-            IXLTextBlock p3 = p1;
-            //TODO Also changes the text of the first textblock
-            p3.Text = "Third textblock test";
+            IXLTextBlock p1 = new TextBlock( "Test paragraph one" );
+            IXLTextBlock p2 = new TextBlock( "Test paragraph two" );
+            IXLTextBlock p3 = new TextBlock( "A third test paragraph" );
+            IXLTextBlock p4 = new TextBlock( "A fourth" );
+            IXLTextBlock p5 = new TextBlock( "A fifth" );
 
             //Add the blocks to the document
             //TODO Create method to add blocks from collection to document at once
-            document.Blocks( ).Add( p1 );
-            document.Blocks( ).Add( p2 );
-            document.Blocks( ).Add( p3 );
-            document.Blocks( ).AddBlocksToDocument( );
+            document.AddBlock(p1);
+            document.AddBlock(p2);
+            document.AddBlock(p3);
+            document.AddBlock(p4);
+            document.AddBlock(p5);
 
-            Console.WriteLine(p1.BlockId);
-            Console.WriteLine(p2.BlockId);
-            Console.WriteLine(p3.BlockId);
+            Console.WriteLine( p1.BlockId );
+            Console.WriteLine( p2.BlockId );
+            Console.WriteLine( p3.BlockId );
+            Console.WriteLine( p4.BlockId );
+            Console.WriteLine( p5.BlockId );
 
-            //TODO Create way to access a text block by id or name
-            IXLTextBlock testTextBlock = document.Block( 0 ) as IXLTextBlock;
+            //TODO Create way to access a text block by id
+            //IXLTextBlock testTextBlock = document.Block( "TB0" ) as IXLTextBlock;
             //Do something with the textblock
 
             //Save the document

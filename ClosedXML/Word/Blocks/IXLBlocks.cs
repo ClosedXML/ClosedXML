@@ -6,10 +6,8 @@ namespace ClosedXML.Word
     {
         IXLDocument Document { get; set; }
 
-        bool TryGetBlock(int blockId, out IXLBlock block);
+        bool TryGetBlock(string blockId, out IXLBlock block);
 
-        bool TryGetBlock(string blockName, out IXLBlock block);
-
-        int GenerateBlockIds(bool fromLoadedDocument = false);
+        int Count { get; }
     }
 }

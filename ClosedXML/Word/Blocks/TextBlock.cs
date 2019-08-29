@@ -5,28 +5,54 @@ namespace ClosedXML.Word
 {
     public class TextBlock : IXLTextBlock
     {
-        public XLBlockTypes BlockType => XLBlockTypes.TextBlock;
+        public XLBlockTypes BlockType
+        {
+            get { return XLBlockTypes.TextBlock; }
+        }
 
-        public string BlockName { get; set; }
-        public int BlockId { get; set; }
+        public string BlockId
+        {
+            get { return _blockID; }
+            set { _blockID = value; }
+        }
 
-        #region Constructor
+        public string Text
+        {
+            get { return _text; }
+            set { _text = value; }
+        }
+
+        public IXLDocument Document { get; set; }
+
+        #region Fields
+
+        //private IXLDocument _document;
+        private string _blockID;
+        private string _text;
+
+        #endregion Fields
+
+        #region Constructors
+
+        internal TextBlock( IXLDocument document, string blockID, string text )
+        {
+            _blockID = blockID;
+            _text = text;
+        }
+
         public TextBlock( string text )
         {
-            Text = text;
-
-            //TODO Access GenerateBlockIds method from IXLBlocks
-            //BlockId = GenerateTextBlockId();
+            _text = text;
+            //_blockID = GenerateBlockID();
         }
 
-        public TextBlock(int blockId, string text)
+        public TextBlock( string blockId, string text )
         {
-            BlockId = blockId;
-            Text = text;
+            _blockID = blockId;
+            _text = text;
         }
-        #endregion Constructor
 
-        public string Text { get; set; }
+        #endregion Constructors
 
         public RunProperties RunProperties { get; set; }
 

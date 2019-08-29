@@ -8,10 +8,12 @@ namespace ClosedXML.Word
     {
         XLBlockTypes BlockType { get; }
 
+        IXLDocument Document { get; set; }
+
         /// <summary>
         /// If no ID is supplied when creating a new Block, an ID will be generated. An ID will also be generated when opening an existing document.
         /// </summary>
-        int BlockId { get; set; }
+        string BlockId { get; set; }
 
         RunProperties RunProperties { get; set; }
     }
