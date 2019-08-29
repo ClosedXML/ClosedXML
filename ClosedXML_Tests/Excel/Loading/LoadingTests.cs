@@ -492,5 +492,17 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(8, ws.Column("A").Style.Font.FontSize);
             }
         }
+
+        [Test]
+        public void EmptyNumberFormatIdTreatedAsGeneral()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EmptyNumberFormatId.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+
+                Assert.AreEqual(XLPredefinedFormat.General, ws.Cell("A2").Style.NumberFormat.NumberFormatId);
+            }
+        }
     }
 }
