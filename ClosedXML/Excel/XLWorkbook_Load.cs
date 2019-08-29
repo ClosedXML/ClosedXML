@@ -1816,21 +1816,25 @@ namespace ClosedXML.Excel
                 else
                 {
                     xlCell.DataType = GetDataTypeFromCell(xlCell.StyleValue.NumberFormat);
-                    var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
+
                     if (!String.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString());
 
-                    if (s.NumberingFormats != null &&
-                        s.NumberingFormats.Any(nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId))
+                    var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
+
+                    if (numberFormatId?.HasValue ?? false)
                     {
-                        xlCell.InnerStyle.NumberFormat.Format =
-                            ((NumberingFormat)s.NumberingFormats
-                                                .First(
-                                                    nf => ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId)
-                            ).FormatCode.Value;
+                        var format = s.NumberingFormats?
+                            .Cast<NumberingFormat>()
+                            .Where(nf => nf.NumberFormatId.Value == numberFormatId)
+                            .Select(nf => nf.FormatCode.Value)
+                            .FirstOrDefault();
+
+                        if (format == null)
+                            xlCell.InnerStyle.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
+                        else
+                            xlCell.InnerStyle.NumberFormat.Format = format;
                     }
-                    else
-                        xlCell.InnerStyle.NumberFormat.NumberFormatId = Int32.Parse(numberFormatId);
                 }
             }
 
