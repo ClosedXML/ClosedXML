@@ -19,7 +19,7 @@ namespace ClosedXML.Word
         public Document DocumentPart { get; set; }
         public Body BodyPart { get; set; }
 
-        private int _counter = 0;
+        private int _counter;
 
         #region Constructors
 
@@ -148,9 +148,13 @@ namespace ClosedXML.Word
             switch ( block.BlockType )
             {
                 case XLBlockTypes.TextBlock:
-                    IXLTextBlock textBlock = block as IXLTextBlock;
-                    AddTextBlock( textBlock );
-                    textBlock.BlockId = $"{block.BlockType.ToString( )}{_counter}";
+                    if ( block is IXLTextBlock textBlock )
+                    {
+                        textBlock.Document = this;
+                        textBlock.BlockId = $"{block.BlockType.ToString( )}{_counter}";
+                        AddTextBlock( textBlock );
+                    }
+
                     break;
                 default:
                     throw new IndexOutOfRangeException( $"The block type {block.BlockType} is not a valid block type" );
