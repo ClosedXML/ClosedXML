@@ -63,7 +63,11 @@ namespace ClosedXML.Excel
 
         public override int GetHashCode()
         {
-            return -280332839 + Key.GetHashCode();
+            if (_hashCode.HasValue)
+                return _hashCode.Value;
+
+            _hashCode = -280332839 + Key.GetHashCode();
+            return _hashCode.Value;
         }
 
         public static bool operator ==(XLStyleValue left, XLStyleValue right)
@@ -74,6 +78,9 @@ namespace ClosedXML.Excel
                 return true;
             if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
                 return false;
+            if (left._hashCode.HasValue && right._hashCode.HasValue &&
+                left._hashCode != right._hashCode)
+                return false;
             return left.Key.Equals(right.Key);
         }
 
@@ -81,5 +88,7 @@ namespace ClosedXML.Excel
         {
             return !(left == right);
         }
+
+        private int? _hashCode;
     }
 }
