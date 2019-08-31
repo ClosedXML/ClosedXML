@@ -232,7 +232,7 @@ namespace ClosedXML.Excel
             // because we are using SetValue<T> (typed).
             // Only in SetValue(object value) to we try to fall back to a value of a different type
             if (!parsed)
-                throw new ArgumentException($"Unable to set cell value to {value.ToInvariantString()}");
+                throw new ArgumentException($"Unable to set cell value to {value.ObjectToInvariantString()}");
 
             SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
 
@@ -248,7 +248,7 @@ namespace ClosedXML.Excel
             bool parsed;
             if (value is String && acceptString || value is char || value is Guid || value is Enum)
             {
-                parsedValue = value.ToInvariantString();
+                parsedValue = value.ObjectToInvariantString();
                 _dataType = XLDataType.Text;
                 if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
@@ -292,7 +292,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    parsedValue = value.ToInvariantString();
+                    parsedValue = value.ObjectToInvariantString();
                     _dataType = XLDataType.Number;
                 }
                 parsed = true;
@@ -1112,7 +1112,7 @@ namespace ClosedXML.Excel
                                 break;
 
                             default:
-                                _cellValue = v.ToInvariantString();
+                                _cellValue = v.ObjectToInvariantString();
                                 break;
                         }
                     }
@@ -1123,7 +1123,7 @@ namespace ClosedXML.Excel
                         if (!String.IsNullOrWhiteSpace(error))
                             throw new ArgumentException(error, nameof(value));
 
-                        _cellValue = v?.ToInvariantString() ?? "";
+                        _cellValue = v?.ObjectToInvariantString() ?? "";
 
                         var style = GetStyleForRead();
                         switch (v)
@@ -1917,7 +1917,7 @@ namespace ClosedXML.Excel
                     var field = table.Fields.First(f => f.Column.ColumnNumber() == cell.WorksheetColumn().ColumnNumber());
                     field.TotalsRowFunction = XLTotalsRowFunction.None;
 
-                    SetInternalCellValueString(value.ToInvariantString(), validate: true, parseToCachedValue: false);
+                    SetInternalCellValueString(value.ObjectToInvariantString(), validate: true, parseToCachedValue: false);
 
                     field.TotalsRowLabel = _cellValue;
                     this.DataType = XLDataType.Text;
@@ -2253,7 +2253,7 @@ namespace ClosedXML.Excel
             // This doesn't happen in the SetValue<T>() version
             if (style.NumberFormat.Format == "@")
             {
-                parsedValue = value.ToInvariantString();
+                parsedValue = value.ObjectToInvariantString();
 
                 _dataType = XLDataType.Text;
                 if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
