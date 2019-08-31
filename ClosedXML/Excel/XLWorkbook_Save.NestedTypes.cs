@@ -12,22 +12,22 @@ namespace ClosedXML.Excel
         {
             public SaveContext()
             {
-                DifferentialFormats = new Dictionary<XLStyleKey, int>();
+                DifferentialFormats = new Dictionary<XLStyleValue, int>();
                 PivotTables = new Dictionary<Guid, PivotTableInfo>();
                 RelIdGenerator = new RelIdGenerator();
                 SharedFonts = new Dictionary<XLFontValue, FontInfo>();
                 SharedNumberFormats = new Dictionary<int, NumberFormatInfo>();
-                SharedStyles = new Dictionary<XLStyleKey, StyleInfo>();
+                SharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
                 TableId = 0;
                 TableNames = new HashSet<String>();
             }
 
-            public Dictionary<XLStyleKey, Int32> DifferentialFormats { get; private set; }
+            public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; private set; }
             public IDictionary<Guid, PivotTableInfo> PivotTables { get; private set; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
             public Dictionary<Int32, NumberFormatInfo> SharedNumberFormats { get; private set; }
-            public Dictionary<XLStyleKey, StyleInfo> SharedStyles { get; private set; }
+            public Dictionary<XLStyleValue, StyleInfo> SharedStyles { get; private set; }
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
         }

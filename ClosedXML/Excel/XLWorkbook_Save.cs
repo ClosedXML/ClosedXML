@@ -1902,8 +1902,8 @@ namespace ClosedXML.Excel
                         .First()
                         .Style as XLStyle).Value;
 
-                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.ContainsKey(style.Key))
-                        tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[style.Key]));
+                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.ContainsKey(style))
+                        tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[style]));
                 }
                 else
                     tableColumn.DataFormatId = null;
@@ -2954,12 +2954,12 @@ namespace ClosedXML.Excel
 
         private static void GeneratePivotTableFormat(Boolean isRow, XLPivotStyleFormat styleFormat, PivotTableDefinition pivotTableDefinition, SaveContext context)
         {
-            if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Key))
+            if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Value))
                 return;
 
             var format = new Format();
 
-            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Key]));
+            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Value]));
 
             var pivotArea = GenerateDefaultPivotArea(XLPivotStyleFormatTarget.GrandTotal);
 
@@ -2980,12 +2980,12 @@ namespace ClosedXML.Excel
             if (target == XLPivotStyleFormatTarget.GrandTotal)
                 throw new ArgumentException($"Use {nameof(GeneratePivotTableFormat)} to populate grand total formats.");
 
-            if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Key))
+            if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Value))
                 return;
 
             var format = new Format();
 
-            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Key]));
+            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Value]));
 
             var pivotArea = GenerateDefaultPivotArea(target);
 
@@ -3608,7 +3608,7 @@ namespace ClosedXML.Excel
             else
                 defaultFormatId = 0;
 
-            context.SharedStyles.Add(defaultStyle.Key,
+            context.SharedStyles.Add(defaultStyle,
                 new StyleInfo
                 {
                     StyleId = defaultFormatId,
@@ -3714,8 +3714,8 @@ namespace ClosedXML.Excel
                     ? xlStyle.NumberFormat.NumberFormatId
                     : allSharedNumberFormats[xlStyle.NumberFormat].NumberFormatId;
 
-                if (!context.SharedStyles.ContainsKey(xlStyle.Key))
-                    context.SharedStyles.Add(xlStyle.Key,
+                if (!context.SharedStyles.ContainsKey(xlStyle))
+                    context.SharedStyles.Add(xlStyle,
                         new StyleInfo
                         {
                             StyleId = styleCount++,
@@ -3736,7 +3736,7 @@ namespace ClosedXML.Excel
 
             workbookStylesPart.Stylesheet.CellStyles.Count = (UInt32)workbookStylesPart.Stylesheet.CellStyles.Count();
 
-            var newSharedStyles = new Dictionary<XLStyleKey, StyleInfo>();
+            var newSharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
             foreach (var ss in context.SharedStyles)
             {
                 var styleId = -1;
@@ -3777,7 +3777,7 @@ namespace ClosedXML.Excel
                 foreach (var cf in ws.ConditionalFormats)
                 {
                     var styleValue = (cf.Style as XLStyle).Value;
-                    if (!styleValue.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(styleValue.Key))
+                    if (!styleValue.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(styleValue))
                         AddConditionalDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, cf, context);
                 }
 
@@ -3790,7 +3790,7 @@ namespace ClosedXML.Excel
                             .First()
                             .Style as XLStyle).Value;
 
-                        if (!style.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(style.Key))
+                        if (!style.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(style))
                             AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, style, context);
                     }
                 }
@@ -3800,7 +3800,7 @@ namespace ClosedXML.Excel
                     foreach (var styleFormat in pt.AllStyleFormats)
                     {
                         var xlStyle = (XLStyle)styleFormat.Style;
-                        if (!xlStyle.Value.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(xlStyle.Key))
+                        if (!xlStyle.Value.Equals(DefaultStyleValue) && !context.DifferentialFormats.ContainsKey(xlStyle.Value))
                             AddStyleAsDifferentialFormat(workbookStylesPart.Stylesheet.DifferentialFormats, xlStyle.Value, context);
                     }
                 }
@@ -3812,7 +3812,7 @@ namespace ClosedXML.Excel
         }
 
         private void FillDifferentialFormatsCollection(DifferentialFormats differentialFormats,
-            Dictionary<XLStyleKey, int> dictionary)
+            Dictionary<XLStyleValue, int> dictionary)
         {
             dictionary.Clear();
             var id = 0;
@@ -3827,8 +3827,8 @@ namespace ClosedXML.Excel
                 LoadNumberFormat(df.NumberingFormat, emptyContainer.Style.NumberFormat);
                 LoadFill(df.Fill, emptyContainer.Style.Fill, differentialFillFormat: true);
 
-                if (!dictionary.ContainsKey(emptyContainer.StyleValue.Key))
-                    dictionary.Add(emptyContainer.StyleValue.Key, id++);
+                if (!dictionary.ContainsKey(emptyContainer.StyleValue))
+                    dictionary.Add(emptyContainer.StyleValue, id++);
             }
         }
 
@@ -3862,7 +3862,7 @@ namespace ClosedXML.Excel
 
             differentialFormats.Append(differentialFormat);
 
-            context.DifferentialFormats.Add(styleValue.Key, differentialFormats.Count() - 1);
+            context.DifferentialFormats.Add(styleValue, differentialFormats.Count() - 1);
         }
 
         private static void AddStyleAsDifferentialFormat(DifferentialFormats differentialFormats, XLStyleValue style,
@@ -3908,7 +3908,7 @@ namespace ClosedXML.Excel
 
             differentialFormats.Append(differentialFormat);
 
-            context.DifferentialFormats.Add(style.Key, differentialFormats.Count() - 1);
+            context.DifferentialFormats.Add(style, differentialFormats.Count() - 1);
         }
 
         private static void ResolveRest(WorkbookStylesPart workbookStylesPart, SaveContext context)
@@ -4837,7 +4837,7 @@ namespace ClosedXML.Excel
 
             #region Columns
 
-            var worksheetStyleId = context.SharedStyles[xlWorksheet.StyleValue.Key].StyleId;
+            var worksheetStyleId = context.SharedStyles[xlWorksheet.StyleValue].StyleId;
             if (xlWorksheet.Internals.CellsCollection.Count == 0 &&
                 xlWorksheet.Internals.ColumnsCollection.Count == 0
                 && worksheetStyleId == 0)
@@ -4898,7 +4898,7 @@ namespace ClosedXML.Excel
                     var outlineLevel = 0;
                     if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
                     {
-                        styleId = context.SharedStyles[xlWorksheet.Internals.ColumnsCollection[co].StyleValue.Key].StyleId;
+                        styleId = context.SharedStyles[xlWorksheet.Internals.ColumnsCollection[co].StyleValue].StyleId;
                         columnWidth = GetColumnWidth(xlWorksheet.Internals.ColumnsCollection[co].Width).SaveRound();
                         isHidden = xlWorksheet.Internals.ColumnsCollection[co].IsHidden;
                         collapsed = xlWorksheet.Internals.ColumnsCollection[co].Collapsed;
@@ -4906,7 +4906,7 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        styleId = context.SharedStyles[xlWorksheet.StyleValue.Key].StyleId;
+                        styleId = context.SharedStyles[xlWorksheet.StyleValue].StyleId;
                         columnWidth = worksheetColumnWidth;
                     }
 
@@ -5029,7 +5029,7 @@ namespace ClosedXML.Excel
 
                     if (thisRow.StyleValue != xlWorksheet.StyleValue)
                     {
-                        row.StyleIndex = context.SharedStyles[thisRow.StyleValue.Key].StyleId;
+                        row.StyleIndex = context.SharedStyles[thisRow.StyleValue].StyleId;
                         row.CustomFormat = true;
                     }
 
@@ -5077,7 +5077,7 @@ namespace ClosedXML.Excel
                     {
                         XLTableField field = null;
 
-                        var styleId = context.SharedStyles[xlCell.StyleValue.Key].StyleId;
+                        var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
                         var cellReference = (xlCell.Address).GetTrimmedAddress();
 
                         // For saving cells to file, ignore conditional formatting, data validation rules and merged
