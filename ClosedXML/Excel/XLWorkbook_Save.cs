@@ -1021,7 +1021,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    var value = c.Value.ToInvariantString();
+                    var value = c.Value.ObjectToInvariantString();
                     if (newStrings.ContainsKey(value))
                         c.SharedStringId = newStrings[value];
                     else
@@ -2136,7 +2136,7 @@ namespace ClosedXML.Excel
             foreach (var c in source.Columns())
             {
                 var columnNumber = c.ColumnNumber();
-                var columnName = c.FirstCell().Value.ToInvariantString();
+                var columnName = c.FirstCell().Value.ObjectToInvariantString();
 
                 CacheField cacheField = null;
 
@@ -2596,9 +2596,9 @@ namespace ClosedXML.Excel
                         if (ptfi.MixedDataType || ptfi.DataType == XLDataType.Text)
                         {
                             var values = ptfi.DistinctValues
-                                .Select(v => v.ToInvariantString().ToLower())
+                                .Select(v => v.ObjectToInvariantString().ToLower())
                                 .ToList();
-                            var selectedValue = labelOrFilterField.SelectedValues.Single().ToInvariantString().ToLower();
+                            var selectedValue = labelOrFilterField.SelectedValues.Single().ObjectToInvariantString().ToLower();
                             if (values.Contains(selectedValue))
                                 pageField.Item = Convert.ToUInt32(values.IndexOf(selectedValue));
                         }
@@ -2833,7 +2833,7 @@ namespace ClosedXML.Excel
             foreach (var value in pt.Values)
             {
                 var sourceColumn =
-                    pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.SourceName);
+                    pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ObjectToInvariantString() == value.SourceName);
                 if (sourceColumn == null) continue;
 
                 UInt32 numberFormatId = 0;
@@ -2853,7 +2853,7 @@ namespace ClosedXML.Excel
 
                 if (!String.IsNullOrEmpty(value.BaseField))
                 {
-                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ToInvariantString() == value.BaseField);
+                    var baseField = pt.SourceRange.Columns().FirstOrDefault(c => c.Cell(1).Value.ObjectToInvariantString() == value.BaseField);
                     if (baseField != null)
                     {
                         df.BaseField = baseField.ColumnNumber() - pt.SourceRange.RangeAddress.FirstAddress.ColumnNumber;
@@ -5991,7 +5991,7 @@ namespace ClosedXML.Excel
                 try
                 {
                     var v = xlCell.Value;
-                    cellValue.Text = v.ToInvariantString();
+                    cellValue.Text = v.ObjectToInvariantString();
                     switch (v)
                     {
                         case String s:
@@ -6104,7 +6104,7 @@ namespace ClosedXML.Excel
                         var customFilters = new CustomFilters();
                         foreach (var filter in kp.Value)
                         {
-                            var customFilter = new CustomFilter { Val = filter.Value.ToInvariantString() };
+                            var customFilter = new CustomFilter { Val = filter.Value.ObjectToInvariantString() };
 
                             if (filter.Operator != XLFilterOperator.Equal)
                                 customFilter.Operator = filter.Operator.ToOpenXml();
@@ -6164,7 +6164,7 @@ namespace ClosedXML.Excel
                         var filters = new Filters();
                         foreach (var filter in kp.Value)
                         {
-                            filters.Append(new Filter { Val = filter.Value.ToInvariantString() });
+                            filters.Append(new Filter { Val = filter.Value.ObjectToInvariantString() });
                         }
 
                         filterColumn.Append(filters);
