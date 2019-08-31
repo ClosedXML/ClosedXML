@@ -343,45 +343,46 @@ namespace ClosedXML.Excel
                 }
 
                 var firstCell = FirstCell();
-                var firstCellStyle = (firstCell.Style as XLStyle).Key;
-                var defaultStyle = XLStyle.Default.Key;
+                var firstCellStyleKey = (firstCell.Style as XLStyle).Key;
+                var firstCellStyle = firstCell.Style;
+                var defaultStyleKey = XLStyle.Default.Key;
                 var cellsUsed =
                     CellsUsed(XLCellsUsedOptions.All & ~XLCellsUsedOptions.MergedRanges, c => c != firstCell).ToList();
                 cellsUsed.ForEach(c => c.Clear(XLClearOptions.All
                                                & ~XLClearOptions.MergedRanges
                                                & ~XLClearOptions.NormalFormats));
 
-                if (firstCellStyle.Alignment != defaultStyle.Alignment)
-                    asRange.Style.Alignment = firstCell.Style.Alignment;
+                if (firstCellStyleKey.Alignment != defaultStyleKey.Alignment)
+                    asRange.Style.Alignment = firstCellStyle.Alignment;
                 else
-                    cellsUsed.ForEach(c => c.Style.Alignment = firstCell.Style.Alignment);
+                    cellsUsed.ForEach(c => c.Style.Alignment = firstCellStyle.Alignment);
 
-                if (firstCellStyle.Fill != defaultStyle.Fill)
-                    asRange.Style.Fill = firstCell.Style.Fill;
+                if (firstCellStyleKey.Fill != defaultStyleKey.Fill)
+                    asRange.Style.Fill = firstCellStyle.Fill;
                 else
-                    cellsUsed.ForEach(c => c.Style.Fill = firstCell.Style.Fill);
+                    cellsUsed.ForEach(c => c.Style.Fill = firstCellStyle.Fill);
 
-                if (firstCellStyle.Font != defaultStyle.Font)
-                    asRange.Style.Font = firstCell.Style.Font;
+                if (firstCellStyleKey.Font != defaultStyleKey.Font)
+                    asRange.Style.Font = firstCellStyle.Font;
                 else
-                    cellsUsed.ForEach(c => c.Style.Font = firstCell.Style.Font);
+                    cellsUsed.ForEach(c => c.Style.Font = firstCellStyle.Font);
 
-                if (firstCellStyle.IncludeQuotePrefix != defaultStyle.IncludeQuotePrefix)
-                    asRange.Style.IncludeQuotePrefix = firstCell.Style.IncludeQuotePrefix;
+                if (firstCellStyleKey.IncludeQuotePrefix != defaultStyleKey.IncludeQuotePrefix)
+                    asRange.Style.IncludeQuotePrefix = firstCellStyle.IncludeQuotePrefix;
                 else
-                    cellsUsed.ForEach(c => c.Style.IncludeQuotePrefix = firstCell.Style.IncludeQuotePrefix);
+                    cellsUsed.ForEach(c => c.Style.IncludeQuotePrefix = firstCellStyle.IncludeQuotePrefix);
 
-                if (firstCellStyle.NumberFormat != defaultStyle.NumberFormat)
-                    asRange.Style.NumberFormat = firstCell.Style.NumberFormat;
+                if (firstCellStyleKey.NumberFormat != defaultStyleKey.NumberFormat)
+                    asRange.Style.NumberFormat = firstCellStyle.NumberFormat;
                 else
-                    cellsUsed.ForEach(c => c.Style.NumberFormat = firstCell.Style.NumberFormat);
+                    cellsUsed.ForEach(c => c.Style.NumberFormat = firstCellStyle.NumberFormat);
 
-                if (firstCellStyle.Protection != defaultStyle.Protection)
-                    asRange.Style.Protection = firstCell.Style.Protection;
+                if (firstCellStyleKey.Protection != defaultStyleKey.Protection)
+                    asRange.Style.Protection = firstCellStyle.Protection;
                 else
-                    cellsUsed.ForEach(c => c.Style.Protection = firstCell.Style.Protection);
+                    cellsUsed.ForEach(c => c.Style.Protection = firstCellStyle.Protection);
 
-                if (cellsUsed.Any(c => (c.Style as XLStyle).Key.Border != defaultStyle.Border))
+                if (cellsUsed.Any(c => (c.Style as XLStyle).Key.Border != defaultStyleKey.Border))
                     asRange.Style.Border.SetInsideBorder(XLBorderStyleValues.None);
             }
 
