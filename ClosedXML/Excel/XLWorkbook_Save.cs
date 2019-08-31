@@ -956,7 +956,7 @@ namespace ClosedXML.Excel
             bool hasSharedString(IXLCell c)
             {
                 if (c.DataType == XLDataType.Text && c.ShareString || c.HasRichText)
-                    return c.Style.IncludeQuotePrefix || String.IsNullOrWhiteSpace(c.FormulaA1) && (c as XLCell).InnerText.Length > 0;
+                    return (c as XLCell).StyleValue.IncludeQuotePrefix || String.IsNullOrWhiteSpace(c.FormulaA1) && (c as XLCell).InnerText.Length > 0;
                 else
                     return false;
             }
@@ -6032,7 +6032,7 @@ namespace ClosedXML.Excel
 
             if (dataType == XLDataType.Text)
             {
-                if (!xlCell.Style.IncludeQuotePrefix && xlCell.InnerText.Length == 0)
+                if (!xlCell.StyleValue.IncludeQuotePrefix && xlCell.InnerText.Length == 0)
                     openXmlCell.CellValue = null;
                 else
                 {
