@@ -1106,81 +1106,46 @@ namespace ClosedXML.Excel
 
             foreach (var worksheet in WorksheetsInternal)
             {
-                var cellsWithoutFormulas = new HashSet<String>();
-                foreach (var c in worksheet.Internals.CellsCollection.GetCells())
+                foreach (var c in worksheet.Internals.CellsCollection.GetCells().Where(c => c.HasFormula))
                 {
-                    if (String.IsNullOrWhiteSpace(c.FormulaA1))
-                        cellsWithoutFormulas.Add(c.Address.ToStringRelative());
-                    else
+                    if (c.HasArrayFormula)
                     {
-                        if (c.HasArrayFormula)
+                        if (c.FormulaReference == null)
+                            c.FormulaReference = c.AsRange().RangeAddress;
+
+                        if (c.FormulaReference.FirstAddress.Equals(c.Address))
                         {
-                            if (c.FormulaReference == null)
-                                c.FormulaReference = c.AsRange().RangeAddress;
-
-                            if (c.FormulaReference.FirstAddress.Equals(c.Address))
-                            {
-                                var cc = new CalculationCell
-                                {
-                                    CellReference = c.Address.ToString(),
-                                    SheetId = worksheet.SheetId
-                                };
-
-                                cc.Array = true;
-                                calculationChain.AppendChild(cc);
-
-                                foreach (var childCell in worksheet.Range(c.FormulaReference.ToString()).Cells())
-                                {
-                                    calculationChain.AppendChild(
-                                        new CalculationCell
-                                        {
-                                            CellReference = childCell.Address.ToString(),
-                                            SheetId = worksheet.SheetId,
-                                            InChildChain = true
-                                        }
-                                    );
-                                }
-                            }
-                        }
-                        else
-                        {
-                            calculationChain.AppendChild(new CalculationCell
+                            var cc = new CalculationCell
                             {
                                 CellReference = c.Address.ToString(),
                                 SheetId = worksheet.SheetId
-                            });
+                            };
+
+                            cc.Array = true;
+                            calculationChain.AppendChild(cc);
+
+                            foreach (var childCell in worksheet.Range(c.FormulaReference.ToString()).Cells())
+                            {
+                                calculationChain.AppendChild(
+                                    new CalculationCell
+                                    {
+                                        CellReference = childCell.Address.ToString(),
+                                        SheetId = worksheet.SheetId,
+                                        InChildChain = true
+                                    }
+                                );
+                            }
                         }
                     }
-                }
-
-                // This part shouldn't be necessary anymore, but I'm keeping it in the DEBUG configuration until I'm 100% sure.
-
-#if DEBUG
-                var sheetCellReferences = calculationChain.Elements<CalculationCell>()
-                    .Where(cc1 => cc1.SheetId != null)
-                    .Select(cc1 => cc1.CellReference.Value)
-                    .ToList();
-
-                // Remove orphaned calc chain cells
-                var cellsToRemove = calculationChain.Elements<CalculationCell>()
-                    .Where(cc =>
+                    else
                     {
-                        return cc.SheetId == worksheet.SheetId
-                                   && cellsWithoutFormulas.Contains(cc.CellReference.Value)
-                               || cc.SheetId == null
-                                   && cc.InChildChain == null
-                                   && sheetCellReferences.Contains(cc.CellReference.Value);
-                    })
-                    .ToArray();
-
-                // This shouldn't happen, because the calc chain should be correctly generated
-                System.Diagnostics.Debug.Assert(!cellsToRemove.Any());
-
-                foreach (var cc in cellsToRemove)
-                {
-                    calculationChain.RemoveChild(cc);
+                        calculationChain.AppendChild(new CalculationCell
+                        {
+                            CellReference = c.Address.ToString(),
+                            SheetId = worksheet.SheetId
+                        });
+                    }
                 }
-#endif
             }
 
             if (!calculationChain.Any())
