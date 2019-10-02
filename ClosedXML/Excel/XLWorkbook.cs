@@ -288,45 +288,6 @@ namespace ClosedXML.Excel
             };
         }
 
-        internal XLColor GetXLColor(XLThemeColor themeColor)
-        {
-            switch (themeColor)
-            {
-                case XLThemeColor.Text1:
-                    return Theme.Text1;
-
-                case XLThemeColor.Background1:
-                    return Theme.Background1;
-
-                case XLThemeColor.Text2:
-                    return Theme.Text2;
-
-                case XLThemeColor.Background2:
-                    return Theme.Background2;
-
-                case XLThemeColor.Accent1:
-                    return Theme.Accent1;
-
-                case XLThemeColor.Accent2:
-                    return Theme.Accent2;
-
-                case XLThemeColor.Accent3:
-                    return Theme.Accent3;
-
-                case XLThemeColor.Accent4:
-                    return Theme.Accent4;
-
-                case XLThemeColor.Accent5:
-                    return Theme.Accent5;
-
-                case XLThemeColor.Accent6:
-                    return Theme.Accent6;
-
-                default:
-                    throw new ArgumentException("Invalid theme color");
-            }
-        }
-
         public IXLNamedRange NamedRange(String rangeName)
         {
             if (rangeName.Contains("!"))
