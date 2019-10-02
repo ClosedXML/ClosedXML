@@ -261,10 +261,11 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(0, actual, tolerance);
         }
 
-        public void Atan2_Returns3QuartersOfPiWhenFirstSmaller0AndSecondItsNegative([Range(-5, 5, 0.3)] double input)
+        [Test]
+        public void Atan2_ReturnsMinus3QuartersOfPiWhenFirstSmaller0AndSecondItsNegative([Range(-5, -0.1, 0.3)] double input)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2(0, {0})", input.ToString(CultureInfo.InvariantCulture)));
-            Assert.AreEqual(0.25 * Math.PI, actual, tolerance);
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2({0}, {0})", input.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(-0.75 * Math.PI, actual, tolerance);
         }
 
         [TestCase(1, 2, 1.10714871779409)]
@@ -319,9 +320,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(Math.PI, actual, tolerance);
         }
 
-        public void Atan2_ReturnsQuarterOfPiWhenInputsAreEqualAndGreater0([Range(-5, 5, 0.3)] double input)
+        [Test]
+        public void Atan2_ReturnsQuarterOfPiWhenInputsAreEqualAndGreater0([Range(0.1, 5, 0.3)] double input)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2(0, {0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"ATAN2({0}, {0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(0.25 * Math.PI, actual, tolerance);
         }
 
