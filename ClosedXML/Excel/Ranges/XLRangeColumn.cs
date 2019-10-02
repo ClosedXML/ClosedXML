@@ -148,9 +148,7 @@ namespace ClosedXML.Excel
                 string lastRow;
                 if (trimmedPair.Contains(':') || trimmedPair.Contains('-'))
                 {
-                    var rowRange = trimmedPair.Contains('-')
-                                       ? trimmedPair.Replace('-', ':').Split(':')
-                                       : trimmedPair.Split(':');
+                    var rowRange = trimmedPair.Split(':', '-');
 
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
