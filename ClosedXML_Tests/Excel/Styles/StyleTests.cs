@@ -111,5 +111,24 @@ namespace ClosedXML_Tests.Excel
                 yield return new TestCaseData(new Func<IXLWorksheet, IXLStyle>((ws) => ws.Range("G8:H10").Row(2).Style)).SetName(t + ": Range(\"G8:H10\").Row(2)");
             }
         }
+
+        [TestCase("A1", "Normal")]
+        [TestCase("A2", "Good")]
+        [TestCase("A3", "Bad")]
+        [TestCase("B1", "Better")]
+        [TestCase("B2", "Worse")]
+        [TestCase("B3", "Normalish")]
+        public void CanReadStyleNames(string cellAddress, string expectedName)
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\NamedStyles\input.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+
+                var actualName = ws.Cell(cellAddress).Style.Name;
+
+                Assert.AreEqual(expectedName, actualName);
+            }
+        }
     }
 }

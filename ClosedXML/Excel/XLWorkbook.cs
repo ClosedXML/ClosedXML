@@ -161,6 +161,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLNamedRanges NamedRanges { get; private set; }
 
+        internal XLNamedStyles NamedStyles { get; }
+
         /// <summary>
         ///   Gets an object to manipulate this workbook's theme.
         /// </summary>
@@ -726,6 +728,7 @@ namespace ClosedXML.Excel
             RightToLeft = DefaultRightToLeft;
             WorksheetsInternal = new XLWorksheets(this);
             NamedRanges = new XLNamedRanges(this);
+            NamedStyles = new XLNamedStyles();
             CustomProperties = new XLCustomProperties(this);
             ShapeIdManager = new XLIdManager();
             Author = Environment.UserName;

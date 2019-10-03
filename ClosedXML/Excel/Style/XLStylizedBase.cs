@@ -39,7 +39,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLStyle InnerStyle
         {
-            get { return new XLStyle(this, StyleValue.Key); }
+            get { return new XLStyle(this, StyleValue); }
             set { SetStyle(value, false); }
         }
 

@@ -64,5 +64,9 @@
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
     <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Resource\Other\StyleReferenceFiles\NamedStyles\" />
+  </ItemGroup>
 
 </Project>

@@ -2992,6 +2992,15 @@ namespace ClosedXML.Excel
 
             xlStyle.IncludeQuotePrefix = OpenXmlHelper.GetBooleanValueAsBool(cellFormat.QuotePrefix, false);
 
+            if (s.CellStyles != null &&
+                cellFormat?.FormatId != null)
+            {
+                var cellStyle = s.CellStyles
+                    .Cast<CellStyle>()
+                    .SingleOrDefault(cs => cs.FormatId == cellFormat.FormatId.Value);
+                xlStyle.Name = cellStyle?.Name;
+            }
+
             if (cellFormat.ApplyProtection != null)
             {
                 var protection = cellFormat.Protection;
@@ -3190,6 +3199,11 @@ namespace ClosedXML.Excel
                 columns.Cast<XLColumn>().ForEach(col => col.InnerStyle = new XLStyle(col, xlStyle));
             else
                 xlStylized.InnerStyle = new XLStyle(xlStylized, xlStyle);
+
+            if (xlStyle.Name != null)
+            {
+                NamedStyles.Add(xlStyle.Name, xlStyle);
+            }
         }
 
         private static Boolean UInt32HasValue(UInt32Value value)

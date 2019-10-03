@@ -3632,9 +3632,10 @@ namespace ClosedXML.Excel
             {
                 // Possible to have duplicate default cell styles - occurs when file gets saved under different cultures.
                 // We prefer the style that is named Normal
+                var normal = XLStyleValue.Default.Name;
                 var normalCellStyles = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>()
                     .Where(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0)
-                    .OrderBy(c => c.Name != null && c.Name.HasValue && c.Name.Value == "Normal");
+                    .OrderBy(c => c.Name != null && c.Name.HasValue && c.Name.Value == normal);
 
                 defaultFormatId = normalCellStyles.Last().FormatId.Value;
             }
@@ -3767,7 +3768,7 @@ namespace ClosedXML.Excel
             ResolveRest(workbookStylesPart, context);
 
             if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0U))
-                workbookStylesPart.Stylesheet.CellStyles.AppendChild(new CellStyle { Name = "Normal", FormatId = defaultFormatId, BuiltinId = 0U });
+                workbookStylesPart.Stylesheet.CellStyles.AppendChild(new CellStyle { Name = XLStyleValue.Default.Name, FormatId = defaultFormatId, BuiltinId = 0U });
 
             workbookStylesPart.Stylesheet.CellStyles.Count = (UInt32)workbookStylesPart.Stylesheet.CellStyles.Count();
 
