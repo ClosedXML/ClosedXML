@@ -130,5 +130,119 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(expectedName, actualName);
             }
         }
+
+        [Test]
+        public void CanChangeStyleName()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell = ws.FirstCell();
+                cell.Style.Name = "Test Style";
+
+                Assert.AreEqual("Test Style", cell.Style.Name);
+                Assert.AreSame(wb.NamedStyles["Test Style"], (cell.Style as XLStyle).Value);
+            }
+        }
+
+        [Test]
+        public void CannotChangeStyleNameToExisting()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell("A2");
+
+                cell1.Style.Name = "Style 1";
+
+                Assert.Throws<InvalidOperationException>(() => cell2.Style.Name = "Style 1");
+            }
+        }
+
+        [Test]
+        public void StyleNamesAreCaseInsensitive()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                var cell1 = ws.Cell("A1");
+                var cell2 = ws.Cell("A2");
+
+                cell1.Style.Name = "Style 1";
+
+                Assert.Throws<InvalidOperationException>(() => cell2.Style.Name = "STYLE 1");
+            }
+        }
+
+        [Test]
+        public void CannotChangeNameOfDetachedStyle()
+        {
+            var style = new XLStyle(new XLStylizedEmpty(XLStyle.Default));
+
+            Assert.Throws<InvalidOperationException>(() => style.Name = "Custom style");
+        }
+
+        [Test]
+        public void CanCopyNamedStyleToAnotherWorkbook()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.AddWorksheet();
+                var cell = ws1.FirstCell();
+                cell.Style.Name = "Test Style";
+
+                var ws2 = ws1.CopyTo(wb2, "Copy");
+
+                Assert.AreEqual("Test Style", ws2.FirstCell().Style.Name);
+                Assert.AreSame((ws2.FirstCell().Style as XLStyle).Value, wb2.NamedStyles["Test Style"]);
+            }
+        }
+
+        [Test]
+        public void CopiedStylesAreRenamedIfAlreadyExistsAndDiffers()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.AddWorksheet();
+                var cell1 = ws1.FirstCell();
+                cell1.Style.Name = "Test Style";
+
+                var ws2 = wb2.AddWorksheet();
+                var cell2 = ws2.FirstCell();
+                cell2.Style.Fill.BackgroundColor = XLColor.Amber;
+                cell2.Style.Name = "Test Style";
+
+                var cell3 = ws2.Cell("B1");
+                cell3.CopyFrom(cell1);
+
+                Assert.AreEqual("Test Style 1", cell3.Style.Name);
+            }
+        }
+
+        [Test]
+        public void CopiedStylesAreRenamedIfAlreadyExistsAndEquals()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var wb2 = new XLWorkbook())
+            {
+                var ws1 = wb1.AddWorksheet();
+                var cell1 = ws1.FirstCell();
+                cell1.Style.Fill.BackgroundColor = XLColor.Amber;
+                cell1.Style.Name = "Test Style";
+
+                var ws2 = wb2.AddWorksheet();
+                var cell2 = ws2.FirstCell();
+                cell2.Style.Fill.BackgroundColor = XLColor.Amber;
+                cell2.Style.Name = "Test Style";
+
+                var cell3 = ws2.Cell("B1");
+                cell3.CopyFrom(cell1);
+
+                Assert.AreEqual("Test Style", cell3.Style.Name);
+            }
+        }
     }
 }

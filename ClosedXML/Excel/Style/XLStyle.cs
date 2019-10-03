@@ -154,6 +154,12 @@ namespace ClosedXML.Excel
             }
         }
 
+        public IXLStyle SetName(string name)
+        {
+            Name = name;
+            return this;
+        }
+
         public IXLNumberFormat NumberFormat
         {
             get { return new XLNumberFormat(this, Value.NumberFormat); }
@@ -233,8 +239,12 @@ namespace ClosedXML.Excel
             if (workbook == null)
                 throw new InvalidOperationException("Cannot change name of detached style. It must belong to a workbook.");
 
-            if (workbook.NamedStyles[styleName] != null)
+            var existingStyle = workbook.NamedStyles[styleName];
+            if (existingStyle != null &&
+                existingStyle != Value)
+            {
                 throw new InvalidOperationException("This name is already used");
+            }
         }
 
         private void AddToNamedStyles()

@@ -635,7 +635,10 @@ namespace ClosedXML.Excel
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
             Internals.ColumnsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Column(kp.Key)));
             Internals.RowsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Row(kp.Key)));
-            Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address).CopyFrom(c, XLCellCopyOptions.Values | XLCellCopyOptions.Styles));
+            var namedStylesMerger = new XLNamedStyleMerger(Workbook, targetSheet.Workbook);
+            Internals.CellsCollection.GetCells().ForEach(c => targetSheet.Cell(c.Address)
+                .CastTo<XLCell>()
+                .CopyFromInternal(c, XLCellCopyOptions.Values | XLCellCopyOptions.Styles, namedStylesMerger));
             DataValidations.ForEach(dv => targetSheet.DataValidations.Add(new XLDataValidation(dv, this)));
             targetSheet.Visibility = Visibility;
             targetSheet.ColumnWidth = ColumnWidth;
