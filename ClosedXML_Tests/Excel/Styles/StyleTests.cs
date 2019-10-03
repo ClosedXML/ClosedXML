@@ -244,5 +244,45 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual("Test Style", cell3.Style.Name);
             }
         }
+        
+        [Test]
+        public void CanSaveStyleName()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws = wb.AddWorksheet("Sheet1");
+                    var cell = ws.FirstCell();
+                    cell.Style.Fill.BackgroundColor = XLColor.Amber;
+                    cell.Style.SetName("TestStyle");
+                    wb.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    var cell = ws.FirstCell();
+                    Assert.AreEqual("TestStyle", cell.Style.Name);
+                }
+            }
+        }
+
+        [Test]
+        public void CanLoadAndSaveNamedStyles()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\NamedStyles\input.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    wb.SaveAs(ms);
+                    return wb;
+                }, @"Other\StyleReferenceFiles\NamedStyles\output.xlsx");
+            }
+        }
     }
 }
