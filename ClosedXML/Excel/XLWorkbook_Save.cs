@@ -320,10 +320,7 @@ namespace ClosedXML.Excel
                     GenerateWorksheetCommentsPartContent(commentsPart, worksheet);
                     hasAnyVmlElements = GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet);
                 }
-
-                if (worksheetHasComments != hasAnyVmlElements)
-                    throw new ApplicationException("Error generating comments");
-
+                
                 // Remove empty parts
                 if (commentsPart != null && (commentsPart.RootElement?.ChildElements?.Count ?? 0) == 0)
                     worksheetPart.DeletePart(commentsPart);

@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="**\*.xlsx" Exclude="**\~$*.xlsx;bin\**" />
+    <EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
     <EmbeddedResource Include="Resource\Images\*.png" />
     <EmbeddedResource Include="Resource\Images\*.jpg" />
   </ItemGroup>

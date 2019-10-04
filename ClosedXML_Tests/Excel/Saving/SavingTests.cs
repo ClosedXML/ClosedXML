@@ -623,5 +623,18 @@ namespace ClosedXML_Tests.Excel.Saving
                 return wb;
             }, @"Other\PivotTableReferenceFiles\LongText\outputfile.xlsx");
         }
+
+        [Test]
+        public void CanSaveFileWithVml_NoComments()
+        {
+            //See #1285
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\FileWithButton.xlsm")))
+            using (var wb = new XLWorkbook(stream))
+            using (var ms = new MemoryStream())
+            {
+                Assert.DoesNotThrow(() => wb.SaveAs(ms));
+            }
+
+        }
     }
 }
