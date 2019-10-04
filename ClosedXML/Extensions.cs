@@ -135,8 +135,16 @@ namespace ClosedXML.Excel
 
         internal static string EscapeSheetName(this String sheetName)
         {
-            if (sheetName.Contains("'") ||
-                sheetName.Contains(" "))
+            if (string.IsNullOrEmpty(sheetName)) return sheetName;
+
+            var needEscape = (!char.IsLetter(sheetName[0]) && sheetName[0] != '_') ||
+                             XLHelper.IsValidA1Address(sheetName) ||
+                             XLHelper.IsValidRCAddress(sheetName) ||
+                             sheetName.Any(c => (char.IsPunctuation(c) && c != '.' && c != '_') ||
+                                                char.IsSeparator(c) ||
+                                                char.IsControl(c) ||
+                                                char.IsSymbol(c));
+            if (needEscape)
                 return string.Concat('\'', sheetName.Replace("'", "''"), '\'');
             else
                 return sheetName;
