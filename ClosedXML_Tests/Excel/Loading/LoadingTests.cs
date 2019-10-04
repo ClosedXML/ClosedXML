@@ -15,70 +15,52 @@ namespace ClosedXML_Tests.Excel
     [TestFixture]
     public class LoadingTests
     {
-        [Test]
-        public void CanSuccessfullyLoadFiles()
-        {
-            var files = new List<string>()
-            {
-                @"TryToLoad\TableWithCustomTheme.xlsx",
-                @"TryToLoad\EmptyTable.xlsx",
-                @"TryToLoad\LoadPivotTables.xlsx",
-                @"TryToLoad\LoadFileWithCustomSheetViews.xlsx",
-                @"TryToLoad\LoadSheetsWithCommas.xlsx",
-                @"TryToLoad\ExcelProducedWorkbookWithImages.xlsx",
-                @"TryToLoad\InvalidPrintTitles.xlsx",
-                @"TryToLoad\InvalidPrintTitles2.xlsx",
-                @"TryToLoad\ExcelProducedWorkbookWithImages.xlsx",
-                @"TryToLoad\EmptyCellValue.xlsx",
-                @"TryToLoad\AllShapes.xlsx",
-                @"TryToLoad\TableHeadersWithLineBreaks.xlsx",
-                @"TryToLoad\TableWithNameNull.xlsx",
-                @"TryToLoad\DuplicateImageNames.xlsx",
-                @"TryToLoad\InvalidPrintArea.xlsx",
-                @"TryToLoad\Date1904System.xlsx",
-                @"TryToLoad\LoadImageWithoutTransform2D.xlsx",
-                @"TryToLoad\PivotTableWithTableSource.xlsx",
-                @"TryToLoad\TemplateWithTableSourcePivotTables.xlsx",
-                @"TryToLoad\PrintAreaRefersToExternalWorksheet.xlsx",
-                @"TryToLoad\NamedRangeWithInvalidCharacter.xlsx",
-                @"TryToLoad\NoReferencesOnRowsOrCells.xlsx"
-            };
+        private static IEnumerable<string> TryToLoad =>
+            TestHelper.ListResourceFiles(s =>
+                    s.Contains(".TryToLoad.") &&
+                    !s.Contains(".LO."));
 
-            foreach (var file in files)
-            {
-                TestHelper.LoadFile(file);
-            }
+        [TestCaseSource(nameof(TryToLoad))]
+        public void CanSuccessfullyLoadFiles(string file)
+        {
+            TestHelper.LoadFile(file);
         }
 
-        [Test]
-        public void CanSuccessfullyLoadLOFiles()
+        [TestCaseSource(nameof(LOFiles))]
+        public void CanSuccessfullyLoadLOFiles(string file)
         {
-            // TODO: unpark all files
-            var parkedForLater = new[]
-            {
-                "TryToLoad.LO.xlsx.formats.xlsx",
-                "TryToLoad.LO.xlsx.pivot_table.shared-group-field.xlsx",
-                "TryToLoad.LO.xlsx.pivot_table.shared-nested-dategroup.xlsx",
-                "TryToLoad.LO.xlsx.pivottable_bool_field_filter.xlsx",
-                "TryToLoad.LO.xlsx.pivottable_date_field_filter.xlsx",
-                "TryToLoad.LO.xlsx.pivottable_double_field_filter.xlsx",
-                "TryToLoad.LO.xlsx.pivottable_duplicated_member_filter.xlsx",
-                "TryToLoad.LO.xlsx.pivottable_rowcolpage_field_filter.xlsx",
-                "TryToLoad.LO.xlsx.pivottable_string_field_filter.xlsx",
-                "TryToLoad.LO.xlsx.pivottable_tabular_mode.xlsx",
-                "TryToLoad.LO.xlsx.pivot_table_first_header_row.xlsx",
-                "TryToLoad.LO.xlsx.tdf100709.xlsx",
-                "TryToLoad.LO.xlsx.tdf89139_pivot_table.xlsx",
-                "TryToLoad.LO.xlsx.universal-content-strict.xlsx",
-                "TryToLoad.LO.xlsx.universal-content.xlsx",
-                "TryToLoad.LO.xlsx.xf_default_values.xlsx"
-            };
+            TestHelper.LoadFile(file);
+        }
 
-            var files = TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i))).ToArray();
-
-            foreach (var file in files)
+        private static IEnumerable<string> LOFiles
+        {
+            get
             {
-                TestHelper.LoadFile(file);
+                // TODO: unpark all files
+                var parkedForLater = new[]
+                {
+                    "TryToLoad.LO.xlsx.formats.xlsx",
+                    "TryToLoad.LO.xlsx.pivot_table.shared-group-field.xlsx",
+                    "TryToLoad.LO.xlsx.pivot_table.shared-nested-dategroup.xlsx",
+                    "TryToLoad.LO.xlsx.pivottable_bool_field_filter.xlsx",
+                    "TryToLoad.LO.xlsx.pivottable_date_field_filter.xlsx",
+                    "TryToLoad.LO.xlsx.pivottable_double_field_filter.xlsx",
+                    "TryToLoad.LO.xlsx.pivottable_duplicated_member_filter.xlsx",
+                    "TryToLoad.LO.xlsx.pivottable_rowcolpage_field_filter.xlsx",
+                    "TryToLoad.LO.xlsx.pivottable_string_field_filter.xlsx",
+                    "TryToLoad.LO.xlsx.pivottable_tabular_mode.xlsx",
+                    "TryToLoad.LO.xlsx.pivot_table_first_header_row.xlsx",
+                    "TryToLoad.LO.xlsx.tdf100709.xlsx",
+                    "TryToLoad.LO.xlsx.tdf89139_pivot_table.xlsx",
+                    "TryToLoad.LO.xlsx.universal-content-strict.xlsx",
+                    "TryToLoad.LO.xlsx.universal-content.xlsx",
+                    "TryToLoad.LO.xlsx.xf_default_values.xlsx",
+                    "TryToLoad.LO.xlsm.pass.CVE-2016-0122-1.xlsm",
+                    "TryToLoad.LO.xlsm.tdf111974.xlsm",
+                    "TryToLoad.LO.xlsm.vba-user-function.xlsm",
+                };
+
+                return TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i)));
             }
         }
 
