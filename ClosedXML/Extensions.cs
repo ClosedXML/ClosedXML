@@ -101,17 +101,17 @@ namespace ClosedXML.Excel
     {
         private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)", RegexOptions.Compiled);
 
-        public static String FixNewLines(this String value)
+        internal static String FixNewLines(this String value)
         {
             return value.Contains("\n") ? RegexNewLine.Replace(value, Environment.NewLine) : value;
         }
 
-        public static Boolean PreserveSpaces(this String value)
+        internal static Boolean PreserveSpaces(this String value)
         {
             return value.StartsWith(" ") || value.EndsWith(" ") || value.Contains(Environment.NewLine);
         }
 
-        public static String ToCamel(this String value)
+        internal static String ToCamel(this String value)
         {
             if (value.Length == 0)
                 return value;
@@ -122,7 +122,7 @@ namespace ClosedXML.Excel
             return value.Substring(0, 1).ToLower() + value.Substring(1);
         }
 
-        public static String ToProper(this String value)
+        internal static String ToProper(this String value)
         {
             if (value.Length == 0)
                 return value;
@@ -131,6 +131,40 @@ namespace ClosedXML.Excel
                 return value.ToUpper();
 
             return value.Substring(0, 1).ToUpper() + value.Substring(1);
+        }
+
+        internal static string EscapeSheetName(this String sheetName)
+        {
+            if (sheetName.Contains("'") ||
+                sheetName.Contains(" "))
+                return string.Concat('\'', sheetName.Replace("'", "''"), '\'');
+            else
+                return sheetName;
+        }
+
+        internal static string UnescapeSheetName(this String sheetName)
+        {
+            return sheetName
+                .Trim('\'')
+                .Replace("''", "'");
+        }
+
+        internal static String HashPassword(this String password)
+        {
+            if (password == null) return null;
+
+            Int32 pLength = password.Length;
+            Int32 hash = 0;
+            if (pLength == 0) return String.Empty;
+
+            for (Int32 i = pLength - 1; i >= 0; i--)
+            {
+                hash ^= password[i];
+                hash = hash >> 14 & 0x01 | hash << 1 & 0x7fff;
+            }
+            hash ^= 0x8000 | 'N' << 8 | 'K';
+            hash ^= pLength;
+            return hash.ToString("X");
         }
     }
 
