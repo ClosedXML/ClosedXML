@@ -130,7 +130,7 @@ namespace ClosedXML_Tests
             {
                 throw new ArgumentException("Must be in position 0", "one");
             }
-            if (tuple1.Item2.Position != 0)
+            if (tuple2.Item2.Position != 0)
             {
                 throw new ArgumentException("Must be in position 0", "other");
             }
