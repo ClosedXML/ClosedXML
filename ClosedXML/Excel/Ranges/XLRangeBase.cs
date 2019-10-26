@@ -2170,12 +2170,7 @@ namespace ClosedXML.Excel
             Worksheet.SelectedRanges.Add(AsRange());
         }
 
-        public IXLRangeBase Grow()
-        {
-            return Grow(1);
-        }
-
-        public IXLRangeBase Grow(int growCount)
+        public IXLRangeBase Grow(int growCount = 1)
         {
             var firstRow = Math.Max(1, this.RangeAddress.FirstAddress.RowNumber - growCount);
             var firstColumn = Math.Max(1, this.RangeAddress.FirstAddress.ColumnNumber - growCount);

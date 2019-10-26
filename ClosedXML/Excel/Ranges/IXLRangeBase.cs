@@ -308,17 +308,14 @@ namespace ClosedXML.Excel
 
         void Select();
 
-        /// <summary>
-        /// Grows this the current range by one cell to each side
-        /// </summary>
-        IXLRangeBase Grow();
+      
 
         /// <summary>
         /// Grows this the current range by the specified number of cells to each side.
         /// </summary>
         /// <param name="growCount">The grow count.</param>
         /// <returns></returns>
-        IXLRangeBase Grow(Int32 growCount);
+        IXLRangeBase Grow(Int32 growCount = 1);
 
         /// <summary>
         /// Shrinks this current range by one cell.
