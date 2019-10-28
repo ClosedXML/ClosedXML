@@ -321,6 +321,13 @@ namespace ClosedXML.Excel
         IXLRangeBase Grow(Int32 growCount);
 
         /// <summary>
+        /// Grows this the current range by the specified number of rows.
+        /// </summary>
+        /// <param name="growRowCount">The grow count.</param>
+        /// <returns></returns>
+        IXLRangeBase GrowRow(Int32 growRowCount);
+
+        /// <summary>
         /// Shrinks this current range by one cell.
         /// </summary>
         IXLRangeBase Shrink();

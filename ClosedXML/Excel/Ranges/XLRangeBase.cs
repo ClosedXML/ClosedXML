@@ -2186,6 +2186,17 @@ namespace ClosedXML.Excel
             return this.Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
         }
 
+        public IXLRangeBase GrowRow(int growRowCount)
+        {
+            var firstRow = Math.Max(1, this.RangeAddress.FirstAddress.RowNumber - growRowCount);
+            var firstColumn = Math.Max(1, this.RangeAddress.FirstAddress.ColumnNumber - growRowCount);
+
+            var lastRow = Math.Min(XLHelper.MaxRowNumber, this.RangeAddress.LastAddress.RowNumber + growRowCount);
+            var lastColumn = Math.Min(XLHelper.MaxColumnNumber, this.RangeAddress.LastAddress.ColumnNumber);
+
+            return this.Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
+        }
+
         public IXLRangeBase Shrink()
         {
             return Shrink(1);
