@@ -267,6 +267,13 @@ namespace ClosedXML.Excel
                 parsed = true;
                 SetDateTimeFormat(style, d.Date == d);
             }
+            else if (value is DateTimeOffset dto && dto.LocalDateTime >= BaseDate)
+            {
+                d = dto.LocalDateTime;
+                parsedValue = d.ToOADate().ToInvariantString();
+                parsed = true;
+                SetDateTimeFormat(style, d.Date == d);
+            }
             else if (value is TimeSpan ts)
             {
                 parsedValue = ts.TotalDays.ToInvariantString();

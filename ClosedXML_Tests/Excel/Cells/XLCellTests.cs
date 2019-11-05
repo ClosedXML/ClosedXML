@@ -568,6 +568,17 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void ValueSetDateTimeOffset()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            var expected = new DateTimeOffset(2019, 11, 5, 11, 30, 5, new TimeSpan(0));
+            cell.Value = expected;
+            var actual = (DateTime)cell.Value;
+            Assert.AreEqual(expected.LocalDateTime, actual);
+        }
+
+        [Test]
         public void SetStringCellValues()
         {
             using (var wb = new XLWorkbook())
