@@ -579,15 +579,12 @@ namespace ClosedXML_Tests.Excel.Saving
         [Test]
         public void CanSaveFileWithEmptyFill()
         {
-            // Arrange
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EmptyFill.xlsx")))
             using (var wb = new XLWorkbook(stream))
             using (var ms = new MemoryStream())
             {
-                // Act
-                wb.SaveAs(ms, false);
+                Assert.DoesNotThrow(() => wb.SaveAs(ms, false));
             }
-                // Assert
         }
     }
 }
