@@ -4325,10 +4325,11 @@ namespace ClosedXML.Excel
         {
             if (fills.Elements<Fill>().Any(f =>
                 f.PatternFill == null
-                ||( f.PatternFill.PatternType == patternValues
+                || (f.PatternFill.PatternType == patternValues
                     && f.PatternFill.ForegroundColor == null
                     && f.PatternFill.BackgroundColor == null
-                ))) return;
+                )))
+                return;
 
             var fill1 = new Fill();
             var patternFill1 = new PatternFill { PatternType = patternValues };
