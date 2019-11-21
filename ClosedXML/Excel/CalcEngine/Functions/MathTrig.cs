@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -954,8 +955,36 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Subtotal(List<Expression> p)
         {
+            var removeStringLiteralsRegex = new Regex("\"([^\"]|\"\")*\"", RegexOptions.Compiled);
+            var containsSubtotalFormulaRegex = new Regex(@"\bSUBTOTAL\b\(.+?,.+?\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+            // Skip cells that already evaluate a SUBTOTAL
+            // TODO Possibly in the future we can use a formula AST to see whether the SUBTOTAL function is used
+
+            IEnumerable<Expression> extractExpressionsWithoutSubtotal(CellRangeReference crr)
+            {
+                return crr.Range
+                    .CellsUsed()
+                    .Where(c =>
+                    {
+                        if (c.HasFormula)
+                            // remove string literals
+                            return !containsSubtotalFormulaRegex.IsMatch(removeStringLiteralsRegex.Replace(c.FormulaA1, ""));
+                        else
+                            return true;
+                    })
+                    .Select(c => new XObjectExpression(new CellRangeReference(c.AsRange(), (XLCalcEngine)crr.CalcEngine)) as Expression);
+                };
+
+            var expressions = p.Skip(1)
+                .SelectMany(e =>
+                    e is XObjectExpression xoe && xoe.Value is CellRangeReference crr
+                        ? extractExpressionsWithoutSubtotal(crr)
+                        : new[] { e })
+                .ToArray();
+
             var fId = (int)(Double)p[0];
-            var tally = new Tally(p.Skip(1));
+            var tally = new Tally(expressions);
 
             switch (fId)
             {
