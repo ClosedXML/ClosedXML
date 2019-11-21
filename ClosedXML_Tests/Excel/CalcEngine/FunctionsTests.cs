@@ -565,6 +565,74 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void SubtotalCalc()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.NamedRanges.Add("subtotalrange", "A37:A38");
+
+            ws.Cell("A1").Value = 2;
+            ws.Cell("A2").Value = 4;
+            ws.Cell("A3").FormulaA1 = "SUBTOTAL(9, A1:A2)"; // simple add subtotal
+            ws.Cell("A4").Value = 8;
+            ws.Cell("A5").Value = 16;
+            ws.Cell("A6").FormulaA1 = "SUBTOTAL(9, A4:A5)"; // simple add subtotal
+            ws.Cell("A7").Value = 32;
+            ws.Cell("A8").Value = 64;
+            ws.Cell("A9").FormulaA1 = "SUM(A7:A8)"; // func but not subtotal
+            ws.Cell("A10").Value = 128;
+            ws.Cell("A11").Value = 256;
+            ws.Cell("A12").FormulaA1 = "SUBTOTAL(1, A10:A11)"; // simple avg subtotal
+            ws.Cell("A13").Value = 512;
+            ws.Cell("A14").FormulaA1 = "SUBTOTAL(9, A1:A13)"; // subtotals in range
+            ws.Cell("A15").Value = 1024;
+            ws.Cell("A16").Value = 2048;
+            ws.Cell("A17").FormulaA1 = "42 + SUBTOTAL(9, A15:A16)"; // simple add subtotal in formula
+            ws.Cell("A18").Value = 4096;
+            ws.Cell("A19").FormulaA1 = "SUBTOTAL(9, A15:A18)"; // subtotals in range
+            ws.Cell("A20").Value = 8192;
+            ws.Cell("A21").Value = 16384;
+            ws.Cell("A22").FormulaA1 = @"32768 * SEARCH(""SUBTOTAL(9, A1:A2)"", A28)"; // subtotal literal in formula
+            ws.Cell("A23").FormulaA1 = "SUBTOTAL(9, A20:A22)"; // subtotal literal in formula in range
+            ws.Cell("A24").Value = 65536;
+            ws.Cell("A25").FormulaA1 = "A23"; // link to subtotal
+            ws.Cell("A26").FormulaA1 = "PRODUCT(SUBTOTAL(9, A24:A25), 2)"; // subtotal as parameter in func
+            ws.Cell("A27").Value = 131072;
+            ws.Cell("A28").Value = "SUBTOTAL(9, A1:A2)"; // subtotal literal
+            ws.Cell("A29").FormulaA1 = "SUBTOTAL(9, A27:A28)"; // subtotal literal in range
+            ws.Cell("A30").FormulaA1 = "SUBTOTAL(9, A31:A32)"; // simple add subtotal backward
+            ws.Cell("A31").Value = 262144;
+            ws.Cell("A32").Value = 524288;
+            ws.Cell("A33").FormulaA1 = "SUBTOTAL(9, A20:A32)"; // subtotals in range
+            ws.Cell("A34").FormulaA1 = @"SUBTOTAL(VALUE(""9""), A1:A33, A35:A41)"; // func as parameter in subtotal and many ranges
+            ws.Cell("A35").Value = 1048576;
+            ws.Cell("A36").FormulaA1 = "SUBTOTAL(9, A31:A32, A35)"; // many ranges
+            ws.Cell("A37").Value = 2097152;
+            ws.Cell("A38").Value = 4194304;
+            ws.Cell("A39").FormulaA1 = "SUBTOTAL(3*3, subtotalrange)"; // formula as parameter in subtotal and named range
+            ws.Cell("A40").Value = 8388608;
+            ws.Cell("A41").FormulaA1 = "PRODUCT(SUBTOTAL(A4+1, A35:A40), 2)"; // formula with link as parameter in subtotal
+            ws.Cell("A42").FormulaA1 = "PRODUCT(SUBTOTAL(A4+1, A35:A40), 2) + SUBTOTAL(A4+1, A35:A40)"; // two subtotals in one formula
+
+            Assert.AreEqual(6, ws.Cell("A3").Value);
+            Assert.AreEqual(24, ws.Cell("A6").Value);
+            Assert.AreEqual(192, ws.Cell("A12").Value);
+            Assert.AreEqual(1118, ws.Cell("A14").Value);
+            Assert.AreEqual(3114, ws.Cell("A17").Value);
+            Assert.AreEqual(7168, ws.Cell("A19").Value);
+            Assert.AreEqual(57344, ws.Cell("A23").Value);
+            Assert.AreEqual(245760, ws.Cell("A26").Value);
+            Assert.AreEqual(131072, ws.Cell("A29").Value);
+            Assert.AreEqual(786432, ws.Cell("A30").Value);
+            Assert.AreEqual(1097728, ws.Cell("A33").Value);
+            Assert.AreEqual(16834654, ws.Cell("A34").Value);
+            Assert.AreEqual(1835008, ws.Cell("A36").Value);
+            Assert.AreEqual(6291456, ws.Cell("A39").Value);
+            Assert.AreEqual(31457280, ws.Cell("A41").Value);
+            Assert.AreEqual(47185920, ws.Cell("A42").Value);
+        }
+
+        [Test]
         public void Sum()
         {
             IXLCell cell = new XLWorkbook().AddWorksheet("Sheet1").FirstCell();

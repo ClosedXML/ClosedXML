@@ -272,14 +272,13 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class UnaryExpression : Expression
     {
-        // ** fields
-        private Expression _expr;
-
         // ** ctor
         public UnaryExpression(Token tk, Expression expr) : base(tk)
         {
-            _expr = expr;
+            Expression = expr;
         }
+
+        public Expression Expression { get; private set; }
 
         // ** object model
         override public object Evaluate()
@@ -287,25 +286,25 @@ namespace ClosedXML.Excel.CalcEngine
             switch (_token.ID)
             {
                 case TKID.ADD:
-                    return +(double)_expr;
+                    return +(double)Expression;
 
                 case TKID.SUB:
-                    return -(double)_expr;
+                    return -(double)Expression;
             }
             throw new ArgumentException("Bad expression.");
         }
 
         public override Expression Optimize()
         {
-            _expr = _expr.Optimize();
-            return _expr._token.Type == TKTYPE.LITERAL
+            Expression = Expression.Optimize();
+            return Expression._token.Type == TKTYPE.LITERAL
                 ? new Expression(this.Evaluate())
                 : this;
         }
 
         public override string LastParseItem
         {
-            get { return _expr.LastParseItem; }
+            get { return Expression.LastParseItem; }
         }
     }
 
@@ -314,17 +313,15 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class BinaryExpression : Expression
     {
-        // ** fields
-        private Expression _lft;
-
-        private Expression _rgt;
-
         // ** ctor
         public BinaryExpression(Token tk, Expression exprLeft, Expression exprRight) : base(tk)
         {
-            _lft = exprLeft;
-            _rgt = exprRight;
+            LeftExpression = exprLeft;
+            RightExpression = exprRight;
         }
+
+        public Expression LeftExpression { get; private set; }
+        public Expression RightExpression { get; private set; }
 
         // ** object model
         override public object Evaluate()
@@ -332,7 +329,7 @@ namespace ClosedXML.Excel.CalcEngine
             // handle comparisons
             if (_token.Type == TKTYPE.COMPARE)
             {
-                var cmp = _lft.CompareTo(_rgt);
+                var cmp = LeftExpression.CompareTo(RightExpression);
                 switch (_token.ID)
                 {
                     case TKID.GT: return cmp > 0;
@@ -348,61 +345,61 @@ namespace ClosedXML.Excel.CalcEngine
             switch (_token.ID)
             {
                 case TKID.CONCAT:
-                    return (string)_lft + (string)_rgt;
+                    return (string)LeftExpression + (string)RightExpression;
 
                 case TKID.ADD:
-                    return (double)_lft + (double)_rgt;
+                    return (double)LeftExpression + (double)RightExpression;
 
                 case TKID.SUB:
-                    return (double)_lft - (double)_rgt;
+                    return (double)LeftExpression - (double)RightExpression;
 
                 case TKID.MUL:
-                    return (double)_lft * (double)_rgt;
+                    return (double)LeftExpression * (double)RightExpression;
 
                 case TKID.DIV:
-                    if (Math.Abs((double)_rgt) < double.Epsilon)
+                    if (Math.Abs((double)RightExpression) < double.Epsilon)
                         throw new DivisionByZeroException();
 
-                    return (double)_lft / (double)_rgt;
+                    return (double)LeftExpression / (double)RightExpression;
 
                 case TKID.DIVINT:
-                    if (Math.Abs((double)_rgt) < double.Epsilon)
+                    if (Math.Abs((double)RightExpression) < double.Epsilon)
                         throw new DivisionByZeroException();
 
-                    return (double)(int)((double)_lft / (double)_rgt);
+                    return (double)(int)((double)LeftExpression / (double)RightExpression);
 
                 case TKID.MOD:
-                    if (Math.Abs((double)_rgt) < double.Epsilon)
+                    if (Math.Abs((double)RightExpression) < double.Epsilon)
                         throw new DivisionByZeroException();
 
-                    return (double)(int)((double)_lft % (double)_rgt);
+                    return (double)(int)((double)LeftExpression % (double)RightExpression);
 
                 case TKID.POWER:
-                    var a = (double)_lft;
-                    var b = (double)_rgt;
+                    var a = (double)LeftExpression;
+                    var b = (double)RightExpression;
                     if (b == 0.0) return 1.0;
                     if (b == 0.5) return Math.Sqrt(a);
                     if (b == 1.0) return a;
                     if (b == 2.0) return a * a;
                     if (b == 3.0) return a * a * a;
                     if (b == 4.0) return a * a * a * a;
-                    return Math.Pow((double)_lft, (double)_rgt);
+                    return Math.Pow((double)LeftExpression, (double)RightExpression);
             }
             throw new ArgumentException("Bad expression.");
         }
 
         public override Expression Optimize()
         {
-            _lft = _lft.Optimize();
-            _rgt = _rgt.Optimize();
-            return _lft._token.Type == TKTYPE.LITERAL && _rgt._token.Type == TKTYPE.LITERAL
+            LeftExpression = LeftExpression.Optimize();
+            RightExpression = RightExpression.Optimize();
+            return LeftExpression._token.Type == TKTYPE.LITERAL && RightExpression._token.Type == TKTYPE.LITERAL
                 ? new Expression(this.Evaluate())
                 : this;
         }
 
         public override string LastParseItem
         {
-            get { return _rgt.LastParseItem; }
+            get { return RightExpression.LastParseItem; }
         }
     }
 
@@ -411,36 +408,34 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FunctionExpression : Expression
     {
-        // ** fields
-        private readonly FunctionDefinition _fn;
-
-        private readonly List<Expression> _parms;
-
         // ** ctor
         internal FunctionExpression()
         { }
 
         public FunctionExpression(FunctionDefinition function, List<Expression> parms)
         {
-            _fn = function;
-            _parms = parms;
+            FunctionDefinition = function;
+            Parameters = parms;
         }
 
         // ** object model
         override public object Evaluate()
         {
-            return _fn.Function(_parms);
+            return FunctionDefinition.Function(Parameters);
         }
+
+        public FunctionDefinition FunctionDefinition { get; }
+        public List<Expression> Parameters { get; }
 
         public override Expression Optimize()
         {
             bool allLits = true;
-            if (_parms != null)
+            if (Parameters != null)
             {
-                for (int i = 0; i < _parms.Count; i++)
+                for (int i = 0; i < Parameters.Count; i++)
                 {
-                    var p = _parms[i].Optimize();
-                    _parms[i] = p;
+                    var p = Parameters[i].Optimize();
+                    Parameters[i] = p;
                     if (p._token.Type != TKTYPE.LITERAL)
                     {
                         allLits = false;
@@ -454,7 +449,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override string LastParseItem
         {
-            get { return _parms.Last().LastParseItem; }
+            get { return Parameters.Last().LastParseItem; }
         }
     }
 
@@ -486,9 +481,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Expression that represents an external object.
     /// </summary>
-    internal class XObjectExpression :
-        Expression,
-        IEnumerable
+    internal class XObjectExpression : Expression, IEnumerable
     {
         private readonly object _value;
 
@@ -533,7 +526,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class EmptyValueExpression : Expression
     {
-        internal EmptyValueExpression() { }
+        internal EmptyValueExpression()
+        {
+        }
 
         public override string LastParseItem
         {
