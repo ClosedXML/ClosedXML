@@ -954,8 +954,49 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Subtotal(List<Expression> p)
         {
+            // Skip cells that already evaluate a SUBTOTAL
+            bool hasSubtotalInFormula(Expression e)
+            {
+                if (e is FunctionExpression fe && (fe.FunctionDefinition.Function.Method.Name == nameof(Subtotal) || fe.Parameters.Any(fp => hasSubtotalInFormula(fp))))
+                    return true;
+
+                if (e is BinaryExpression be)
+                    return hasSubtotalInFormula(be.LeftExpression) || hasSubtotalInFormula(be.RightExpression);
+
+                if (e is UnaryExpression ue)
+                    return hasSubtotalInFormula(ue.Expression);
+
+                return false;
+            };
+
+            IEnumerable<Expression> extractExpressionsWithoutSubtotal(CellRangeReference crr)
+            {
+                var ce = crr.CalcEngine as XLCalcEngine;
+
+                return crr.Range
+                    .CellsUsed()
+                    .Where(c =>
+                    {
+                        if (c.HasFormula)
+                        {
+                            var expression = ce.ExpressionCache[c.FormulaA1];
+                            return !hasSubtotalInFormula(expression);
+                        }
+                        else
+                            return true;
+                    })
+                    .Select(c => new XObjectExpression(new CellRangeReference(c.AsRange(), (XLCalcEngine)crr.CalcEngine)) as Expression);
+            };
+
+            var expressions = p.Skip(1)
+                .SelectMany(e =>
+                    e is XObjectExpression xoe && xoe.Value is CellRangeReference crr
+                        ? extractExpressionsWithoutSubtotal(crr)
+                        : new[] { e })
+                .ToArray();
+
             var fId = (int)(Double)p[0];
-            var tally = new Tally(p.Skip(1));
+            var tally = new Tally(expressions);
 
             switch (fId)
             {

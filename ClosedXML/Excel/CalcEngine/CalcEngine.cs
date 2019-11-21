@@ -36,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
         private Dictionary<string, object> _vars;       // table with variables
         private object _dataContext;                    // object with properties
         private bool _optimize;                         // optimize expressions when parsing
-        private ExpressionCache _cache;                 // cache with parsed expressions
+        protected ExpressionCache _cache;               // cache with parsed expressions
         private CultureInfo _ci;                        // culture info used to parse numbers/dates
         private char _decimal, _listSep, _percent;      // localized decimal separator, list separator, percent sign
 
