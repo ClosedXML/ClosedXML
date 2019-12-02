@@ -225,6 +225,8 @@ namespace ClosedXML.Excel
                 var styleList = new Dictionary<int, IXLStyle>();// {{0, ws.Style}};
                 PageSetupProperties pageSetupProperties = null;
 
+                lastRow = 0;
+
                 using (var reader = OpenXmlReader.Create(worksheetPart))
                 {
                     Type[] ignoredElements = new Type[]
@@ -270,7 +272,6 @@ namespace ClosedXML.Excel
                                         (Columns)reader.LoadCurrentElement());
                         else if (reader.ElementType == typeof(Row))
                         {
-                            lastRow = 0;
                             LoadRows(s, numberingFormats, fills, borders, fonts, ws, sharedStrings, sharedFormulasR1C1,
                                      styleList, (Row)reader.LoadCurrentElement());
                         }
