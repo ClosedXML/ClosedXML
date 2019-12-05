@@ -2100,8 +2100,10 @@ namespace ClosedXML.Excel
         {
             if (columns == null) return;
 
-            var wsDefaultColumn =
-                columns.Elements<Column>().FirstOrDefault(c => c.Max == XLHelper.MaxColumnNumber);
+            var wsDefaultColumn = columns.Elements<Column>()
+                .Where(c => c.Max == XLHelper.MaxColumnNumber || c.Max == XLHelper.MaxLOColumnNumber)
+                .OrderByDescending(c => c.Max)
+                .FirstOrDefault();
 
             if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
                 ws.ColumnWidth = wsDefaultColumn.Width - ColumnWidthOffset;
@@ -2115,7 +2117,7 @@ namespace ClosedXML.Excel
             foreach (Column col in columns.Elements<Column>())
             {
                 //IXLStylized toApply;
-                if (col.Max == XLHelper.MaxColumnNumber) continue;
+                if (col == wsDefaultColumn) continue;
 
                 var xlColumns = (XLColumns)ws.Columns(col.Min, col.Max);
                 if (col.Width != null)

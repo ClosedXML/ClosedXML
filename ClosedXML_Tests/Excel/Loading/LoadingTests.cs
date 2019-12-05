@@ -494,6 +494,16 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void CorrectlyLoadLibreOfficeFileColumns()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\LibreOfficeFileWithDates.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                Assert.AreEqual(2, wb.Worksheets.First().Columns().Count()); // Column "A" with data and column "E" with cursor
+            }
+        }
+
+        [Test]
         public void EmptyNumberFormatIdTreatedAsGeneral()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EmptyNumberFormatId.xlsx")))

@@ -16,6 +16,7 @@ namespace ClosedXML.Excel
         public const int MinColumnNumber = 1;
         public const int MaxRowNumber = 1048576;
         public const int MaxColumnNumber = 16384;
+        public const int MaxLOColumnNumber = 1025;
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
