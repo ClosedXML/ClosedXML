@@ -11,7 +11,7 @@ namespace ClosedXML.Extensions
             if (!nf.IsValid)
                 return format;
 
-            return nf.Format(o, CultureInfo.InvariantCulture);
+            return nf.Format(o, CultureInfo.CurrentCulture);
         }
     }
 }
