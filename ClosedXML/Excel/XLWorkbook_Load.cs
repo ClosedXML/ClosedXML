@@ -545,8 +545,12 @@ namespace ClosedXML.Excel
                             else
                             {
                                 sourceType = XLPivotTableSourceType.Range;
-                                var sourceSheet = wss.Sheet == null ? ws : this.Worksheet(wss.Sheet.Value);
-                                source = this.Range(sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(includeSheet: true));
+
+                                IXLWorksheet sourceSheet;
+                                if (wss.Sheet == null)
+                                    sourceSheet = ws;
+                                else if (WorksheetsInternal.TryGetWorksheet(wss.Sheet.Value, out sourceSheet))
+                                    source = this.Range(sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(includeSheet: true));
                             }
 
                             if (source == null)
@@ -670,7 +674,7 @@ namespace ClosedXML.Excel
                                                 continue;
 
                                             var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(rf.Index.Value) as CacheField;
-                                            if (cacheField.Name != null)
+                                            if (pt.SourceRangeFieldsAvailable.Contains(cacheField.Name?.Value))
                                                 pivotField = pf.Name != null
                                                     ? pt.RowLabels.Add(cacheField.Name, pf.Name.Value)
                                                     : pt.RowLabels.Add(cacheField.Name.Value);
@@ -707,7 +711,7 @@ namespace ClosedXML.Excel
                                             continue;
 
                                         var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(cf.Index.Value) as CacheField;
-                                        if (cacheField.Name != null)
+                                        if (pt.SourceRangeFieldsAvailable.Contains(cacheField.Name?.Value))
                                             pivotField = pf.Name != null
                                                 ? pt.ColumnLabels.Add(cacheField.Name, pf.Name.Value)
                                                 : pt.ColumnLabels.Add(cacheField.Name.Value);
@@ -746,7 +750,7 @@ namespace ClosedXML.Excel
 
                                         if (pf.Name != null)
                                             pivotValue = pt.Values.Add(pf.Name.Value, df.Name.Value);
-                                        else if (cacheField.Name != null)
+                                        else if (cacheField.Name != null && pt.SourceRangeFieldsAvailable.Contains<String>(cacheField.Name))
                                             pivotValue = pt.Values.Add(cacheField.Name.Value, df.Name.Value);
                                         else
                                             continue;
@@ -791,6 +795,9 @@ namespace ClosedXML.Excel
                                         continue;
 
                                     var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(pageField.Field.Value) as CacheField;
+
+                                    if (!pt.SourceRangeFieldsAvailable.Contains(cacheField.Name?.Value))
+                                        continue;
 
                                     var filterName = pf.Name?.Value ?? cacheField.Name?.Value;
 
@@ -942,7 +949,10 @@ namespace ClosedXML.Excel
                     else
                     {
                         var fieldName = pt.SourceRangeFieldsAvailable.ElementAt(fieldIndex);
-                        field = (XLPivotField)pt.ImplementedFields.Single(f => f.SourceName.Equals(fieldName));
+                        field = (XLPivotField)pt.ImplementedFields.SingleOrDefault(f => f.SourceName.Equals(fieldName));
+
+                        if (field is null)
+                            continue;
                     }
 
                     if (defaultSubtotal)
@@ -1478,12 +1488,14 @@ namespace ClosedXML.Excel
                             xlDrawing.Style.Size.Width = ptWidth / 7.5;
                         }
                         break;
+
                     case "height":
                         if (TryGetPtValue(value, out var ptHeight))
                         {
                             xlDrawing.Style.Size.Height = ptHeight;
                         }
                         break;
+
                     case "z-index":
                         if (Int32.TryParse(value, out var zOrder))
                         {
