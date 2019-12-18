@@ -6210,12 +6210,18 @@ namespace ClosedXML.Excel
 
             if (xlAutoFilter.Sorted)
             {
+                string reference = null;
+
+                if (filterRange.FirstCell().Address.RowNumber < filterRange.LastCell().Address.RowNumber)
+                    reference = filterRange.Range(filterRange.FirstCell().CellBelow(), filterRange.LastCell()).RangeAddress.ToString();
+                else
+                    reference = filterRange.RangeAddress.ToString();
+
                 var sortState = new SortState
                 {
-                    Reference =
-                        filterRange.Range(filterRange.FirstCell().CellBelow(), filterRange.LastCell()).RangeAddress.
-                            ToString()
+                    Reference = reference
                 };
+
                 var sortCondition = new SortCondition
                 {
                     Reference =
