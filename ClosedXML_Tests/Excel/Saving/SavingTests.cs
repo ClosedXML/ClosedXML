@@ -586,5 +586,16 @@ namespace ClosedXML_Tests.Excel.Saving
                 Assert.DoesNotThrow(() => wb.SaveAs(ms, false));
             }
         }
+
+        [Test]
+        public void CanSaveSingleRowAutoFilter()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\SingleRowAutoFilter.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            using (var ms = new MemoryStream())
+            {
+                Assert.DoesNotThrow(() => wb.SaveAs(ms, false));
+            }
+        }
     }
 }
