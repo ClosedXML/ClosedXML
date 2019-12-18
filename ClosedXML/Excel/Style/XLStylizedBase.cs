@@ -104,10 +104,21 @@ namespace ClosedXML.Excel
             }
         }
 
-        private IEnumerable<XLStylizedBase> GetChildrenRecursively(XLStylizedBase parent)
+        private static HashSet<XLStylizedBase> GetChildrenRecursively(XLStylizedBase parent)
         {
-            return new List<XLStylizedBase> { parent }
-                   .Union(parent.Children.Where(child => child != parent).SelectMany(child => GetChildrenRecursively(child)));
+            void Collect(XLStylizedBase root, HashSet<XLStylizedBase> collector)
+            {
+                collector.Add(root);
+                foreach (var child in root.Children)
+                {
+                    Collect(child, collector);
+                }
+            }
+
+            var results = new HashSet<XLStylizedBase>();
+            Collect(parent, results);
+
+            return results;
         }
 
         #endregion Private methods

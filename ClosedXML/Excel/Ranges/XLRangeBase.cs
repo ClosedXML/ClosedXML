@@ -571,7 +571,14 @@ namespace ClosedXML.Excel
 
         public virtual Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            return CellsUsed(options).Cast<XLCell>().All(c => c.IsEmpty(options));
+            foreach (var cell in CellsUsed(options))
+            {
+                if (!cell.IsEmpty(options))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public virtual Boolean IsEntireRow()

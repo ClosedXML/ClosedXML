@@ -936,10 +936,12 @@ namespace ClosedXML.Excel
         {
             var rows = new XLRows(worksheet: null, StyleValue);
             var rowsUsed = new HashSet<Int32>();
-            Internals.RowsCollection.Keys.ForEach(r => rowsUsed.Add(r));
-            Internals.CellsCollection.RowsUsed.Keys.ForEach(r => rowsUsed.Add(r));
-            foreach (var rowNum in rowsUsed)
+            foreach (var rowNum in Internals.RowsCollection.Keys.Concat(Internals.CellsCollection.RowsUsed.Keys))
             {
+                if (!rowsUsed.Add(rowNum))
+                {
+                    continue;
+                }
                 var row = Row(rowNum);
                 if (!row.IsEmpty(options) && (predicate == null || predicate(row)))
                     rows.Add(row);
