@@ -18,9 +18,9 @@ namespace ClosedXML.Excel
             {
                 key = XLAlignmentValue.Default.Key;
             }
-            else if (d is XLAlignment)
+            else if (d is XLAlignment alignment)
             {
-                key = (d as XLAlignment).Key;
+                key = alignment.Key;
             }
             else
             {

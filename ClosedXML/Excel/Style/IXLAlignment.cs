@@ -2,14 +2,14 @@ using System;
 
 namespace ClosedXML.Excel
 {
-    public enum XLAlignmentReadingOrderValues
+    public enum XLAlignmentReadingOrderValues : byte
     {
         ContextDependent,
         LeftToRight,
         RightToLeft
     }
 
-    public enum XLAlignmentHorizontalValues
+    public enum XLAlignmentHorizontalValues : byte
     {
         Center,
         CenterContinuous,
@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
         Right
     }
 
-    public enum XLAlignmentVerticalValues
+    public enum XLAlignmentVerticalValues : byte
     {
         Bottom,
         Center,

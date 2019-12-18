@@ -71,6 +71,7 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetUsedCells()
         {
+            var visitedCells = new HashSet<XLAddress>();
             var groupedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
             foreach (var worksheetGroup in groupedAddresses)
             {
@@ -82,14 +83,13 @@ namespace ClosedXML.Excel
                     .OrderBy(cell => cell.Address.RowNumber)
                     .ThenBy(cell => cell.Address.ColumnNumber);
 
-                var visitedCells = new HashSet<XLAddress>();
+                visitedCells.Clear();
                 foreach (var cell in cells)
                 {
-                    if (visitedCells.Contains(cell.Address)) continue;
-
-                    visitedCells.Add(cell.Address);
-
-                    yield return cell;
+                    if (visitedCells.Add(cell.Address))
+                    {
+                        yield return cell;
+                    }
                 }
             }
         }
@@ -105,12 +105,11 @@ namespace ClosedXML.Excel
             var maxColumn = normalizedAddress.LastAddress.ColumnNumber;
 
             var cellRange = worksheet.Internals.CellsCollection
-                .GetCells(minRow, minColumn, maxRow, maxColumn, _predicate)
-                .Where(c => !c.IsEmpty(_options));
+                .GetCells(minRow, minColumn, maxRow, maxColumn, _predicate);
 
             foreach (var cell in cellRange)
             {
-                if (_predicate(cell))
+                if (!cell.IsEmpty(_options) && _predicate(cell))
                     yield return cell;
             }
 
@@ -131,6 +130,11 @@ namespace ClosedXML.Excel
         {
             var candidates = Enumerable.Empty<XLSheetPoint>();
 
+            if (_options == XLCellsUsedOptions.AllContents)
+            {
+                return candidates;
+            }
+
             if (_options.HasFlag(XLCellsUsedOptions.MergedRanges))
                 candidates = candidates.Union(
                     worksheet.Internals.MergedRanges.SelectMany(r => GetAllCellsInRange(r.RangeAddress)));
@@ -148,11 +152,12 @@ namespace ClosedXML.Excel
 
         public IEnumerator<XLCell> GetEnumerator()
         {
-            var cells = (_usedCellsOnly) ? GetUsedCells() : GetAllCells();
-            foreach (var cell in cells)
-            {
-                yield return cell;
-            }
+            return GetCells().GetEnumerator();
+        }
+
+        private IEnumerable<XLCell> GetCells()
+        {
+            return _usedCellsOnly ? GetUsedCells() : GetAllCells();
         }
 
         #endregion IEnumerable<XLCell> Members
@@ -161,8 +166,7 @@ namespace ClosedXML.Excel
 
         IEnumerator<IXLCell> IEnumerable<IXLCell>.GetEnumerator()
         {
-            foreach (XLCell cell in this)
-                yield return cell;
+            return GetCells().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

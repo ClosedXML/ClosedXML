@@ -55,9 +55,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLAlignmentValue;
-            return cached != null &&
-                   Key.Equals(cached.Key);
+            return obj is XLAlignmentValue cached && Key.Equals(cached.Key);
         }
 
         public override int GetHashCode()
