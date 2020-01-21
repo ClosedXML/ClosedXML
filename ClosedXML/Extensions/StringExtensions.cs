@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Linq;
 
 namespace ClosedXML.Extensions
 {
     internal static class StringExtensions
     {
+        // Well, these chars aren't really "escaped", but the sheetname is wrapped in quotes
+        private static readonly char[] escapeChars = new[] { '\'', ' ', '@' };
+
         internal static string EscapeSheetName(this String sheetName)
         {
-            if (sheetName.Contains("'") ||
-                sheetName.Contains(" "))
+            if (escapeChars.Any(c => sheetName.Contains(c)))
                 return string.Concat('\'', sheetName.Replace("'", "''"), '\'');
             else
                 return sheetName;

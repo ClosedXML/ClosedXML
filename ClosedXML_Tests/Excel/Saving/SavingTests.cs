@@ -586,5 +586,15 @@ namespace ClosedXML_Tests.Excel.Saving
                 Assert.DoesNotThrow(() => wb.SaveAs(ms, false));
             }
         }
+
+        [Test]
+        public void EscapeSheetNameCharactersWhenSaving()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Escaping\inputfile.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                TestHelper.CreateAndCompare(() => wb, @"Other\Escaping\outputfile.xlsx");
+            }
+        }
     }
 }
