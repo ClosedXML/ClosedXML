@@ -1551,13 +1551,7 @@ namespace ClosedXML.Excel
                     // This is a new row so we're going to reference all
                     // cells in columns of this row to preserve their formatting
 
-                    var usedColumns = from c in Internals.ColumnsCollection
-                                      join dc in Internals.CellsCollection.ColumnsUsed.Keys
-                                          on c.Key equals dc
-                                      where !Internals.CellsCollection.Contains(rowNumber, dc)
-                                      select dc;
-
-                    usedColumns.ForEach(c => Cell(rowNumber, c));
+                    Internals.ColumnsCollection.Keys.ForEach(c => Cell(rowNumber, c));
                 }
 
                 row = RangeFactory.CreateRow(rowNumber);
@@ -1681,7 +1675,6 @@ namespace ClosedXML.Excel
                     return null;
 
                 return workbookNamedRange.Ranges.First().CastTo<XLRange>();
-
             }
 
             return null;
