@@ -1,4 +1,5 @@
-﻿using ExcelNumberFormat;
+﻿// Keep this file CodeMaid organised and cleaned
+using ExcelNumberFormat;
 using System.Globalization;
 
 namespace ClosedXML.Extensions
