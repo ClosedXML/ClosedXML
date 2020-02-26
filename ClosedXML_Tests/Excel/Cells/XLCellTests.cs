@@ -157,6 +157,26 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void InsertData_with_Nulls_IEnumerable()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+
+            var dateTimeList = new List<DateTime?>()
+            {
+                new DateTime(2000, 1, 1),
+                new DateTime(2000, 1, 2),
+                new DateTime(2000, 1, 3),
+                new DateTime(2000, 1, 4),
+                null
+            };
+
+            ws.FirstCell().InsertData(dateTimeList);
+
+            Assert.AreEqual(new DateTime(2000, 1, 1), ws.Cell("A1").GetDateTime());
+            Assert.AreEqual(String.Empty, ws.Cell("A5").Value);
+        }
+
+        [Test]
         public void IsEmpty1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
