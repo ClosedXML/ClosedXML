@@ -886,6 +886,13 @@ namespace ClosedXML.Excel
                 {
                     resetRecordPosition();
 
+                    if (m == null)
+                    {
+                        Worksheet.SetValue(String.Empty, currentRowNumber, currentColumnNumber);
+                        incrementRecordPosition();
+                        continue;
+                    }
+
                     if (m.GetType().IsSimpleType())
                     {
                         if (addHeadings && !hasHeadings)
