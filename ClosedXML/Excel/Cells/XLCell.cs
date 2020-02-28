@@ -446,11 +446,19 @@ namespace ClosedXML.Excel
             if (Worksheet.Workbook.Worksheets.Contains(sName)
                 && XLHelper.IsValidA1Address(cAddress))
             {
-                var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
-                if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
-                    return 0;
-                else
-                    return referenceCell.Value;
+                try
+                {
+                    IsEvaluating = true;
+                    var referenceCell = Worksheet.Workbook.Worksheet(sName).Cell(cAddress);
+                    if (referenceCell.IsEmpty(XLCellsUsedOptions.AllContents))
+                        return 0;
+                    else
+                        return referenceCell.Value;
+                }
+                finally
+                {
+                    IsEvaluating = false;
+                }
             }
 
             object retVal;
