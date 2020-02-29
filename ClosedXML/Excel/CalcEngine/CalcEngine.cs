@@ -403,11 +403,19 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression ParseUnary()
         {
             // unary plus and minus
-            if (_token.ID == TKID.ADD || _token.ID == TKID.SUB)
+            if (_token.Type == TKTYPE.ADDSUB)
             {
-                var t = _token;
-                GetToken();
+                var sign = 1;
+                do
+                {
+                    if (_token.ID == TKID.SUB)
+                        sign = -sign;
+                    GetToken();
+                } while (_token.Type == TKTYPE.ADDSUB);
                 var a = ParseAtom();
+                var t = (sign == 1)
+                    ? _tkTbl['+']
+                    : _tkTbl['-'];
                 return new UnaryExpression(t, a);
             }
 

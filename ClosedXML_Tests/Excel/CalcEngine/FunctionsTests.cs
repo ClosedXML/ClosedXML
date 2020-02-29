@@ -682,5 +682,16 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             Assert.AreEqual(expectedResult, res, XLHelper.Epsilon);
         }
+
+        [TestCase("=--1", 1)]
+        [TestCase("=++1", 1)]
+        [TestCase("=-+-+-1", -1)]
+        [TestCase("=2^---2", 0.25)]
+        public void MultipleUnaryOperators(string formula, double expectedResult)
+        {
+            var res = (double)XLWorkbook.EvaluateExpr(formula);
+
+            Assert.AreEqual(expectedResult, res, XLHelper.Epsilon);
+        }
     }
 }
