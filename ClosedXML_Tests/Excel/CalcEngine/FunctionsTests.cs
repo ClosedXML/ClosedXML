@@ -667,5 +667,20 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.DoesNotThrow(() => XLWorkbook.EvaluateExpr("_xlfn.TODAY()"));
             Assert.IsTrue((bool)XLWorkbook.EvaluateExpr("_xlfn.TODAY() = TODAY()"));
         }
+
+        [TestCase("=1234%", 12.34)]
+        [TestCase("=1234%%", 0.1234)]
+        [TestCase("=100+200%", 102.0)]
+        [TestCase("=100%+200", 201.0)]
+        [TestCase("=(100+200)%", 3.0)]
+        [TestCase("=200%^5", 32.0)]
+        [TestCase("=200%^400%", 16.0)]
+        [TestCase("=SUM(100,200,300)%", 6.0)]
+        public void PercentOperator(string formula, double expectedResult)
+        {
+            var res = (double)XLWorkbook.EvaluateExpr(formula);
+
+            Assert.AreEqual(expectedResult, res, XLHelper.Epsilon);
+        }
     }
 }

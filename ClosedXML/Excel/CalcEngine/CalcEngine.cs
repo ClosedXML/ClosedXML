@@ -281,6 +281,7 @@ namespace ClosedXML.Excel.CalcEngine
                 AddToken('.', TKID.PERIOD, TKTYPE.GROUP);
                 AddToken('/', TKID.DIV, TKTYPE.MULDIV);
                 AddToken('\\', TKID.DIVINT, TKTYPE.MULDIV);
+                AddToken('%', TKID.DIV100, TKTYPE.MULDIV_UNARY);
                 AddToken('=', TKID.EQ, TKTYPE.COMPARE);
                 AddToken('>', TKID.GT, TKTYPE.COMPARE);
                 AddToken('<', TKID.LT, TKTYPE.COMPARE);
@@ -375,13 +376,26 @@ namespace ClosedXML.Excel.CalcEngine
 
         private Expression ParsePower()
         {
-            var x = ParseUnary();
+            var x = ParseMulDivUnary();
             while (_token.Type == TKTYPE.POWER)
             {
                 var t = _token;
                 GetToken();
-                var a = ParseUnary();
+                var a = ParseMulDivUnary();
                 x = new BinaryExpression(t, x, a);
+            }
+            return x;
+        }
+
+        private Expression ParseMulDivUnary()
+        {
+            var x = ParseUnary();
+            while (_token.Type == TKTYPE.MULDIV_UNARY)
+            {
+                var t = _tkTbl['/'];
+                var a = new Expression(100);
+                x = new BinaryExpression(t, x, a);
+                GetToken();
             }
             return x;
         }
@@ -577,7 +591,6 @@ namespace ClosedXML.Excel.CalcEngine
             if (isDigit || c == _decimal)
             {
                 var sci = false;
-                var pct = false;
                 var div = -1.0; // use double, not int (this may get really big)
                 var val = 0.0;
                 for (i = 0; i + _ptr < _len; i++)
@@ -611,14 +624,6 @@ namespace ClosedXML.Excel.CalcEngine
                         continue;
                     }
 
-                    // percentage?
-                    if (c == _percent)
-                    {
-                        pct = true;
-                        i++;
-                        break;
-                    }
-
                     // end of literal
                     break;
                 }
@@ -630,10 +635,6 @@ namespace ClosedXML.Excel.CalcEngine
                     if (div > 1)
                     {
                         val /= div;
-                    }
-                    if (pct)
-                    {
-                        val /= 100.0;
                     }
                 }
                 else
