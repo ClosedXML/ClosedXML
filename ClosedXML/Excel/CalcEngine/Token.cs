@@ -29,6 +29,7 @@ namespace ClosedXML.Excel.CalcEngine
         ADDSUB,      // + -
         MULDIV,      // * /
         POWER,       // ^
+        MULDIV_UNARY,// %
         GROUP,       // ( ) , .
         LITERAL,     // 123.32, "Hello", etc.
         IDENTIFIER,  // functions, external objects, bindings
@@ -44,6 +45,7 @@ namespace ClosedXML.Excel.CalcEngine
         ADD, SUB, // ADDSUB
         MUL, DIV, DIVINT, MOD, // MULDIV
         POWER, // POWER
+        DIV100, // MULTIV_UNARY
         OPEN, CLOSE, END, COMMA, PERIOD, // GROUP
         ATOM, // LITERAL, IDENTIFIER
         CONCAT
