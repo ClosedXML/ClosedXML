@@ -37,8 +37,10 @@ namespace ClosedXML.Excel
             + @")"
             + @"!)?" // End Sheet Name, optional
             + @"(?<Range>" // Start range
+            + @"(?<![\w\d])" // Preceded by anything but a letter or a number
             + @"\$?[a-zA-Z]{1,3}\$?\d{1,7}" // A1 Address 1
             + @"(?<RangeEnd>:\$?[a-zA-Z]{1,3}\$?\d{1,7})?" // A1 Address 2, optional
+            + @"(?![\w\d])" // followed by anything but a letter or a number
             + @"|"
             + @"(?<ColumnNumbers>\$?\d{1,7}:\$?\d{1,7})" // 1:1
             + @"|"
