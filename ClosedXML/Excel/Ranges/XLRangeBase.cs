@@ -590,13 +590,11 @@ namespace ClosedXML.Excel
                                   ? Worksheet.Workbook.NamedRanges
                                   : Worksheet.NamedRanges;
 
-            if (namedRanges.Any(nr => String.Compare(nr.Name, rangeName, true) == 0))
-            {
-                var namedRange = namedRanges.Single(nr => String.Compare(nr.Name, rangeName, true) == 0);
+            if (namedRanges.TryGetValue(rangeName, out IXLNamedRange namedRange))
                 namedRange.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
-            }
             else
                 namedRanges.Add(rangeName, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
+
             return AsRange();
         }
 
@@ -851,7 +849,10 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(cellAddressInRange))
                 return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
 
-            return (XLCell)Worksheet.NamedRange(cellAddressInRange).Ranges.First().FirstCell();
+            if (Worksheet.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange namedRange))
+                return namedRange.Ranges.First().FirstCell().CastTo<XLCell>();
+
+            return null;
         }
 
         public XLCell Cell(Int32 row, String column)
