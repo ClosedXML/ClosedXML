@@ -929,16 +929,14 @@ namespace ClosedXML.Excel
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
-                else if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
+                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange worksheetNamedRange))
                 {
-                    NamedRange(rangeAddressStr).Ranges.ForEach(retVal.Add);
+                    worksheetNamedRange.Ranges.ForEach(retVal.Add);
                 }
-                else
+                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange workbookNamedRange)
+                    && workbookNamedRange.Ranges.First().Worksheet == this)
                 {
-                    Workbook.NamedRanges.First(n =>
-                        String.Compare(n.Name, rangeAddressStr, true) == 0
-                        && n.Ranges.First().Worksheet == this).Ranges
-                    .ForEach(retVal.Add);
+                    workbookNamedRange.Ranges.ForEach(retVal.Add);
                 }
             }
             return retVal;
@@ -1649,17 +1647,18 @@ namespace ClosedXML.Excel
 
         public override XLCell Cell(String cellAddressInRange)
         {
-            if (XLHelper.IsValidA1Address(cellAddressInRange))
-                return Cell(XLAddress.Create(this, cellAddressInRange));
+            var cell = base.Cell(cellAddressInRange);
+            if (cell != null) return cell;
 
-            if (NamedRanges.Any(n => String.Compare(n.Name, cellAddressInRange, true) == 0))
-                return (XLCell)NamedRange(cellAddressInRange).Ranges.First().FirstCell();
+            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange workbookNamedRange))
+            {
+                if (!workbookNamedRange.Ranges.Any())
+                    return null;
 
-            var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
-                                                      String.Compare(n.Name, cellAddressInRange, true) == 0
-                                                      && n.Ranges.Count == 1);
+                return workbookNamedRange.Ranges.FirstOrDefault().FirstCell().CastTo<XLCell>();
+            }
 
-            return (XLCell)namedRanges?.Ranges?.FirstOrDefault()?.FirstCell();
+            return null;
         }
 
         public override XLRange Range(String rangeAddressStr)
@@ -1670,15 +1669,19 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains("["))
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
 
-            if (NamedRanges.Any(n => String.Compare(n.Name, rangeAddressStr, true) == 0))
-                return (XLRange)NamedRange(rangeAddressStr).Ranges.First();
+            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange worksheetNamedRange))
+                return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
 
-            var namedRanges = Workbook.NamedRanges.FirstOrDefault(n =>
-                                                       String.Compare(n.Name, rangeAddressStr, true) == 0
-                                                       && n.Ranges.Count == 1
-                                                       );
-            if (namedRanges == null || !namedRanges.Ranges.Any()) return null;
-            return (XLRange)namedRanges.Ranges.First();
+            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange workbookNamedRange))
+            {
+                if (!workbookNamedRange.Ranges.Any())
+                    return null;
+
+                return workbookNamedRange.Ranges.First().CastTo<XLRange>();
+
+            }
+
+            return null;
         }
 
         public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
