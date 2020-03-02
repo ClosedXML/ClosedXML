@@ -24,9 +24,14 @@ namespace ClosedXML.Excel
             return Cell(1, column);
         }
 
-        public new IXLCell Cell(string column)
+        public override XLCell Cell(string columnLetter)
         {
-            return Cell(1, column);
+            return Cell(1, columnLetter);
+        }
+
+        IXLCell IXLRangeRow.Cell(string columnLetter)
+        {
+            return Cell(columnLetter);
         }
 
         public void Delete()
@@ -54,7 +59,7 @@ namespace ClosedXML.Excel
             return InsertColumnsBefore(numberOfColumns, expandRange).Cells();
         }
 
-        public new IXLCells Cells(string cellsInRow)
+        public override IXLCells Cells(string cellsInRow)
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');
