@@ -270,12 +270,12 @@ namespace ClosedXML.Excel
             return LastCellUsed(options, predicate);
         }
 
-        public IXLCells Cells()
+        public virtual IXLCells Cells()
         {
             return Cells(false);
         }
 
-        public IXLCells Cells(Boolean usedCellsOnly)
+        public virtual IXLCells Cells(Boolean usedCellsOnly)
         {
             return Cells(usedCellsOnly, XLCellsUsedOptions.AllContents);
         }
@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLCells Cells(String cells)
+        public virtual IXLCells Cells(String cells)
         {
             return Ranges(cells).Cells();
         }
@@ -847,7 +847,7 @@ namespace ClosedXML.Excel
             return Cell(new XLAddress(Worksheet, row, column, false, false));
         }
 
-        public XLCell Cell(String cellAddressInRange)
+        public virtual XLCell Cell(String cellAddressInRange)
         {
             if (XLHelper.IsValidA1Address(cellAddressInRange))
                 return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
@@ -1060,7 +1060,7 @@ namespace ClosedXML.Excel
             return GetRange(newFirstCellAddress, newLastCellAddress);
         }
 
-        public IXLRanges Ranges(String ranges)
+        public virtual IXLRanges Ranges(String ranges)
         {
             var retVal = new XLRanges();
             var rangePairs = ranges.Split(',');
@@ -1865,7 +1865,7 @@ namespace ClosedXML.Excel
             return (XLPivotTable)targetCell.Worksheet.PivotTables.Add(name, targetCell, AsRange());
         }
 
-        public IXLAutoFilter SetAutoFilter()
+        public virtual IXLAutoFilter SetAutoFilter()
         {
             return SetAutoFilter(true);
         }

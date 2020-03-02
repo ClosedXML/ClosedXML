@@ -80,7 +80,7 @@ namespace ClosedXML.Excel
             return Cell(rowNumber, 1);
         }
 
-        public new IXLCells Cells(String cellsInColumn)
+        public override IXLCells Cells(String cellsInColumn)
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.All);
             var rangePairs = cellsInColumn.Split(',');
@@ -89,12 +89,12 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public new IXLCells Cells()
+        public override IXLCells Cells()
         {
             return Cells(true, XLCellsUsedOptions.All);
         }
 
-        public new IXLCells Cells(Boolean usedCellsOnly)
+        public override IXLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
                 return Cells(true, XLCellsUsedOptions.All);

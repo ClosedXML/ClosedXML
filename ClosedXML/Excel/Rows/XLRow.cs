@@ -144,17 +144,22 @@ namespace ClosedXML.Excel
             return Cell(1, columnNumber);
         }
 
-        public new IXLCell Cell(String columnLetter)
+        public override XLCell Cell(String columnLetter)
         {
             return Cell(1, columnLetter);
         }
 
-        public new IXLCells Cells()
+        IXLCell IXLRow.Cell(string columnLetter)
+        {
+            return Cell(columnLetter);
+        }
+
+        public override IXLCells Cells()
         {
             return Cells(true, XLCellsUsedOptions.All);
         }
 
-        public new IXLCells Cells(Boolean usedCellsOnly)
+        public override IXLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
                 return Cells(true, XLCellsUsedOptions.All);
@@ -162,7 +167,7 @@ namespace ClosedXML.Excel
                 return Cells(FirstCellUsed().Address.ColumnNumber, LastCellUsed().Address.ColumnNumber);
         }
 
-        public new IXLCells Cells(String cellsInRow)
+        public override IXLCells Cells(String cellsInRow)
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');

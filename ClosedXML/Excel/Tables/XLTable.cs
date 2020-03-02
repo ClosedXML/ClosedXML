@@ -180,7 +180,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public new IXLAutoFilter SetAutoFilter()
+        public override IXLAutoFilter SetAutoFilter()
         {
             return AutoFilter;
         }
