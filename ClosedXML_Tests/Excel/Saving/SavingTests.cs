@@ -597,5 +597,31 @@ namespace ClosedXML_Tests.Excel.Saving
                 Assert.DoesNotThrow(() => wb.SaveAs(ms, false));
             }
         }
+
+        [Test]
+        public void PivotTableWithVeryLongField()
+        {
+            TestHelper.CreateAndCompare(() =>
+            {
+                var wb = new XLWorkbook();
+                var ws = wb.AddWorksheet();
+
+                var longText = string.Join(" ", Enumerable.Range(0, 40).Select(i => "1234567890"));
+
+                var data = new[]
+                {
+                    new { Col1 = longText, Col2 = 2}
+                };
+
+                var table = ws.FirstCell().InsertTable(data);
+
+                var pvtSheet = wb.AddWorksheet("pvt");
+
+                var pvt = table.CreatePivotTable(pvtSheet.FirstCell(), "PivotTable1");
+                pvt.RowLabels.Add("Col1");
+
+                return wb;
+            }, @"Other\PivotTableReferenceFiles\LongText\outputfile.xlsx");
+        }
     }
 }
