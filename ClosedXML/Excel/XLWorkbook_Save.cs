@@ -2317,6 +2317,9 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
+                        if (ptfi.DistinctValues.Any(v => ((string)v).Length > 255))
+                            sharedItems.LongText = true;
+
                         foreach (var value in ptfi.DistinctValues)
                             sharedItems.AppendChild(new StringItem { Val = (string)value });
 
