@@ -364,7 +364,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             {
                 var ws = wb.AddWorksheet("Test");
                 ws.Cell(1, 1).Value = new DateTime(2019, 1, 1, 14, 0, 0);
-                ws.Cell(1, 2).Value = new DateTime(2019, 1, 1, 17, 48, 0);
+                ws.Cell(1, 2).Value = new DateTime(2019, 1, 1, 17, 45, 0);
                 var cell = ws.Cell(1, 3);
                 cell.FormulaA1 = "=B1-A1";
                 cell.Style.DateFormat.Format = "hh:mm";
@@ -376,15 +376,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
                 cell.DataType = XLDataType.DateTime;
                 Assert.AreEqual(DateTime.FromOADate(value), cell.CachedValue);
-                Assert.AreEqual("03:48", cell.GetFormattedString());
+                Assert.AreEqual("03:45", cell.GetFormattedString());
 
                 cell.DataType = XLDataType.Number;
                 Assert.AreEqual(value, (double)cell.CachedValue, 1e-10);
-                Assert.AreEqual("0.158333333333333", cell.GetFormattedString());
+                Assert.AreEqual("0.15625", cell.GetFormattedString());
 
                 cell.DataType = XLDataType.TimeSpan;
                 Assert.AreEqual(TimeSpan.FromDays(value), (TimeSpan)cell.CachedValue);
-                Assert.AreEqual("03:48:00", cell.GetFormattedString()); // I think the seconds in this string is due to a shortcoming in the ExcelNumberFormat library
+                Assert.AreEqual("03:45:00", cell.GetFormattedString()); // I think the seconds in this string is due to a shortcoming in the ExcelNumberFormat library
             }
         }
     }
