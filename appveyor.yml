@@ -1,7 +1,7 @@
 version: 0.95.0.{build}
 
-os: Visual Studio 2017
-image: Visual Studio 2017
+os: Visual Studio 2019
+image: Visual Studio 2019
 
 environment:
   AppVeyor: APPVEYOR
