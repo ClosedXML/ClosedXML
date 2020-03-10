@@ -55,10 +55,12 @@ namespace ClosedXML.Excel
                     return v.ToString(CultureInfo.InvariantCulture);
 
                 case float v:
-                    return v.ToString(CultureInfo.InvariantCulture);
+                    // Specify precision explicitly for backward compatibility
+                    return v.ToString("G7", CultureInfo.InvariantCulture);
 
                 case double v:
-                    return v.ToString(CultureInfo.InvariantCulture);
+                    // Specify precision explicitly for backward compatibility
+                    return v.ToString("G15", CultureInfo.InvariantCulture);
 
                 case decimal v:
                     return v.ToString(CultureInfo.InvariantCulture);
@@ -108,10 +110,12 @@ namespace ClosedXML.Excel
                     return v.ToString(CultureInfo.InvariantCulture);
 
                 case float v:
-                    return v.ToString(CultureInfo.InvariantCulture);
+                    // Specify precision explicitly for backward compatibility
+                    return v.ToString("G7", CultureInfo.InvariantCulture);
 
                 case double v:
-                    return v.ToString(CultureInfo.InvariantCulture);
+                    // Specify precision explicitly for backward compatibility
+                    return v.ToString("G15", CultureInfo.InvariantCulture);
 
                 case decimal v:
                     return v.ToString(CultureInfo.InvariantCulture);
