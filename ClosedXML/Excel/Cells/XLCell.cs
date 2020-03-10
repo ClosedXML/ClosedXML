@@ -547,14 +547,14 @@ namespace ClosedXML.Excel
                 if (this.DataType == XLDataType.DateTime && d.IsValidOADateNumber())
                     CachedValue = DateTime.FromOADate(d);
                 else if (this.DataType == XLDataType.TimeSpan)
-                    CachedValue = TimeSpan.FromDays(d);
+                    CachedValue = XLHelper.GetTimeSpan(d);
             }
             else if (CachedValue is DateTime dt)
             {
                 if (this.DataType == XLDataType.Number)
                     CachedValue = dt.ToOADate();
                 else if (this.DataType == XLDataType.TimeSpan)
-                    CachedValue = TimeSpan.FromDays(dt.ToOADate());
+                    CachedValue = XLHelper.GetTimeSpan(dt.ToOADate());
             }
             else if (CachedValue is TimeSpan ts)
             {
@@ -634,7 +634,7 @@ namespace ClosedXML.Excel
                 if (TimeSpan.TryParse(cellValue, out TimeSpan ts))
                     return ts;
                 else if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d))
-                    return TimeSpan.FromDays(d);
+                    return XLHelper.GetTimeSpan(d);
                 else
                 {
                     error = string.Format("Cannot set data type to TimeSpan because '{0}' is not recognized as a TimeSpan.", cellValue);
