@@ -39,10 +39,10 @@ namespace ClosedXML_Tests.OleDb
                         Assert.AreEqual(2, dt.Rows.Count);
 
                         Assert.AreEqual(42, dt.Rows.Cast<DataRow>().First()[0]);
-                        Assert.AreEqual("42", dt.Rows.Cast<DataRow>().First()[1]);
+                        Assert.AreEqual(42, dt.Rows.Cast<DataRow>().First()[1]);
 
                         Assert.AreEqual(41, dt.Rows.Cast<DataRow>().Last()[0]);
-                        Assert.AreEqual("41", dt.Rows.Cast<DataRow>().Last()[1]);
+                        Assert.AreEqual(41, dt.Rows.Cast<DataRow>().Last()[1]);
                     }
 
                     using (var command = new OleDbCommand("select * from [Sheet2$]", connection))
@@ -57,12 +57,12 @@ namespace ClosedXML_Tests.OleDb
                         Assert.AreEqual("Sum", dt.Columns[2].ColumnName);
                         Assert.AreEqual("SumRef", dt.Columns[3].ColumnName);
 
-                        var expected = new Dictionary<string, string>()
+                        var expected = new Dictionary<string, double>()
                         {
-                            {"Ref1", "42" },
-                            {"Ref2", "41" },
-                            {"Sum", "83" },
-                            {"SumRef", "83" },
+                            {"Ref1", 42 },
+                            {"Ref2", 41 },
+                            {"Sum", 83 },
+                            {"SumRef", 83 },
                         };
 
                         foreach (var col in dt.Columns.Cast<DataColumn>())
