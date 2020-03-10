@@ -328,7 +328,8 @@ namespace ClosedXML.Excel
 
                 this.Style.SetIncludeQuotePrefix();
             }
-            else if (value.Trim() != "NaN" && Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
+            else if (!string.Equals(value.Trim(), "NaN", StringComparison.OrdinalIgnoreCase) &&
+                     Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
                 _dataType = XLDataType.Number;
             else if (TimeSpan.TryParse(value, out TimeSpan ts))
             {
