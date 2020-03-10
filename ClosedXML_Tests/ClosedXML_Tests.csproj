@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net40;net46</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net40;net46</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
     <Version>0.95.0</Version>
     <IsPackable>false</IsPackable>
@@ -21,7 +21,7 @@
     <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <DefineConstants>$(DefineConstants);_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
   </PropertyGroup>
 
@@ -40,7 +40,7 @@
     <EmbeddedResource Include="Resource\Images\*.jpg" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'netcoreapp2.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'netcoreapp3.1' ">
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
   </ItemGroup>
