@@ -138,7 +138,6 @@ namespace ClosedXML_Tests.Excel.Saving
                 {
                     var ws = book2.Worksheet(1);
 
-                    Assert.IsNull(ws.Cell("A2").ValueCached);
                     Assert.IsNull(ws.Cell("A2").CachedValue);
                 }
             }
@@ -165,10 +164,8 @@ namespace ClosedXML_Tests.Excel.Saving
                 {
                     var ws = book2.Worksheet(1);
 
-                    Assert.AreEqual("1230", ws.Cell("A2").ValueCached);
                     Assert.AreEqual(1230, ws.Cell("A2").CachedValue);
 
-                    Assert.AreEqual("1 230", ws.Cell("A3").ValueCached);
                     Assert.AreEqual("1 230", ws.Cell("A3").CachedValue);
                 }
             }
