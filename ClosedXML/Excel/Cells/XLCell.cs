@@ -1436,9 +1436,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        [Obsolete("Use CachedValue instead")]
-        public string ValueCached { get; internal set; }
-
         public IXLRichText RichText
         {
             get
