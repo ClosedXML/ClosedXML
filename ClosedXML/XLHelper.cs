@@ -330,6 +330,18 @@ namespace ClosedXML.Excel
             return -657435 <= d && d < 2958466;
         }
 
+        /// <summary>
+        /// A backward compatible version of <see cref="TimeSpan.FromDays(double)"/> that returns a value
+        /// rounded to milliseconds. In .Net Core 3.0 the behavior has changed and timespan includes microseconds
+        /// as well. As a result, the value 1:12:30 saved on one machine could become 1:12:29.999999 on another.
+        /// </summary>
+        internal static TimeSpan GetTimeSpan(double totalDays)
+        {
+            var timeSpan = TimeSpan.FromDays(totalDays);
+            var roundedMilliseconds = (int)Math.Round(timeSpan.TotalMilliseconds);
+            return new TimeSpan(0, 0, 0, 0, roundedMilliseconds);
+        }
+
         public static Boolean ValidateName(String objectType, String newName, String oldName, IEnumerable<String> existingNames, out String message)
         {
             message = "";
