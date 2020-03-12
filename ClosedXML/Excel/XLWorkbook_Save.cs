@@ -968,7 +968,7 @@ namespace ClosedXML.Excel
 
             bool hasSharedString(IXLCell c)
             {
-                if (c.DataType == XLDataType.Text && c.ShareString || c.HasRichText)
+                if (c.DataType == XLDataType.Text && c.ShareString)
                     return (c as XLCell).StyleValue.IncludeQuotePrefix || String.IsNullOrWhiteSpace(c.FormulaA1) && (c as XLCell).InnerText.Length > 0;
                 else
                     return false;
@@ -984,49 +984,7 @@ namespace ClosedXML.Excel
                     else
                     {
                         var sharedStringItem = new SharedStringItem();
-                        foreach (var rt in c.RichText.Where(r => !String.IsNullOrEmpty(r.Text)))
-                        {
-                            sharedStringItem.Append(GetRun(rt));
-                        }
-
-                        if (c.RichText.HasPhonetics)
-                        {
-                            foreach (var p in c.RichText.Phonetics)
-                            {
-                                var phoneticRun = new PhoneticRun
-                                {
-                                    BaseTextStartIndex = (UInt32)p.Start,
-                                    EndingBaseIndex = (UInt32)p.End
-                                };
-
-                                var text = new Text { Text = p.Text };
-                                if (p.Text.PreserveSpaces())
-                                    text.Space = SpaceProcessingModeValues.Preserve;
-
-                                phoneticRun.Append(text);
-                                sharedStringItem.Append(phoneticRun);
-                            }
-
-                            var f = XLFontValue.FromKey(XLFont.GenerateKey(c.RichText.Phonetics));
-
-                            if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
-                            {
-                                fi = new FontInfo { Font = f };
-                                context.SharedFonts.Add(f, fi);
-                            }
-
-                            var phoneticProperties = new PhoneticProperties
-                            {
-                                FontId = fi.FontId
-                            };
-
-                            if (c.RichText.Phonetics.Alignment != XLPhoneticAlignment.Left)
-                                phoneticProperties.Alignment = c.RichText.Phonetics.Alignment.ToOpenXml();
-                            if (c.RichText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
-                                phoneticProperties.Type = c.RichText.Phonetics.Type.ToOpenXml();
-
-                            sharedStringItem.Append(phoneticProperties);
-                        }
+                        PopulatedRichTextElements(sharedStringItem, c, context);
 
                         sharedStringTablePart.SharedStringTable.Append(sharedStringItem);
                         sharedStringTablePart.SharedStringTable.Count += 1;
@@ -1061,6 +1019,52 @@ namespace ClosedXML.Excel
                         stringId++;
                     }
                 }
+            }
+        }
+
+        private static void PopulatedRichTextElements(RstType rstType, IXLCell cell, SaveContext context)
+        {
+            foreach (var rt in cell.RichText.Where(r => !String.IsNullOrEmpty(r.Text)))
+            {
+                rstType.Append(GetRun(rt));
+            }
+
+            if (cell.RichText.HasPhonetics)
+            {
+                foreach (var p in cell.RichText.Phonetics)
+                {
+                    var phoneticRun = new PhoneticRun
+                    {
+                        BaseTextStartIndex = (UInt32)p.Start,
+                        EndingBaseIndex = (UInt32)p.End
+                    };
+
+                    var text = new Text { Text = p.Text };
+                    if (p.Text.PreserveSpaces())
+                        text.Space = SpaceProcessingModeValues.Preserve;
+
+                    phoneticRun.Append(text);
+                    rstType.Append(phoneticRun);
+                }
+                var f = XLFontValue.FromKey(XLFont.GenerateKey(cell.RichText.Phonetics));
+
+                if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
+                {
+                    fi = new FontInfo { Font = f };
+                    context.SharedFonts.Add(f, fi);
+                }
+
+                var phoneticProperties = new PhoneticProperties
+                {
+                    FontId = fi.FontId
+                };
+
+                if (cell.RichText.Phonetics.Alignment != XLPhoneticAlignment.Left)
+                    phoneticProperties.Alignment = cell.RichText.Phonetics.Alignment.ToOpenXml();
+                if (cell.RichText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
+                    phoneticProperties.Type = cell.RichText.Phonetics.Type.ToOpenXml();
+
+                rstType.Append(phoneticProperties);
             }
         }
 
@@ -5112,6 +5116,11 @@ namespace ClosedXML.Excel
                             {
                                 cell.Remove();
                             }
+
+                            // reset some stuff that we'll populate later
+                            cell.DataType = null;
+                            cell.RemoveAllChildren<InlineString>();
+
                         }
 
                         if (!isEmpty)
@@ -5204,7 +5213,7 @@ namespace ClosedXML.Excel
                             }
 
                             if (options.EvaluateFormulasBeforeSaving || field != null || !xlCell.HasFormula)
-                                SetCellValue(xlCell, field, cell);
+                                SetCellValue(xlCell, field, cell, context);
                         }
                     }
                     xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
@@ -5249,8 +5258,8 @@ namespace ClosedXML.Excel
                 if (existingSheetDataRows.TryGetValue(r, out Row row))
                 {
                     sheetData.RemoveChild(row);
-                    existingSheetDataRows.Remove(r);
-                }
+                existingSheetDataRows.Remove(r);
+            }
             }
 
             #endregion SheetData
@@ -5982,7 +5991,7 @@ namespace ClosedXML.Excel
             #endregion LegacyDrawingHeaderFooter
         }
 
-        private static void SetCellValue(XLCell xlCell, XLTableField field, Cell openXmlCell)
+        private static void SetCellValue(XLCell xlCell, XLTableField field, Cell openXmlCell, SaveContext context)
         {
             if (field != null)
             {
@@ -6063,12 +6072,22 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        var text = xlCell.GetString();
-                        var t = new Text(text);
-                        if (text.PreserveSpaces())
-                            t.Space = SpaceProcessingModeValues.Preserve;
+                        var inlineString = new InlineString();
+                        if (xlCell.HasRichText)
+                        {
+                            PopulatedRichTextElements(inlineString, xlCell, context);
+                        }
+                        else
+                        {
+                            var text = xlCell.GetString();
+                            var t = new Text(text);
+                            if (text.PreserveSpaces())
+                                t.Space = SpaceProcessingModeValues.Preserve;
 
-                        openXmlCell.InlineString = new InlineString { Text = t };
+                            inlineString.Text = t;
+                        }
+
+                        openXmlCell.InlineString = inlineString;
                     }
                 }
             }
