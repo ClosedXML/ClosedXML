@@ -1401,7 +1401,9 @@ namespace ClosedXML.Excel
             LoadDrawingProtection<T>(drawing, clientData);
 
             var visible = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Visible");
-            drawing.Visible = visible != null && visible.Value.ToLower().StartsWith("t");
+            drawing.Visible = visible != null &&
+                              (string.IsNullOrEmpty(visible.Value) ||
+                               visible.Value.StartsWith("t", StringComparison.OrdinalIgnoreCase));
 
             LoadDrawingHAlignment<T>(drawing, clientData);
             LoadDrawingVAlignment<T>(drawing, clientData);
@@ -1469,7 +1471,7 @@ namespace ClosedXML.Excel
 
                 switch (attribute)
                 {
-                    case "visibility": xlDrawing.Visible = value.ToLower().Equals("visible"); break;
+                    case "visibility": xlDrawing.Visible = string.Equals("visible", value, StringComparison.OrdinalIgnoreCase); break;
                     case "width": xlDrawing.Style.Size.Width = GetPtValue(value) / 7.5; break;
                     case "height": xlDrawing.Style.Size.Height = GetPtValue(value); break;
                     case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
