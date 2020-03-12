@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML_Tests
 {
@@ -667,6 +667,97 @@ namespace ClosedXML_Tests
             expected = String.Empty;
             actual = richString.ToString();
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ConstructDefaultRichText()
+        {
+            var richText = new XLRichText(XLFont.DefaultCommentFont);
+            Assert.IsTrue(richText.IsDefault);
+
+            richText = new XLRichText("Test", XLFont.DefaultCommentFont);
+            Assert.IsTrue(richText.IsDefault);
+
+            richText = new XLRichText(richText, XLFont.DefaultCommentFont);
+            Assert.IsTrue(richText.IsDefault);
+        }
+
+        [Test]
+        public void RichTextEditMakesItNonDefault()
+        {
+            var richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.Bold = true;
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.FontColor = XLColor.CosmicLatte;
+            Assert.IsFalse(richText.IsDefault);
+            
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.FontFamilyNumbering = XLFontFamilyNumberingValues.Script;
+            Assert.IsFalse(richText.IsDefault);
+            
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.FontName = "Times";
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.FontSize = 20;
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.Italic = true;
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.Phonetics.Add("abc", 0, 1);
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.Shadow = true;
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.Strikethrough = true;
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.AddNewLine();
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.AddText("Custom");
+            Assert.IsFalse(richText.IsDefault);
+
+            richText = new XLRichText("Test", XLFont.DefaultCommentFont);
+            richText.Substring(0);
+            Assert.IsFalse(richText.IsDefault);
+        }
+
+        [Test]
+        public void ClearRichTextMakesItDefault()
+        {
+            var richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.Bold = true;
+            richText.ClearFont();
+            Assert.IsTrue(richText.IsDefault);
+
+            richText = new XLRichText(XLFont.DefaultCommentFont);
+            richText.Bold = true;
+            richText.ClearText();
+            Assert.IsTrue(richText.IsDefault);
+        }
+
+        [Test(Description = "See #1271")]
+        public void DefaultRichTextDoesNotAffectValue()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            var cell = ws.Cell("A1");
+            cell.Value = 123.45;
+            cell.Style.NumberFormat.Format = "$ 0.00";
+
+            Assert.AreEqual("$ 123.45", cell.RichText.ToString());
+            Assert.AreEqual(123.45, cell.GetValue<double>(), XLHelper.Epsilon);
         }
     }
 }

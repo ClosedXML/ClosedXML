@@ -1457,7 +1457,11 @@ namespace ClosedXML.Excel
 
         public bool HasRichText
         {
-            get { return _richText != null; }
+            get
+            {
+                return _richText is XLRichText richText &&
+                       !richText.IsDefault;
+            }
         }
 
         IXLComment IXLCell.Comment

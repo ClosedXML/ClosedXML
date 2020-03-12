@@ -11,10 +11,12 @@ namespace ClosedXML.Excel
 
         protected T Container;
         readonly IXLFontBase _defaultFont;
+
         public XLFormattedText(IXLFontBase defaultFont)
         {
             Length = 0;
             _defaultFont = defaultFont;
+            _isDefault = true;
         }
 
         public XLFormattedText(IXLFormattedText<T> defaultRichText, IXLFontBase defaultFont)
@@ -26,13 +28,24 @@ namespace ClosedXML.Excel
             {
                 _phonetics = new XLPhonetics(defaultRichText.Phonetics, defaultFont);
             }
+
+            _isDefault = _richTexts.Count <= 1;
         }
 
         public XLFormattedText(String text, IXLFontBase defaultFont)
             :this(defaultFont)
         {
             AddText(text);
+            _isDefault = true;
         }
+
+        private bool _isDefault;
+
+        /// <summary>
+        /// Flag showing that the formatted text was constructed from a simple string and has not change since then.
+        /// When IsDefault is true a rich text can be converted to an ordinary text without information loss.
+        /// </summary>
+        internal bool IsDefault => _isDefault && !HasPhonetics;
 
         public Int32 Count { get { return _richTexts.Count; } }
         public int Length { get; private set; }
@@ -51,6 +64,7 @@ namespace ClosedXML.Excel
         {
             _richTexts.Add(richText);
             Length += richText.Text.Length;
+            _isDefault = false;
             return richText;
         }
 
@@ -63,6 +77,7 @@ namespace ClosedXML.Excel
         {
             _richTexts.Clear();
             Length = 0;
+            _isDefault = true;
             return this;
         }
         public IXLFormattedText<T> ClearFont()
@@ -70,6 +85,7 @@ namespace ClosedXML.Excel
             String text = Text;
             ClearText();
             AddText(text);
+            _isDefault = true;
             return this;
         }
 
@@ -126,6 +142,7 @@ namespace ClosedXML.Excel
                 lastPosition += rt.Text.Length;
             }
             _richTexts = newRichTexts;
+            _isDefault = false;
             return retVal;
         }
 
@@ -139,16 +156,95 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Boolean Bold { set { _richTexts.ForEach(rt => rt.Bold = value); } }
-        public Boolean Italic { set { _richTexts.ForEach(rt => rt.Italic = value); } }
-        public XLFontUnderlineValues Underline { set { _richTexts.ForEach(rt => rt.Underline = value); } }
-        public Boolean Strikethrough { set { _richTexts.ForEach(rt => rt.Strikethrough = value); } }
-        public XLFontVerticalTextAlignmentValues VerticalAlignment { set { _richTexts.ForEach(rt => rt.VerticalAlignment = value); } }
-        public Boolean Shadow { set { _richTexts.ForEach(rt => rt.Shadow = value); } }
-        public Double FontSize { set { _richTexts.ForEach(rt => rt.FontSize = value); } }
-        public XLColor FontColor { set { _richTexts.ForEach(rt => rt.FontColor = value); } }
-        public String FontName { set { _richTexts.ForEach(rt => rt.FontName = value); } }
-        public XLFontFamilyNumberingValues FontFamilyNumbering { set { _richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
+        public Boolean Bold
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.Bold = value);
+                _isDefault = false;
+            }
+        }
+
+        public Boolean Italic
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.Italic = value);
+                _isDefault = false;
+            }
+        }
+
+        public XLFontUnderlineValues Underline
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.Underline = value);
+                _isDefault = false;
+            }
+        }
+
+        public Boolean Strikethrough
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.Strikethrough = value);
+                _isDefault = false;
+            }
+        }
+
+        public XLFontVerticalTextAlignmentValues VerticalAlignment
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.VerticalAlignment = value);
+                _isDefault = false;
+            }
+        }
+
+        public Boolean Shadow
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.Shadow = value);
+                _isDefault = false;
+            }
+        }
+
+        public Double FontSize
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.FontSize = value);
+                _isDefault = false;
+            }
+        }
+
+        public XLColor FontColor
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.FontColor = value);
+                _isDefault = false;
+            }
+        }
+
+        public String FontName
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.FontName = value);
+                _isDefault = false;
+            }
+        }
+
+        public XLFontFamilyNumberingValues FontFamilyNumbering
+        {
+            set
+            {
+                _richTexts.ForEach(rt => rt.FontFamilyNumbering = value);
+                _isDefault = false;
+            }
+        }
 
         public IXLFormattedText<T> SetBold() { Bold = true; return this; }	public IXLFormattedText<T> SetBold(Boolean value) { Bold = value; return this; }
         public IXLFormattedText<T> SetItalic() { Italic = true; return this; }	public IXLFormattedText<T> SetItalic(Boolean value) { Italic = value; return this; }
