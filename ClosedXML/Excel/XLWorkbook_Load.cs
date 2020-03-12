@@ -1260,8 +1260,8 @@ namespace ClosedXML.Excel
             if (strokeColor != null) drawing.Style.ColorsAndLines.LineColor = ExtractColor(strokeColor.Value);
 
             var strokeWeight = shape.Attribute("strokeweight");
-            if (strokeWeight != null)
-                drawing.Style.ColorsAndLines.LineWeight = GetPtValue(strokeWeight.Value);
+            if (strokeWeight != null && TryGetPtValue(strokeWeight.Value, out var lineWeight))
+                drawing.Style.ColorsAndLines.LineWeight = lineWeight;
 
             var fillColor = shape.Attribute("fillcolor");
             if (fillColor != null && !fillColor.Value.ToLower().Contains("infobackground")) drawing.Style.ColorsAndLines.FillColor = ExtractColor(fillColor.Value);
@@ -1472,9 +1472,24 @@ namespace ClosedXML.Excel
                 switch (attribute)
                 {
                     case "visibility": xlDrawing.Visible = string.Equals("visible", value, StringComparison.OrdinalIgnoreCase); break;
-                    case "width": xlDrawing.Style.Size.Width = GetPtValue(value) / 7.5; break;
-                    case "height": xlDrawing.Style.Size.Height = GetPtValue(value); break;
-                    case "z-index": xlDrawing.ZOrder = Int32.Parse(value); break;
+                    case "width":
+                        if (TryGetPtValue(value, out var ptWidth))
+                        {
+                            xlDrawing.Style.Size.Width = ptWidth / 7.5;
+                        }
+                        break;
+                    case "height":
+                        if (TryGetPtValue(value, out var ptHeight))
+                        {
+                            xlDrawing.Style.Size.Height = ptHeight;
+                        }
+                        break;
+                    case "z-index":
+                        if (Int32.TryParse(value, out var zOrder))
+                        {
+                            xlDrawing.ZOrder = zOrder;
+                        }
+                        break;
                 }
             }
         }
@@ -1486,14 +1501,23 @@ namespace ClosedXML.Excel
             {"mm", 72.0/25.4}
         };
 
-        private double GetPtValue(string value)
+        private bool TryGetPtValue(string value, out double result)
         {
             var knownUnit = knownUnits.FirstOrDefault(ku => value.Contains(ku.Key));
 
             if (knownUnit.Key == null)
-                return Double.Parse(value);
+                return Double.TryParse(value, out result);
 
-            return Double.Parse(value.Replace(knownUnit.Key, String.Empty), CultureInfo.InvariantCulture) * knownUnit.Value;
+            value = value.Replace(knownUnit.Key, String.Empty);
+
+            if (Double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            {
+                result *= knownUnit.Value;
+                return true;
+            }
+
+            result = 0d;
+            return false;
         }
 
         private void LoadDefinedNames(Workbook workbook)
