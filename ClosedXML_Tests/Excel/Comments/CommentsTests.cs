@@ -177,5 +177,18 @@ namespace ClosedXML_Tests.Excel.Comments
                 Assert.DoesNotThrow(() => new XLWorkbook(ms));
             }
         }
+
+        [Test]
+        public void CanLoadCommentVisibility()
+        {
+            using (var inputStream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Drawings\Comments\inputfile.xlsx")))
+            using (var workbook = new XLWorkbook(inputStream))
+            {
+                var ws = workbook.Worksheets.First();
+
+                Assert.True(ws.Cell("A1").Comment.Visible);
+                Assert.False(ws.Cell("A4").Comment.Visible);
+            }
+        }
     }
 }
