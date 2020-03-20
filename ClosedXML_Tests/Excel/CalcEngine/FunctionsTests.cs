@@ -693,5 +693,17 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             Assert.AreEqual(expectedResult, res, XLHelper.Epsilon);
         }
+
+        [TestCase("RIGHT(\"2020\", 2) + 1", 21)]
+        [TestCase("LEFT(\"20.2020\", 6) + 1", 21.202)]
+        [TestCase("2 + (\"3\" & \"4\")", 36)]
+        [TestCase("2 + \"3\" & \"4\"", "54")]
+        [TestCase("\"7\" & \"4\"", "74")]
+        public void TestStringSubExpression(string formula, object expectedResult)
+        {
+            var actual = XLWorkbook.EvaluateExpr(formula);
+
+            Assert.AreEqual(expectedResult, actual);
+        }
     }
 }
