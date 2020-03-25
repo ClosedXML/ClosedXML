@@ -42,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("EXP", 1, Exp);
             ce.RegisterFunction("FACT", 1, Fact);
             ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
-            ce.RegisterFunction("FLOOR", 1, 2, Floor);
+            ce.RegisterFunction("FLOOR", 2, Floor);
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, Int);
@@ -252,15 +252,10 @@ namespace ClosedXML.Excel.CalcEngine
             if (p.Count > 1)
                 significance = p[1];
 
-            if (significance < 0)
-            {
-                number = -number;
-                significance = -significance;
-
-                return -Math.Floor(number / significance) * significance;
-            }
-            else if (significance == 1)
-                return Math.Floor(number);
+            if (significance < 0 && number > 0)
+                throw new NumberException();
+            else if (significance < 0)
+                return -Math.Floor(-number / -significance) * -significance;
             else
                 return Math.Floor(number / significance) * significance;
         }
@@ -276,7 +271,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (number >= 0)
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
-            else if (mode >= 0)
+            else if (mode == 0)
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
             else
                 return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);

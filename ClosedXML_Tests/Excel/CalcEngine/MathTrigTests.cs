@@ -935,40 +935,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE(""x"")")));
         }
 
-        [Test]
-        public void Floor()
+        [TestCase(24.3, 5, 20)]
+        [TestCase(6.7, 1, 6)]
+        [TestCase(-8.1, 2, -10)]
+        [TestCase(5.5, 2.1, 4.2)]
+        [TestCase(-5.5, 2.1, -6.3)]
+        [TestCase(-5.5, -2.1, -4.2)]
+        public void Floor(double input, double significance, double expectedResult)
         {
-            Object actual;
+            var actual = (double)XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})");
+            Assert.AreEqual(expectedResult, actual, tolerance);
+        }
 
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(1.2)");
-            Assert.AreEqual(1, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(1.7)");
-            Assert.AreEqual(1, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(-1.7)");
-            Assert.AreEqual(-2, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(1.2, 1)");
-            Assert.AreEqual(1, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(1.7, 1)");
-            Assert.AreEqual(1, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(-1.7, 1)");
-            Assert.AreEqual(-2, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(0.4, 2)");
-            Assert.AreEqual(0, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(2.7, 2)");
-            Assert.AreEqual(2, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(7.8, 2)");
-            Assert.AreEqual(6, actual);
-
-            actual = XLWorkbook.EvaluateExpr(@"FLOOR(-5.5, -2)");
-            Assert.AreEqual(-4, actual);
+        [TestCase(6.7, -1)]
+        public void Floor_ThrowsNumberExceptionOnInvalidInput(object input, object significance)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})"));
         }
 
         [Test]
@@ -980,10 +962,15 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(5.5, -2.1, 0, 4.2)]
         [TestCase(5.5, 2.1, -1, 4.2)]
         [TestCase(5.5, -2.1, -1, 4.2)]
+        [TestCase(5.5, 2.1, 10, 4.2)]
+        [TestCase(5.5, -2.1, 10, 4.2)]
         [TestCase(-5.5, 2.1, 0, -6.3)]
         [TestCase(-5.5, -2.1, 0, -6.3)]
         [TestCase(-5.5, 2.1, -1, -4.2)]
         [TestCase(-5.5, -2.1, -1, -4.2)]
+        [TestCase(-5.5, 2.1, 10, -4.2)]
+        [TestCase(-5.5, -2.1, 10, -4.2)]
+
         public void FloorMath(double input, double? step, int? mode, double expectedResult)
         {
             string parameters = input.ToString(CultureInfo.InvariantCulture);
