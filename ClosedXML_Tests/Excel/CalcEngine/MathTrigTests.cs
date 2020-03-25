@@ -450,6 +450,54 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                     minLength)));
         }
 
+        [TestCase(24.3, 5, 25)]
+        [TestCase(6.7, 1, 7)]
+        [TestCase(-8.1, 2, -8)]
+        [TestCase(5.5, 2.1, 6.3)]
+        [TestCase(-5.5, 2.1, -4.2)]
+        [TestCase(-5.5, -2.1, -6.3)]
+        public void Ceiling(double input, double significance, double expectedResult)
+        {
+            var actual = (double)XLWorkbook.EvaluateExpr($"CEILING({input}, {significance})");
+            Assert.AreEqual(expectedResult, actual, tolerance);
+        }
+
+        [TestCase(6.7, -1)]
+        public void Ceiling_ThrowsNumberExceptionOnInvalidInput(object input, object significance)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"CEILING({input}, {significance})"));
+        }
+
+        [TestCase(24.3, 5, null, 25)]
+        [TestCase(6.7, null, null, 7)]
+        [TestCase(-8.1, 2, null, -8)]
+        [TestCase(5.5, 2.1, 0, 6.3)]
+        [TestCase(5.5, -2.1, 0, 6.3)]
+        [TestCase(5.5, 2.1, -1, 6.3)]
+        [TestCase(5.5, -2.1, -1, 6.3)]
+        [TestCase(5.5, 2.1, 10, 6.3)]
+        [TestCase(5.5, -2.1, 10, 6.3)]
+        [TestCase(-5.5, 2.1, 0, -4.2)]
+        [TestCase(-5.5, -2.1, 0, -4.2)]
+        [TestCase(-5.5, 2.1, -1, -6.3)]
+        [TestCase(-5.5, -2.1, -1, -6.3)]
+        [TestCase(-5.5, 2.1, 10, -6.3)]
+        [TestCase(-5.5, -2.1, 10, -6.3)]
+
+        public void CeilingMath(double input, double? step, int? mode, double expectedResult)
+        {
+            string parameters = input.ToString(CultureInfo.InvariantCulture);
+            if (step != null)
+            {
+                parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
+                if (mode != null)
+                    parameters = parameters + ", " + mode?.ToString(CultureInfo.InvariantCulture);
+            }
+
+            var actual = (double)XLWorkbook.EvaluateExpr($"CEILING.MATH({parameters})");
+            Assert.AreEqual(expectedResult, actual, tolerance);
+        }
+
         [Theory]
         public void Combin_Returns1ForKis0OrKEqualsN([Range(0, 10)] int n)
         {
