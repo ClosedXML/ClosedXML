@@ -122,6 +122,11 @@ namespace ClosedXML.Excel
 
             using (package)
             {
+                if (package.DocumentType != spreadsheetDocumentType)
+                {
+                    package.ChangeDocumentType(spreadsheetDocumentType);
+                }
+
                 CreateParts(package, options);
                 if (options.ValidatePackage) Validate(package);
             }

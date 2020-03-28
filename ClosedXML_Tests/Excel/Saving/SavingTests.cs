@@ -367,6 +367,29 @@ namespace ClosedXML_Tests.Excel.Saving
         }
 
         [Test]
+        public void CanSaveTemplateAsWorkbook()
+        {
+            // See #1375
+            using (var template = new TemporaryFile(Path.ChangeExtension(Path.GetTempFileName(), "xltx")))
+            using (var workbook = new TemporaryFile())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    wb.AddWorksheet();
+                    wb.SaveAs(template.Path);
+                }
+                using (var wb = new XLWorkbook(template.Path))
+                {
+                    wb.SaveAs(workbook.Path);
+                }
+                using (var package = SpreadsheetDocument.Open(workbook.Path, false))
+                {
+                    Assert.AreEqual(SpreadsheetDocumentType.Workbook, package.DocumentType);
+                }
+            }
+        }
+        
+        [Test]
         public void SaveAsWithNoExtensionFails()
         {
             using (var tf = new TemporaryFile("FileWithNoExtension"))
