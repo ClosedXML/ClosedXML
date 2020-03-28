@@ -131,9 +131,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Ceiling(List<Expression> p)
         {
             double number = p[0];
-            double significance = 1;
-            if (p.Count > 1)
-                significance = p[1];
+            double significance = p[1];
 
             if (significance < 0 && number > 0)
                 throw new NumberException();
@@ -248,9 +246,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Floor(List<Expression> p)
         {
             double number = p[0];
-            double significance = 1;
-            if (p.Count > 1)
-                significance = p[1];
+            double significance = p[1];
 
             if (significance < 0 && number > 0)
                 throw new NumberException();
