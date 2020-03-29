@@ -5,14 +5,13 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class CellRangeReference : IValueObject, IEnumerable
     {
-        private readonly XLCalcEngine _ce;
-
         public CellRangeReference(IXLRange range, XLCalcEngine ce)
         {
             Range = range;
-            _ce = ce;
+            CalcEngine = ce;
         }
 
+        internal CalcEngine CalcEngine { get; }
         public IXLRange Range { get; }
 
         // ** IValueObject
