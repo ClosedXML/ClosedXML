@@ -41,8 +41,7 @@ namespace ClosedXML.Excel.CalcEngine
         public void Add(Expression e)
         {
             // handle enumerables
-            var ienum = e as IEnumerable;
-            if (ienum != null)
+            if (e is IEnumerable ienum)
             {
                 foreach (var value in ienum)
                 {
@@ -54,8 +53,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             // handle expressions
             var val = e.Evaluate();
-            var valEnumerable = val as IEnumerable;
-            if (valEnumerable == null || val is string)
+            if (val is string || !(val is IEnumerable valEnumerable))
                 _list.Add(val);
             else
                 foreach (var v in valEnumerable)
@@ -87,8 +85,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             foreach (var value in _list)
             {
-                var vEnumerable = value as IEnumerable;
-                if (vEnumerable == null || vEnumerable is string)
+                if (value is string || !(value is IEnumerable vEnumerable))
                 {
                     if (TryParseToDouble(value, out double tmp))
                         yield return tmp;
@@ -111,9 +108,9 @@ namespace ClosedXML.Excel.CalcEngine
                 d = Convert.ToDouble(value);
                 return true;
             }
-            else if (value is DateTime)
+            else if (value is DateTime dt)
             {
-                d = Convert.ToDouble(((DateTime)value).ToOADate());
+                d = dt.ToOADate();
                 return true;
             }
             else
