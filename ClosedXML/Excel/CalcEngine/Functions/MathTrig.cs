@@ -26,7 +26,8 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("ATAN2", 2, Atan2);
             ce.RegisterFunction("ATANH", 1, Atanh);
             ce.RegisterFunction("BASE", 2, 3, Base);
-            ce.RegisterFunction("CEILING", 1, Ceiling);
+            ce.RegisterFunction("CEILING", 2, Ceiling);
+            ce.RegisterFunction("CEILING.MATH", 1, 3, CeilingMath);
             ce.RegisterFunction("COMBIN", 2, Combin);
             ce.RegisterFunction("COMBINA", 2, CombinA);
             ce.RegisterFunction("COS", 1, Cos);
@@ -41,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("EXP", 1, Exp);
             ce.RegisterFunction("FACT", 1, Fact);
             ce.RegisterFunction("FACTDOUBLE", 1, FactDouble);
-            ce.RegisterFunction("FLOOR", 1, 2, Floor);
+            ce.RegisterFunction("FLOOR", 2, Floor);
             ce.RegisterFunction("FLOOR.MATH", 1, 3, FloorMath);
             ce.RegisterFunction("GCD", 1, 255, Gcd);
             ce.RegisterFunction("INT", 1, Int);
@@ -129,7 +130,36 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Ceiling(List<Expression> p)
         {
-            return Math.Ceiling(p[0]);
+            double number = p[0];
+            double significance = p[1];
+
+            if (significance == 0)
+                return 0d;
+            else if (significance < 0 && number > 0)
+                throw new NumberException();
+            else if (significance < 0)
+                return -Math.Ceiling(-number / -significance) * -significance;
+            else
+                return Math.Ceiling(number / significance) * significance;
+        }
+
+        private static object CeilingMath(List<Expression> p)
+        {
+            double number = p[0];
+            double significance = 1;
+            if (p.Count > 1) significance = p[1];
+
+            double mode = 0;
+            if (p.Count > 2) mode = p[2];
+
+            if (significance == 0)
+                return 0d;
+            else if (number >= 0)
+                return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
+            else if (mode == 0)
+                return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
+            else
+                return -Math.Ceiling(-number / Math.Abs(significance)) * Math.Abs(significance);
         }
 
         private static object Cos(List<Expression> p)
@@ -220,19 +250,14 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Floor(List<Expression> p)
         {
             double number = p[0];
-            double significance = 1;
-            if (p.Count > 1)
-                significance = p[1];
+            double significance = p[1];
 
-            if (significance < 0)
-            {
-                number = -number;
-                significance = -significance;
-
-                return -Math.Floor(number / significance) * significance;
-            }
-            else if (significance == 1)
-                return Math.Floor(number);
+            if (significance == 0)
+                throw new DivisionByZeroException();
+            else if (significance < 0 && number > 0)
+                throw new NumberException();
+            else if (significance < 0)
+                return -Math.Floor(-number / -significance) * -significance;
             else
                 return Math.Floor(number / significance) * significance;
         }
@@ -246,9 +271,11 @@ namespace ClosedXML.Excel.CalcEngine
             double mode = 0;
             if (p.Count > 2) mode = p[2];
 
-            if (number >= 0)
+            if (significance == 0)
+                return 0d;
+            else if (number >= 0)
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
-            else if (mode >= 0)
+            else if (mode == 0)
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
             else
                 return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);
