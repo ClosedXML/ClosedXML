@@ -133,7 +133,9 @@ namespace ClosedXML.Excel.CalcEngine
             double number = p[0];
             double significance = p[1];
 
-            if (significance < 0 && number > 0)
+            if (significance == 0)
+                return 0d;
+            else if (significance < 0 && number > 0)
                 throw new NumberException();
             else if (significance < 0)
                 return -Math.Ceiling(-number / -significance) * -significance;
@@ -150,7 +152,9 @@ namespace ClosedXML.Excel.CalcEngine
             double mode = 0;
             if (p.Count > 2) mode = p[2];
 
-            if (number >= 0)
+            if (significance == 0)
+                return 0d;
+            else if (number >= 0)
                 return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
             else if (mode == 0)
                 return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
@@ -248,7 +252,9 @@ namespace ClosedXML.Excel.CalcEngine
             double number = p[0];
             double significance = p[1];
 
-            if (significance < 0 && number > 0)
+            if (significance == 0)
+                throw new DivisionByZeroException();
+            else if (significance < 0 && number > 0)
                 throw new NumberException();
             else if (significance < 0)
                 return -Math.Floor(-number / -significance) * -significance;
@@ -265,7 +271,9 @@ namespace ClosedXML.Excel.CalcEngine
             double mode = 0;
             if (p.Count > 2) mode = p[2];
 
-            if (number >= 0)
+            if (significance == 0)
+                return 0d;
+            else if (number >= 0)
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
             else if (mode == 0)
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);

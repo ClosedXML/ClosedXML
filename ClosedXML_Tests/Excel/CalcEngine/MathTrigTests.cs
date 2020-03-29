@@ -454,8 +454,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(6.7, 1, 7)]
         [TestCase(-8.1, 2, -8)]
         [TestCase(5.5, 2.1, 6.3)]
+        [TestCase(5.5, 0, 0)]
         [TestCase(-5.5, 2.1, -4.2)]
         [TestCase(-5.5, -2.1, -6.3)]
+        [TestCase(-5.5, 0, 0)]
         public void Ceiling(double input, double significance, double expectedResult)
         {
             var actual = (double)XLWorkbook.EvaluateExpr($"CEILING({input}, {significance})");
@@ -473,16 +475,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(-8.1, 2, null, -8)]
         [TestCase(5.5, 2.1, 0, 6.3)]
         [TestCase(5.5, -2.1, 0, 6.3)]
+        [TestCase(5.5, 0, 0, 0)]
         [TestCase(5.5, 2.1, -1, 6.3)]
         [TestCase(5.5, -2.1, -1, 6.3)]
+        [TestCase(5.5, 0, -1, 0)]
         [TestCase(5.5, 2.1, 10, 6.3)]
         [TestCase(5.5, -2.1, 10, 6.3)]
+        [TestCase(5.5, 0, 10, 0)]
         [TestCase(-5.5, 2.1, 0, -4.2)]
         [TestCase(-5.5, -2.1, 0, -4.2)]
+        [TestCase(-5.5, 0, 0, 0)]
         [TestCase(-5.5, 2.1, -1, -6.3)]
         [TestCase(-5.5, -2.1, -1, -6.3)]
+        [TestCase(-5.5, 0, -1, 0)]
         [TestCase(-5.5, 2.1, 10, -6.3)]
         [TestCase(-5.5, -2.1, 10, -6.3)]
+        [TestCase(-5.5, 0, 10, 0)]
 
         public void CeilingMath(double input, double? step, int? mode, double expectedResult)
         {
@@ -953,6 +961,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})"));
         }
 
+        [TestCase(6.7, 0)]
+        [TestCase(-6.7, 0)]
+        public void Floor_ThrowsDivisionByZeroOnZeroSignificance(object input, object significance)
+        {
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})"));
+        }
+
         [Test]
         // Functions have to support a period first before we can implement this
         [TestCase(24.3, 5, null, 20)]
@@ -960,17 +975,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(-8.1, 2, null, -10)]
         [TestCase(5.5, 2.1, 0, 4.2)]
         [TestCase(5.5, -2.1, 0, 4.2)]
+        [TestCase(5.5, 0, 0, 0)]
         [TestCase(5.5, 2.1, -1, 4.2)]
         [TestCase(5.5, -2.1, -1, 4.2)]
+        [TestCase(5.5, 0, -2, 0)]
         [TestCase(5.5, 2.1, 10, 4.2)]
         [TestCase(5.5, -2.1, 10, 4.2)]
+        [TestCase(5.5, 0, 10, 0)]
         [TestCase(-5.5, 2.1, 0, -6.3)]
         [TestCase(-5.5, -2.1, 0, -6.3)]
+        [TestCase(-5.5, 0, 0, 0)]
         [TestCase(-5.5, 2.1, -1, -4.2)]
         [TestCase(-5.5, -2.1, -1, -4.2)]
+        [TestCase(-5.5, 0, -1, 0)]
         [TestCase(-5.5, 2.1, 10, -4.2)]
         [TestCase(-5.5, -2.1, 10, -4.2)]
-
+        [TestCase(-5.5, 0, 0, 0)]
         public void FloorMath(double input, double? step, int? mode, double expectedResult)
         {
             string parameters = input.ToString(CultureInfo.InvariantCulture);
