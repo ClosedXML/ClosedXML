@@ -773,14 +773,25 @@ namespace ClosedXML.Excel
 
             if (activeTab == 0)
             {
-                activeTab = firstSheetVisible;
+                UInt32? firstActiveTab = null;
+                UInt32? firstSelectedTab = null;
                 foreach (var ws in worksheets)
                 {
-                    if (!ws.TabActive) continue;
+                    if (ws.TabActive)
+                    {
+                        firstActiveTab = (UInt32)(ws.Position - 1);
+                        break;
+                    }
 
-                    activeTab = (UInt32)(ws.Position - 1);
-                    break;
+                    if (ws.TabSelected)
+                    {
+                        firstSelectedTab = (UInt32)(ws.Position - 1);
+                    }
                 }
+
+                activeTab = firstActiveTab
+                         ?? firstSelectedTab
+                         ?? firstSheetVisible;
             }
 
             if (workbookView == null)
