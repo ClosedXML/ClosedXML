@@ -1142,5 +1142,31 @@ namespace ClosedXML_Tests
                 Assert.IsTrue(ws.Cell("B2").Style.Font.Italic);
             }
         }
+
+        [Test]
+        public void SelectedTabIsActive_WhenInsertBefore()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var ws1 = wb.AddWorksheet();
+                    ws1.TabSelected = true;
+                    var ws2 = wb.Worksheets.Add(1);
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws1 = wb.Worksheets.First();
+                    var ws2 = wb.Worksheets.Last();
+
+                    Assert.IsFalse(ws1.TabActive);
+                    Assert.IsFalse(ws1.TabSelected);
+                    Assert.IsTrue(ws2.TabActive);
+                    Assert.IsTrue(ws2.TabSelected);
+                }
+            }
+        }
     }
 }
