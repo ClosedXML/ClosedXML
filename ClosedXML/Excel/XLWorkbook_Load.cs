@@ -465,10 +465,13 @@ namespace ClosedXML.Excel
             var workbook = dSpreadsheet.WorkbookPart.Workbook;
 
             var bookViews = workbook.BookViews;
-            if (bookViews != null && bookViews.Any())
+            if (bookViews != null && bookViews.FirstOrDefault() is WorkbookView workbookView)
             {
-                var workbookView = bookViews.First() as WorkbookView;
-                if (workbookView != null && workbookView.ActiveTab != null)
+                if (workbookView.ActiveTab == null)
+                {
+                    Worksheets.First().SetTabActive().Unhide();
+                }
+                else
                 {
                     UnsupportedSheet unsupportedSheet =
                         UnsupportedSheets.FirstOrDefault(us => us.Position == (Int32)(workbookView.ActiveTab.Value + 1));

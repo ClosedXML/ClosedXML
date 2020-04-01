@@ -1168,5 +1168,17 @@ namespace ClosedXML_Tests
                 }
             }
         }
+
+        [TestCase("noactive_noselected.xlsx")]
+        [TestCase("noactive_twoselected.xlsx")]
+        public void FirstSheetIsActive_WhenNotSpecified(string fileName)
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NoActiveSheet\"+fileName)))
+            using (var wb = new XLWorkbook(stream))
+            {
+                Assert.IsTrue(wb.Worksheets.First().TabActive);
+                Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheets.First().Visibility);
+            }
+        }
     }
 }
