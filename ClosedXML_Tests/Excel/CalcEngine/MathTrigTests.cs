@@ -460,14 +460,14 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(-5.5, 0, 0)]
         public void Ceiling(double input, double significance, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"CEILING({input}, {significance})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"CEILING({input.ToInvariantString()}, {significance.ToInvariantString()})");
             Assert.AreEqual(expectedResult, actual, tolerance);
         }
 
         [TestCase(6.7, -1)]
-        public void Ceiling_ThrowsNumberExceptionOnInvalidInput(object input, object significance)
+        public void Ceiling_ThrowsNumberExceptionOnInvalidInput(double input, double significance)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"CEILING({input}, {significance})"));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"CEILING({input.ToInvariantString()}, {significance.ToInvariantString()})"));
         }
 
         [TestCase(24.3, 5, null, 25)]
@@ -951,21 +951,21 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(-5.5, -2.1, -4.2)]
         public void Floor(double input, double significance, double expectedResult)
         {
-            var actual = (double)XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})");
+            var actual = (double)XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})");
             Assert.AreEqual(expectedResult, actual, tolerance);
         }
 
         [TestCase(6.7, -1)]
-        public void Floor_ThrowsNumberExceptionOnInvalidInput(object input, object significance)
+        public void Floor_ThrowsNumberExceptionOnInvalidInput(double input, double significance)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})"));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
         }
 
         [TestCase(6.7, 0)]
         [TestCase(-6.7, 0)]
-        public void Floor_ThrowsDivisionByZeroOnZeroSignificance(object input, object significance)
+        public void Floor_ThrowsDivisionByZeroOnZeroSignificance(double input, double significance)
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input}, {significance})"));
+            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
         }
 
         [Test]
