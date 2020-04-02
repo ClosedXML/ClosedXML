@@ -1,5 +1,6 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,9 +14,9 @@ namespace ClosedXML.Excel
                 action(item);
         }
 
-        public static Type GetItemType<T>(this IEnumerable<T> source)
+        public static Type GetItemType(this IEnumerable source)
         {
-            return GetGenericArgument(source?.GetType()) ?? typeof(T);
+            return GetGenericArgument(source?.GetType());
 
             Type GetGenericArgument(Type collectionType)
             {
