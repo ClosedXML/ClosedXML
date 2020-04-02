@@ -78,6 +78,14 @@ namespace ClosedXML_Tests.Excel.Misc
             }
         }
 
+        [Theory]
+        public void CanResolveAllThemeColors(XLThemeColor themeColor)
+        {
+            var theme = new XLWorkbook().Theme;
+            var color = theme.ResolveThemeColor(themeColor);
+            Assert.IsNotNull(color);
+        }
+
         [Test]
         public void SetStyleViaRowReference()
         {
