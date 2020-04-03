@@ -205,19 +205,21 @@ namespace ClosedXML.Excel
                 return this;
             }
             else
-                return SetValue(value, true);
+                return SetValue(value, setTableHeader: true, checkMergedRanges: true);
         }
 
-        internal IXLCell SetValue<T>(T value, bool setTableHeader)
+        internal IXLCell SetValue<T>(T value, bool setTableHeader, bool checkMergedRanges)
         {
-            if (IsInferiorMergedCell())
+            if (checkMergedRanges && IsInferiorMergedCell())
                 return this;
 
             if (value == null)
                 return this.Clear(XLClearOptions.Contents);
 
-            FormulaA1 = String.Empty;
             _richText = null;
+            _formulaA1 = String.Empty;
+            _formulaR1C1 = null;
+            cachedValue = null;
 
             if (setTableHeader)
             {
@@ -226,14 +228,12 @@ namespace ClosedXML.Excel
             }
 
             var style = GetStyleForRead();
-            Boolean parsed;
-            string parsedValue;
 
             // For SetValue<T> we set the cell value directly to the parameter
             // as opposed to the other SetValue(object value) where we parse the string and try to decude the value
             var tuple = SetKnownTypedValue(value, style, acceptString: true);
-            parsedValue = tuple.Item1;
-            parsed = tuple.Item2;
+            var parsedValue = tuple.Item1;
+            var parsed = tuple.Item2;
 
             // If parsing was unsuccessful, we throw an ArgumentException
             // because we are using SetValue<T> (typed).
@@ -242,8 +242,6 @@ namespace ClosedXML.Excel
                 throw new ArgumentException($"Unable to set cell value to {value.ObjectToInvariantString()}");
 
             SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
-
-            CachedValue = null;
 
             return this;
         }

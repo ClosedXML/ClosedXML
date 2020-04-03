@@ -1831,11 +1831,11 @@ namespace ClosedXML.Excel
         internal void SetValue<T>(T value, int ro, int co) where T : class
         {
             if (value == null)
-                this.Cell(ro, co).SetValue(String.Empty);
+                this.Cell(ro, co).SetValue(String.Empty, setTableHeader: true, checkMergedRanges: false);
             else if (value is IConvertible)
-                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
+                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)), setTableHeader: true, checkMergedRanges: false);
             else
-                this.Cell(ro, co).SetValue(value);
+                this.Cell(ro, co).SetValue(value, setTableHeader: true, checkMergedRanges: false);
         }
 
         /// <summary>

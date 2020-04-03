@@ -86,7 +86,7 @@ namespace ClosedXML.Excel
                 if (name == value) return;
 
                 if (table.ShowHeaderRow)
-                    (table.HeadersRow(false).Cell(Index + 1) as XLCell).SetValue(value, false);
+                    (table.HeadersRow(false).Cell(Index + 1) as XLCell).SetValue(value, setTableHeader: false, checkMergedRanges: true);
 
                 table.RenameField(name, value);
                 name = value;
@@ -142,7 +142,7 @@ namespace ClosedXML.Excel
             set
             {
                 totalsRowFunction = XLTotalsRowFunction.None;
-                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, false);
+                (table.TotalsRow().Cell(Index + 1) as XLCell).SetValue(value, setTableHeader: false, checkMergedRanges:true);
                 totalsRowLabel = value;
             }
         }
