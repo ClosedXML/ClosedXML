@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
 
             if (count > 1)
             {
-                dictionary[key]--;
+                dictionary[key] = count - 1;
                 return false;
             }
             else
