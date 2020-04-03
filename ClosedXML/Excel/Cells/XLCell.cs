@@ -1,19 +1,17 @@
-﻿using System;
+﻿using ClosedXML.Excel.InsertData;
+using ClosedXML.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
-    using Attributes;
-    using ClosedXML.Extensions;
-
     [DebuggerDisplay("{Address}")]
     internal class XLCell : XLStylizedBase, IXLCell, IXLStylized
     {
@@ -729,10 +727,17 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
+            var reader = InsertDataReaderFactory.Instance.CreateReader(data);
+            return InsertTableInternal(reader, tableName, createTable, addHeadings, transpose);
+        }
+
+        private IXLTable InsertTableInternal(IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings,
+            Boolean transpose)
+        {
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
-            var range = InsertDataInternal(data, addHeadings, transpose);
+            var range = InsertDataInternal(reader, addHeadings, transpose);
 
             if (createTable)
                 // Create a table and save it in the file
@@ -763,57 +768,35 @@ namespace ClosedXML.Excel
                 return null;
 
             if (XLHelper.IsValidA1Address(tableName) || XLHelper.IsValidRCAddress(tableName))
-                throw new InvalidOperationException(string.Format("Table name cannot be a valid Cell Address '{0}'.", tableName));
+                throw new InvalidOperationException($"Table name cannot be a valid Cell Address '{tableName}'.");
 
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
-                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
+                throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
 
-            if (data.Rows.Cast<DataRow>().Any())
-                return InsertTable(data.Rows.Cast<DataRow>(), tableName, createTable);
-
-            var co = _columnNumber;
-
-            foreach (DataColumn col in data.Columns)
-            {
-                Worksheet.SetValue(col.ColumnName, _rowNumber, co);
-                co++;
-            }
-
-            ClearMerged();
-            var range = Worksheet.Range(
-                _rowNumber,
-                _columnNumber,
-                _rowNumber,
-                co - 1);
-
-            if (createTable)
-                // Create a table and save it in the file
-                return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
-            else
-                // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
-                return tableName == null ? range.AsTable() : range.AsTable(tableName);
+            var reader = InsertDataReaderFactory.Instance.CreateReader(data);
+            return InsertTableInternal(reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
-        internal XLRange InsertDataInternal<T>(IEnumerable<T> data, Boolean addHeadings, Boolean transpose)
+        internal XLRange InsertDataInternal(IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
         {
-            if (data == null || data is String)
+            if (reader == null)
                 return null;
 
             var currentRowNumber = _rowNumber;
-            if (addHeadings && !transpose) currentRowNumber++;
-
             var currentColumnNumber = _columnNumber;
-            if (addHeadings && transpose) currentColumnNumber++;
-
-            var firstRowNumber = _rowNumber;
-            var hasHeadings = false;
             var maximumColumnNumber = currentColumnNumber;
             var maximumRowNumber = currentRowNumber;
 
-            var itemType = data.GetItemType();
-            var isArray = itemType.IsArray;
-            var isDataTable = itemType == typeof(DataTable);
-            var isDataReader = itemType == typeof(IDataReader);
+            if (transpose)
+            {
+                maximumColumnNumber += reader.GetRecordsCount() - 1;
+                maximumRowNumber += reader.GetPropertiesCount() - 1;
+            }
+            else
+            {
+                maximumColumnNumber += reader.GetPropertiesCount() - 1;
+                maximumRowNumber += reader.GetRecordsCount() - 1;
+            }
 
             // Inline functions to handle looping with transposing
             //////////////////////////////////////////////////////
@@ -854,206 +837,43 @@ namespace ClosedXML.Excel
             }
             //////////////////////////////////////////////////////
 
-            if (!data.Any())
+            var empty = maximumRowNumber <= _rowNumber ||
+                        maximumColumnNumber <= _columnNumber;
+
+            if (!empty)
             {
-                if (itemType.IsSimpleType())
-                    maximumColumnNumber = _columnNumber;
-                else
-                    maximumColumnNumber = _columnNumber + itemType.GetFields().Length + itemType.GetProperties().Length - 1;
+                Worksheet.Range(
+                        _rowNumber,
+                        _columnNumber,
+                        maximumRowNumber,
+                        maximumColumnNumber)
+                    .Clear();
             }
-            else if (itemType.IsSimpleType())
+
+            if (addHeadings)
             {
-                foreach (object o in data)
+                for (int i = 0; i < reader.GetPropertiesCount(); i++)
                 {
-                    resetRecordPosition();
-
-                    if (addHeadings && !hasHeadings)
-                    {
-                        var fieldName = XLColumnAttribute.GetHeader(itemType);
-                        if (String.IsNullOrWhiteSpace(fieldName))
-                            fieldName = itemType.Name;
-
-                        Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                        hasHeadings = true;
-                        resetRecordPosition();
-                    }
-
-                    Worksheet.SetValue(o, currentRowNumber, currentColumnNumber);
+                    var propertyName = reader.GetPropertyName(i);
+                    Worksheet.SetValue(propertyName, currentRowNumber, currentColumnNumber);
                     incrementFieldPosition();
-                    incrementRecordPosition();
                 }
+
+                incrementRecordPosition();
             }
-            else
+
+            var data = reader.GetData();
+
+            foreach (var item in data)
             {
-                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-                var memberCache = new Dictionary<Type, MemberInfo[]>();
-                MemberInfo[] members = null;
-                bool isPlainObject = itemType == typeof(object);
-
-                if (!isPlainObject)
+                resetRecordPosition();
+                foreach (var value in item)
                 {
-                    members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
-                         .Concat(itemType.GetProperties(bindingFlags))
-                         .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                         .OrderBy(mi => XLColumnAttribute.GetOrder(mi))
-                         .ToArray();
+                    Worksheet.SetValue(value, currentRowNumber, currentColumnNumber);
+                    incrementFieldPosition();
                 }
-
-                foreach (T m in data)
-                {
-                    resetRecordPosition();
-
-                    if (m == null)
-                    {
-                        Worksheet.SetValue(String.Empty, currentRowNumber, currentColumnNumber);
-                        incrementRecordPosition();
-                        continue;
-                    }
-
-                    if (m.GetType().IsSimpleType())
-                    {
-                        if (addHeadings && !hasHeadings)
-                        {
-                            var fieldName = XLColumnAttribute.GetHeader(itemType);
-                            if (String.IsNullOrWhiteSpace(fieldName))
-                                fieldName = itemType.Name;
-
-                            Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                            hasHeadings = true;
-                            resetRecordPosition();
-                        }
-
-                        Worksheet.SetValue(m as object, currentRowNumber, currentColumnNumber);
-                        incrementFieldPosition();
-                    }
-                    else
-                    {
-                        if (isPlainObject)
-                        {
-                            // In this case data is just IEnumerable<object>, which means we have to determine the runtime type of each element
-                            // This is very inefficient and we prefer type of T to be a concrete class or struct
-                            var type = m.GetType();
-
-                            isArray |= type.IsArray;
-                            isDataTable |= type == typeof(DataRow);
-                            isDataReader |= type == typeof(IDataRecord);
-
-                            if (!memberCache.TryGetValue(type, out members))
-                            {
-                                members = type.GetFields(bindingFlags).Cast<MemberInfo>()
-                                     .Concat(type.GetProperties(bindingFlags))
-                                     .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                                     .OrderBy(mi => XLColumnAttribute.GetOrder(mi))
-                                     .ToArray();
-
-                                memberCache.Add(type, members);
-                            }
-                        }
-
-                        if (isArray)
-                        {
-                            foreach (var item in (m as Array))
-                            {
-                                Worksheet.SetValue(item, currentRowNumber, currentColumnNumber);
-                                incrementFieldPosition();
-                            }
-                        }
-                        else if (isDataTable || m is DataRow)
-                        {
-                            var row = m as DataRow;
-                            if (!isDataTable)
-                                isDataTable = true;
-
-                            if (addHeadings && !hasHeadings)
-                            {
-                                foreach (var fieldName in from DataColumn column in row.Table.Columns
-                                                          select String.IsNullOrWhiteSpace(column.Caption)
-                                                                     ? column.ColumnName
-                                                                     : column.Caption)
-                                {
-                                    Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                                    incrementFieldPosition();
-                                }
-
-                                resetRecordPosition();
-                                hasHeadings = true;
-                            }
-
-                            foreach (var item in row.ItemArray)
-                            {
-                                Worksheet.SetValue(item, currentRowNumber, currentColumnNumber);
-                                incrementFieldPosition();
-                            }
-                        }
-                        else if (isDataReader || m is IDataRecord)
-                        {
-                            if (!isDataReader)
-                                isDataReader = true;
-
-                            var record = m as IDataRecord;
-
-                            var fieldCount = record.FieldCount;
-                            if (addHeadings && !hasHeadings)
-                            {
-                                for (var i = 0; i < fieldCount; i++)
-                                {
-                                    Worksheet.SetValue(record.GetName(i), firstRowNumber, currentColumnNumber);
-                                    incrementFieldPosition();
-                                }
-
-                                resetRecordPosition();
-                                hasHeadings = true;
-                            }
-
-                            for (var i = 0; i < fieldCount; i++)
-                            {
-                                Worksheet.SetValue(record[i], currentRowNumber, currentColumnNumber);
-                                incrementFieldPosition();
-                            }
-                        }
-                        else
-                        {
-                            if (addHeadings && !hasHeadings)
-                            {
-                                foreach (var mi in members)
-                                {
-                                    if (!(mi is IEnumerable))
-                                    {
-                                        var fieldName = XLColumnAttribute.GetHeader(mi);
-                                        if (String.IsNullOrWhiteSpace(fieldName))
-                                            fieldName = mi.Name;
-
-                                        Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                                    }
-
-                                    incrementFieldPosition();
-                                }
-
-                                resetRecordPosition();
-                                hasHeadings = true;
-                            }
-
-                            foreach (var mi in members)
-                            {
-                                if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                    Worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), currentRowNumber, currentColumnNumber);
-                                else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
-                                    Worksheet.SetValue((mi as FieldInfo).GetValue(null), currentRowNumber, currentColumnNumber);
-                                else if (mi.MemberType == MemberTypes.Property)
-                                    Worksheet.SetValue((mi as PropertyInfo).GetValue(m, null), currentRowNumber, currentColumnNumber);
-                                else if (mi.MemberType == MemberTypes.Field)
-                                    Worksheet.SetValue((mi as FieldInfo).GetValue(m), currentRowNumber, currentColumnNumber);
-
-                                incrementFieldPosition();
-                            }
-                        }
-                    }
-
-                    incrementRecordPosition();
-                }
+                incrementRecordPosition();
             }
-
-            ClearMerged();
 
             var range = Worksheet.Range(
                 _rowNumber,
@@ -1080,7 +900,7 @@ namespace ClosedXML.Excel
             if (data == null || data is String)
                 return null;
 
-            return InsertDataInternal(data?.Cast<object>(), addHeadings: false, transpose: false);
+            return InsertData(data, transpose: false);
         }
 
         public IXLRange InsertData(IEnumerable data, Boolean transpose)
@@ -1088,7 +908,8 @@ namespace ClosedXML.Excel
             if (data == null || data is String)
                 return null;
 
-            return InsertDataInternal(data?.Cast<object>(), addHeadings: false, transpose: transpose);
+            var reader = InsertDataReaderFactory.Instance.CreateReader(data);
+            return InsertDataInternal(reader, addHeadings: false, transpose: transpose);
         }
 
         public IXLRange InsertData(DataTable dataTable)
@@ -1096,7 +917,8 @@ namespace ClosedXML.Excel
             if (dataTable == null)
                 return null;
 
-            return InsertDataInternal(dataTable?.Rows?.Cast<DataRow>(), addHeadings: false, transpose: false);
+            var reader = InsertDataReaderFactory.Instance.CreateReader(dataTable);
+            return InsertDataInternal(reader, addHeadings: false, transpose: false);
         }
 
         public IXLCell SetDataType(XLDataType dataType)
