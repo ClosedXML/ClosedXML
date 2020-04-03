@@ -1,6 +1,7 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -14,7 +15,19 @@ namespace ClosedXML.Excel
 
         public static Type GetItemType<T>(this IEnumerable<T> source)
         {
-            return typeof(T);
+            return GetGenericArgument(source?.GetType()) ?? typeof(T);
+
+            Type GetGenericArgument(Type collectionType)
+            {
+                if (collectionType == null)
+                    return null;
+
+                var ienumerable = collectionType.GetInterfaces()
+                    .SingleOrDefault(i => i.GetGenericArguments().Length == 1 &&
+                                          i.Name == "IEnumerable`1");
+
+                return ienumerable?.GetGenericArguments()?.FirstOrDefault();
+            }
         }
 
         public static Boolean HasDuplicates<T>(this IEnumerable<T> source)
