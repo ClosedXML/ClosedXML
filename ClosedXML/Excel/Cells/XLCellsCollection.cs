@@ -6,14 +6,9 @@ namespace ClosedXML.Excel
 {
     internal class XLCellsCollection
     {
-        private readonly Dictionary<int, Dictionary<int, XLCell>> rowsCollection = new Dictionary<int, Dictionary<int, XLCell>>();
-        public readonly Dictionary<Int32, Int32> ColumnsUsed = new Dictionary<int, int>();
-        public readonly Dictionary<Int32, HashSet<Int32>> deleted = new Dictionary<int, HashSet<int>>();
-
-        internal Dictionary<int, Dictionary<int, XLCell>> RowsCollection
-        {
-            get { return rowsCollection; }
-        }
+        internal Dictionary<Int32, Int32> ColumnsUsed { get; } = new Dictionary<int, int>();
+        internal Dictionary<Int32, HashSet<Int32>> Deleted { get; } = new Dictionary<int, HashSet<int>>();
+        internal Dictionary<int, Dictionary<int, XLCell>> RowsCollection { get; } = new Dictionary<int, Dictionary<int, XLCell>>();
 
         public Int32 MaxColumnUsed;
         public Int32 MaxRowUsed;
@@ -38,16 +33,16 @@ namespace ClosedXML.Excel
             IncrementUsage(RowsUsed, row);
             IncrementUsage(ColumnsUsed, column);
 
-            if (!rowsCollection.TryGetValue(row, out Dictionary<int, XLCell> columnsCollection))
+            if (!RowsCollection.TryGetValue(row, out Dictionary<int, XLCell> columnsCollection))
             {
                 columnsCollection = new Dictionary<int, XLCell>();
-                rowsCollection.Add(row, columnsCollection);
+                RowsCollection.Add(row, columnsCollection);
             }
             columnsCollection.Add(column, cell);
             if (row > MaxRowUsed) MaxRowUsed = row;
             if (column > MaxColumnUsed) MaxColumnUsed = column;
 
-            if (deleted.TryGetValue(row, out HashSet<int> delHash))
+            if (Deleted.TryGetValue(row, out HashSet<int> delHash))
                 delHash.Remove(column);
         }
 
@@ -84,7 +79,7 @@ namespace ClosedXML.Excel
             RowsUsed.Clear();
             ColumnsUsed.Clear();
 
-            rowsCollection.Clear();
+            RowsCollection.Clear();
             MaxRowUsed = 0;
             MaxColumnUsed = 0;
         }
@@ -114,7 +109,7 @@ namespace ClosedXML.Excel
                     : 0;
             }
 
-            if (deleted.TryGetValue(row, out HashSet<Int32> delHash))
+            if (Deleted.TryGetValue(row, out HashSet<Int32> delHash))
             {
                 if (!delHash.Contains(column))
                     delHash.Add(column);
@@ -123,15 +118,15 @@ namespace ClosedXML.Excel
             {
                 delHash = new HashSet<int>();
                 delHash.Add(column);
-                deleted.Add(row, delHash);
+                Deleted.Add(row, delHash);
             }
 
-            if (rowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection))
+            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection))
             {
                 columnsCollection.Remove(column);
                 if (columnsCollection.Count == 0)
                 {
-                    rowsCollection.Remove(row);
+                    RowsCollection.Remove(row);
                 }
             }
         }
@@ -144,7 +139,7 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
                 {
                     for (int co = columnStart; co <= finalColumn; co++)
                     {
@@ -163,7 +158,7 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
                 {
                     for (int co = columnStart; co <= finalColumn; co++)
                     {
@@ -188,7 +183,7 @@ namespace ClosedXML.Excel
             var found = false;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
                 {
                     for (int co = columnStart; co <= firstColumnUsed; co++)
                     {
@@ -215,7 +210,7 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = finalRow; ro >= rowStart; ro--)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
                 {
                     for (int co = finalColumn; co >= columnStart; co--)
                     {
@@ -238,7 +233,7 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = finalRow; ro >= rowStart; ro--)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<int, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<int, XLCell> columnsCollection))
                 {
                     for (int co = finalColumn; co >= columnStart && co > maxCo; co--)
                     {
@@ -260,7 +255,7 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<int, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<int, XLCell> columnsCollection))
                 {
                     for (int co = columnStart; co <= finalColumn; co++)
                     {
@@ -278,7 +273,7 @@ namespace ClosedXML.Excel
             int finalColumn = columnEnd > MaxColumnUsed ? MaxColumnUsed : columnEnd;
             for (int ro = rowStart; ro <= finalRow; ro++)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
                 {
                     for (int co = columnStart; co <= finalColumn; co++)
                     {
@@ -294,7 +289,7 @@ namespace ClosedXML.Excel
             if (row > MaxRowUsed || column > MaxColumnUsed)
                 return null;
 
-            if (rowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection))
+            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection))
             {
                 return columnsCollection.TryGetValue(column, out XLCell cell) ? cell : null;
             }
@@ -349,7 +344,7 @@ namespace ClosedXML.Excel
         {
             for (int ro = 1; ro <= MaxRowUsed; ro++)
             {
-                if (rowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
+                if (RowsCollection.TryGetValue(ro, out Dictionary<Int32, XLCell> columnsCollection))
                 {
                     for (int co = 1; co <= MaxColumnUsed; co++)
                     {
@@ -363,7 +358,7 @@ namespace ClosedXML.Excel
 
         public Boolean Contains(Int32 row, Int32 column)
         {
-            return rowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
+            return RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
                 && columnsCollection.ContainsKey(column);
         }
 
@@ -371,7 +366,7 @@ namespace ClosedXML.Excel
         {
             for (int row = 1; row <= MaxRowUsed; row++)
             {
-                if (rowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
+                if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
                     && columnsCollection.ContainsKey(column))
 
                     return row;
@@ -384,7 +379,7 @@ namespace ClosedXML.Excel
         {
             for (int row = MaxRowUsed; row >= 1; row--)
             {
-                if (rowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
+                if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
                     && columnsCollection.ContainsKey(column))
 
                     return row;
@@ -395,7 +390,7 @@ namespace ClosedXML.Excel
 
         public Int32 MinColumnInRow(Int32 row)
         {
-            if (rowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
+            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
                 && columnsCollection.Any())
 
                 return columnsCollection.Keys.Min();
@@ -405,7 +400,7 @@ namespace ClosedXML.Excel
 
         public Int32 MaxColumnInRow(Int32 row)
         {
-            if (rowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
+            if (RowsCollection.TryGetValue(row, out Dictionary<Int32, XLCell> columnsCollection)
                 && columnsCollection.Any())
 
                 return columnsCollection.Keys.Max();
