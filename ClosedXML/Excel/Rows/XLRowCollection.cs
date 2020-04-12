@@ -72,11 +72,6 @@ namespace ClosedXML.Excel
 
         public void Clear()
         {
-            foreach (var kp in _dictionary.Where(kp => !Deleted.ContainsKey(kp.Key)))
-            {
-                Deleted.Add(kp.Key, kp.Value);
-            }
-
             _dictionary.Clear();
         }
 
