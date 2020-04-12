@@ -143,8 +143,7 @@ namespace ClosedXML.Excel
             if (location.Worksheet != Worksheet)
                 throw new ArgumentException("The specified sparkline belongs to the different worksheet");
 
-            var sparkline = new XLSparkline(this, location, sourceData);
-            return Add(sparkline);
+            return new XLSparkline(this, location, sourceData);
         }
 
         public IEnumerable<IXLSparkline> Add(string locationRangeAddress, string sourceDataAddress)
