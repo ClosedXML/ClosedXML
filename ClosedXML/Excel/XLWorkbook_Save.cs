@@ -5010,7 +5010,7 @@ namespace ClosedXML.Excel
             {
                 sheetData.RemoveChild(existingSheetDataRows[r.Key]);
                 existingSheetDataRows.Remove(r.Key);
-                xlWorksheet.Internals.CellsCollection.deleted.Remove(r.Key);
+                xlWorksheet.Internals.CellsCollection.Deleted.Remove(r.Key);
             }
 
             var tableTotalCells = new HashSet<IXLAddress>(
@@ -5068,7 +5068,7 @@ namespace ClosedXML.Excel
                         c => c
                     );
 
-                if (xlWorksheet.Internals.CellsCollection.deleted.TryGetValue(distinctRow, out HashSet<Int32> deletedColumns))
+                if (xlWorksheet.Internals.CellsCollection.Deleted.TryGetValue(distinctRow, out HashSet<Int32> deletedColumns))
                 {
                     foreach (var deletedColumn in deletedColumns.ToList())
                     {
@@ -5081,7 +5081,7 @@ namespace ClosedXML.Excel
                         deletedColumns.Remove(deletedColumn);
                     }
                     if (deletedColumns.Count == 0)
-                        xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
+                        xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
                 }
 
                 if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(distinctRow, out Dictionary<int, XLCell> cells))
@@ -5207,7 +5207,7 @@ namespace ClosedXML.Excel
                                 SetCellValue(xlCell, field, cell);
                         }
                     }
-                    xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
+                    xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
                 }
 
                 // If we're adding a new row (not in sheet already and it's not "empty"
@@ -5244,7 +5244,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (var r in xlWorksheet.Internals.CellsCollection.deleted.Keys)
+            foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Keys)
             {
                 if (existingSheetDataRows.TryGetValue(r, out Row row))
                 {
