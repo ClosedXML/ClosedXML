@@ -77,9 +77,9 @@ namespace ClosedXML.Excel
                 foreach (var cell in headersRow.Cells())
                 {
                     var name = cell.GetString();
-                    if (_fieldNames.ContainsKey(name) && _fieldNames[name].Column.ColumnNumber() == cell.Address.ColumnNumber)
+                    if (_fieldNames.TryGetValue(name, out IXLTableField tableField) && tableField.Column.ColumnNumber() == cell.Address.ColumnNumber)
                     {
-                        (_fieldNames[name] as XLTableField).Index = cellPos;
+                        (tableField as XLTableField).Index = cellPos;
                         detectedFieldNames.Add(name, _fieldNames[name]);
                         cellPos++;
                         continue;
@@ -132,10 +132,9 @@ namespace ClosedXML.Excel
 
         internal void RenameField(String oldName, String newName)
         {
-            if (!_fieldNames.ContainsKey(oldName))
+            if (!_fieldNames.TryGetValue(oldName, out IXLTableField field))
                 throw new ArgumentException("The field does not exist in this table", "oldName");
 
-            var field = _fieldNames[oldName];
             _fieldNames.Remove(oldName);
             _fieldNames.Add(newName, field);
         }
@@ -596,8 +595,8 @@ namespace ClosedXML.Excel
             // The entry in the table definition will contain \r\n
             // but the shared string value of the actual cell will contain only \n
             name = name.Replace("\r\n", "\n");
-            if (FieldNames.ContainsKey(name))
-                return FieldNames[name].Index;
+            if (FieldNames.TryGetValue(name, out IXLTableField tableField))
+                return tableField.Index;
 
             throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
         }

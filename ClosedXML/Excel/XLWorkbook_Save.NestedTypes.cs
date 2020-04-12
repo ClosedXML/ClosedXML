@@ -51,11 +51,12 @@ namespace ClosedXML.Excel
 
             public void AddValues(IEnumerable<String> values, RelType relType)
             {
-                if (!_relIds.ContainsKey(relType))
+                if (!_relIds.TryGetValue(relType, out List<String> list))
                 {
-                    _relIds.Add(relType, new List<String>());
+                    list = new List<String>();
+                    _relIds.Add(relType, list);
                 }
-                _relIds[relType].AddRange(values.Where(v => !_relIds[relType].Contains(v)));
+                list.AddRange(values.Where(v => !list.Contains(v)));
             }
 
             public String GetNext()
@@ -65,18 +66,19 @@ namespace ClosedXML.Excel
 
             public String GetNext(RelType relType)
             {
-                if (!_relIds.ContainsKey(relType))
+                if (!_relIds.TryGetValue(relType, out List<String> list))
                 {
-                    _relIds.Add(relType, new List<String>());
+                    list = new List<String>();
+                    _relIds.Add(relType, list);
                 }
 
-                Int32 id = _relIds[relType].Count + 1;
+                Int32 id = list.Count + 1;
                 while (true)
                 {
                     String relId = String.Concat("rId", id);
-                    if (!_relIds[relType].Contains(relId))
+                    if (!list.Contains(relId))
                     {
-                        _relIds[relType].Add(relId);
+                        list.Add(relId);
                         return relId;
                     }
                     id++;

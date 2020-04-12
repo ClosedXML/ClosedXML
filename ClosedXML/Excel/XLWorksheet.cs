@@ -1028,20 +1028,22 @@ namespace ClosedXML.Excel
         public void IncrementColumnOutline(Int32 level)
         {
             if (level <= 0) return;
-            if (!_columnOutlineCount.ContainsKey(level))
-                _columnOutlineCount.Add(level, 0);
-
-            _columnOutlineCount[level]++;
+            if (_columnOutlineCount.TryGetValue(level, out Int32 value))
+                _columnOutlineCount[level] = value + 1;
+            else
+                _columnOutlineCount.Add(level, 1);
         }
 
         public void DecrementColumnOutline(Int32 level)
         {
             if (level <= 0) return;
-            if (!_columnOutlineCount.ContainsKey(level))
+            if (_columnOutlineCount.TryGetValue(level, out Int32 value))
+            {
+                if (value > 0)
+                    _columnOutlineCount[level] = value - 1;
+            }
+            else
                 _columnOutlineCount.Add(level, 0);
-
-            if (_columnOutlineCount[level] > 0)
-                _columnOutlineCount[level]--;
         }
 
         public Int32 GetMaxColumnOutline()
@@ -1053,20 +1055,22 @@ namespace ClosedXML.Excel
         public void IncrementRowOutline(Int32 level)
         {
             if (level <= 0) return;
-            if (!_rowOutlineCount.ContainsKey(level))
+            if (_rowOutlineCount.TryGetValue(level, out Int32 value))
+                _rowOutlineCount[level] = value + 1;
+            else
                 _rowOutlineCount.Add(level, 0);
-
-            _rowOutlineCount[level]++;
         }
 
         public void DecrementRowOutline(Int32 level)
         {
             if (level <= 0) return;
-            if (!_rowOutlineCount.ContainsKey(level))
+            if (_rowOutlineCount.TryGetValue(level, out Int32 value))
+            {
+                if (value > 0)
+                    _rowOutlineCount[level] = level - 1;
+            }
+            else
                 _rowOutlineCount.Add(level, 0);
-
-            if (_rowOutlineCount[level] > 0)
-                _rowOutlineCount[level]--;
         }
 
         public Int32 GetMaxRowOutline()

@@ -1685,9 +1685,9 @@ namespace ClosedXML.Excel
 
             var xlCell = ws.Cell(in cellAddress);
 
-            if (styleList.ContainsKey(styleIndex))
+            if (styleList.TryGetValue(styleIndex, out IXLStyle style))
             {
-                xlCell.InnerStyle = styleList[styleIndex];
+                xlCell.InnerStyle = style;
             }
             else
             {

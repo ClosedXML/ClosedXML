@@ -26,10 +26,13 @@ namespace ClosedXML.Excel
             if (element == XLPivotStyleFormatElement.None)
                 throw new ArgumentException("Choose an enum value that represents an element", nameof(element));
 
-            if (!_styleFormats.ContainsKey(element))
-                _styleFormats.Add(element, new XLPivotStyleFormat(_pivotField) { AppliesTo = element });
+            if (!_styleFormats.TryGetValue(element, out IXLPivotStyleFormat pivotStyleFormat))
+            {
+                pivotStyleFormat = new XLPivotStyleFormat(_pivotField) { AppliesTo = element };
+                _styleFormats.Add(element, pivotStyleFormat);
+            }
 
-            return _styleFormats[element];
+            return pivotStyleFormat;
         }
 
         public IEnumerator<IXLPivotStyleFormat> GetEnumerator()

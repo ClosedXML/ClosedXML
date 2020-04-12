@@ -1327,9 +1327,11 @@ namespace ClosedXML.Excel
                     Int32 lastRoReturned = lastRoUsed.RowNumber();
                     for (Int32 ro = 1; ro <= lastRoReturned; ro++)
                     {
-                        var styleToUse = Worksheet.Internals.RowsCollection.ContainsKey(ro)
-                                             ? Worksheet.Internals.RowsCollection[ro].Style
-                                             : Worksheet.Style;
+                        var styleToUse =
+                            Worksheet.Internals.RowsCollection.TryGetValue(ro, out XLRow row)
+                                ? row.Style
+                                : Worksheet.Style;
+
                         rangeToReturn.Row(ro).Style = styleToUse;
                     }
                 }
@@ -1543,9 +1545,11 @@ namespace ClosedXML.Excel
                     Int32 lastCoReturned = lastCoUsed.ColumnNumber();
                     for (Int32 co = 1; co <= lastCoReturned; co++)
                     {
-                        var styleToUse = Worksheet.Internals.ColumnsCollection.ContainsKey(co)
-                                             ? Worksheet.Internals.ColumnsCollection[co].Style
-                                             : Worksheet.Style;
+                        var styleToUse =
+                            Worksheet.Internals.ColumnsCollection.TryGetValue(co, out XLColumn column)
+                                ? column.Style
+                                : Worksheet.Style;
+
                         rangeToReturn.Style = styleToUse;
                     }
                 }

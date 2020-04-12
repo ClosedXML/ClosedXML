@@ -43,7 +43,7 @@ namespace ClosedXML.Excel.Caching
             if (_storage.TryGetValue(key, out WeakReference cachedReference))
             {
                 value = cachedReference.Target as Tvalue;
-                return (value != null);
+                return value != null;
             }
             value = null;
             return false;
@@ -64,16 +64,14 @@ namespace ClosedXML.Excel.Caching
             if (value == null)
                 return null;
 
-            if (!_storage.ContainsKey(key))
+            if (!_storage.TryGetValue(key, out WeakReference cachedReference))
             {
                 _storage.TryAdd(key, new WeakReference(value));
                 return value;
             }
             else
             {
-                var cachedReference = _storage[key];
-                var storedValue = cachedReference.Target as Tvalue;
-                if (storedValue == null)
+                if (!(cachedReference.Target is Tvalue storedValue))
                 {
                     _storage.TryAdd(key, new WeakReference(value));
                     return value;
@@ -86,8 +84,7 @@ namespace ClosedXML.Excel.Caching
         {
             if (_storage.TryGetValue(key, out WeakReference cachedReference))
             {
-                var storedValue = cachedReference.Target as Tvalue;
-                if (storedValue != null)
+                if (cachedReference.Target is Tvalue storedValue)
                 {
                     return storedValue;
                 }

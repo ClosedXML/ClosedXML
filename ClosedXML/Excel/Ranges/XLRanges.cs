@@ -18,10 +18,13 @@ namespace ClosedXML.Excel
 
         private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
         {
-            if (!_indexes.ContainsKey(worksheet))
-                _indexes.Add(worksheet, new XLRangeIndex<XLRange>(worksheet));
+            if (!_indexes.TryGetValue(worksheet, out IXLRangeIndex<XLRange> rangeIndex))
+            {
+                rangeIndex = new XLRangeIndex<XLRange>(worksheet);
+                _indexes.Add(worksheet, rangeIndex);
+            }
 
-            return _indexes[worksheet];
+            return rangeIndex;
         }
 
         public XLRanges() : base(XLWorkbook.DefaultStyleValue)
@@ -79,7 +82,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="match">Criteria to filter ranges. Only those ranges that satisfy the criteria will be removed.
         /// Null means the entire collection should be cleared.</param>
-        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from 
+        /// <param name="releaseEventHandlers">Specify whether or not should removed ranges be unsubscribed from
         /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
         public void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true)
         {
@@ -139,7 +142,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public IEnumerable<IXLRange> GetIntersectedRanges(IXLAddress address)
         {
-            var xlAddress = (XLAddress) address;
+            var xlAddress = (XLAddress)address;
             return GetIntersectedRanges(in xlAddress);
         }
 
@@ -203,7 +206,6 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-
         public IXLCells CellsUsed(Boolean includeFormats)
         {
             return CellsUsed(includeFormats

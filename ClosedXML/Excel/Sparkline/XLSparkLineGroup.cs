@@ -212,9 +212,7 @@ namespace ClosedXML.Excel
 
         public IXLSparkline GetSparkline(IXLCell cell)
         {
-            return _sparklines.ContainsKey(cell)
-                ? _sparklines[cell]
-                : null;
+            return _sparklines.TryGetValue(cell, out IXLSparkline sparkline) ? sparkline : null;
         }
 
         public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)
