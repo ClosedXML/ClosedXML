@@ -325,7 +325,7 @@ namespace ClosedXML.Excel
                     GenerateWorksheetCommentsPartContent(commentsPart, worksheet);
                     hasAnyVmlElements = GenerateVmlDrawingPartContent(vmlDrawingPart, worksheet);
                 }
-                
+
                 // Remove empty parts
                 if (commentsPart != null && (commentsPart.RootElement?.ChildElements?.Count ?? 0) == 0)
                     worksheetPart.DeletePart(commentsPart);
@@ -979,8 +979,8 @@ namespace ClosedXML.Excel
                 c.DataType = XLDataType.Text;
                 if (c.HasRichText)
                 {
-                    if (newRichStrings.ContainsKey(c.RichText))
-                        c.SharedStringId = newRichStrings[c.RichText];
+                    if (newRichStrings.TryGetValue(c.RichText, out int id))
+                        c.SharedStringId = id;
                     else
                     {
                         var sharedStringItem = new SharedStringItem();
@@ -1006,14 +1006,20 @@ namespace ClosedXML.Excel
                                 phoneticRun.Append(text);
                                 sharedStringItem.Append(phoneticRun);
                             }
+
                             var f = XLFontValue.FromKey(XLFont.GenerateKey(c.RichText.Phonetics));
-                            if (!context.SharedFonts.ContainsKey(f))
-                                context.SharedFonts.Add(f, new FontInfo { Font = f });
+
+                            if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
+                            {
+                                fi = new FontInfo { Font = f };
+                                context.SharedFonts.Add(f, fi);
+                            }
 
                             var phoneticProperties = new PhoneticProperties
                             {
-                                FontId = context.SharedFonts[f].FontId
+                                FontId = fi.FontId
                             };
+
                             if (c.RichText.Phonetics.Alignment != XLPhoneticAlignment.Left)
                                 phoneticProperties.Alignment = c.RichText.Phonetics.Alignment.ToOpenXml();
                             if (c.RichText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
@@ -1035,8 +1041,8 @@ namespace ClosedXML.Excel
                 else
                 {
                     var value = c.Value.ObjectToInvariantString();
-                    if (newStrings.ContainsKey(value))
-                        c.SharedStringId = newStrings[value];
+                    if (newStrings.TryGetValue(value, out int id))
+                        c.SharedStringId = id;
                     else
                     {
                         var s = value;
@@ -1915,8 +1921,8 @@ namespace ClosedXML.Excel
                         .First()
                         .Style as XLStyle).Value;
 
-                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.ContainsKey(style))
-                        tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[style]));
+                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.TryGetValue(style, out Int32 id))
+                        tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(id));
                 }
                 else
                     tableColumn.DataFormatId = null;
@@ -3907,8 +3913,8 @@ namespace ClosedXML.Excel
                     numberFormat.NumberFormatId = (UInt32)(style.NumberFormat.NumberFormatId);
                     if (!string.IsNullOrEmpty(style.NumberFormat.Format))
                         numberFormat.FormatCode = style.NumberFormat.Format;
-                    else if (XLPredefinedFormat.FormatCodes.ContainsKey(style.NumberFormat.NumberFormatId))
-                        numberFormat.FormatCode = XLPredefinedFormat.FormatCodes[style.NumberFormat.NumberFormatId];
+                    else if (XLPredefinedFormat.FormatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out string formatCode))
+                        numberFormat.FormatCode = formatCode;
                 }
 
                 differentialFormat.Append(numberFormat);
@@ -4912,13 +4918,13 @@ namespace ClosedXML.Excel
                     var isHidden = false;
                     var collapsed = false;
                     var outlineLevel = 0;
-                    if (xlWorksheet.Internals.ColumnsCollection.ContainsKey(co))
+                    if (xlWorksheet.Internals.ColumnsCollection.TryGetValue(co, out XLColumn col))
                     {
-                        styleId = context.SharedStyles[xlWorksheet.Internals.ColumnsCollection[co].StyleValue].StyleId;
-                        columnWidth = GetColumnWidth(xlWorksheet.Internals.ColumnsCollection[co].Width).SaveRound();
-                        isHidden = xlWorksheet.Internals.ColumnsCollection[co].IsHidden;
-                        collapsed = xlWorksheet.Internals.ColumnsCollection[co].Collapsed;
-                        outlineLevel = xlWorksheet.Internals.ColumnsCollection[co].OutlineLevel;
+                        styleId = context.SharedStyles[col.StyleValue].StyleId;
+                        columnWidth = GetColumnWidth(col.Width).SaveRound();
+                        isHidden = col.IsHidden;
+                        collapsed = col.Collapsed;
+                        outlineLevel = col.OutlineLevel;
                     }
                     else
                     {
@@ -5019,9 +5025,7 @@ namespace ClosedXML.Excel
             foreach (var distinctRow in distinctRows.OrderBy(r => r))
             {
                 Row row;
-                if (existingSheetDataRows.ContainsKey(distinctRow))
-                    row = existingSheetDataRows[distinctRow];
-                else
+                if (!existingSheetDataRows.TryGetValue(distinctRow, out row))
                     row = new Row { RowIndex = (UInt32)distinctRow };
 
                 if (maxColumn > 0)
@@ -5033,9 +5037,8 @@ namespace ClosedXML.Excel
                 row.StyleIndex = null;
                 row.CustomFormat = null;
                 row.Collapsed = null;
-                if (xlWorksheet.Internals.RowsCollection.ContainsKey(distinctRow))
+                if (xlWorksheet.Internals.RowsCollection.TryGetValue(distinctRow, out XLRow thisRow))
                 {
-                    var thisRow = xlWorksheet.Internals.RowsCollection[distinctRow];
                     if (thisRow.HeightChanged)
                     {
                         row.Height = thisRow.Height.SaveRound();
@@ -5065,29 +5068,29 @@ namespace ClosedXML.Excel
                         c => c
                     );
 
-                if (xlWorksheet.Internals.CellsCollection.deleted.ContainsKey(distinctRow))
+                if (xlWorksheet.Internals.CellsCollection.deleted.TryGetValue(distinctRow, out HashSet<Int32> deletedColumns))
                 {
-                    foreach (var deletedColumn in xlWorksheet.Internals.CellsCollection.deleted[distinctRow].ToList())
+                    foreach (var deletedColumn in deletedColumns.ToList())
                     {
                         var key = XLHelper.GetColumnLetterFromNumber(deletedColumn) + distinctRow.ToInvariantString();
 
-                        if (!currentOpenXmlRowCells.ContainsKey(key))
+                        if (!currentOpenXmlRowCells.TryGetValue(key, out Cell cell))
                             continue;
 
-                        row.RemoveChild(currentOpenXmlRowCells[key]);
-                        xlWorksheet.Internals.CellsCollection.deleted[distinctRow].Remove(deletedColumn);
+                        row.RemoveChild(cell);
+                        deletedColumns.Remove(deletedColumn);
                     }
-                    if (xlWorksheet.Internals.CellsCollection.deleted[distinctRow].Count == 0)
+                    if (deletedColumns.Count == 0)
                         xlWorksheet.Internals.CellsCollection.deleted.Remove(distinctRow);
                 }
 
-                if (xlWorksheet.Internals.CellsCollection.RowsCollection.ContainsKey(distinctRow))
+                if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(distinctRow, out Dictionary<int, XLCell> cells))
                 {
                     var isNewRow = !row.Elements<Cell>().Any();
                     lastCell = 0;
                     var mRows = row.Elements<Cell>().ToDictionary(c => XLHelper.GetColumnNumberFromAddress(c.CellReference == null
                         ? (XLHelper.GetColumnLetterFromNumber(++lastCell) + distinctRow) : c.CellReference.Value), c => c);
-                    foreach (var xlCell in xlWorksheet.Internals.CellsCollection.RowsCollection[distinctRow].Values
+                    foreach (var xlCell in cells.Values
                         .OrderBy(c => c.Address.ColumnNumber)
                         .Select(c => c))
                     {
@@ -5103,10 +5106,8 @@ namespace ClosedXML.Excel
                                                      & ~XLCellsUsedOptions.DataValidation
                                                      & ~XLCellsUsedOptions.MergedRanges);
 
-                        Cell cell = null;
-                        if (currentOpenXmlRowCells.ContainsKey(cellReference))
+                        if (currentOpenXmlRowCells.TryGetValue(cellReference, out Cell cell))
                         {
-                            cell = currentOpenXmlRowCells[cellReference];
                             if (isEmpty)
                             {
                                 cell.Remove();
@@ -5243,13 +5244,13 @@ namespace ClosedXML.Excel
                 }
             }
 
-            foreach (
-                var r in
-                    xlWorksheet.Internals.CellsCollection.deleted.Keys.Where(
-                        existingSheetDataRows.ContainsKey))
+            foreach (var r in xlWorksheet.Internals.CellsCollection.deleted.Keys)
             {
-                sheetData.RemoveChild(existingSheetDataRows[r]);
-                existingSheetDataRows.Remove(r);
+                if (existingSheetDataRows.TryGetValue(r, out Row row))
+                {
+                    sheetData.RemoveChild(row);
+                    existingSheetDataRows.Remove(r);
+                }
             }
 
             #endregion SheetData
@@ -6253,13 +6254,11 @@ namespace ClosedXML.Excel
 
         private static void UpdateColumn(Column column, Columns columns, Dictionary<uint, Column> sheetColumnsByMin)
         {
-            var co = column.Min.Value;
-            Column newColumn;
-            if (!sheetColumnsByMin.ContainsKey(co))
+            if (!sheetColumnsByMin.TryGetValue(column.Min.Value, out Column newColumn))
             {
                 newColumn = (Column)column.CloneNode(true);
                 columns.AppendChild(newColumn);
-                sheetColumnsByMin.Add(co, newColumn);
+                sheetColumnsByMin.Add(column.Min.Value, newColumn);
             }
             else
             {

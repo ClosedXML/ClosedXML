@@ -54,13 +54,15 @@ namespace ClosedXML.Excel
 
         public void Remove(String name)
         {
-            if (!_tables.ContainsKey(name))
+            if (!_tables.TryGetValue(name, out IXLTable table))
                 throw new ArgumentOutOfRangeException(nameof(name), $"Unable to delete table because the table name {name} could not be found.");
 
-            var table = _tables[name] as XLTable;
             _tables.Remove(name);
 
-            if (table.RelId != null) Deleted.Add(table.RelId);
+            var relId = (table as XLTable)?.RelId;
+
+            if (relId != null)
+                Deleted.Add(relId);
         }
 
         public IXLTable Table(Int32 index)
@@ -78,13 +80,7 @@ namespace ClosedXML.Excel
 
         public bool TryGetTable(string tableName, out IXLTable table)
         {
-            if (_tables.ContainsKey(tableName))
-            {
-                table = _tables[tableName];
-                return true;
-            }
-            table = null;
-            return false;
+            return _tables.TryGetValue(tableName, out table);
         }
 
         #endregion IXLTables Members

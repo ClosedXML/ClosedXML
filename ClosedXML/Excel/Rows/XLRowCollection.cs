@@ -76,7 +76,7 @@ namespace ClosedXML.Excel
 
         public void Clear()
         {
-            foreach (KeyValuePair<int, XLRow> kp in _dictionary.Where(kp => !_deleted.ContainsKey(kp.Key)))
+            foreach (var kp in _dictionary.Where(kp => !_deleted.ContainsKey(kp.Key)))
             {
                 _deleted.Add(kp.Key, kp.Value);
             }
@@ -141,9 +141,9 @@ namespace ClosedXML.Excel
 
         public void RemoveAll(Func<XLRow, Boolean> predicate)
         {
-            foreach (XLRow kp in _dictionary.Values.Where(predicate).Select(c => c).Where(kp => !_deleted.ContainsKey(kp.RowNumber())))
+            foreach (var row in _dictionary.Values.Where(predicate).Where(row1 => !_deleted.ContainsKey(row1.RowNumber())))
             {
-                _deleted.Add(kp.RowNumber(), kp);
+                _deleted.Add(row.RowNumber(), row);
             }
 
             _dictionary.RemoveAll(predicate);

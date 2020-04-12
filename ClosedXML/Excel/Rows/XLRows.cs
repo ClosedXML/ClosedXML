@@ -59,10 +59,13 @@ namespace ClosedXML.Excel
                 var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
                 foreach (XLRow r in _rows)
                 {
-                    if (!toDelete.ContainsKey(r.Worksheet))
-                        toDelete.Add(r.Worksheet, new List<Int32>());
+                    if (!toDelete.TryGetValue(r.Worksheet, out List<Int32> list))
+                    {
+                        list = new List<Int32>();
+                        toDelete.Add(r.Worksheet, list);
+                    }
 
-                    toDelete[r.Worksheet].Add(r.RowNumber());
+                    list.Add(r.RowNumber());
                 }
 
                 foreach (KeyValuePair<IXLWorksheet, List<int>> kp in toDelete)

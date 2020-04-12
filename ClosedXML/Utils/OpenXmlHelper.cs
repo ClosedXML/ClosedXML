@@ -96,12 +96,7 @@ namespace ClosedXML.Utils
                 if (openXMLColor.Rgb != null)
                 {
                     String htmlColor = "#" + openXMLColor.Rgb.Value;
-                    Drawing.Color thisColor;
-                    if (colorCache?.ContainsKey(htmlColor) ?? false)
-                    {
-                        thisColor = colorCache[htmlColor];
-                    }
-                    else
+                    if (colorCache == null || !colorCache.TryGetValue(htmlColor, out Drawing.Color thisColor))
                     {
                         thisColor = ColorStringParser.ParseFromHtml(htmlColor);
                         colorCache?.Add(htmlColor, thisColor);

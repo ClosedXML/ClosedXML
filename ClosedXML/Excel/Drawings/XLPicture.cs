@@ -68,7 +68,7 @@ namespace ClosedXML.Excel.Drawings
 
                 using (var bitmap = new Bitmap(ImageStream))
                 {
-                    if (FormatMap.ContainsKey(this.Format) && FormatMap[this.Format].Guid != bitmap.RawFormat.Guid)
+                    if (FormatMap.TryGetValue(this.Format, out ImageFormat imageFormat) && imageFormat.Guid != bitmap.RawFormat.Guid)
                         throw new ArgumentException("The picture format in the stream and the parameter don't match");
 
                     DeduceDimensionsFromBitmap(bitmap);

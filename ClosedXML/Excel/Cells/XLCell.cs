@@ -918,18 +918,16 @@ namespace ClosedXML.Excel
                             isDataTable |= type == typeof(DataRow);
                             isDataReader |= type == typeof(IDataRecord);
 
-                            if (!memberCache.ContainsKey(type))
+                            if (!memberCache.TryGetValue(type, out members))
                             {
-                                var _members = type.GetFields(bindingFlags).Cast<MemberInfo>()
+                                members = type.GetFields(bindingFlags).Cast<MemberInfo>()
                                      .Concat(type.GetProperties(bindingFlags))
                                      .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
                                      .OrderBy(mi => XLColumnAttribute.GetOrder(mi))
                                      .ToArray();
 
-                                memberCache.Add(type, _members);
+                                memberCache.Add(type, members);
                             }
-
-                            members = memberCache[type];
                         }
 
                         if (isArray)
@@ -2049,17 +2047,17 @@ namespace ClosedXML.Excel
 
         private string GetFormat()
         {
-            var format = String.Empty;
             var style = GetStyleForRead();
             if (String.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = XLPredefinedFormat.FormatCodes;
-                if (formatCodes.ContainsKey(style.NumberFormat.NumberFormatId))
-                    format = formatCodes[style.NumberFormat.NumberFormatId];
+                if (formatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out string format))
+                    return format;
+                else
+                    return string.Empty;
             }
             else
-                format = style.NumberFormat.Format;
-            return format;
+                return style.NumberFormat.Format;
         }
 
         private bool SetRichText(object value)

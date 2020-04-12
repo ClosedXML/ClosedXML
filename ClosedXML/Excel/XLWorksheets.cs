@@ -1,4 +1,3 @@
-using ClosedXML.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -63,9 +62,6 @@ namespace ClosedXML.Excel
 
             if (_worksheets.TryGetValue(sheetName, out XLWorksheet w))
                 return w;
-
-            if (_worksheets.ContainsKey(sheetName))
-                return _worksheets[sheetName];
 
             throw new ArgumentException("There isn't a worksheet named '" + sheetName + "'.");
         }
@@ -180,13 +176,12 @@ namespace ClosedXML.Excel
 
         public void Rename(String oldSheetName, String newSheetName)
         {
-            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.ContainsKey(oldSheetName)) return;
+            if (String.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.TryGetValue(oldSheetName, out XLWorksheet ws)) return;
 
             if (!oldSheetName.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)
                 && _worksheets.ContainsKey(newSheetName))
                 throw new ArgumentException(String.Format("A worksheet with the same name ({0}) has already been added.", newSheetName), nameof(newSheetName));
 
-            var ws = _worksheets[oldSheetName];
             _worksheets.Remove(oldSheetName);
             Add(newSheetName, ws);
         }

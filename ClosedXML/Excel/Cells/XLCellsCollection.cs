@@ -53,8 +53,8 @@ namespace ClosedXML.Excel
 
         private static void IncrementUsage(Dictionary<int, int> dictionary, Int32 key)
         {
-            if (dictionary.ContainsKey(key))
-                dictionary[key]++;
+            if (dictionary.TryGetValue(key, out Int32 value))
+                dictionary[key] = value + 1;
             else
                 dictionary.Add(key, 1);
         }
