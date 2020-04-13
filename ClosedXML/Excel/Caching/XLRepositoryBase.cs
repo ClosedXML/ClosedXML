@@ -20,6 +20,7 @@ namespace ClosedXML.Excel.Caching
 
         private readonly ConcurrentDictionary<Tkey, WeakReference> _storage;
         private readonly Func<Tkey, Tvalue> _createNew;
+
         protected XLRepositoryBase(Func<Tkey, Tvalue> createNew)
             : this(createNew, EqualityComparer<Tkey>.Default)
         {
@@ -49,7 +50,6 @@ namespace ClosedXML.Excel.Caching
             return false;
         }
 
-
         /// <summary>
         /// Put the entity into the repository under the specified key if no other entity with
         /// the same key is presented.
@@ -64,45 +64,34 @@ namespace ClosedXML.Excel.Caching
             if (value == null)
                 return null;
 
-            if (!_storage.TryGetValue(key, out WeakReference cachedReference))
+            do
             {
-                _storage.TryAdd(key, new WeakReference(value));
-                return value;
-            }
-            else
-            {
-                if (!(cachedReference.Target is Tvalue storedValue))
+                if (_storage.TryGetValue(key, out WeakReference cachedReference) &&
+                    cachedReference.Target is Tvalue storedValue)
                 {
-                    _storage.TryAdd(key, new WeakReference(value));
-                    return value;
+                    return storedValue;
                 }
-                return storedValue;
-            }
+            } while (!_storage.TryAdd(key, new WeakReference(value)));
+
+            return value;
         }
 
         public Tvalue GetOrCreate(Tkey key)
         {
-            if (_storage.TryGetValue(key, out WeakReference cachedReference))
+            if (_storage.TryGetValue(key, out WeakReference cachedReference) &&
+                cachedReference.Target is Tvalue storedValue)
             {
-                if (cachedReference.Target is Tvalue storedValue)
-                {
-                    return storedValue;
-                }
-                else
-                {
-                    _storage.TryRemove(key, out WeakReference _);
-                }
+                return storedValue;
             }
 
+            _storage.TryRemove(key, out WeakReference _);
             var value = _createNew(key);
             return Store(key, value);
         }
 
         public Tvalue Replace(Tkey oldKey, Tkey newKey)
         {
-            WeakReference cachedReference;
-            _storage.TryRemove(oldKey, out cachedReference);
-            if (cachedReference != null)
+            if (_storage.TryRemove(oldKey, out WeakReference cachedReference) && cachedReference != null)
             {
                 _storage.TryAdd(newKey, cachedReference);
                 return GetOrCreate(newKey);
@@ -113,8 +102,7 @@ namespace ClosedXML.Excel.Caching
 
         public void Remove(Tkey key)
         {
-            WeakReference _;
-            _storage.TryRemove(key, out _);
+            _storage.TryRemove(key, out WeakReference _);
         }
 
         public override void Clear()
