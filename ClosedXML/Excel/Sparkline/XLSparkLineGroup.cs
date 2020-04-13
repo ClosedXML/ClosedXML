@@ -306,12 +306,7 @@ namespace ClosedXML.Excel
                 throw new ArgumentException("The specified sparkline belongs to the different worksheet");
 
             SparklineGroups.Remove(sparkline.Location);
-
-            if (_sparklines.ContainsKey(sparkline.Location))
-                _sparklines.Remove(sparkline.Location);
-
-            _sparklines.Add(sparkline.Location, sparkline);
-
+            _sparklines[sparkline.Location] = sparkline;
             return sparkline;
         }
 

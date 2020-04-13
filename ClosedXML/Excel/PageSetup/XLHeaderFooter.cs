@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
         }
 
         private Dictionary<XLHFOccurrence, String> innerTexts = new Dictionary<XLHFOccurrence, String>();
-        internal String SetInnerText(XLHFOccurrence occurrence, String text)
+        internal void SetInnerText(XLHFOccurrence occurrence, String text)
         {
             var parsedElements = ParseFormattedHeaderFooterText(text);
 
@@ -63,13 +63,7 @@ namespace ClosedXML.Excel
             if (parsedElements.Any(e => e.Position == 'R'))
                 this.Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'R').Select(e => e.Text).ToArray()), occurrence);
 
-
-            if (innerTexts.ContainsKey(occurrence))
-                innerTexts[occurrence] = text;
-            else
-                innerTexts.Add(occurrence, text);
-
-            return innerTexts[occurrence];
+            innerTexts[occurrence] = text;
         }
 
         private struct ParsedHeaderFooterElement
