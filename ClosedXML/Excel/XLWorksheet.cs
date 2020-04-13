@@ -1179,14 +1179,6 @@ namespace ClosedXML.Excel
             return Range(1, 1, XLHelper.MaxRowNumber, XLHelper.MaxColumnNumber);
         }
 
-        public void Clear()
-        {
-            Internals.CellsCollection.Clear();
-            Internals.ColumnsCollection.Clear();
-            Internals.MergedRanges.Clear();
-            Internals.RowsCollection.Clear();
-        }
-
         internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             if (!range.IsEntireColumn())
