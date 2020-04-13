@@ -779,10 +779,7 @@ namespace ClosedXML.Excel
                     var value = row.Cell(f.Index + 1).Value;
                     // ExpandoObject supports IDictionary so we can extend it like this
                     var expandoDict = expando as IDictionary<string, object>;
-                    if (expandoDict.ContainsKey(f.Name))
-                        expandoDict[f.Name] = value;
-                    else
-                        expandoDict.Add(f.Name, value);
+                    expandoDict[f.Name] = value;
                 }
 
                 yield return expando;
