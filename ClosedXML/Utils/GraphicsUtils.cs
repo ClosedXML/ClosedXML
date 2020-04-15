@@ -15,6 +15,7 @@ namespace ClosedXML.Utils
                 if (threadLocalGraphics == null)
                 {
                     var image = new Bitmap(1, 1);
+                    image.SetResolution(96, 96);
                     threadLocalGraphics = Graphics.FromImage(image);
                 }
                 return threadLocalGraphics;
