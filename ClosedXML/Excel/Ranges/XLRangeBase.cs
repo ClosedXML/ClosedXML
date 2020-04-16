@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
             {
                 var hyperlinks = new XLHyperlinks();
                 var hls = from hl in Worksheet.Hyperlinks
-                          where Contains(hl.Cell.AsRange())
+                          where RangeAddress.Contains(hl.Cell.Address)
                           select hl;
                 hls.ForEach(hyperlinks.Add);
                 return hyperlinks;
