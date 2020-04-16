@@ -1908,10 +1908,10 @@ namespace ClosedXML.Excel
                 String text = run.Text.InnerText.FixNewLines();
 
                 if (runProperties == null)
-                    xlCell.RichText.AddText(text, xlCell.Style.Font);
+                    xlCell.GetRichText().AddText(text, xlCell.Style.Font);
                 else
                 {
-                    var rt = xlCell.RichText.AddText(text);
+                    var rt = xlCell.GetRichText().AddText(text);
                     LoadFont(runProperties, rt);
                 }
                 if (!hasRuns)
@@ -1927,11 +1927,11 @@ namespace ClosedXML.Excel
             if (pp != null)
             {
                 if (pp.Alignment != null)
-                    xlCell.RichText.Phonetics.Alignment = pp.Alignment.Value.ToClosedXml();
+                    xlCell.GetRichText().Phonetics.Alignment = pp.Alignment.Value.ToClosedXml();
                 if (pp.Type != null)
-                    xlCell.RichText.Phonetics.Type = pp.Type.Value.ToClosedXml();
+                    xlCell.GetRichText().Phonetics.Type = pp.Type.Value.ToClosedXml();
 
-                LoadFont(pp, xlCell.RichText.Phonetics);
+                LoadFont(pp, xlCell.GetRichText().Phonetics);
             }
 
             #endregion Load PhoneticProperties
@@ -1940,7 +1940,7 @@ namespace ClosedXML.Excel
 
             foreach (PhoneticRun pr in phoneticRuns)
             {
-                xlCell.RichText.Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
+                xlCell.GetRichText().Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
                                               (Int32)pr.EndingBaseIndex.Value);
             }
 

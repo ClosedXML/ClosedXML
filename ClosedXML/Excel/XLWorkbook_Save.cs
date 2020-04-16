@@ -1001,7 +1001,7 @@ namespace ClosedXML.Excel
                 c.DataType = XLDataType.Text;
                 if (c.HasRichText)
                 {
-                    if (newRichStrings.TryGetValue(c.RichText, out int id))
+                    if (newRichStrings.TryGetValue(c.GetRichText(), out int id))
                         c.SharedStringId = id;
                     else
                     {
@@ -1012,7 +1012,7 @@ namespace ClosedXML.Excel
                         sharedStringTablePart.SharedStringTable.Count += 1;
                         sharedStringTablePart.SharedStringTable.UniqueCount += 1;
 
-                        newRichStrings.Add(c.RichText, stringId);
+                        newRichStrings.Add(c.GetRichText(), stringId);
                         c.SharedStringId = stringId;
 
                         stringId++;
@@ -1046,14 +1046,15 @@ namespace ClosedXML.Excel
 
         private static void PopulatedRichTextElements(RstType rstType, IXLCell cell, SaveContext context)
         {
-            foreach (var rt in cell.RichText.Where(r => !String.IsNullOrEmpty(r.Text)))
+            var richText = cell.GetRichText();
+            foreach (var rt in richText.Where(r => !String.IsNullOrEmpty(r.Text)))
             {
                 rstType.Append(GetRun(rt));
             }
 
-            if (cell.RichText.HasPhonetics)
+            if (richText.HasPhonetics)
             {
-                foreach (var p in cell.RichText.Phonetics)
+                foreach (var p in richText.Phonetics)
                 {
                     var phoneticRun = new PhoneticRun
                     {
@@ -1069,7 +1070,7 @@ namespace ClosedXML.Excel
                     rstType.Append(phoneticRun);
                 }
 
-                var fontKey = XLFont.GenerateKey(cell.RichText.Phonetics);
+                var fontKey = XLFont.GenerateKey(richText.Phonetics);
                 var f = XLFontValue.FromKey(ref fontKey);
 
                 if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
@@ -1083,10 +1084,11 @@ namespace ClosedXML.Excel
                     FontId = fi.FontId
                 };
 
-                if (cell.RichText.Phonetics.Alignment != XLPhoneticAlignment.Left)
-                    phoneticProperties.Alignment = cell.RichText.Phonetics.Alignment.ToOpenXml();
-                if (cell.RichText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
-                    phoneticProperties.Type = cell.RichText.Phonetics.Type.ToOpenXml();
+                if (richText.Phonetics.Alignment != XLPhoneticAlignment.Left)
+                    phoneticProperties.Alignment = richText.Phonetics.Alignment.ToOpenXml();
+
+                if (richText.Phonetics.Type != XLPhoneticType.FullWidthKatakana)
+                    phoneticProperties.Type = richText.Phonetics.Type.ToOpenXml();
 
                 rstType.Append(phoneticProperties);
             }

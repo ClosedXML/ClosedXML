@@ -19,12 +19,12 @@ namespace ClosedXML_Examples.Styles
 
             // Phonetics are implemented as part of the Rich Text functionality. For more information see [Using Rich Text]
             // First we add the text.
-            cell.RichText.AddText("みんなさんはお元気ですか。").SetFontSize(16);
+            cell.GetRichText().AddText("みんなさんはお元気ですか。").SetFontSize(16);
 
             // And then we add the phonetics
-            cell.RichText.Phonetics.SetFontSize(8);
-            cell.RichText.Phonetics.Add("げん", 7, 8);
-            cell.RichText.Phonetics.Add("き", 8, 9);
+            cell.GetRichText().Phonetics.SetFontSize(8);
+            cell.GetRichText().Phonetics.Add("げん", 7, 8);
+            cell.GetRichText().Phonetics.Add("き", 8, 9);
 
             //TODO: I'm looking for someone who understands Japanese to confirm the validity of the above code.
 

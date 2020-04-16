@@ -61,7 +61,7 @@ namespace ClosedXML_Examples.Styles
             // We want everything in blue except the word show 
             // (which we want in red and with Courier Font)
             cell1.Style.Font.FontColor = XLColor.Blue; // Set the color for the entire cell
-            cell1.RichText.Substring(4, 4)
+            cell1.GetRichText().Substring(4, 4)
                 .SetFontColor(XLColor.Red)
                 .SetFontName("Courier"); // Set the color and font for the word "show"
 
@@ -69,13 +69,13 @@ namespace ClosedXML_Examples.Styles
             var cell = ws.Cell(3, 1);
 
             // Add the text parts
-            cell.RichText.AddText("Hello").SetFontColor(XLColor.Red);
-            cell.RichText.AddText(" BIG ").SetFontColor(XLColor.Blue).SetBold();
-            cell.RichText.AddText("World").SetFontColor(XLColor.Red);
+            cell.GetRichText().AddText("Hello").SetFontColor(XLColor.Red);
+            cell.GetRichText().AddText(" BIG ").SetFontColor(XLColor.Blue).SetBold();
+            cell.GetRichText().AddText("World").SetFontColor(XLColor.Red);
 
             // Here we're showing that even though we added three pieces of text
             // you can treat then like a single one.
-            cell.RichText.Substring(4, 7).SetUnderline();
+            cell.GetRichText().Substring(4, 7).SetUnderline();
 
             // Right now cell.RichText has the following 5 strings:
             // 
@@ -86,7 +86,7 @@ namespace ClosedXML_Examples.Styles
             // "orld"  -> Red
 
             // Of course you can loop through each piece of text and check its properties
-            foreach (var richText in cell.RichText)
+            foreach (var richText in cell.GetRichText())
             {
                 if(richText.Bold)
                     ws.Cell(3, 2).Value = String.Format("\"{0}\" is Bold.", richText.Text);
@@ -97,13 +97,13 @@ namespace ClosedXML_Examples.Styles
             cell = ws.Cell(5, 1);
 
             // Add the text parts
-            cell.RichText.AddText("Some").SetFontColor(XLColor.Green);
-            cell.RichText.AddText(" rich text ").SetFontColor(XLColor.Blue).SetBold();
-            cell.RichText.AddText("with a gray background").SetItalic();
+            cell.GetRichText().AddText("Some").SetFontColor(XLColor.Green);
+            cell.GetRichText().AddText(" rich text ").SetFontColor(XLColor.Blue).SetBold();
+            cell.GetRichText().AddText("with a gray background").SetItalic();
 
             cell.Style.Fill.SetBackgroundColor(XLColor.Gray);
 
-            ws.Cell(5, 2).Value = cell.RichText; // Should copy only rich text, but not background
+            ws.Cell(5, 2).Value = cell.GetRichText(); // Should copy only rich text, but not background
 
 
             ws.Columns().AdjustToContents();

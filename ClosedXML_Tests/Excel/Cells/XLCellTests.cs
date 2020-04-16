@@ -394,7 +394,7 @@ namespace ClosedXML_Tests
             IXLCell cell = ws.Cell("A1").SetValue("Anything");
             bool success = cell.TryGetValue(out IXLRichText outValue);
             Assert.IsTrue(success);
-            Assert.AreEqual(cell.RichText, outValue);
+            Assert.AreEqual(cell.GetRichText(), outValue);
             Assert.AreEqual("Anything", outValue.ToString());
         }
 
@@ -403,10 +403,10 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell("A1");
-            cell.RichText.AddText("Anything");
+            cell.GetRichText().AddText("Anything");
             bool success = cell.TryGetValue(out IXLRichText outValue);
             Assert.IsTrue(success);
-            Assert.AreEqual(cell.RichText, outValue);
+            Assert.AreEqual(cell.GetRichText(), outValue);
         }
 
         [Test]

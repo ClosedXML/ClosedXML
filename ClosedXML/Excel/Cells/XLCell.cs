@@ -1279,26 +1279,25 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLRichText RichText
+        public IXLRichText GetRichText()
         {
-            get
+            return _richText ?? CreateRichText();
+        }
+
+        public bool HasRichText
             {
-                if (_richText == null)
+            get { return _richText != null; }
+        }
+
+        public IXLRichText CreateRichText()
                 {
                     var style = GetStyleForRead();
                     _richText = _cellValue.Length == 0
                                     ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
                                     : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
-                }
 
                 return _richText;
             }
-        }
-
-        public bool HasRichText
-        {
-            get { return _richText != null; }
-        }
 
         IXLComment IXLCell.Comment
         {
@@ -1651,7 +1650,7 @@ namespace ClosedXML.Excel
         {
             if (typeof(T) == typeof(IXLRichText))
             {
-                value = (T)RichText;
+                value = (T)GetRichText();
                 return true;
             }
             value = default;

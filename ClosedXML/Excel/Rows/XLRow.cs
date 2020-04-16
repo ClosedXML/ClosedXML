@@ -221,7 +221,7 @@ namespace ClosedXML.Excel
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
                     if (c.HasRichText)
                     {
-                        foreach (IXLRichString rt in c.RichText)
+                        foreach (IXLRichString rt in c.GetRichText())
                         {
                             String formattedString = rt.Text;
                             var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
