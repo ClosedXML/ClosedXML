@@ -154,17 +154,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal XLComment Comment
+        internal XLComment GetComment()
         {
-            get
-            {
-                if (_comment == null)
-                {
-                    CreateComment();
-                }
-
-                return _comment;
-            }
+            return _comment ?? CreateComment();
         }
 
         internal XLComment CreateComment(int? shapeId = null)
@@ -1299,14 +1291,19 @@ namespace ClosedXML.Excel
                 return _richText;
             }
 
-        IXLComment IXLCell.Comment
+        IXLComment IXLCell.GetComment()
         {
-            get { return Comment; }
+            return GetComment();
         }
 
         public bool HasComment
         {
             get { return _comment != null; }
+        }
+
+        IXLComment IXLCell.CreateComment()
+        {
+            return CreateComment(shapeId: null);
         }
 
         public Boolean IsMerged()

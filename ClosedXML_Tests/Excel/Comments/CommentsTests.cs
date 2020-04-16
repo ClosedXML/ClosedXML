@@ -18,7 +18,7 @@ namespace ClosedXML_Tests.Excel.Comments
                 var ws = wb.Worksheets.First();
                 var c = ws.FirstCellUsed();
 
-                var xlColor = c.Comment.Style.ColorsAndLines.LineColor;
+                var xlColor = c.GetComment().Style.ColorsAndLines.LineColor;
                 Assert.AreEqual(XLColorType.Indexed, xlColor.ColorType);
                 Assert.AreEqual(81, xlColor.Indexed);
 
@@ -40,7 +40,7 @@ namespace ClosedXML_Tests.Excel.Comments
             Assert.AreEqual(2, ws.Internals.RowsCollection.Count);
             Assert.AreEqual(3, ws.Internals.CellsCollection.RowsCollection.SelectMany(r => r.Value.Values).Count());
 
-            ws.Cell("A4").Comment.AddText("Comment");
+            ws.Cell("A4").GetComment().AddText("Comment");
             Assert.AreEqual(2, ws.Internals.RowsCollection.Count);
             Assert.AreEqual(3, ws.Internals.CellsCollection.RowsCollection.SelectMany(r => r.Value.Values).Count());
 
@@ -69,16 +69,16 @@ namespace ClosedXML_Tests.Excel.Comments
 
                 var cell = ws.Cell(2, 2).SetValue("Comment 1");
 
-                cell.Comment
+                cell.GetComment()
                     .SetVisible(false)
                     .AddText(strExcelComment);
 
-                cell.Comment
+                cell.GetComment()
                     .Style
                     .Alignment
                     .SetAutomaticSize();
 
-                cell.Comment
+                cell.GetComment()
                     .Style
                     .ColorsAndLines
                     .SetFillColor(XLColor.Red);
@@ -87,8 +87,8 @@ namespace ClosedXML_Tests.Excel.Comments
 
                 Action<IXLCell> validate = c =>
                 {
-                    Assert.IsTrue(c.Comment.Style.Alignment.AutomaticSize);
-                    Assert.AreEqual(XLColor.Red, c.Comment.Style.ColorsAndLines.FillColor);
+                    Assert.IsTrue(c.GetComment().Style.Alignment.AutomaticSize);
+                    Assert.AreEqual(XLColor.Red, c.GetComment().Style.ColorsAndLines.FillColor);
                 };
 
                 validate(ws.Cell("B3"));
@@ -186,8 +186,8 @@ namespace ClosedXML_Tests.Excel.Comments
             {
                 var ws = workbook.Worksheets.First();
 
-                Assert.True(ws.Cell("A1").Comment.Visible);
-                Assert.False(ws.Cell("A4").Comment.Visible);
+                Assert.True(ws.Cell("A1").GetComment().Visible);
+                Assert.False(ws.Cell("A4").GetComment().Visible);
             }
         }
     }

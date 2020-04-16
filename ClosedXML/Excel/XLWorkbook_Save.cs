@@ -3168,7 +3168,7 @@ namespace ClosedXML.Excel
             foreach (var c in xlWorksheet.Internals.CellsCollection.GetCells(c => c.HasComment))
             {
                 var comment = new Comment { Reference = c.Address.ToStringRelative() };
-                var authorName = c.Comment.Author;
+                var authorName = c.GetComment().Author;
 
                 if (!authorsDict.TryGetValue(authorName, out int authorId))
                 {
@@ -3178,7 +3178,7 @@ namespace ClosedXML.Excel
                 comment.AuthorId = (UInt32)authorId;
 
                 var commentText = new CommentText();
-                foreach (var rt in c.Comment)
+                foreach (var rt in c.GetComment())
                 {
                     commentText.Append(GetRun(rt));
                 }
@@ -3261,14 +3261,15 @@ namespace ClosedXML.Excel
             var rowNumber = c.Address.RowNumber;
             var columnNumber = c.Address.ColumnNumber;
 
-            var shapeId = String.Concat("_x0000_s", c.Comment.ShapeId);
+            var comment = c.GetComment();
+            var shapeId = String.Concat("_x0000_s", comment.ShapeId);
             // Unique per cell (workbook?), e.g.: "_x0000_s1026"
             var anchor = GetAnchor(c);
-            var textBox = GetTextBox(c.Comment.Style);
-            var fill = new Vml.Fill { Color2 = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) };
-            if (c.Comment.Style.ColorsAndLines.FillTransparency < 1)
+            var textBox = GetTextBox(comment.Style);
+            var fill = new Vml.Fill { Color2 = "#" + comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2) };
+            if (comment.Style.ColorsAndLines.FillTransparency < 1)
                 fill.Opacity =
-                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.FillTransparency), 2).ToInvariantString();
+                    Math.Round(Convert.ToDouble(comment.Style.ColorsAndLines.FillTransparency), 2).ToInvariantString();
             var stroke = GetStroke(c);
             var shape = new Vml.Shape(
                 fill,
@@ -3277,21 +3278,21 @@ namespace ClosedXML.Excel
                 new Vml.Path { ConnectionPointType = ConnectValues.None },
                 textBox,
                 new ClientData(
-                    new MoveWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute
+                    new MoveWithCells(comment.Style.Properties.Positioning == XLDrawingAnchor.Absolute
                         ? "True"
                         : "False"), // Counterintuitive
-                    new ResizeWithCells(c.Comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells
+                    new ResizeWithCells(comment.Style.Properties.Positioning == XLDrawingAnchor.MoveAndSizeWithCells
                         ? "False"
                         : "True"), // Counterintuitive
                     anchor,
-                    new HorizontalTextAlignment(c.Comment.Style.Alignment.Horizontal.ToString().ToCamel()),
-                    new Vml.Spreadsheet.VerticalTextAlignment(c.Comment.Style.Alignment.Vertical.ToString().ToCamel()),
+                    new HorizontalTextAlignment(comment.Style.Alignment.Horizontal.ToString().ToCamel()),
+                    new Vml.Spreadsheet.VerticalTextAlignment(comment.Style.Alignment.Vertical.ToString().ToCamel()),
                     new AutoFill("False"),
                     new CommentRowTarget { Text = (rowNumber - 1).ToInvariantString() },
                     new CommentColumnTarget { Text = (columnNumber - 1).ToInvariantString() },
-                    new Locked(c.Comment.Style.Protection.Locked ? "True" : "False"),
-                    new LockText(c.Comment.Style.Protection.LockText ? "True" : "False"),
-                    new Visible(c.Comment.Visible ? "True" : "False")
+                    new Locked(comment.Style.Protection.Locked ? "True" : "False"),
+                    new LockText(comment.Style.Protection.LockText ? "True" : "False"),
+                    new Visible(comment.Visible ? "True" : "False")
                     )
                 { ObjectType = ObjectValues.Note }
                 )
@@ -3299,23 +3300,23 @@ namespace ClosedXML.Excel
                 Id = shapeId,
                 Type = "#" + XLConstants.Comment.ShapeTypeId,
                 Style = GetCommentStyle(c),
-                FillColor = "#" + c.Comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
-                StrokeColor = "#" + c.Comment.Style.ColorsAndLines.LineColor.Color.ToHex().Substring(2),
-                StrokeWeight = String.Concat(c.Comment.Style.ColorsAndLines.LineWeight.ToInvariantString(), "pt"),
-                InsetMode = c.Comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
+                FillColor = "#" + comment.Style.ColorsAndLines.FillColor.Color.ToHex().Substring(2),
+                StrokeColor = "#" + comment.Style.ColorsAndLines.LineColor.Color.ToHex().Substring(2),
+                StrokeWeight = String.Concat(comment.Style.ColorsAndLines.LineWeight.ToInvariantString(), "pt"),
+                InsetMode = comment.Style.Margins.Automatic ? InsetMarginValues.Auto : InsetMarginValues.Custom
             };
-            if (!String.IsNullOrWhiteSpace(c.Comment.Style.Web.AlternateText))
-                shape.Alternate = c.Comment.Style.Web.AlternateText;
+            if (!String.IsNullOrWhiteSpace(comment.Style.Web.AlternateText))
+                shape.Alternate = comment.Style.Web.AlternateText;
 
             return shape;
         }
 
         private static Vml.Stroke GetStroke(XLCell c)
         {
-            var lineDash = c.Comment.Style.ColorsAndLines.LineDash;
+            var lineDash = c.GetComment().Style.ColorsAndLines.LineDash;
             var stroke = new Vml.Stroke
             {
-                LineStyle = c.Comment.Style.ColorsAndLines.LineStyle.ToOpenXml(),
+                LineStyle = c.GetComment().Style.ColorsAndLines.LineStyle.ToOpenXml(),
                 DashStyle =
                     lineDash == XLDashStyle.RoundDot || lineDash == XLDashStyle.SquareDot
                         ? "shortDot"
@@ -3323,9 +3324,9 @@ namespace ClosedXML.Excel
             };
             if (lineDash == XLDashStyle.RoundDot)
                 stroke.EndCap = Vml.StrokeEndCapValues.Round;
-            if (c.Comment.Style.ColorsAndLines.LineTransparency < 1)
+            if (c.GetComment().Style.ColorsAndLines.LineTransparency < 1)
                 stroke.Opacity =
-                    Math.Round(Convert.ToDouble(c.Comment.Style.ColorsAndLines.LineTransparency), 2).ToInvariantString();
+                    Math.Round(Convert.ToDouble(c.GetComment().Style.ColorsAndLines.LineTransparency), 2).ToInvariantString();
             return stroke;
         }
 
@@ -3566,7 +3567,7 @@ namespace ClosedXML.Excel
 
         private static Anchor GetAnchor(XLCell cell)
         {
-            var c = cell.Comment;
+            var c = cell.GetComment();
             var cWidth = c.Style.Size.Width;
             var fcNumber = c.Position.Column - 1;
             var fcOffset = Convert.ToInt32(c.Position.ColumnOffset * 7.5);
@@ -3607,7 +3608,7 @@ namespace ClosedXML.Excel
 
         private static StringValue GetCommentStyle(XLCell cell)
         {
-            var c = cell.Comment;
+            var c = cell.GetComment();
             var sb = new StringBuilder("position:absolute; ");
 
             sb.Append("visibility:");

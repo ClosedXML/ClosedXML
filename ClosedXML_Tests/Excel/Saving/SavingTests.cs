@@ -37,7 +37,7 @@ namespace ClosedXML_Tests.Excel.Saving
                 var sheet = wb.Worksheets.Add("TestSheet");
 
                 // Comments might cause duplicate VmlDrawing Id's - ensure it's tested:
-                sheet.Cell(1, 1).Comment.AddText("abc");
+                sheet.Cell(1, 1).GetComment().AddText("abc");
 
                 wb.SaveAs(memoryStream, validate: true);
 
@@ -302,7 +302,7 @@ namespace ClosedXML_Tests.Excel.Saving
                     .MoveTo(50, 50)
                     .WithSize(200, 200);
 
-                ws.Cell("D4").Comment.SetVisible().AddText("This is a comment");
+                ws.Cell("D4").GetComment().SetVisible().AddText("This is a comment");
 
                 wb.SaveAs(ms);
             }
@@ -737,7 +737,7 @@ namespace ClosedXML_Tests.Excel.Saving
             using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\GoogleSheets\file1.xlsx"));
             using var wb = new XLWorkbook(stream);
             var ws = wb.Worksheets.First();
-            ws.Cell(1, 1).Comment.AddText("Test");
+            ws.Cell(1, 1).CreateComment().AddText("Test");
             Assert.DoesNotThrow(() => wb.SaveAs(ms));
         }
     }

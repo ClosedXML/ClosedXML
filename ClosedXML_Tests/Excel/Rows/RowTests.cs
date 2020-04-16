@@ -264,7 +264,7 @@ namespace ClosedXML_Tests.Excel
         public void DeleteRowOnWorksheetWithComment()
         {
             var ws = new XLWorkbook().AddWorksheet();
-            ws.Cell(4, 1).Comment.AddText("test");
+            ws.Cell(4, 1).GetComment().AddText("test");
             ws.Column(1).Width = 100;
             Assert.DoesNotThrow(() => ws.Row(1).Delete());
         }
