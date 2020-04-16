@@ -52,50 +52,50 @@ namespace ClosedXML_Examples.Misc
             // browser: http, ftp, mailto, gopher, news, nntp, etc.
             
             ws.Cell(++ro, 1).Value = "Link to a web page, no tooltip - Yahoo!";
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink(@"http://www.yahoo.com");
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(@"http://www.yahoo.com"));
 
             ws.Cell(++ro, 1).Value = "Link to a web page, with a tooltip - Yahoo!";
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink(@"http://www.yahoo.com", "Click to go to Yahoo!");
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(@"http://www.yahoo.com", "Click to go to Yahoo!"));
 
             ws.Cell(++ro, 1).Value = "Link to a file - same folder";
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink("Test.xlsx");
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink("Test.xlsx"));
 
             ws.Cell(++ro, 1).Value = "Link to a file - Absolute";
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink(@"D:\Test.xlsx");
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(@"D:\Test.xlsx"));
 
             ws.Cell(++ro, 1).Value = "Link to a file - relative address";
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink(@"../Test.xlsx");
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(@"../Test.xlsx"));
 
             ws.Cell(++ro, 1).Value = "Link to an address in this worksheet";
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink("B1");
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink("B1"));
 
             ws.Cell(++ro, 1).Value = "Link to an address in another worksheet";
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink("'Second Sheet'!A1");
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink("'Second Sheet'!A1"));
 
             // You can also set the properties of a hyperlink directly:
 
             ws.Cell(++ro, 1).Value = "Link to a range in this worksheet";
-            ws.Cell(ro, 1).Hyperlink.InternalAddress = "B1:C2";
-            ws.Cell(ro, 1).Hyperlink.Tooltip = "SquareBox";
+            ws.Cell(ro, 1).GetHyperlink().InternalAddress = "B1:C2";
+            ws.Cell(ro, 1).GetHyperlink().Tooltip = "SquareBox";
 
             ws.Cell(++ro, 1).Value = "Link to an email message";
-            ws.Cell(ro, 1).Hyperlink.ExternalAddress = new Uri(@"mailto:SantaClaus@NorthPole.com?subject=Presents");
+            ws.Cell(ro, 1).GetHyperlink().ExternalAddress = new Uri(@"mailto:SantaClaus@NorthPole.com?subject=Presents");
 
             // Deleting a hyperlink
             ws.Cell(++ro, 1).Value = "This is no longer a link";
-            ws.Cell(ro, 1).Hyperlink.InternalAddress = "A1";
-            ws.Cell(ro, 1).Hyperlink.Delete();
+            ws.Cell(ro, 1).GetHyperlink().InternalAddress = "A1";
+            ws.Cell(ro, 1).GetHyperlink().Delete();
 
             // Setting a hyperlink preserves previous formatting:
             ws.Cell(++ro, 1).Value = "Odd looking link";
             ws.Cell(ro, 1).Style.Font.FontColor = XLColor.Red;
             ws.Cell(ro, 1).Style.Font.Underline = XLFontUnderlineValues.Double;
-            ws.Cell(ro, 1).Hyperlink = new XLHyperlink(ws.Range("B1:C2"));
+            ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(ws.Range("B1:C2")));
             
             // Hyperlink via formula
             ws.Cell( ++ro, 1 ).SetValue( "Send Email" )
                 .SetFormulaA1( "=HYPERLINK(\"mailto:test@test.com\", \"Send Email\")" )
-                .Hyperlink = new XLHyperlink( "mailto:test@test.com", "'Send Email'" );
+                .SetHyperlink(new XLHyperlink( "mailto:test@test.com", "'Send Email'" ));
 
             // List all hyperlinks in a worksheet:
             var hyperlinksInWorksheet = ws.Hyperlinks;
@@ -105,12 +105,12 @@ namespace ClosedXML_Examples.Misc
 
             // Clearing a cell with a hyperlink
             ws.Cell(++ro, 1).Value = "ERROR!";
-            ws.Cell(ro, 1).Hyperlink.InternalAddress = "A1";
+            ws.Cell(ro, 1).GetHyperlink().InternalAddress = "A1";
             ws.Cell(ro, 1).Clear();
 
             // Deleting a cell with a hyperlink
             ws.Cell(++ro, 1).Value = "ERROR!";
-            ws.Cell(ro, 1).Hyperlink.InternalAddress = "A1";
+            ws.Cell(ro, 1).GetHyperlink().InternalAddress = "A1";
             ws.Cell(ro, 1).Clear();
 
             ws.Columns().AdjustToContents();

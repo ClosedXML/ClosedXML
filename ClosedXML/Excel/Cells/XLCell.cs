@@ -994,7 +994,7 @@ namespace ClosedXML.Excel
             {
                 if (clearOptions.HasFlag(XLClearOptions.Contents))
                 {
-                    Hyperlink = null;
+                    SetHyperlink(null);
                     _richText = null;
                     _cellValue = String.Empty;
                     FormulaA1 = String.Empty;
@@ -1101,37 +1101,37 @@ namespace ClosedXML.Excel
 
         public bool ShareString { get; set; }
 
-        public XLHyperlink Hyperlink
+        public XLHyperlink GetHyperlink()
         {
-            get
-            {
-                if (_hyperlink == null)
-                    Hyperlink = new XLHyperlink();
+            return _hyperlink ?? CreateHyperlink();
+        }
 
-                return _hyperlink;
-            }
+        public void SetHyperlink(XLHyperlink hyperlink)
+        {
+            Worksheet.Hyperlinks.TryDelete(Address);
 
-            set
-            {
-                Worksheet.Hyperlinks.TryDelete(Address);
+            _hyperlink = hyperlink;
 
-                _hyperlink = value;
+            if (_hyperlink == null) return;
 
-                if (_hyperlink == null) return;
+            _hyperlink.Worksheet = Worksheet;
+            _hyperlink.Cell = this;
 
-                _hyperlink.Worksheet = Worksheet;
-                _hyperlink.Cell = this;
+            Worksheet.Hyperlinks.Add(_hyperlink);
 
-                Worksheet.Hyperlinks.Add(_hyperlink);
+            if (SettingHyperlink) return;
 
-                if (SettingHyperlink) return;
+            if (GetStyleForRead().Font.FontColor.Equals(Worksheet.StyleValue.Font.FontColor))
+                Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
-                if (GetStyleForRead().Font.FontColor.Equals(Worksheet.StyleValue.Font.FontColor))
-                    Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
+            if (GetStyleForRead().Font.Underline == Worksheet.StyleValue.Font.Underline)
+                Style.Font.Underline = XLFontUnderlineValues.Single;
+        }
 
-                if (GetStyleForRead().Font.Underline == Worksheet.StyleValue.Font.Underline)
-                    Style.Font.Underline = XLFontUnderlineValues.Single;
-            }
+        public XLHyperlink CreateHyperlink()
+        {
+            SetHyperlink(new XLHyperlink());
+            return GetHyperlink();
         }
 
         public IXLCells InsertCellsAbove(int numberOfRows)
@@ -1471,14 +1471,6 @@ namespace ClosedXML.Excel
             get { return _hyperlink != null; }
         }
 
-        public XLHyperlink GetHyperlink()
-        {
-            if (HasHyperlink)
-                return Hyperlink;
-
-            return Value as XLHyperlink;
-        }
-
         public Boolean TryGetValue<T>(out T value)
         {
             var targetType = typeof(T);
@@ -1704,7 +1696,7 @@ namespace ClosedXML.Excel
         {
             if (typeof(T) == typeof(XLHyperlink))
             {
-                var hyperlink = GetHyperlink();
+                var hyperlink = _hyperlink ?? Value as XLHyperlink;
                 if (hyperlink != null)
                 {
                     value = (T)Convert.ChangeType(hyperlink, typeof(T));
@@ -2386,7 +2378,7 @@ namespace ClosedXML.Excel
             if (source._hyperlink != null)
             {
                 SettingHyperlink = true;
-                Hyperlink = new XLHyperlink(source.Hyperlink);
+                SetHyperlink(new XLHyperlink(source.GetHyperlink()));
                 SettingHyperlink = false;
             }
         }
