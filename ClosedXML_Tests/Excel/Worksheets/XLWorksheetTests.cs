@@ -670,19 +670,19 @@ namespace ClosedXML_Tests
             {
                 var ws1 = wb1.Worksheets.Add("Original");
 
-                var dv1 = ws1.Range("A:A").SetDataValidation();
+                var dv1 = ws1.Range("A:A").CreateDataValidation();
                 dv1.WholeNumber.EqualTo(2);
                 dv1.ErrorStyle = XLErrorStyle.Warning;
                 dv1.ErrorTitle = "Number out of range";
                 dv1.ErrorMessage = "This cell only allows the number 2.";
 
-                var dv2 = ws1.Ranges("B2:C3,D4:E5").SetDataValidation();
+                var dv2 = ws1.Ranges("B2:C3,D4:E5").CreateDataValidation();
                 dv2.Decimal.GreaterThan(5);
                 dv2.ErrorStyle = XLErrorStyle.Stop;
                 dv2.ErrorTitle = "Decimal number out of range";
                 dv2.ErrorMessage = "This cell only allows decimals greater than 5.";
 
-                var dv3 = ws1.Cell("D1").SetDataValidation();
+                var dv3 = ws1.Cell("D1").CreateDataValidation();
                 dv3.TextLength.EqualOrLessThan(10);
                 dv3.ErrorStyle = XLErrorStyle.Information;
                 dv3.ErrorTitle = "Text length out of range";

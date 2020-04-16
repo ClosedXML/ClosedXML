@@ -23,7 +23,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
                 var ws1 = wb.AddWorksheet();
                 var ws2 = wb.AddWorksheet();
 
-                var dv1 = ws1.Range("A1:A3").SetDataValidation();
+                var dv1 = ws1.Range("A1:A3").CreateDataValidation();
                 dv1.MinValue = "100";
 
                 var dv2 = ws2.DataValidations.Add(dv1);
@@ -49,7 +49,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var dv = ws.Range("A1:A3").SetDataValidation();
+                var dv = ws.Range("A1:A3").CreateDataValidation();
                 dv.MinValue = "100";
                 dv.AddRange(ws.Range("C1:C3"));
 
@@ -77,11 +77,11 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var dv1 = ws.Range("A1:A3").SetDataValidation();
+                var dv1 = ws.Range("A1:A3").CreateDataValidation();
                 dv1.MinValue = "100";
                 dv1.AddRange(ws.Range("C1:C3"));
 
-                var dv2 = ws.Range("E4:G6").SetDataValidation();
+                var dv2 = ws.Range("E4:G6").CreateDataValidation();
                 dv2.MinValue = "200";
 
                 var address = new XLRangeAddress(ws as XLWorksheet, searchAddress);
@@ -98,10 +98,10 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var dv1 = ws.Ranges("B2:G7,C11:C13").SetDataValidation();
+                var dv1 = ws.Ranges("B2:G7,C11:C13").CreateDataValidation();
                 dv1.MinValue = "100";
 
-                var dv2 = ws.Range("E4:G6").SetDataValidation();
+                var dv2 = ws.Range("E4:G6").CreateDataValidation();
                 dv2.MinValue = "100";
 
                 Assert.AreEqual(4, dv1.Ranges.Count());
@@ -116,7 +116,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var dv = ws.Range("A1:A3").SetDataValidation();
+                var dv = ws.Range("A1:A3").CreateDataValidation();
                 dv.MinValue = "100";
                 var range = ws.Range("C1:C3");
                 dv.AddRange(range);
@@ -135,9 +135,9 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet();
-                var dv1 = ws.Range("A1:A3").SetDataValidation();
+                var dv1 = ws.Range("A1:A3").CreateDataValidation();
                 dv1.MinValue = "100";
-                var dv2 = ws.Range("B1:B3").SetDataValidation();
+                var dv2 = ws.Range("B1:B3").CreateDataValidation();
                 dv2.MinValue = "100";
 
                 (ws.DataValidations as XLDataValidations).Consolidate();

@@ -64,8 +64,8 @@ namespace ClosedXML_Tests.Excel.ConditionalFormats
 
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
-            ws.Range("C2:C5").SetDataValidation().Decimal.Between(1, 5);
-            ws.Range("D2:D5").SetDataValidation().Decimal.Between(1, 5);
+            ws.Range("C2:C5").CreateDataValidation().Decimal.Between(1, 5);
+            ws.Range("D2:D5").CreateDataValidation().Decimal.Between(1, 5);
 
             using (var ms = new MemoryStream())
             {

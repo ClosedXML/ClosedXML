@@ -281,7 +281,7 @@ namespace ClosedXML_Tests.Excel.Ranges
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Sheet1");
-                ws.Range("B2:B12").SetDataValidation()
+                ws.Range("B2:B12").CreateDataValidation()
                     .Decimal.EqualOrGreaterThan(0);
 
                 var usedCells = ws.CellsUsed(XLCellsUsedOptions.All).ToList();
@@ -344,7 +344,7 @@ namespace ClosedXML_Tests.Excel.Ranges
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Sheet1");
-                ws.SetDataValidation().WholeNumber.GreaterThan(0);
+                ws.CreateDataValidation().WholeNumber.GreaterThan(0);
 
                 var firstCell = ws.FirstCellUsed(XLCellsUsedOptions.All);
 
@@ -359,7 +359,7 @@ namespace ClosedXML_Tests.Excel.Ranges
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Sheet1");
-                ws.SetDataValidation().WholeNumber.GreaterThan(0);
+                ws.CreateDataValidation().WholeNumber.GreaterThan(0);
 
                 var lastCell = ws.LastCellUsed(XLCellsUsedOptions.All);
 

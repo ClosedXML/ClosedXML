@@ -64,29 +64,15 @@ namespace ClosedXML.Excel
             get { return RangeAddress.Worksheet; }
         }
 
-        public IXLDataValidation NewDataValidation
+        public IXLDataValidation CreateDataValidation()
         {
-            get
-            {
-                var newRange = AsRange();
-                var dataValidation = new XLDataValidation(newRange);
-                Worksheet.DataValidations.Add(dataValidation);
-                return dataValidation;
-            }
+            var newRange = AsRange();
+            var dataValidation = new XLDataValidation(newRange);
+            Worksheet.DataValidations.Add(dataValidation);
+            return dataValidation;
         }
 
-        /// <summary>
-        /// Get the data validation rule containing current range or create a new one if no rule was defined for range.
-        /// </summary>
-        public IXLDataValidation DataValidation
-        {
-            get
-            {
-                return SetDataValidation();
-            }
-        }
-
-        private IXLDataValidation GetDataValidation()
+        public IXLDataValidation GetDataValidation()
         {
             Worksheet.DataValidations.TryGet(RangeAddress, out var existingDataValidation);
             return existingDataValidation;
@@ -422,7 +408,7 @@ namespace ClosedXML.Excel
 
             if (clearOptions.HasFlag(XLClearOptions.DataValidation))
             {
-                var validation = NewDataValidation;
+                var validation = CreateDataValidation();
                 Worksheet.DataValidations.Delete(validation);
             }
 
@@ -2148,6 +2134,7 @@ namespace ClosedXML.Excel
             return Worksheet.RangeRow(new XLRangeAddress(firstCellAddress, lastCellAddress));
         }
 
+        [Obsolete("Use GetDataValidation() to access the existing rule, or CreateDataValidation() to create a new one.")]
         public IXLDataValidation SetDataValidation()
         {
             var existingValidation = GetDataValidation();

@@ -711,7 +711,7 @@ namespace ClosedXML_Tests.Excel.Saving
             using (var ms = new MemoryStream())
             {
                 var ws = wb.AddWorksheet("WithDataValidation");
-                ws.Range("B4:B4").SetDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("B4:B4").CreateDataValidation().WholeNumber.Between(0, 1);
 
                 ws.Row(1).InsertRowsAbove(1);
                 var dv = ws.DataValidations.ToArray();

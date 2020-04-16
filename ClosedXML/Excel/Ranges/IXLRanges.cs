@@ -53,6 +53,12 @@ namespace ClosedXML.Excel
 
         IXLStyle Style { get; set; }
 
+        /// <summary>
+        /// Creates a new data validation rule for the ranges collection, replacing the existing ones.
+        /// </summary>
+        IXLDataValidation CreateDataValidation();
+
+        [Obsolete("Use CreateDataValidation() instead.")]
         IXLDataValidation SetDataValidation();
 
         /// <summary>

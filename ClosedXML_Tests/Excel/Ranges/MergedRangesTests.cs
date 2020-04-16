@@ -271,14 +271,14 @@ namespace ClosedXML_Tests
             using (XLWorkbook wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell("A1").NewDataValidation.WholeNumber.Between(1, 2);
-                ws.Cell("A2").NewDataValidation.Date.GreaterThan(new System.DateTime(2018, 1, 1));
+                ws.Cell("A1").CreateDataValidation().WholeNumber.Between(1, 2);
+                ws.Cell("A2").CreateDataValidation().Date.GreaterThan(new System.DateTime(2018, 1, 1));
 
                 ws.Range("A1:A2").Merge();
 
                 Assert.IsTrue(ws.Cell("A1").HasDataValidation);
-                Assert.AreEqual("1", ws.Cell("A1").DataValidation.MinValue);
-                Assert.AreEqual("2", ws.Cell("A1").DataValidation.MaxValue);
+                Assert.AreEqual("1", ws.Cell("A1").GetDataValidation().MinValue);
+                Assert.AreEqual("2", ws.Cell("A1").GetDataValidation().MaxValue);
                 Assert.IsFalse(ws.Cell("A2").HasDataValidation);
             }
         }

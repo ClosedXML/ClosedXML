@@ -43,8 +43,6 @@ namespace ClosedXML.Excel
         /// <exception cref="ArgumentException"></exception>
         XLDataType DataType { get; set; }
 
-        IXLDataValidation DataValidation { get; }
-
         /// <summary>
         /// Gets or sets the cell's formula with A1 references.
         /// </summary>
@@ -79,8 +77,6 @@ namespace ClosedXML.Excel
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
         Boolean NeedsRecalculation { get; }
-
-        IXLDataValidation NewDataValidation { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this cell's text should be shared or not.
@@ -180,6 +176,11 @@ namespace ClosedXML.Excel
         IXLComment CreateComment();
 
         /// <summary>
+        /// Creates a new data validation rule for the cell, replacing the existing one.
+        /// </summary>
+        IXLDataValidation CreateDataValidation();
+
+        /// <summary>
         /// Replaces a value of the cell with a newly created rich text object.
         /// </summary>
         IXLRichText CreateRichText();
@@ -201,6 +202,11 @@ namespace ClosedXML.Excel
         /// Returns the comment for the cell or create a new instance if there is no comment on the cell.
         /// </summary>
         IXLComment GetComment();
+
+        /// <summary>
+        /// Returns a data validation rule assigned to the cell, if any, or creates a new instance of data validation rule if no rule exists.
+        /// </summary>
+        IXLDataValidation GetDataValidation();
 
         /// <summary>
         /// Gets the cell's value converted to DateTime.
@@ -380,6 +386,7 @@ namespace ClosedXML.Excel
         /// <returns></returns>
         IXLCell SetDataType(XLDataType dataType);
 
+        [Obsolete("Use GetDataValidation to access the existing rule, or CreateDataValidation() to create a new one.")]
         IXLDataValidation SetDataValidation();
 
         IXLCell SetFormulaA1(String formula);

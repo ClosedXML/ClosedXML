@@ -24,7 +24,7 @@ namespace ClosedXML_Tests
 
             c.Style.Fill.BackgroundColor = backgroundColor;
             c.Style.Font.FontColor = foregroundColor;
-            c.SetDataValidation().Custom("B1");
+            c.CreateDataValidation().Custom("B1");
 
             ////
 
@@ -71,7 +71,7 @@ namespace ClosedXML_Tests
                 Assert.IsTrue(cell.HasComment);
             }
 
-            Assert.AreEqual("B1", ws.Cell("A1").DataValidation.Value);
+            Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
 
             return wb;
         }
@@ -93,7 +93,7 @@ namespace ClosedXML_Tests
                     Assert.AreEqual(ws.Style.Font.FontColor, c.Style.Font.FontColor);
                     Assert.IsFalse(ws.ConditionalFormats.Any());
                     Assert.IsFalse(c.HasComment);
-                    Assert.AreEqual(String.Empty, c.DataValidation.Value);
+                    Assert.AreEqual(String.Empty, c.GetDataValidation().Value);
                 }
             }
         }
@@ -116,7 +116,7 @@ namespace ClosedXML_Tests
                     Assert.IsTrue(c.HasComment);
                 }
 
-                Assert.AreEqual("B1", ws.Cell("A1").DataValidation.Value);
+                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
 
                 Assert.AreEqual(XLDataType.Text, ws.Cell("A1").DataType);
                 Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
@@ -143,7 +143,7 @@ namespace ClosedXML_Tests
                     Assert.IsTrue(c.HasComment);
                 }
 
-                Assert.AreEqual("B1", ws.Cell("A1").DataValidation.Value);
+                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
             }
         }
 
@@ -169,7 +169,7 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
                 Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
 
-                Assert.AreEqual("B1", ws.Cell("A1").DataValidation.Value);
+                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
             }
         }
 
@@ -195,7 +195,7 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
                 Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
 
-                Assert.AreEqual("B1", ws.Cell("A1").DataValidation.Value);
+                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
             }
         }
 
@@ -221,7 +221,7 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
                 Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
 
-                Assert.AreEqual("B1", ws.Cell("A1").DataValidation.Value);
+                Assert.AreEqual("B1", ws.Cell("A1").GetDataValidation().Value);
             }
         }
 
@@ -247,7 +247,7 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(XLDataType.Text, ws.Cell("A2").DataType);
                 Assert.AreEqual(XLDataType.DateTime, ws.Cell("A3").DataType);
 
-                Assert.AreEqual(string.Empty, ws.Cell("A1").DataValidation.Value);
+                Assert.AreEqual(string.Empty, ws.Cell("A1").GetDataValidation().Value);
             }
         }
 
