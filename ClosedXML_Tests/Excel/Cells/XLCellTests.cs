@@ -520,7 +520,7 @@ namespace ClosedXML_Tests
 
                 var linkCell1 = ws1.Cell("A1");
                 linkCell1.Value = "Link to IXLCell";
-                linkCell1.Hyperlink = new XLHyperlink(targetCell);
+                linkCell1.SetHyperlink(new XLHyperlink(targetCell));
 
                 var success = linkCell1.TryGetValue(out XLHyperlink hyperlink);
                 Assert.IsTrue(success);

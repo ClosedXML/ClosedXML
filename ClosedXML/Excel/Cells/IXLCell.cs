@@ -71,8 +71,6 @@ namespace ClosedXML.Excel
 
         Boolean HasSparkline { get; }
 
-        XLHyperlink Hyperlink { get; set; }
-
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
@@ -181,6 +179,11 @@ namespace ClosedXML.Excel
         IXLDataValidation CreateDataValidation();
 
         /// <summary>
+        /// Creates a new hyperlink replacing the existing one.
+        /// </summary>
+        XLHyperlink CreateHyperlink();
+
+        /// <summary>
         /// Replaces a value of the cell with a newly created rich text object.
         /// </summary>
         IXLRichText CreateRichText();
@@ -227,6 +230,9 @@ namespace ClosedXML.Excel
         /// </summary>
         String GetFormattedString();
 
+        /// <summary>
+        /// Returns a hyperlink for the cell, if any, or creates a new instance is there is no hyperlink.
+        /// </summary>
         XLHyperlink GetHyperlink();
 
         /// <summary>
@@ -392,6 +398,8 @@ namespace ClosedXML.Excel
         IXLCell SetFormulaA1(String formula);
 
         IXLCell SetFormulaR1C1(String formula);
+
+        void SetHyperlink(XLHyperlink hyperlink);
 
         /// <summary>
         /// Sets the cell's value.

@@ -2801,11 +2801,11 @@ namespace ClosedXML.Excel
                     xlCell.SettingHyperlink = true;
 
                     if (hl.Id != null)
-                        xlCell.Hyperlink = new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip);
+                        xlCell.SetHyperlink(new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip));
                     else if (hl.Location != null)
-                        xlCell.Hyperlink = new XLHyperlink(hl.Location.Value, tooltip);
+                        xlCell.SetHyperlink(new XLHyperlink(hl.Location.Value, tooltip));
                     else
-                        xlCell.Hyperlink = new XLHyperlink(hl.Reference.Value, tooltip);
+                        xlCell.SetHyperlink(new XLHyperlink(hl.Reference.Value, tooltip));
 
                     xlCell.SettingHyperlink = false;
                 }
