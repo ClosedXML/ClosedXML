@@ -18,12 +18,12 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
-            cell.RichText.AddText("12");
+            cell.CreateRichText().AddText("12");
             cell.DataType = XLDataType.Number;
 
             Assert.AreEqual(12.0, cell.GetDouble());
 
-            IXLRichText richText = cell.RichText;
+            IXLRichText richText = cell.GetRichText();
 
             Assert.AreEqual("12", richText.ToString());
 
@@ -44,14 +44,14 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
-            IXLRichText richString = cell.RichText;
+            IXLRichText richString = cell.CreateRichText();
 
             string text = "Hello";
             richString.AddText(text).SetBold().SetFontColor(XLColor.Red);
 
             Assert.AreEqual(cell.GetString(), text);
-            Assert.AreEqual(cell.RichText.First().Bold, true);
-            Assert.AreEqual(cell.RichText.First().FontColor, XLColor.Red);
+            Assert.AreEqual(cell.GetRichText().First().Bold, true);
+            Assert.AreEqual(cell.GetRichText().First().FontColor, XLColor.Red);
 
             Assert.AreEqual(1, richString.Count);
 
@@ -72,14 +72,14 @@ namespace ClosedXML_Tests
 
             string text = number.ToString();
 
-            Assert.AreEqual(cell.RichText.ToString(), text);
-            Assert.AreEqual(cell.RichText.First().Bold, true);
-            Assert.AreEqual(cell.RichText.First().FontColor, XLColor.Red);
+            Assert.AreEqual(cell.GetRichText().ToString(), text);
+            Assert.AreEqual(cell.GetRichText().First().Bold, true);
+            Assert.AreEqual(cell.GetRichText().First().FontColor, XLColor.Red);
 
-            Assert.AreEqual(1, cell.RichText.Count);
+            Assert.AreEqual(1, cell.GetRichText().Count);
 
-            cell.RichText.AddText("World");
-            Assert.AreEqual(cell.RichText.First().Text, text, "Item in collection is not the same as the one returned");
+            cell.GetRichText().AddText("World");
+            Assert.AreEqual(cell.GetRichText().First().Text, text, "Item in collection is not the same as the one returned");
         }
 
         [Test]
@@ -95,14 +95,14 @@ namespace ClosedXML_Tests
 
             string text = number.ToString();
 
-            Assert.AreEqual(cell.RichText.ToString(), text);
-            Assert.AreEqual(cell.RichText.First().Bold, true);
-            Assert.AreEqual(cell.RichText.First().FontColor, XLColor.Red);
+            Assert.AreEqual(cell.GetRichText().ToString(), text);
+            Assert.AreEqual(cell.GetRichText().First().Bold, true);
+            Assert.AreEqual(cell.GetRichText().First().FontColor, XLColor.Red);
 
-            Assert.AreEqual(1, cell.RichText.Count);
+            Assert.AreEqual(1, cell.GetRichText().Count);
 
-            cell.RichText.AddText("World");
-            Assert.AreEqual(cell.RichText.First().Text, text, "Item in collection is not the same as the one returned");
+            cell.GetRichText().AddText("World");
+            Assert.AreEqual(cell.GetRichText().First().Text, text, "Item in collection is not the same as the one returned");
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace ClosedXML_Tests
         public void ClearTest()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText(" ");
@@ -130,7 +130,7 @@ namespace ClosedXML_Tests
         public void CountTest()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText(" ");
@@ -144,7 +144,7 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
-            cell.RichText.AddText("123");
+            cell.GetRichText().AddText("123");
 
             Assert.AreEqual(true, cell.HasRichText);
 
@@ -156,7 +156,7 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual(false, cell.HasRichText);
 
-            cell.RichText.AddText("123");
+            cell.GetRichText().AddText("123");
 
             Assert.AreEqual(true, cell.HasRichText);
 
@@ -164,7 +164,7 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual(false, cell.HasRichText);
 
-            cell.RichText.AddText("123");
+            cell.GetRichText().AddText("123");
 
             Assert.AreEqual(true, cell.HasRichText);
 
@@ -180,7 +180,7 @@ namespace ClosedXML_Tests
         public void Substring_All_From_OneString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -192,14 +192,14 @@ namespace ClosedXML_Tests
 
             actual.First().SetBold();
 
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.First().Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().First().Bold);
         }
 
         [Test]
         public void Substring_All_From_ThreeStrings()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
@@ -216,16 +216,16 @@ namespace ClosedXML_Tests
 
             actual.First().SetBold();
 
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.First().Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.Last().Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().First().Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().Last().Bold);
         }
 
         [Test]
         public void Substring_From_OneString_End()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -242,20 +242,20 @@ namespace ClosedXML_Tests
 
             actual.First().SetBold();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.First().Bold);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.Last().Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().First().Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().Last().Bold);
 
             richString.Last().SetItalic();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.First().Italic);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.Last().Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().First().Italic);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().Last().Italic);
 
             Assert.AreEqual(true, actual.First().Italic);
 
             richString.SetFontSize(20);
 
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.First().FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.Last().FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().First().FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().Last().FontSize);
 
             Assert.AreEqual(20, actual.First().FontSize);
         }
@@ -264,7 +264,7 @@ namespace ClosedXML_Tests
         public void Substring_From_OneString_Middle()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -282,23 +282,23 @@ namespace ClosedXML_Tests
 
             actual.First().SetBold();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.First().Bold);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(1).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.Last().Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().First().Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(1).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().Last().Bold);
 
             richString.Last().SetItalic();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.First().Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Italic);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.Last().Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().First().Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Italic);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().Last().Italic);
 
             Assert.AreEqual(false, actual.First().Italic);
 
             richString.SetFontSize(20);
 
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.First().FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(1).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.Last().FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().First().FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(1).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().Last().FontSize);
 
             Assert.AreEqual(20, actual.First().FontSize);
         }
@@ -307,7 +307,7 @@ namespace ClosedXML_Tests
         public void Substring_From_OneString_Start()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -324,20 +324,20 @@ namespace ClosedXML_Tests
 
             actual.First().SetBold();
 
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.First().Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.Last().Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().First().Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().Last().Bold);
 
             richString.Last().SetItalic();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.First().Italic);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.Last().Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().First().Italic);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().Last().Italic);
 
             Assert.AreEqual(false, actual.First().Italic);
 
             richString.SetFontSize(20);
 
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.First().FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.Last().FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().First().FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().Last().FontSize);
 
             Assert.AreEqual(20, actual.First().FontSize);
         }
@@ -346,7 +346,7 @@ namespace ClosedXML_Tests
         public void Substring_From_ThreeStrings_End1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
@@ -367,26 +367,26 @@ namespace ClosedXML_Tests
 
             actual.First().SetBold();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(0).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Bold);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(3).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(0).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(3).Bold);
 
             richString.Last().SetItalic();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(0).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Italic);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(3).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(0).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Italic);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(3).Italic);
 
             Assert.AreEqual(true, actual.First().Italic);
 
             richString.SetFontSize(20);
 
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(0).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(1).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(2).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(3).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(0).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(1).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(2).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(3).FontSize);
 
             Assert.AreEqual(20, actual.First().FontSize);
         }
@@ -395,7 +395,7 @@ namespace ClosedXML_Tests
         public void Substring_From_ThreeStrings_End2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
@@ -417,27 +417,27 @@ namespace ClosedXML_Tests
 
             actual.ElementAt(1).SetBold();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(0).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Bold);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(3).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(0).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(3).Bold);
 
             richString.Last().SetItalic();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(0).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Italic);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(3).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(0).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Italic);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(3).Italic);
 
             Assert.AreEqual(false, actual.ElementAt(0).Italic);
             Assert.AreEqual(true, actual.ElementAt(1).Italic);
 
             richString.SetFontSize(20);
 
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(0).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(1).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(2).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(3).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(0).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(1).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(2).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(3).FontSize);
 
             Assert.AreEqual(20, actual.ElementAt(0).FontSize);
             Assert.AreEqual(20, actual.ElementAt(1).FontSize);
@@ -447,7 +447,7 @@ namespace ClosedXML_Tests
         public void Substring_From_ThreeStrings_Mid1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
@@ -473,7 +473,7 @@ namespace ClosedXML_Tests
         public void Substring_From_ThreeStrings_Mid2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
@@ -500,7 +500,7 @@ namespace ClosedXML_Tests
         public void Substring_From_ThreeStrings_Start1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
@@ -521,26 +521,26 @@ namespace ClosedXML_Tests
 
             actual.First().SetBold();
 
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(0).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(3).Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(0).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(3).Bold);
 
             richString.First().SetItalic();
 
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(0).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(3).Italic);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(0).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(3).Italic);
 
             Assert.AreEqual(true, actual.First().Italic);
 
             richString.SetFontSize(20);
 
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(0).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(1).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(2).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(3).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(0).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(1).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(2).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(3).FontSize);
 
             Assert.AreEqual(20, actual.First().FontSize);
         }
@@ -549,7 +549,7 @@ namespace ClosedXML_Tests
         public void Substring_From_ThreeStrings_Start2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
@@ -571,27 +571,27 @@ namespace ClosedXML_Tests
 
             actual.ElementAt(1).SetBold();
 
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(0).Bold);
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(1).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Bold);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(3).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(0).Bold);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(1).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Bold);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(3).Bold);
 
             richString.First().SetItalic();
 
-            Assert.AreEqual(true, ws.Cell(1, 1).RichText.ElementAt(0).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(1).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(2).Italic);
-            Assert.AreEqual(false, ws.Cell(1, 1).RichText.ElementAt(3).Italic);
+            Assert.AreEqual(true, ws.Cell(1, 1).GetRichText().ElementAt(0).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(1).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(2).Italic);
+            Assert.AreEqual(false, ws.Cell(1, 1).GetRichText().ElementAt(3).Italic);
 
             Assert.AreEqual(true, actual.ElementAt(0).Italic);
             Assert.AreEqual(false, actual.ElementAt(1).Italic);
 
             richString.SetFontSize(20);
 
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(0).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(1).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(2).FontSize);
-            Assert.AreEqual(20, ws.Cell(1, 1).RichText.ElementAt(3).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(0).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(1).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(2).FontSize);
+            Assert.AreEqual(20, ws.Cell(1, 1).GetRichText().ElementAt(3).FontSize);
 
             Assert.AreEqual(20, actual.ElementAt(0).FontSize);
             Assert.AreEqual(20, actual.ElementAt(1).FontSize);
@@ -601,7 +601,7 @@ namespace ClosedXML_Tests
         public void Substring_IndexOutsideRange1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -612,7 +612,7 @@ namespace ClosedXML_Tests
         public void Substring_IndexOutsideRange2()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText("World");
@@ -624,7 +624,7 @@ namespace ClosedXML_Tests
         public void Substring_IndexOutsideRange3()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -635,7 +635,7 @@ namespace ClosedXML_Tests
         public void Substring_IndexOutsideRange4()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText("World");
@@ -650,7 +650,7 @@ namespace ClosedXML_Tests
         public void ToStringTest()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).RichText;
+            IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText(" ");
@@ -705,7 +705,7 @@ namespace ClosedXML_Tests
                 using (var inputStream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\InlinedRichText\ChangeRichText\inputfile.xlsx")))
                 using (var workbook = new XLWorkbook(inputStream))
                 {
-                    var richText = workbook.Worksheets.First().Cell("A1").RichText;
+                    var richText = workbook.Worksheets.First().Cell("A1").GetRichText();
                     testRichText(richText);
                     richText.AddText(" - changed");
                     workbook.SaveAs(outputStream);
@@ -716,7 +716,7 @@ namespace ClosedXML_Tests
                     var cell = wb.Worksheets.First().Cell("A1");
                     Assert.IsFalse(cell.ShareString);
                     Assert.IsTrue(cell.HasRichText);
-                    var rt = cell.RichText;
+                    var rt = cell.GetRichText();
                     Assert.AreEqual("Year (range: 3 yrs) - changed", rt.ToString());
                     testRichText(rt);
                 }
@@ -735,7 +735,7 @@ namespace ClosedXML_Tests
                         var ws = wb.AddWorksheet();
                         var cell = ws.FirstCell();
 
-                        cell.RichText.AddText("Bold").SetBold().AddText(" and red").SetBold().SetFontColor(XLColor.Red);
+                        cell.GetRichText().AddText("Bold").SetBold().AddText(" and red").SetBold().SetFontColor(XLColor.Red);
                         cell.ShareString = false;
 
                         //wb.SaveAs(ms);

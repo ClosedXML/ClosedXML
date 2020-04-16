@@ -84,8 +84,6 @@ namespace ClosedXML.Excel
 
         IXLDataValidation NewDataValidation { get; }
 
-        IXLRichText RichText { get; }
-
         /// <summary>
         /// Gets or sets a value indicating whether this cell's text should be shared or not.
         /// </summary>
@@ -179,6 +177,11 @@ namespace ClosedXML.Excel
         IXLCell CopyTo(String target);
 
         /// <summary>
+        /// Replaces a value of the cell with a newly created rich text object.
+        /// </summary>
+        IXLRichText CreateRichText();
+
+        /// <summary>
         /// Deletes the current cell and shifts the surrounding cells according to the shiftDeleteCells parameter.
         /// </summary>
         /// <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
@@ -211,6 +214,11 @@ namespace ClosedXML.Excel
         String GetFormattedString();
 
         XLHyperlink GetHyperlink();
+
+        /// <summary>
+        /// Returns the value of the cell if it formatted as a rich text.
+        /// </summary>
+        IXLRichText GetRichText();
 
         /// <summary>
         /// Gets the cell's value converted to a String.
