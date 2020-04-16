@@ -4,10 +4,11 @@ namespace ClosedXML.Excel
 {
     internal class XLHyperlinks: IXLHyperlinks
     {
-        private Dictionary<IXLAddress, XLHyperlink> hyperlinks = new Dictionary<IXLAddress, XLHyperlink>();
+        private readonly Dictionary<IXLAddress, XLHyperlink> _hyperlinks = new Dictionary<IXLAddress, XLHyperlink>();
+
         public IEnumerator<XLHyperlink> GetEnumerator()
         {
-            return hyperlinks.Values.GetEnumerator();
+            return _hyperlinks.Values.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -17,18 +18,38 @@ namespace ClosedXML.Excel
 
         public void Add(XLHyperlink hyperlink)
         {
-            hyperlinks.Add(hyperlink.Cell.Address, hyperlink);
+            _hyperlinks.Add(hyperlink.Cell.Address, hyperlink);
         }
 
         public void Delete(XLHyperlink hyperlink)
         {
-            hyperlinks.Remove(hyperlink.Cell.Address);
+            _hyperlinks.Remove(hyperlink.Cell.Address);
         }
 
         public void Delete(IXLAddress address)
         {
-            hyperlinks.Remove(address);
+            _hyperlinks.Remove(address);
         }
 
+        public bool TryDelete(IXLAddress address)
+        {
+            if (_hyperlinks.ContainsKey(address))
+            {
+                _hyperlinks.Remove(address);
+                return true;
+            }
+
+            return false;
+        }
+
+        public XLHyperlink Get(IXLAddress address)
+        {
+            return _hyperlinks[address];
+        }
+
+        public bool TryGet(IXLAddress address, out XLHyperlink hyperlink)
+        {
+            return _hyperlinks.TryGetValue(address, out hyperlink);
+        }
     }
 }

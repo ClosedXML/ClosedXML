@@ -1145,8 +1145,7 @@ namespace ClosedXML.Excel
 
             set
             {
-                if (Worksheet.Hyperlinks.Any(hl => Address.Equals(hl.Cell.Address)))
-                    Worksheet.Hyperlinks.Delete(Address);
+                Worksheet.Hyperlinks.TryDelete(Address);
 
                 _hyperlink = value;
 
