@@ -13,23 +13,23 @@ namespace ClosedXML_Examples.Misc
             c1.Value = 1;
             c2.Value = 2;
 
-            ws.Range("A2:A10").SetDataValidation().TextLength.EqualTo(1);
-            ws.Range("B2:B10").SetDataValidation().TextLength.NotEqualTo(2);
-            ws.Range("C2:C10").SetDataValidation().TextLength.GreaterThan(3);
-            ws.Range("D2:D10").SetDataValidation().TextLength.LessThan(4);
-            ws.Range("E2:E10").SetDataValidation().TextLength.EqualOrGreaterThan(5);
-            ws.Range("F2:F10").SetDataValidation().TextLength.EqualOrLessThan(6);
-            ws.Range("G2:G10").SetDataValidation().TextLength.Between(7, 8);
-            ws.Range("H2:H10").SetDataValidation().TextLength.NotBetween(9, 10);
+            ws.Range("A2:A10").CreateDataValidation().TextLength.EqualTo(1);
+            ws.Range("B2:B10").CreateDataValidation().TextLength.NotEqualTo(2);
+            ws.Range("C2:C10").CreateDataValidation().TextLength.GreaterThan(3);
+            ws.Range("D2:D10").CreateDataValidation().TextLength.LessThan(4);
+            ws.Range("E2:E10").CreateDataValidation().TextLength.EqualOrGreaterThan(5);
+            ws.Range("F2:F10").CreateDataValidation().TextLength.EqualOrLessThan(6);
+            ws.Range("G2:G10").CreateDataValidation().TextLength.Between(7, 8);
+            ws.Range("H2:H10").CreateDataValidation().TextLength.NotBetween(9, 10);
 
-            ws.Range("A11:A20").SetDataValidation().TextLength.EqualTo(c1);
-            ws.Range("B11:B20").SetDataValidation().TextLength.NotEqualTo(c1);
-            ws.Range("C11:C20").SetDataValidation().TextLength.GreaterThan(c1);
-            ws.Range("D11:D20").SetDataValidation().TextLength.LessThan(c1);
-            ws.Range("E11:E20").SetDataValidation().TextLength.EqualOrGreaterThan(c1);
-            ws.Range("F11:F20").SetDataValidation().TextLength.EqualOrLessThan(c1);
-            ws.Range("G11:G20").SetDataValidation().TextLength.Between(c1, c2);
-            ws.Range("H11:H20").SetDataValidation().TextLength.NotBetween(c1, c2);
+            ws.Range("A11:A20").CreateDataValidation().TextLength.EqualTo(c1);
+            ws.Range("B11:B20").CreateDataValidation().TextLength.NotEqualTo(c1);
+            ws.Range("C11:C20").CreateDataValidation().TextLength.GreaterThan(c1);
+            ws.Range("D11:D20").CreateDataValidation().TextLength.LessThan(c1);
+            ws.Range("E11:E20").CreateDataValidation().TextLength.EqualOrGreaterThan(c1);
+            ws.Range("F11:F20").CreateDataValidation().TextLength.EqualOrLessThan(c1);
+            ws.Range("G11:G20").CreateDataValidation().TextLength.Between(c1, c2);
+            ws.Range("H11:H20").CreateDataValidation().TextLength.NotBetween(c1, c2);
 
             wb.SaveAs(filePath);
         }

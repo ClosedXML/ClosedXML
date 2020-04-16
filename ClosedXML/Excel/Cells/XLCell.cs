@@ -135,25 +135,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLDataValidation NewDataValidation
-        {
-            get
-            {
-                return AsRange().NewDataValidation; // Call the data validation without breaking it into pieces
-            }
-        }
-
-        /// <summary>
-        /// Get the data validation rule containing current cell or create a new one if no rule was defined for cell.
-        /// </summary>
-        public IXLDataValidation DataValidation
-        {
-            get
-            {
-                return SetDataValidation();
-            }
-        }
-
         internal XLComment GetComment()
         {
             return _comment ?? CreateComment();
@@ -166,11 +147,6 @@ namespace ClosedXML.Excel
         }
 
         #region IXLCell Members
-
-        IXLDataValidation IXLCell.DataValidation
-        {
-            get { return DataValidation; }
-        }
 
         IXLWorksheet IXLCell.Worksheet
         {
@@ -1045,7 +1021,7 @@ namespace ClosedXML.Excel
 
                 if (clearOptions.HasFlag(XLClearOptions.DataValidation) && HasDataValidation)
                 {
-                    var validation = NewDataValidation;
+                    var validation = CreateDataValidation();
                     Worksheet.DataValidations.Delete(validation);
                 }
 
@@ -1423,21 +1399,34 @@ namespace ClosedXML.Excel
         /// <summary> The sparkline assigned to the cell </summary>
         public IXLSparkline Sparkline => Worksheet.SparklineGroups.GetSparkline(this);
 
+        public IXLDataValidation GetDataValidation()
+        {
+            return FindDataValidation() ?? CreateDataValidation();
+        }
+
         public Boolean HasDataValidation
         {
-            get { return GetDataValidation() != null; }
+            get { return FindDataValidation() != null; }
         }
 
         /// <summary>
         /// Get the data validation rule containing current cell.
         /// </summary>
         /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
-        private IXLDataValidation GetDataValidation()
+        private IXLDataValidation FindDataValidation()
         {
             Worksheet.DataValidations.TryGet(AsRange().RangeAddress, out var dataValidation);
             return dataValidation;
         }
 
+        public IXLDataValidation CreateDataValidation()
+        {
+            var validation = new XLDataValidation(AsRange());
+            Worksheet.DataValidations.Add(validation);
+            return validation;
+        }
+
+        [Obsolete("Use GetDataValidation() to access the existing rule, or CreateDataValidation() to create a new one.")]
         public IXLDataValidation SetDataValidation()
         {
             var validation = GetDataValidation();
@@ -2017,7 +2006,7 @@ namespace ClosedXML.Excel
                         var dvTargetRange = Worksheet.Range(dvTargetAddress);
                         if (newDataValidation == null)
                         {
-                            newDataValidation = dvTargetRange.SetDataValidation() as XLDataValidation;
+                            newDataValidation = dvTargetRange.CreateDataValidation() as XLDataValidation;
                             newDataValidation.CopyFrom(dataValidation);
                         }
                         else
@@ -2481,7 +2470,7 @@ namespace ClosedXML.Excel
             var eventTracking = Worksheet.EventTrackingEnabled;
             Worksheet.EventTrackingEnabled = false;
             if (otherCell.HasDataValidation)
-                CopyDataValidation(otherCell, otherCell.DataValidation);
+                CopyDataValidation(otherCell, otherCell.GetDataValidation());
             else if (HasDataValidation)
             {
                 Worksheet.DataValidations.Delete(AsRange());
@@ -2491,7 +2480,7 @@ namespace ClosedXML.Excel
 
         internal void CopyDataValidation(XLCell otherCell, IXLDataValidation otherDv)
         {
-            var thisDv = SetDataValidation() as XLDataValidation;
+            var thisDv = GetDataValidation() as XLDataValidation;
             thisDv.CopyFrom(otherDv);
             thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
             thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));

@@ -25,36 +25,36 @@ namespace ClosedXML_Tests.Excel.DataValidations
 
             ws.Cell("A1").SetValue("Cell below has Validation Only.");
             cell = ws.Cell("A2");
-            cell.DataValidation.List(ws.Range("$E$1:$E$4"));
+            cell.GetDataValidation().List(ws.Range("$E$1:$E$4"));
 
             ws.Cell("B1").SetValue("Cell below has Validation with a title.");
             cell = ws.Cell("B2");
-            cell.DataValidation.List(ws.Range("$E$1:$E$4"));
-            cell.DataValidation.InputTitle = "Title for B2";
+            cell.GetDataValidation().List(ws.Range("$E$1:$E$4"));
+            cell.GetDataValidation().InputTitle = "Title for B2";
 
-            Assert.AreEqual(XLAllowedValues.List, cell.DataValidation.AllowedValues);
-            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.DataValidation.Value);
-            Assert.AreEqual("Title for B2", cell.DataValidation.InputTitle);
+            Assert.AreEqual(XLAllowedValues.List, cell.GetDataValidation().AllowedValues);
+            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.GetDataValidation().Value);
+            Assert.AreEqual("Title for B2", cell.GetDataValidation().InputTitle);
 
             ws.Cell("C1").SetValue("Cell below has Validation with a message.");
             cell = ws.Cell("C2");
-            cell.DataValidation.List(ws.Range("$E$1:$E$4"));
-            cell.DataValidation.InputMessage = "Message for C2";
+            cell.GetDataValidation().List(ws.Range("$E$1:$E$4"));
+            cell.GetDataValidation().InputMessage = "Message for C2";
 
-            Assert.AreEqual(XLAllowedValues.List, cell.DataValidation.AllowedValues);
-            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.DataValidation.Value);
-            Assert.AreEqual("Message for C2", cell.DataValidation.InputMessage);
+            Assert.AreEqual(XLAllowedValues.List, cell.GetDataValidation().AllowedValues);
+            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.GetDataValidation().Value);
+            Assert.AreEqual("Message for C2", cell.GetDataValidation().InputMessage);
 
             ws.Cell("D1").SetValue("Cell below has Validation with title and message.");
             cell = ws.Cell("D2");
-            cell.DataValidation.List(ws.Range("$E$1:$E$4"));
-            cell.DataValidation.InputTitle = "Title for D2";
-            cell.DataValidation.InputMessage = "Message for D2";
+            cell.GetDataValidation().List(ws.Range("$E$1:$E$4"));
+            cell.GetDataValidation().InputTitle = "Title for D2";
+            cell.GetDataValidation().InputMessage = "Message for D2";
 
-            Assert.AreEqual(XLAllowedValues.List, cell.DataValidation.AllowedValues);
-            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.DataValidation.Value);
-            Assert.AreEqual("Title for D2", cell.DataValidation.InputTitle);
-            Assert.AreEqual("Message for D2", cell.DataValidation.InputMessage);
+            Assert.AreEqual(XLAllowedValues.List, cell.GetDataValidation().AllowedValues);
+            Assert.AreEqual("'Data Validation Issue'!$E$1:$E$4", cell.GetDataValidation().Value);
+            Assert.AreEqual("Title for D2", cell.GetDataValidation().InputTitle);
+            Assert.AreEqual("Message for D2", cell.GetDataValidation().InputMessage);
         }
 
         [Test]
@@ -63,13 +63,13 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Custom("Sheet1!A1");
+            ws.Cell("B1").CreateDataValidation().Custom("Sheet1!A1");
 
             IXLWorksheet ws2 = wb.AddWorksheet("Sheet2");
             ws2.Cell("A1").SetValue("B");
             ws.Cell("B1").CopyTo(ws2.Cell("B1"));
 
-            Assert.AreEqual("Sheet1!A1", ws2.Cell("B1").DataValidation.Value);
+            Assert.AreEqual("Sheet1!A1", ws2.Cell("B1").GetDataValidation().Value);
         }
 
         [Test, Ignore("Wait for proper formula shifting (#686)")]
@@ -78,10 +78,10 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Custom("A1");
+            ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.FirstRow().InsertRowsAbove(1);
 
-            Assert.AreEqual("A2", ws.Cell("B2").DataValidation.Value);
+            Assert.AreEqual("A2", ws.Cell("B2").GetDataValidation().Value);
         }
 
         [Test]
@@ -90,9 +90,9 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Custom("A1");
+            ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("B2"));
-            Assert.AreEqual("A2", ws.Cell("B2").DataValidation.Value);
+            Assert.AreEqual("A2", ws.Cell("B2").GetDataValidation().Value);
         }
 
         [Test, Ignore("Wait for proper formula shifting (#686)")]
@@ -101,10 +101,10 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Custom("A1");
+            ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.FirstColumn().InsertColumnsBefore(1);
 
-            Assert.AreEqual("B1", ws.Cell("C1").DataValidation.Value);
+            Assert.AreEqual("B1", ws.Cell("C1").GetDataValidation().Value);
         }
 
         [Test]
@@ -113,9 +113,9 @@ namespace ClosedXML_Tests.Excel.DataValidations
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
-            ws.Cell("B1").SetDataValidation().Custom("A1");
+            ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("C1"));
-            Assert.AreEqual("B1", ws.Cell("C1").DataValidation.Value);
+            Assert.AreEqual("B1", ws.Cell("C1").GetDataValidation().Value);
         }
 
         [Test]
@@ -130,10 +130,10 @@ namespace ClosedXML_Tests.Excel.DataValidations
 
             IXLTable table = ws.RangeUsed().CreateTable();
 
-            IXLDataValidation dv = table.DataRange.SetDataValidation();
+            IXLDataValidation dv = table.DataRange.CreateDataValidation();
             dv.ErrorTitle = "Error";
 
-            Assert.AreEqual("Error", table.DataRange.FirstCell().DataValidation.ErrorTitle);
+            Assert.AreEqual("Error", table.DataRange.FirstCell().GetDataValidation().ErrorTitle);
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
 
             IXLTable table = ws.RangeUsed().CreateTable();
 
-            IXLDataValidation dv = table.DataRange.SetDataValidation();
+            IXLDataValidation dv = table.DataRange.CreateDataValidation();
             dv.ErrorTitle = "Error";
 
             Assert.AreEqual("Error", ws.DataValidations.Single().ErrorTitle);
@@ -165,7 +165,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             //Arrange
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("DataValidation");
-            var validation = ws.Range(initialAddress).SetDataValidation();
+            var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);
             if (setValue)
                 ws.Range(initialAddress).Value = 50;
@@ -191,7 +191,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             //Arrange
             var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("DataValidation");
-            var validation = ws.Range(initialAddress).SetDataValidation();
+            var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);
             if (setValue)
                 ws.Range(initialAddress).Value = 50;
@@ -211,7 +211,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("DataValidation");
-                var validation = ws.Range("A1:C3").SetDataValidation();
+                var validation = ws.Range("A1:C3").CreateDataValidation();
                 validation.WholeNumber.Between(0, 100);
 
                 //Act
@@ -229,17 +229,17 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("DataValidation");
-                var validation = ws.Range("A1:C3").SetDataValidation();
+                var validation = ws.Range("A1:C3").CreateDataValidation();
                 validation.WholeNumber.Between(10, 100);
 
                 //Act
-                ws.Cell("B2").NewDataValidation.WholeNumber.Between(-100, -0);
+                ws.Cell("B2").CreateDataValidation().WholeNumber.Between(-100, -0);
 
                 //Assert
-                Assert.AreEqual("-100", ws.Cell("B2").DataValidation.MinValue);
+                Assert.AreEqual("-100", ws.Cell("B2").GetDataValidation().MinValue);
                 Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
                 Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2")
-                                .All(c => c.DataValidation.MinValue == "10"));
+                                .All(c => c.GetDataValidation().MinValue == "10"));
             }
         }
 
@@ -253,7 +253,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
 
             using (var wb = new XLWorkbook())
             {
-                var dv = wb.AddWorksheet("Sheet 1").Cell(1, 1).DataValidation;
+                var dv = wb.AddWorksheet("Sheet 1").Cell(1, 1).GetDataValidation();
 
                 Assert.Throws<ArgumentOutOfRangeException>(() => dv.List(values));
                 Assert.Throws<ArgumentOutOfRangeException>(() =>

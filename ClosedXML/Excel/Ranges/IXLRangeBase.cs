@@ -302,8 +302,19 @@ namespace ClosedXML.Excel
 
         IXLAutoFilter SetAutoFilter(Boolean value);
 
-        IXLDataValidation SetDataValidation();
+        /// <summary>
+        /// Returns a data validation rule assigned to the range, if any, or creates a new instance of data validation rule if no rule exists.
+        /// </summary>
+        IXLDataValidation GetDataValidation();
 
+        /// <summary>
+        /// Creates a new data validation rule for the range, replacing the existing one.
+        /// </summary>
+        IXLDataValidation CreateDataValidation();
+
+        [Obsolete("Use GetDataValidation() to access the existing rule, or CreateDataValidation() to create a new one.")]
+        IXLDataValidation SetDataValidation();
+        
         IXLConditionalFormat AddConditionalFormat();
 
         void Select();

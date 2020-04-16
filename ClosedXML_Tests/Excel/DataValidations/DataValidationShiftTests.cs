@@ -13,11 +13,11 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("DataValidationShift");
-                ws.Range("A1:A1").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("A2:B2").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("A3:C3").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("B4:B6").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("C7:D7").SetDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A1:A1").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A2:B2").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A3:C3").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("B4:B6").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("C7:D7").CreateDataValidation().WholeNumber.Between(0, 1);
                 ws.Cells("A1:D7").Value = 1;
 
                 ws.Column(2).InsertColumnsAfter(2);
@@ -38,11 +38,11 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("DataValidationShift");
-                ws.Range("A1:A1").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("B1:B2").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("C1:C3").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("D2:F2").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("G4:G5").SetDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A1:A1").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("B1:B2").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("C1:C3").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("D2:F2").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("G4:G5").CreateDataValidation().WholeNumber.Between(0, 1);
                 ws.Cells("A1:G5").Value = 1;
 
                 ws.Row(2).InsertRowsBelow(2);
@@ -63,11 +63,11 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("DataValidationShift");
-                ws.Range("A1:A1").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("A2:B2").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("A3:C3").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("B4:B6").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("C7:D7").SetDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A1:A1").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A2:B2").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A3:C3").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("B4:B6").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("C7:D7").CreateDataValidation().WholeNumber.Between(0, 1);
                 ws.Cells("A1:D7").Value = 1;
 
                 ws.Column(2).Delete();
@@ -87,11 +87,11 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("DataValidationShift");
-                ws.Range("A1:A1").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("B1:B2").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("C1:C3").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("D2:F2").SetDataValidation().WholeNumber.Between(0, 1);
-                ws.Range("G4:G5").SetDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("A1:A1").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("B1:B2").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("C1:C3").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("D2:F2").CreateDataValidation().WholeNumber.Between(0, 1);
+                ws.Range("G4:G5").CreateDataValidation().WholeNumber.Between(0, 1);
                 ws.Cells("A1:G5").Value = 1;
 
                 ws.Row(2).Delete();
@@ -111,7 +111,7 @@ namespace ClosedXML_Tests.Excel.DataValidations
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("DataValidationShift");
-                ws.AsRange().SetDataValidation().WholeNumber.Between(0, 1);
+                ws.AsRange().CreateDataValidation().WholeNumber.Between(0, 1);
                 var dv = ws.DataValidations.Single();
 
                 ws.Row(2).InsertRowsAbove(1);
