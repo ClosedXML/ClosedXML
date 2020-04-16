@@ -24,8 +24,6 @@ namespace ClosedXML.Excel
         /// </summary>
         Object CachedValue { get; }
 
-        IXLComment Comment { get; }
-
         /// <summary>
         /// Returns the current region. The current region is a range bounded by any combination of blank rows and blank columns
         /// </summary>
@@ -177,6 +175,11 @@ namespace ClosedXML.Excel
         IXLCell CopyTo(String target);
 
         /// <summary>
+        /// Creates a new comment for the cell, replacing the existing one.
+        /// </summary>
+        IXLComment CreateComment();
+
+        /// <summary>
         /// Replaces a value of the cell with a newly created rich text object.
         /// </summary>
         IXLRichText CreateRichText();
@@ -193,6 +196,11 @@ namespace ClosedXML.Excel
         /// <para>An exception will be thrown if the current value cannot be converted to Boolean.</para>
         /// </summary>
         Boolean GetBoolean();
+
+        /// <summary>
+        /// Returns the comment for the cell or create a new instance if there is no comment on the cell.
+        /// </summary>
+        IXLComment GetComment();
 
         /// <summary>
         /// Gets the cell's value converted to DateTime.

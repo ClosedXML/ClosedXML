@@ -91,10 +91,10 @@ namespace ClosedXML_Tests
 
             ws.Cell("A1").SetValue("Insert Below");
             ws.Cell("A2").SetValue("Already existing cell");
-            ws.Cell("A3").SetValue("Cell with comment").Comment.AddText("Comment here");
+            ws.Cell("A3").SetValue("Cell with comment").GetComment().AddText("Comment here");
 
             ws.Row(1).InsertRowsBelow(2);
-            Assert.AreEqual("Comment here", ws.Cell("A5").Comment.Text);
+            Assert.AreEqual("Comment here", ws.Cell("A5").GetComment().Text);
         }
 
         [Test]
@@ -105,10 +105,10 @@ namespace ClosedXML_Tests
 
             ws.Cell("A1").SetValue("Insert to the right");
             ws.Cell("B1").SetValue("Already existing cell");
-            ws.Cell("C1").SetValue("Cell with comment").Comment.AddText("Comment here");
+            ws.Cell("C1").SetValue("Cell with comment").GetComment().AddText("Comment here");
 
             ws.Column(1).InsertColumnsAfter(2);
-            Assert.AreEqual("Comment here", ws.Cell("E1").Comment.Text);
+            Assert.AreEqual("Comment here", ws.Cell("E1").GetComment().Text);
         }
 
         [Test]

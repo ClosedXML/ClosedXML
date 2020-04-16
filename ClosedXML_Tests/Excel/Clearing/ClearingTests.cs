@@ -20,7 +20,7 @@ namespace ClosedXML_Tests
             var c = ws.FirstCell()
                 .SetValue("Hello world!");
 
-            c.Comment.AddText("Some comment");
+            c.GetComment().AddText("Some comment");
 
             c.Style.Fill.BackgroundColor = backgroundColor;
             c.Style.Font.FontColor = foregroundColor;
@@ -32,7 +32,7 @@ namespace ClosedXML_Tests
                 .CellBelow()
                 .SetFormulaA1("=LEFT(A1,5)");
 
-            c.Comment.AddText("Another comment");
+            c.GetComment().AddText("Another comment");
 
             c.Style.Fill.BackgroundColor = backgroundColor;
             c.Style.Font.FontColor = foregroundColor;
@@ -43,7 +43,7 @@ namespace ClosedXML_Tests
                 .CellBelow(2)
                 .SetValue(new DateTime(2018, 1, 15));
 
-            c.Comment.AddText("A date");
+            c.GetComment().AddText("A date");
 
             c.Style.Fill.BackgroundColor = backgroundColor;
             c.Style.Font.FontColor = foregroundColor;

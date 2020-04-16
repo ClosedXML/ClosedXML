@@ -32,7 +32,7 @@ namespace ClosedXML_Examples
         private void AddWeb(XLWorkbook wb)
         {
             var ws = wb.Worksheets.Add("Web");
-            ws.Cell("A1").Comment.Style.Web.AlternateText = "The alternate text in case you need it.";
+            ws.Cell("A1").GetComment().Style.Web.AlternateText = "The alternate text in case you need it.";
         }
 
         private void AddSize(XLWorkbook wb)
@@ -42,23 +42,23 @@ namespace ClosedXML_Examples
             // Automatic size is a copy of the property comment.Style.Alignment.AutomaticSize
             // I created the duplicate because it makes more sense for it to be in Size
             // but Excel has it under the Alignment tab.
-            ws.Cell("A2").Comment.AddText("Things are very tight around here.");
-            ws.Cell("A2").Comment.Style.Size.SetAutomaticSize();
+            ws.Cell("A2").GetComment().AddText("Things are very tight around here.");
+            ws.Cell("A2").GetComment().Style.Size.SetAutomaticSize();
 
-            ws.Cell("A4").Comment.AddText("Different size");
-            ws.Cell("A4").Comment.Style
+            ws.Cell("A4").GetComment().AddText("Different size");
+            ws.Cell("A4").GetComment().Style
                 .Size.SetHeight(30) // The height is set in the same units as row.Height
                 .Size.SetWidth(30); // The width is set in the same units as row.Width
 
             // Set all comments to visible
-            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.Comment.SetVisible());
+            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.GetComment().SetVisible());
         }
 
         private void AddProtection(XLWorkbook wb)
         {
             var ws = wb.Worksheets.Add("Protection");
 
-            ws.Cell("A1").Comment.Style
+            ws.Cell("A1").GetComment().Style
                 .Protection.SetLocked(false)
                 .Protection.SetLockText(false);
         }
@@ -67,22 +67,22 @@ namespace ClosedXML_Examples
         {
             var ws = wb.Worksheets.Add("Properties");
 
-            ws.Cell("A1").Comment.Style.Properties.Positioning = XLDrawingAnchor.Absolute;
-            ws.Cell("A2").Comment.Style.Properties.Positioning = XLDrawingAnchor.MoveAndSizeWithCells;
-            ws.Cell("A3").Comment.Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
+            ws.Cell("A1").GetComment().Style.Properties.Positioning = XLDrawingAnchor.Absolute;
+            ws.Cell("A2").GetComment().Style.Properties.Positioning = XLDrawingAnchor.MoveAndSizeWithCells;
+            ws.Cell("A3").GetComment().Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
         }
 
         private void AddMagins(XLWorkbook wb)
         {
             var ws = wb.Worksheets.Add("Margins");
 
-            ws.Cell("A2").Comment
+            ws.Cell("A2").GetComment()
                 .SetVisible()
                 .AddText("Lorem ipsum dolor sit amet, adipiscing elit. ").AddNewLine()
                 .AddText("Nunc elementum, sapien a ultrices, commodo nisl. ").AddNewLine()
                 .AddText("Consequat erat lectus a nisi. Aliquam facilisis.");
 
-            ws.Cell("A2").Comment.Style
+            ws.Cell("A2").GetComment().Style
                 .Margins.SetAll(0.25)
                 .Size.SetAutomaticSize();
         }
@@ -91,11 +91,11 @@ namespace ClosedXML_Examples
         {
             var ws = wb.Worksheets.Add("Colors and Lines");
 
-            ws.Cell("A2").Comment
+            ws.Cell("A2").GetComment()
                 .AddText("Now ")
                 .AddText("THIS").SetBold().SetFontColor(XLColor.Red)
                 .AddText(" is colorful!");
-            ws.Cell("A2").Comment.Style
+            ws.Cell("A2").GetComment().Style
                 .ColorsAndLines.SetFillColor(XLColor.RichCarmine)
                 .ColorsAndLines.SetFillTransparency(0.25) // 25% opaque
                 .ColorsAndLines.SetLineColor(XLColor.Blue)
@@ -105,7 +105,7 @@ namespace ClosedXML_Examples
                 .ColorsAndLines.SetLineWeight(7.5);
 
             // Set all comments to visible
-            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.Comment.SetVisible());
+            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.GetComment().SetVisible());
         }
 
         private void AddStyleAlignment(XLWorkbook wb)
@@ -113,82 +113,82 @@ namespace ClosedXML_Examples
             var ws = wb.Worksheets.Add("Alignment");
 
             // Automagically adjust the size of the comment to fit the contents
-            ws.Cell("A1").Comment.Style.Alignment.SetAutomaticSize();
-            ws.Cell("A1").Comment.AddText("Things are pretty tight around here");
+            ws.Cell("A1").GetComment().Style.Alignment.SetAutomaticSize();
+            ws.Cell("A1").GetComment().AddText("Things are pretty tight around here");
 
             // Default values
-            ws.Cell("A3").Comment
+            ws.Cell("A3").GetComment()
                 .AddText("Default Alignments:").AddNewLine()
                 .AddText("Vertical = Top").AddNewLine()
                 .AddText("Horizontal = Left").AddNewLine()
                 .AddText("Orientation = Left to Right");
 
             // Let's change the alignments
-            ws.Cell("A8").Comment
+            ws.Cell("A8").GetComment()
                 .AddText("Vertical = Bottom").AddNewLine()
                 .AddText("Horizontal = Right");
-            ws.Cell("A8").Comment.Style
+            ws.Cell("A8").GetComment().Style
                 .Alignment.SetVertical(XLDrawingVerticalAlignment.Bottom)
                 .Alignment.SetHorizontal(XLDrawingHorizontalAlignment.Right);
 
             // And now the orientation...
-            ws.Cell("D3").Comment.AddText("Orientation = Bottom to Top");
-            ws.Cell("D3").Comment.Style
+            ws.Cell("D3").GetComment().AddText("Orientation = Bottom to Top");
+            ws.Cell("D3").GetComment().Style
                 .Alignment.SetOrientation(XLDrawingTextOrientation.BottomToTop)
                 .Alignment.SetAutomaticSize();
 
-            ws.Cell("E3").Comment.AddText("Orientation = Top to Bottom");
-            ws.Cell("E3").Comment.Style
+            ws.Cell("E3").GetComment().AddText("Orientation = Top to Bottom");
+            ws.Cell("E3").GetComment().Style
                 .Alignment.SetOrientation(XLDrawingTextOrientation.TopToBottom)
                 .Alignment.SetAutomaticSize();
 
-            ws.Cell("F3").Comment.AddText("Orientation = Vertical");
-            ws.Cell("F3").Comment.Style
+            ws.Cell("F3").GetComment().AddText("Orientation = Vertical");
+            ws.Cell("F3").GetComment().Style
                 .Alignment.SetOrientation(XLDrawingTextOrientation.Vertical)
                 .Alignment.SetAutomaticSize();
 
 
             // Set all comments to visible
-            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.Comment.SetVisible());
+            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.GetComment().SetVisible());
         }
 
         private static void AddMiscComments(XLWorkbook wb)
         {
             var ws = wb.Worksheets.Add("Comments");
 
-            ws.Cell("A1").SetValue("Hidden").Comment.AddText("Hidden");
-            ws.Cell("A2").SetValue("Visible").Comment.AddText("Visible");
-            ws.Cell("A3").SetValue("On Top").Comment.AddText("On Top");
-            ws.Cell("A4").SetValue("Underneath").Comment.AddText("Underneath");
-            ws.Cell("A4").Comment.Style.Alignment.SetVertical(XLDrawingVerticalAlignment.Bottom);
-            ws.Cell("A3").Comment.SetZOrder(ws.Cell("A4").Comment.ZOrder + 1);
+            ws.Cell("A1").SetValue("Hidden").GetComment().AddText("Hidden");
+            ws.Cell("A2").SetValue("Visible").GetComment().AddText("Visible");
+            ws.Cell("A3").SetValue("On Top").GetComment().AddText("On Top");
+            ws.Cell("A4").SetValue("Underneath").GetComment().AddText("Underneath");
+            ws.Cell("A4").GetComment().Style.Alignment.SetVertical(XLDrawingVerticalAlignment.Bottom);
+            ws.Cell("A3").GetComment().SetZOrder(ws.Cell("A4").GetComment().ZOrder + 1);
 
-            ws.Cell("D9").Comment.AddText("Vertical");
-            ws.Cell("D9").Comment.Style.Alignment.Orientation = XLDrawingTextOrientation.Vertical;
-            ws.Cell("D9").Comment.Style.Size.SetAutomaticSize();
+            ws.Cell("D9").GetComment().AddText("Vertical");
+            ws.Cell("D9").GetComment().Style.Alignment.Orientation = XLDrawingTextOrientation.Vertical;
+            ws.Cell("D9").GetComment().Style.Size.SetAutomaticSize();
 
-            ws.Cell("E9").Comment.AddText("Top to Bottom");
-            ws.Cell("E9").Comment.Style.Alignment.Orientation = XLDrawingTextOrientation.TopToBottom;
-            ws.Cell("E9").Comment.Style.Size.SetAutomaticSize();
+            ws.Cell("E9").GetComment().AddText("Top to Bottom");
+            ws.Cell("E9").GetComment().Style.Alignment.Orientation = XLDrawingTextOrientation.TopToBottom;
+            ws.Cell("E9").GetComment().Style.Size.SetAutomaticSize();
 
-            ws.Cell("F9").Comment.AddText("Bottom to Top");
-            ws.Cell("F9").Comment.Style.Alignment.Orientation = XLDrawingTextOrientation.BottomToTop;
-            ws.Cell("F9").Comment.Style.Size.SetAutomaticSize();
+            ws.Cell("F9").GetComment().AddText("Bottom to Top");
+            ws.Cell("F9").GetComment().Style.Alignment.Orientation = XLDrawingTextOrientation.BottomToTop;
+            ws.Cell("F9").GetComment().Style.Size.SetAutomaticSize();
 
-            ws.Cell("E1").Comment.Position.SetColumn(5);
-            ws.Cell("E1").Comment.AddText("Start on Col E, on top border");
-            ws.Cell("E1").Comment.Style.Size.SetWidth(10);
-            var cE3 = ws.Cell("E3").Comment;
+            ws.Cell("E1").GetComment().Position.SetColumn(5);
+            ws.Cell("E1").GetComment().AddText("Start on Col E, on top border");
+            ws.Cell("E1").GetComment().Style.Size.SetWidth(10);
+            var cE3 = ws.Cell("E3").GetComment();
             cE3.AddText("Size and position");
             cE3.Position.SetColumn(5).SetRow(4).SetColumnOffset(7).SetRowOffset(10);
             cE3.Style.Size.SetHeight(25).Size.SetWidth(10);
-            var cE7 = ws.Cell("E7").Comment;
+            var cE7 = ws.Cell("E7").GetComment();
             cE7.Position.SetColumn(6).SetRow(7).SetColumnOffset(0).SetRowOffset(0);
             cE7.Style.Size.SetHeight(ws.Row(7).Height).Size.SetWidth(ws.Column(6).Width);
 
-            ws.Cell("G1").Comment.AddText("Automatic Size");
-            ws.Cell("G1").Comment.Style.Alignment.SetAutomaticSize();
-            var cG3 = ws.Cell("G3").Comment;
+            ws.Cell("G1").GetComment().AddText("Automatic Size");
+            ws.Cell("G1").GetComment().Style.Alignment.SetAutomaticSize();
+            var cG3 = ws.Cell("G3").GetComment();
             cG3.SetAuthor("MDeLeon");
             cG3.AddSignature();
             cG3.AddText("This is a test of the emergency broadcast system.");
@@ -216,10 +216,10 @@ namespace ClosedXML_Examples
                 .Protection.SetLockText(false)
                 .Web.SetAlternateText("This won't be released to the web");
 
-            ws.Cell("A9").Comment.SetAuthor("MDeLeon").AddSignature().AddText("Something");
-            ws.Cell("A9").Comment.SetBold().SetFontColor(XLColor.DarkBlue);
+            ws.Cell("A9").GetComment().SetAuthor("MDeLeon").AddSignature().AddText("Something");
+            ws.Cell("A9").GetComment().SetBold().SetFontColor(XLColor.DarkBlue);
 
-            ws.CellsUsed(XLCellsUsedOptions.All, c => !c.Address.ToStringRelative().Equals("A1") && c.HasComment).ForEach(c => c.Comment.SetVisible());
+            ws.CellsUsed(XLCellsUsedOptions.All, c => !c.Address.ToStringRelative().Equals("A1") && c.HasComment).ForEach(c => c.GetComment().SetVisible());
         }
 
         private static void AddVisibilityComments(XLWorkbook wb)
@@ -227,19 +227,19 @@ namespace ClosedXML_Examples
             var ws = wb.Worksheets.Add("Visibility");
 
             // By default comments are hidden
-            ws.Cell("A1").SetValue("I have a hidden comment").Comment.AddText("Hidden");
+            ws.Cell("A1").SetValue("I have a hidden comment").GetComment().AddText("Hidden");
             
             // Set the comment as visible
-            ws.Cell("A2").Comment.SetVisible().AddText("Visible");
+            ws.Cell("A2").GetComment().SetVisible().AddText("Visible");
 
             // The ZOrder on previous comments were 1 and 2 respectively
             // here we're explicit about the ZOrder
-            ws.Cell("A3").Comment.SetZOrder(5).SetVisible().AddText("On Top");
+            ws.Cell("A3").GetComment().SetZOrder(5).SetVisible().AddText("On Top");
 
             // We want this comment to appear underneath the one for A3
             // so we set the ZOrder to something lower
-            ws.Cell("A4").Comment.SetZOrder(4).SetVisible().AddText("Underneath");
-            ws.Cell("A4").Comment.Style.Alignment.SetVertical(XLDrawingVerticalAlignment.Bottom);
+            ws.Cell("A4").GetComment().SetZOrder(4).SetVisible().AddText("Underneath");
+            ws.Cell("A4").GetComment().Style.Alignment.SetVertical(XLDrawingVerticalAlignment.Bottom);
             
             // Alternatively you could set all comments to visible with the following line:
             // ws.CellsUsed(true, c => c.HasComment).ForEach(c => c.Comment.SetVisible());
@@ -253,15 +253,15 @@ namespace ClosedXML_Examples
             
             ws.Columns().Width = 10;
 
-            ws.Cell("A1").Comment.AddText("This is an unusual place for a comment...");
-            ws.Cell("A1").Comment.Position
+            ws.Cell("A1").GetComment().AddText("This is an unusual place for a comment...");
+            ws.Cell("A1").GetComment().Position
                 .SetColumn(3) // Starting from the third column
                 .SetColumnOffset(5) // The comment will start in the middle of the third column
                 .SetRow(5) // Starting from the fifth row
                 .SetRowOffset(7.5); // The comment will start in the middle of the fifth row
 
             // Set all comments to visible
-            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.Comment.SetVisible());
+            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.GetComment().SetVisible());
         }
 
         private void AddSignatures(XLWorkbook wb)
@@ -272,14 +272,14 @@ namespace ClosedXML_Examples
             // ws.Cell("A2").Comment.AddSignature().AddText("Hello World!");
 
             // You can override this by specifying the comment's author:
-            ws.Cell("A2").Comment
+            ws.Cell("A2").GetComment()
                 .SetAuthor("MDeLeon")
                 .AddSignature()
                 .AddText("Hello World!");
             
 
             // Set all comments to visible
-            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.Comment.SetVisible());
+            ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.GetComment().SetVisible());
         }
     }
 }

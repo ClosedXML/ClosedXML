@@ -28,9 +28,9 @@ namespace ClosedXML_Examples
             // A1
 
             // edit existing comment
-            sheet.Cell("B3").Comment.AddNewLine();
-            sheet.Cell("B3").Comment.AddSignature();
-            sheet.Cell("B3").Comment.AddText("more comment");
+            sheet.Cell("B3").GetComment().AddNewLine();
+            sheet.Cell("B3").GetComment().AddSignature();
+            sheet.Cell("B3").GetComment().AddText("more comment");
 
             // delete
             //sheet.Cell("C1").DeleteComment();
@@ -39,11 +39,11 @@ namespace ClosedXML_Examples
             sheet.Cell("D3").Clear(XLClearOptions.Contents);
 
             // new basic
-            sheet.Cell("E1").Comment.AddText("non authored comment");
+            sheet.Cell("E1").GetComment().AddText("non authored comment");
 
             // new with author
-            sheet.Cell("F3").Comment.AddSignature();
-            sheet.Cell("F3").Comment.AddText("comment from author");
+            sheet.Cell("F3").GetComment().AddSignature();
+            sheet.Cell("F3").GetComment().AddText("comment from author");
 
             // TODO: merge with cells
             // TODO: resize with cells
