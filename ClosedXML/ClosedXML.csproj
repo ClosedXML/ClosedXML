@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40;net46</TargetFrameworks>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <AssemblyName>ClosedXML</AssemblyName>
     <PackageId>ClosedXML</PackageId>
     <Version>0.95.2</Version>
