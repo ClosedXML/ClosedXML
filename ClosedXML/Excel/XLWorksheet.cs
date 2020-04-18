@@ -1631,7 +1631,7 @@ namespace ClosedXML.Excel
         public override IXLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
-                return Cells(true, XLCellsUsedOptions.All);
+                return Cells(true, XLCellsUsedOptions.AllContents);
             else
                 return Range((this as IXLRangeBase).FirstCellUsed(XLCellsUsedOptions.All),
                              (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All))
