@@ -1,9 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClosedXML_Tests.Excel.Ranges
 {
@@ -22,6 +19,7 @@ namespace ClosedXML_Tests.Excel.Ranges
             ws.Cell(2, 2).Value = "B2";
             ws.Cell(4, 1).Value = "A4";
             ws.Cell(5, 2).Value = "B5";
+            ws.Cell(6, 2).Style.Fill.BackgroundColor = XLColor.Red;
         }
 
         [Test]
@@ -42,6 +40,24 @@ namespace ClosedXML_Tests.Excel.Ranges
                 i++;
             }
             Assert.AreEqual(1, i);
+
+            i = 0;
+            row = workbook.Worksheets.First().LastRowUsed(XLCellsUsedOptions.All);
+            Assert.AreEqual(6, row.RowNumber());
+            foreach (var cell in row.Cells())
+            {
+                i++;
+            }
+            Assert.AreEqual(1, i);
+
+            i = 0;
+            row = workbook.Worksheets.First().LastRowUsed(XLCellsUsedOptions.All);
+            Assert.AreEqual(6, row.RowNumber());
+            foreach (var cell in row.CellsUsed())
+            {
+                i++;
+            }
+            Assert.AreEqual(0, i);
         }
 
         [Test]
@@ -82,6 +98,22 @@ namespace ClosedXML_Tests.Excel.Ranges
                 i++;
             }
             Assert.AreEqual(1, i);
+
+            i = 0;
+            column = workbook.Worksheets.First().Column(2);
+            foreach (var cell in column.Cells())
+            {
+                i++;
+            }
+            Assert.AreEqual(3, i);
+
+            i = 0;
+            column = workbook.Worksheets.First().Column(2);
+            foreach (var cell in column.CellsUsed())
+            {
+                i++;
+            }
+            Assert.AreEqual(2, i);
         }
 
         [Test]
@@ -105,12 +137,25 @@ namespace ClosedXML_Tests.Excel.Ranges
         }
 
         [Test]
+        public void CountCellsInWorksheet()
+        {
+            var ws = workbook.Worksheets.First();
+            int i = 0;
+
+            foreach (var cell in ws.Cells()) // All cells with content or formats
+            {
+                i++;
+            }
+            Assert.AreEqual(6, i);
+        }
+
+        [Test]
         public void CountUsedCellsInWorksheet()
         {
             var ws = workbook.Worksheets.First();
             int i = 0;
 
-            foreach (var cell in ws.Cells()) // Only used cells in worksheet
+            foreach (var cell in ws.CellsUsed()) // Only used cells in worksheet
             {
                 i++;
             }
@@ -127,7 +172,7 @@ namespace ClosedXML_Tests.Excel.Ranges
             {
                 i++;
             }
-            Assert.AreEqual(15, i);
+            Assert.AreEqual(18, i);
         }
 
         [Test]
@@ -339,6 +384,5 @@ namespace ClosedXML_Tests.Excel.Ranges
                 Assert.AreEqual(XLHelper.LastCell, lastCell.Address.ToString());
             }
         }
-
     }
 }

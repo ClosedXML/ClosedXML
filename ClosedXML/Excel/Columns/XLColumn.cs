@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
         public override IXLCells Cells(Boolean usedCellsOnly)
         {
             if (usedCellsOnly)
-                return Cells(true, XLCellsUsedOptions.All);
+                return Cells(true, XLCellsUsedOptions.AllContents);
             else
                 return Cells(FirstCellUsed().Address.RowNumber, LastCellUsed().Address.RowNumber);
         }
