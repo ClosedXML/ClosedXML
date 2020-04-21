@@ -1599,13 +1599,19 @@ namespace ClosedXML.Excel
 
         private string GetNewTableName(string baseName)
         {
+            var existingTableNames = new HashSet<String>(
+                this.Workbook.Worksheets
+                    .SelectMany(ws => ws.Tables)
+                    .Select(t => t.Name),
+                StringComparer.OrdinalIgnoreCase);
+
             var i = 1;
             string tableName;
             do
             {
                 tableName = baseName + i.ToString();
                 i++;
-            } while (Tables.Any(t => t.Name == tableName));
+            } while (existingTableNames.Contains(tableName));
 
             return tableName;
         }
