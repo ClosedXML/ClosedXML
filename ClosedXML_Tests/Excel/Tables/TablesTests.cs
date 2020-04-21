@@ -1114,6 +1114,21 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void SecondTableOnNewSheetHasUniqueName()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet();
+                var t1 = ws1.FirstCell().InsertTable(Enumerable.Range(1, 10).Select(i => new { Number = i }));
+                Assert.AreEqual("Table1", t1.Name);
+
+                var ws2 = wb.AddWorksheet();
+                var t2 = ws2.FirstCell().InsertTable(Enumerable.Range(1, 10).Select(i => new { Number = i }));
+                Assert.AreEqual("Table2", t2.Name);
+            }
+        }
+
         private void AssertTablesAreEqual(IXLTable table1, IXLTable table2)
         {
             Assert.AreEqual(table1.RangeAddress.ToString(XLReferenceStyle.A1, false), table2.RangeAddress.ToString(XLReferenceStyle.A1, false));
