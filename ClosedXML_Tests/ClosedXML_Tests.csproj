@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net40;net46</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
-    <Version>0.95.0</Version>
+    <Version>0.95.1</Version>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release;Release.Signed</Configurations>
