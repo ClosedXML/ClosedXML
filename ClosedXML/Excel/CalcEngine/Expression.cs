@@ -509,10 +509,19 @@ namespace ClosedXML.Excel.CalcEngine
 
         public IEnumerator GetEnumerator()
         {
-            if (_value is string)
-                return new[] { (string)_value }.GetEnumerator();
-
-            return (_value as IEnumerable).GetEnumerator();
+            if (_value is string s)
+            {
+                yield return s;
+            }
+            else if (_value is IEnumerable ie)
+            {
+                foreach (var o in ie)
+                    yield return o;
+            }
+            else
+            {
+                yield return _value;
+            }
         }
 
         public override string LastParseItem
