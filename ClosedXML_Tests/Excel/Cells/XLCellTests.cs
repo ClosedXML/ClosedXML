@@ -370,6 +370,16 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetValue_TimeSpan_Good_Large()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            var timeSpan = TimeSpan.FromMilliseconds((double)int.MaxValue + 1);
+            bool success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out TimeSpan outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(timeSpan, outValue);
+        }
+
+        [Test]
         public void TryGetValue_TimeSpan_GoodString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");

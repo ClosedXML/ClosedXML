@@ -338,8 +338,8 @@ namespace ClosedXML.Excel
         internal static TimeSpan GetTimeSpan(double totalDays)
         {
             var timeSpan = TimeSpan.FromDays(totalDays);
-            var roundedMilliseconds = (int)Math.Round(timeSpan.TotalMilliseconds);
-            return new TimeSpan(0, 0, 0, 0, roundedMilliseconds);
+            var roundedMilliseconds = Math.Round(timeSpan.TotalMilliseconds);
+            return TimeSpan.FromMilliseconds(roundedMilliseconds);
         }
 
         public static Boolean ValidateName(String objectType, String newName, String oldName, IEnumerable<String> existingNames, out String message)
