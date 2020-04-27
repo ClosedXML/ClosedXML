@@ -1650,8 +1650,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                sheetName = sections[0].UnescapeSheetName();
-                sheetArea = sections[1];
+                sheetName = string.Join("!", sections.Take(sections.Length - 1)).UnescapeSheetName();
+                sheetArea = sections[sections.Length - 1];
             }
         }
 
