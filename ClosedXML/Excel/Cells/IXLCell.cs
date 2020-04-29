@@ -242,6 +242,24 @@ namespace ClosedXML.Excel
         /// </param>
         IXLTable InsertTable(DataTable data, Boolean createTable);
 
+        /// <summary>
+        /// Creates an Excel table from the given DataTable data elements.
+        /// </summary>
+        /// <param name="data">The table data.</param>
+        /// <param name="tableName">Name of the table.</param>
+        IXLTable InsertTable(DataTable data, String tableName);
+
+        /// <summary>
+        /// Inserts the DataTable data elements as a table and returns it.
+        /// </summary>
+        /// <param name="data">The table data.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="createTable">
+        /// if set to <c>true</c> it will create an Excel table.
+        /// <para>if set to <c>false</c> the table will be created in memory.</para>
+        /// </param>
+        IXLTable InsertTable(DataTable data, String tableName, Boolean createTable);
+
         XLTableCellType TableCellType();
 
         XLHyperlink Hyperlink { get; set; }
