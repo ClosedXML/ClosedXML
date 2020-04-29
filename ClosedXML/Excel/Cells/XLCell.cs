@@ -716,40 +716,30 @@ namespace ClosedXML.Excel
 
             if (createTable)
                 // Create a table and save it in the file
-                return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
+                return String.IsNullOrWhiteSpace(tableName) ? range.CreateTable() : range.CreateTable(tableName);
             else
                 // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
-                return tableName == null ? range.AsTable() : range.AsTable(tableName);
+                return String.IsNullOrWhiteSpace(tableName) ? range.AsTable() : range.AsTable(tableName);
         }
 
         public IXLTable InsertTable(DataTable data)
         {
-            return InsertTable(data, null, true);
+            return InsertTable(data, true);
         }
 
         public IXLTable InsertTable(DataTable data, Boolean createTable)
         {
-            return InsertTable(data, null, createTable);
-        }
-
-        public IXLTable InsertTable(DataTable data, String tableName)
-        {
-            return InsertTable(data, tableName, true);
-        }
-
-        public IXLTable InsertTable(DataTable data, String tableName, Boolean createTable)
-        {
             if (data == null || data.Columns.Count == 0)
                 return null;
 
-            if (XLHelper.IsValidA1Address(tableName) || XLHelper.IsValidRCAddress(tableName))
-                throw new InvalidOperationException(string.Format("Table name cannot be a valid Cell Address '{0}'.", tableName));
+            if (XLHelper.IsValidA1Address(data.TableName) || XLHelper.IsValidRCAddress(data.TableName))
+                throw new InvalidOperationException(string.Format("Table name cannot be a valid Cell Address '{0}'.", data.TableName));
 
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
             if (data.Rows.Cast<DataRow>().Any())
-                return InsertTable(data.Rows.Cast<DataRow>(), tableName, createTable);
+                return InsertTable(data.Rows.Cast<DataRow>(), data.TableName, createTable);
 
             var co = _columnNumber;
 
@@ -768,10 +758,10 @@ namespace ClosedXML.Excel
 
             if (createTable)
                 // Create a table and save it in the file
-                return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
+                return String.IsNullOrWhiteSpace(data.TableName) ? range.CreateTable() : range.CreateTable(data.TableName);
             else
                 // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
-                return tableName == null ? range.AsTable() : range.AsTable(tableName);
+                return String.IsNullOrWhiteSpace(data.TableName) ? range.AsTable() : range.AsTable(data.TableName);
         }
 
         internal XLRange InsertDataInternal<T>(IEnumerable<T> data, Boolean addHeadings, Boolean transpose)
