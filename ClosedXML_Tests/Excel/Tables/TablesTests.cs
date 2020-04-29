@@ -536,19 +536,23 @@ namespace ClosedXML_Tests.Excel
         [Test]
         public void TableNameCannotBeValidCellName()
         {
-            var dt = new DataTable("sheet1");
-            dt.Columns.Add("Patient", typeof(string));
-            dt.Rows.Add("David");
+            DataTable GetTable(string tableName)
+            {
+                var dt = new DataTable(tableName);
+                dt.Columns.Add("Patient", typeof(string));
+                dt.Rows.Add("David");
+                return dt;
+            }
 
             using (var wb = new XLWorkbook())
             {
                 IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "May2019"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "A1"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "R1C2"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "r3c2"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "R2C33333"));
-                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "RC"));
+                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(GetTable("May2019")));
+                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(GetTable("A1")));
+                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(GetTable("R1C2")));
+                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(GetTable("r3c2")));
+                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(GetTable("R2C33333")));
+                Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(GetTable("RC")));
             }
         }
 
