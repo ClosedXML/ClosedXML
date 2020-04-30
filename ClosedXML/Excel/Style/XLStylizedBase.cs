@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Read-only style property.
         /// </summary>
-        internal XLStyleValue StyleValue { get; private set; }
+        internal XLStyleValue StyleValue { get; private protected set; }
         XLStyleValue IXLStylized.StyleValue
         {
             get { return StyleValue; }
