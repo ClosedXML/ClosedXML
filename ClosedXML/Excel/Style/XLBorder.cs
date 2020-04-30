@@ -166,7 +166,18 @@ namespace ClosedXML.Excel
                     {
                         using (new RestoreOutsideBorder(r))
                         {
-                            r.Cells().Style.Border.OutsideBorder = value;
+                            foreach (var cell in r.Cells())
+                            {
+                                (cell.Style.Border as XLBorder)
+                                    .Modify(k =>
+                                    {
+                                        k.TopBorder =
+                                        k.BottomBorder =
+                                        k.LeftBorder =
+                                        k.RightBorder = value;
+                                        return k;
+                                    });
+                            }
                         }
                     }
                 }
@@ -184,9 +195,9 @@ namespace ClosedXML.Excel
                 {
                     Modify(k =>
                     {
-                        k.TopBorderColor = value.Key;
-                        k.BottomBorderColor = value.Key;
-                        k.LeftBorderColor = value.Key;
+                        k.TopBorderColor =
+                        k.BottomBorderColor =
+                        k.LeftBorderColor =
                         k.RightBorderColor = value.Key;
                         return k;
                     });
@@ -197,7 +208,19 @@ namespace ClosedXML.Excel
                     {
                         using (new RestoreOutsideBorder(r))
                         {
-                            r.Cells().Style.Border.OutsideBorderColor = value;
+                            foreach (var cell in r.Cells())
+                            {
+                                (cell.Style.Border as XLBorder)
+                                    .Modify(k =>
+                                    {
+                                        k.TopBorderColor = 
+                                        k.BottomBorderColor = 
+                                        k.LeftBorderColor = 
+                                        k.RightBorderColor = value.Key;
+                                        return k;
+                                    });
+                            }
+
                         }
                     }
                 }
