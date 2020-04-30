@@ -43,8 +43,8 @@ namespace ClosedXML.Excel
         public XLRangeAddress(XLWorksheet worksheet, String rangeAddress) : this()
         {
             string addressToUse = rangeAddress.Contains("!")
-                                      ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
-                                      : rangeAddress;
+                ? rangeAddress.Substring(rangeAddress.LastIndexOf("!") + 1)
+                : rangeAddress;
 
             string firstPart;
             string secondPart;
