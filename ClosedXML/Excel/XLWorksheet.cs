@@ -1574,7 +1574,8 @@ namespace ClosedXML.Excel
             else
                 rangeAddress = range.RangeAddress;
 
-            var table = (XLTable)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Table, rangeAddress));
+            var rangeKey = new XLRangeKey(XLRangeType.Table, rangeAddress);
+            var table = (XLTable)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (table.Name != name)
                 table.Name = name;
@@ -1839,7 +1840,8 @@ namespace ClosedXML.Excel
 
         public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)
         {
-            var range = _rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress));
+            var rangeKey = new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress);
+            var range = _rangeRepository.GetOrCreate(ref rangeKey);
             if (xlRangeParameters.DefaultStyle != null && range.StyleValue == StyleValue)
                 range.InnerStyle = xlRangeParameters.DefaultStyle;
 
@@ -1854,7 +1856,8 @@ namespace ClosedXML.Excel
         /// <returns>Range row with the specified address.</returns>
         public XLRangeRow RangeRow(XLRangeAddress address, IXLStyle defaultStyle = null)
         {
-            var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.RangeRow, address));
+            var rangeKey = new XLRangeKey(XLRangeType.RangeRow, address);
+            var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (defaultStyle != null && rangeRow.StyleValue == StyleValue)
                 rangeRow.InnerStyle = defaultStyle;
@@ -1870,7 +1873,8 @@ namespace ClosedXML.Excel
         /// <returns>Range column with the specified address.</returns>
         public XLRangeColumn RangeColumn(XLRangeAddress address, IXLStyle defaultStyle = null)
         {
-            var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.RangeColumn, address));
+            var rangeKey = new XLRangeKey(XLRangeType.RangeColumn, address);
+            var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (defaultStyle != null && rangeColumn.StyleValue == StyleValue)
                 rangeColumn.InnerStyle = defaultStyle;
@@ -1887,8 +1891,9 @@ namespace ClosedXML.Excel
             if (_rangeRepository == null)
                 return;
 
-            var range = _rangeRepository.Replace(new XLRangeKey(rangeType, oldAddress),
-                                                 new XLRangeKey(rangeType, newAddress));
+            var oldKey = new XLRangeKey(rangeType, oldAddress);
+            var newKey = new XLRangeKey(rangeType, newAddress);
+            var range = _rangeRepository.Replace(ref oldKey, ref newKey);
 
             foreach (var rangeIndex in _rangeIndices)
             {
@@ -1937,7 +1942,8 @@ namespace ClosedXML.Excel
 
         internal void DeleteRange(XLRangeAddress rangeAddress)
         {
-            _rangeRepository.Remove(new XLRangeKey(XLRangeType.Range, rangeAddress));
+            var rangeKey = new XLRangeKey(XLRangeType.Range, rangeAddress);
+            _rangeRepository.Remove(ref rangeKey);
         }
     }
 }

@@ -7,12 +7,12 @@ namespace ClosedXML.Excel
     {
         private static readonly XLStyleRepository Repository = new XLStyleRepository(key => new XLStyleValue(key));
 
-        public static XLStyleValue FromKey(XLStyleKey key)
+        public static XLStyleValue FromKey(ref XLStyleKey key)
         {
-            return Repository.GetOrCreate(key);
+            return Repository.GetOrCreate(ref key);
         }
 
-        internal static readonly XLStyleValue Default = FromKey(new XLStyleKey
+        private static readonly XLStyleKey DefaultKey = new XLStyleKey
         {
             Alignment = XLAlignmentValue.Default.Key,
             Border = XLBorderValue.Default.Key,
@@ -21,7 +21,9 @@ namespace ClosedXML.Excel
             IncludeQuotePrefix = false,
             NumberFormat = XLNumberFormatValue.Default.Key,
             Protection = XLProtectionValue.Default.Key
-        });
+        };
+
+        internal static readonly XLStyleValue Default = FromKey(ref DefaultKey);
 
         public XLStyleKey Key { get; private set; }
 
@@ -42,13 +44,14 @@ namespace ClosedXML.Excel
         internal XLStyleValue(XLStyleKey key)
         {
             Key = key;
-            Alignment = XLAlignmentValue.FromKey(Key.Alignment);
-            Border = XLBorderValue.FromKey(Key.Border);
-            Fill = XLFillValue.FromKey(Key.Fill);
-            Font = XLFontValue.FromKey(Key.Font);
+            var (alignment, border, fill, font, _, numberFormat, protection) = Key;
+            Alignment = XLAlignmentValue.FromKey(ref alignment);
+            Border = XLBorderValue.FromKey(ref border);
+            Fill = XLFillValue.FromKey(ref fill);
+            Font = XLFontValue.FromKey(ref font);
             IncludeQuotePrefix = key.IncludeQuotePrefix;
-            NumberFormat = XLNumberFormatValue.FromKey(Key.NumberFormat);
-            Protection = XLProtectionValue.FromKey(Key.Protection);
+            NumberFormat = XLNumberFormatValue.FromKey(ref numberFormat);
+            Protection = XLProtectionValue.FromKey(ref protection);
         }
 
         public override bool Equals(object obj)

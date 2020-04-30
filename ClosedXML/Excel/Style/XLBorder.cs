@@ -52,7 +52,7 @@ namespace ClosedXML.Excel
         internal XLBorderKey Key
         {
             get { return _value.Key; }
-            private set { _value = XLBorderValue.FromKey(value); }
+            private set { _value = XLBorderValue.FromKey(ref value); }
         }
 
         #region Constructors
@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
             _value = value;
         }
 
-        public XLBorder(IXLStylized container, XLStyle style, XLBorderKey key) : this(container, style, XLBorderValue.FromKey(key))
+        public XLBorder(IXLStylized container, XLStyle style, XLBorderKey key) : this(container, style, XLBorderValue.FromKey(ref key))
         {
         }
 
@@ -92,9 +92,9 @@ namespace ClosedXML.Excel
                 {
                     Modify(k =>
                     {
-                        k.TopBorder = value;
-                        k.BottomBorder = value;
-                        k.LeftBorder = value;
+                        k.TopBorder =
+                        k.BottomBorder =
+                        k.LeftBorder =
                         k.RightBorder = value;
                         return k;
                     });
@@ -122,9 +122,9 @@ namespace ClosedXML.Excel
                 {
                     Modify(k =>
                     {
-                        k.TopBorderColor = value.Key;
-                        k.BottomBorderColor = value.Key;
-                        k.LeftBorderColor = value.Key;
+                        k.TopBorderColor =
+                        k.BottomBorderColor =
+                        k.LeftBorderColor =
                         k.RightBorderColor = value.Key;
                         return k;
                     });
@@ -153,9 +153,9 @@ namespace ClosedXML.Excel
                 {
                     Modify(k =>
                     {
-                        k.TopBorder = value;
-                        k.BottomBorder = value;
-                        k.LeftBorder = value;
+                        k.TopBorder =
+                        k.BottomBorder =
+                        k.LeftBorder =
                         k.RightBorder = value;
                         return k;
                     });
@@ -235,7 +235,11 @@ namespace ClosedXML.Excel
 
         public XLColor LeftBorderColor
         {
-            get { return XLColor.FromKey(Key.LeftBorderColor); }
+            get
+            {
+                var colorKey = Key.LeftBorderColor;
+                return XLColor.FromKey(ref colorKey);
+            }
             set
             {
                 if (value == null)
@@ -253,7 +257,11 @@ namespace ClosedXML.Excel
 
         public XLColor RightBorderColor
         {
-            get { return XLColor.FromKey(Key.RightBorderColor); }
+            get
+            {
+                var colorKey = Key.RightBorderColor;
+                return XLColor.FromKey(ref colorKey);
+            }
             set
             {
                 if (value == null)
@@ -271,7 +279,11 @@ namespace ClosedXML.Excel
 
         public XLColor TopBorderColor
         {
-            get { return XLColor.FromKey(Key.TopBorderColor); }
+            get
+            {
+                var colorKey = Key.TopBorderColor;
+                return XLColor.FromKey(ref colorKey);
+            }
             set
             {
                 if (value == null)
@@ -289,7 +301,11 @@ namespace ClosedXML.Excel
 
         public XLColor BottomBorderColor
         {
-            get { return XLColor.FromKey(Key.BottomBorderColor); }
+            get
+            {
+                var colorKey = Key.BottomBorderColor;
+                return XLColor.FromKey(ref colorKey);
+            }
             set
             {
                 if (value == null)
@@ -307,7 +323,11 @@ namespace ClosedXML.Excel
 
         public XLColor DiagonalBorderColor
         {
-            get { return XLColor.FromKey(Key.DiagonalBorderColor); }
+            get
+            {
+                var colorKey = Key.DiagonalBorderColor;
+                return XLColor.FromKey(ref colorKey);
+            }
             set
             {
                 if (value == null)
@@ -540,18 +560,34 @@ namespace ClosedXML.Excel
 
             public void Dispose()
             {
-                _topBorders.ForEach(kp => _range.FirstRow().Cell(kp.Key).Style
-                    .Border.SetTopBorder(kp.Value.TopBorder)
-                    .Border.SetTopBorderColor(XLColor.FromKey(kp.Value.TopBorderColor)));
-                _bottomBorders.ForEach(kp => _range.LastRow().Cell(kp.Key).Style
-                    .Border.SetBottomBorder(kp.Value.BottomBorder)
-                    .Border.SetBottomBorderColor(XLColor.FromKey(kp.Value.BottomBorderColor)));
-                _leftBorders.ForEach(kp => _range.FirstColumn().Cell(kp.Key).Style
-                    .Border.SetLeftBorder(kp.Value.LeftBorder)
-                    .Border.SetLeftBorderColor(XLColor.FromKey(kp.Value.LeftBorderColor)));
-                _rightBorders.ForEach(kp => _range.LastColumn().Cell(kp.Key).Style
-                    .Border.SetRightBorder(kp.Value.RightBorder)
-                    .Border.SetRightBorderColor(XLColor.FromKey(kp.Value.RightBorderColor)));
+                _topBorders.ForEach(kp => (_range.FirstRow().Cell(kp.Key).Style
+                    .Border as XLBorder).Modify(k =>
+                    {
+                        k.TopBorder = kp.Value.TopBorder;
+                        k.TopBorderColor = kp.Value.TopBorderColor;
+                        return k;
+                    }));
+                _bottomBorders.ForEach(kp => (_range.LastRow().Cell(kp.Key).Style
+                    .Border as XLBorder).Modify(k =>
+                    {
+                        k.BottomBorder = kp.Value.BottomBorder;
+                        k.BottomBorderColor = kp.Value.BottomBorderColor;
+                        return k;
+                    }));
+                _leftBorders.ForEach(kp => (_range.FirstColumn().Cell(kp.Key).Style
+                    .Border as XLBorder).Modify(k =>
+                    {
+                        k.LeftBorder = kp.Value.LeftBorder;
+                        k.LeftBorderColor = kp.Value.LeftBorderColor;
+                        return k;
+                    }));
+                _rightBorders.ForEach(kp => (_range.LastColumn().Cell(kp.Key).Style
+                    .Border as XLBorder).Modify(k =>
+                    {
+                        k.RightBorder = kp.Value.RightBorder;
+                        k.RightBorderColor = kp.Value.RightBorderColor;
+                        return k;
+                    }));
             }
         }
     }
