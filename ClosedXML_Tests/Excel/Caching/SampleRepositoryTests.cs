@@ -21,8 +21,8 @@ namespace ClosedXML_Tests.Excel.Caching
             var sampleRepository = this.CreateSampleRepository();
 
             // Act
-            var storedEntity1 = sampleRepository.Store(key, entity1);
-            var storedEntity2 = sampleRepository.Store(key, entity2);
+            var storedEntity1 = sampleRepository.Store(ref key, entity1);
+            var storedEntity2 = sampleRepository.Store(ref key, entity2);
 
             // Assert
             Assert.AreSame(entity1, storedEntity1);
@@ -40,7 +40,7 @@ namespace ClosedXML_Tests.Excel.Caching
             var sampleRepository = this.CreateSampleRepository();
 
             // Act
-            var storedEntityRef1 = new WeakReference(sampleRepository.Store(key, new SampleEntity(key)));
+            var storedEntityRef1 = new WeakReference(sampleRepository.Store(ref key, new SampleEntity(key)));
 
             int count = 0;
             do
@@ -81,7 +81,11 @@ namespace ClosedXML_Tests.Excel.Caching
 
             // Act
             Parallel.ForEach(entities, new ParallelOptions { MaxDegreeOfParallelism = 8 },
-                e => sampleRepository.Store(e.Key, e));
+                e =>
+                {
+                    var key = e.Key;
+                    sampleRepository.Store(ref key, e);
+                });
 
             Thread.Sleep(50);
             GC.Collect();
@@ -113,7 +117,11 @@ namespace ClosedXML_Tests.Excel.Caching
 
             // Act
             Parallel.ForEach(entities, new ParallelOptions { MaxDegreeOfParallelism = 8 },
-                e => sampleRepository.Store(e.Key, e));
+                e =>
+                {
+                    var key = e.Key;
+                    sampleRepository.Store(ref key, e);
+                });
             var storedEntries = sampleRepository.ToList();
 
             // Assert
@@ -129,13 +137,13 @@ namespace ClosedXML_Tests.Excel.Caching
             int key2 = 54321;
             var entity = new SampleEntity(key1);
             var sampleRepository = this.CreateSampleRepository();
-            var storedEntity1 = sampleRepository.Store(key1, entity);
+            var storedEntity1 = sampleRepository.Store(ref key1, entity);
 
             // Act
-            sampleRepository.Replace(key1, key2);
-            bool containsOld = sampleRepository.ContainsKey(key1, out var _);
-            bool containsNew = sampleRepository.ContainsKey(key2, out var _);
-            var storedEntity2 = sampleRepository.GetOrCreate(key2);
+            sampleRepository.Replace(ref key1, ref key2);
+            bool containsOld = sampleRepository.ContainsKey(ref key1, out var _);
+            bool containsNew = sampleRepository.ContainsKey(ref key2, out var _);
+            var storedEntity2 = sampleRepository.GetOrCreate(ref key2);
 
             // Assert
             Assert.IsFalse(containsOld);
@@ -149,13 +157,14 @@ namespace ClosedXML_Tests.Excel.Caching
         {
             var sampleRepository = new EditableRepository();
             int[] keys = Enumerable.Range(0, 1000).ToArray();
-            keys.ForEach(key => sampleRepository.GetOrCreate(key));
+            keys.ForEach(key => sampleRepository.GetOrCreate(ref key));
 
             Parallel.ForEach(keys, key =>
             {
-                var val1 = sampleRepository.Replace(key, key + 2000);
+                var modifiedKey = key + 2000;
+                var val1 = sampleRepository.Replace(ref key, ref modifiedKey);
                 val1.Key = key + 2000;
-                var val2 = sampleRepository.GetOrCreate(key + 2000);
+                var val2 = sampleRepository.GetOrCreate(ref modifiedKey);
                 Assert.AreSame(val1, val2);
             });
         }
@@ -168,9 +177,9 @@ namespace ClosedXML_Tests.Excel.Caching
             int key3 = 300;
             var entity = new SampleEntity(key1);
             var sampleRepository = this.CreateSampleRepository();
-            sampleRepository.Store(key1, entity);
+            sampleRepository.Store(ref key1, entity);
 
-            sampleRepository.Replace(key2, key3);
+            sampleRepository.Replace(ref key2, ref key3);
             var all = sampleRepository.ToList();
 
             Assert.AreEqual(1, all.Count);

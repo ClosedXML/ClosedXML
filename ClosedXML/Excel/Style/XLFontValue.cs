@@ -7,12 +7,12 @@ namespace ClosedXML.Excel
     {
         private static readonly XLFontRepository Repository = new XLFontRepository(key => new XLFontValue(key));
 
-        public static XLFontValue FromKey(XLFontKey key)
+        public static XLFontValue FromKey(ref XLFontKey key)
         {
-            return Repository.GetOrCreate(key);
+            return Repository.GetOrCreate(ref key);
         }
 
-        internal static readonly XLFontValue Default = FromKey(new XLFontKey
+        private static readonly XLFontKey DefaultKey = new XLFontKey
         {
             Bold = false,
             Italic = false,
@@ -24,7 +24,8 @@ namespace ClosedXML.Excel
             FontName = "Calibri",
             FontFamilyNumbering = XLFontFamilyNumberingValues.Swiss,
             FontCharSet = XLFontCharSet.Default
-        });
+        };
+        internal static readonly XLFontValue Default = FromKey(ref DefaultKey);
 
         public XLFontKey Key { get; private set; }
 
@@ -53,8 +54,8 @@ namespace ClosedXML.Excel
         private XLFontValue(XLFontKey key)
         {
             Key = key;
-
-            FontColor = XLColor.FromKey(Key.FontColor);
+            var fontColorKey = Key.FontColor;
+            FontColor = XLColor.FromKey(ref fontColorKey);
         }
 
         public override bool Equals(object obj)

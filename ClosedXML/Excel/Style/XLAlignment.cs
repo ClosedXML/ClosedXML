@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
         internal XLAlignmentKey Key
         {
             get { return _value.Key; }
-            private set { _value = XLAlignmentValue.FromKey(value); }
+            private set { _value = XLAlignmentValue.FromKey(ref value); }
         }
 
         #endregion Properties
@@ -68,7 +68,7 @@ namespace ClosedXML.Excel
             _value = value;
         }
 
-        public XLAlignment(XLStyle style, XLAlignmentKey key) : this(style, XLAlignmentValue.FromKey(key))
+        public XLAlignment(XLStyle style, XLAlignmentKey key) : this(style, XLAlignmentValue.FromKey(ref key))
         {
         }
 

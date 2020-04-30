@@ -66,5 +66,23 @@ namespace ClosedXML.Excel
         public static bool operator ==(XLStyleKey left, XLStyleKey right) => left.Equals(right);
 
         public static bool operator !=(XLStyleKey left, XLStyleKey right) => !(left.Equals(right));
+
+        public void Deconstruct(
+            out XLAlignmentKey alignment,
+            out XLBorderKey border,
+            out XLFillKey fill,
+            out XLFontKey font,
+            out Boolean includeQuotePrefix,
+            out XLNumberFormatKey numberFormat,
+            out XLProtectionKey protection)
+        {
+            alignment = Alignment;
+            border = Border;
+            fill = Fill;
+            font = Font;
+            includeQuotePrefix = IncludeQuotePrefix;
+            numberFormat = NumberFormat;
+            protection = Protection;
+        }
     }
 }

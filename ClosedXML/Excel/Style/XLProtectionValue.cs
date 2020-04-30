@@ -6,16 +6,18 @@ namespace ClosedXML.Excel
     {
         private static readonly XLProtectionRepository Repository = new XLProtectionRepository(key => new XLProtectionValue(key));
 
-        public static XLProtectionValue FromKey(XLProtectionKey key)
+        public static XLProtectionValue FromKey(ref XLProtectionKey key)
         {
-            return Repository.GetOrCreate(key);
+            return Repository.GetOrCreate(ref key);
         }
 
-        internal static readonly XLProtectionValue Default = FromKey(new XLProtectionKey
+        private static readonly XLProtectionKey DefaultKey = new XLProtectionKey
         {
             Locked = true,
             Hidden = false
-        });
+        };
+
+        internal static readonly XLProtectionValue Default = FromKey(ref DefaultKey);
 
         public XLProtectionKey Key { get; private set; }
 

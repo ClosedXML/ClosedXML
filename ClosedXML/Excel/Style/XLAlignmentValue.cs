@@ -6,12 +6,12 @@ namespace ClosedXML.Excel
     {
         private static readonly XLAlignmentRepository Repository = new XLAlignmentRepository(key => new XLAlignmentValue(key));
 
-        public static XLAlignmentValue FromKey(XLAlignmentKey key)
+        public static XLAlignmentValue FromKey(ref XLAlignmentKey key)
         {
-            return Repository.GetOrCreate(key);
+            return Repository.GetOrCreate(ref key);
         }
 
-        internal static readonly XLAlignmentValue Default = FromKey(new XLAlignmentKey
+        private static readonly XLAlignmentKey DefaultKey = new XLAlignmentKey
         {
             Indent = 0,
             Horizontal = XLAlignmentHorizontalValues.General,
@@ -22,7 +22,9 @@ namespace ClosedXML.Excel
             TextRotation = 0,
             Vertical = XLAlignmentVerticalValues.Bottom,
             WrapText = false
-        });
+        };
+
+        internal static readonly XLAlignmentValue Default = FromKey(ref DefaultKey);
 
         public XLAlignmentKey Key { get; private set; }
 

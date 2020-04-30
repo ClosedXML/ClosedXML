@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
         internal XLNumberFormatKey Key
         {
             get { return _value.Key; }
-            private set { _value = XLNumberFormatValue.FromKey(value); }
+            private set { _value = XLNumberFormatValue.FromKey(ref value); }
         }
 
         #endregion Properties
@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
             _value = value;
         }
 
-        public XLNumberFormat(XLStyle style, XLNumberFormatKey key) : this(style, XLNumberFormatValue.FromKey(key))
+        public XLNumberFormat(XLStyle style, XLNumberFormatKey key) : this(style, XLNumberFormatValue.FromKey(ref key))
         {
         }
 

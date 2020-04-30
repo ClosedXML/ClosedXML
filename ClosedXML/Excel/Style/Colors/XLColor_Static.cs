@@ -13,18 +13,19 @@ namespace ClosedXML.Excel
         private static readonly Dictionary<Color, XLColor> ByColor = new Dictionary<Color, XLColor>();
         private static readonly Object ByColorLock = new Object();
 
-        internal static XLColor FromKey(XLColorKey key)
+        internal static XLColor FromKey(ref XLColorKey key)
         {
-            return Repository.GetOrCreate(key);
+            return Repository.GetOrCreate(ref key);
         }
 
         public static XLColor FromColor(Color color)
         {
-            return FromKey(new XLColorKey
+            var key = new XLColorKey
             {
                 ColorType = XLColorType.Color,
                 Color = color
-            });
+            };
+            return FromKey(ref key);
         }
 
         public static XLColor FromArgb(Int32 argb)
@@ -61,30 +62,33 @@ namespace ClosedXML.Excel
 
         public static XLColor FromIndex(Int32 index)
         {
-            return FromKey(new XLColorKey
+            var key = new XLColorKey
             {
                 ColorType = XLColorType.Indexed,
                 Indexed = index
-            });
+            };
+            return FromKey(ref key);
         }
 
         public static XLColor FromTheme(XLThemeColor themeColor)
         {
-            return FromKey(new XLColorKey
+            var key = new XLColorKey
             {
                 ColorType = XLColorType.Theme,
                 ThemeColor = themeColor
-            });
+            };
+            return FromKey(ref key);
         }
 
         public static XLColor FromTheme(XLThemeColor themeColor, Double themeTint)
         {
-            return FromKey(new XLColorKey
+            var key = new XLColorKey
             {
                 ColorType = XLColorType.Theme,
                 ThemeColor = themeColor,
                 ThemeTint = themeTint
-            });
+            };
+            return FromKey(ref key);
         }
 
         private static Dictionary<Int32, XLColor> _indexedColors;

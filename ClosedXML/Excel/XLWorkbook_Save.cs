@@ -1046,7 +1046,9 @@ namespace ClosedXML.Excel
                     phoneticRun.Append(text);
                     rstType.Append(phoneticRun);
                 }
-                var f = XLFontValue.FromKey(XLFont.GenerateKey(cell.RichText.Phonetics));
+
+                var fontKey = XLFont.GenerateKey(cell.RichText.Phonetics);
+                var f = XLFontValue.FromKey(ref fontKey);
 
                 if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
                 {
@@ -3707,11 +3709,12 @@ namespace ClosedXML.Excel
 
             foreach (var pivotNumberFormat in pivotTableNumberFormats.Where(nf => nf.NumberFormatId == -1))
             {
-                var numberFormat = XLNumberFormatValue.FromKey(new XLNumberFormatKey
+                var numberFormatKey = new XLNumberFormatKey
                 {
                     NumberFormatId = -1,
                     Format = pivotNumberFormat.Format
-                });
+                };
+                var numberFormat = XLNumberFormatValue.FromKey(ref numberFormatKey);
 
                 if (sharedNumberFormats.ContainsKey(numberFormat))
                     continue;
