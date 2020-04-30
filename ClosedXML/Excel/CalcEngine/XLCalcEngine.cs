@@ -75,16 +75,17 @@ namespace ClosedXML.Excel.CalcEngine
                     .Select(part =>
                     {
                         if (part.Contains("!"))
-                            return part.Substring(0, part.IndexOf('!')).ToLower();
+                            return part.Substring(0, part.LastIndexOf('!')).ToLower();
                         else
                             return null;
                     })
                     .Where(sheet => sheet != null)
-                    .Distinct();
+                    .Distinct()
+                    .ToList();
 
-                if (!referencedSheetNames.Any())
+                if (referencedSheetNames.Count == 0)
                     return GetCellRangeReference(_ws.Range(identifier));
-                else if (referencedSheetNames.Count() > 1)
+                else if (referencedSheetNames.Count > 1)
                     throw new ArgumentOutOfRangeException(referencedSheetNames.Last(), "Cross worksheet references may references no more than 1 other worksheet");
                 else
                 {

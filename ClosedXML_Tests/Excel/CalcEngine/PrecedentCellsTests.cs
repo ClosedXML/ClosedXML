@@ -82,5 +82,19 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 }
             }
         }
+
+        [Test]
+        public void CanParseWorksheetNamesWithExclamationMark()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet() as XLWorksheet;
+                var ws2 = wb.AddWorksheet("Worksheet!");
+                var expectedCell = ws2.Cell("B2");
+
+                var cells = ws1.CalcEngine.GetPrecedentCells("='Worksheet!'!B2*2");
+                Assert.AreSame(expectedCell, cells.Single());
+            }
+        }
     }
 }
