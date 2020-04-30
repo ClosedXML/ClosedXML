@@ -1830,7 +1830,12 @@ namespace ClosedXML.Excel
                     xlCell.SetDataTypeFast(XLDataType.DateTime);
 
                     if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
+                    {
+                        if (Double.TryParse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out double doubleValue))
+                            xlCell.SetInternalCellValueString(doubleValue.ToInvariantString());
+                        else
+                            xlCell.SetInternalCellValueString(DateTime.Parse(cell.CellValue.Text).ToOADate().ToInvariantString());
+                    }
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
