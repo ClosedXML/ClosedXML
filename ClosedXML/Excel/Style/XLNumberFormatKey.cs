@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
         public override int GetHashCode()
         {
             var hashCode = -759193072;
-            hashCode = hashCode * -1521134295 + NumberFormatId.GetHashCode();
+            hashCode = hashCode * -1521134295 + NumberFormatId;
             hashCode = hashCode * -1521134295 + (Format == null ? 0 : Format.GetHashCode());
             return hashCode;
         }

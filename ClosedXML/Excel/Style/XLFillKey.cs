@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
             if (HasNoFill()) return hashCode;
 
-            hashCode = hashCode * -1521134295 + PatternType.GetHashCode();
+            hashCode = hashCode * -1521134295 + (int)PatternType;
             hashCode = hashCode * -1521134295 + BackgroundColor.GetHashCode();
 
             if (HasNoForeground()) return hashCode;

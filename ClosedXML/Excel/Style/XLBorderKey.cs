@@ -31,11 +31,11 @@ namespace ClosedXML.Excel
         public override int GetHashCode()
         {
             var hashCode = -198124310;
-            hashCode = hashCode * -1521134295 + LeftBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + RightBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + TopBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + BottomBorder.GetHashCode();
-            hashCode = hashCode * -1521134295 + DiagonalBorder.GetHashCode();
+            hashCode = hashCode * -1521134295 + (int)LeftBorder;
+            hashCode = hashCode * -1521134295 + (int)RightBorder;
+            hashCode = hashCode * -1521134295 + (int)TopBorder;
+            hashCode = hashCode * -1521134295 + (int)BottomBorder;
+            hashCode = hashCode * -1521134295 + (int)DiagonalBorder;
             hashCode = hashCode * -1521134295 + DiagonalUp.GetHashCode();
             hashCode = hashCode * -1521134295 + DiagonalDown.GetHashCode();
 
