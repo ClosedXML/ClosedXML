@@ -49,14 +49,14 @@ namespace ClosedXML.Excel
         public override int GetHashCode()
         {
             var hashCode = -596887160;
-            hashCode = hashCode * -1521134295 + Horizontal.GetHashCode();
-            hashCode = hashCode * -1521134295 + Vertical.GetHashCode();
-            hashCode = hashCode * -1521134295 + Indent.GetHashCode();
+            hashCode = hashCode * -1521134295 + (int)Horizontal;
+            hashCode = hashCode * -1521134295 + (int)Vertical;
+            hashCode = hashCode * -1521134295 + Indent;
             hashCode = hashCode * -1521134295 + JustifyLastLine.GetHashCode();
-            hashCode = hashCode * -1521134295 + ReadingOrder.GetHashCode();
-            hashCode = hashCode * -1521134295 + RelativeIndent.GetHashCode();
+            hashCode = hashCode * -1521134295 + (int)ReadingOrder;
+            hashCode = hashCode * -1521134295 + RelativeIndent;
             hashCode = hashCode * -1521134295 + ShrinkToFit.GetHashCode();
-            hashCode = hashCode * -1521134295 + TextRotation.GetHashCode();
+            hashCode = hashCode * -1521134295 + TextRotation;
             hashCode = hashCode * -1521134295 + WrapText.GetHashCode();
             hashCode = hashCode * -1521134295 + TopToBottom.GetHashCode();
             return hashCode;
