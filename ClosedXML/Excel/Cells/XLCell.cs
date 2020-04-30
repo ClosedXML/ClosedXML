@@ -1878,6 +1878,13 @@ namespace ClosedXML.Excel
             }
         }
 
+        void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
+        {
+            //XLCell cannot have children so the base method may be optimized
+            var styleKey = modification(StyleValue.Key);
+            StyleValue = XLStyleValue.FromKey(ref styleKey);
+        }
+
         protected override IEnumerable<XLStylizedBase> Children
         {
             get { yield break; }
