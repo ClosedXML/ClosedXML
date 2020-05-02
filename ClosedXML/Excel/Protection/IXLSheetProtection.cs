@@ -45,6 +45,8 @@ namespace ClosedXML.Excel
 
         XLSheetProtectionElements AllowedElements { get; set; }
 
+        Boolean IsPasswordProtected { get; }
+
         Boolean IsProtected { get; }
 
         /// <summary>

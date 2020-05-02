@@ -124,6 +124,7 @@ namespace ClosedXML_Tests.Excel.Worksheets
                 var p2 = ws2.Protection.CopyFrom(p1).CastTo<XLSheetProtection>();
 
                 Assert.IsTrue(p2.IsProtected);
+                Assert.IsTrue(p2.IsPasswordProtected);
                 Assert.AreEqual(p1.Algorithm, p2.Algorithm);
                 Assert.AreEqual(p1.PasswordHash, p2.PasswordHash);
                 Assert.AreEqual(p1.Base64EncodedSalt, p2.Base64EncodedSalt);

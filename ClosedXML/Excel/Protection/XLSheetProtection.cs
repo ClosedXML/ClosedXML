@@ -14,7 +14,11 @@ namespace ClosedXML.Excel
 
         public Algorithm Algorithm { get; internal set; }
         public XLSheetProtectionElements AllowedElements { get; set; }
-        public Boolean IsProtected { get; set; }
+
+        public Boolean IsPasswordProtected => this.IsProtected && !String.IsNullOrEmpty(PasswordHash);
+        public Boolean IsProtected { get; internal set; }
+
+
         internal String Base64EncodedSalt { get; set; }
         internal String PasswordHash { get; set; }
         internal UInt32 SpinCount { get; set; } = 100000;
