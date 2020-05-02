@@ -129,16 +129,7 @@ namespace ClosedXML.Excel
                 FileSharing.UserName = wbFilesharing.UserName?.Value;
             }
 
-            var wbProtection = dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection;
-            if (wbProtection != null)
-            {
-                if (wbProtection.LockStructure != null)
-                    LockStructure = wbProtection.LockStructure.Value;
-                if (wbProtection.LockWindows != null)
-                    LockWindows = wbProtection.LockWindows.Value;
-                if (wbProtection.WorkbookPassword != null)
-                    LockPassword = wbProtection.WorkbookPassword.Value;
-            }
+            LoadWorkbookProtection(dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection, this);
 
             var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
             if (calculationProperties != null)
@@ -2736,6 +2727,30 @@ namespace ClosedXML.Excel
                 slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
                     .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
             }
+        }
+
+        private static void LoadWorkbookProtection(WorkbookProtection wp, XLWorkbook wb)
+        {
+            if (wp == null) return;
+
+            wb.Protection.IsProtected = true;
+
+            var algorithmName = wp.WorkbookAlgorithmName?.Value ?? string.Empty;
+            if (String.IsNullOrEmpty(algorithmName))
+            {
+                wb.Protection.PasswordHash = wp.WorkbookPassword?.Value ?? string.Empty;
+                wb.Protection.Base64EncodedSalt = string.Empty;
+            }
+            else if (DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.IsValidDescription(algorithmName))
+            {
+                wb.Protection.Algorithm = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.FromDescription(algorithmName);
+                wb.Protection.PasswordHash = wp.WorkbookHashValue?.Value ?? string.Empty;
+                wb.Protection.SpinCount = wp.WorkbookSpinCount?.Value ?? 0;
+                wb.Protection.Base64EncodedSalt = wp.WorkbookSaltValue?.Value ?? string.Empty;
+            }
+
+            wb.Protection.AllowElement(XLWorkbookProtectionElements.Structure, !OpenXmlHelper.GetBooleanValueAsBool(wp.LockStructure, false));
+            wb.Protection.AllowElement(XLWorkbookProtectionElements.Windows, !OpenXmlHelper.GetBooleanValueAsBool(wp.LockWindows, false));
         }
 
         private static XLFormula GetFormula(String value)

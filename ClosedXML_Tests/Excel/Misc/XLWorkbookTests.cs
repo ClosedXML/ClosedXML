@@ -395,6 +395,7 @@ namespace ClosedXML_Tests.Excel
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsFalse(wb.IsPasswordProtected);
+                wb.Unprotect();
                 wb.Protect("Abc@123");
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);

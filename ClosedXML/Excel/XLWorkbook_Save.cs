@@ -657,16 +657,36 @@ namespace ClosedXML.Excel
 
             #region WorkbookProtection
 
-            if (LockStructure || LockWindows)
+            if (this.Protection.IsProtected)
             {
                 if (workbook.WorkbookProtection == null)
                     workbook.WorkbookProtection = new WorkbookProtection();
 
-                workbook.WorkbookProtection.LockStructure = LockStructure;
-                workbook.WorkbookProtection.LockWindows = LockWindows;
+                var workbookProtection = workbook.WorkbookProtection;
 
-                if (LockPassword != null)
-                    workbook.WorkbookProtection.WorkbookPassword = LockPassword;
+                var protection = this.Protection;
+
+                workbookProtection.WorkbookPassword = null;
+                workbookProtection.WorkbookAlgorithmName = null;
+                workbookProtection.WorkbookHashValue = null;
+                workbookProtection.WorkbookSpinCount = null;
+                workbookProtection.WorkbookSaltValue = null;
+
+                if (protection.Algorithm == XLProtectionAlgorithm.Algorithm.SimpleHash)
+                {
+                    if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
+                        workbookProtection.WorkbookPassword = protection.PasswordHash;
+                }
+                else
+                {
+                    workbookProtection.WorkbookAlgorithmName = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.ToDescription(protection.Algorithm);
+                    workbookProtection.WorkbookHashValue = protection.PasswordHash;
+                    workbookProtection.WorkbookSpinCount = protection.SpinCount;
+                    workbookProtection.WorkbookSaltValue = protection.Base64EncodedSalt;
+                }
+
+                workbookProtection.LockStructure = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Structure), false);
+                workbookProtection.LockWindows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Windows), false);
             }
             else
             {

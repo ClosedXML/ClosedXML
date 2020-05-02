@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
@@ -51,6 +52,8 @@ namespace ClosedXML.Excel
         Boolean FullPrecision { get; set; }
 
         Boolean IsPasswordProtected { get; }
+
+        Boolean IsProtected { get; }
 
         Boolean LockStructure { get; set; }
 
@@ -155,15 +158,17 @@ namespace ClosedXML.Excel
 
         IXLNamedRange NamedRange(String rangeName);
 
-        void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword);
+        IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password);
 
-        void Protect();
+        IXLWorkbookProtection Protect();
 
-        void Protect(string workbookPassword);
+        IXLWorkbookProtection Protect(Boolean lockStructure);
 
-        void Protect(Boolean lockStructure);
+        IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows);
 
-        void Protect(Boolean lockStructure, Boolean lockWindows);
+        IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm, XLWorkbookProtectionElements allowedElements = XLWorkbookProtectionElements.Windows);
+
+        IXLWorkbookProtection Protection { get; set; }
 
         IXLRange Range(String range);
 
@@ -236,13 +241,13 @@ namespace ClosedXML.Excel
         /// <param name="comparisonType">One of the enumeration values that specifies how the strings will be compared.</param>
         /// <returns>The table with given name</returns>
         /// <exception cref="ArgumentOutOfRangeException">If no tables with this name could be found in the workbook.</exception>
-        IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
+        IXLTable Table(String tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
 
         Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet);
 
-        void Unprotect();
+        IXLWorkbookProtection Unprotect();
 
-        void Unprotect(string workbookPassword);
+        IXLWorkbookProtection Unprotect(String password);
 
         IXLWorksheet Worksheet(String name);
 
