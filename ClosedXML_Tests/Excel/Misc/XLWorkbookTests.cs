@@ -379,9 +379,9 @@ namespace ClosedXML_Tests.Excel
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsTrue(wb.IsPasswordProtected);
-                Assert.Throws(typeof(InvalidOperationException), delegate { wb.Protect(); });
-                Assert.Throws(typeof(InvalidOperationException), delegate { wb.Unprotect(); });
-                Assert.Throws(typeof(ArgumentException), delegate { wb.Unprotect("Cde@345"); });
+                Assert.Throws<InvalidOperationException>(() => wb.Protect());
+                Assert.Throws<InvalidOperationException>(() => wb.Unprotect());
+                Assert.Throws<ArgumentException>(() => wb.Unprotect("Cde@345"));
             }
         }
 
