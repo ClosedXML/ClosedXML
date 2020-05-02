@@ -2,13 +2,12 @@ using ClosedXML.Excel.Drawings;
 using System;
 using System.Drawing;
 using System.IO;
-using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
     public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
 
-    public interface IXLWorksheet : IXLRangeBase
+    public interface IXLWorksheet : IXLRangeBase, IXLProtectable<IXLSheetProtection, XLSheetProtectionElements>
     {
         /// <summary>
         /// Gets the workbook that contains this worksheet
@@ -363,16 +362,6 @@ namespace ClosedXML.Excel
         IXLWorksheet Hide();
 
         IXLWorksheet Unhide();
-
-        IXLSheetProtection Protection { get; set; }
-
-        IXLSheetProtection Protect();
-
-        IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm);
-
-        IXLSheetProtection Unprotect();
-
-        IXLSheetProtection Unprotect(String password);
 
         IXLSortElements SortRows { get; }
 

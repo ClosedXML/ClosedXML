@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLWorkbook : IDisposable
+    public interface IXLWorkbook : IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>, IDisposable
     {
         String Author { get; set; }
 
@@ -51,9 +50,9 @@ namespace ClosedXML.Excel
 
         Boolean FullPrecision { get; set; }
 
-        Boolean IsPasswordProtected { get; }
+        //Boolean IsPasswordProtected { get; }
 
-        Boolean IsProtected { get; }
+        //Boolean IsProtected { get; }
 
         Boolean LockStructure { get; set; }
 
@@ -160,15 +159,9 @@ namespace ClosedXML.Excel
 
         IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password);
 
-        IXLWorkbookProtection Protect();
-
         IXLWorkbookProtection Protect(Boolean lockStructure);
 
         IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows);
-
-        IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm, XLWorkbookProtectionElements allowedElements = XLWorkbookProtectionElements.Windows);
-
-        IXLWorkbookProtection Protection { get; set; }
 
         IXLRange Range(String range);
 
@@ -244,10 +237,6 @@ namespace ClosedXML.Excel
         IXLTable Table(String tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
 
         Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet);
-
-        IXLWorkbookProtection Unprotect();
-
-        IXLWorkbookProtection Unprotect(String password);
 
         IXLWorksheet Worksheet(String name);
 

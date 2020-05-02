@@ -930,7 +930,7 @@ namespace ClosedXML.Excel
         public Boolean IsPasswordProtected => Protection.IsPasswordProtected;
         public Boolean IsProtected => Protection.IsProtected;
 
-        IXLWorkbookProtection IXLWorkbook.Protection
+        IXLWorkbookProtection IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>.Protection
         {
             get => Protection;
             set => Protection = value as XLWorkbookProtection;
@@ -975,9 +975,25 @@ namespace ClosedXML.Excel
             return Protect(lockStructure, lockWindows, null);
         }
 
-        public IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm, XLWorkbookProtectionElements allowedElements = XLWorkbookProtectionElements.Windows)
+        public IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
+
+        {
+            return Protect(password, algorithm, XLWorkbookProtectionElements.Windows);
+        }
+
+        public IXLWorkbookProtection Protect(String password, Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
         {
             return Protection.Protect(password, algorithm, allowedElements);
+        }
+
+        IXLElementProtection IXLProtectable.Protect()
+        {
+            return Protect();
+        }
+
+        IXLElementProtection IXLProtectable.Protect(string password, Algorithm algorithm)
+        {
+            return Protect(password, algorithm);
         }
 
         public IXLWorkbookProtection Unprotect()
@@ -985,9 +1001,19 @@ namespace ClosedXML.Excel
             return Protection.Unprotect();
         }
 
-        public IXLWorkbookProtection Unprotect(string password)
+        public IXLWorkbookProtection Unprotect(String password)
         {
             return Protection.Unprotect(password);
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect()
+        {
+            return Unprotect();
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect(String password)
+        {
+            return Unprotect(password);
         }
 
         public override string ToString()

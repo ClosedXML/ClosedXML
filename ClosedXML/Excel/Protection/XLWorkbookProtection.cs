@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
             };
         }
 
-        public IXLWorkbookProtection CopyFrom(IXLWorkbookProtection workbookProtection)
+        public IXLWorkbookProtection CopyFrom(IXLElementProtection<XLWorkbookProtectionElements> workbookProtection)
         {
             if (workbookProtection is XLWorkbookProtection xlWorkbookProtection)
             {
@@ -99,6 +99,9 @@ namespace ClosedXML.Excel
                 this.Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(this.Algorithm);
                 this.PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
             }
+
+            this.AllowedElements = allowedElements;
+
             return this;
         }
 
@@ -129,5 +132,27 @@ namespace ClosedXML.Excel
 
             return this;
         }
+
+        #region IXLProtectable interface
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.AllowElement(XLWorkbookProtectionElements element, Boolean allowed) => AllowElement(element, allowed);
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.AllowEverything() => AllowEverything();
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.AllowNone() => AllowNone();
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.DisallowElement(XLWorkbookProtectionElements element) => DisallowElement(element);
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Protect() => Protect();
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Protect(String password, Algorithm algorithm) => Protect(password, algorithm);
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Unprotect() => Unprotect();
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Unprotect(String password) => Unprotect(password);
+
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.CopyFrom(IXLElementProtection<XLWorkbookProtectionElements> protectable) => CopyFrom(protectable);
+
+        #endregion IXLProtectable interface
     }
 }

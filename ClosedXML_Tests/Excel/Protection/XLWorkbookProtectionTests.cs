@@ -2,7 +2,9 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML_Tests
@@ -236,6 +238,36 @@ namespace ClosedXML_Tests
                 Assert.Throws<InvalidOperationException>(() => wb2.Unprotect());
                 wb2.Unprotect("Abc@123");
             }
+        }
+
+        [Test]
+        public void IXLProtectableTests()
+        {
+            using var wb = new XLWorkbook();
+            Enumerable.Range(1, 5).ForEach(i => wb.AddWorksheet());
+
+            var list = new List<IXLProtectable>() { wb };
+            list.AddRange(wb.Worksheets);
+
+            list.ForEach(el => el.Protect());
+
+            list.ForEach(el => Assert.IsTrue(el.IsProtected));
+            list.ForEach(el => Assert.IsFalse(el.IsPasswordProtected));
+
+            list.ForEach(el => el.Unprotect());
+
+            list.ForEach(el => Assert.IsFalse(el.IsProtected));
+            list.ForEach(el => Assert.IsFalse(el.IsPasswordProtected));
+
+            list.ForEach(el => el.Protect("password"));
+
+            list.ForEach(el => Assert.IsTrue(el.IsProtected));
+            list.ForEach(el => Assert.IsTrue(el.IsPasswordProtected));
+
+            list.ForEach(el => el.Unprotect("password"));
+
+            list.ForEach(el => Assert.IsFalse(el.IsProtected));
+            list.ForEach(el => Assert.IsFalse(el.IsPasswordProtected));
         }
 
         [Test]
