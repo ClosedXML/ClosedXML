@@ -704,7 +704,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        IXLSheetProtection IXLWorksheet.Protection
+        IXLSheetProtection IXLProtectable<IXLSheetProtection, XLSheetProtectionElements>.Protection
         {
             get => Protection;
             set => Protection = value as XLSheetProtection;
@@ -717,7 +717,22 @@ namespace ClosedXML.Excel
 
         public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
         {
-            return Protection.Protect(password, algorithm);
+            return Protection.Protect(password, algorithm, XLSheetProtectionElements.SelectEverything);
+        }
+
+        public IXLSheetProtection Protect(String password, Algorithm algorithm, XLSheetProtectionElements allowedElements)
+        {
+            return Protection.Protect(password, algorithm, allowedElements);
+        }
+
+        IXLElementProtection IXLProtectable.Protect()
+        {
+            return Protect();
+        }
+
+        IXLElementProtection IXLProtectable.Protect(String password, Algorithm algorithm)
+        {
+            return Protect(password, algorithm);
         }
 
         public IXLSheetProtection Unprotect()
@@ -728,6 +743,16 @@ namespace ClosedXML.Excel
         public IXLSheetProtection Unprotect(String password)
         {
             return Protection.Unprotect(password);
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect()
+        {
+            return Unprotect();
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect(String password)
+        {
+            return Unprotect(password);
         }
 
         public new IXLRange Sort()
@@ -1748,6 +1773,10 @@ namespace ClosedXML.Excel
         }
 
         public IXLPictures Pictures { get; private set; }
+
+        public Boolean IsPasswordProtected => Protection.IsPasswordProtected;
+
+        public bool IsProtected => Protection.IsProtected;
 
         public IXLPicture Picture(string pictureName)
         {
