@@ -157,10 +157,13 @@ namespace ClosedXML.Excel
 
         IXLNamedRange NamedRange(String rangeName);
 
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
         IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password);
 
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
         IXLWorkbookProtection Protect(Boolean lockStructure);
 
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
         IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows);
 
         IXLRange Range(String range);
