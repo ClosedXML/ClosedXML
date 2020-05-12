@@ -766,7 +766,7 @@ namespace ClosedXML_Tests
         [Test]
         public void PivotTableWithCustomThemeTest()
         {
-            // https://github.com/ClosedXML/ClosedXML/pull/1428
+            // https://github.com/ClosedXML/ClosedXML/pull/1429
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Lion\PivotTables\CustomPivotTheme.xlsx")))
             using (var ms = new MemoryStream())
             {
@@ -783,7 +783,7 @@ namespace ClosedXML_Tests
         [Test]
         public void PivotTableWithStylesTest()
         {
-            // https://github.com/ClosedXML/ClosedXML/pull/1428
+            // https://github.com/ClosedXML/ClosedXML/pull/1429
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Lion\PivotTables\PivotWithStyles.xlsx")))
             using (var ms = new MemoryStream())
             {
