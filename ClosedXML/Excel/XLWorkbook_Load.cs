@@ -1059,7 +1059,10 @@ namespace ClosedXML.Excel
                     styleFormat.CollapsedLevelsAreSubtotals = OpenXmlHelper.GetBooleanValueAsBool(pivotArea.CollapsedLevelsAreSubtotals, false);
                 }
 
-                IXLStyle style = XLStyle.Default;
+                // Lion
+                //IXLStyle style = XLStyle.Default;
+                IXLStyle style = new XLStyle(null, DefaultStyle);
+
                 if (format.FormatId != null)
                 {
                     var df = differentialFormats[(Int32)format.FormatId.Value];
