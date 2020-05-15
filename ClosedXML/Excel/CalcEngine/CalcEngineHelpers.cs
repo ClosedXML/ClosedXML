@@ -6,21 +6,21 @@ using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal class CalcEngineHelpers
+    internal static class CalcEngineHelpers
     {
         private static Lazy<Dictionary<string, Tuple<string, string>>> patternReplacements =
             new Lazy<Dictionary<string, Tuple<string, string>>>(() =>
             {
-                var patternReplacements = new Dictionary<string, Tuple<string, string>>();
                 // key: the literal string to match
                 // value: a tuple: first item: the search pattern, second item: the replacement
-                patternReplacements.Add(@"~~", new Tuple<string, string>(@"~~", "~"));
-                patternReplacements.Add(@"~*", new Tuple<string, string>(@"~\*", @"\*"));
-                patternReplacements.Add(@"~?", new Tuple<string, string>(@"~\?", @"\?"));
-                patternReplacements.Add(@"?", new Tuple<string, string>(@"\?", ".?"));
-                patternReplacements.Add(@"*", new Tuple<string, string>(@"\*", ".*"));
-
-                return patternReplacements;
+                return new Dictionary<string, Tuple<string, string>>()
+                {
+                    [@"~~"] = new Tuple<string, string>(@"~~", "~"),
+                    [@"~*"] = new Tuple<string, string>(@"~\*", @"\*"),
+                    [@"~?"] = new Tuple<string, string>(@"~\?", @"\?"),
+                    [@"?"] = new Tuple<string, string>(@"\?", ".?"),
+                    [@"*"] = new Tuple<string, string>(@"\*", ".*"),
+                };
             });
 
         internal static bool ValueSatisfiesCriteria(object value, object criteria, CalcEngine ce)
