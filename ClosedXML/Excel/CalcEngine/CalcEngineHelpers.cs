@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -31,17 +30,19 @@ namespace ClosedXML.Excel.CalcEngine
                 return false;
             }
 
-            // if criteria is a number, straight comparison
-            if (criteria is double)
-            {
-                if (value is Double)
-                    return (double)value == (double)criteria;
-                return Double.TryParse(value.ToString(), out double dValue) && dValue == (double)criteria;
-            }
+            // Excel treats TRUE and 1 as unequal, but LibreOffice treats them as equal. We follow Excel's convention
+            if (criteria is Boolean b1)
+                return (value is Boolean b2) && b1.Equals(b2);
 
-            // convert criteria to string
-            var cs = criteria as string;
-            if (cs != null)
+            if (value is Boolean) return false;
+
+            // if criteria is a number, straight comparison
+            Double cdbl;
+            if (criteria is Double dbl2) cdbl = dbl2;
+            else if (criteria is Int32 i) cdbl = i; // results of DATE function can be an integer
+            else if (criteria is DateTime dt) cdbl = dt.ToOADate();
+            else if (criteria is TimeSpan ts) cdbl = ts.TotalDays;
+            else if (criteria is String cs)
             {
                 if (value is string && (value as string).Trim() == "")
                     return cs == "";
@@ -92,19 +93,38 @@ namespace ClosedXML.Excel.CalcEngine
                 }
 
                 // straight string comparison
-                return string.Equals(value.ToString(), cs, StringComparison.OrdinalIgnoreCase);
+                if (value is string vs)
+                    return vs.Equals(cs, StringComparison.OrdinalIgnoreCase);
+                else
+                    return string.Equals(value.ToString(), cs, StringComparison.OrdinalIgnoreCase);
             }
+            else
+                throw new NotImplementedException();
 
-            // should never get here?
-            Debug.Assert(false, "failed to evaluate criteria in SumIf");
-            return false;
+            Double vdbl;
+            if (value is Double dbl) vdbl = dbl;
+            else if (value is Int32 i) vdbl = i;
+            else if (value is DateTime dt) vdbl = dt.ToOADate();
+            else if (value is TimeSpan ts) vdbl = ts.TotalDays;
+            else if (value is String s)
+            {
+                if (!Double.TryParse(s, out vdbl)) return false;
+            }
+            else
+                throw new NotImplementedException();
+
+            return Math.Abs(vdbl - cdbl) < Double.Epsilon;
         }
 
         internal static bool ValueIsBlank(object value)
         {
-            return
-                value == null ||
-                value is string && ((string)value).Length == 0;
+            if (value == null)
+                return true;
+
+            if (value is string s)
+                return s.Length == 0;
+
+            return false;
         }
 
         /// <summary>
@@ -115,7 +135,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>Total number of cells in the range.</returns>
         internal static long GetTotalCellsCount(XObjectExpression rangeExpression)
         {
-            var range = ((rangeExpression)?.Value as CellRangeReference)?.Range;
+            var range = (rangeExpression?.Value as CellRangeReference)?.Range;
             if (range == null)
                 return 0;
             return (long)(range.LastColumn().ColumnNumber() - range.FirstColumn().ColumnNumber() + 1) *
