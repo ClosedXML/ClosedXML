@@ -87,25 +87,34 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (value is string || !(value is IEnumerable vEnumerable))
                 {
-                    if (TryParseToDouble(value, out double tmp))
+                    if (TryParseToDouble(value, aggressiveConversion: false, out double tmp))
                         yield return tmp;
                 }
                 else
                 {
                     foreach (var v in vEnumerable)
                     {
-                        if (TryParseToDouble(v, out double tmp))
+                        if (TryParseToDouble(v, aggressiveConversion: false, out double tmp))
                             yield return tmp;
                     }
                 }
             }
         }
 
-        private bool TryParseToDouble(object value, out double d)
+        // If aggressiveConversion == true, then try to parse non-numeric types to double too
+        private bool TryParseToDouble(object value, bool aggressiveConversion, out double d)
         {
+            d = 0;
             if (value.IsNumber())
             {
                 d = Convert.ToDouble(value);
+                return true;
+            }
+            else if (value is Boolean b)
+            {
+                if (!aggressiveConversion) return false;
+
+                d = (b ? 1 : 0);
                 return true;
             }
             else if (value is DateTime dt)
@@ -113,10 +122,18 @@ namespace ClosedXML.Excel.CalcEngine
                 d = dt.ToOADate();
                 return true;
             }
-            else
+            else if (value is TimeSpan ts)
             {
-                return double.TryParse(value.ToString(), out d);
+                d = ts.TotalDays;
+                return true;
             }
+            else if (value is string s)
+            {
+                if (!aggressiveConversion) return false;
+                return double.TryParse(s, out d);
+            }
+
+            return false;
         }
 
         private double[] NumericValuesInternal()

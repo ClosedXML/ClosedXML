@@ -361,17 +361,8 @@ namespace ClosedXML.Excel.CalcEngine
                 p[2] as XObjectExpression;   // range of values to sum up
             var criteria = p[1].Evaluate();                             // the criteria to evaluate
 
-            // build list of values in range and sumRange
-            var rangeValues = new List<object>();
-            foreach (var value in range)
-            {
-                rangeValues.Add(value);
-            }
-            var sumRangeValues = new List<object>();
-            foreach (var value in sumRange)
-            {
-                sumRangeValues.Add(value);
-            }
+            var rangeValues = range.Cast<object>().ToList();
+            var sumRangeValues = sumRange.Cast<object>().ToList();
 
             // compute total
             var ce = new CalcEngine();

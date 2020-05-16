@@ -117,6 +117,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, value);
         }
 
+        [TestCase(@"=COUNTIF(A1:A10, 1)", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, 2.0)", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, ""3"")", 2)]
+        [TestCase(@"=COUNTIF(A1:A10, 3)", 2)]
+        [TestCase(@"=COUNTIF(A1:A10, 43831)", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, DATE(2020, 1, 1))", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, TRUE)", 1)]
+        public void CountIf_MixedData(string formula, int expected)
+        {
+            // We follow to Excel's convention.
+            // Excel treats 1 and TRUE as unequal, but 3 and "3" as equal
+            // LibreOffice Calc handles some SUMIF and COUNTIF differently, e.g. it treats 1 and TRUE as equal, but 3 and "3" differently
+            var ws = workbook.Worksheet("MixedData");
+            Assert.AreEqual(expected, ws.Evaluate(formula));
+        }
+
         [TestCase("x", @"=COUNTIF(A1:A1, ""?"")", 1)]
         [TestCase("x", @"=COUNTIF(A1:A1, ""~?"")", 0)]
         [TestCase("?", @"=COUNTIF(A1:A1, ""~?"")", 1)]
@@ -296,6 +312,22 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(46.79135458, value, tolerance);
         }
 
+        [TestCase(@"=SUMIF(A1:A10, 1, A1:A10)", 1)]
+        [TestCase(@"=SUMIF(A1:A10, 2.0, A1:A10)", 2)]
+        [TestCase(@"=SUMIF(A1:A10, 3, A1:A10)", 3)]
+        [TestCase(@"=SUMIF(A1:A10, ""3"", A1:A10)", 3)]
+        [TestCase(@"=SUMIF(A1:A10, 43831, A1:A10)", 43831)]
+        [TestCase(@"=SUMIF(A1:A10, DATE(2020, 1, 1), A1:A10)", 43831)]
+        [TestCase(@"=SUMIF(A1:A10, TRUE, A1:A10)", 0)]
+        public void SumIf_MixedData(string formula, double expected)
+        {
+            // We follow to Excel's convention.
+            // Excel treats 1 and TRUE as unequal, but 3 and "3" as equal
+            // LibreOffice Calc handles some SUMIF and COUNTIF differently, e.g. it treats 1 and TRUE as equal, but 3 and "3" differently
+            var ws = workbook.Worksheet("MixedData");
+            Assert.AreEqual(expected, ws.Evaluate(formula));
+        }
+
         [Test]
         [TestCase("COUNT(G:I,G:G,H:I)", 258d, Description = "COUNT overlapping columns")]
         [TestCase("COUNT(6:8,6:6,7:8)", 30d, Description = "COUNT overlapping rows")]
@@ -359,10 +391,11 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             value = workbook.Evaluate(@"=VARP(Data!H:H)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);
         }
+
         private XLWorkbook SetupWorkbook()
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Data");
+            var ws1 = wb.AddWorksheet("Data");
             var data = new object[]
             {
                 new {Id=1, OrderDate = DateTime.Parse("2015-01-06"), Region = "East", Rep = "Jones", Item = "Pencil", Units = 95, UnitCost = 1.99, Total = 189.05 },
@@ -409,10 +442,14 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 new {Id=42, OrderDate = DateTime.Parse("2016-12-04"), Region = "Central", Rep = "Jardine", Item = "Binder", Units = 94, UnitCost = 19.99, Total = 1879.06},
                 new {Id=43, OrderDate = DateTime.Parse("2016-12-21"), Region = "Central", Rep = "Andrews", Item = "Binder", Units = 28, UnitCost = 4.99, Total = 139.72}
             };
-            ws.FirstCell()
+
+            ws1.FirstCell()
                 .CellBelow()
                 .CellRight()
                 .InsertTable(data, "Table1");
+
+            var ws2 = wb.AddWorksheet("MixedData");
+            ws2.FirstCell().InsertData(new object[] { 1, 2.0, "3", 3, new DateTime(2020, 1, 1), true, new TimeSpan(10, 5, 30, 10) });
 
             return wb;
         }

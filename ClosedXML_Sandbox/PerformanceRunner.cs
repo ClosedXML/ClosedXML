@@ -44,6 +44,7 @@ namespace ClosedXML_Sandbox
         {
             using (var wb = new XLWorkbook("test.xlsx"))
             {
+                wb.RecalculateAllFormulas();
                 var ws = wb.Worksheets.First();
                 var cell = ws.FirstCellUsed();
                 Console.WriteLine(cell.Value);
