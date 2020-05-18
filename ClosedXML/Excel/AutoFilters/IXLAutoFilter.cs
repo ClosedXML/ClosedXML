@@ -29,5 +29,7 @@ namespace ClosedXML.Excel
         IXLAutoFilter Reapply();
 
         IXLAutoFilter Sort(Int32 columnToSortBy = 1, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+
+        IXLAutoFilter AddColorFilter(int Column, XLColor color);
     }
 }
