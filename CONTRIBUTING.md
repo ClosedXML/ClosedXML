@@ -6,8 +6,7 @@ Here are some tips.
 * Before starting a large pull request, log an issue and outline the problem and a broad outline of your solution. The maintainers will discuss the issue with you and possibly propose some alternative approaches to align with the ClosedXML development conventions. 
 * Please submit pull requests that are based on the `develop` branch.
 * Where possible, pull requests should include unit tests that cover as many uses cases as possible.
-* We recommend Visual Studio 2017 or higher as the development environment. If you do use Visual Studio, please install these extensions:
-  * [NUnit 3.0 Test Adapter](https://marketplace.visualstudio.com/items?itemName=NUnitDevelopers.NUnit3TestAdapter), for running the unit tests in Visual Studio. More information about this at the [NUnit Adapter Installation](https://github.com/nunit/docs/wiki/Adapter-Installation).
+* We recommend Visual Studio 2019 or higher as the development environment. If you do use Visual Studio, please install these extensions:
   * [CodeMaid](https://marketplace.visualstudio.com/items?itemName=SteveCadwallader.CodeMaid), for ensuring consistent code syntax, whitespace convention, etc.
   * If you use a version of Visual Studio lower than 2017, you should install [editorconfig](<https://marketplace.visualstudio.com/items?itemName=EditorConfigTeam.EditorConfig>) support. Read more about [EditorConfig](http://www.editorconfig.org).
 * We use 4 spaces for code indentation. This is the default in Visual Studio. Don't leave any trailing white space at the end of lines or files.
