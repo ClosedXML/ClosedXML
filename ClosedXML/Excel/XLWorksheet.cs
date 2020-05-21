@@ -331,15 +331,15 @@ namespace ClosedXML.Excel
         public IXLColumns Columns()
         {
             var retVal = new XLColumns(this, StyleValue);
-            var columnList = new List<Int32>();
+            var columnMap = new HashSet<Int32>();
 
             if (Internals.CellsCollection.Count > 0)
-                columnList.AddRange(Internals.CellsCollection.ColumnsUsed.Keys);
+                columnMap.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
 
             if (Internals.ColumnsCollection.Count > 0)
-                columnList.AddRange(Internals.ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
+                columnMap.UnionWith(Internals.ColumnsCollection.Keys);
 
-            foreach (int c in columnList)
+            foreach (int c in columnMap)
                 retVal.Add(Column(c));
 
             return retVal;
@@ -397,15 +397,15 @@ namespace ClosedXML.Excel
         public IXLRows Rows()
         {
             var retVal = new XLRows(this, StyleValue);
-            var rowList = new List<Int32>();
+            var rowMap = new HashSet<Int32>();
 
             if (Internals.CellsCollection.Count > 0)
-                rowList.AddRange(Internals.CellsCollection.RowsUsed.Keys);
+                rowMap.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
 
             if (Internals.RowsCollection.Count > 0)
-                rowList.AddRange(Internals.RowsCollection.Keys.Where(r => !rowList.Contains(r)));
+                rowMap.UnionWith(Internals.RowsCollection.Keys);
 
-            foreach (int r in rowList)
+            foreach (int r in rowMap)
                 retVal.Add(Row(r));
 
             return retVal;
@@ -1933,10 +1933,8 @@ namespace ClosedXML.Excel
         {
             Internals.ColumnsCollection.Remove(columnNumber);
 
-            var columnsToMove = new List<Int32>();
-            columnsToMove.AddRange(
-                Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key));
-            foreach (int column in columnsToMove.OrderBy(c => c))
+            var columnsToMove = new List<Int32>(Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key).OrderBy(c => c));
+            foreach (int column in columnsToMove)
             {
                 Internals.ColumnsCollection.Add(column - 1, Internals.ColumnsCollection[column]);
                 Internals.ColumnsCollection.Remove(column);
@@ -1949,9 +1947,8 @@ namespace ClosedXML.Excel
         {
             Internals.RowsCollection.Remove(rowNumber);
 
-            var rowsToMove = new List<Int32>();
-            rowsToMove.AddRange(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
-            foreach (int row in rowsToMove.OrderBy(r => r))
+            var rowsToMove = new List<Int32>(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key).OrderBy(r => r));
+            foreach (int row in rowsToMove)
             {
                 Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
                 Internals.RowsCollection.Remove(row);
