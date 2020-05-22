@@ -2,7 +2,7 @@
 
 namespace ClosedXML.Excel
 {
-    internal struct XLFontKey : IEquatable<XLFontKey>
+    public struct XLFontKey : IEquatable<XLFontKey>
     {
         public bool Bold { get; set; }
 

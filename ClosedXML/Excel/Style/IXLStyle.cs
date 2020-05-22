@@ -22,5 +22,7 @@ namespace ClosedXML.Excel
         IXLProtection Protection { get; set; }
 
         IXLStyle SetIncludeQuotePrefix(Boolean includeQuotePrefix = true);
+
+        void Modify(Func<XLStyleKey, XLStyleKey> modification);
     }
 }
