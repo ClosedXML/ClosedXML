@@ -228,7 +228,8 @@ namespace ClosedXML.Excel
                 if (!String.IsNullOrWhiteSpace(oldname) && !String.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
                 {
                     Worksheet.Tables.Add(this);
-                    Worksheet.Tables.Remove(oldname);
+                    if (Worksheet.Tables.Contains(oldname))
+                        Worksheet.Tables.Remove(oldname);
                 }
             }
         }
