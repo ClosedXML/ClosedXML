@@ -1590,7 +1590,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
         {
-            CheckRangeNotInTable(range);
+            CheckRangeNotOverlappingOtherEntities(range);
             XLRangeAddress rangeAddress;
             if (range.Rows().Count() == 1)
             {
@@ -1617,11 +1617,16 @@ namespace ClosedXML.Excel
             return table;
         }
 
-        private void CheckRangeNotInTable(XLRange range)
+        private void CheckRangeNotOverlappingOtherEntities(XLRange range)
         {
-            var overlappingTables = Tables.Where(t => t.RangeUsed().Intersects(range));
-            if (overlappingTables.Any())
-                throw new ArgumentException(nameof(range), $"The range {range.RangeAddress.ToStringRelative(true)} is already part of table '{overlappingTables.First().Name}'");
+            // Check that the range doesn't overlap with any existing tables
+            var firstOverlappingTable = Tables.FirstOrDefault(t => t.RangeUsed().Intersects(range));
+            if (firstOverlappingTable != null)
+                throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
+
+            // Check that the range doesn't overlap with any filters
+            if (AutoFilter.IsEnabled && this.AutoFilter.Range.Intersects(range))
+                throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} overlaps with the worksheet's autofilter.");
         }
 
         private string GetNewTableName(string baseName)
