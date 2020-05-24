@@ -860,7 +860,7 @@ namespace ClosedXML.Excel
                     definedNames.AppendChild(definedName);
                 }
 
-                if (worksheet.AutoFilter.Enabled)
+                if (worksheet.AutoFilter.IsEnabled)
                 {
                     var definedName = new DefinedName
                     {
@@ -5351,7 +5351,7 @@ namespace ClosedXML.Excel
             #region AutoFilter
 
             worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
-            if (xlWorksheet.AutoFilter.Enabled)
+            if (xlWorksheet.AutoFilter.IsEnabled)
             {
                 var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.AutoFilter);
                 worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
