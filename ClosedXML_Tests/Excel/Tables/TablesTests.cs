@@ -552,7 +552,7 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
-       [Test]
+        [Test]
         public void CanDeleteTableField()
         {
             var l = new List<TestObjectWithAttributes>()
@@ -895,8 +895,26 @@ namespace ClosedXML_Tests.Excel
             {
                 IXLWorksheet ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(l);
-                Assert.Throws<ArgumentException>(() => ws.RangeUsed().CreateTable());
+                Assert.Throws<InvalidOperationException>(() => ws.RangeUsed().CreateTable());
             }
+        }
+
+        [Test]
+        public void CannotCreateTableOverExistingAutoFilter()
+        {
+            using var wb = new XLWorkbook();
+
+            var data = Enumerable.Range(1, 10).Select(i => new
+            {
+                Index = i,
+                String = $"String {i}"
+            });
+
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().InsertTable(data, createTable: false);
+            ws.RangeUsed().SetAutoFilter().Column(1).AddFilter(5);
+
+            Assert.Throws<InvalidOperationException>(() => ws.RangeUsed().CreateTable());
         }
 
         [Test]
