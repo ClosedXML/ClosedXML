@@ -662,7 +662,7 @@ namespace ClosedXML.Excel
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
             SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));
 
-            if (AutoFilter.Enabled)
+            if (AutoFilter.IsEnabled)
             {
                 var range = targetSheet.Range(((XLRangeAddress)AutoFilter.Range.RangeAddress).WithoutWorksheet());
                 range.SetAutoFilter();
