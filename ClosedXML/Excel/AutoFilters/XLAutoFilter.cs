@@ -146,6 +146,10 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter Set(IXLRangeBase range)
         {
+            var firstOverlappingTable = range.Worksheet.Tables.FirstOrDefault(t => t.RangeUsed().Intersects(range));
+            if (firstOverlappingTable != null)
+                throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
+
             Range = range.AsRange();
             IsEnabled = true;
             return this;

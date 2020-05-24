@@ -128,6 +128,23 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CannotAddAutoFilterOverExistingTable()
+        {
+            using var wb = new XLWorkbook();
+
+            var data = Enumerable.Range(1, 10).Select(i => new
+            {
+                Index = i,
+                String = $"String {i}"
+            });
+
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().InsertTable(data);
+
+            Assert.Throws<InvalidOperationException>(() => ws.RangeUsed().SetAutoFilter());
+        }
+
+        [Test]
         [TestCase("A1:A4")]
         [TestCase("A1:B4")]
         [TestCase("A1:C4")]
