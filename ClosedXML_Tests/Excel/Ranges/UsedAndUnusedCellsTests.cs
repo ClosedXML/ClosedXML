@@ -60,6 +60,19 @@ namespace ClosedXML_Tests.Excel.Ranges
             Assert.AreEqual(0, i);
         }
 
+        [Test(Description = "See 1443")]
+        public void FirstRowUsedRegression()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+
+                ws.Range("B3:F6").SetValue(100);
+
+                Assert.AreEqual(3, ws.FirstRowUsed(XLCellsUsedOptions.AllContents).RowNumber());
+            }
+        }
+
         [Test]
         public void CountAllCellsInRow()
         {
