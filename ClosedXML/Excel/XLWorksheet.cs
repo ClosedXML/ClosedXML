@@ -267,7 +267,7 @@ namespace ClosedXML.Excel
 
         IXLRow IXLWorksheet.FirstRowUsed(XLCellsUsedOptions options)
         {
-            return LastRowUsed(options);
+            return FirstRowUsed(options);
         }
 
         IXLRow IXLWorksheet.LastRowUsed()
