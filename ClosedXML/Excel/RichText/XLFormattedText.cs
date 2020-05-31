@@ -169,7 +169,7 @@ namespace ClosedXML.Excel
 
             for (Int32 i = 0; i < count; i++)
             {
-                if (_richTexts.ElementAt(i) != other.ElementAt(i))
+                if (_richTexts.ElementAt(i).Equals(other.ElementAt(i)))
                     return false;
             }
 
