@@ -341,6 +341,26 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetValue_Enum_Good()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles value));
+            Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value);
+
+            // Nullable alternative
+            Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles? value2));
+            Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value2);
+        }
+
+        [Test]
+        public void TryGetValue_Enum_BadString()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles value));
+            Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles? value2));
+        }
+
+        [Test]
         public void TryGetValue_RichText_Bad()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
