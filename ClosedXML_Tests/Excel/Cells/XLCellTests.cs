@@ -98,6 +98,18 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void GetValue_Nullable()
+        {
+            var cell = new XLWorkbook().AddWorksheet().FirstCell();
+
+            Assert.IsNull(cell.Clear().GetValue<double?>());
+            Assert.AreEqual(1.5, cell.SetValue(1.5).GetValue<double?>());
+            Assert.AreEqual(2, cell.SetValue(1.5).GetValue<int?>());
+            Assert.AreEqual(2.5, cell.SetValue("2.5").GetValue<double?>());
+            Assert.Throws<FormatException>(() => cell.SetValue("text").GetValue<double?>());
+        }
+
+        [Test]
         public void InsertData1()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -489,6 +501,25 @@ namespace ClosedXML_Tests
 
             Assert.IsTrue(success);
             Assert.AreEqual("Site_x005F_x0020_Column_x005F_x0020_Test", outValue);
+        }
+
+        [Test]
+        public void TryGetValue_Nullable()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            ws.Cell("A1").Clear();
+            ws.Cell("A2").SetValue(1.5);
+            ws.Cell("A3").SetValue("2.5");
+            ws.Cell("A4").SetValue("text");
+
+            foreach (var cell in ws.Range("A1:A3").Cells())
+            {
+                Assert.IsTrue(cell.TryGetValue(out double? value));
+            }
+
+            Assert.IsFalse(ws.Cell("A4").TryGetValue(out double? _));
         }
 
         [Test]
