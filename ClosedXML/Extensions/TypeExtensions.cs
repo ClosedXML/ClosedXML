@@ -5,6 +5,16 @@ namespace ClosedXML.Excel
 {
     internal static class TypeExtensions
     {
+        public static Type GetUnderlyingType(this Type type)
+        {
+            return Nullable.GetUnderlyingType(type) ?? type;
+        }
+
+        public static bool IsNullableType(this Type type)
+        {
+            return Nullable.GetUnderlyingType(type) != null;
+        }
+
         public static bool IsNumber(this Type type)
         {
             return type == typeof(sbyte)

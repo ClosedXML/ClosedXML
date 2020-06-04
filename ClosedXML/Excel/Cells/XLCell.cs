@@ -1655,6 +1655,10 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetValue<T>(out T value)
         {
+            var targetType = typeof(T);
+            var underlyingType = targetType.GetUnderlyingType();
+            var isNullable = targetType.IsNullableType();
+
             Object currentValue;
             try
             {
@@ -1667,13 +1671,13 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            if (currentValue == null)
+            if (isNullable && (currentValue == null || currentValue is string s && String.IsNullOrEmpty(s)))
             {
                 value = default;
                 return true;
             }
 
-            if (typeof(T) != typeof(String) // Strings are handled later and have some specifics to UTF handling
+            if (targetType != typeof(String) // Strings are handled later and have some specifics to UTF handling
                 && currentValue is T t)
             {
                 value = t;
@@ -1696,7 +1700,7 @@ namespace ClosedXML.Excel
             {
                 try
                 {
-                    value = (T)Convert.ChangeType(currentValue, typeof(T));
+                    value = (T)Convert.ChangeType(currentValue, underlyingType);
                     return true;
                 }
                 catch (Exception)
@@ -1708,21 +1712,21 @@ namespace ClosedXML.Excel
 
             var strValue = currentValue.ToString();
 
-            if (typeof(T) == typeof(sbyte)) return TryGetBasicValue<T, sbyte>(strValue, sbyte.TryParse, out value);
-            if (typeof(T) == typeof(byte)) return TryGetBasicValue<T, byte>(strValue, byte.TryParse, out value);
-            if (typeof(T) == typeof(short)) return TryGetBasicValue<T, short>(strValue, short.TryParse, out value);
-            if (typeof(T) == typeof(ushort)) return TryGetBasicValue<T, ushort>(strValue, ushort.TryParse, out value);
-            if (typeof(T) == typeof(int)) return TryGetBasicValue<T, int>(strValue, int.TryParse, out value);
-            if (typeof(T) == typeof(uint)) return TryGetBasicValue<T, uint>(strValue, uint.TryParse, out value);
-            if (typeof(T) == typeof(long)) return TryGetBasicValue<T, long>(strValue, long.TryParse, out value);
-            if (typeof(T) == typeof(ulong)) return TryGetBasicValue<T, ulong>(strValue, ulong.TryParse, out value);
-            if (typeof(T) == typeof(float)) return TryGetBasicValue<T, float>(strValue, float.TryParse, out value);
-            if (typeof(T) == typeof(double)) return TryGetBasicValue<T, double>(strValue, double.TryParse, out value);
-            if (typeof(T) == typeof(decimal)) return TryGetBasicValue<T, decimal>(strValue, decimal.TryParse, out value);
+            if (underlyingType == typeof(sbyte)) return TryGetBasicValue<T, sbyte>(strValue, sbyte.TryParse, out value);
+            if (underlyingType == typeof(byte)) return TryGetBasicValue<T, byte>(strValue, byte.TryParse, out value);
+            if (underlyingType == typeof(short)) return TryGetBasicValue<T, short>(strValue, short.TryParse, out value);
+            if (underlyingType == typeof(ushort)) return TryGetBasicValue<T, ushort>(strValue, ushort.TryParse, out value);
+            if (underlyingType == typeof(int)) return TryGetBasicValue<T, int>(strValue, int.TryParse, out value);
+            if (underlyingType == typeof(uint)) return TryGetBasicValue<T, uint>(strValue, uint.TryParse, out value);
+            if (underlyingType == typeof(long)) return TryGetBasicValue<T, long>(strValue, long.TryParse, out value);
+            if (underlyingType == typeof(ulong)) return TryGetBasicValue<T, ulong>(strValue, ulong.TryParse, out value);
+            if (underlyingType == typeof(float)) return TryGetBasicValue<T, float>(strValue, float.TryParse, out value);
+            if (underlyingType == typeof(double)) return TryGetBasicValue<T, double>(strValue, double.TryParse, out value);
+            if (underlyingType == typeof(decimal)) return TryGetBasicValue<T, decimal>(strValue, decimal.TryParse, out value);
 
             try
             {
-                value = (T)Convert.ChangeType(currentValue, typeof(T));
+                value = (T)Convert.ChangeType(currentValue, targetType);
                 return true;
             }
             catch
@@ -1734,7 +1738,7 @@ namespace ClosedXML.Excel
 
         private static bool TryGetDateTimeValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) != typeof(DateTime))
+            if (typeof(T) != typeof(DateTime) && typeof(T) != typeof(DateTime?))
             {
                 value = default;
                 return false;
@@ -1752,7 +1756,7 @@ namespace ClosedXML.Excel
 
         private static bool TryGetTimeSpanValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) != typeof(TimeSpan))
+            if (typeof(T) != typeof(TimeSpan) && typeof(T) != typeof(TimeSpan?))
             {
                 value = default;
                 return false;
@@ -1818,7 +1822,7 @@ namespace ClosedXML.Excel
 
         private static Boolean TryGetBooleanValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) != typeof(Boolean))
+            if (typeof(T) != typeof(Boolean) && typeof(T) != typeof(Boolean?))
             {
                 value = default;
                 return false;
@@ -1856,10 +1860,8 @@ namespace ClosedXML.Excel
         {
             if (parseFunction.Invoke(currentValue, NumberStyles.Any, null, out U result))
             {
-                value = (T)Convert.ChangeType(result, typeof(T));
-                {
-                    return true;
-                }
+                value = (T)Convert.ChangeType(result, typeof(T).GetUnderlyingType());
+                return true;
             }
 
             value = default;
