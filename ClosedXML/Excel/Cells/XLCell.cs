@@ -1724,6 +1724,17 @@ namespace ClosedXML.Excel
             if (underlyingType == typeof(double)) return TryGetBasicValue<T, double>(strValue, double.TryParse, out value);
             if (underlyingType == typeof(decimal)) return TryGetBasicValue<T, decimal>(strValue, decimal.TryParse, out value);
 
+            if (underlyingType.IsEnum)
+            {
+                if (Enum.IsDefined(underlyingType, strValue))
+                {
+                    value = (T)Enum.Parse(underlyingType, strValue, ignoreCase: false);
+                    return true;
+                }
+                value = default;
+                return false;
+            }
+
             try
             {
                 value = (T)Convert.ChangeType(currentValue, targetType);
