@@ -888,7 +888,7 @@ namespace ClosedXML.Excel
 
         public IXLRange AppendData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
         {
-            var castedData = data?.Cast<object>();
+            var castedData = data?.Cast<object>().ToArray();
             if (!(castedData?.Any() ?? false) || data is String)
                 return null;
 
@@ -912,10 +912,11 @@ namespace ClosedXML.Excel
 
         public IXLRange AppendData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
         {
-            if (!(data?.Any() ?? false) || data is String)
+            var castedData = data?.Cast<object>().ToArray();
+            if (!(castedData?.Any() ?? false) || data is String)
                 return null;
 
-            var numberOfNewRows = data.Count();
+            var numberOfNewRows = castedData.Count();
 
             if (numberOfNewRows == 0)
                 return null;
@@ -924,7 +925,7 @@ namespace ClosedXML.Excel
             lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
             this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(data);
+            var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(castedData);
 
             PropagateExtraColumns(insertedRange.ColumnCount(), lastRowOfOldRange.RowNumber());
 
@@ -938,7 +939,7 @@ namespace ClosedXML.Excel
 
         public IXLRange ReplaceData(IEnumerable data, bool transpose, Boolean propagateExtraColumns = false)
         {
-            var castedData = data?.Cast<object>();
+            var castedData = data?.Cast<object>().ToArray();
             if (!(castedData?.Any() ?? false) || data is String)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
@@ -981,14 +982,15 @@ namespace ClosedXML.Excel
 
         public IXLRange ReplaceData<T>(IEnumerable<T> data, Boolean propagateExtraColumns = false)
         {
-            if (!(data?.Any() ?? false) || data is String)
+            var castedData = data?.Cast<object>().ToArray();
+            if (!(castedData?.Any() ?? false) || data is String)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
             var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
             var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
 
             // Resize table
-            var sizeDifference = data.Count() - this.DataRange.RowCount();
+            var sizeDifference = castedData.Count() - this.DataRange.RowCount();
             if (sizeDifference > 0)
                 this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
             else if (sizeDifference < 0)
@@ -1008,7 +1010,7 @@ namespace ClosedXML.Excel
                 // Invalidate table fields' columns
                 this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var replacedRange = this.DataRange.FirstCell().InsertData(data);
+            var replacedRange = this.DataRange.FirstCell().InsertData(castedData);
 
             if (propagateExtraColumns)
                 PropagateExtraColumns(replacedRange.ColumnCount(), lastDataRowNumber);

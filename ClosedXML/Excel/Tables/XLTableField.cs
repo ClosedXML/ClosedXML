@@ -170,10 +170,11 @@ namespace ClosedXML.Excel
             var dataTypes = this.Column
                 .Cells()
                 .Skip(this.table.ShowHeaderRow ? 1 : 0)
-                .Select(c => c.DataType);
+                .Select(c => c.DataType)
+                .ToArray();
 
             if (this.table.ShowTotalsRow)
-                dataTypes = dataTypes.Take(dataTypes.Count() - 1);
+                dataTypes = dataTypes.Take(dataTypes.Count() - 1).ToArray();
 
             var distinctDataTypes = dataTypes
                 .GroupBy(dt => dt)
@@ -187,10 +188,11 @@ namespace ClosedXML.Excel
             var formulas = this.Column
                 .Cells()
                 .Skip(this.table.ShowHeaderRow ? 1 : 0)
-                .Select(c => c.FormulaR1C1);
+                .Select(c => c.FormulaR1C1)
+                .ToArray();
 
             if (this.table.ShowTotalsRow)
-                formulas = formulas.Take(formulas.Count() - 1);
+                formulas = formulas.Take(formulas.Count() - 1).ToArray();
 
             var distinctFormulas = formulas
                 .GroupBy(f => f)
@@ -205,10 +207,11 @@ namespace ClosedXML.Excel
                 .Cells()
                 .Skip(this.table.ShowHeaderRow ? 1 : 0)
                 .OfType<XLCell>()
-                .Select(c => c.StyleValue);
+                .Select(c => c.StyleValue)
+                .ToArray();
 
             if (this.table.ShowTotalsRow)
-                styles = styles.Take(styles.Count() - 1);
+                styles = styles.Take(styles.Count() - 1).ToArray();
 
             var distinctStyles = styles
                 .Distinct();

@@ -741,13 +741,13 @@ namespace ClosedXML.Excel
                 );
             }
 
-            cellsUsed = cellsUsed.ToList();
+            var materializedCellsUsed = cellsUsed.ToList();
 
-            if (!cellsUsed.Any())
+            if (!materializedCellsUsed.Any())
                 return null;
 
-            var firstRow = cellsUsed.Min(c => c.Address.RowNumber);
-            var firstColumn = cellsUsed.Min(c => c.Address.ColumnNumber);
+            var firstRow = materializedCellsUsed.Min(c => c.Address.RowNumber);
+            var firstColumn = materializedCellsUsed.Min(c => c.Address.ColumnNumber);
 
             if (firstRow < RangeAddress.FirstAddress.RowNumber)
                 firstRow = RangeAddress.FirstAddress.RowNumber;
@@ -822,14 +822,14 @@ namespace ClosedXML.Excel
                         .Where(predicate)
                 );
             }
+            
+            var materializedCellsUsed = cellsUsed.ToList();
 
-            cellsUsed = cellsUsed.ToList();
-
-            if (!cellsUsed.Any())
+            if (!materializedCellsUsed.Any())
                 return null;
 
-            var lastRow = cellsUsed.Max(c => c.Address.RowNumber);
-            var lastColumn = cellsUsed.Max(c => c.Address.ColumnNumber);
+            var lastRow = materializedCellsUsed.Max(c => c.Address.RowNumber);
+            var lastColumn = materializedCellsUsed.Max(c => c.Address.ColumnNumber);
 
             if (lastRow > RangeAddress.LastAddress.RowNumber)
                 lastRow = RangeAddress.LastAddress.RowNumber;

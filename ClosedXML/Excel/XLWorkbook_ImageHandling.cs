@@ -16,7 +16,8 @@ namespace ClosedXML.Excel
             var matchingAnchor = drawingsPart.WorksheetDrawing
                 .Where(wsdr => wsdr.Descendants<Xdr.BlipFill>()
                     .Any(x => x?.Blip?.Embed?.Value.Equals(relId) ?? false)
-                );
+                )
+                .ToArray();
 
             if (!matchingAnchor.Any())
                 return null;
@@ -30,7 +31,8 @@ namespace ClosedXML.Excel
             var matchingAnchor = drawingsPart.WorksheetDrawing
                 .Where(wsdr => wsdr.Descendants<Xdr.NonVisualDrawingProperties>()
                     .Any(x => x.Id.Value.Equals(Convert.ToUInt32(index + 1)))
-                );
+                )
+                .ToArray();
 
             if (!matchingAnchor.Any())
                 return null;

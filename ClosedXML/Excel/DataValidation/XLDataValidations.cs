@@ -84,7 +84,8 @@ namespace ClosedXML.Excel
 
             var candidates = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress) rangeAddress)
                 .Where(c => c.RangeAddress.Contains(rangeAddress.FirstAddress) &&
-                            c.RangeAddress.Contains(rangeAddress.LastAddress));
+                            c.RangeAddress.Contains(rangeAddress.LastAddress))
+                .ToArray();
 
             if (!candidates.Any())
                 return false;

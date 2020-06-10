@@ -80,7 +80,8 @@ namespace ClosedXML.Excel.CalcEngine
                             return null;
                     })
                     .Where(sheet => sheet != null)
-                    .Distinct();
+                    .Distinct()
+                    .ToArray();
 
                 if (!referencedSheetNames.Any())
                     return GetCellRangeReference(_ws.Range(identifier));
@@ -104,7 +105,8 @@ namespace ClosedXML.Excel.CalcEngine
                         XLHelper.IsValidRangeAddress(r) 
                             ? GetCellRangeReference(_ws.Workbook.Range(r))
                             : new XLCalcEngine(_ws).Evaluate(r.ToString())
-                        );
+                        )
+                        .ToArray();
                     if (references.Count() == 1)
                         return references.Single();
                     return references;

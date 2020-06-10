@@ -93,12 +93,12 @@ namespace ClosedXML.Excel
         {
             var backupCulture = Thread.CurrentThread.CurrentCulture;
 
-            IEnumerable<ValidationErrorInfo> errors;
+            IReadOnlyCollection<ValidationErrorInfo> errors;
             try
             {
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
                 var validator = new OpenXmlValidator();
-                errors = validator.Validate(package);
+                errors = validator.Validate(package).ToArray();
             }
             finally
             {
@@ -753,11 +753,12 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
+            var sheetElements = (from sheet in workbook.Sheets.Elements<Sheet>()
                                 join worksheet in ((IEnumerable<XLWorksheet>)WorksheetsInternal) on sheet.Id.Value
                                     equals worksheet.RelId
                                 orderby worksheet.Position
-                                select sheet;
+                                select sheet)
+                .ToArray();
 
             UInt32 firstSheetVisible = 0;
             var activeTab =
@@ -5435,7 +5436,8 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && c.Colors.Count > 1 && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
+            var exlst = (from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && c.Colors.Count > 1 && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c)
+                .ToArray();
             if (exlst != null && exlst.Any())
             {
                 if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
@@ -5869,7 +5871,7 @@ namespace ClosedXML.Excel
 
                 var rowBreaks = worksheetPart.Worksheet.Elements<RowBreaks>().First();
 
-                var existingBreaks = rowBreaks.ChildElements.OfType<Break>();
+                var existingBreaks = rowBreaks.ChildElements.OfType<Break>().ToArray();
                 var rowBreaksToDelete = existingBreaks
                     .Where(rb => !rb.Id.HasValue ||
                                  !xlWorksheet.PageSetup.RowBreaks.Contains((int)rb.Id.Value))
@@ -5916,7 +5918,7 @@ namespace ClosedXML.Excel
 
                 var columnBreaks = worksheetPart.Worksheet.Elements<ColumnBreaks>().First();
 
-                var existingBreaks = columnBreaks.ChildElements.OfType<Break>();
+                var existingBreaks = columnBreaks.ChildElements.OfType<Break>().ToArray();
                 var columnBreaksToDelete = existingBreaks
                     .Where(cb => !cb.Id.HasValue ||
                                  !xlWorksheet.PageSetup.ColumnBreaks.Contains((int)cb.Id.Value))

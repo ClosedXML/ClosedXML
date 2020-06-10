@@ -98,7 +98,7 @@ namespace ClosedXML.Excel.Patterns
         public bool Add(IXLAddressable range)
         {
             bool res = false;
-            var children = Children ?? CreateChildren().ToList();
+            var children = (Children ?? CreateChildren()).ToList();
             bool addToChild = false;
             foreach (var childQuadrant in children)
             {

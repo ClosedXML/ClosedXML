@@ -233,7 +233,7 @@ namespace ClosedXML.Excel
                                        .SetTopBottomValue(value)
                                        .SetTopBottomType(type);
 
-            var values = GetValues(value, type, takeTop);
+            var values = GetValues(value, type, takeTop).ToArray();
 
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
@@ -284,7 +284,7 @@ namespace ClosedXML.Excel
                     return cellsUsed.Select(c => c.GetDouble()).OrderByDescending(d => d).Take(value).Distinct();
                 }
 
-                var numerics1 = cellsUsed.Select(c => c.GetDouble());
+                var numerics1 = cellsUsed.Select(c => c.GetDouble()).ToArray();
                 Int32 valsToTake1 = numerics1.Count() * value / 100;
                 return numerics1.OrderByDescending(d => d).Take(valsToTake1).Distinct();
             }
@@ -294,7 +294,7 @@ namespace ClosedXML.Excel
                 return cellsUsed.Select(c => c.GetDouble()).OrderBy(d => d).Take(value).Distinct();
             }
 
-            var numerics = cellsUsed.Select(c => c.GetDouble());
+            var numerics = cellsUsed.Select(c => c.GetDouble()).ToArray();
             Int32 valsToTake = numerics.Count() * value / 100;
             return numerics.OrderBy(d => d).Take(valsToTake).Distinct();
         }
@@ -306,7 +306,7 @@ namespace ClosedXML.Excel
                 .SetDynamicType(aboveAverage
                                     ? XLFilterDynamicType.AboveAverage
                                     : XLFilterDynamicType.BelowAverage);
-            var values = GetAverageValues(aboveAverage);
+            var values = GetAverageValues(aboveAverage).ToArray();
 
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());

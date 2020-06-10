@@ -22,7 +22,8 @@ namespace ClosedXML.Excel.ContentManagers
 
             var previousElements = contents.Keys
                 .Where(key => key.CastTo<int>() < i && contents[key] != null)
-                .OrderBy(key => key.CastTo<int>());
+                .OrderBy(key => key.CastTo<int>())
+                .ToArray();
 
             if (previousElements.Any())
                 return contents[previousElements.Last()];

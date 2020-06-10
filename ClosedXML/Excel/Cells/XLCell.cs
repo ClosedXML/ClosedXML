@@ -790,7 +790,8 @@ namespace ClosedXML.Excel
             var maximumColumnNumber = currentColumnNumber;
             var maximumRowNumber = currentRowNumber;
 
-            var itemType = data.GetItemType();
+            var materializedData = data.ToArray();
+            var itemType = materializedData.GetItemType();
             var isArray = itemType.IsArray;
             var isDataTable = itemType == typeof(DataTable);
             var isDataReader = itemType == typeof(IDataReader);
@@ -834,7 +835,7 @@ namespace ClosedXML.Excel
             }
             //////////////////////////////////////////////////////
 
-            if (!data.Any())
+            if (!materializedData.Any())
             {
                 if (itemType.IsSimpleType())
                     maximumColumnNumber = _columnNumber;
@@ -843,7 +844,7 @@ namespace ClosedXML.Excel
             }
             else if (itemType.IsSimpleType())
             {
-                foreach (object o in data)
+                foreach (object o in materializedData)
                 {
                     resetRecordPosition();
 
@@ -879,7 +880,7 @@ namespace ClosedXML.Excel
                          .ToArray();
                 }
 
-                foreach (T m in data)
+                foreach (T m in materializedData)
                 {
                     resetRecordPosition();
 
@@ -3078,8 +3079,9 @@ namespace ClosedXML.Excel
             var rangeAddress = range.RangeAddress;
 
             var filledCells = range
-                .SurroundingCells(c => !(c as XLCell).IsEmpty(XLCellsUsedOptions.AllContents))
-                .Concat(this.Worksheet.Range(rangeAddress).Cells());
+                .SurroundingCells(c => c is XLCell xlCell && !xlCell.IsEmpty(XLCellsUsedOptions.AllContents))
+                .Concat(this.Worksheet.Range(rangeAddress).Cells())
+                .ToArray();
 
             var grownRangeAddress = new XLRangeAddress(
                 new XLAddress(this.Worksheet, filledCells.Min(c => c.Address.RowNumber), filledCells.Min(c => c.Address.ColumnNumber), false, false),

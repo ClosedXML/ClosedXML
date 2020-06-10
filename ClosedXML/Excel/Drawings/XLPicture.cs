@@ -86,7 +86,8 @@ namespace ClosedXML.Excel.Drawings
             ImageStream.Seek(0, SeekOrigin.Begin);
             DeduceDimensionsFromBitmap(bitmap);
 
-            var formats = FormatMap.Where(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid));
+            var formats = FormatMap.Where(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid))
+                .ToArray();
             if (!formats.Any() || formats.Count() > 1)
                 throw new ArgumentException("Unsupported or unknown image format in bitmap");
 
@@ -104,7 +105,8 @@ namespace ClosedXML.Excel.Drawings
             };
 
             // Calculate default picture ID
-            var allPictures = worksheet.Workbook.Worksheets.SelectMany(ws => ws.Pictures);
+            var allPictures = worksheet.Workbook.Worksheets.SelectMany(ws => ws.Pictures)
+                .ToArray();
             if (allPictures.Any())
                 this.id = allPictures.Max(p => p.Id) + 1;
             else
