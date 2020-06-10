@@ -93,7 +93,7 @@ namespace ClosedXML.Excel
         {
             var backupCulture = Thread.CurrentThread.CurrentCulture;
 
-            IReadOnlyCollection<ValidationErrorInfo> errors;
+            IList<ValidationErrorInfo> errors;
             try
             {
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

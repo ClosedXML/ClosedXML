@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
             public string Text;
         }
 
-        private static IReadOnlyCollection<ParsedHeaderFooterElement> ParseFormattedHeaderFooterText(string text)
+        private static IList<ParsedHeaderFooterElement> ParseFormattedHeaderFooterText(string text)
         {
             Func<int, bool> IsAtPositionIndicator = i => i < text.Length - 1 && text[i] == '&' && (new char[] { 'L', 'C', 'R' }.Contains(text[i + 1]));
 
