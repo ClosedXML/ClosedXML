@@ -1561,7 +1561,7 @@ namespace ClosedXML.Excel
 
         public IXLCell CopyFrom(IXLCell otherCell)
         {
-            return CopyFrom(otherCell as XLCell, XLCellCopyOptions.All);
+            return CopyFrom(otherCell, XLCellCopyOptions.All);
         }
 
         public IXLCell CopyFrom(String otherCell)
@@ -2554,6 +2554,9 @@ namespace ClosedXML.Excel
 
         internal IXLCell CopyFromInternal(XLCell otherCell, XLCellCopyOptions options)
         {
+            if (otherCell == null)
+                return this;
+
             if (options.HasFlag(XLCellCopyOptions.Values))
                 CopyValuesFrom(otherCell);
 
