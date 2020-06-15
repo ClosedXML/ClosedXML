@@ -1083,5 +1083,24 @@ namespace ClosedXML_Tests
                 Assert.IsTrue(A3.TryGetValue(out String _));
             }
         }
+
+        [Test]
+        public void CopyFromInternalNullTest()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                const string value = "Test data";
+                var ws = wb.AddWorksheet("Sheet1");
+                var a1 = ws.Cell("A1");
+                a1.Value = value;
+
+                if (a1 is XLCell a1Xl)
+                {
+                    a1Xl.CopyFromInternal(null, XLCellCopyOptions.Values);
+                }
+
+                Assert.AreEqual(value, a1.Value);
+            }
+        }
     }
 }
