@@ -1138,13 +1138,13 @@ namespace ClosedXML.Excel
                             case DateTime d:
                                 _cellValue = d.ToOADate().ToInvariantString();
 
-                                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                                if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                                     Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
 
                                 break;
 
                             case TimeSpan ts:
-                                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                                if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                                     Style.NumberFormat.NumberFormatId = 46;
 
                                 break;
@@ -2311,7 +2311,7 @@ namespace ClosedXML.Excel
         {
             _dataType = XLDataType.DateTime;
 
-            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = onlyDatePart ? 14 : 22;
         }
 
@@ -2319,7 +2319,7 @@ namespace ClosedXML.Excel
         {
             _dataType = XLDataType.TimeSpan;
 
-            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = 46;
         }
 

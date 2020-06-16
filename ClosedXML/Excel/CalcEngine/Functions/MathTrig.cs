@@ -576,7 +576,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             try
             {
-                if (input == "")
+                if (input.Length == 0)
                     return 0;
                 if (input == "-")
                     throw new NumberException();

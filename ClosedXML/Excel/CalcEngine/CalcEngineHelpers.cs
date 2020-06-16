@@ -44,10 +44,10 @@ namespace ClosedXML.Excel.CalcEngine
             else if (criteria is TimeSpan ts) cdbl = ts.TotalDays;
             else if (criteria is String cs)
             {
-                if (value is string && (value as string).Trim() == "")
-                    return cs == "";
+                if (value is string && (value as string).Trim().Length == 0)
+                    return cs.Length == 0;
 
-                if (cs == "")
+                if (cs.Length == 0)
                     return cs.Equals(value);
 
                 // if criteria is an expression (e.g. ">20"), use calc engine
