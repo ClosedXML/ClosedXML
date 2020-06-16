@@ -306,7 +306,7 @@ namespace ClosedXML_Tests
                 range.Unmerge();
 
                 Assert.IsTrue(range.Cells().All(c => c.Style.Fill.BackgroundColor == XLColor.Red));
-                Assert.IsTrue(range.Cells().Where(c => c != firstCell).All(c => c.Value == ""));
+                Assert.IsTrue(range.Cells().Where(c => c != firstCell).All(c => c.GetString().Length == 0));
                 Assert.AreEqual("B2", firstCell.Value);
 
                 Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B2").Style.Border.TopBorder);
