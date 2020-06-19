@@ -100,9 +100,6 @@ namespace ClosedXML.Excel
             get { return XLRangeType.Worksheet; }
         }
 
-        //private IXLStyle _style;
-        private const String InvalidNameChars = @":\/?*[]";
-
         public string LegacyDrawingId;
         public Boolean LegacyDrawingIsNew;
         private Double _columnWidth;
@@ -202,21 +199,7 @@ namespace ClosedXML.Excel
             {
                 if (_name == value) return;
 
-                if (String.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Worksheet names cannot be empty");
-
-                if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
-                    throw new ArgumentException("Worksheet names cannot contain any of the following characters: " +
-                                                InvalidNameChars);
-
-                if (value.Length > 31)
-                    throw new ArgumentException("Worksheet names cannot be more than 31 characters");
-
-                if (value.StartsWith("'", StringComparison.Ordinal))
-                    throw new ArgumentException("Worksheet names cannot start with an apostrophe");
-
-                if (value.EndsWith("'", StringComparison.Ordinal))
-                    throw new ArgumentException("Worksheet names cannot end with an apostrophe");
+                XLHelper.ValidateSheetName(value);
 
                 Workbook.WorksheetsInternal.Rename(_name, value);
                 _name = value;

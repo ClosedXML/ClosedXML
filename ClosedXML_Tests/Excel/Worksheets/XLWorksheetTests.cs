@@ -12,6 +12,8 @@ namespace ClosedXML_Tests
     [TestFixture]
     public class XLWorksheetTests
     {
+        private readonly static char[] illegalWorksheetCharacters = "\u0000\u0003:\\/?*[]".ToCharArray();
+
         [Test]
         public void ColumnCountTime()
         {
@@ -327,6 +329,19 @@ namespace ClosedXML_Tests
             };
 
             Assert.Throws(typeof(ArgumentException), addWorksheet);
+        }
+
+        [Test]
+        public void WorksheetNameCannotBeEmpty()
+        {
+            Assert.Throws<ArgumentException>(() => new XLWorkbook().AddWorksheet(" "));
+        }
+
+        [TestCaseSource(nameof(illegalWorksheetCharacters))]
+        public void WorksheetNameCannotContainIllegalCharacters(char c)
+        {
+            var proposedName = $"Sheet{c}Name";
+            Assert.Throws<ArgumentException>(() => new XLWorkbook().AddWorksheet(proposedName));
         }
 
         [Test]
@@ -1173,7 +1188,7 @@ namespace ClosedXML_Tests
         [TestCase("noactive_twoselected.xlsx")]
         public void FirstSheetIsActive_WhenNotSpecified(string fileName)
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NoActiveSheet\"+fileName)))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NoActiveSheet\" + fileName)))
             using (var wb = new XLWorkbook(stream))
             {
                 Assert.IsTrue(wb.Worksheets.First().TabActive);

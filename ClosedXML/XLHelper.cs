@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     /// <summary>
     /// 	Common methods
     /// </summary>
-    public static class XLHelper
+    public static partial class XLHelper
     {
         public const int MinRowNumber = 1;
         public const int MinColumnNumber = 1;
