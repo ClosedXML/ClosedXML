@@ -438,6 +438,10 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
+                        var texts = c.GetFirstChild<CommentText>().Elements<Text> ();
+                        foreach (var text in texts)
+                            xlComment.AddText(text.InnerText.FixNewLines());
+
                         if (shape != null)
                         {
                             LoadShapeProperties(xlComment, shape);
