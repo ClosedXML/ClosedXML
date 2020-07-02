@@ -326,6 +326,29 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetValue_DateTime_Good2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            bool success = ws.Cell("A1").SetFormulaA1("=TODAY() + 10").TryGetValue(out DateTime outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(DateTime.Today.AddDays(10), outValue);
+        }
+
+        [Test]
+        public void TryGetValue_DateTime_BadButFormulaGood()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            bool success = ws.Cell("A1").SetFormulaA1("=\"44\"&\"020\"").TryGetValue(out DateTime outValue);
+            Assert.IsFalse(success);
+
+            ws.Cell("B1").SetFormulaA1("=A1+1");
+
+            success = ws.Cell("B1").TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(new DateTime(2020, 07, 09), outValue);
+        }
+
+        [Test]
         public void TryGetValue_DateTime_BadString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");

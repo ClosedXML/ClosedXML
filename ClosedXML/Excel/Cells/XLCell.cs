@@ -1761,14 +1761,35 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            if (!DateTime.TryParse(currentValue.ToString(), out DateTime ts))
+            if (currentValue is T v) { value = v; return true; }
+
+            if (currentValue.IsNumber())
             {
-                value = default;
-                return false;
+                var dbl1 = Convert.ToDouble(currentValue);
+                if (dbl1.IsValidOADateNumber())
+                {
+                    value = (T)Convert.ChangeType(DateTime.FromOADate(dbl1), typeof(T));
+                    return true;
+                }
             }
 
-            value = (T)Convert.ChangeType(ts, typeof(T));
-            return true;
+            if (DateTime.TryParse(currentValue.ToString(), out DateTime ts))
+            {
+                value = (T)Convert.ChangeType(ts, typeof(T));
+                return true;
+            }
+
+            // If the cell value is a string, e.g. "42020", we could theoretically coerce it to a DateTime, but this seems to go against what is expected.
+            // Leaving this code block here, though. Maybe we revert our decision later.
+
+            //if (Double.TryParse(currentValue.ObjectToInvariantString(), out Double dbl2) && dbl2.IsValidOADateNumber())
+            //{
+            //    value = (T)Convert.ChangeType(DateTime.FromOADate(dbl2), typeof(T));
+            //    return true;
+            //}
+
+            value = default;
+            return false;
         }
 
         private static bool TryGetTimeSpanValue<T>(out T value, object currentValue)
@@ -1778,6 +1799,8 @@ namespace ClosedXML.Excel
                 value = default;
                 return false;
             }
+
+            if (currentValue is T v) { value = v; return true; }
 
             if (!TimeSpan.TryParse(currentValue.ToString(), out TimeSpan ts))
             {
@@ -1844,6 +1867,8 @@ namespace ClosedXML.Excel
                 value = default;
                 return false;
             }
+
+            if (currentValue is T v) { value = v; return true; }
 
             if (!Boolean.TryParse(currentValue.ToString(), out Boolean b))
             {
