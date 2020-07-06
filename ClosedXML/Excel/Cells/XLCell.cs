@@ -199,7 +199,13 @@ namespace ClosedXML.Excel
 
         public IXLCell SetValue<T>(T value)
         {
-            return SetValue(value, true);
+            if (value is IEnumerable ie && !(value is string))
+            {
+                this.InsertData(ie);
+                return this;
+            }
+            else
+                return SetValue(value, true);
         }
 
         internal IXLCell SetValue<T>(T value, bool setTableHeader)
