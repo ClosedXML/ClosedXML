@@ -4757,8 +4757,8 @@ namespace ClosedXML.Excel
             svcm.SetElement(XLSheetViewContents.Pane, pane);
 
             pane.State = PaneStateValues.FrozenSplit;
-            Double hSplit = xlWorksheet.SheetView.SplitColumn;
-            Double ySplit = xlWorksheet.SheetView.SplitRow;
+            int hSplit = xlWorksheet.SheetView.SplitColumn;
+            int ySplit = xlWorksheet.SheetView.SplitRow;
 
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
@@ -6370,7 +6370,7 @@ namespace ClosedXML.Excel
                 ((left.Style == null && right.Style == null)
                  || (left.Style != null && right.Style != null && left.Style.Value == right.Style.Value))
                 && ((left.Width == null && right.Width == null)
-                    || (left.Width != null && right.Width != null && left.Width.Value == right.Width.Value))
+                    || (left.Width != null && right.Width != null && (Math.Abs(left.Width.Value - right.Width.Value) < XLHelper.Epsilon)))
                 && ((left.Hidden == null && right.Hidden == null)
                     || (left.Hidden != null && right.Hidden != null && left.Hidden.Value == right.Hidden.Value))
                 && ((left.Collapsed == null && right.Collapsed == null)
