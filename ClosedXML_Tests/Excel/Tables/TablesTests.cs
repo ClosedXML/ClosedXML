@@ -248,6 +248,23 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
+        public void EmptyTableCreatedFromListOfObjectWithPropertyAttributes()
+        {
+            var l = new List<TestObjectWithAttributes>();
+
+            using (var wb = new XLWorkbook())
+            {
+                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().InsertTable(l);
+                Assert.AreEqual(4, ws.Tables.First().ColumnCount());
+                Assert.AreEqual("FirstColumn", ws.FirstCell().Value);
+                Assert.AreEqual("SecondColumn", ws.FirstCell().CellRight().Value);
+                Assert.AreEqual("SomeFieldNotProperty", ws.FirstCell().CellRight().CellRight().Value);
+                Assert.AreEqual("UnOrderedColumn", ws.FirstCell().CellRight().CellRight().CellRight().Value);
+            }
+        }
+
+        [Test]
         public void TableInsertAboveFromData()
         {
             using (var wb = new XLWorkbook())
