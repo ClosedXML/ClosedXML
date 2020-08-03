@@ -330,15 +330,12 @@ namespace ClosedXML.Excel
 
         public IXLColumns Columns()
         {
+            var columnList = new HashSet<Int32>();
+
+            columnList.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
+            columnList.UnionWith(Internals.ColumnsCollection.Keys);
+
             var retVal = new XLColumns(this, StyleValue);
-            var columnList = new List<Int32>();
-
-            if (Internals.CellsCollection.Count > 0)
-                columnList.AddRange(Internals.CellsCollection.ColumnsUsed.Keys);
-
-            if (Internals.ColumnsCollection.Count > 0)
-                columnList.AddRange(Internals.ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
-
             foreach (int c in columnList)
                 retVal.Add(Column(c));
 
@@ -397,13 +394,10 @@ namespace ClosedXML.Excel
         public IXLRows Rows()
         {
             var retVal = new XLRows(this, StyleValue);
-            var rowList = new List<Int32>();
+            var rowList = new HashSet<Int32>();
 
-            if (Internals.CellsCollection.Count > 0)
-                rowList.AddRange(Internals.CellsCollection.RowsUsed.Keys);
-
-            if (Internals.RowsCollection.Count > 0)
-                rowList.AddRange(Internals.RowsCollection.Keys.Where(r => !rowList.Contains(r)));
+            rowList.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
+            rowList.UnionWith(Internals.RowsCollection.Keys);
 
             foreach (int r in rowList)
                 retVal.Add(Row(r));
