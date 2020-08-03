@@ -335,10 +335,7 @@ namespace ClosedXML.Excel
             columnList.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
             columnList.UnionWith(Internals.ColumnsCollection.Keys);
 
-            var retVal = new XLColumns(this, StyleValue);
-            foreach (int c in columnList)
-                retVal.Add(Column(c));
-
+            var retVal = new XLColumns(this, StyleValue, columnList.Select(Column));
             return retVal;
         }
 
@@ -393,15 +390,11 @@ namespace ClosedXML.Excel
 
         public IXLRows Rows()
         {
-            var retVal = new XLRows(this, StyleValue);
             var rowList = new HashSet<Int32>();
-
             rowList.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
             rowList.UnionWith(Internals.RowsCollection.Keys);
 
-            foreach (int r in rowList)
-                retVal.Add(Row(r));
-
+            var retVal = new XLRows(this, StyleValue, rowList.Select(Row));
             return retVal;
         }
 
