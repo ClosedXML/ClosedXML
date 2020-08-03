@@ -335,10 +335,7 @@ namespace ClosedXML.Excel
             columnMap.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
             columnMap.UnionWith(Internals.ColumnsCollection.Keys);
 
-            var retVal = new XLColumns(this, StyleValue);
-            foreach (int c in columnMap)
-                retVal.Add(Column(c));
-
+            var retVal = new XLColumns(this, StyleValue, columnMap.Select(Column));
             return retVal;
         }
 
@@ -398,10 +395,7 @@ namespace ClosedXML.Excel
             rowMap.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
             rowMap.UnionWith(Internals.RowsCollection.Keys);
 
-            var retVal = new XLRows(this, StyleValue);
-            foreach (int r in rowMap)
-                retVal.Add(Row(r));
-
+            var retVal = new XLRows(this, StyleValue, rowMap.Select(Row));
             return retVal;
         }
 
