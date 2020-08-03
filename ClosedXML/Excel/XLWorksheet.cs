@@ -330,15 +330,12 @@ namespace ClosedXML.Excel
 
         public IXLColumns Columns()
         {
-            var retVal = new XLColumns(this, StyleValue);
             var columnMap = new HashSet<Int32>();
 
-            if (Internals.CellsCollection.Count > 0)
-                columnMap.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
+            columnMap.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
+            columnMap.UnionWith(Internals.ColumnsCollection.Keys);
 
-            if (Internals.ColumnsCollection.Count > 0)
-                columnMap.UnionWith(Internals.ColumnsCollection.Keys);
-
+            var retVal = new XLColumns(this, StyleValue);
             foreach (int c in columnMap)
                 retVal.Add(Column(c));
 
@@ -396,15 +393,12 @@ namespace ClosedXML.Excel
 
         public IXLRows Rows()
         {
-            var retVal = new XLRows(this, StyleValue);
             var rowMap = new HashSet<Int32>();
 
-            if (Internals.CellsCollection.Count > 0)
-                rowMap.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
+            rowMap.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
+            rowMap.UnionWith(Internals.RowsCollection.Keys);
 
-            if (Internals.RowsCollection.Count > 0)
-                rowMap.UnionWith(Internals.RowsCollection.Keys);
-
+            var retVal = new XLRows(this, StyleValue);
             foreach (int r in rowMap)
                 retVal.Add(Row(r));
 
