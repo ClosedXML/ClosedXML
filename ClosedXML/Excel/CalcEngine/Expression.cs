@@ -286,9 +286,15 @@ namespace ClosedXML.Excel.CalcEngine
             switch (_token.ID)
             {
                 case TKID.ADD:
-                    return +(double)Expression;
+                    return Expression.Evaluate();
 
                 case TKID.SUB:
+                    var value = Expression.Evaluate() as string;
+
+                    // If string not parsable to double, #VALUE error
+                    if (value != null && !double.TryParse(value, out _))
+                        throw new CellValueException();
+
                     return -(double)Expression;
             }
             throw new ArgumentException("Bad expression.");
