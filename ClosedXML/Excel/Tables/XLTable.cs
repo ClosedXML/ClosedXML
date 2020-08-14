@@ -48,21 +48,10 @@ namespace ClosedXML.Excel
                 if (_fieldNames != null && _lastRangeAddress != null && _lastRangeAddress.Equals(RangeAddress))
                     return _fieldNames;
 
-                if (_fieldNames == null)
-                {
-                    _fieldNames = new Dictionary<String, IXLTableField>(StringComparer.OrdinalIgnoreCase);
-                    _lastRangeAddress = RangeAddress;
-                    HeadersRow();
-                }
-                else
-                {
-                    HeadersRow(false);
-                }
-
-                RescanFieldNames();
-
                 _lastRangeAddress = RangeAddress;
 
+                RescanFieldNames();
+                
                 return _fieldNames;
             }
         }
@@ -71,16 +60,17 @@ namespace ClosedXML.Excel
         {
             if (ShowHeaderRow)
             {
-                var detectedFieldNames = new Dictionary<String, IXLTableField>();
+                var oldFieldNames = _fieldNames ?? new Dictionary<string, IXLTableField>();
+                _fieldNames = new Dictionary<string, IXLTableField>();
                 var headersRow = HeadersRow(false);
                 Int32 cellPos = 0;
                 foreach (var cell in headersRow.Cells())
                 {
                     var name = cell.GetString();
-                    if (_fieldNames.TryGetValue(name, out IXLTableField tableField) && tableField.Column.ColumnNumber() == cell.Address.ColumnNumber)
+                    if (oldFieldNames.TryGetValue(name, out IXLTableField tableField))// && tableField.Column.ColumnNumber() == cell.Address.ColumnNumber)
                     {
                         (tableField as XLTableField).Index = cellPos;
-                        detectedFieldNames.Add(name, _fieldNames[name]);
+                        _fieldNames.Add(name, tableField);
                         cellPos++;
                         continue;
                     }
@@ -96,13 +86,7 @@ namespace ClosedXML.Excel
                         throw new ArgumentException("The header row contains more than one field name '" + name + "'.");
 
                     _fieldNames.Add(name, new XLTableField(this, name) { Index = cellPos++ });
-                    detectedFieldNames.Add(name, _fieldNames[name]);
                 }
-
-                _fieldNames.Keys
-                    .Where(key => !detectedFieldNames.ContainsKey(key))
-                    .ToArray()
-                    .ForEach(key => _fieldNames.Remove(key));
             }
             else
             {
@@ -415,6 +399,9 @@ namespace ClosedXML.Excel
 
                         if (f.TotalsRowFunction != XLTotalsRowFunction.None)
                             c.DataType = XLDataType.Number;
+
+                        if (!string.IsNullOrEmpty(f.TotalsRowLabel))
+                            c.SetValue(f.TotalsRowLabel);
                     }
                 }
             }
