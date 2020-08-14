@@ -40,6 +40,11 @@ namespace ClosedXML_Examples.Tables
                 var table3 = ws3.Tables.First();
                 table3.Resize(table3.FirstCell().CellLeft(), table3.LastCell().CellRight().CellBelow(1));
 
+                ////See #1492
+                var ws4 = ws1.CopyTo("Sheet4");
+                var table4 = ws4.Tables.First();
+                table4.Field("String").Column.InsertColumnsAfter(1, true);
+
                 wb.Worksheets.ForEach(ws => ws.Columns().AdjustToContents());
                 wb.SaveAs(filePath);
             }
