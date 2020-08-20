@@ -246,10 +246,28 @@ namespace ClosedXML.Excel.Drawings
             Worksheet.Pictures.Delete(this.Name);
         }
 
-        public void Dispose()
+        // Used by Janitor.Fody
+        private void DisposeManaged()
         {
             this.ImageStream.Dispose();
         }
+
+#if _NET40_
+
+        public void Dispose()
+        {
+            // net40 doesn't support Janitor.Fody, so let's dispose manually
+            DisposeManaged();
+        }
+
+#else
+
+        public void Dispose()
+        {
+            // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
+        }
+
+#endif
 
         /// <summary>
         /// Create a copy of the picture on the same worksheet.
