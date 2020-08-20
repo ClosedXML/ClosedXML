@@ -442,5 +442,22 @@ namespace ClosedXML_Tests.Excel
                 }
             }
         }
+
+#if _NET40_
+        [Ignore(".NET 40 does not support Janitor.Fody")]
+#endif
+
+        [Test]
+        public void AccessDisposedWorkbookThrowsException()
+        {
+            IXLWorkbook wb;
+            using (wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                ws.FirstCell().SetValue("Hello world");
+            }
+
+            Assert.Throws<ObjectDisposedException>(() => Console.WriteLine(wb.Worksheets.First().FirstCell().Value));
+        }
     }
 }

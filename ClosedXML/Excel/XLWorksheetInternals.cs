@@ -22,12 +22,30 @@ namespace ClosedXML.Excel
         public XLRowsCollection RowsCollection { get; private set; }
         public XLRanges MergedRanges { get; internal set; }
 
-        public void Dispose()
+        // Used by Janitor.Fody
+        private void DisposeManaged()
         {
             CellsCollection.Clear();
             ColumnsCollection.Clear();
             RowsCollection.Clear();
             MergedRanges.RemoveAll();
         }
+
+#if _NET40_
+
+        public void Dispose()
+        {
+            // net40 doesn't support Janitor.Fody, so let's dispose manually
+            DisposeManaged();
+        }
+
+#else
+
+        public void Dispose()
+        {
+            // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
+        }
+
+#endif
     }
 }

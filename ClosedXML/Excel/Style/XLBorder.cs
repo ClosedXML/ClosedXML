@@ -213,14 +213,13 @@ namespace ClosedXML.Excel
                                 (cell.Style.Border as XLBorder)
                                     .Modify(k =>
                                     {
-                                        k.TopBorderColor = 
-                                        k.BottomBorderColor = 
-                                        k.LeftBorderColor = 
+                                        k.TopBorderColor =
+                                        k.BottomBorderColor =
+                                        k.LeftBorderColor =
                                         k.RightBorderColor = value.Key;
                                         return k;
                                     });
                             }
-
                         }
                     }
                 }
@@ -558,7 +557,8 @@ namespace ClosedXML.Excel
                     c => (c.Style as XLStyle).Key.Border);
             }
 
-            public void Dispose()
+            // Used by Janitor.Fody
+            private void DisposeManaged()
             {
                 _topBorders.ForEach(kp => (_range.FirstRow().Cell(kp.Key).Style
                     .Border as XLBorder).Modify(k =>
@@ -589,6 +589,23 @@ namespace ClosedXML.Excel
                         return k;
                     }));
             }
+
+#if _NET40_
+
+            public void Dispose()
+            {
+                // net40 doesn't support Janitor.Fody, so let's dispose manually
+                DisposeManaged();
+            }
+
+#else
+
+            public void Dispose()
+            {
+                // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
+            }
+
+#endif
         }
     }
 }
