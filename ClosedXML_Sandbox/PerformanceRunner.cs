@@ -42,13 +42,13 @@ namespace ClosedXML_Sandbox
 
         public static void OpenTestFile()
         {
-            var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Collections");
-
-            var listOfStrings = new List<String>();
-            listOfStrings.Add("House");
-            listOfStrings.Add("Car");
-            ws.Cell(1, 1).SetValue(listOfStrings);
+            using (var wb = new XLWorkbook("test.xlsx"))
+            {
+                wb.RecalculateAllFormulas();
+                var ws = wb.Worksheets.First();
+                var cell = ws.FirstCellUsed();
+                Console.WriteLine(cell.Value);
+            }
         }
 
         private static void CreateMergedCell(IXLWorksheet worksheet)
@@ -136,7 +136,7 @@ namespace ClosedXML_Sandbox
 
             return row;
         }
-        
+
         public static void PerformHeavyCalculation()
         {
             int rows = 200;
