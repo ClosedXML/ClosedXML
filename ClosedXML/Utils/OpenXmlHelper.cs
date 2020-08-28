@@ -25,8 +25,9 @@ namespace ClosedXML.Utils
         public static T FromClosedXMLColor<T>(this ColorType openXMLColor, XLColor xlColor, bool isDifferential = false)
             where T : ColorType
         {
-            FillFromClosedXMLColor(openXMLColor, xlColor, isDifferential);
-            return (T)openXMLColor;
+            var adapter = new ColorTypeAdapter(openXMLColor);
+            FillFromClosedXMLColor(adapter, xlColor, isDifferential);
+            return (T)adapter.ColorType;
         }
 
         /// <summary>
@@ -41,8 +42,9 @@ namespace ClosedXML.Utils
         public static T FromClosedXMLColor<T>(this X14.ColorType openXMLColor, XLColor xlColor, bool isDifferential = false)
             where T : X14.ColorType
         {
-            FillFromClosedXMLColor(openXMLColor, xlColor, isDifferential);
-            return (T)openXMLColor;
+            var adapter = new X14ColorTypeAdapter(openXMLColor);
+            FillFromClosedXMLColor(adapter, xlColor, isDifferential);
+            return (T)adapter.ColorType;
         }
 
         public static BooleanValue GetBooleanValue(bool value, bool defaultValue)
@@ -63,7 +65,7 @@ namespace ClosedXML.Utils
         /// <returns>The color in ClosedXML format.</returns>
         public static XLColor ToClosedXMLColor(this ColorType openXMLColor, IDictionary<string, Drawing.Color> colorCache = null)
         {
-            return ConvertToClosedXMLColor(openXMLColor, colorCache);
+            return ConvertToClosedXMLColor(new ColorTypeAdapter(openXMLColor), colorCache);
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace ClosedXML.Utils
         /// <returns>The color in ClosedXML format.</returns>
         public static XLColor ToClosedXMLColor(this X14.ColorType openXMLColor, IDictionary<string, Drawing.Color> colorCache = null)
         {
-            return ConvertToClosedXMLColor(openXMLColor, colorCache);
+            return ConvertToClosedXMLColor(new X14ColorTypeAdapter(openXMLColor), colorCache);
         }
 
         #endregion Public Methods
@@ -88,7 +90,7 @@ namespace ClosedXML.Utils
         /// Since these types do not implement a common interface we use dynamic.</param>
         /// <param name="colorCache">The dictionary containing parsed colors to optimize performance.</param>
         /// <returns>The color in ClosedXML format.</returns>
-        private static XLColor ConvertToClosedXMLColor(dynamic openXMLColor, IDictionary<string, Drawing.Color> colorCache )
+        private static XLColor ConvertToClosedXMLColor(IColorTypeAdapter openXMLColor, IDictionary<string, Drawing.Color> colorCache )
         {
             XLColor retVal = null;
             if (openXMLColor != null)
@@ -125,7 +127,7 @@ namespace ClosedXML.Utils
         /// <param name="xlColor">Color in ClosedXML format.</param>
         /// <param name="isDifferential">Flag specifiying that the color should be saved in
         /// differential format (affects the transparent color processing).</param>
-        private static void FillFromClosedXMLColor(dynamic openXMLColor, XLColor xlColor, bool isDifferential)
+        private static void FillFromClosedXMLColor(IColorTypeAdapter openXMLColor, XLColor xlColor, bool isDifferential)
         {
             if (openXMLColor == null)
                 throw new ArgumentNullException(nameof(openXMLColor));
