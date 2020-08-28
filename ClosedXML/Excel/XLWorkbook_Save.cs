@@ -5769,9 +5769,9 @@ namespace ClosedXML.Excel
             pageSetup.CellComments = xlWorksheet.PageSetup.ShowComments.ToOpenXml();
             pageSetup.Errors = xlWorksheet.PageSetup.PrintErrorValue.ToOpenXml();
 
-            if (xlWorksheet.PageSetup.FirstPageNumber > 0)
+            if (xlWorksheet.PageSetup.FirstPageNumber.HasValue)
             {
-                pageSetup.FirstPageNumber = (UInt32)xlWorksheet.PageSetup.FirstPageNumber;
+                pageSetup.FirstPageNumber = UInt32Value.FromUInt32(xlWorksheet.PageSetup.FirstPageNumber.Value);
                 pageSetup.UseFirstPageNumber = true;
             }
             else
