@@ -1,4 +1,4 @@
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -190,6 +190,23 @@ namespace ClosedXML_Tests
 
             Assert.AreEqual(new DateTime(2000, 1, 1), ws.Cell("A1").GetDateTime());
             Assert.AreEqual(String.Empty, ws.Cell("A5").Value);
+        }
+
+        [Test]
+        public void InsertData_Objects_with_KnownTypeMapping()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            ws.Workbook.KnownTypeMapping.Add(typeof(XLDataType), typeof(int));
+            ws.Workbook.KnownTypeMapping.Add(typeof(XLTableCellType), typeof(string));
+            ws.Workbook.KnownTypeMapping.Add(typeof(int), typeof(string));
+            var item = new { I = XLDataType.TimeSpan, S = XLTableCellType.Header, X = 1 };
+            IXLRange range = ws.Cell(2, 2).InsertData(new[] { item }, false);
+
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual("Sheet1!B2:D2", range.ToString());
+            Assert.AreEqual((int)XLDataType.TimeSpan, range.Cell(1, 1).Value);
+            Assert.AreEqual(XLTableCellType.Header.ToString(), range.Cell(1, 2).Value);
+            Assert.AreEqual("1", range.Cell(1, 3).Value);
         }
 
         [Test]
@@ -601,6 +618,42 @@ namespace ClosedXML_Tests
             Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
             Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
             Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
+        }
+
+        [Test]
+        public void SetCellValueToEnum_AsString()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Workbook.KnownTypeMapping.Add(typeof(XLDataType), typeof(string));
+            var dataType = XLDataType.Number;
+            ws.FirstCell().Value = dataType;
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
+
+            dataType = XLDataType.TimeSpan;
+            ws.FirstCell().SetValue(dataType);
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().Value);
+            Assert.AreEqual(dataType.ToString(), ws.FirstCell().GetString());
+        }
+
+        [Test]
+        public void SetCellValueToEnum_AsInt()
+        {
+            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            ws.Workbook.KnownTypeMapping.Add(typeof(XLDataType), typeof(int));
+            var dataType = XLDataType.Number;
+            ws.FirstCell().Value = dataType;
+            Assert.AreEqual(XLDataType.Number, ws.FirstCell().DataType);
+            Assert.AreEqual((int)dataType, ws.FirstCell().Value);
+            Assert.AreEqual(((int)dataType).ToString(), ws.FirstCell().GetString());
+
+            dataType = XLDataType.TimeSpan;
+            ws.FirstCell().SetValue(dataType);
+            Assert.AreEqual(XLDataType.Number, ws.FirstCell().DataType);
+            Assert.AreEqual((int)dataType, ws.FirstCell().Value);
+            Assert.AreEqual(((int)dataType).ToString(), ws.FirstCell().GetString());
         }
 
         [Test]

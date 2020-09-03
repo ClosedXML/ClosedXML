@@ -1,4 +1,4 @@
-using ClosedXML.Excel.CalcEngine;
+﻿using ClosedXML.Excel.CalcEngine;
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
@@ -195,6 +195,11 @@ namespace ClosedXML.Excel
         ///   <para>All new worksheets will use these outline options.</para>
         /// </summary>
         public IXLOutline Outline { get; set; }
+
+        /// <summary>
+        ///   Gets the set of known type mappings.
+        /// </summary>
+        public IDictionary<Type, Type> KnownTypeMapping { get; } = new Dictionary<Type, Type>();
 
         /// <summary>
         ///   Gets or sets the workbook's properties.

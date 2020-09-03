@@ -249,8 +249,19 @@ namespace ClosedXML.Excel
         }
 
         // TODO: Replace with (string, bool) ValueTuple later
-        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style, Boolean acceptString)
+        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style, Boolean acceptString, Boolean mapped = false)
         {
+            // Map types to a specific known type, avoid endless loop
+            if (!mapped && null != value && value is IConvertible)
+            {
+                var valueType = value.GetType();
+                if (Worksheet.Workbook.KnownTypeMapping.TryGetValue(valueType, out Type mappedType))
+                {
+                    var mappedValue = Convert.ChangeType(value, mappedType);
+                    return SetKnownTypedValue(mappedValue, style, acceptString, mapped: true);
+                }
+            }
+
             string parsedValue;
             bool parsed;
             if (value is String && acceptString || value is char || value is Guid || value is Enum)
