@@ -319,6 +319,7 @@ namespace ClosedXML.Excel.CalcEngine
                 Text.Register(this);
                 Statistical.Register(this);
                 DateAndTime.Register(this);
+                Financial.Register(this);
             }
             return _fnTbl;
         }
