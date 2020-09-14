@@ -243,6 +243,24 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Devsq()
+        {
+            var ws = workbook.Worksheets.First();
+            double value;
+            Assert.That(() => ws.Evaluate(@"=DEVSQ(D3:D45)"),
+                Throws.TypeOf<ArgumentException>().With.Message.EqualTo("No numeric parameters."));
+
+            value = ws.Evaluate(@"=DEVSQ(H3:H45)").CastTo<double>();
+            Assert.AreEqual(94145.5271162791, value, tolerance);
+
+            value = ws.Evaluate(@"=DEVSQ(H:H)").CastTo<double>();
+            Assert.AreEqual(94145.5271162791, value, tolerance);
+
+            value = workbook.Evaluate(@"=DEVSQ(Data!H:H)").CastTo<double>();
+            Assert.AreEqual(94145.5271162791, value, tolerance);
+        }
+
+        [Test]
         public void Max()
         {
             var ws = workbook.Worksheets.First();

@@ -165,6 +165,15 @@ namespace ClosedXML.Excel.CalcEngine
             return nums.Length == 0 ? 0 : nums.Min();
         }
 
+        public double Devsq()
+        {
+            var nums = NumericValuesInternal();
+            if (nums.Length == 0) throw new ArgumentException("No numeric parameters.");
+
+            var averageNumber = Average();
+            return nums.Sum(x => Math.Pow(x - averageNumber, 2));
+        }
+
         public double Max()
         {
             var nums = NumericValuesInternal();
