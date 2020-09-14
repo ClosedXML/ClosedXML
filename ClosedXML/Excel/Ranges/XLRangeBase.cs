@@ -1,4 +1,3 @@
-using ClosedXML.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -332,7 +331,11 @@ namespace ClosedXML.Excel
 
         public IXLRange Merge(Boolean checkIntersect)
         {
+            if (RangeAddress.FirstAddress.Equals(RangeAddress.LastAddress))
+                return Worksheet.Range(RangeAddress);
+
             var asRange = AsRange();
+
             if (checkIntersect)
             {
                 var intersectedMergedRanges =
