@@ -247,15 +247,21 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
             double value;
-            Assert.That(() => ws.Evaluate(@"=FISHER(D3:D45)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Parameter non numeric."));
 
-            Assert.That(() => ws.Evaluate(@"=FISHER(D3)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Parameter non numeric."));
+            Assert.That(() => ws.Evaluate(@"=FISHER(D3:D45)"),
+                Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Parameter non numeric."));
 
-            Assert.That(() => ws.Evaluate(@"=FISHER(H3)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+            Assert.That(() => ws.Evaluate(@"=FISHER(D3)"),
+                Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Parameter non numeric."));
 
-            Assert.That(() => ws.Evaluate(@"=FISHER(-1)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+            Assert.That(() => ws.Evaluate(@"=FISHER(H3)"),
+                Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
 
-            Assert.That(() => ws.Evaluate(@"=FISHER(1)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+            Assert.That(() => ws.Evaluate(@"=FISHER(-1)"),
+                Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+
+            Assert.That(() => ws.Evaluate(@"=FISHER(1)"),
+                Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
 
             value = ws.Evaluate(@"=FISHER(0)").CastTo<double>();
             Assert.AreEqual(0, value, tolerance);
