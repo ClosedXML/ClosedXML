@@ -269,6 +269,35 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook = SetupWorkbook();
         }
 
+        [TestCase(0, ExpectedResult = 0)]
+        [TestCase(0.2, ExpectedResult = 0.202732554054082)]
+        [TestCase(0.25, ExpectedResult = 0.255412811882995)]
+        [TestCase(0.3296001056, ExpectedResult = 0.342379555936801)]
+        [TestCase(-0.36, ExpectedResult = -0.37688590118819)]
+        [TestCase(-0.000003, ExpectedResult = -0.00000299999999998981)]
+        [TestCase(-0.063453535345348, ExpectedResult = -0.0635389037459617)]
+        [TestCase(0.559015883901589171354964, ExpectedResult = 0.631400600322212)]
+        [TestCase(0.2691496, ExpectedResult = 0.275946780611959)]
+        [TestCase(-0.10674142, ExpectedResult = -0.107149608461448)]
+        [DefaultFloatingPointTolerance(1e-12)]
+        public double Fisher(double sourceValue)
+        {
+            return XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})").CastTo<double>();
+        }
+
+        // TODO : the string case will be treated correctly when Coercion is implemented better
+        //[TestCase("asdf", typeof(CellValueException), "Parameter non numeric.")]
+        [TestCase("5", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        [TestCase("-1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        public void Fisher_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        {
+
+            Assert.Throws(
+                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
+                () => XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})"));
+        }
+
         [Test]
         public void Max()
         {
