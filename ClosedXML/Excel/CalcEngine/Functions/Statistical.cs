@@ -31,7 +31,7 @@ namespace ClosedXML.Excel.CalcEngine
             //EXPONDIST	Returns the exponential distribution
             //FDIST	Returns the F probability distribution
             //FINV	Returns the inverse of the F probability distribution
-            //FISHER	Returns the Fisher transformation
+            ce.RegisterFunction("FISHER", 1, Fisher); // Returns the Fisher transformation
             //FISHERINV	Returns the inverse of the Fisher transformation
             //FORECAST	Returns a value along a linear trend
             //FREQUENCY	Returns a frequency distribution as a vertical array
@@ -205,6 +205,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             // done
             return count;
+        }
+
+        private static object Fisher(List<Expression> p)
+        {
+            return GetTally(p, true).Fisher();
         }
 
         private static object Max(List<Expression> p)

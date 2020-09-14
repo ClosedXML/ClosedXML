@@ -243,6 +243,40 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Fisher()
+        {
+            var ws = workbook.Worksheets.First();
+            double value;
+            Assert.That(() => ws.Evaluate(@"=FISHER(D3:D45)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Parameter non numeric."));
+
+            Assert.That(() => ws.Evaluate(@"=FISHER(D3)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Parameter non numeric."));
+
+            Assert.That(() => ws.Evaluate(@"=FISHER(H3)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+
+            Assert.That(() => ws.Evaluate(@"=FISHER(-1)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+
+            Assert.That(() => ws.Evaluate(@"=FISHER(1)"), Throws.TypeOf<ArgumentException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+
+            value = ws.Evaluate(@"=FISHER(0)").CastTo<double>();
+            Assert.AreEqual(0, value, tolerance);
+
+            value = ws.Evaluate(@"=FISHER(0.2)").CastTo<double>();
+            Assert.AreEqual(0.202732554054082, value, tolerance);
+
+            value = ws.Evaluate(@"=FISHER(0.25)").CastTo<double>();
+            Assert.AreEqual(0.255412811882995, value, tolerance);
+
+            value = ws.Evaluate(@"=FISHER(0.3296001056)").CastTo<double>();
+            Assert.AreEqual(0.342379555936801, value, tolerance);
+
+            value = ws.Evaluate(@"=FISHER(-0.36)").CastTo<double>();
+            Assert.AreEqual(-0.37688590118819, value, tolerance);
+
+            value = ws.Evaluate(@"=FISHER(-0.000003)").CastTo<double>();
+            Assert.AreEqual(-0.00000299999999998981, value, tolerance);
+        }
+
+        [Test]
         public void Max()
         {
             var ws = workbook.Worksheets.First();

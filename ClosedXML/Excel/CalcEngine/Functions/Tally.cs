@@ -165,6 +165,15 @@ namespace ClosedXML.Excel.CalcEngine
             return nums.Length == 0 ? 0 : nums.Min();
         }
 
+        public double Fisher()
+        {
+            var nums = NumericValuesInternal();
+            if (nums.Length == 0) throw new ArgumentException("Parameter non numeric.");
+            if (nums[0] <= -1 || nums[0] >= 1) throw new ArgumentException("Incorrect value. Should be: -1 >= x <= 1.");
+
+            return 0.5 * Math.Log((1 + nums[0]) / (1 - nums[0]));
+        }
+
         public double Max()
         {
             var nums = NumericValuesInternal();
