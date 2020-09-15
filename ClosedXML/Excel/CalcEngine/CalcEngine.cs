@@ -312,6 +312,7 @@ namespace ClosedXML.Excel.CalcEngine
                 _fnTbl = new Dictionary<string, FunctionDefinition>(StringComparer.InvariantCultureIgnoreCase);
 
                 // register built-in functions (and constants)
+                Engineering.Register(this);
                 Information.Register(this);
                 Logical.Register(this);
                 Lookup.Register(this);
@@ -319,6 +320,7 @@ namespace ClosedXML.Excel.CalcEngine
                 Text.Register(this);
                 Statistical.Register(this);
                 DateAndTime.Register(this);
+                Financial.Register(this);
             }
             return _fnTbl;
         }
