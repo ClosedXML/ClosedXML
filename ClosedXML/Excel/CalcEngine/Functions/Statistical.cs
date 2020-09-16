@@ -39,7 +39,7 @@ namespace ClosedXML.Excel.CalcEngine
             //GAMMADIST	Returns the gamma distribution
             //GAMMAINV	Returns the inverse of the gamma cumulative distribution
             //GAMMALN	Returns the natural logarithm of the gamma function, Γ(x)
-            //GEOMEAN	Returns the geometric mean
+            ce.RegisterFunction("GEOMEAN", 1, 255, Geomean); // Returns the geometric mean
             //GROWTH	Returns values along an exponential trend
             //HARMEAN	Returns the harmonic mean
             //HYPGEOMDIST	Returns the hypergeometric distribution
@@ -205,6 +205,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             // done
             return count;
+        }
+
+        private static object Geomean(List<Expression> p)
+        {
+            return GetTally(p, true).Geomean();
         }
 
         private static object Max(List<Expression> p)
