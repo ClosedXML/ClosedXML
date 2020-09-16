@@ -1,3 +1,4 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -163,6 +164,22 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var nums = NumericValuesInternal();
             return nums.Length == 0 ? 0 : nums.Min();
+        }
+
+        public double Geomean()
+        {
+            var nums = NumericValuesInternal();
+
+            if (nums.Length == 0) throw new NumberException("No numeric parameters.");
+            if (HasNonPositiveNumbers()) throw new NumberException("Incorrect parameters. Use only positive numbers in your data.");
+
+            return Math.Pow(Product(), 1.0 / nums.Length);
+        }
+
+        private bool HasNonPositiveNumbers()
+        {
+            var nums = NumericValuesInternal();
+            return nums.Any(x => x <= 0);
         }
 
         public double Max()
