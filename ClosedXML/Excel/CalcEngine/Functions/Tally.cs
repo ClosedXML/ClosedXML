@@ -166,6 +166,14 @@ namespace ClosedXML.Excel.CalcEngine
             return nums.Length == 0 ? 0 : nums.Min();
         }
 
+        public double DevSq()
+        {
+            var nums = NumericValuesInternal();
+            if (nums.Length == 0) throw new CellValueException("No numeric parameters.");
+
+            return nums.Sum(x => Math.Pow(x - Average(), 2));
+        }
+
         public double Geomean()
         {
             var nums = NumericValuesInternal();

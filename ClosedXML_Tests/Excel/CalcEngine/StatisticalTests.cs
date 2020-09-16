@@ -269,6 +269,32 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook = SetupWorkbook();
         }
 
+        [TestCase(@"H3:H45", ExpectedResult = 94145.5271162791)]
+        [TestCase(@"H:H", ExpectedResult = 94145.5271162791)]
+        [TestCase(@"Data!H:H", ExpectedResult = 94145.5271162791)]
+        [TestCase(@"H3:H10", ExpectedResult = 411.5)]
+        [TestCase(@"H3:H20", ExpectedResult = 13604.2067611111)]
+        [TestCase(@"H3:H30", ExpectedResult = 14231.0694)]
+        [TestCase(@"H3:H3", ExpectedResult = 0)]
+        [TestCase(@"H10:H20", ExpectedResult = 12713.7600909091)]
+        [TestCase(@"H15:H20", ExpectedResult = 10827.2200833333)]
+        [TestCase(@"H20:H30", ExpectedResult = 477.132272727273)]
+        [DefaultFloatingPointTolerance(1e-10)]
+        public double DevSq(string sourceValue)
+        {
+            return workbook.Worksheets.First().Evaluate($"=DEVSQ({sourceValue})").CastTo<double>();
+        }
+
+        [TestCase("D3:D45", typeof(CellValueException), "No numeric parameters.")]
+        public void Devsq_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        {
+            var ws = workbook.Worksheets.First();
+
+            Assert.Throws(
+                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
+                () => ws.Evaluate($"=DEVSQ({sourceValue})"));
+        }
+
         [TestCase(0, ExpectedResult = 0)]
         [TestCase(0.2, ExpectedResult = 0.202732554054082)]
         [TestCase(0.25, ExpectedResult = 0.255412811882995)]
@@ -292,7 +318,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
         public void Fisher_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
         {
-
             Assert.Throws(
                 Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
                 () => XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})"));

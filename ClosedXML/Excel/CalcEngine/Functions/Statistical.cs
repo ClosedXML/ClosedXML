@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COUNTIFS", 2, 144, CountIfs);
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
-            //DEVSQ	Returns the sum of squares of deviations
+            ce.RegisterFunction("DEVSQ", 1, 255, DevSq); // Returns the sum of squares of deviations
             //EXPONDIST	Returns the exponential distribution
             //FDIST	Returns the F probability distribution
             //FINV	Returns the inverse of the F probability distribution
@@ -205,6 +205,11 @@ namespace ClosedXML.Excel.CalcEngine
 
             // done
             return count;
+        }
+
+        private static object DevSq(List<Expression> p)
+        {
+            return GetTally(p, true).DevSq();
         }
 
         private static object Fisher(List<Expression> p)
