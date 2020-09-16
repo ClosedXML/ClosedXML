@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -163,6 +164,14 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var nums = NumericValuesInternal();
             return nums.Length == 0 ? 0 : nums.Min();
+        }
+
+        public double Devsq()
+        {
+            var nums = NumericValuesInternal();
+            if (nums.Length == 0) throw new NumberException("No numeric parameters.");
+
+            return nums.Sum(x => Math.Pow(x - Average(), 2));
         }
 
         public double Max()
