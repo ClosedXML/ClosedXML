@@ -259,7 +259,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedValue, currentValue, tolerance);
         }
 
-        [TestCase("D3:D45", typeof(ApplicationException), "No numeric parameters.")]
+        [TestCase("D3:D45", typeof(NumberException), "No numeric parameters.")]
         [TestCase("-1, 0, 3", typeof(NumberException), "Incorrect parameters. Use only positive numbers in your data.")]
         public void Geomean_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
         {

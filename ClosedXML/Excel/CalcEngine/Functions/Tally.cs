@@ -176,7 +176,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var nums = NumericValuesInternal();
 
-            if (nums.Length == 0) throw new ApplicationException("No numeric parameters.");
+            if (nums.Length == 0) throw new NumberException("No numeric parameters.");
             if (HasNonPositiveNumbers()) throw new NumberException("Incorrect parameters. Use only positive numbers in your data.");
 
             return Math.Pow(Product(), 1.0 / nums.Length);
