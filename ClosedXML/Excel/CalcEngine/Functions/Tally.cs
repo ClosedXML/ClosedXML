@@ -169,7 +169,7 @@ namespace ClosedXML.Excel.CalcEngine
         public double Devsq()
         {
             var nums = NumericValuesInternal();
-            if (nums.Length == 0) throw new NumberException("No numeric parameters.");
+            if (nums.Length == 0) throw new CellValueException("No numeric parameters.");
 
             return nums.Sum(x => Math.Pow(x - Average(), 2));
         }
