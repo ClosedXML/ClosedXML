@@ -242,25 +242,18 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook = SetupWorkbook();
         }
 
-        [Test]
-        public void Fisher_IncorrectCases()
+        [TestCase("D3:D45", typeof(CellValueException), "Parameter non numeric.")]
+        [TestCase("D3", typeof(CellValueException), "Parameter non numeric.")]
+        [TestCase("H3", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        [TestCase("-1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        public void Fisher_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
         {
             var ws = workbook.Worksheets.First();
 
-            Assert.That(() => ws.Evaluate(@"=FISHER(D3:D45)"),
-                Throws.TypeOf<CellValueException>().With.Message.EqualTo("Parameter non numeric."));
-
-            Assert.That(() => ws.Evaluate(@"=FISHER(D3)"),
-                Throws.TypeOf<CellValueException>().With.Message.EqualTo("Parameter non numeric."));
-
-            Assert.That(() => ws.Evaluate(@"=FISHER(H3)"),
-                Throws.TypeOf<NumberException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
-
-            Assert.That(() => ws.Evaluate(@"=FISHER(-1)"),
-                Throws.TypeOf<NumberException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
-
-            Assert.That(() => ws.Evaluate(@"=FISHER(1)"),
-                Throws.TypeOf<NumberException>().With.Message.EqualTo("Incorrect value. Should be: -1 >= x <= 1."));
+            Assert.Throws(
+                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
+                () => ws.Evaluate($"=FISHER({sourceValue})"), exceptionMessage);
         }
 
         [TestCase(0, 0)]

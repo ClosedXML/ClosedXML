@@ -210,7 +210,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Fisher(List<Expression> p)
         {
             if (!double.TryParse(p?[0].Evaluate().ToString(), out double value)) throw new CellValueException("Parameter non numeric.");
-            if (value <= -1 || value >= 1) throw new NumberException("Incorrect value. Should be: -1 >= x <= 1.");
+            if (value <= -1 || value >= 1) throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
 
             return 0.5 * Math.Log((1 + value) / (1 - value));
         }
