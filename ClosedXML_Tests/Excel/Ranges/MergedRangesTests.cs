@@ -426,5 +426,18 @@ namespace ClosedXML_Tests
                 Assert.AreEqual(1, ws.Cell("B1").Value);
             }
         }
+
+        [Test]
+        public void MergeSingleCellRangeDoesNothing()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range = ws.Range(1, 1, 1, 1);
+
+            range.Merge();
+
+            Assert.IsFalse(range.IsMerged());
+            Assert.AreEqual(0, ws.MergedRanges.Count);
+        }
     }
 }
