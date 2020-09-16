@@ -242,20 +242,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook = SetupWorkbook();
         }
 
-        [TestCase("D3:D45", typeof(CellValueException), "Parameter non numeric.")]
-        [TestCase("D3", typeof(CellValueException), "Parameter non numeric.")]
-        [TestCase("H3", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        [TestCase("-1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        public void Fisher_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
-        {
-            var ws = workbook.Worksheets.First();
-
-            Assert.Throws(
-                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => ws.Evaluate($"=FISHER({sourceValue})"), exceptionMessage);
-        }
-
         [TestCase(0, 0)]
         [TestCase(0.2, 0.202732554054082)]
         [TestCase(0.25, 0.255412811882995)]
@@ -271,6 +257,20 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             var ws = workbook.Worksheets.First();
             double currentValue = ws.Evaluate($"=FISHER({sourceValue})").CastTo<double>();
             Assert.AreEqual(expectedValue, currentValue, tolerance);
+        }
+
+        [TestCase("D3:D45", typeof(CellValueException), "Parameter non numeric.")]
+        [TestCase("D3", typeof(CellValueException), "Parameter non numeric.")]
+        [TestCase("H3", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        [TestCase("-1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
+        public void Fisher_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        {
+            var ws = workbook.Worksheets.First();
+
+            Assert.Throws(
+                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
+                () => ws.Evaluate($"=FISHER({sourceValue})"), exceptionMessage);
         }
 
         [Test]
