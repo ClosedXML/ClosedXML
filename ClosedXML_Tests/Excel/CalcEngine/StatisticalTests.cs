@@ -262,6 +262,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(0.3296001056, 0.342379555936801)]
         [TestCase(-0.36, -0.37688590118819)]
         [TestCase(-0.000003, -0.00000299999999998981)]
+        [TestCase(-0.063453535345348, -0.0635389037459617)]
+        [TestCase(0.559015883901589171354964, 0.631400600322212)]
+        [TestCase(0.2691496, 0.275946780611959)]
+        [TestCase(-0.10674142, -0.107149608461448)]
         public void Fisher_CorrectCases(double sourceValue, double expectedValue)
         {
             var ws = workbook.Worksheets.First();
