@@ -234,6 +234,33 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook.Dispose();
         }
 
+        [TestCase(@"H3:H45", ExpectedResult = 7.51126069234216)]
+        [TestCase(@"H:H", ExpectedResult = 7.51126069234216)]
+        [TestCase(@"Data!H:H", ExpectedResult = 7.51126069234216)]
+        [TestCase(@"H3:H10", ExpectedResult = 5.26214814727941)]
+        [TestCase(@"H3:H20", ExpectedResult = 7.01281435054797)]
+        [TestCase(@"H3:H30", ExpectedResult = 7.00137389296182)]
+        [TestCase(@"H3:H3", ExpectedResult = 1.99)]
+        [TestCase(@"H10:H20", ExpectedResult = 8.37855107505682)]
+        [TestCase(@"H15:H20", ExpectedResult = 15.8927310267677)]
+        [TestCase(@"H20:H30", ExpectedResult = 7.14321227391814)]
+        [DefaultFloatingPointTolerance(1e-12)]
+        public double Geomean(string sourceValue)
+        {
+            return workbook.Worksheets.First().Evaluate($"=GEOMEAN({sourceValue})").CastTo<double>();
+        }
+
+        [TestCase("D3:D45", typeof(NumberException), "No numeric parameters.")]
+        [TestCase("-1, 0, 3", typeof(NumberException), "Incorrect parameters. Use only positive numbers in your data.")]
+        public void Geomean_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        {
+            var ws = workbook.Worksheets.First();
+
+            Assert.Throws(
+                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
+                () => ws.Evaluate($"=GEOMEAN({sourceValue})"));
+        }
+
         [SetUp]
         public void Init()
         {
