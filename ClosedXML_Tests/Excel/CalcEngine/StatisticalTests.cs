@@ -270,7 +270,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
 
             Assert.Throws(
                 Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => ws.Evaluate($"=FISHER({sourceValue})"), exceptionMessage);
+                () => ws.Evaluate($"=FISHER({sourceValue})"));
         }
 
         [Test]
