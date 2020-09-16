@@ -242,6 +242,34 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook = SetupWorkbook();
         }
 
+        [TestCase(@"H3:H45", 7.51126069234216)]
+        [TestCase(@"H:H", 7.51126069234216)]
+        [TestCase(@"Data!H:H", 7.51126069234216)]
+        [TestCase(@"H3:H10", 5.26214814727941)]
+        [TestCase(@"H3:H20", 7.01281435054797)]
+        [TestCase(@"H3:H30", 7.00137389296182)]
+        [TestCase(@"H3:H3", 1.99)]
+        [TestCase(@"H10:H20", 8.37855107505682)]
+        [TestCase(@"H15:H20", 15.8927310267677)]
+        [TestCase(@"H20:H30", 7.14321227391814)]
+        public void Geomean_CorrectCases(string sourceValue, double expectedValue)
+        {
+            var ws = workbook.Worksheets.First();
+            double currentValue = ws.Evaluate($"=GEOMEAN({sourceValue})").CastTo<double>();
+            Assert.AreEqual(expectedValue, currentValue, tolerance);
+        }
+
+        [TestCase("D3:D45", typeof(ApplicationException), "No numeric parameters.")]
+        [TestCase("-1, 0, 3", typeof(NumberException), "Incorrect parameters. Use only positive numbers in your data.")]
+        public void Geomean_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        {
+            var ws = workbook.Worksheets.First();
+
+            Assert.Throws(
+                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
+                () => ws.Evaluate($"=GEOMEAN({sourceValue})"));
+        }
+
         [Test]
         public void Max()
         {
