@@ -242,6 +242,33 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             workbook = SetupWorkbook();
         }
 
+        [TestCase(@"H3:H45", 94145.5271162791)]
+        [TestCase(@"H:H", 94145.5271162791)]
+        [TestCase(@"Data!H:H", 94145.5271162791)]
+        [TestCase(@"H3:H10", 411.5)]
+        [TestCase(@"H3:H20", 13604.2067611111)]
+        [TestCase(@"H3:H30", 14231.0694)]
+        [TestCase(@"H3:H3", 0)]
+        [TestCase(@"H10:H20", 12713.7600909091)]
+        [TestCase(@"H15:H20", 10827.2200833333)]
+        [TestCase(@"H20:H30", 477.132272727273)]
+        public void Devsq_CorrectCases(string sourceValue, double expectedValue)
+        {
+            var ws = workbook.Worksheets.First();
+            double currentValue = ws.Evaluate($"=DEVSQ({sourceValue})").CastTo<double>();
+            Assert.AreEqual(expectedValue, currentValue, tolerance);
+        }
+
+        [TestCase("D3:D45", typeof(CellValueException), "No numeric parameters.")]
+        public void Devsq_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        {
+            var ws = workbook.Worksheets.First();
+
+            Assert.Throws(
+                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
+                () => ws.Evaluate($"=DEVSQ({sourceValue})"));
+        }
+
         [Test]
         public void Max()
         {
