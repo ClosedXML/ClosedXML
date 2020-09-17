@@ -86,7 +86,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 throw new ArgumentException("Bad expression.");
             }
-            return _token.Value;
+            return CellValueException.CatchTypeConversionExceptions(() => _token.Value);
         }
 
         public virtual Expression Optimize()
@@ -217,15 +217,12 @@ namespace ClosedXML.Excel.CalcEngine
         // ** object model
         override public object Evaluate()
         {
-            switch (_token.ID)
+            return CellValueException.CatchTypeConversionExceptions(() => _token.ID switch
             {
-                case TKID.ADD:
-                    return +(double)Expression;
-
-                case TKID.SUB:
-                    return -(double)Expression;
-            }
-            throw new ArgumentException("Bad expression.");
+                TKID.ADD => +(double)Expression,
+                TKID.SUB => -(double)Expression,
+                _ => throw new ArgumentException("Bad expression."),
+            });
         }
 
         public override Expression Optimize()
@@ -266,66 +263,69 @@ namespace ClosedXML.Excel.CalcEngine
         // ** object model
         override public object Evaluate()
         {
-            // handle comparisons
-            if (_token.Type == TKTYPE.COMPARE)
+            return CellValueException.CatchTypeConversionExceptions<object>(() =>
             {
-                var cmp = LeftExpression.CompareTo(RightExpression, _convention);
+                // handle comparisons
+                if (_token.Type == TKTYPE.COMPARE)
+                {
+                    var cmp = LeftExpression.CompareTo(RightExpression, _convention);
+                    switch (_token.ID)
+                    {
+                        case TKID.GT: return cmp > 0;
+                        case TKID.LT: return cmp < 0;
+                        case TKID.GE: return cmp >= 0;
+                        case TKID.LE: return cmp <= 0;
+                        case TKID.EQ: return cmp == 0;
+                        case TKID.NE: return cmp != 0;
+                    }
+                }
+
+                // handle everything else
                 switch (_token.ID)
                 {
-                    case TKID.GT: return cmp > 0;
-                    case TKID.LT: return cmp < 0;
-                    case TKID.GE: return cmp >= 0;
-                    case TKID.LE: return cmp <= 0;
-                    case TKID.EQ: return cmp == 0;
-                    case TKID.NE: return cmp != 0;
+                    case TKID.CONCAT:
+                        return (string)LeftExpression + (string)RightExpression;
+
+                    case TKID.ADD:
+                        return (double)LeftExpression + (double)RightExpression;
+
+                    case TKID.SUB:
+                        return (double)LeftExpression - (double)RightExpression;
+
+                    case TKID.MUL:
+                        return (double)LeftExpression * (double)RightExpression;
+
+                    case TKID.DIV:
+                        if (Math.Abs((double)RightExpression) < double.Epsilon)
+                            throw new DivisionByZeroException();
+
+                        return (double)LeftExpression / (double)RightExpression;
+
+                    case TKID.DIVINT:
+                        if (Math.Abs((double)RightExpression) < double.Epsilon)
+                            throw new DivisionByZeroException();
+
+                        return (double)(int)((double)LeftExpression / (double)RightExpression);
+
+                    case TKID.MOD:
+                        if (Math.Abs((double)RightExpression) < double.Epsilon)
+                            throw new DivisionByZeroException();
+
+                        return (double)(int)((double)LeftExpression % (double)RightExpression);
+
+                    case TKID.POWER:
+                        var a = (double)LeftExpression;
+                        var b = (double)RightExpression;
+                        if (b == 0.0) return 1.0;
+                        if (b == 0.5) return Math.Sqrt(a);
+                        if (b == 1.0) return a;
+                        if (b == 2.0) return a * a;
+                        if (b == 3.0) return a * a * a;
+                        if (b == 4.0) return a * a * a * a;
+                        return Math.Pow((double)LeftExpression, (double)RightExpression);
                 }
-            }
-
-            // handle everything else
-            switch (_token.ID)
-            {
-                case TKID.CONCAT:
-                    return (string)LeftExpression + (string)RightExpression;
-
-                case TKID.ADD:
-                    return (double)LeftExpression + (double)RightExpression;
-
-                case TKID.SUB:
-                    return (double)LeftExpression - (double)RightExpression;
-
-                case TKID.MUL:
-                    return (double)LeftExpression * (double)RightExpression;
-
-                case TKID.DIV:
-                    if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
-
-                    return (double)LeftExpression / (double)RightExpression;
-
-                case TKID.DIVINT:
-                    if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
-
-                    return (double)(int)((double)LeftExpression / (double)RightExpression);
-
-                case TKID.MOD:
-                    if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
-
-                    return (double)(int)((double)LeftExpression % (double)RightExpression);
-
-                case TKID.POWER:
-                    var a = (double)LeftExpression;
-                    var b = (double)RightExpression;
-                    if (b == 0.0) return 1.0;
-                    if (b == 0.5) return Math.Sqrt(a);
-                    if (b == 1.0) return a;
-                    if (b == 2.0) return a * a;
-                    if (b == 3.0) return a * a * a;
-                    if (b == 4.0) return a * a * a * a;
-                    return Math.Pow((double)LeftExpression, (double)RightExpression);
-            }
-            throw new ArgumentException("Bad expression.");
+                throw new ArgumentException("Bad expression.");
+            });
         }
 
         public override Expression Optimize()
@@ -368,7 +368,7 @@ namespace ClosedXML.Excel.CalcEngine
         // ** object model
         override public object Evaluate()
         {
-            return FunctionDefinition.Function(Parameters);
+            return CellValueException.CatchTypeConversionExceptions(() => FunctionDefinition.Function(Parameters));
         }
 
         public FunctionDefinition FunctionDefinition { get; }

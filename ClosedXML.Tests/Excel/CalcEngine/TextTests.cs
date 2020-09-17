@@ -686,7 +686,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Value_Input_String_Is_Not_A_Number()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Value(""asdf"")"), Throws.TypeOf<FormatException>());
+            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(@"Value(""asdf"")"));
         }
 
         [Test]
