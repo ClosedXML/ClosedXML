@@ -63,43 +63,49 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.NotBetween;
         }
 
-
+        [Obsolete("Use the overload accepting IXLCell")]
         public void EqualTo(IXLRange range)
         {
             dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualTo;
         }
 
+        [Obsolete("Use the overload accepting IXLCell")]
         public void NotEqualTo(IXLRange range)
         {
             dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.NotEqualTo;
         }
 
+        [Obsolete("Use the overload accepting IXLCell")]
         public void GreaterThan(IXLRange range)
         {
             dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.GreaterThan;
         }
 
+        [Obsolete("Use the overload accepting IXLCell")]
         public void LessThan(IXLRange range)
         {
             dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.LessThan;
         }
 
+        [Obsolete("Use the overload accepting IXLCell")]
         public void EqualOrGreaterThan(IXLRange range)
         {
             dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualOrGreaterThan;
         }
 
+        [Obsolete("Use the overload accepting IXLCell")]
         public void EqualOrLessThan(IXLRange range)
         {
             dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualOrLessThan;
         }
 
+        [Obsolete("Use the overload accepting IXLCell")]
         public void Between(IXLRange minValue, IXLRange maxValue)
         {
             dataValidation.MinValue =  minValue.RangeAddress.ToStringFixed();
@@ -107,6 +113,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.Between;
         }
 
+        [Obsolete("Use the overload accepting IXLCell")]
         public void NotBetween(IXLRange minValue, IXLRange maxValue)
         {
             dataValidation.MinValue = minValue.RangeAddress.ToStringFixed();

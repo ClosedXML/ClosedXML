@@ -13,13 +13,21 @@ namespace ClosedXML.Excel
         void Between(String minValue, String maxValue);
         void NotBetween(String minValue, String maxValue);
 
+        [Obsolete("Use the overload accepting IXLCell")]
         void EqualTo(IXLRange range);
+        [Obsolete("Use the overload accepting IXLCell")]
         void NotEqualTo(IXLRange range);
+        [Obsolete("Use the overload accepting IXLCell")]
         void GreaterThan(IXLRange range);
+        [Obsolete("Use the overload accepting IXLCell")]
         void LessThan(IXLRange range);
+        [Obsolete("Use the overload accepting IXLCell")]
         void EqualOrGreaterThan(IXLRange range);
+        [Obsolete("Use the overload accepting IXLCell")]
         void EqualOrLessThan(IXLRange range);
+        [Obsolete("Use the overload accepting IXLCell")]
         void Between(IXLRange minValue, IXLRange maxValue);
+        [Obsolete("Use the overload accepting IXLCell")]
         void NotBetween(IXLRange minValue, IXLRange maxValue);
 
         void EqualTo(IXLCell cell);
