@@ -18,12 +18,4 @@ namespace ClosedXML.Excel
         AllContents = Contents | DataType | Comments,
         All = Contents | DataType | NormalFormats | ConditionalFormats | Comments | DataValidation | MergedRanges | Sparklines
     }
-
-    internal static class XLCellsUsedOptionsExtensions
-    {
-        public static XLClearOptions ToClearOptions(this XLCellsUsedOptions options)
-        {
-            return (XLClearOptions)options;
-        }
-    }
 }

@@ -406,7 +406,7 @@ namespace ClosedXML.Excel
         public void SaveAs(String file, SaveOptions options)
         {
             checkForWorksheetsPresent();
-            PathHelper.CreateDirectory(Path.GetDirectoryName(file));
+            Directory.CreateDirectory(Path.GetDirectoryName(file));
             if (_loadSource == XLLoadSource.New)
             {
                 if (File.Exists(file))
