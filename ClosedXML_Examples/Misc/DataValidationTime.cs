@@ -9,8 +9,8 @@ namespace ClosedXML_Examples.Misc
         {
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var time1 = TimeSpan.FromHours(1);
-            var time2 = TimeSpan.FromMinutes(150);
+            var time1 = TimeSpan.FromHours(6);
+            var time2 = TimeSpan.FromHours(12);
             var c1 = ws.Cell("A1");
             var c2 = ws.Cell("B1");
             c1.Value = time1;
