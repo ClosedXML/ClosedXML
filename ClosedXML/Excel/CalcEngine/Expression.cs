@@ -8,9 +8,25 @@ using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
+    [Flags]
+    internal enum CoercionConvention
+    {
+        None = 0,
+        EmptyStringAsZero = 1 << 0,
+        NonEmptyStringAsZero = 1 << 1,
+        NullAsZero = 1 << 2,
+        CaseInsensitive = 1 << 3,
+
+        Default = NullAsZero,
+        AnyStringAsZero = EmptyStringAsZero | NonEmptyStringAsZero,
+        StringOrNullAsZero = AnyStringAsZero | NullAsZero
+    }
+
     internal abstract class ExpressionBase
     {
         public abstract string LastParseItem { get; }
+
+        public abstract Expression WithCoercionConvention(CoercionConvention convention);
     }
 
     /// <summary>
@@ -29,6 +45,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** fields
 
+        protected readonly CoercionConvention _convention;
         internal readonly Token _token;
 
         #endregion ** fields
@@ -37,17 +54,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** ctors
 
-        internal Expression()
+        internal Expression(CoercionConvention convention = CoercionConvention.Default)
         {
+            _convention = convention;
             _token = new Token(null, TKID.ATOM, TKTYPE.IDENTIFIER);
         }
 
-        internal Expression(object value)
+        internal Expression(object value, CoercionConvention convention = CoercionConvention.Default)
+            : this(convention)
         {
             _token = new Token(value, TKID.ATOM, TKTYPE.LITERAL);
         }
 
-        internal Expression(Token tk)
+        internal Expression(Token tk, CoercionConvention convention = CoercionConvention.Default)
+            : this(convention)
         {
             _token = tk;
         }
@@ -126,20 +146,24 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle string
-            if (v is string s && double.TryParse(s, out var doubleValue))
+            if (v is string s)
             {
-                return doubleValue;
+                if (x._convention.HasFlag(CoercionConvention.EmptyStringAsZero) && string.IsNullOrEmpty(s))
+                    return 0;
+                else if (x._convention.HasFlag(CoercionConvention.NonEmptyStringAsZero) && !string.IsNullOrEmpty(s))
+                    return 0;
+                else if (double.TryParse(s, out var doubleValue))
+                    return doubleValue;
             }
 
             // handle nulls
-            if (v == null || v is string)
+            if (x._convention.HasFlag(CoercionConvention.NullAsZero) && v == null)
             {
                 return 0;
             }
 
             // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
-            return (double)Convert.ChangeType(v, typeof(double), _ci);
+            return Convert.ToDouble(v, Thread.CurrentThread.CurrentCulture);
         }
 
         public static implicit operator bool(Expression x)
@@ -208,7 +232,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** IComparable<Expression>
 
-        public int CompareTo(Expression other)
+        public int CompareTo(Expression other) => CompareTo(other, _convention);
+
+        public int CompareTo(Expression other, CoercionConvention convention)
         {
             // get both values
             var c1 = this.Evaluate() as IComparable;
@@ -248,7 +274,10 @@ namespace ClosedXML.Excel.CalcEngine
 
             // String comparisons should be case insensitive
             if (c1 is string s1 && c2 is string s2)
-                return StringComparer.OrdinalIgnoreCase.Compare(s1, s2);
+            {
+                var comparer = convention.HasFlag(CoercionConvention.CaseInsensitive) ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+                return comparer.Compare(s1, s2);
+            }
             else
                 return c1.CompareTo(c2);
         }
@@ -264,6 +293,11 @@ namespace ClosedXML.Excel.CalcEngine
             get { return _token?.Value?.ToString() ?? "Unknown value"; }
         }
 
+        public override Expression WithCoercionConvention(CoercionConvention convention)
+        {
+            return this._convention == convention ? this : new Expression(_token, convention);
+        }
+
         #endregion ** ExpressionBase
     }
 
@@ -273,7 +307,8 @@ namespace ClosedXML.Excel.CalcEngine
     internal class UnaryExpression : Expression
     {
         // ** ctor
-        public UnaryExpression(Token tk, Expression expr) : base(tk)
+        public UnaryExpression(Token tk, Expression expr, CoercionConvention convention = CoercionConvention.Default)
+            : base(tk, convention)
         {
             Expression = expr;
         }
@@ -298,13 +333,18 @@ namespace ClosedXML.Excel.CalcEngine
         {
             Expression = Expression.Optimize();
             return Expression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? new Expression(this.Evaluate(), this._convention)
                 : this;
         }
 
         public override string LastParseItem
         {
             get { return Expression.LastParseItem; }
+        }
+
+        public override Expression WithCoercionConvention(CoercionConvention convention)
+        {
+            return this._convention == convention ? this : new UnaryExpression(_token, Expression, convention);
         }
     }
 
@@ -314,7 +354,8 @@ namespace ClosedXML.Excel.CalcEngine
     internal class BinaryExpression : Expression
     {
         // ** ctor
-        public BinaryExpression(Token tk, Expression exprLeft, Expression exprRight) : base(tk)
+        public BinaryExpression(Token tk, Expression exprLeft, Expression exprRight, CoercionConvention convention = CoercionConvention.Default)
+            : base(tk, convention)
         {
             LeftExpression = exprLeft;
             RightExpression = exprRight;
@@ -329,7 +370,7 @@ namespace ClosedXML.Excel.CalcEngine
             // handle comparisons
             if (_token.Type == TKTYPE.COMPARE)
             {
-                var cmp = LeftExpression.CompareTo(RightExpression);
+                var cmp = LeftExpression.CompareTo(RightExpression, _convention);
                 switch (_token.ID)
                 {
                     case TKID.GT: return cmp > 0;
@@ -393,13 +434,18 @@ namespace ClosedXML.Excel.CalcEngine
             LeftExpression = LeftExpression.Optimize();
             RightExpression = RightExpression.Optimize();
             return LeftExpression._token.Type == TKTYPE.LITERAL && RightExpression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? new Expression(this.Evaluate(), this._convention)
                 : this;
         }
 
         public override string LastParseItem
         {
             get { return RightExpression.LastParseItem; }
+        }
+
+        public override Expression WithCoercionConvention(CoercionConvention convention)
+        {
+            return this._convention == convention ? this : new BinaryExpression(_token, LeftExpression, RightExpression, convention);
         }
     }
 
@@ -409,10 +455,12 @@ namespace ClosedXML.Excel.CalcEngine
     internal class FunctionExpression : Expression
     {
         // ** ctor
-        internal FunctionExpression()
+        internal FunctionExpression(CoercionConvention convention)
+            : base(convention)
         { }
 
-        public FunctionExpression(FunctionDefinition function, List<Expression> parms)
+        public FunctionExpression(FunctionDefinition function, List<Expression> parms, CoercionConvention convention = CoercionConvention.Default)
+            : this(convention)
         {
             FunctionDefinition = function;
             Parameters = parms;
@@ -443,13 +491,18 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
             return allLits
-                ? new Expression(this.Evaluate())
+                ? new Expression(this.Evaluate(), this._convention)
                 : this;
         }
 
         public override string LastParseItem
         {
             get { return Parameters.Last().LastParseItem; }
+        }
+
+        public override Expression WithCoercionConvention(CoercionConvention convention)
+        {
+            return this._convention == convention ? this : new FunctionExpression(FunctionDefinition, Parameters, convention);
         }
     }
 
@@ -461,7 +514,8 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly Dictionary<string, object> _dct;
         private readonly string _name;
 
-        public VariableExpression(Dictionary<string, object> dct, string name)
+        public VariableExpression(Dictionary<string, object> dct, string name, CoercionConvention convention = CoercionConvention.Default)
+            : base(convention)
         {
             _dct = dct;
             _name = name;
@@ -476,6 +530,11 @@ namespace ClosedXML.Excel.CalcEngine
         {
             get { return _name; }
         }
+
+        public override Expression WithCoercionConvention(CoercionConvention convention)
+        {
+            return this._convention == convention ? this : new VariableExpression(_dct, _name, convention);
+        }
     }
 
     /// <summary>
@@ -486,7 +545,8 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly object _value;
 
         // ** ctor
-        internal XObjectExpression(object value)
+        internal XObjectExpression(object value, CoercionConvention convention = CoercionConvention.Default)
+            : base(convention)
         {
             _value = value;
         }
@@ -497,10 +557,9 @@ namespace ClosedXML.Excel.CalcEngine
         public override object Evaluate()
         {
             // use IValueObject if available
-            var iv = _value as IValueObject;
-            if (iv != null)
+            if (_value is IValueObject iv)
             {
-                return iv.GetValue();
+                return iv.GetValue(emptyStringAsNull: true);
             }
 
             // return raw object
@@ -527,6 +586,11 @@ namespace ClosedXML.Excel.CalcEngine
         public override string LastParseItem
         {
             get { return Value.ToString(); }
+        }
+
+        public override Expression WithCoercionConvention(CoercionConvention convention)
+        {
+            return this._convention == convention ? this : new XObjectExpression(_value, convention);
         }
     }
 
@@ -600,6 +664,15 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     public interface IValueObject
     {
-        object GetValue();
+        /// <summary>
+        /// Value of external object
+        /// </summary>
+        /// <param name="emptyStringAsNull">
+        /// Return null if value is empty string.
+        /// Typical case is =LEN(A1) where A1 has no value.
+        /// A1 should not evaluate to an empty string as ws.Cell("A1").Value would.
+        /// </param>
+        /// <returns></returns>
+        object GetValue(bool emptyStringAsNull);
     }
 }
