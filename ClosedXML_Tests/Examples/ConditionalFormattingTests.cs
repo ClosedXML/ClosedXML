@@ -127,6 +127,18 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void CFTop()
+        {
+            TestHelper.RunTestExample<CFTop>(@"ConditionalFormatting\CFTop.xlsx");
+        }
+
+        [Test]
+        public void CFBottom()
+        {
+            TestHelper.RunTestExample<CFBottom>(@"ConditionalFormatting\CFBottom.xlsx");
+        }
+
+        [Test]
         public void CFDatesOccurring()
         {
             TestHelper.RunTestExample<CFDatesOccurring>(@"ConditionalFormatting\CFDatesOccurring.xlsx");

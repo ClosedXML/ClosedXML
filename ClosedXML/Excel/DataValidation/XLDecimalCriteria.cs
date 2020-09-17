@@ -8,55 +8,13 @@ namespace ClosedXML.Excel
             : base(dataValidation)
         {
         }
-
-        public void EqualTo(Double value)
-        {
-            dataValidation.Value = value.ToString();
-            dataValidation.Operator = XLOperator.EqualTo;
-        }
-
-        public void NotEqualTo(Double value)
-        {
-            dataValidation.Value = value.ToString();
-            dataValidation.Operator = XLOperator.NotEqualTo;
-        }
-
-        public void GreaterThan(Double value)
-        {
-            dataValidation.Value = value.ToString();
-            dataValidation.Operator = XLOperator.GreaterThan;
-        }
-
-        public void LessThan(Double value)
-        {
-            dataValidation.Value = value.ToString();
-            dataValidation.Operator = XLOperator.LessThan;
-        }
-
-        public void EqualOrGreaterThan(Double value)
-        {
-            dataValidation.Value = value.ToString();
-            dataValidation.Operator = XLOperator.EqualOrGreaterThan;
-        }
-
-        public void EqualOrLessThan(Double value)
-        {
-            dataValidation.Value = value.ToString();
-            dataValidation.Operator = XLOperator.EqualOrLessThan;
-        }
-
-        public void Between(Double minValue, Double maxValue)
-        {
-            dataValidation.MinValue = minValue.ToString();
-            dataValidation.MaxValue = maxValue.ToString();
-            dataValidation.Operator = XLOperator.Between;
-        }
-
-        public void NotBetween(Double minValue, Double maxValue)
-        {
-            dataValidation.MinValue = minValue.ToString();
-            dataValidation.MaxValue = maxValue.ToString();
-            dataValidation.Operator = XLOperator.NotBetween;
-        }
+        public void EqualTo(Double value) => base.EqualTo(value.ToInvariantString());
+        public void NotEqualTo(Double value) => base.NotEqualTo(value.ToInvariantString());
+        public void GreaterThan(Double value) => base.GreaterThan(value.ToInvariantString());
+        public void LessThan(Double value) => base.LessThan(value.ToInvariantString());
+        public void EqualOrGreaterThan(Double value) => base.EqualOrGreaterThan(value.ToInvariantString());
+        public void EqualOrLessThan(Double value) => base.EqualOrLessThan(value.ToInvariantString());
+        public void Between(Double minValue, Double maxValue) => base.Between(minValue.ToInvariantString(), maxValue.ToInvariantString());
+        public void NotBetween(Double minValue, Double maxValue) => base.NotBetween(minValue.ToInvariantString(), maxValue.ToInvariantString());
     }
 }

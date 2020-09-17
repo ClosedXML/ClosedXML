@@ -14,54 +14,13 @@ namespace ClosedXML.Excel
             return (value.TotalHours / 24.0).ToString();
         }
 
-        public void EqualTo(TimeSpan value)
-        {
-            dataValidation.Value = GetXLTime(value);
-            dataValidation.Operator = XLOperator.EqualTo;
-        }
-
-        public void NotEqualTo(TimeSpan value)
-        {
-            dataValidation.Value = GetXLTime(value);
-            dataValidation.Operator = XLOperator.NotEqualTo;
-        }
-
-        public void GreaterThan(TimeSpan value)
-        {
-            dataValidation.Value = GetXLTime(value);
-            dataValidation.Operator = XLOperator.GreaterThan;
-        }
-
-        public void LessThan(TimeSpan value)
-        {
-            dataValidation.Value = GetXLTime(value);
-            dataValidation.Operator = XLOperator.LessThan;
-        }
-
-        public void EqualOrGreaterThan(TimeSpan value)
-        {
-            dataValidation.Value = GetXLTime(value);
-            dataValidation.Operator = XLOperator.EqualOrGreaterThan;
-        }
-
-        public void EqualOrLessThan(TimeSpan value)
-        {
-            dataValidation.Value = GetXLTime(value);
-            dataValidation.Operator = XLOperator.EqualOrLessThan;
-        }
-
-        public void Between(TimeSpan minValue, TimeSpan maxValue)
-        {
-            dataValidation.MinValue = GetXLTime(minValue);
-            dataValidation.MaxValue = GetXLTime(maxValue);
-            dataValidation.Operator = XLOperator.Between;
-        }
-
-        public void NotBetween(TimeSpan minValue, TimeSpan maxValue)
-        {
-            dataValidation.MinValue = GetXLTime(minValue);
-            dataValidation.MaxValue = GetXLTime(maxValue);
-            dataValidation.Operator = XLOperator.NotBetween;
-        }
+        public void EqualTo(TimeSpan value) => base.EqualTo(GetXLTime(value));
+        public void NotEqualTo(TimeSpan value) => base.NotEqualTo(GetXLTime(value));
+        public void GreaterThan(TimeSpan value) => base.GreaterThan(GetXLTime(value));
+        public void LessThan(TimeSpan value) => base.LessThan(GetXLTime(value));
+        public void EqualOrGreaterThan(TimeSpan value) => base.EqualOrGreaterThan(GetXLTime(value));
+        public void EqualOrLessThan(TimeSpan value) => base.EqualOrLessThan(GetXLTime(value));
+        public void Between(TimeSpan minValue, TimeSpan maxValue) => base.Between(GetXLTime(minValue), GetXLTime(maxValue));
+        public void NotBetween(TimeSpan minValue, TimeSpan maxValue) => base.NotBetween(GetXLTime(minValue), GetXLTime(maxValue));
     }
 }
