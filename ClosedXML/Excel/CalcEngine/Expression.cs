@@ -2,7 +2,6 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 
@@ -163,7 +162,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle everything else
-            return Convert.ToDouble(v, Thread.CurrentThread.CurrentCulture);
+            return ConvertTo<double>(v);
         }
 
         public static implicit operator bool(Expression x)
@@ -193,7 +192,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle everything else
-            return (double)Convert.ChangeType(v, typeof(double)) != 0;
+            return ConvertTo<double>(v) != 0;
         }
 
         public static implicit operator DateTime(Expression x)
@@ -222,8 +221,12 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
-            return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
+            return ConvertTo<DateTime>(v);
+        }
+
+        private static T ConvertTo<T>(object v)
+        {
+            return (T)Convert.ChangeType(v, typeof(T), Thread.CurrentThread.CurrentCulture);
         }
 
         #endregion ** implicit converters
