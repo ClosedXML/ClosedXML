@@ -92,6 +92,36 @@ namespace ClosedXML_Tests.Examples
         }
 
         [Test]
+        public void DataValidationDecimal()
+        {
+            TestHelper.RunTestExample<DataValidationDecimal>(@"Misc\DataValidationDecimal.xlsx");
+        }
+
+        [Test]
+        public void DataValidationWholeNumber()
+        {
+            TestHelper.RunTestExample<DataValidationWholeNumber>(@"Misc\DataValidationWholeNumber.xlsx");
+        }
+
+        [Test]
+        public void DataValidationTextLength()
+        {
+            TestHelper.RunTestExample<DataValidationTextLength>(@"Misc\DataValidationTextLength.xlsx");
+        }
+
+        [Test]
+        public void DataValidationDate()
+        {
+            TestHelper.RunTestExample<DataValidationDate>(@"Misc\DataValidationDate.xlsx");
+        }
+
+        [Test]
+        public void DataValidationTime()
+        {
+            TestHelper.RunTestExample<DataValidationTime>(@"Misc\DataValidationTime.xlsx");
+        }
+
+        [Test]
         public void Formulas()
         {
             TestHelper.RunTestExample<Formulas>(@"Misc\Formulas.xlsx");
