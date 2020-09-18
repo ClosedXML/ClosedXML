@@ -714,4 +714,48 @@ namespace ClosedXML_Examples
             }
         }
     }
+
+    public class CFDataBars : IXLExample
+    {
+        public void Create(string filePath)
+        {
+            using var workbook = new XLWorkbook();
+            var ws = workbook.AddWorksheet();
+
+            ws.Range("A2:F3").Value = 1;
+            ws.Range("A4:F4").Value = 2;
+            ws.Range("A5:F5").Value = 3;
+            ws.Range("A6:F6").Value = 4;
+
+            ws.Cell("A1").Value = "Automatic";
+            ws.Range("A2:A6").AddConditionalFormat().DataBar(XLColor.Amber);
+            
+            ws.Cell("B1").Value = "Lowest/Highest";
+            ws.Range("B2:B6").AddConditionalFormat().DataBar(XLColor.BallBlue)
+                .LowestValue()
+                .HighestValue();
+
+            ws.Cell("C1").Value = "Value";
+            ws.Range("C2:C6").AddConditionalFormat().DataBar(XLColor.Cadet)
+                .Minimum(XLCFContentType.Number, 0)
+                .Maximum(XLCFContentType.Number, 10);
+
+            ws.Cell("D1").Value = "Percent";
+            ws.Range("D2:D6").AddConditionalFormat().DataBar(XLColor.Desert)
+                .Minimum(XLCFContentType.Percent, 50)
+                .Maximum(XLCFContentType.Percent, 100);
+
+            ws.Cell("E1").Value = "Formula";
+            ws.Range("E2:E6").AddConditionalFormat().DataBar(XLColor.Ecru)
+                .Minimum(XLCFContentType.Formula, "-SUM($A$2:$E$2)")
+                .Maximum(XLCFContentType.Formula, "SUM($A$6:$E$6)");
+
+            ws.Cell("F1").Value = "Percentile";
+            ws.Range("F2:F6").AddConditionalFormat().DataBar(XLColor.Fandango)
+                .Minimum(XLCFContentType.Percentile, 30)
+                .Maximum(XLCFContentType.Percentile, 70);
+            
+            workbook.SaveAs(filePath);
+        }
+    }
 }

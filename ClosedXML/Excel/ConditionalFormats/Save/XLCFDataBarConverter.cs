@@ -1,7 +1,7 @@
 using ClosedXML.Extensions;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
-using System.Linq;
 
 namespace ClosedXML.Excel
 {
@@ -13,12 +13,9 @@ namespace ClosedXML.Excel
 
             var dataBar = new DataBar { ShowValue = !cf.ShowBarOnly };
 
-            var conditionalFormatValueObject1 = new ConditionalFormatValueObject { Type = cf.ContentTypes[1].ToOpenXml() };
-            if (cf.Values.Any() && cf.Values[1]?.Value != null) conditionalFormatValueObject1.Val = cf.Values[1].Value;
-
-            var conditionalFormatValueObject2 = new ConditionalFormatValueObject { Type = cf.ContentTypes[2].ToOpenXml() };
-            if (cf.Values.Count >= 2 && cf.Values[2]?.Value != null) conditionalFormatValueObject2.Val = cf.Values[2].Value;
-
+            var conditionalFormatValueObject1 = GetConditionalFormatValueObjectByIndex(cf, 1, ConditionalFormatValueObjectValues.Min);
+            var conditionalFormatValueObject2 = GetConditionalFormatValueObjectByIndex(cf, 2, ConditionalFormatValueObjectValues.Max);
+            
             var color = new Color();
             switch (cf.Colors[1].ColorType)
             {
@@ -41,23 +38,45 @@ namespace ClosedXML.Excel
 
             conditionalFormattingRule.Append(dataBar);
 
-            if (cf.Colors.Count > 1)
-            {
-                ConditionalFormattingRuleExtensionList conditionalFormattingRuleExtensionList = new ConditionalFormattingRuleExtensionList();
+            var conditionalFormattingRuleExtensionList = new ConditionalFormattingRuleExtensionList();
+            conditionalFormattingRuleExtensionList.Append(BuildRuleExtension(cf));
+            conditionalFormattingRule.Append(conditionalFormattingRuleExtensionList);
 
-                ConditionalFormattingRuleExtension conditionalFormattingRuleExtension = new ConditionalFormattingRuleExtension { Uri = "{B025F937-C7B1-47D3-B67F-A62EFF666E3E}" };
-                conditionalFormattingRuleExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
-                DocumentFormat.OpenXml.Office2010.Excel.Id id = new DocumentFormat.OpenXml.Office2010.Excel.Id
-                {
-                    Text = (cf as XLConditionalFormat).Id.WrapInBraces()
-                };
-                conditionalFormattingRuleExtension.Append(id);
-
-                conditionalFormattingRuleExtensionList.Append(conditionalFormattingRuleExtension);
-
-                conditionalFormattingRule.Append(conditionalFormattingRuleExtensionList);
-            }
             return conditionalFormattingRule;
+        }
+
+        private ConditionalFormattingRuleExtension BuildRuleExtension(IXLConditionalFormat cf)
+        {
+            var conditionalFormattingRuleExtension = new ConditionalFormattingRuleExtension { Uri = "{B025F937-C7B1-47D3-B67F-A62EFF666E3E}" };
+            conditionalFormattingRuleExtension.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
+            var id = new DocumentFormat.OpenXml.Office2010.Excel.Id
+            {
+                Text = (cf as XLConditionalFormat).Id.WrapInBraces()
+            };
+            conditionalFormattingRuleExtension.Append(id);
+
+            return conditionalFormattingRuleExtension;
+        }
+
+        private ConditionalFormatValueObject GetConditionalFormatValueObjectByIndex(IXLConditionalFormat cf, int index, ConditionalFormatValueObjectValues defaultType)
+        {
+            var conditionalFormatValueObject = new ConditionalFormatValueObject();
+
+            if (cf.ContentTypes.TryGetValue(index, out var contentType))
+            {
+                conditionalFormatValueObject.Type = contentType.ToOpenXml();
+            }
+            else
+            {
+                conditionalFormatValueObject.Type = defaultType;
+            }
+
+            if (cf.Values.TryGetValue(index, out var value1) && value1?.Value != null)
+            {
+                conditionalFormatValueObject.Val = value1.Value;
+            }
+
+            return conditionalFormatValueObject;
         }
     }
 }
