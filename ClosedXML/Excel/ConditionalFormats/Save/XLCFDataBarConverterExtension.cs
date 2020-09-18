@@ -24,12 +24,13 @@ namespace ClosedXML.Excel
             {
                 MinLength = 0,
                 MaxLength = 100,
-                Gradient = false,
-                AxisPosition = DataBarAxisPositionValues.Middle,
+                Gradient = true,
                 ShowValue = !cf.ShowBarOnly
             };
 
-            ConditionalFormattingValueObjectTypeValues cfMinType = Convert(cf.ContentTypes[1].ToOpenXml());
+            var cfMinType = cf.ContentTypes.TryGetValue(1, out var contentType1)
+                ? Convert(contentType1.ToOpenXml())
+                : ConditionalFormattingValueObjectTypeValues.AutoMin;
             var cfMin = new ConditionalFormattingValueObject { Type = cfMinType };
             if (cf.Values.Any() && cf.Values[1]?.Value != null)
             {
@@ -37,7 +38,9 @@ namespace ClosedXML.Excel
                 cfMin.Append(new Formula() { Text = cf.Values[1].Value });
             }
 
-            ConditionalFormattingValueObjectTypeValues cfMaxType = Convert(cf.ContentTypes[2].ToOpenXml());
+            var cfMaxType = cf.ContentTypes.TryGetValue(2, out var contentType2)
+                ? Convert(contentType2.ToOpenXml())
+                : ConditionalFormattingValueObjectTypeValues.AutoMax;
             var cfMax = new ConditionalFormattingValueObject { Type = cfMaxType };
             if (cf.Values.Count >= 2 && cf.Values[2]?.Value != null)
             {
