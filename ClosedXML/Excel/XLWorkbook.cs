@@ -1,4 +1,4 @@
-﻿using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine;
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
