@@ -1,6 +1,6 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System.Drawing;
+using Color = System.Drawing.Color;
 using System.Linq;
 
 namespace ClosedXML.Tests
@@ -134,6 +134,22 @@ namespace ClosedXML.Tests
             Assert.AreEqual("Sheet2", ws2.ConditionalFormats.First().Ranges.First().Worksheet.Name);
             Assert.AreEqual("A1:J2", ws1.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
             Assert.AreEqual("A1:A2", ws2.ConditionalFormats.First().Ranges.First().RangeAddress.ToString());
+        }
+
+        [Test]
+        public void CopyConditionalFormatColorScaleInRange()
+        {
+            var ws = new XLWorkbook().Worksheets.Add("Sheet");
+
+            ws.Row(1).Cell(1).AddConditionalFormat()
+                .ColorScale()
+                .LowestValue(XLColor.Teal)
+                .HighestValue(XLColor.Orange);
+
+            ws.Cell(5, 2).Value = ws.Range(1, 1, 1, 5);
+
+            Assert.AreEqual(2, ws.ConditionalFormats.Count()); //existing format + copied.
+            Assert.IsTrue(ws.ConditionalFormats.Single(x => x.Range.RangeAddress.ToStringRelative() == "B5:B5").ConditionalFormatType == XLConditionalFormatType.ColorScale);
         }
 
         private static void FillRow(IXLRow row1)

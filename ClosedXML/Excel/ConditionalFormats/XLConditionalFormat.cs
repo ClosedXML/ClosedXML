@@ -259,7 +259,7 @@ namespace ClosedXML.Excel
             StopIfTrue = other.StopIfTrue;
 
             Values.Clear();
-            other.Values.ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));
+            other.Values.Where(x=>x.Value != null).ForEach(kp => Values.Add(kp.Key, new XLFormula(kp.Value)));
             //CopyDictionary(Values, other.Values);
             CopyDictionary(Colors, other.Colors);
             CopyDictionary(ContentTypes, other.ContentTypes);
