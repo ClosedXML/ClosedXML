@@ -76,6 +76,11 @@ namespace ClosedXML.Excel
         IXLPageSetup PageOptions { get; set; }
 
         /// <summary>
+        ///   Gets the set of known type mappings.
+        /// </summary>
+        IDictionary<Type, Type> KnownTypeMapping { get; }
+
+        /// <summary>
         ///   Gets or sets the workbook's properties.
         /// </summary>
         XLWorkbookProperties Properties { get; set; }
