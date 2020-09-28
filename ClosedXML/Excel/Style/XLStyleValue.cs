@@ -19,6 +19,7 @@ namespace ClosedXML.Excel
             Fill = XLFillValue.Default.Key,
             Font = XLFontValue.Default.Key,
             IncludeQuotePrefix = false,
+            Name = "Normal",
             NumberFormat = XLNumberFormatValue.Default.Key,
             Protection = XLProtectionValue.Default.Key
         };
@@ -36,6 +37,8 @@ namespace ClosedXML.Excel
         public XLFontValue Font { get; private set; }
 
         public Boolean IncludeQuotePrefix { get; private set; }
+
+        public string Name => Key.Name;
 
         public XLNumberFormatValue NumberFormat { get; private set; }
 

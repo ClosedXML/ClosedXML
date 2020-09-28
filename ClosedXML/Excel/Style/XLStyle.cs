@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 
 namespace ClosedXML.Excel
@@ -22,6 +23,7 @@ namespace ClosedXML.Excel
                 Alignment = XLAlignment.GenerateKey(initialStyle.Alignment),
                 Border = XLBorder.GenerateKey(initialStyle.Border),
                 Fill = XLFill.GenerateKey(initialStyle.Fill),
+                Name = XLStyleValue.Default.Name,
                 NumberFormat = XLNumberFormat.GenerateKey(initialStyle.NumberFormat),
                 Protection = XLProtection.GenerateKey(initialStyle.Protection)
             };
@@ -141,6 +143,23 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public string Name
+        {
+            get { return Value.Name; }
+            set
+            {
+                ThrowIfNameAlreadyTaken(value);
+                Modify(k => { k.Name = value; return k; });
+                AddToNamedStyles();
+            }
+        }
+
+        public IXLStyle SetName(string name)
+        {
+            Name = name;
+            return this;
+        }
+
         public IXLNumberFormat NumberFormat
         {
             get { return new XLNumberFormat(this, Value.NumberFormat); }
@@ -210,5 +229,31 @@ namespace ClosedXML.Excel
         }
 
         #endregion Overridden
+
+        #region Private Methods
+
+        private void ThrowIfNameAlreadyTaken(string styleName)
+        {
+            var workbook = _container?.RangesUsed?.FirstOrDefault()?.Worksheet?.Workbook;
+
+            if (workbook == null)
+                throw new InvalidOperationException("Cannot change name of detached style. It must belong to a workbook.");
+
+            var existingStyle = workbook.NamedStyles[styleName];
+            if (existingStyle != null &&
+                existingStyle != Value)
+            {
+                throw new InvalidOperationException("This name is already used");
+            }
+        }
+
+        private void AddToNamedStyles()
+        {
+            var workbook = _container.RangesUsed.First().Worksheet.Workbook;
+
+            workbook.NamedStyles.Add(Value.Name, Value.Key);
+        }
+
+        #endregion Private Methods
     }
 }

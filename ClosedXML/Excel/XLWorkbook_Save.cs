@@ -3645,9 +3645,10 @@ namespace ClosedXML.Excel
             {
                 // Possible to have duplicate default cell styles - occurs when file gets saved under different cultures.
                 // We prefer the style that is named Normal
+                var normal = XLStyleValue.Default.Name;
                 var normalCellStyles = workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>()
                     .Where(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0)
-                    .OrderBy(c => c.Name != null && c.Name.HasValue && c.Name.Value == "Normal");
+                    .OrderBy(c => c.Name != null && c.Name.HasValue && c.Name.Value == normal);
 
                 defaultFormatId = normalCellStyles.Last().FormatId.Value;
             }
@@ -3665,6 +3666,7 @@ namespace ClosedXML.Excel
                     FillId = 0,
                     BorderId = 0,
                     IncludeQuotePrefix = false,
+                    Name = XLStyleValue.Default.Name,
                     NumberFormatId = 0
                     //AlignmentId = 0
                 });
@@ -3773,15 +3775,37 @@ namespace ClosedXML.Excel
                             FillId = allSharedFills[xlStyle.Fill].FillId,
                             BorderId = allSharedBorders[xlStyle.Border].BorderId,
                             NumberFormatId = numberFormatId,
+                            Name = xlStyle.Name,
                             IncludeQuotePrefix = xlStyle.IncludeQuotePrefix
                         });
             }
 
+            var keys = context.SharedStyles.Keys.ToArray();
+            foreach (var key in keys)
+            {
+                var style = context.SharedStyles[key];
+                var existingStyle = workbookStylesPart.Stylesheet.CellStyles
+                    .Elements<CellStyle>()
+                    .SingleOrDefault(c => StringComparer.InvariantCultureIgnoreCase.Equals(style.Name, c.Name));
+
+                if (existingStyle == null)
+                {
+                    workbookStylesPart.Stylesheet.CellStyles.AppendChild(new CellStyle
+                    {
+                        Name = style.Name,
+                        FormatId = style.StyleId,
+                        BuiltinId = 0U
+                    });
+                }
+                else
+                {
+                    style.StyleId = existingStyle.FormatId.Value;
+                    context.SharedStyles[key] = style;
+                }
+            }
+
             ResolveCellStyleFormats(workbookStylesPart, context);
             ResolveRest(workbookStylesPart, context);
-
-            if (!workbookStylesPart.Stylesheet.CellStyles.Elements<CellStyle>().Any(c => c.BuiltinId != null && c.BuiltinId.HasValue && c.BuiltinId.Value == 0U))
-                workbookStylesPart.Stylesheet.CellStyles.AppendChild(new CellStyle { Name = "Normal", FormatId = defaultFormatId, BuiltinId = 0U });
 
             workbookStylesPart.Stylesheet.CellStyles.Count = (UInt32)workbookStylesPart.Stylesheet.CellStyles.Count();
 
@@ -3974,7 +3998,7 @@ namespace ClosedXML.Excel
                 if (foundOne) continue;
 
                 var cellFormat = GetCellFormat(styleInfo);
-                cellFormat.FormatId = 0;
+                cellFormat.FormatId = styleInfo.StyleId;
                 var alignment = new Alignment
                 {
                     Horizontal = styleInfo.Style.Alignment.Horizontal.ToOpenXml(),
@@ -4056,7 +4080,7 @@ namespace ClosedXML.Excel
                 ApplyAlignment = true,
                 ApplyFill = ApplyFill(styleInfo),
                 ApplyBorder = ApplyBorder(styleInfo),
-                ApplyProtection = ApplyProtection(styleInfo)
+                ApplyProtection = ApplyProtection(styleInfo),
             };
             return cellFormat;
         }
@@ -4083,7 +4107,8 @@ namespace ClosedXML.Excel
         private static bool CellFormatsAreEqual(CellFormat f, StyleInfo styleInfo, bool compareAlignment)
         {
             return
-                f.BorderId != null && styleInfo.BorderId == f.BorderId
+                f.FormatId != null && styleInfo.StyleId == f.FormatId
+                && f.BorderId != null && styleInfo.BorderId == f.BorderId
                 && f.FillId != null && styleInfo.FillId == f.FillId
                 && f.FontId != null && styleInfo.FontId == f.FontId
                 && f.NumberFormatId != null && styleInfo.NumberFormatId == f.NumberFormatId

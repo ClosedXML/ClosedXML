@@ -2146,13 +2146,18 @@ namespace ClosedXML.Excel
                                                   & ~XLCellsUsedOptions.ConditionalFormats
                                                   & ~XLCellsUsedOptions.DataValidation
                                                   & ~XLCellsUsedOptions.MergedRanges);
+
+                var namedStyleMerger = new XLNamedStyleMerger(Worksheet.Workbook, asRange.Worksheet.Workbook);
                 foreach (var sourceCell in cellsUsed)
                 {
-                    Worksheet.Cell(
+                    Worksheet
+                        .Cell(
                         _rowNumber + sourceCell.Address.RowNumber - minRow,
                         _columnNumber + sourceCell.Address.ColumnNumber - minColumn
-                        ).CopyFromInternal(sourceCell as XLCell,
-                        XLCellCopyOptions.All & ~XLCellCopyOptions.ConditionalFormats); //Conditional formats are copied separately
+                        )
+                        .CopyFromInternal(sourceCell as XLCell,
+                        XLCellCopyOptions.All & ~XLCellCopyOptions.ConditionalFormats, //Conditional formats are copied separately
+                            namedStyleMerger);
                 }
 
                 var rangesToMerge = asRange.Worksheet.Internals.MergedRanges
@@ -2583,13 +2588,14 @@ namespace ClosedXML.Excel
             return defaultWorksheet.Workbook.Worksheet(wsName).Cell(pair[1]);
         }
 
-        internal IXLCell CopyFromInternal(XLCell otherCell, XLCellCopyOptions options)
+        internal IXLCell CopyFromInternal(XLCell otherCell, XLCellCopyOptions options,
+            XLNamedStyleMerger namedStylesMerger)
         {
             if (options.HasFlag(XLCellCopyOptions.Values))
                 CopyValuesFrom(otherCell);
 
             if (options.HasFlag(XLCellCopyOptions.Styles))
-                InnerStyle = otherCell.InnerStyle;
+                CopyStyleFrom(otherCell, namedStylesMerger);
 
             if (options.HasFlag(XLCellCopyOptions.Sparklines))
                 CopySparklineFrom(otherCell);
@@ -2601,6 +2607,12 @@ namespace ClosedXML.Excel
                 CopyDataValidationFrom(otherCell);
 
             return this;
+        }
+
+        private void CopyStyleFrom(XLCell otherCell, XLNamedStyleMerger namedStylesMerger)
+        {
+            InnerStyle = otherCell.InnerStyle;
+            InnerStyle.Name = namedStylesMerger.GetTargetStyleName(otherCell.StyleValue);
         }
 
         private void CopySparklineFrom(XLCell otherCell)
@@ -2641,7 +2653,7 @@ namespace ClosedXML.Excel
         {
             var source = otherCell as XLCell; // To expose GetFormulaR1C1, etc
 
-            CopyFromInternal(source, options);
+            CopyFromInternal(source, options, new XLNamedStyleMerger(otherCell.Worksheet.Workbook, Worksheet.Workbook));
             return this;
         }
 

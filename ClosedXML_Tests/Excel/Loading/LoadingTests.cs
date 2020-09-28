@@ -175,7 +175,7 @@ namespace ClosedXML_Tests.Excel
 
         /// <summary>
         /// For non-English locales, the default style ("Normal" in English) can be
-        /// another piece of text (e.g. ??????? in Russian).
+        /// another piece of text (e.g. Обычный in Russian).
         /// This test ensures that the default style is correctly detected and
         /// no style conflicts occur on save.
         /// </summary>

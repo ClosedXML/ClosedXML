@@ -17,10 +17,14 @@ namespace ClosedXML.Excel
 
         Boolean IncludeQuotePrefix { get; set; }
 
+        string Name { get; set; }
+
         IXLNumberFormat NumberFormat { get; set; }
 
         IXLProtection Protection { get; set; }
 
         IXLStyle SetIncludeQuotePrefix(Boolean includeQuotePrefix = true);
+
+        IXLStyle SetName(string name);
     }
 }
