@@ -766,13 +766,7 @@ namespace ClosedXML.Excel.CalcEngine
             var n = (Decimal)(Double)p[0];
             var k = (Decimal)(Double)p[1];
 
-            var mod = n % k;
-            var mult = Math.Floor(n / k);
-            var div = k / 2;
-
-            if (Math.Abs(mod - div) <= (Decimal)XLHelper.Epsilon) return (k * mult) + k;
-
-            return k * mult;
+            return Math.Round(n / k, MidpointRounding.AwayFromZero) * k;
         }
 
         private static object Multinomial(List<Expression> p)
