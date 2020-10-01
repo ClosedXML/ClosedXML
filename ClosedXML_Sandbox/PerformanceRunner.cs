@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Word;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
