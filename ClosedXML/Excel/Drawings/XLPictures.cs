@@ -143,7 +143,8 @@ namespace ClosedXML.Excel.Drawings
 
         public bool TryGetPicture(string pictureName, out IXLPicture picture)
         {
-            var matches = _pictures.Where(p => p.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase));
+            var matches = _pictures.Where(p => p.Name.Equals(pictureName, StringComparison.OrdinalIgnoreCase))
+                .ToArray();
             if (matches.Any())
             {
                 picture = matches.First();

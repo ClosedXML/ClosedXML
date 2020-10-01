@@ -24,8 +24,9 @@ namespace ClosedXML.Excel
 
         public static DateTime NextWorkday(this DateTime date, IEnumerable<DateTime> bankHolidays)
         {
+            var materializedBankHolidays = bankHolidays.ToArray();
             var nextDate = date.AddDays(1);
-            while (!nextDate.IsWorkDay(bankHolidays))
+            while (!nextDate.IsWorkDay(materializedBankHolidays))
                 nextDate = nextDate.AddDays(1);
 
             return nextDate;
@@ -33,8 +34,9 @@ namespace ClosedXML.Excel
 
         public static DateTime PreviousWorkDay(this DateTime date, IEnumerable<DateTime> bankHolidays)
         {
+            var materializedBankHolidays = bankHolidays.ToArray();
             var previousDate = date.AddDays(-1);
-            while (!previousDate.IsWorkDay(bankHolidays))
+            while (!previousDate.IsWorkDay(materializedBankHolidays))
                 previousDate = previousDate.AddDays(-1);
 
             return previousDate;

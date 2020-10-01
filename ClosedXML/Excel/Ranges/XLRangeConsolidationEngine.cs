@@ -69,9 +69,10 @@ namespace ClosedXML.Excel
             /// <param name="ranges">Ranges to be consolidated. They are expected to belong to the current worksheet, no check is performed.</param>
             public XLRangeConsolidationMatrix(IXLWorksheet worksheet, IEnumerable<IXLRange> ranges)
             {
+                var materializedRanges = ranges.ToArray();
                 _worksheet = worksheet;
-                PrepareBitMatrix(ranges);
-                FillBitMatrix(ranges);
+                PrepareBitMatrix(materializedRanges);
+                FillBitMatrix(materializedRanges);
             }
 
             #endregion Public Constructors
