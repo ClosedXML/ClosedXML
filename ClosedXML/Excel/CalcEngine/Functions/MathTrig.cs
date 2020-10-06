@@ -967,7 +967,7 @@ namespace ClosedXML.Excel.CalcEngine
                     {
                         if (c.HasFormula)
                         {
-                            var expression = ce.ExpressionCache[c.FormulaA1];
+                            var expression = ce.Parse(c.FormulaA1);
                             return !hasSubtotalInFormula(expression);
                         }
                         else

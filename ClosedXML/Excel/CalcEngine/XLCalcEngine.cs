@@ -27,8 +27,6 @@ namespace ClosedXML.Excel.CalcEngine
 
         private IList<IXLRange> _cellRanges;
 
-        public ExpressionCache ExpressionCache => this._cache;
-
         /// <summary>
         /// Get a collection of cell ranges included into the expression. Order is not preserved.
         /// </summary>

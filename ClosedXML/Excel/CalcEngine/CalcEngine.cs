@@ -37,7 +37,6 @@ namespace ClosedXML.Excel.CalcEngine
         private Dictionary<string, object> _vars;       // table with variables
         private object _dataContext;                    // object with properties
         private bool _optimize;                         // optimize expressions when parsing
-        protected ExpressionCache _cache;               // cache with parsed expressions
         private CultureInfo _ci;                        // culture info used to parse numbers/dates
         private char _decimal, _listSep, _percent;      // localized decimal separator, list separator, percent sign
 
@@ -53,7 +52,6 @@ namespace ClosedXML.Excel.CalcEngine
             _tkTbl = GetSymbolTable();
             _fnTbl = GetFunctionTable();
             _vars = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            _cache = new ExpressionCache(this);
             _optimize = true;
 #if DEBUG
             //this.Test();
@@ -118,28 +116,8 @@ namespace ClosedXML.Excel.CalcEngine
         /// </remarks>
         public object Evaluate(string expression)
         {
-            var x = _cache != null
-                    ? _cache[expression]
-                    : Parse(expression);
+            var x = Parse(expression);
             return x.Evaluate();
-        }
-
-        /// <summary>
-        /// Gets or sets whether the calc engine should keep a cache with parsed
-        /// expressions.
-        /// </summary>
-        public bool CacheExpressions
-        {
-            get { return _cache != null; }
-            set
-            {
-                if (value != CacheExpressions)
-                {
-                    _cache = value
-                        ? new ExpressionCache(this)
-                        : null;
-                }
-            }
         }
 
         /// <summary>
