@@ -6,6 +6,8 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class XLCalcEngine : CalcEngine
     {
+        private static readonly XLCellByAddressComparer xlCellByAddressComparer = new XLCellByAddressComparer();
+        private static readonly XLRangeByAddressComparer xlRangeByAddressComparer = new XLRangeByAddressComparer();
         private readonly IXLWorksheet _ws;
         private readonly XLWorkbook _wb;
 
@@ -36,17 +38,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             _cellRanges = new List<IXLRange>();
             Parse(expression);
-            var ranges = _cellRanges;
-            _cellRanges = null;
-            var visitedRanges = new HashSet<IXLRangeAddress>(new XLRangeAddressComparer(true));
-            foreach (var range in ranges)
-            {
-                if (!visitedRanges.Contains(range.RangeAddress))
-                {
-                    visitedRanges.Add(range.RangeAddress);
-                    yield return range;
-                }
-            }
+            return _cellRanges.Distinct(xlRangeByAddressComparer);
         }
 
         public IEnumerable<IXLCell> GetPrecedentCells(string expression)
@@ -54,17 +46,10 @@ namespace ClosedXML.Excel.CalcEngine
             if (!String.IsNullOrWhiteSpace(expression))
             {
                 var ranges = GetPrecedentRanges(expression);
-                var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
-                var cells = ranges.SelectMany(range => range.Cells()).Distinct();
-                foreach (var cell in cells)
-                {
-                    if (!visitedCells.Contains(cell.Address))
-                    {
-                        visitedCells.Add(cell.Address);
-                        yield return cell;
-                    }
-                }
+                return ranges.SelectMany(range => range.Cells()).Distinct(xlCellByAddressComparer);
             }
+
+            return Enumerable.Empty<IXLCell>();
         }
 
         public override object GetExternalObject(string identifier)
@@ -86,11 +71,13 @@ namespace ClosedXML.Excel.CalcEngine
                 if (referencedSheetNames.Count == 0)
                     return GetCellRangeReference(_ws.Range(identifier));
                 else if (referencedSheetNames.Count > 1)
-                    throw new ArgumentOutOfRangeException(referencedSheetNames.Last(), "Cross worksheet references may references no more than 1 other worksheet");
+                    throw new ArgumentOutOfRangeException(referencedSheetNames.Last(),
+                        "Cross worksheet references may references no more than 1 other worksheet");
                 else
                 {
                     if (!_wb.TryGetWorksheet(referencedSheetNames.Single(), out IXLWorksheet worksheet))
-                        throw new ArgumentOutOfRangeException(referencedSheetNames.Single(), "The required worksheet cannot be found");
+                        throw new ArgumentOutOfRangeException(referencedSheetNames.Single(),
+                            "The required worksheet cannot be found");
 
                     identifier = identifier.ToLower().Replace(string.Format("{0}!", worksheet.Name.ToLower()), "");
 
