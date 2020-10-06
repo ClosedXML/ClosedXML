@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -352,6 +353,37 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             cell.DataType = XLDataType.TimeSpan;
             Assert.AreEqual(TimeSpan.FromDays(value), (TimeSpan)cell.CachedValue);
             Assert.AreEqual("03:45:00", cell.GetFormattedString()); // I think the seconds in this string is due to a shortcoming in the ExcelNumberFormat library
+        }
+
+        [Test]
+        public void ChangingNamedRangeInvalidatesCache()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var cell1 = ws.FirstCell();
+            cell1.FormulaA1 = "NAMED * 10";
+            var cell2 = ws.Cell("B1");
+            cell2.Value = 5;
+
+            Assert.Throws<NameNotRecognizedException>(() => _ = cell1.Value);
+
+            cell2.AddToNamed("NAMED");
+            Assert.AreEqual(50, cell1.Value);
+
+            wb.NamedRanges.NamedRange("NAMED").SetRefersTo("Sheet1!D1");
+            Assert.AreEqual(0, cell1.Value);
+
+            wb.NamedRanges.DeleteAll();
+            Assert.Throws<NameNotRecognizedException>(() => _ = cell1.Value);
+
+            cell2.AddToNamed("NAMED", XLScope.Worksheet);
+            Assert.AreEqual(50, cell1.Value);
+
+            ws.NamedRanges.NamedRange("NAMED").SetRefersTo("Sheet1!D1");
+            Assert.AreEqual(0, cell1.Value);
+
+            ws.NamedRanges.DeleteAll();
+            Assert.Throws<NameNotRecognizedException>(() => _ = cell1.Value);
         }
     }
 }
