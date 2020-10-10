@@ -257,7 +257,7 @@ namespace ClosedXML.Excel
 
             GenerateExtendedFilePropertiesPartContent(extendedFilePropertiesPart);
 
-            GenerateWorkbookPartContent(workbookPart, context);
+            GenerateWorkbookPartContent(workbookPart, options, context);
 
             var sharedStringTablePart = workbookPart.SharedStringTablePart ??
                                         workbookPart.AddNewPart<SharedStringTablePart>(
@@ -615,7 +615,7 @@ namespace ClosedXML.Excel
             return namedRanges;
         }
 
-        private void GenerateWorkbookPartContent(WorkbookPart workbookPart, SaveContext context)
+        private void GenerateWorkbookPartContent(WorkbookPart workbookPart, SaveOptions options, SaveContext context)
         {
             if (workbookPart.Workbook == null)
                 workbookPart.Workbook = new Workbook();
@@ -637,8 +637,10 @@ namespace ClosedXML.Excel
             if (workbook.WorkbookProperties.CodeName == null)
                 workbook.WorkbookProperties.CodeName = "ThisWorkbook";
 
-            if (Use1904DateSystem)
-                workbook.WorkbookProperties.Date1904 = true;
+            workbook.WorkbookProperties.Date1904 = OpenXmlHelper.GetBooleanValue(this.Use1904DateSystem, false);
+
+            if (options.FilterPrivacy.HasValue)
+                workbook.WorkbookProperties.FilterPrivacy = OpenXmlHelper.GetBooleanValue(options.FilterPrivacy.Value, false);
 
             #endregion WorkbookProperties
 
