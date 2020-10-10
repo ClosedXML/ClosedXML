@@ -654,7 +654,54 @@ namespace ClosedXML_Tests.Excel.Saving
             {
                 Assert.DoesNotThrow(() => wb.SaveAs(ms));
             }
+        }
 
+        [Test]
+        public void CanEnableWorkbookFilterPrivacyAndSaveInWorkbook()
+        {
+            using var ms = new MemoryStream();
+
+            using (var wb = new XLWorkbook())
+            {
+                wb.AddWorksheet();
+                wb.SaveAs(ms, new SaveOptions { FilterPrivacy = true });
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (var wb = SpreadsheetDocument.Open(ms, false))
+            {
+                Assert.IsTrue(wb.WorkbookPart.Workbook.WorkbookProperties.FilterPrivacy);
+            }
+        }
+
+        [Test]
+        public void WorkbookFilterPrivacyIsNotSetByDefault()
+        {
+            using var ms = new MemoryStream();
+
+            using (var wb = new XLWorkbook())
+            {
+                wb.AddWorksheet();
+                wb.SaveAs(ms);
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (var wb = SpreadsheetDocument.Open(ms, false))
+            {
+                Assert.IsNull(wb.WorkbookPart.Workbook.WorkbookProperties.FilterPrivacy);
+            }
+        }
+
+        [Test]
+        public void WorkbookFilterPrivacyIsReadCorrectly()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\FilterPrivacyEnabledWorkbook.xlsx")))
+            using (var wb = SpreadsheetDocument.Open(stream, false))
+            {
+                Assert.IsTrue(wb.WorkbookPart.Workbook.WorkbookProperties.FilterPrivacy);
+            }
         }
 
         [Test]
