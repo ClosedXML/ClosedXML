@@ -656,5 +656,31 @@ namespace ClosedXML_Tests.Excel.Saving
             }
 
         }
+
+        [Test]
+        public void CanSaveAsWithDataValidationAfterInsertFirstRowsAboveAndInsertFirstColumnsBefore()
+        {
+            using (var wb = new XLWorkbook())
+            using (var ms = new MemoryStream())
+            {
+                var ws = wb.AddWorksheet("WithDataValidation");
+                ws.Range("B4:B4").SetDataValidation().WholeNumber.Between(0, 1);
+
+                ws.Row(1).InsertRowsAbove(1);
+                var dv = ws.DataValidations.ToArray();
+                Assert.AreEqual(1, dv.Length);
+                Assert.AreEqual("B5:B5", dv[0].Ranges.Single().RangeAddress.ToString());
+
+                Assert.DoesNotThrow(() => wb.SaveAs(ms));
+
+
+                ws.Column(1).InsertColumnsBefore(1);
+                dv = ws.DataValidations.ToArray();
+                Assert.AreEqual(1, dv.Length);
+                Assert.AreEqual("C5:C5", dv[0].Ranges.Single().RangeAddress.ToString());
+
+                Assert.DoesNotThrow(() => wb.SaveAs(ms));
+            }
+        }
     }
 }
