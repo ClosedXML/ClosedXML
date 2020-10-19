@@ -375,6 +375,14 @@ namespace ClosedXML.Excel
 
         IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
 
+        IXLCharts Charts { get; }
+
+        //IXLChart AddChart(Dictionary<string, int> data, String name, XLChartType chartType);
+
+        IXLChart AddChart(IXLChart chart);
+
+        IXLChart Chart(Int32 index);
+        
         //IXLCharts Charts { get; }
 
         Boolean ShowFormulas { get; set; }
