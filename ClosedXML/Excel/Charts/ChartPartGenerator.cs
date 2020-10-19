@@ -31,6 +31,7 @@ namespace ClosedXML.Excel.Charts
                 case LabelType.CategoryValueLabel:
                     DataLabels categoryLabels = new DataLabels();
                     categoryLabels.Append(new NumberingFormat { FormatCode = "General", SourceLinked = false });
+                    categoryLabels.Append(ChartStyle.SetTextProperties());
                     if (seriesData.Label.Position != DataLabelPositionValues.BestFit)
                         SetSafeLabelPosition(seriesData, categoryLabels);
                     categoryLabels.Append(new ShowLegendKey { Val = false });
@@ -40,11 +41,11 @@ namespace ClosedXML.Excel.Charts
                     categoryLabels.Append(new ShowPercent { Val = false });
                     categoryLabels.Append(new ShowBubbleSize { Val = false });
                     categoryLabels.Append(new ShowLeaderLines { Val = false });
-                    categoryLabels.Append(ChartStyle.SetTextProperties());
                     return categoryLabels;
                 case LabelType.PercentValuesOutsideEnd:
                     DataLabels dataLabels = new DataLabels();
                     dataLabels.Append(new NumberingFormat { FormatCode = "General", SourceLinked = false });
+                    dataLabels.Append(ChartStyle.SetTextProperties());
                     if (seriesData.Label.Position != DataLabelPositionValues.BestFit)
                     {
                         seriesData.Label.Position = DataLabelPositionValues.OutsideEnd;
@@ -57,13 +58,25 @@ namespace ClosedXML.Excel.Charts
                     dataLabels.Append(new ShowPercent { Val = false });
                     dataLabels.Append(new ShowBubbleSize { Val = false });
                     dataLabels.Append(new ShowLeaderLines { Val = false });
-                    dataLabels.Append(ChartStyle.SetTextProperties());
                     return dataLabels;
                 case LabelType.SingleElementLabels:
-                    return GenerateDataLabels(seriesData);
+                    DataLabels labels = new DataLabels();
+                    labels.Append(new NumberingFormat { FormatCode = "#,##0.000", SourceLinked = false });
+                    labels.Append(ChartStyle.SetTextProperties());
+                    if (seriesData.Label.Position != DataLabelPositionValues.BestFit)
+                        SetSafeLabelPosition(seriesData, labels);
+                    labels.Append(new ShowLegendKey { Val = false });
+                    labels.Append(new ShowValue { Val = true });
+                    labels.Append(new ShowCategoryName { Val = false });
+                    labels.Append(new ShowSeriesName { Val = false });
+                    labels.Append(new ShowPercent { Val = false });
+                    labels.Append(new ShowBubbleSize { Val = false });
+                    labels.Append(new ShowLeaderLines { Val = false });
+                    return labels;
                 case LabelType.RegularLabel:
                     DataLabels regularLabels = new DataLabels();
                     regularLabels.Append(new NumberingFormat { FormatCode = "General", SourceLinked = false });
+                    regularLabels.Append(ChartStyle.SetTextProperties());
                     if (seriesData.Label.Position != DataLabelPositionValues.BestFit)
                         SetSafeLabelPosition(seriesData, regularLabels);
                     regularLabels.Append(new ShowLegendKey { Val = false });
@@ -73,7 +86,6 @@ namespace ClosedXML.Excel.Charts
                     regularLabels.Append(new ShowPercent { Val = false });
                     regularLabels.Append(new ShowBubbleSize { Val = false });
                     regularLabels.Append(new ShowLeaderLines { Val = false });
-                    regularLabels.Append(ChartStyle.SetTextProperties());
                     return regularLabels;
                 default:
                     return null;
@@ -99,7 +111,7 @@ namespace ClosedXML.Excel.Charts
                 var p = new Paragraph();
                 var r = new Run();
                 r.Append(new RunProperties() { Language = "de-DE" });
-                r.Append(new Text(seriesData.Names[i]));
+                r.Append(new Text(seriesData.Names[i] ?? null));
                 p.Append(r);
 
                 rich.Append(p);
@@ -135,7 +147,6 @@ namespace ClosedXML.Excel.Charts
             dataLabels.Append(new ShowLeaderLines { Val = false });
 
             return dataLabels;
-
         }
 
         public static RichText GenerateRichTextSingleElement(String text, String language = null, String hexColor = null)
@@ -403,13 +414,21 @@ namespace ClosedXML.Excel.Charts
             UInt32 i = 0;
             foreach (var valueText in values)
             {
-                NumericPoint numericPoint = new NumericPoint { Index = i };
-                NumericValue numericValue = new NumericValue { Text = valueText };
+                if(valueText == null)
+                {
+                    i++;
+                }
+                else
+                {
+                    NumericPoint numericPoint = new NumericPoint { Index = i };
+                    NumericValue numericValue = new NumericValue { Text = valueText };
 
-                numericPoint.Append(numericValue);
-                numberLiteral.Append(numericPoint);
+                    numericPoint.Append(numericValue);
+                    numberLiteral.Append(numericPoint);
 
-                i++;
+                    i++;
+                }
+                
             }
             return numberLiteral;
         }
