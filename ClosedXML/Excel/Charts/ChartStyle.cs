@@ -6,6 +6,17 @@ namespace ClosedXML.Excel.Charts
 {
     public class ChartStyle
     {
+        public static ChartShapeProperties SetHexColor(string HexColor)
+        {
+            ChartShapeProperties chartShapeProperties = new ChartShapeProperties();
+            SolidFill solidFill = new SolidFill();
+            RgbColorModelHex rgbColorModelHex = new RgbColorModelHex() { Val = HexColor };
+            solidFill.Append(rgbColorModelHex);
+            chartShapeProperties.Append(solidFill);
+
+            return chartShapeProperties;
+        }
+        
         public static TextProperties SetTextProperties(OpenXmlCompositeElement axisElement, XLChart chartData)
         {
             int rotation = 5400000;
@@ -117,6 +128,22 @@ namespace ClosedXML.Excel.Charts
 
             Size size = new Size() { Val = 5 };
             marker.Append(size);
+
+            if(seriesData.HexColor != null)
+            {
+                ChartShapeProperties shapeProperties = new ChartShapeProperties();
+
+                SolidFill solidFill = new SolidFill();
+                solidFill.Append(new RgbColorModelHex() { Val = seriesData.HexColor });
+                shapeProperties.Append(solidFill);
+
+                Outline outline = new Outline();
+                NoFill noFill = new NoFill();
+                outline.Append(noFill);
+                shapeProperties.Append(outline);
+
+                marker.Append(shapeProperties);
+            }           
 
             return marker;
         }
