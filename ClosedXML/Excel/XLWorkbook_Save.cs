@@ -3384,6 +3384,9 @@ namespace ClosedXML.Excel
 
             DocumentFormat.OpenXml.Drawing.Charts.PlotVisibleOnly plotVisibleOnly = new DocumentFormat.OpenXml.Drawing.Charts.PlotVisibleOnly() { Val = false };
             chart.Append(plotVisibleOnly);
+            
+            DocumentFormat.OpenXml.Drawing.Charts.DisplayBlanksAs displayBlanksAs = new DocumentFormat.OpenXml.Drawing.Charts.DisplayBlanksAs() { Val = DocumentFormat.OpenXml.Drawing.Charts.DisplayBlanksAsValues.Gap };
+            chart.Append(displayBlanksAs);
 
             if (!chartxl.Border)
             {
