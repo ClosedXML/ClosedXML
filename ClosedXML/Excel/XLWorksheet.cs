@@ -78,7 +78,7 @@ namespace ClosedXML.Excel
             _rowHeight = workbook.RowHeight;
             RowHeightChanged = Math.Abs(workbook.RowHeight - XLWorkbook.DefaultRowHeight) > XLHelper.Epsilon;
             Name = sheetName;
-            Charts = new XLCharts();
+            Charts = new XLCharts(this);
             ShowFormulas = workbook.ShowFormulas;
             ShowGridLines = workbook.ShowGridLines;
             ShowOutlineSymbols = workbook.ShowOutlineSymbols;
@@ -157,6 +157,16 @@ namespace ClosedXML.Excel
         public XLDataValidations DataValidations { get; private set; }
 
         public IXLCharts Charts { get; private set; }
+        
+        public IXLChart Chart(Int32 index)
+        {
+            return Charts.Chart(index);
+        }
+
+        public IXLChart AddChart(IXLChart chart)
+        {
+            return Charts.Add(chart);
+        }
 
         public XLSheetProtection Protection
         {
