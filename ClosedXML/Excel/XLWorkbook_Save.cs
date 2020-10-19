@@ -3333,6 +3333,104 @@ namespace ClosedXML.Excel
             return Convert.ToInt64(914400L * pixels / resolution);
         }
 
+        private static ChartPart InsertChartPart(DrawingsPart drawingsPart, XLChart chartxl, SaveContext context)
+        {
+            ChartPart chartPart;
+            if (drawingsPart.HasPartWithId(chartxl.RelId))
+                chartPart = drawingsPart.GetPartById(chartxl.RelId) as ChartPart;
+            else
+            {
+                chartxl.RelId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                chartPart = drawingsPart.AddNewPart<ChartPart>();
+            }
+
+            chartPart.ChartSpace = new DocumentFormat.OpenXml.Drawing.Charts.ChartSpace();
+            chartPart.ChartSpace.Append(new DocumentFormat.OpenXml.Drawing.Charts.EditingLanguage() { Val = new StringValue("de-DE") });
+            chartPart.ChartSpace.Append(new DocumentFormat.OpenXml.Drawing.Charts.RoundedCorners() { Val = new BooleanValue(false) });
+
+
+
+            AlternateContent alternateContent = new AlternateContent();
+            alternateContent.AddNamespaceDeclaration("mc", "http://schemas.openxmlformats.org/markup-compatibility/2006");
+
+            AlternateContentChoice alternateContentChoice = new AlternateContentChoice() { Requires = "c14" };
+            alternateContentChoice.AddNamespaceDeclaration("c14", "http://schemas.microsoft.com/office/drawing/2007/8/2/chart");
+
+            DocumentFormat.OpenXml.Office2010.Drawing.Charts.Style style5 = new DocumentFormat.OpenXml.Office2010.Drawing.Charts.Style() { Val = 102 };
+
+            alternateContentChoice.Append(style5);
+
+            AlternateContentFallback alternateContentFallback = new AlternateContentFallback();
+            DocumentFormat.OpenXml.Drawing.Charts.Style style6 = new DocumentFormat.OpenXml.Drawing.Charts.Style() { Val = 2 };
+            alternateContentFallback.Append(style6);
+
+            alternateContent.Append(alternateContentChoice);
+            alternateContent.Append(alternateContentFallback);
+
+
+            chartPart.ChartSpace.Append(alternateContent);
+
+            var chart = chartPart.ChartSpace.AppendChild(new DocumentFormat.OpenXml.Drawing.Charts.Chart());
+
+            Charts.ChartGenerator.AddChartTitle(chart, chartxl.ChartTitle, chartxl);
+
+            chart.AppendChild(Charts.PlotAreaGenerator.GeneratePlotArea(chartxl));
+
+            if (chartxl.ShowLegend)
+            {
+                DocumentFormat.OpenXml.Drawing.Charts.Legend legend = Charts.ChartGenerator.AddChartLegend();
+                chart.Append(legend);
+            }
+
+            DocumentFormat.OpenXml.Drawing.Charts.PlotVisibleOnly plotVisibleOnly = new DocumentFormat.OpenXml.Drawing.Charts.PlotVisibleOnly() { Val = false };
+            chart.Append(plotVisibleOnly);
+
+            if (!chartxl.Border)
+            {
+                DocumentFormat.OpenXml.Drawing.Charts.ShapeProperties sp = new DocumentFormat.OpenXml.Drawing.Charts.ShapeProperties();
+
+                Outline outline = new Outline();
+                NoFill noFill = new NoFill();
+                outline.Append(noFill);
+
+                sp.Append(outline);
+                chartPart.ChartSpace.Append(sp);
+            }
+
+            // Save the chart part.
+            chartPart.ChartSpace.Save();
+
+            return chartPart;
+        }
+
+        private static void AddChartAnchor(WorksheetPart worksheetPart, IXLChart xlChart, SaveContext context)
+        {
+            var chartxl = xlChart as XLChart;
+
+            DrawingsPart drawingsPart;
+            if (worksheetPart.DrawingsPart == null)
+                drawingsPart = worksheetPart.AddNewPart<DrawingsPart>(context.RelIdGenerator.GetNext(RelType.Workbook));
+            else
+                drawingsPart = worksheetPart.DrawingsPart;
+
+            if (drawingsPart.WorksheetDrawing == null)
+                drawingsPart.WorksheetDrawing = new Xdr.WorksheetDrawing();
+
+            var worksheetDrawing = drawingsPart.WorksheetDrawing;
+
+            // Add namespaces
+            if (!worksheetDrawing.NamespaceDeclarations.Any(nd => nd.Value.Equals("http://schemas.openxmlformats.org/drawingml/2006/main")))
+                worksheetDrawing.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+            if (!worksheetDrawing.NamespaceDeclarations.Any(nd => nd.Value.Equals("http://schemas.openxmlformats.org/officeDocument/2006/relationships")))
+                worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+            /////////
+
+            var chartPart = InsertChartPart(drawingsPart, chartxl, context);
+
+            Charts.ChartGenerator.SetPosition(worksheetPart, chartPart, chartxl);
+        }
+        
         private static void AddPictureAnchor(WorksheetPart worksheetPart, Drawings.IXLPicture picture, SaveContext context)
         {
             var pic = picture as Drawings.XLPicture;
@@ -5995,6 +6093,55 @@ namespace ClosedXML.Excel
             }
 
             #endregion Drawings
+                
+            #region Charts
+
+            foreach (var xlChart in xlWorksheet.Charts)
+            {
+                if (xlChart.ChartType == XLChartType.Pie)
+                {
+                    var series = xlChart.GetAllSeries();
+                    xlChart.DeleteSeries();
+                    xlChart.AddSeries(series[0]);
+                    AddChartAnchor(worksheetPart, xlChart, context);
+                    var chartToCopy = xlChart;
+                    for (int i = 1; i < series.Count(); i++)
+                    {
+                        var newChart = xlChart.CopyPieChart(chartToCopy);
+                        newChart.AddSeries(series[i]);
+                        AddChartAnchor(worksheetPart, newChart, context);
+                        chartToCopy = newChart;
+                    }
+                }
+                else
+                {
+                    AddChartAnchor(worksheetPart, xlChart, context);
+                }
+
+            }
+
+            if (xlWorksheet.Charts.Any())
+                RebaseNonVisualDrawingPropertiesIds(worksheetPart);
+
+            var tabeParts = worksheetPart.Worksheet.Elements<TableParts>().First();
+            if (xlWorksheet.Charts.Any() && !worksheetPart.Worksheet.OfType<Drawing>().Any())
+            {
+                var worksheetDrawing = new Drawing { Id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart) };
+                worksheetDrawing.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+                worksheetPart.Worksheet.InsertBefore(worksheetDrawing, tableParts);
+                cm.SetElement(XLWorksheetContents.Drawing, worksheetPart.Worksheet.Elements<Drawing>().First());
+            }
+
+            // Instead of saving a file with an empty Drawings.xml file, rather remove the .xml file
+            if (!xlWorksheet.Charts.Any() && worksheetPart.DrawingsPart != null
+                && !worksheetPart.DrawingsPart.Parts.Any())
+            {
+                var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
+                worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
+                worksheetPart.DeletePart(worksheetPart.DrawingsPart);
+            }
+
+            #endregion Charts
 
             #region LegacyDrawing
 
