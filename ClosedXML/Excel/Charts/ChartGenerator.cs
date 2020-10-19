@@ -263,6 +263,10 @@ namespace ClosedXML.Excel.Charts
             SeriesText seriesText = ChartPartGenerator.GenerateSeriesText(seriesData);
             pieSeries.Append(seriesText);
 
+            //User Color
+            if(seriesData.HexColor != null)
+                pieSeries.Append(ChartStyle.SetHexColor(seriesData.HexColor));
+
             //DataLabel
             DataLabels dataLabels = ChartPartGenerator.GenerateReferencedDataLables(seriesData);
             pieSeries.Append(dataLabels);
@@ -391,6 +395,10 @@ namespace ClosedXML.Excel.Charts
             SeriesText seriesText = ChartPartGenerator.GenerateSeriesText(seriesData);
             barChartSeries.Append(seriesText);
 
+            //User Color
+            if(seriesData.HexColor != null)
+                barChartSeries.Append(ChartStyle.SetHexColor(seriesData.HexColor));
+
             //TODO
             InvertIfNegative invertIfNegative = new InvertIfNegative { Val = false };
             barChartSeries.Append(invertIfNegative);
@@ -464,7 +472,7 @@ namespace ClosedXML.Excel.Charts
 
             var r = new Run();
             var rPr = new RunProperties() { Language = "de-DE" };
-            var t = new Text(chartXl.ChartType == XLChartType.Pie ? chartXl.GetSeries(0).SeriesName.Value : title);
+            var t = new Text(chartXl.ChartType == XLChartType.Pie ? title + "\n" + chartXl.GetSeries(0).SeriesName.Value : title);
             r.Append(rPr); r.Append(t);
 
             paragraph.Append(r);
@@ -542,6 +550,11 @@ namespace ClosedXML.Excel.Charts
         private static void AddColorFill(this OpenXmlElement element, ChartSeriesData seriesData)
         {
             SolidFill solidFill = new SolidFill();
+            if(seriesData.HexColor != null)
+            {
+                RgbColorModelHex rgbColorModelHex = new RgbColorModelHex() { Val = seriesData.HexColor };
+                solidFill.Append(rgbColorModelHex);
+            }
 
             ChartShapeProperties chartShapeProperties = new ChartShapeProperties();
 
