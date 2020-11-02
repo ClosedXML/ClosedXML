@@ -1,3 +1,4 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +11,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(CalcEngine ce)
         {
             ce.RegisterFunction("DATE", 3, Date); // Returns the serial number of a particular date
+            ce.RegisterFunction("DATEDIF", 3, Datedif); // Calculates the number of days, months, or years between two dates
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, Day); // Converts a serial number to a day of the month
             ce.RegisterFunction("DAYS", 2, Days); // Returns the number of days between two dates.
@@ -111,6 +113,44 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             return (int)Math.Floor(new DateTime(year, month, day).AddDays(daysAdjustment).ToOADate());
+        }
+
+        private static object Datedif(List<Expression> p)
+        {
+            DateTime startDate;
+            DateTime endDate;
+            var unit = (string)p[2];
+
+            if (p[0]._token.Value.GetType() == typeof(string))
+                startDate = DateTime.FromOADate((int)Datevalue(new List<Expression> { p[0] }));
+            else
+                startDate = DateTime.FromOADate(p[0]);
+
+            if (p[1]._token.Value.GetType() == typeof(string))
+                endDate = DateTime.FromOADate((int)Datevalue(new List<Expression> { p[1] }));
+            else
+                endDate = DateTime.FromOADate(p[1]);
+
+            if (startDate > endDate)
+                throw new NumberException();
+
+            switch (unit.ToUpper())
+            {
+                case "Y":
+                    return (new DateTime(1, 1, 1) + (endDate - startDate)).Year - 1;
+                case "M":
+                    return Math.Abs(endDate.Month - startDate.Month + 12 * (endDate.Year - startDate.Year));
+                case "D":
+                    return (int)Math.Abs((endDate - startDate).TotalDays);
+                case "MD":
+                    return (endDate.Day - startDate.Day);
+                case "YM":
+                    return (endDate.Month - startDate.Month);
+                case "YD":
+                    return (int)Math.Abs((new DateTime(startDate.Year, endDate.Month, endDate.Day) - startDate).TotalDays);
+                default:
+                    throw new NumberException();
+            }
         }
 
         private static object Datevalue(List<Expression> p)
