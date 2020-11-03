@@ -6,14 +6,9 @@
     <OutputType>Exe</OutputType>
     <Version>0.95.2</Version>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
-    <Configurations>Debug;Release;Release.Signed</Configurations>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
-    <OutputPath>bin\Release.Signed\</OutputPath>
+    <Configurations>Debug;Release</Configurations>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>$(DefineConstants);STRONGNAME</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">

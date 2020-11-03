@@ -6,21 +6,15 @@
     <Version>0.95.2</Version>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
-    <Configurations>Debug;Release;Release.Signed</Configurations>
+    <Configurations>Debug;Release;</Configurations>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <DefineConstants>$(AppVeyor)</DefineConstants>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
-    <OutputPath>bin\Release.Signed\</OutputPath>
-    <SignAssembly>true</SignAssembly>
-    <Optimize>true</Optimize>
-    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
-  </PropertyGroup>
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <DefineConstants>$(DefineConstants);_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
   </PropertyGroup>
