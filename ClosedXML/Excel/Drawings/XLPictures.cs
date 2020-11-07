@@ -74,7 +74,7 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Add(string imageFile)
         {
-            using (var fs = File.Open(imageFile, FileMode.Open))
+            using (var fs = File.OpenRead(imageFile))
             {
                 var picture = new XLPicture(_worksheet, fs);
                 _pictures.Add(picture);
