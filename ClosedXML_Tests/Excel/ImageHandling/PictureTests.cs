@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ClosedXML_Tests
 {
@@ -86,6 +87,54 @@ namespace ClosedXML_Tests
                 {
                     if (File.Exists(path))
                         File.Delete(path);
+                }
+            }
+        }
+
+        [Test]
+        public void CanAddPictureConcurrentlyFromFile()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var path = Path.ChangeExtension(Path.GetTempFileName(), "jpg");
+
+                try
+                {
+                    using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                    using (var fileStream = File.Create(path))
+                    {
+                        resourceStream.Seek(0, SeekOrigin.Begin);
+                        resourceStream.CopyTo(fileStream);
+                        fileStream.Close();
+                    }
+
+                    Parallel.Invoke(() =>
+                    {
+                        var picture1 = ws.AddPicture(path)
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(50, 50);
+
+                        Assert.AreEqual(XLPictureFormat.Jpeg, picture1.Format);
+                        Assert.AreEqual(400, picture1.Width);
+                        Assert.AreEqual(50, picture1.Top);
+                    }, () =>
+                    {
+                        var picture2 = ws.AddPicture(path)
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(100, 100);
+
+                        Assert.AreEqual(XLPictureFormat.Jpeg, picture2.Format);
+                        Assert.AreEqual(100, picture2.Top);
+                    });
+                }
+                finally
+                {
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
                 }
             }
         }
