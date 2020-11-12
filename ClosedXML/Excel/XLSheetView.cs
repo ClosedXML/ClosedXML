@@ -1,9 +1,12 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 
 namespace ClosedXML.Excel
 {
     internal class XLSheetView : IXLSheetView
     {
+        private int _zoomScale;
+
         public XLSheetView()
         {
             View = XLSheetViewOptions.Normal;
@@ -55,8 +58,6 @@ namespace ClosedXML.Excel
         public int ZoomScalePageLayoutView { get; set; }
 
         public int ZoomScaleSheetLayoutView { get; set; }
-
-        private int _zoomScale { get; set; }
 
         public void Freeze(Int32 rows, Int32 columns)
         {
