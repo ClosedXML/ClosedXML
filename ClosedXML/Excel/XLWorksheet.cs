@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
 
             Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(this);
-            SheetView = new XLSheetView();
+            SheetView = new XLSheetView(this);
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations(this);
@@ -602,7 +602,9 @@ namespace ClosedXML.Excel
             return NamedRanges.NamedRange(rangeName);
         }
 
-        public IXLSheetView SheetView { get; private set; }
+        IXLSheetView IXLWorksheet.SheetView { get => SheetView; }
+
+        public XLSheetView SheetView { get; private set; }
 
         public IXLTables Tables { get; private set; }
 
@@ -651,7 +653,7 @@ namespace ClosedXML.Excel
             (targetSheet.PageSetup.Header as XLHeaderFooter).Changed = true;
             (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
-            targetSheet.SheetView = new XLSheetView(SheetView);
+            targetSheet.SheetView = new XLSheetView(targetSheet, SheetView);
             targetSheet.SelectedRanges.RemoveAll();
 
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));

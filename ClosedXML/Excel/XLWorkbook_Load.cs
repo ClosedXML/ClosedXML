@@ -3016,6 +3016,9 @@ namespace ClosedXML.Excel
                 if (pane.VerticalSplit != null)
                     ws.SheetView.SplitRow = (Int32)pane.VerticalSplit.Value;
             }
+
+            if (XLHelper.IsValidA1Address(sheetView.TopLeftCell))
+                ws.SheetView.TopLeftCellAddress = ws.Cell(sheetView.TopLeftCell.Value).Address;
         }
 
         private void SetProperties(SpreadsheetDocument dSpreadsheet)

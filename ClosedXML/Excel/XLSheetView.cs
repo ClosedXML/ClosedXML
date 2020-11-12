@@ -5,10 +5,12 @@ namespace ClosedXML.Excel
 {
     internal class XLSheetView : IXLSheetView
     {
+        private XLAddress _topLeftCellAddress;
         private int _zoomScale;
 
-        public XLSheetView()
+        public XLSheetView(XLWorksheet worksheet)
         {
+            Worksheet = worksheet;
             View = XLSheetViewOptions.Normal;
 
             ZoomScale = 100;
@@ -17,18 +19,37 @@ namespace ClosedXML.Excel
             ZoomScaleSheetLayoutView = 100;
         }
 
-        public XLSheetView(IXLSheetView sheetView)
-            : this()
+        public XLSheetView(XLWorksheet worksheet, XLSheetView sheetView)
+            : this(worksheet)
         {
             this.SplitRow = sheetView.SplitRow;
             this.SplitColumn = sheetView.SplitColumn;
-            this.FreezePanes = ((XLSheetView)sheetView).FreezePanes;
+            this.FreezePanes = sheetView.FreezePanes;
+            this.TopLeftCellAddress = new XLAddress(this.Worksheet, sheetView.TopLeftCellAddress.RowNumber, sheetView.TopLeftCellAddress.ColumnNumber, sheetView.TopLeftCellAddress.FixedRow, sheetView.TopLeftCellAddress.FixedColumn);
         }
 
         public Boolean FreezePanes { get; set; }
         public Int32 SplitColumn { get; set; }
         public Int32 SplitRow { get; set; }
+
+        IXLAddress IXLSheetView.TopLeftCellAddress { get => TopLeftCellAddress; set => TopLeftCellAddress = (XLAddress)value; }
+
+        public XLAddress TopLeftCellAddress
+        {
+            get => _topLeftCellAddress;
+            set
+            {
+                if (value.HasWorksheet && !value.Worksheet.Equals(this.Worksheet))
+                    throw new ArgumentException($"The value should be on the same worksheet as the sheet view.");
+
+                _topLeftCellAddress = value;
+            }
+        }
+
         public XLSheetViewOptions View { get; set; }
+
+        IXLWorksheet IXLSheetView.Worksheet { get => Worksheet; }
+        public XLWorksheet Worksheet { get; internal set; }
 
         public int ZoomScale
         {
