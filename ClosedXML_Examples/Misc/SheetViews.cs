@@ -1,8 +1,4 @@
 using ClosedXML.Excel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML_Examples.Misc
 {
@@ -37,6 +33,9 @@ namespace ClosedXML_Examples.Misc
                 ws = wb.AddWorksheet("ZoomScaleTooBig");
                 ws.FirstCell().SetValue(ws.Name);
                 ws.SheetView.ZoomScale = 500;
+
+                ws = wb.AddWorksheet("TopLeftCell");
+                ws.SheetView.TopLeftCellAddress = ws.Cell("AZ2000").Address;
 
                 wb.SaveAs(filePath);
             }

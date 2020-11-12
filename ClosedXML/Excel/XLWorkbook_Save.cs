@@ -4773,12 +4773,18 @@ namespace ClosedXML.Excel
 
             if (hSplit == 0 && ySplit == 0)
             {
+                // We don't have a pane. Just a regular sheet.
                 pane = null;
                 sheetView.RemoveAllChildren<Pane>();
                 svcm.SetElement(XLSheetViewContents.Pane, null);
             }
-            else
+
+            // Do sheet view. Whether it's for a regular sheet or for the bottom-right pane
+            if (!xlWorksheet.SheetView.TopLeftCellAddress.IsValid
+                || xlWorksheet.SheetView.TopLeftCellAddress == new XLAddress(1, 1, fixedRow: false, fixedColumn: false))
                 sheetView.TopLeftCell = null;
+            else
+                sheetView.TopLeftCell = xlWorksheet.SheetView.TopLeftCellAddress.ToString();
 
             if (xlWorksheet.SelectedRanges.Any() || xlWorksheet.ActiveCell != null)
             {
