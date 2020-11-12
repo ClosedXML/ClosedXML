@@ -3009,15 +3009,13 @@ namespace ClosedXML.Excel
                 ws.SheetView.ZoomScaleSheetLayoutView = (int)UInt32Value.ToUInt32(sheetView.ZoomScaleSheetLayoutView);
 
             var pane = sheetView.Elements<Pane>().FirstOrDefault();
-            if (pane == null) return;
-
-            if (pane.State == null ||
-                (pane.State != PaneStateValues.FrozenSplit && pane.State != PaneStateValues.Frozen)) return;
-
-            if (pane.HorizontalSplit != null)
-                ws.SheetView.SplitColumn = (Int32)pane.HorizontalSplit.Value;
-            if (pane.VerticalSplit != null)
-                ws.SheetView.SplitRow = (Int32)pane.VerticalSplit.Value;
+            if (new[] { PaneStateValues.Frozen, PaneStateValues.FrozenSplit }.Contains(pane?.State?.Value ?? PaneStateValues.Split))
+            {
+                if (pane.HorizontalSplit != null)
+                    ws.SheetView.SplitColumn = (Int32)pane.HorizontalSplit.Value;
+                if (pane.VerticalSplit != null)
+                    ws.SheetView.SplitRow = (Int32)pane.VerticalSplit.Value;
+            }
         }
 
         private void SetProperties(SpreadsheetDocument dSpreadsheet)
