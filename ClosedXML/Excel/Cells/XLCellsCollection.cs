@@ -317,6 +317,9 @@ namespace ClosedXML.Excel
                     if (cell1 == null) cell1 = worksheet.Cell(sp1.Row, sp1.Column);
                     if (cell2 == null) cell2 = worksheet.Cell(sp2.Row, sp2.Column);
 
+                    var formula1 = cell1.HasFormula ? cell1.FormulaR1C1 : (string)null;
+                    var formula2 = cell2.HasFormula ? cell2.FormulaR1C1 : (string)null;
+
                     //if (cell1 != null)
                     //{
                     cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
@@ -331,6 +334,9 @@ namespace ClosedXML.Excel
                     Remove(sp2);
                     //if (cell1 != null)
                     Add(sp2, cell1);
+
+                    if (formula1 != null) cell1.FormulaR1C1 = formula1;
+                    if (formula2 != null) cell2.FormulaR1C1 = formula2;
                 }
             }
         }
