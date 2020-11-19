@@ -5,7 +5,7 @@
     <LangVersion>7.2</LangVersion>
     <AssemblyName>ClosedXML</AssemblyName>
     <PackageId>ClosedXML</PackageId>
-    <Version>0.95.2.1</Version>
+    <Version>0.95.3.1</Version>
     <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
     <Owners>Francois Botha, Aleksei Pankratev</Owners>
     <Company />
@@ -15,7 +15,7 @@
     <Copyright>MIT</Copyright>
     <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png</PackageIconUrl>
+    <!--<PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png</PackageIconUrl>-->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
