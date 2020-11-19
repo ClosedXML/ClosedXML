@@ -3020,6 +3020,8 @@ namespace ClosedXML.Excel
             Properties.Comments = p.Description;
             if (p.Created != null)
                 Properties.Created = p.Created.Value;
+            if (p.Modified != null)
+                Properties.Modified = p.Modified.Value;
             Properties.Keywords = p.Keywords;
             Properties.LastModifiedBy = p.LastModifiedBy;
             Properties.Status = p.ContentStatus;
