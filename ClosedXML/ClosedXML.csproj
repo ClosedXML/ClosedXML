@@ -5,7 +5,7 @@
     <LangVersion>7.2</LangVersion>
     <AssemblyName>ClosedXML</AssemblyName>
     <PackageId>ClosedXML</PackageId>
-    <Version>0.95.3.1</Version>
+    <Version>0.95.3.2</Version>
     <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
     <Owners>Francois Botha, Aleksei Pankratev</Owners>
     <Company />
