@@ -117,40 +117,27 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static object Datedif(List<Expression> p)
         {
-            DateTime startDate;
-            DateTime endDate;
-            var unit = (string)p[2];
-
-            if (p[0]._token.Value.GetType() == typeof(string))
-                startDate = DateTime.FromOADate((int)Datevalue(new List<Expression> { p[0] }));
-            else
-                startDate = DateTime.FromOADate(p[0]);
-
-            if (p[1]._token.Value.GetType() == typeof(string))
-                endDate = DateTime.FromOADate((int)Datevalue(new List<Expression> { p[1] }));
-            else
-                endDate = DateTime.FromOADate(p[1]);
+            DateTime startDate = p[0];
+            DateTime endDate = p[1];
+            string unit = p[2];
 
             if (startDate > endDate)
-                throw new NumberException();
+                throw new NumberException("The start date is greater than the end date");
 
-            switch (unit.ToUpper())
+            return (unit.ToUpper()) switch
             {
-                case "Y":
-                    return (new DateTime(1, 1, 1) + (endDate - startDate)).Year - 1;
-                case "M":
-                    return Math.Abs(endDate.Month - startDate.Month + 12 * (endDate.Year - startDate.Year));
-                case "D":
-                    return (int)Math.Abs((endDate - startDate).TotalDays);
-                case "MD":
-                    return (endDate.Day - startDate.Day);
-                case "YM":
-                    return (endDate.Month - startDate.Month);
-                case "YD":
-                    return (int)Math.Abs((new DateTime(startDate.Year, endDate.Month, endDate.Day) - startDate).TotalDays);
-                default:
-                    throw new NumberException();
-            }
+                "Y" => endDate.Year - startDate.Year - (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0),
+                "M" => Math.Truncate((endDate.Year - startDate.Year) * 12d + endDate.Month - startDate.Month - (endDate.Day < startDate.Day ? 1 : 0)),
+                "D" => Math.Truncate(endDate.Date.Subtract(startDate.Date).TotalDays),
+
+                // Microsoft discouranges the use of the MD parameter
+                // https://support.microsoft.com/en-us/office/datedif-function-25dba1a4-2812-480b-84dd-8b32a451b35c
+                "MD" => (endDate.Day - startDate.Day + DateTime.DaysInMonth(startDate.Year, startDate.Month)) % DateTime.DaysInMonth(startDate.Year, startDate.Month),
+
+                "YM" => (endDate.Month - startDate.Month + 12) % 12 - (endDate.Day < startDate.Day ? 1 : 0),
+                "YD" => Math.Truncate(new DateTime(startDate.Year + (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0), endDate.Month, endDate.Day).Subtract(startDate).TotalDays),
+                _ => throw new NumberException(),
+            };
         }
 
         private static object Datevalue(List<Expression> p)

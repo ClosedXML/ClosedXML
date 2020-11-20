@@ -1,10 +1,9 @@
+using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
+using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.Threading;
-using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel.DataValidations
 {
@@ -44,55 +43,42 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Assert.AreEqual(39752, actual);
         }
 
-        [Test]
-        public void Datedif()
+        [TestCase("1/1/2006", "12/12/2010", "Y", ExpectedResult = 4)]
+        [TestCase("1/1/2006", "12/12/2010", "M", ExpectedResult = 59)]
+        [TestCase("1/1/2006", "12/12/2010", "D", ExpectedResult = 1806)]
+        [TestCase("1/1/2006", "12/12/2010", "MD", ExpectedResult = 11)]
+        [TestCase("1/1/2006", "12/12/2010", "YM", ExpectedResult = 11)]
+        [TestCase("1/1/2006", "12/12/2010", "YD", ExpectedResult = 345)]
+        [TestCase(38718, 40524, "Y", ExpectedResult = 4)]
+        [TestCase(38718, 40524, "M", ExpectedResult = 59)]
+        [TestCase(38718, 40524, "D", ExpectedResult = 1806)]
+        [TestCase(38718, 40524, "MD", ExpectedResult = 11)]
+        [TestCase(38718, 40524, "YM", ExpectedResult = 11)]
+        [TestCase(38718, 40524, "YD", ExpectedResult = 345)]
+        [TestCase("2001-12-31", "2002-4-15", "YM", ExpectedResult = 3)]
+        [TestCase("2001-12-10", "2002-4-15", "YM", ExpectedResult = 4)]
+        [TestCase("2001-12-15", "2002-4-15", "YM", ExpectedResult = 4)]
+        [TestCase("2001-12-31", "2002-4-15", "YD", ExpectedResult = 105)]
+        [TestCase("2001-12-31", "2003-4-15", "YD", ExpectedResult = 105)]
+        [TestCase("2002-01-31", "2002-4-15", "YD", ExpectedResult = 74)]
+        [TestCase("2001-12-02", "2001-12-15", "Y", ExpectedResult = 0)]
+        [TestCase("2001-12-02", "2002-12-02", "Y", ExpectedResult = 1)]
+        [TestCase("2006-01-15", "2006-03-14", "M", ExpectedResult = 1)]
+        [TestCase("2020-11-22", "2020-11-23 9:00", "D", ExpectedResult = 1)]
+        public double Datedif(object startDate, object endDate, string unit)
         {
-            Object actual;
+            if (startDate is string s1) startDate = $"\"{s1}\"";
+            if (endDate is string s2) endDate = $"\"{s2}\"";
+            return (double)XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")");
+        }
 
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\", \"Y\")");
-            Assert.AreEqual(4, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524, \"Y\")");
-            Assert.AreEqual(4, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\", \"M\")");
-            Assert.AreEqual(59, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524, \"M\")");
-            Assert.AreEqual(59, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\", \"D\")");
-            Assert.AreEqual(1806, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524, \"D\")");
-            Assert.AreEqual(1806, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\", \"MD\")");
-            Assert.AreEqual(11, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524, \"MD\")");
-            Assert.AreEqual(11, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\", \"YM\")");
-            Assert.AreEqual(11, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524, \"YM\")");
-            Assert.AreEqual(11, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\", \"YD\")");
-            Assert.AreEqual(345, actual);
-
-            actual = XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524, \"YD\")");
-            Assert.AreEqual(345, actual);
-
-            Assert.Throws(typeof(NumberException), () => XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2010\", \"12/12/2006\", \"Y\")"));
-            Assert.Throws(typeof(NumberException), () => XLWorkbook.EvaluateExpr("DATEDIF(40524, 38718, \"Y\")"));
-
-            Assert.Throws(typeof(NumberException), () => XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\", \"N\")"));
-            Assert.Throws(typeof(NumberException), () => XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524, \"N\")"));
-
-            Assert.Throws(typeof(ExpressionParseException), () => XLWorkbook.EvaluateExpr("DATEDIF(\"1/1/2006\", \"12/12/2010\")"));
-            Assert.Throws(typeof(ExpressionParseException), () => XLWorkbook.EvaluateExpr("DATEDIF(38718, 40524"));
+        [TestCase("\"1/1/2010\"", "\"12/12/2006\"", "Y")]
+        [TestCase(40524, 38718, "Y")]
+        [TestCase("\"1/1/2006\"", "\"12/12/2010\"", "N")]
+        [TestCase(38718, 40524, "N")]
+        public void DatedifExceptions(object startDate, object endDate, string unit)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")"));
         }
 
         [Test]
@@ -480,7 +466,6 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Object actual = ws.Evaluate("Workday(A2,A3,A4:A6)");
             Assert.AreEqual(new DateTime(2009, 5, 5), actual);
         }
-
 
         [Test]
         public void Workdays_NoHolidaysGiven()
