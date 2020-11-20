@@ -1,11 +1,9 @@
-using System;
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
+using System;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
-
     [TestFixture]
     public class FunctionsTests
     {
@@ -180,7 +178,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
 
-
             Object actual;
 
             ws.Cell("A5").FormulaA1 = "MDeterm(A1:B2)";
@@ -206,7 +203,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             ws.Cell("A1").SetValue(1).CellRight().SetValue(2).CellRight().SetValue(1);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
             ws.Cell("A3").SetValue(0).CellRight().SetValue(2).CellRight().SetValue(0);
-
 
             Object actual;
 
@@ -251,46 +247,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             actual = ws.Cell("A7").Value;
 
             Assert.AreEqual(102.0, actual);
-        }
-
-        [Test]
-        public void MRound()
-        {
-            object actual = XLWorkbook.EvaluateExpr("MRound(10, 3)");
-            Assert.AreEqual(9m, actual);
-
-            object actual3 = XLWorkbook.EvaluateExpr("MRound(10.5, 3)");
-            Assert.AreEqual(12m, actual3);
-
-            object actual4 = XLWorkbook.EvaluateExpr("MRound(10.4, 3)");
-            Assert.AreEqual(9m, actual4);
-
-            object actual1 = XLWorkbook.EvaluateExpr("MRound(-10, -3)");
-            Assert.AreEqual(-9m, actual1);
-
-            object actual2 = XLWorkbook.EvaluateExpr("MRound(1.3, 0.2)");
-            Assert.AreEqual(1.4m, actual2);
-
-            Assert.AreEqual(5680m, XLWorkbook.EvaluateExpr("MRound(5677.912288, 10)"));
-            Assert.AreEqual(5670m, XLWorkbook.EvaluateExpr("MRound(5674.912288, 10)"));
-
-            Assert.AreEqual(1m, XLWorkbook.EvaluateExpr("MRound(0.5, 1)"));
-            Assert.AreEqual(0m, XLWorkbook.EvaluateExpr("MRound(0.49999, 1)"));
-
-            Assert.AreEqual(1m, XLWorkbook.EvaluateExpr("MRound(0.5, 1)"));
-            Assert.AreEqual(0m, XLWorkbook.EvaluateExpr("MRound(0.49999, 1)"));
-
-            Assert.AreEqual(1m, XLWorkbook.EvaluateExpr("MRound(0.5, 1)"));
-            Assert.AreEqual(0m, XLWorkbook.EvaluateExpr("MRound(0.49999, 1)"));
-
-            Assert.AreEqual(-12m, XLWorkbook.EvaluateExpr("MRound(-13.4, -3)"));
-            Assert.AreEqual(-15m, XLWorkbook.EvaluateExpr("MRound(-13.5, -3)"));
-
-            Assert.AreEqual(1m, XLWorkbook.EvaluateExpr("MRound(0.9, 0.2)"));
-            Assert.AreEqual(0.8m, XLWorkbook.EvaluateExpr("MRound(0.89999, 0.2)"));
-
-            Assert.AreEqual(15m, XLWorkbook.EvaluateExpr("MRound(15.5, 3)"));
-            Assert.AreEqual(1.5m, XLWorkbook.EvaluateExpr("MRound(1.4, 0.5)"));
         }
 
         [Test]
