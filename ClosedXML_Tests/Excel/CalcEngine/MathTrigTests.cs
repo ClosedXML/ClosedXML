@@ -1042,6 +1042,30 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(0.7, actual, tolerance);
         }
 
+        [TestCase(10, 3, ExpectedResult = 9.0)]
+        [TestCase(10.5, 3, ExpectedResult = 12.0)]
+        [TestCase(10.4, 3, ExpectedResult = 9.0)]
+        [TestCase(-10, -3, ExpectedResult = -9.0)]
+        [TestCase(1.3, 0.2, ExpectedResult = 1.4)]
+        [TestCase(5677.912288, 10, ExpectedResult = 5680.0)]
+        [TestCase(5674.912288, 10, ExpectedResult = 5670.0)]
+        [TestCase(0.5, 1, ExpectedResult = 1.0)]
+        [TestCase(0.49999, 1, ExpectedResult = 0.0)]
+        [TestCase(0.5, 1, ExpectedResult = 1.0)]
+        [TestCase(0.49999, 1, ExpectedResult = 0.0)]
+        [TestCase(0.5, 1, ExpectedResult = 1.0)]
+        [TestCase(0.49999, 1, ExpectedResult = 0.0)]
+        [TestCase(-13.4, -3, ExpectedResult = -12.0)]
+        [TestCase(-13.5, -3, ExpectedResult = -15.0)]
+        [TestCase(0.9, 0.2, ExpectedResult = 1.0)]
+        [TestCase(0.89999, 0.2, ExpectedResult = 0.8)]
+        [TestCase(15.5, 3, ExpectedResult = 15.0)]
+        [TestCase(1.4, 0.5, ExpectedResult = 1.5)]
+        public decimal MRound(double number, double multiple)
+        {
+            return (decimal)XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})");
+        }
+
         [TestCase(0, 1)]
         [TestCase(0.3, 1.0467516)]
         [TestCase(0.6, 1.21162831)]
