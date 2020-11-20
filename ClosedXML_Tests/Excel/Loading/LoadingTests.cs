@@ -484,5 +484,63 @@ namespace ClosedXML_Tests.Excel
                 Assert.AreEqual(XLPredefinedFormat.General, ws.Cell("A2").Style.NumberFormat.NumberFormatId);
             }
         }
+
+        [Test]
+        public void CanLoadProperties()
+        {
+            const string author = "TestAuthor";
+            const string title = "TestTitle";
+            const string subject = "TestSubject";
+            const string category = "TestCategory";
+            const string keywords = "TestKeywords";
+            const string comments = "TestComments";
+            const string status = "TestStatus";
+            var created = new DateTime(2019, 10, 19, 20, 42, 30);
+            var modified = new DateTime(2020, 11, 20, 09, 51, 20);
+            const string lastModifiedBy = "TestLastModifiedBy";
+            const string company = "TestCompany";
+            const string manager = "TestManager";
+
+            using (var stream = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook ())
+                {
+                    var sheet = wb.AddWorksheet("sheet1");
+
+                    wb.Properties.Author = author;
+                    wb.Properties.Title = title;
+                    wb.Properties.Subject = subject;
+                    wb.Properties.Category = category;
+                    wb.Properties.Keywords = keywords;
+                    wb.Properties.Comments = comments;
+                    wb.Properties.Status = status;
+                    wb.Properties.Created = created;
+                    wb.Properties.Modified = modified;
+                    wb.Properties.LastModifiedBy = lastModifiedBy;
+                    wb.Properties.Company = company;
+                    wb.Properties.Manager = manager;
+
+                    wb.SaveAs (stream, true);
+                }
+
+                stream.Position = 0;
+
+                using (var wb = new XLWorkbook(stream))
+                {
+                    Assert.AreEqual (author, wb.Properties.Author);
+                    Assert.AreEqual (title, wb.Properties.Title);
+                    Assert.AreEqual (subject, wb.Properties.Subject);
+                    Assert.AreEqual (category, wb.Properties.Category);
+                    Assert.AreEqual (keywords, wb.Properties.Keywords);
+                    Assert.AreEqual (comments, wb.Properties.Comments);
+                    Assert.AreEqual (status, wb.Properties.Status);
+                    Assert.AreEqual (created, wb.Properties.Created);
+                    Assert.AreEqual (modified, wb.Properties.Modified);
+                    Assert.AreEqual (lastModifiedBy, wb.Properties.LastModifiedBy);
+                    Assert.AreEqual (company, wb.Properties.Company);
+                    Assert.AreEqual (manager, wb.Properties.Manager);
+                }
+            }
+        }
     }
 }
