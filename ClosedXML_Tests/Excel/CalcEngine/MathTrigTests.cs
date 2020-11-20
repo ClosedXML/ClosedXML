@@ -1061,9 +1061,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         [TestCase(0.89999, 0.2, ExpectedResult = 0.8)]
         [TestCase(15.5, 3, ExpectedResult = 15.0)]
         [TestCase(1.4, 0.5, ExpectedResult = 1.5)]
-        public decimal MRound(double number, double multiple)
+        [DefaultFloatingPointTolerance(1e-12)]
+        public double MRound(double number, double multiple)
         {
-            return (decimal)XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})");
+            return (double)XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})");
         }
 
         [TestCase(0, 1)]
