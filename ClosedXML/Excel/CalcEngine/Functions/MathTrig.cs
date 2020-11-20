@@ -763,8 +763,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MRound(List<Expression> p)
         {
-            var n = (Decimal)(Double)p[0];
-            var k = (Decimal)(Double)p[1];
+            var n = (Double)p[0];
+            var k = (Double)p[1];
 
             return Math.Round(n / k, MidpointRounding.AwayFromZero) * k;
         }
