@@ -192,6 +192,31 @@ namespace ClosedXML_Tests.Excel.Comments
         }
 
         [Test]
+        public void CanDeleteFormattedNote ()
+        {
+            using (var stream = TestHelper.GetStreamFromResource (TestHelper.GetResourcePath (@"TryToLoad\CommentFormatted.xlsx")))
+            using (var wb = new XLWorkbook (stream))
+            {
+                var ws = wb.Worksheets.First ();
+
+                var cellsWithComments = ws.CellsUsed (XLCellsUsedOptions.Comments).ToArray ();
+
+                Assert.That (cellsWithComments.Length, Is.EqualTo (2));
+
+                Assert.That (cellsWithComments[0].Comment.Text, Is.EqualTo (@"normal Note"));
+                Assert.That (cellsWithComments[1].Comment.Text, Is.EqualTo ("Author:\r\nboldAndUnderlinenormal bold italic normal"));
+
+                cellsWithComments[0].Clear (XLClearOptions.Comments);
+                cellsWithComments[1].Clear (XLClearOptions.Comments);
+
+                cellsWithComments = ws.CellsUsed (XLCellsUsedOptions.Comments).ToArray ();
+                // TODO: this breaks when it should not
+                Assert.That (cellsWithComments.Length, Is.EqualTo (0));
+
+            }
+        }
+
+        [Test]
         public void CanReadThreadedCommentNote ()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\ThreadedComment.xlsx")))
