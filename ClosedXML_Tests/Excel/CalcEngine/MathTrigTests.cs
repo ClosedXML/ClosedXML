@@ -1067,6 +1067,13 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             return (double)XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})");
         }
 
+        [TestCase(123456.123, -10)]
+        [TestCase(-123456.123, 5)]
+        public void MRoundExceptions(double number, double multiple)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})"));
+        }
+
         [TestCase(0, 1)]
         [TestCase(0.3, 1.0467516)]
         [TestCase(0.6, 1.21162831)]
