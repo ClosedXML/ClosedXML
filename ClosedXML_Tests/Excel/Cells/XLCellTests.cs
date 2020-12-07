@@ -261,7 +261,7 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
-            cell.Comment.AddText ("comment");
+            cell.Comment.AddText("comment");
             bool actual = cell.IsEmpty();
             bool expected = false;
             Assert.AreEqual(expected, actual);
@@ -272,8 +272,8 @@ namespace ClosedXML_Tests
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
-            cell.Comment.AddText ("comment");
-            cell.SetValue ("value");
+            cell.Comment.AddText("comment");
+            cell.SetValue("value");
 
             bool actual = cell.IsEmpty();
             bool expected = false;
@@ -281,17 +281,17 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        [TestCase (XLCellsUsedOptions.Contents, true)]
-        [TestCase (XLCellsUsedOptions.DataType, true)]
-        [TestCase (XLCellsUsedOptions.NormalFormats, true)]
-        [TestCase (XLCellsUsedOptions.ConditionalFormats, true)]
-        [TestCase (XLCellsUsedOptions.Comments, false)]
-        [TestCase (XLCellsUsedOptions.DataValidation, true)]
-        [TestCase (XLCellsUsedOptions.MergedRanges, true)]
-        [TestCase (XLCellsUsedOptions.Sparklines, true)]
-        [TestCase (XLCellsUsedOptions.AllFormats, true)]
-        [TestCase (XLCellsUsedOptions.AllContents, false)]
-        [TestCase (XLCellsUsedOptions.All, false)]
+        [TestCase(XLCellsUsedOptions.Contents, true)]
+        [TestCase(XLCellsUsedOptions.DataType, true)]
+        [TestCase(XLCellsUsedOptions.NormalFormats, true)]
+        [TestCase(XLCellsUsedOptions.ConditionalFormats, true)]
+        [TestCase(XLCellsUsedOptions.Comments, false)]
+        [TestCase(XLCellsUsedOptions.DataValidation, true)]
+        [TestCase(XLCellsUsedOptions.MergedRanges, true)]
+        [TestCase(XLCellsUsedOptions.Sparklines, true)]
+        [TestCase(XLCellsUsedOptions.AllFormats, true)]
+        [TestCase(XLCellsUsedOptions.AllContents, false)]
+        [TestCase(XLCellsUsedOptions.All, false)]
         public void IsEmpty_Comment_Options(XLCellsUsedOptions options, bool expected)
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -304,23 +304,118 @@ namespace ClosedXML_Tests
         }
 
         [Test]
-        [TestCase (XLCellsUsedOptions.Contents, false)]
-        [TestCase (XLCellsUsedOptions.DataType, true)]
-        [TestCase (XLCellsUsedOptions.NormalFormats, true)]
-        [TestCase (XLCellsUsedOptions.ConditionalFormats, true)]
-        [TestCase (XLCellsUsedOptions.Comments, false)]
-        [TestCase (XLCellsUsedOptions.DataValidation, true)]
-        [TestCase (XLCellsUsedOptions.MergedRanges, true)]
-        [TestCase (XLCellsUsedOptions.Sparklines, true)]
-        [TestCase (XLCellsUsedOptions.AllFormats, true)]
-        [TestCase (XLCellsUsedOptions.AllContents, false)]
-        [TestCase (XLCellsUsedOptions.All, false)]
+        [TestCase(XLCellsUsedOptions.Contents, false)]
+        [TestCase(XLCellsUsedOptions.DataType, true)]
+        [TestCase(XLCellsUsedOptions.NormalFormats, true)]
+        [TestCase(XLCellsUsedOptions.ConditionalFormats, true)]
+        [TestCase(XLCellsUsedOptions.Comments, false)]
+        [TestCase(XLCellsUsedOptions.DataValidation, true)]
+        [TestCase(XLCellsUsedOptions.MergedRanges, true)]
+        [TestCase(XLCellsUsedOptions.Sparklines, true)]
+        [TestCase(XLCellsUsedOptions.AllFormats, true)]
+        [TestCase(XLCellsUsedOptions.AllContents, false)]
+        [TestCase(XLCellsUsedOptions.All, false)]
         public void IsEmpty_Comment_Options_Value(XLCellsUsedOptions options, bool expected) // see #1575
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Comment.AddText("comment");
-            cell.SetValue ("value");
+            cell.SetValue("value");
+
+            bool actual = cell.IsEmpty(options);
+
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [Test]
+        public void IsEmpty_DataType()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.DataType = XLDataType.Boolean;
+            bool actual = cell.IsEmpty();
+            bool expected = false;
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [Test]
+        public void IsEmpty_DataType_Text()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.DataType = XLDataType.Text;
+            bool actual = cell.IsEmpty();
+            bool expected = true;
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [Test]
+        public void IsEmpty_DataType_Value()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.DataType = XLDataType.Number;
+            cell.SetValue(42);
+
+            bool actual = cell.IsEmpty();
+            bool expected = false;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void IsEmpty_DataType_Text_Value()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.DataType = XLDataType.Text;
+            cell.SetValue("value");
+
+            bool actual = cell.IsEmpty();
+            bool expected = false;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        [TestCase(XLCellsUsedOptions.Contents, true)]
+        [TestCase(XLCellsUsedOptions.DataType, false)]
+        [TestCase(XLCellsUsedOptions.NormalFormats, true)]
+        [TestCase(XLCellsUsedOptions.ConditionalFormats, true)]
+        [TestCase(XLCellsUsedOptions.Comments, true)]
+        [TestCase(XLCellsUsedOptions.DataValidation, true)]
+        [TestCase(XLCellsUsedOptions.MergedRanges, true)]
+        [TestCase(XLCellsUsedOptions.Sparklines, true)]
+        [TestCase(XLCellsUsedOptions.AllFormats, true)]
+        [TestCase(XLCellsUsedOptions.AllContents, false)]
+        [TestCase(XLCellsUsedOptions.All, false)]
+        public void IsEmpty_DataType_Options(XLCellsUsedOptions options, bool expected)
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.DataType = XLDataType.Number;
+
+            bool actual = cell.IsEmpty(options);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        [TestCase(XLCellsUsedOptions.Contents, false)]
+        [TestCase(XLCellsUsedOptions.DataType, false)]
+        [TestCase(XLCellsUsedOptions.NormalFormats, true)]
+        [TestCase(XLCellsUsedOptions.ConditionalFormats, true)]
+        [TestCase(XLCellsUsedOptions.Comments, false)]
+        [TestCase(XLCellsUsedOptions.DataValidation, true)]
+        [TestCase(XLCellsUsedOptions.MergedRanges, true)]
+        [TestCase(XLCellsUsedOptions.Sparklines, true)]
+        [TestCase(XLCellsUsedOptions.AllFormats, true)]
+        [TestCase(XLCellsUsedOptions.AllContents, false)]
+        [TestCase(XLCellsUsedOptions.All, false)]
+        public void IsEmpty_DataType_Options_Value(XLCellsUsedOptions options, bool expected) // see #1575
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            IXLCell cell = ws.Cell(1, 1);
+            cell.DataType = XLDataType.Number;
+            cell.SetValue(42);
 
             bool actual = cell.IsEmpty(options);
 

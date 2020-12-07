@@ -1560,6 +1560,9 @@ namespace ClosedXML.Excel
             if (options.HasFlag(XLCellsUsedOptions.Sparklines) && HasSparkline)
                 return false;
 
+            if (options.HasFlag(XLCellsUsedOptions.DataType) && DataType != XLDataType.Text)
+                return false;
+
             return true;
         }
 
