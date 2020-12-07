@@ -403,7 +403,7 @@ namespace ClosedXML_Tests
         [TestCase(XLCellsUsedOptions.DataType, false)]
         [TestCase(XLCellsUsedOptions.NormalFormats, true)]
         [TestCase(XLCellsUsedOptions.ConditionalFormats, true)]
-        [TestCase(XLCellsUsedOptions.Comments, false)]
+        [TestCase(XLCellsUsedOptions.Comments, true)]
         [TestCase(XLCellsUsedOptions.DataValidation, true)]
         [TestCase(XLCellsUsedOptions.MergedRanges, true)]
         [TestCase(XLCellsUsedOptions.Sparklines, true)]
