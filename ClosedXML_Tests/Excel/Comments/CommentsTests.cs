@@ -192,6 +192,63 @@ namespace ClosedXML_Tests.Excel.Comments
         }
 
         [Test]
+        public void CanRemoveCommentsWithoutAddingOthers() // see #1575
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.AddWorksheet("sheet1");
+
+                    //guard
+                    var cellsWithComments1 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+                    Assert.That(cellsWithComments1, Is.Empty);
+
+                    var a1 = sheet.Cell("A1");
+                    var b5 = sheet.Cell("B5");
+
+                    a1.SetValue("test a1");
+                    b5.SetValue("test b5");
+
+                    var cellsWithComments2 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+                    Assert.That(cellsWithComments2, Is.Empty);
+
+                    a1.Comment.AddText("no comment");
+
+                    //guard
+                    var cellsWithComments3 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+                    Assert.That(cellsWithComments3.Length, Is.EqualTo(1));
+
+                    wb.SaveAs(ms, true);
+                }
+
+                ms.Position = 0;
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var cellsWithComments = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+
+                    Assert.That(cellsWithComments.Length, Is.EqualTo(1));
+
+                    // act
+                    cellsWithComments.ForEach(_ => _.Clear(XLClearOptions.Comments));
+
+                    wb.Save();
+                }
+
+                ms.Position = 0;
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    // assert
+                    var cellsWithComments = wb.Worksheets.SelectMany(_ => _.Cells(true, XLCellsUsedOptions.Comments)).ToArray();
+
+                    Assert.That(cellsWithComments, Is.Empty);
+                }
+            }
+        }
+
+        [Test]
         public void CanDeleteFormattedNote ()
         {
             using (var stream = TestHelper.GetStreamFromResource (TestHelper.GetResourcePath (@"TryToLoad\CommentFormatted.xlsx")))
