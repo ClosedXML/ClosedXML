@@ -1,8 +1,9 @@
+using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
+using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.Threading;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests.Excel.DataValidations
 {
@@ -40,6 +41,44 @@ namespace ClosedXML_Tests.Excel.DataValidations
 
             actual = XLWorkbook.EvaluateExpr("Date(2008, 15, -120)");
             Assert.AreEqual(39752, actual);
+        }
+
+        [TestCase("1/1/2006", "12/12/2010", "Y", ExpectedResult = 4)]
+        [TestCase("1/1/2006", "12/12/2010", "M", ExpectedResult = 59)]
+        [TestCase("1/1/2006", "12/12/2010", "D", ExpectedResult = 1806)]
+        [TestCase("1/1/2006", "12/12/2010", "MD", ExpectedResult = 11)]
+        [TestCase("1/1/2006", "12/12/2010", "YM", ExpectedResult = 11)]
+        [TestCase("1/1/2006", "12/12/2010", "YD", ExpectedResult = 345)]
+        [TestCase(38718, 40524, "Y", ExpectedResult = 4)]
+        [TestCase(38718, 40524, "M", ExpectedResult = 59)]
+        [TestCase(38718, 40524, "D", ExpectedResult = 1806)]
+        [TestCase(38718, 40524, "MD", ExpectedResult = 11)]
+        [TestCase(38718, 40524, "YM", ExpectedResult = 11)]
+        [TestCase(38718, 40524, "YD", ExpectedResult = 345)]
+        [TestCase("2001-12-31", "2002-4-15", "YM", ExpectedResult = 3)]
+        [TestCase("2001-12-10", "2002-4-15", "YM", ExpectedResult = 4)]
+        [TestCase("2001-12-15", "2002-4-15", "YM", ExpectedResult = 4)]
+        [TestCase("2001-12-31", "2002-4-15", "YD", ExpectedResult = 105)]
+        [TestCase("2001-12-31", "2003-4-15", "YD", ExpectedResult = 105)]
+        [TestCase("2002-01-31", "2002-4-15", "YD", ExpectedResult = 74)]
+        [TestCase("2001-12-02", "2001-12-15", "Y", ExpectedResult = 0)]
+        [TestCase("2001-12-02", "2002-12-02", "Y", ExpectedResult = 1)]
+        [TestCase("2006-01-15", "2006-03-14", "M", ExpectedResult = 1)]
+        [TestCase("2020-11-22", "2020-11-23 9:00", "D", ExpectedResult = 1)]
+        public double Datedif(object startDate, object endDate, string unit)
+        {
+            if (startDate is string s1) startDate = $"\"{s1}\"";
+            if (endDate is string s2) endDate = $"\"{s2}\"";
+            return (double)XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")");
+        }
+
+        [TestCase("\"1/1/2010\"", "\"12/12/2006\"", "Y")]
+        [TestCase(40524, 38718, "Y")]
+        [TestCase("\"1/1/2006\"", "\"12/12/2010\"", "N")]
+        [TestCase(38718, 40524, "N")]
+        public void DatedifExceptions(object startDate, object endDate, string unit)
+        {
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")"));
         }
 
         [Test]
@@ -241,14 +280,14 @@ namespace ClosedXML_Tests.Excel.DataValidations
         public void TimeValue1()
         {
             Object actual = XLWorkbook.EvaluateExpr("TimeValue(\"2:24 AM\")");
-            Assert.IsTrue(XLHelper.AreEqual(0.1, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.1, (double)actual));
         }
 
         [Test]
         public void TimeValue2()
         {
             Object actual = XLWorkbook.EvaluateExpr("TimeValue(\"22-Aug-2008 6:35 AM\")");
-            Assert.IsTrue(XLHelper.AreEqual(0.27430555555555558, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.27430555555555558, (double)actual));
         }
 
         [Test]
@@ -428,7 +467,6 @@ namespace ClosedXML_Tests.Excel.DataValidations
             Assert.AreEqual(new DateTime(2009, 5, 5), actual);
         }
 
-
         [Test]
         public void Workdays_NoHolidaysGiven()
         {
@@ -457,70 +495,70 @@ namespace ClosedXML_Tests.Excel.DataValidations
         public void Yearfrac_1_base0()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",0)");
-            Assert.IsTrue(XLHelper.AreEqual(0.25, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
         }
 
         [Test]
         public void Yearfrac_1_base1()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",1)");
-            Assert.IsTrue(XLHelper.AreEqual(0.24590163934426229, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.24590163934426229, (double)actual));
         }
 
         [Test]
         public void Yearfrac_1_base2()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",2)");
-            Assert.IsTrue(XLHelper.AreEqual(0.25, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.25, (double)actual));
         }
 
         [Test]
         public void Yearfrac_1_base3()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",3)");
-            Assert.IsTrue(XLHelper.AreEqual(0.24657534246575341, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.24657534246575341, (double)actual));
         }
 
         [Test]
         public void Yearfrac_1_base4()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2008\",4)");
-            Assert.IsTrue(XLHelper.AreEqual(0.24722222222222223, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(0.24722222222222223, (double)actual));
         }
 
         [Test]
         public void Yearfrac_2_base0()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",0)");
-            Assert.IsTrue(XLHelper.AreEqual(5.25, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(5.25, (double)actual));
         }
 
         [Test]
         public void Yearfrac_2_base1()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",1)");
-            Assert.IsTrue(XLHelper.AreEqual(5.24452554744526, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(5.24452554744526, (double)actual));
         }
 
         [Test]
         public void Yearfrac_2_base2()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",2)");
-            Assert.IsTrue(XLHelper.AreEqual(5.32222222222222, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(5.32222222222222, (double)actual));
         }
 
         [Test]
         public void Yearfrac_2_base3()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",3)");
-            Assert.IsTrue(XLHelper.AreEqual(5.24931506849315, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(5.24931506849315, (double)actual));
         }
 
         [Test]
         public void Yearfrac_2_base4()
         {
             Object actual = XLWorkbook.EvaluateExpr("Yearfrac(\"1/1/2008\", \"3/31/2013\",4)");
-            Assert.IsTrue(XLHelper.AreEqual(5.24722222222222, (double) actual));
+            Assert.IsTrue(XLHelper.AreEqual(5.24722222222222, (double)actual));
         }
     }
 }
