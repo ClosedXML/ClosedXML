@@ -385,7 +385,7 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
-        
+
         [Test]
         public void SaveAsWithNoExtensionFails()
         {
@@ -720,7 +720,6 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 Assert.DoesNotThrow(() => wb.SaveAs(ms));
 
-
                 ws.Column(1).InsertColumnsBefore(1);
                 dv = ws.DataValidations.ToArray();
                 Assert.AreEqual(1, dv.Length);
@@ -728,6 +727,18 @@ namespace ClosedXML_Tests.Excel.Saving
 
                 Assert.DoesNotThrow(() => wb.SaveAs(ms));
             }
+        }
+
+        // https://github.com/ClosedXML/ClosedXML/issues/1606
+        [Test]
+        public void CanSaveGSheetsFileWithNewComment()
+        {
+            using var ms = new MemoryStream();
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\GoogleSheets\file1.xlsx"));
+            using var wb = new XLWorkbook(stream);
+            var ws = wb.Worksheets.First();
+            ws.Cell(1, 1).Comment.AddText("Test");
+            Assert.DoesNotThrow(() => wb.SaveAs(ms));
         }
     }
 }
