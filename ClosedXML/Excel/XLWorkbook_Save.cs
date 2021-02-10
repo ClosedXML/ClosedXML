@@ -5994,6 +5994,7 @@ namespace ClosedXML.Excel
                 var id = worksheetPart.GetIdOfPart(worksheetPart.DrawingsPart);
                 worksheetPart.Worksheet.RemoveChild(worksheetPart.Worksheet.OfType<Drawing>().FirstOrDefault(p => p.Id == id));
                 worksheetPart.DeletePart(worksheetPart.DrawingsPart);
+                cm.SetElement(XLWorksheetContents.Drawing, null);
             }
 
             #endregion Drawings
