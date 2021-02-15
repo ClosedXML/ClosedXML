@@ -92,6 +92,12 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Concat_EmptyValue()
+        {
+            Assert.AreEqual("ABC123", XLWorkbook.EvaluateExpr(@"CONCAT(""ABC"", , ""123"", )"));
+        }
+
+        [Test]
         public void Concatenate_Value()
         {
             Object actual = XLWorkbook.EvaluateExpr(@"Concatenate(""ABC"", ""123"")");
