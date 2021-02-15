@@ -24,10 +24,7 @@ namespace ClosedXML.Excel
                 new XLAddress(worksheet, row, XLHelper.MaxColumnNumber, false, false));
         }
 
-        public static readonly XLRangeAddress Invalid = new XLRangeAddress(
-            new XLAddress(-1, -1, fixedRow: true, fixedColumn: true),
-            new XLAddress(-1, -1, fixedRow: true, fixedColumn: true)
-        );
+        public static readonly XLRangeAddress Invalid = new XLRangeAddress(XLAddress.Invalid, XLAddress.Invalid);
 
         #endregion Static members
 
@@ -82,6 +79,13 @@ namespace ClosedXML.Excel
             }
 
             Worksheet = worksheet;
+        }
+
+        public XLRangeAddress(XLWorksheet worksheet, XLAddress firstAddress, XLAddress lastAddress)
+        {
+            Worksheet = worksheet;
+            FirstAddress = new XLAddress(worksheet, firstAddress.RowNumber, firstAddress.ColumnNumber, firstAddress.FixedRow, firstAddress.FixedColumn);
+            LastAddress = new XLAddress(worksheet, lastAddress.RowNumber, lastAddress.ColumnNumber, lastAddress.FixedRow, lastAddress.FixedColumn);
         }
 
         #endregion Constructor
@@ -350,15 +354,10 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            if (!(obj is XLRangeAddress))
-            {
+            if (!(obj is XLRangeAddress rangeAddress))
                 return false;
-            }
 
-            var address = (XLRangeAddress)obj;
-            return FirstAddress.Equals(address.FirstAddress) &&
-                   LastAddress.Equals(address.LastAddress) &&
-                   EqualityComparer<XLWorksheet>.Default.Equals(Worksheet, address.Worksheet);
+            return Equals(rangeAddress);
         }
 
         public override int GetHashCode()
@@ -372,6 +371,9 @@ namespace ClosedXML.Excel
 
         public bool Equals(XLRangeAddress other)
         {
+            if (!this.IsValid && !other.IsValid)
+                return ReferenceEquals(Worksheet, other.Worksheet);
+
             return ReferenceEquals(Worksheet, other.Worksheet) &&
                    FirstAddress == other.FirstAddress &&
                    LastAddress == other.LastAddress;

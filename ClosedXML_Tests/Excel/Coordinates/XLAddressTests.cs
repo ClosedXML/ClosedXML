@@ -159,6 +159,37 @@ namespace ClosedXML_Tests
             Assert.AreEqual("#REF!#REF!", address.ToStringRelative(true));
         }
 
+        [Test]
+        public void EqualityTests()
+        {
+            // Valid addresses
+            var ws = new XLWorkbook().AddWorksheet();
+            var validAddress1 = ws.Cell("A1").Address;
+            var validAddress2 = ws.Cell("C3").Address;
+            var validAddress3 = ((XLRangeAddress)ws.Range("B2:A1").RangeAddress).Normalize().FirstAddress;
+
+            Assert.IsFalse(validAddress1.Equals(validAddress2));
+            Assert.IsTrue(validAddress1.Equals(validAddress3));
+
+            // Invalid addresses
+            var invalidAddress1 = ProduceInvalidAddress();
+            var invalidAddress2 = ProduceAddressOnDeletedWorksheet();
+            var invalidAddress3 = ProduceInvalidAddressOnDeletedWorksheet();
+
+            var invalidAddress4 = new XLAddress(invalidAddress1.Worksheet as XLWorksheet, -50, -50, false, false);
+
+            Assert.IsFalse(validAddress1.Equals(invalidAddress2));
+
+            Assert.IsFalse(invalidAddress1.Equals(invalidAddress2));
+            Assert.IsFalse(invalidAddress1.Equals(invalidAddress3));
+            Assert.IsTrue(invalidAddress1.Equals(invalidAddress4));
+
+            Assert.IsFalse(invalidAddress2.Equals(invalidAddress3));
+            Assert.IsFalse(invalidAddress2.Equals(invalidAddress4));
+
+            Assert.IsFalse(invalidAddress3.Equals(invalidAddress4));
+        }
+
         #region Private Methods
 
         private IXLAddress ProduceInvalidAddress()
