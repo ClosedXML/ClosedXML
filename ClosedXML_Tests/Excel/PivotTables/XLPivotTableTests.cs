@@ -761,5 +761,47 @@ namespace ClosedXML_Tests
             Assert.AreEqual(withDefaults, field.InsertPageBreaks, "InsertPageBreaks save failure");
             Assert.AreEqual(withDefaults, field.IncludeNewItemsInFilter, "IncludeNewItemsInFilter save failure");
         }
+
+
+        [Test]
+        public void PivotTableWithCustomThemeTest()
+        {
+            // https://github.com/ClosedXML/ClosedXML/pull/1429
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Lion\PivotTables\CustomPivotTheme.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                Assert.DoesNotThrow(() =>
+                {
+                    using (var wb = new XLWorkbook(stream))
+                    {
+                        wb.SaveAs(ms);
+                    }
+                }, "Loading pivots with custom theme failure");
+}
+        }
+
+        [Test]
+        public void PivotTableWithStylesTest()
+        {
+            // https://github.com/ClosedXML/ClosedXML/pull/1429
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Lion\PivotTables\PivotWithStyles.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                Assert.DoesNotThrow(() =>
+                {
+                    using (var wb = new XLWorkbook(stream))
+                    {
+                        wb.SaveAs(ms);
+                    }
+                }, "Loading pivots with styles failure");
+
+                // saving loaded workbook - new file will have broken pivot styles (it needs to be fixed)
+                using (var fs = File.Create("PivotWithStyles.xlsx"))
+                {
+                    ms.Position = 0;
+                    ms.CopyTo(fs);
+                }
+            }
+        }
     }
 }
