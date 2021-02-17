@@ -250,9 +250,7 @@ namespace ClosedXML.Excel
                         switch (thisCell.DataType)
                         {
                             case XLDataType.Text:
-                                comparison = e.MatchCase
-                                                 ? thisCell.InnerText.CompareTo(otherCell.InnerText)
-                                                 : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
+                                comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), !e.MatchCase);
                                 break;
 
                             case XLDataType.TimeSpan:
