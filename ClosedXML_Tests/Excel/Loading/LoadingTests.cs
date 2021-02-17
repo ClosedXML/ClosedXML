@@ -173,6 +173,17 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
+        [Test]
+        public void CanLoadPivotTableWithBorder()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\PivotTableWithBorder.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                Assert.IsNotNull(wb);
+                //TODO: Implement pivot table with border
+            }
+        }
+
         /// <summary>
         /// For non-English locales, the default style ("Normal" in English) can be
         /// another piece of text (e.g. ??????? in Russian).
