@@ -451,6 +451,21 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void PivotTableStyleFormats()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\StyleFormats\inputfile.xlsx")))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    wb.SaveAs(ms);
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\StyleFormats\outputfile.xlsx");
+            }
+        }
+
+        [Test]
         public void PivotTableWithNoneTheme()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\PivotTableWithNoneTheme\inputfile.xlsx")))

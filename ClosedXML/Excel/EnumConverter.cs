@@ -782,32 +782,32 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static PivotAreaValues ToOpenXml(this XLPivotAreaValues value)
+        public static PivotAreaValues ToOpenXml(this XLPivotStyleFormatRuleType value)
         {
             switch (value)
             {
-                case XLPivotAreaValues.None:
+                case XLPivotStyleFormatRuleType.None:
                     return PivotAreaValues.None;
 
-                case XLPivotAreaValues.Normal:
+                case XLPivotStyleFormatRuleType.Normal:
                     return PivotAreaValues.Normal;
 
-                case XLPivotAreaValues.Data:
+                case XLPivotStyleFormatRuleType.Data:
                     return PivotAreaValues.Data;
 
-                case XLPivotAreaValues.All:
+                case XLPivotStyleFormatRuleType.All:
                     return PivotAreaValues.All;
 
-                case XLPivotAreaValues.Origin:
+                case XLPivotStyleFormatRuleType.Origin:
                     return PivotAreaValues.Origin;
 
-                case XLPivotAreaValues.Button:
+                case XLPivotStyleFormatRuleType.Button:
                     return PivotAreaValues.Button;
 
-                case XLPivotAreaValues.TopRight:
+                case XLPivotStyleFormatRuleType.TopRight:
                     return PivotAreaValues.TopRight;
 
-                case XLPivotAreaValues.TopEnd:
+                case XLPivotStyleFormatRuleType.TopEnd:
                     return PivotAreaValues.TopEnd;
 
                 default:
@@ -1626,33 +1626,33 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static XLPivotAreaValues ToClosedXml(this PivotAreaValues value)
+        public static XLPivotStyleFormatRuleType ToClosedXml(this PivotAreaValues value)
         {
             switch (value)
             {
                 case PivotAreaValues.None:
-                    return XLPivotAreaValues.None;
+                    return XLPivotStyleFormatRuleType.None;
 
                 case PivotAreaValues.Normal:
-                    return XLPivotAreaValues.Normal;
+                    return XLPivotStyleFormatRuleType.Normal;
 
                 case PivotAreaValues.Data:
-                    return XLPivotAreaValues.Data;
+                    return XLPivotStyleFormatRuleType.Data;
 
                 case PivotAreaValues.All:
-                    return XLPivotAreaValues.All;
+                    return XLPivotStyleFormatRuleType.All;
 
                 case PivotAreaValues.Origin:
-                    return XLPivotAreaValues.Origin;
+                    return XLPivotStyleFormatRuleType.Origin;
 
                 case PivotAreaValues.Button:
-                    return XLPivotAreaValues.Button;
+                    return XLPivotStyleFormatRuleType.Button;
 
                 case PivotAreaValues.TopRight:
-                    return XLPivotAreaValues.TopRight;
+                    return XLPivotStyleFormatRuleType.TopRight;
 
                 case PivotAreaValues.TopEnd:
-                    return XLPivotAreaValues.TopEnd;
+                    return XLPivotStyleFormatRuleType.TopEnd;
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), "PivotAreaValues value not implemented");
