@@ -190,5 +190,25 @@ namespace ClosedXML_Tests.Excel.Comments
                 Assert.False(ws.Cell("A4").Comment.Visible);
             }
         }
+
+        [Test]
+        public void CanReadThreadedCommentNote ()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\ThreadedComment.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                var c = ws.FirstCellUsed();
+
+                Assert.AreEqual(c.Comment.Text, @"[Threaded comment]
+
+Your version of Excel allows you to read this threaded comment; however, any edits to it will get removed if the file is opened in a newer version of Excel. Learn more: https://go.microsoft.com/fwlink/?linkid=870924
+
+Comment:
+    This is a threaded comment.
+Reply:
+    This is a reply.");
+            }
+        }
     }
 }
