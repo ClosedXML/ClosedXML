@@ -311,8 +311,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})").CastTo<double>();
         }
 
-        // TODO : the string case will be treated correctly when Coercion is implemented better
-        //[TestCase("asdf", typeof(CellValueException), "Parameter non numeric.")]
+        [TestCase("\"asdf\"", typeof(CellValueException), "Numeric input value expected.")]
         [TestCase("5", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
         [TestCase("-1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
         [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
@@ -321,6 +320,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.Throws(
                 Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
                 () => XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})"));
+        }
+
+        [Test]
+        public void Fisher_EmptyCell()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            Assert.AreEqual(0, ws.Evaluate("FISHER(A1)"));
         }
 
         [Test]

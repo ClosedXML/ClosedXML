@@ -214,10 +214,17 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Fisher(List<Expression> p)
         {
-            var x = (double)p[0];
-            if (x <= -1 || x >= 1) throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
+            try
+            {
+                var x = (double)p[0];
+                if (x <= -1 || x >= 1) throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
 
-            return 0.5 * Math.Log((1 + x) / (1 - x));
+                return 0.5 * Math.Log((1 + x) / (1 - x));
+            }
+            catch (FormatException ex)
+            {
+                throw new CellValueException("Numeric input value expected.", ex);
+            }
         }
 
         private static object Geomean(List<Expression> p)
