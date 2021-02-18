@@ -1317,9 +1317,6 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (_hyperlink == null)
-                    Hyperlink = new XLHyperlink();
-
                 return _hyperlink;
             }
 
