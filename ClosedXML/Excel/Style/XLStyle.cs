@@ -78,7 +78,7 @@ namespace ClosedXML.Excel
 
         #endregion constructors
 
-        internal void Modify(Func<XLStyleKey, XLStyleKey> modification)
+        public void Modify(Func<XLStyleKey, XLStyleKey> modification)
         {
             Key = modification(Key);
 
