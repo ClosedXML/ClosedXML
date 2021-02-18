@@ -1520,8 +1520,11 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            if (InnerText.Length > 0)
-                return false;
+            if (options.HasFlag (XLCellsUsedOptions.Contents))
+            {
+                if (InnerText.Length > 0)
+                    return false;
+            }
 
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats))
             {
@@ -1555,6 +1558,9 @@ namespace ClosedXML.Excel
                 return false;
 
             if (options.HasFlag(XLCellsUsedOptions.Sparklines) && HasSparkline)
+                return false;
+
+            if (options.HasFlag(XLCellsUsedOptions.DataType) && DataType != XLDataType.Text)
                 return false;
 
             return true;
