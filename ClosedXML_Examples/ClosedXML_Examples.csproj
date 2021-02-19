@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net40;net46</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net40;net46</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <OutputType>Exe</OutputType>
     <Version>0.95.4</Version>
@@ -11,7 +11,7 @@
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <DefineConstants>$(DefineConstants);_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
   </PropertyGroup>
 
