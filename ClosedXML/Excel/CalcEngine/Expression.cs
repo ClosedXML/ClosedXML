@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -38,7 +37,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// object val = expr.Evaluate();
     /// </code>
     /// </remarks>
-    internal class Expression : ExpressionBase, IComparable<Expression>
+    internal partial class Expression : ExpressionBase, IComparable<Expression>
     {
         //---------------------------------------------------------------------------
 
@@ -99,134 +98,27 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator string(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            var v = x.Evaluate();
-
-            if (v == null)
-                return string.Empty;
-
-            if (v is bool b)
-                return b.ToString().ToUpper();
-
-            return v.ToString();
+            return x.Coerce<String>();
         }
 
         public static implicit operator double(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle doubles
-            if (v is double dbl)
-            {
-                return dbl;
-            }
-
-            // handle booleans
-            if (v is bool b)
-            {
-                return b ? 1 : 0;
-            }
-
-            // handle dates
-            if (v is DateTime dt)
-            {
-                return dt.ToOADate();
-            }
-
-            if (v is TimeSpan ts)
-            {
-                return ts.TotalDays;
-            }
-
-            // handle string
-            if (v is string s)
-            {
-                if (x._convention.HasFlag(CoercionConvention.EmptyStringAsZero) && string.IsNullOrEmpty(s))
-                    return 0;
-                else if (x._convention.HasFlag(CoercionConvention.NonEmptyStringAsZero) && !string.IsNullOrEmpty(s))
-                    return 0;
-                else if (double.TryParse(s, out var doubleValue))
-                    return doubleValue;
-            }
-
-            // handle nulls
-            if (x._convention.HasFlag(CoercionConvention.NullAsZero) && v == null)
-            {
-                return 0;
-            }
-
-            // handle everything else
-            return ConvertTo<double>(v);
+            return x.Coerce<Double>();
         }
 
         public static implicit operator bool(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle booleans
-            if (v is bool b)
-            {
-                return b;
-            }
-
-            // handle nulls
-            if (v == null)
-            {
-                return false;
-            }
-
-            // handle doubles
-            if (v is double dbl)
-            {
-                return dbl != 0;
-            }
-
-            // handle everything else
-            return ConvertTo<double>(v) != 0;
+            return x.Coerce<Boolean>();
         }
 
         public static implicit operator DateTime(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle dates
-            if (v is DateTime dt)
-            {
-                return dt;
-            }
-
-            if (v is TimeSpan ts)
-            {
-                return new DateTime().Add(ts);
-            }
-
-            // handle numbers
-            if (v.IsNumber())
-            {
-                return DateTime.FromOADate((double)x);
-            }
-
-            // handle everything else
-            return ConvertTo<DateTime>(v);
+            return x.Coerce<DateTime>();
         }
 
-        private static T ConvertTo<T>(object v)
+        public static implicit operator TimeSpan(Expression x)
         {
-            return (T)Convert.ChangeType(v, typeof(T), Thread.CurrentThread.CurrentCulture);
+            return x.Coerce<TimeSpan>();
         }
 
         #endregion ** implicit converters
