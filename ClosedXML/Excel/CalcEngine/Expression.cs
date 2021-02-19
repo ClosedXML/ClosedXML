@@ -61,7 +61,11 @@ namespace ClosedXML.Excel.CalcEngine
         internal Expression(object value, CoercionConvention convention = CoercionConvention.Default)
             : this(convention)
         {
-            _token = new Token(value, TKID.ATOM, TKTYPE.LITERAL);
+            if (value.IsNumber())
+                // If we returned an int somewhere from a function, ensure we store it as a Double token
+                _token = new Token(Convert.ToDouble(value), TKID.ATOM, TKTYPE.LITERAL);
+            else
+                _token = new Token(value, TKID.ATOM, TKTYPE.LITERAL);
         }
 
         internal Expression(Token tk, CoercionConvention convention = CoercionConvention.Default)
@@ -496,7 +500,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         internal EmptyValueExpression()
             // Ensures a token of type LITERAL, with value of null is created
-            : base(value: null) 
+            : base(value: null)
         {
         }
 
