@@ -104,13 +104,29 @@ namespace ClosedXML_Tests
         [Test]
         public void GetValue_Nullable()
         {
-            var cell = new XLWorkbook().AddWorksheet().FirstCell();
+            var backupCulture = Thread.CurrentThread.CurrentCulture;
 
-            Assert.IsNull(cell.Clear().GetValue<double?>());
-            Assert.AreEqual(1.5, cell.SetValue(1.5).GetValue<double?>());
-            Assert.AreEqual(2, cell.SetValue(1.5).GetValue<int?>());
-            Assert.AreEqual(2.5, cell.SetValue("2.5").GetValue<double?>());
-            Assert.Throws<FormatException>(() => cell.SetValue("text").GetValue<double?>());
+            // Set thread culture to French, which should format numbers using a space as thousands separator
+            try
+            {
+                var culture = CultureInfo.CreateSpecificCulture ("fr-FR");
+                // but use a period instead of a comma as for decimal separator
+                culture.NumberFormat.CurrencyDecimalSeparator = ".";
+                Thread.CurrentThread.CurrentCulture = culture;
+
+                var cell = new XLWorkbook ().AddWorksheet ().FirstCell ();
+
+                Assert.IsNull (cell.Clear ().GetValue<double?> ());
+                Assert.AreEqual (1.5, cell.SetValue (1.5).GetValue<double?> ());
+                Assert.AreEqual (2, cell.SetValue (1.5).GetValue<int?> ());
+                Assert.AreEqual (2.5, cell.SetValue ("2.5").GetValue<double?> ());
+                Assert.Throws<FormatException> (() => cell.SetValue ("text").GetValue<double?> ());
+
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = backupCulture;
+            }
         }
 
         [Test]
