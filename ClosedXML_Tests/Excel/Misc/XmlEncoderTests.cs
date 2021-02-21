@@ -1,5 +1,7 @@
+using ClosedXML.Excel;
 using ClosedXML.Utils;
 using NUnit.Framework;
+using System.IO;
 
 namespace ClosedXML_Tests.Excel
 {
@@ -18,6 +20,28 @@ namespace ClosedXML_Tests.Excel
 
             // https://github.com/ClosedXML/ClosedXML/issues/1154
             Assert.AreEqual("_Xceed_Something", XmlEncoder.DecodeString("_Xceed_Something"));
+        }
+
+        [Test]
+        public void TestEmoji()
+        {
+            using (var sr = new StreamReader(TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Emoji\let_it_go_in_emoji.txt"))))
+            using (var ms = new MemoryStream())
+            {
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook();
+                    var ws = wb.AddWorksheet();
+
+                    var cell = ws.FirstCell();
+                    cell.Value = "This emoji version of Let It Go from Frozen:";
+                    cell.CellBelow().Value = sr.ReadToEnd();
+
+
+                    return wb;
+                }, @"Other\Emoji\outputfile.xlsx");
+            }
+
         }
     }
 }
