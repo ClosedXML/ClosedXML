@@ -5,7 +5,7 @@ using System.IO;
 namespace ClosedXML_Tests
 {
     [TestFixture]
-    public class OpenXMLTests
+    public class OpenXmlTests
     {
         [Test]
         [Ignore("Workaround has been included in ClosedXML")]
