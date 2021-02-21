@@ -795,63 +795,17 @@ namespace ClosedXML_Tests
             {
                 Assert.AreEqual(ws1.PivotTables.Count(), ws2.PivotTables.Count());
 
+                var comparer = new PivotTableComparer();
+
                 for (int i = 0; i < ws1.PivotTables.Count(); i++)
                 {
                     var original = ws1.PivotTables.ElementAt(i).CastTo<XLPivotTable>();
                     var copy = ws2.PivotTables.ElementAt(i).CastTo<XLPivotTable>();
 
                     Assert.AreEqual(ws2, copy.Worksheet);
-
-                    Assert.AreEqual(original.Name, copy.Name);
                     Assert.AreNotEqual(original.Guid, copy.Guid);
 
-                    Assert.AreEqual(original.ReportFilters.Count(), copy.ReportFilters.Count());
-                    Assert.AreEqual(original.ColumnLabels.Count(), copy.ColumnLabels.Count());
-                    Assert.AreEqual(original.RowLabels.Count(), copy.RowLabels.Count());
-                    Assert.AreEqual(original.Values.Count(), copy.Values.Count());
-                    Assert.AreEqual(original.TargetCell.Address.ColumnLetter, copy.TargetCell.Address.ColumnLetter);
-                    Assert.AreEqual(original.TargetCell.Address.RowNumber, copy.TargetCell.Address.RowNumber);
-
-                    Assert.AreEqual(original.Title, copy.Title);
-                    Assert.AreEqual(original.Description, copy.Description);
-                    Assert.AreEqual(original.ColumnHeaderCaption, copy.ColumnHeaderCaption);
-                    Assert.AreEqual(original.RowHeaderCaption, copy.RowHeaderCaption);
-                    Assert.AreEqual(original.MergeAndCenterWithLabels, copy.MergeAndCenterWithLabels);
-                    Assert.AreEqual(original.RowLabelIndent, copy.RowLabelIndent);
-                    Assert.AreEqual(original.FilterAreaOrder, copy.FilterAreaOrder);
-                    Assert.AreEqual(original.FilterFieldsPageWrap, copy.FilterFieldsPageWrap);
-                    Assert.AreEqual(original.ErrorValueReplacement, copy.ErrorValueReplacement);
-                    Assert.AreEqual(original.EmptyCellReplacement, copy.EmptyCellReplacement);
-                    Assert.AreEqual(original.AutofitColumns, copy.AutofitColumns);
-                    Assert.AreEqual(original.PreserveCellFormatting, copy.PreserveCellFormatting);
-                    Assert.AreEqual(original.ShowGrandTotalsColumns, copy.ShowGrandTotalsColumns);
-                    Assert.AreEqual(original.ShowGrandTotalsRows, copy.ShowGrandTotalsRows);
-                    Assert.AreEqual(original.FilteredItemsInSubtotals, copy.FilteredItemsInSubtotals);
-                    Assert.AreEqual(original.AllowMultipleFilters, copy.AllowMultipleFilters);
-                    Assert.AreEqual(original.UseCustomListsForSorting, copy.UseCustomListsForSorting);
-                    Assert.AreEqual(original.ShowExpandCollapseButtons, copy.ShowExpandCollapseButtons);
-                    Assert.AreEqual(original.ShowContextualTooltips, copy.ShowContextualTooltips);
-                    Assert.AreEqual(original.ShowPropertiesInTooltips, copy.ShowPropertiesInTooltips);
-                    Assert.AreEqual(original.DisplayCaptionsAndDropdowns, copy.DisplayCaptionsAndDropdowns);
-                    Assert.AreEqual(original.ClassicPivotTableLayout, copy.ClassicPivotTableLayout);
-                    Assert.AreEqual(original.ShowValuesRow, copy.ShowValuesRow);
-                    Assert.AreEqual(original.ShowEmptyItemsOnColumns, copy.ShowEmptyItemsOnColumns);
-                    Assert.AreEqual(original.ShowEmptyItemsOnRows, copy.ShowEmptyItemsOnRows);
-                    Assert.AreEqual(original.DisplayItemLabels, copy.DisplayItemLabels);
-                    Assert.AreEqual(original.SortFieldsAtoZ, copy.SortFieldsAtoZ);
-                    Assert.AreEqual(original.PrintExpandCollapsedButtons, copy.PrintExpandCollapsedButtons);
-                    Assert.AreEqual(original.RepeatRowLabels, copy.RepeatRowLabels);
-                    Assert.AreEqual(original.PrintTitles, copy.PrintTitles);
-                    Assert.AreEqual(original.SaveSourceData, copy.SaveSourceData);
-                    Assert.AreEqual(original.EnableShowDetails, copy.EnableShowDetails);
-                    Assert.AreEqual(original.RefreshDataOnOpen, copy.RefreshDataOnOpen);
-                    Assert.AreEqual(original.ItemsToRetainPerField, copy.ItemsToRetainPerField);
-                    Assert.AreEqual(original.EnableCellEditing, copy.EnableCellEditing);
-                    Assert.AreEqual(original.ShowRowHeaders, copy.ShowRowHeaders);
-                    Assert.AreEqual(original.ShowColumnHeaders, copy.ShowColumnHeaders);
-                    Assert.AreEqual(original.ShowRowStripes, copy.ShowRowStripes);
-                    Assert.AreEqual(original.ShowColumnStripes, copy.ShowColumnStripes);
-                    Assert.AreEqual(original.Theme, copy.Theme);
+                    Assert.IsTrue(comparer.Equals(original, copy));
                 }
             }
         }
