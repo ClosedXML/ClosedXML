@@ -90,13 +90,11 @@ namespace ClosedXML.Tests
             return _extractor.GetFileNames(predicate);
         }
 
-        public static void LoadFile(string filePartName)
+        public static void LoadFile(string filePartName, LoadOptions loadOptions = null)
         {
-            IXLWorkbook wb;
-            using (var stream = GetStreamFromResource(GetResourcePath(filePartName)))
-            {
-                Assert.DoesNotThrow(() => wb = new XLWorkbook(stream), "Unable to load resource {0}", filePartName);
-            }
+            loadOptions = loadOptions ?? new LoadOptions();
+            using var stream = GetStreamFromResource(GetResourcePath(filePartName));
+            Assert.DoesNotThrow(() => new XLWorkbook(stream, loadOptions), "Unable to load resource {0}", filePartName);
         }
 
         public static void RunTestExample<T>(string filePartName, bool evaluateFormulae = false)
