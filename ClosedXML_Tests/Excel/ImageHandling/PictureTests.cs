@@ -133,7 +133,6 @@ namespace ClosedXML_Tests
             }
         }
 
-
         [Test]
         public void CanScaleImage()
         {
@@ -438,6 +437,55 @@ namespace ClosedXML_Tests
             Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
 
             Assert.AreNotEqual(original.Id, copy.Id);
+        }
+
+        [Test]
+        public void CopyImageDifferentWorkbooks()
+        {
+            using (var wb1 = new XLWorkbook())
+            using (var ms = new MemoryStream())
+            {
+                IXLPicture original;
+
+                using (var wb2 = new XLWorkbook())
+                {
+                    var ws1 = wb1.AddWorksheet();
+                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML_Tests.Resource.Images.ImageHandling.bmp"))
+                    {
+                        original = ws1.AddPicture(stream, XLPictureFormat.Bmp, "Picture1")
+                            .WithPlacement(XLPicturePlacement.FreeFloating)
+                            .MoveTo(220, 155) as XLPicture;
+                    }
+
+                    var ws2 = wb2.AddWorksheet();
+
+                    original.CopyTo(ws2);
+
+                    wb2.SaveAs(ms);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var wb2 = new XLWorkbook(ms))
+                {
+                    var ws2 = wb2.Worksheets.First();
+                    Assert.AreEqual(1, ws2.Pictures.Count);
+
+                    var copy = ws2.Pictures.First();
+
+                    Assert.AreEqual(original.Format, copy.Format);
+                    Assert.AreEqual(original.Height, copy.Height);
+                    Assert.AreEqual(original.Left, copy.Left);
+                    Assert.AreEqual(original.Name, copy.Name);
+                    Assert.AreEqual(original.Placement, copy.Placement);
+                    Assert.AreEqual(original.Top, copy.Top);
+                    Assert.AreEqual(original.TopLeftCell.ToString(), copy.TopLeftCell.ToString());
+                    Assert.AreEqual(original.Width, copy.Width);
+                    Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
+
+                    Assert.AreEqual(original.Id, copy.Id);
+                }
+            }
         }
 
         [Test]

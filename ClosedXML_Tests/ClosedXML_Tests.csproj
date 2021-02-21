@@ -32,6 +32,7 @@
     <EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
     <EmbeddedResource Include="Resource\Images\*.png" />
     <EmbeddedResource Include="Resource\Images\*.jpg" />
+    <EmbeddedResource Include="Resource\Images\*.bmp" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'netcoreapp3.1' ">
