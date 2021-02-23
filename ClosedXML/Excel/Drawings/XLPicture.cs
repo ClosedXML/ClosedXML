@@ -125,7 +125,7 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        public XLPictureFormat Format { get; private set; }
+        public XLPictureFormat Format { get; private set; } = XLPictureFormat.Unknown;
 
         public Int32 Height
         {
