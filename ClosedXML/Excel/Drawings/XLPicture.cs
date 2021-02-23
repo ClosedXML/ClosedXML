@@ -61,20 +61,23 @@ namespace ClosedXML.Excel.Drawings
             this.Format = format;
 
             this.ImageStream = new MemoryStream();
+            stream.Position = 0;
+            stream.CopyTo(ImageStream);
+            ImageStream.Seek(0, SeekOrigin.Begin);
+
+            using (var bitmap = new Bitmap(ImageStream))
             {
-                stream.Position = 0;
-                stream.CopyTo(ImageStream);
-                ImageStream.Seek(0, SeekOrigin.Begin);
+                if (!FormatMap.TryGetValue(this.Format, out ImageFormat imageFormat))
+                    throw new ArgumentException("The picture format in the stream and the parameter don't match");
 
-                using (var bitmap = new Bitmap(ImageStream))
-                {
-                    if (FormatMap.TryGetValue(this.Format, out ImageFormat imageFormat) && imageFormat.Guid != bitmap.RawFormat.Guid)
-                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
+                if (imageFormat.Guid != bitmap.RawFormat.Guid
+                    // Special case to treat ImageFormat.Bmp and ImageFormat.MemoryBmp as the same
+                    && this.Format == XLPictureFormat.Bmp && !new[] { ImageFormat.Bmp.Guid, ImageFormat.MemoryBmp.Guid }.Contains(bitmap.RawFormat.Guid))
+                    throw new ArgumentException("The picture format in the stream and the parameter don't match");
 
-                    DeduceDimensionsFromBitmap(bitmap);
-                }
-                ImageStream.Seek(0, SeekOrigin.Begin);
+                DeduceDimensionsFromBitmap(bitmap);
             }
+            ImageStream.Seek(0, SeekOrigin.Begin);
         }
 
         internal XLPicture(IXLWorksheet worksheet, Bitmap bitmap)

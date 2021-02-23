@@ -133,7 +133,6 @@ namespace ClosedXML_Tests
             }
         }
 
-
         [Test]
         public void CanScaleImage()
         {
@@ -466,6 +465,32 @@ namespace ClosedXML_Tests
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.Picture("dummy"));
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.Pictures.Delete("dummy"));
             }
+        }
+
+        [Test]
+        public void CanCopyBmpImage()
+        {
+            // #1621 - There are 2 Bmp Guids: ImageFormat.Bmp and ImageFormat.MemoryBmp
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Pictures\BitmapPicture.xlsx"));
+            using var wb = new XLWorkbook(stream);
+            var ws1 = wb.Worksheets.First();
+            var img1 = ws1.Pictures.First();
+
+            var ws2 = wb.AddWorksheet();
+
+            var img2 = img1.CopyTo(ws2);
+
+            Assert.AreEqual(XLPictureFormat.Bmp, img2.Format);
+
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms);
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using var wb2 = new XLWorkbook(ms);
+            ws2 = wb2.Worksheet("Sheet2");
+            img2 = ws2.Pictures.First();
+            Assert.AreEqual(XLPictureFormat.Bmp, img2.Format);
         }
     }
 }
