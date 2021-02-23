@@ -246,6 +246,8 @@ namespace ClosedXML.Excel.Drawings
             Worksheet.Pictures.Delete(this.Name);
         }
 
+        #region IDisposable
+
         // Used by Janitor.Fody
         private void DisposeManaged()
         {
@@ -268,6 +270,8 @@ namespace ClosedXML.Excel.Drawings
         }
 
 #endif
+
+        #endregion IDisposable
 
         /// <summary>
         /// Create a copy of the picture on the same worksheet.
