@@ -43,12 +43,12 @@ namespace ClosedXML.Excel.Drawings
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
-                using (var bitmap = new Bitmap(ImageStream))
+                using (var image = Image.FromStream(ImageStream))
                 {
-                    if (FormatMap.Values.Select(f => f.Guid).Contains(bitmap.RawFormat.Guid))
-                        this.Format = FormatMap.Single(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid)).Key;
+                    if (FormatMap.Values.Select(f => f.Guid).Contains(image.RawFormat.Guid))
+                        this.Format = FormatMap.Single(f => f.Value.Guid.Equals(image.RawFormat.Guid)).Key;
 
-                    DeduceDimensionsFromBitmap(bitmap);
+                    DeduceDimensionsFromBitmap(image);
                 }
                 ImageStream.Seek(0, SeekOrigin.Begin);
             }
@@ -61,20 +61,18 @@ namespace ClosedXML.Excel.Drawings
             this.Format = format;
 
             this.ImageStream = new MemoryStream();
+            stream.Position = 0;
+            stream.CopyTo(ImageStream);
+            ImageStream.Seek(0, SeekOrigin.Begin);
+
+            using (var image = Image.FromStream(ImageStream))
             {
-                stream.Position = 0;
-                stream.CopyTo(ImageStream);
-                ImageStream.Seek(0, SeekOrigin.Begin);
+                if (FormatMap.TryGetValue(this.Format, out ImageFormat imageFormat) && imageFormat.Guid != image.RawFormat.Guid)
+                    throw new ArgumentException("The picture format in the stream and the parameter don't match");
 
-                using (var bitmap = new Bitmap(ImageStream))
-                {
-                    if (FormatMap.TryGetValue(this.Format, out ImageFormat imageFormat) && imageFormat.Guid != bitmap.RawFormat.Guid)
-                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
-
-                    DeduceDimensionsFromBitmap(bitmap);
-                }
-                ImageStream.Seek(0, SeekOrigin.Begin);
+                DeduceDimensionsFromBitmap(image);
             }
+            ImageStream.Seek(0, SeekOrigin.Begin);
         }
 
         internal XLPicture(IXLWorksheet worksheet, Bitmap bitmap)
@@ -440,13 +438,13 @@ namespace ClosedXML.Excel.Drawings
             return "image/unknown";
         }
 
-        private void DeduceDimensionsFromBitmap(Bitmap bitmap)
+        private void DeduceDimensionsFromBitmap(Image image)
         {
-            this.OriginalWidth = bitmap.Width;
-            this.OriginalHeight = bitmap.Height;
+            this.OriginalWidth = image.Width;
+            this.OriginalHeight = image.Height;
 
-            this.width = bitmap.Width;
-            this.height = bitmap.Height;
+            this.width = image.Width;
+            this.height = image.Height;
         }
     }
 }
