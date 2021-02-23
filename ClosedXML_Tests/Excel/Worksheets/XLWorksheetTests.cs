@@ -722,8 +722,8 @@ namespace ClosedXML_Tests
 
                 var picture = ws1.AddPicture(bitmap, "MyPicture")
                     .WithPlacement(XLPicturePlacement.FreeFloating)
-                    .MoveTo(50, 50)
-                    .WithSize(200, 200);
+                    .MoveTo(XLMeasure.Create(50, XLMeasureUnit.Pixels), XLMeasure.Create(50, XLMeasureUnit.Pixels))
+                    .WithSize(XLMeasure.Create(200, XLMeasureUnit.Pixels), XLMeasure.Create(200, XLMeasureUnit.Pixels));
 
                 using (var wb2 = new XLWorkbook())
                 {

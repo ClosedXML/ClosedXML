@@ -25,12 +25,12 @@ namespace ClosedXML_Tests
                 {
                     var picture = ws.AddPicture(bitmap, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(50, 50)
-                        .WithSize(200, 200);
+                        .MoveTo(XLMeasure.Create(50, XLMeasureUnit.Pixels), XLMeasure.Create(50, XLMeasureUnit.Pixels))
+                        .WithSize(XLMeasure.Create(200, XLMeasureUnit.Pixels), XLMeasure.Create(200, XLMeasureUnit.Pixels));
 
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
-                    Assert.AreEqual(200, picture.Width);
-                    Assert.AreEqual(200, picture.Height);
+                    Assert.AreEqual(200, picture.Width.Value);
+                    Assert.AreEqual(200, picture.Height.Value);
                 }
             }
         }
@@ -46,12 +46,12 @@ namespace ClosedXML_Tests
                 {
                     var picture = ws.AddPicture(resourceStream, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(50, 50)
-                        .WithSize(200, 200);
+                        .MoveTo(XLMeasure.Create(50, XLMeasureUnit.Pixels), XLMeasure.Create(50, XLMeasureUnit.Pixels))
+                        .WithSize(XLMeasure.Create(200, XLMeasureUnit.Pixels), XLMeasure.Create(200, XLMeasureUnit.Pixels));
 
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
-                    Assert.AreEqual(200, picture.Width);
-                    Assert.AreEqual(200, picture.Height);
+                    Assert.AreEqual(200, picture.Width.Value);
+                    Assert.AreEqual(200, picture.Height.Value);
                 }
             }
         }
@@ -77,11 +77,11 @@ namespace ClosedXML_Tests
 
                     var picture = ws.AddPicture(path)
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(50, 50);
+                        .MoveTo(XLMeasure.Create(50, XLMeasureUnit.Pixels), XLMeasure.Create(50, XLMeasureUnit.Pixels));
 
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
-                    Assert.AreEqual(400, picture.Width);
-                    Assert.AreEqual(400, picture.Height);
+                    Assert.AreEqual(400, picture.Width.Value);
+                    Assert.AreEqual(400, picture.Height.Value);
                 }
                 finally
                 {
@@ -125,14 +125,13 @@ namespace ClosedXML_Tests
 
                 var picture = ws.AddPicture(filePath)
                            .WithPlacement(XLPicturePlacement.FreeFloating)
-                           .MoveTo(50, 50);
+                           .MoveTo(XLMeasure.Create(50, XLMeasureUnit.Pixels), XLMeasure.Create(50, XLMeasureUnit.Pixels));
 
                 Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
-                Assert.AreEqual(400, picture.Width);
-                Assert.AreEqual(50, picture.Top);
+                Assert.AreEqual(XLMeasure.Create(400, XLMeasureUnit.Pixels), picture.Width);
+                Assert.AreEqual(XLMeasure.Create(50, XLMeasureUnit.Pixels), picture.Top);
             }
         }
-
 
         [Test]
         public void CanScaleImage()
@@ -145,36 +144,36 @@ namespace ClosedXML_Tests
                 {
                     var pic = ws.AddPicture(resourceStream, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(50, 50);
+                        .MoveTo(XLMeasure.Create(50, XLMeasureUnit.Pixels), XLMeasure.Create(50, XLMeasureUnit.Pixels));
 
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(252, pic.Width);
-                    Assert.AreEqual(152, pic.Height);
-
-                    pic.ScaleHeight(0.7);
-                    pic.ScaleWidth(1.2);
-
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(302, pic.Width);
-                    Assert.AreEqual(106, pic.Height);
+                    Assert.AreEqual(252, pic.OriginalWidth.Value);
+                    Assert.AreEqual(152, pic.OriginalHeight.Value);
+                    Assert.AreEqual(252, pic.Width.Value);
+                    Assert.AreEqual(152, pic.Height.Value);
 
                     pic.ScaleHeight(0.7);
                     pic.ScaleWidth(1.2);
 
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(362, pic.Width);
-                    Assert.AreEqual(74, pic.Height);
+                    Assert.AreEqual(252, pic.OriginalWidth.Value);
+                    Assert.AreEqual(152, pic.OriginalHeight.Value);
+                    Assert.AreEqual(302, pic.Width.Value);
+                    Assert.AreEqual(106, pic.Height.Value);
+
+                    pic.ScaleHeight(0.7);
+                    pic.ScaleWidth(1.2);
+
+                    Assert.AreEqual(252, pic.OriginalWidth.Value);
+                    Assert.AreEqual(152, pic.OriginalHeight.Value);
+                    Assert.AreEqual(362, pic.Width.Value);
+                    Assert.AreEqual(74, pic.Height.Value);
 
                     pic.ScaleHeight(0.8, true);
                     pic.ScaleWidth(1.1, true);
 
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(277, pic.Width);
-                    Assert.AreEqual(122, pic.Height);
+                    Assert.AreEqual(252, pic.OriginalWidth.Value);
+                    Assert.AreEqual(152, pic.OriginalHeight.Value);
+                    Assert.AreEqual(277, pic.Width.Value);
+                    Assert.AreEqual(122, pic.Height.Value);
                 }
             }
         }
@@ -241,12 +240,13 @@ namespace ClosedXML_Tests
         public void XLMarkerTests()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10), new Point(100, 0));
+            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10), XLMeasure.Create(100, XLMeasureUnit.Pixels), XLMeasure.Zero);
 
             Assert.AreEqual(10, firstMarker.ColumnNumber);
             Assert.AreEqual(1, firstMarker.RowNumber);
-            Assert.AreEqual(100, firstMarker.Offset.X);
-            Assert.AreEqual(0, firstMarker.Offset.Y);
+            Assert.AreEqual(100, firstMarker.X.Value);
+            Assert.AreEqual(XLMeasureUnit.Pixels, firstMarker.X.Unit);
+            Assert.AreEqual(0, firstMarker.Y.Value);
         }
 
         [Test]
@@ -260,17 +260,17 @@ namespace ClosedXML_Tests
                 {
                     var pic = ws.AddPicture(stream, XLPictureFormat.Png, "Image1")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(220, 155);
+                        .MoveTo(XLMeasure.Create(220, XLMeasureUnit.Pixels), XLMeasure.Create(155, XLMeasureUnit.Pixels));
 
                     Assert.AreEqual(XLPicturePlacement.FreeFloating, pic.Placement);
                     Assert.AreEqual("Image1", pic.Name);
                     Assert.AreEqual(XLPictureFormat.Png, pic.Format);
-                    Assert.AreEqual(252, pic.OriginalWidth);
-                    Assert.AreEqual(152, pic.OriginalHeight);
-                    Assert.AreEqual(252, pic.Width);
-                    Assert.AreEqual(152, pic.Height);
-                    Assert.AreEqual(220, pic.Left);
-                    Assert.AreEqual(155, pic.Top);
+                    Assert.AreEqual(252, pic.OriginalWidth.Value);
+                    Assert.AreEqual(152, pic.OriginalHeight.Value);
+                    Assert.AreEqual(252, pic.Width.Value);
+                    Assert.AreEqual(152, pic.Height.Value);
+                    Assert.AreEqual(220, pic.Left.Value);
+                    Assert.AreEqual(155, pic.Top.Value);
                 }
             }
         }
@@ -355,7 +355,7 @@ namespace ClosedXML_Tests
                     //Internal method - used for loading files
                     var pic = (ws2 as XLWorksheet).AddPicture(stream, "Picture 1", 2)
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(220, 155) as XLPicture;
+                        .MoveTo(XLMeasure.Create(220, XLMeasureUnit.Pixels), XLMeasure.Create(155, XLMeasureUnit.Pixels)) as XLPicture;
 
                     var id = pic.Id;
 
@@ -369,7 +369,7 @@ namespace ClosedXML_Tests
 
                     var pic2 = (ws2 as XLWorksheet).AddPicture(stream, "Picture 2", 3)
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(440, 300) as XLPicture;
+                        .MoveTo(XLMeasure.Create(440, XLMeasureUnit.Pixels), XLMeasure.Create(300, XLMeasureUnit.Pixels)) as XLPicture;
                 }
             }
         }
@@ -385,11 +385,11 @@ namespace ClosedXML_Tests
             {
                 original = (ws1 as XLWorksheet).AddPicture(stream, "Picture 1", 2)
                     .WithPlacement(XLPicturePlacement.FreeFloating)
-                    .MoveTo(220, 155) as XLPicture;
+                    .MoveTo(XLMeasure.Create(220, XLMeasureUnit.Pixels), XLMeasure.Create(155, XLMeasureUnit.Pixels)) as XLPicture;
             }
 
             var copy = original.Duplicate()
-                .MoveTo(300, 200) as XLPicture;
+                .MoveTo(XLMeasure.Create(300, XLMeasureUnit.Pixels), XLMeasure.Create(200, XLMeasureUnit.Pixels)) as XLPicture;
 
             Assert.AreEqual(2, ws1.Pictures.Count());
             Assert.AreEqual(ws1, copy.Worksheet);
@@ -400,8 +400,8 @@ namespace ClosedXML_Tests
             Assert.AreEqual(original.Width, copy.Width);
             Assert.AreEqual(original.ImageStream.ToArray(), copy.ImageStream.ToArray(), "Image streams differ");
 
-            Assert.AreEqual(200, copy.Top);
-            Assert.AreEqual(300, copy.Left);
+            Assert.AreEqual(200, copy.Top.Value);
+            Assert.AreEqual(300, copy.Left.Value);
             Assert.AreNotEqual(original.Id, copy.Id);
             Assert.AreNotEqual(original.Name, copy.Name);
         }
@@ -416,7 +416,7 @@ namespace ClosedXML_Tests
             {
                 original = (ws1 as XLWorksheet).AddPicture(stream, "Picture 1", 2)
                     .WithPlacement(XLPicturePlacement.FreeFloating)
-                    .MoveTo(220, 155) as XLPicture;
+                    .MoveTo(XLMeasure.Create(220, XLMeasureUnit.Pixels), XLMeasure.Create(155, XLMeasureUnit.Pixels)) as XLPicture;
             }
             var ws2 = wb.Worksheets.Add("Sheet2");
 
