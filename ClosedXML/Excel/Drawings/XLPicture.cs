@@ -14,23 +14,11 @@ namespace ClosedXML.Excel.Drawings
     internal class XLPicture : IXLPicture
     {
         private const String InvalidNameChars = @":\/?*[]";
-        private static readonly IDictionary<XLPictureFormat, ImageFormat> _formatMap;
+        private static readonly IDictionary<XLPictureFormat, ImageFormat> _formatMap = BuildFormatMap();
         private Int32 _height;
         private Int32 _id;
         private String _name = string.Empty;
         private Int32 _width;
-
-        static XLPicture()
-        {
-            var properties = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
-            _formatMap = Enum.GetValues(typeof(XLPictureFormat))
-                .Cast<XLPictureFormat>()
-                .Where(pf => properties.Any(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)))
-                .ToDictionary(
-                    pf => pf,
-                    pf => properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null) as ImageFormat
-                );
-        }
 
         internal XLPicture(IXLWorksheet worksheet, Stream stream)
             : this(worksheet)
@@ -414,6 +402,18 @@ namespace ClosedXML.Excel.Drawings
                 throw new ArgumentException("Picture names cannot be more than 31 characters");
 
             _name = value;
+        }
+
+        private static IDictionary<XLPictureFormat, ImageFormat> BuildFormatMap()
+        {
+            var properties = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
+            return Enum.GetValues(typeof(XLPictureFormat))
+                .Cast<XLPictureFormat>()
+                .Where(pf => properties.Any(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)))
+                .ToDictionary(
+                    pf => pf,
+                    pf => properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null) as ImageFormat
+                );
         }
 
         private static ImageFormat FromMimeType(string mimeType)
