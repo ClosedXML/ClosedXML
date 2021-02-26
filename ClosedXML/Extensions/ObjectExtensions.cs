@@ -43,6 +43,7 @@ namespace ClosedXML.Excel
                 decimal v => v.ToString(CultureInfo.InvariantCulture),
                 TimeSpan ts => ts.ToString("c", CultureInfo.InvariantCulture),
                 DateTime d => d.ToString(CultureInfo.InvariantCulture),
+                bool b => b.ToString().ToLowerInvariant(),
                 _ => value.ToString(),
             };
         }
@@ -67,6 +68,7 @@ namespace ClosedXML.Excel
                 decimal v => v.ToString(CultureInfo.InvariantCulture),
                 TimeSpan ts => ts.ToString("c", CultureInfo.InvariantCulture),
                 DateTime d => d.ToString(CultureInfo.InvariantCulture),
+                bool b => b.ToString().ToLowerInvariant(),
                 _ => value.ToString(),
             };
         }
