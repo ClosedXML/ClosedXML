@@ -4,16 +4,16 @@
     <TargetFrameworks>netstandard2.0;net40;net46</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>ClosedXML</AssemblyName>
-    <PackageId>ClosedXML</PackageId>
+    <PackageId>ClosedXML.DP</PackageId>
     <Version>0.95.3.3</Version>
-    <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash</Authors>
+    <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash, rominator1983</Authors>
     <Owners>Francois Botha, Aleksei Pankratev</Owners>
     <Company />
     <Product>ClosedXML</Product>
     <PackageReleaseNotes>See https://github.com/ClosedXML/ClosedXML/releases/tag/$(productVersion)</PackageReleaseNotes>
     <Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
     <Copyright>MIT</Copyright>
-    <PackageProjectUrl>https://github.com/ClosedXML/ClosedXML</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/rominator1983/ClosedXML</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <!--<PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png</PackageIconUrl>-->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
-    <PackageId>ClosedXML.Signed</PackageId>
+    <PackageId>ClosedXML.DP.Signed</PackageId>
     <OutputPath>bin\Release.Signed\</OutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
