@@ -86,18 +86,7 @@ namespace ClosedXML.Tests
 
             if (CompareWithResources)
             {
-                string resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
-                using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
-                using (var streamActual = File.OpenRead(filePath2))
-                {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
-                    var formattedMessage =
-                        String.Format(
-                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
-                            filePath2, resourcePath, message);
-
-                    Assert.IsTrue(success, formattedMessage);
-                }
+                CompareFiles(filePath2, "Examples." + filePartName.Replace('\\', '.').TrimStart('.'));
             }
         }
 
@@ -122,18 +111,7 @@ namespace ClosedXML.Tests
 
             if (CompareWithResources)
             {
-                string resourcePath = referenceResource.Replace('\\', '.').TrimStart('.');
-                using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
-                using (var streamActual = File.OpenRead(filePath2))
-                {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
-                    var formattedMessage =
-                        String.Format(
-                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
-                            filePath2, resourcePath, message);
-
-                    Assert.IsTrue(success, formattedMessage);
-                }
+                CompareFiles(filePath2, referenceResource.Replace('\\', '.').TrimStart('.'));
             }
         }
 
@@ -159,6 +137,28 @@ namespace ClosedXML.Tests
         public static IEnumerable<String> ListResourceFiles(Func<String, Boolean> predicate = null)
         {
             return _extractor.GetFileNames(predicate);
+        }
+
+        private static void CompareFiles(string filePath2, string resourcePath)
+        {
+            using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
+            using (var streamActual = File.OpenRead(filePath2))
+            {
+                Assert.IsTrue(ExcelDocsComparer.Compare(streamActual, streamExpected, out string message),
+                    $"Actual file `.\\{GetRelativePath(filePath2, Environment.CurrentDirectory)}` is different to the expected file `{resourcePath}`.\r\n{message}");
+            }
+        }
+
+        private static string GetRelativePath(string filespec, string folder)
+        {
+            Uri pathUri = new Uri(filespec);
+            // Folders must end in a slash
+            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                folder += Path.DirectorySeparatorChar;
+            }
+            Uri folderUri = new Uri(folder);
+            return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
     }
 }
