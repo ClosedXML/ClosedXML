@@ -332,11 +332,8 @@ namespace ClosedXML.Tests
                 }
             }
 
-            if (compareToFirstDifference && pairs.Any(pair => pair.Value.Status != CompareStatus.Equal))
+            if (!compareToFirstDifference || !pairs.Any(pair => pair.Value.Status != CompareStatus.Equal))
             {
-                goto EXIT;
-            }
-
             foreach (PartPair pair in pairs.Values)
             {
                 if (pair.Status != CompareStatus.Equal)
@@ -367,14 +364,12 @@ namespace ClosedXML.Tests
                     {
                         pair.Status = CompareStatus.NonEqual;
                         if (compareToFirstDifference)
-                        {
-                            goto EXIT;
+                                break;
                         }
                     }
                 }
             }
 
-        EXIT:
             List<PartPair> sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();
@@ -384,10 +379,10 @@ namespace ClosedXML.Tests
                 {
                     continue;
                 }
-                sbuilder.AppendFormat("{0} :{1}", pair.Uri, pair.Status);
+                sbuilder.Append($"{pair.Uri}: {pair.Status}");
                 sbuilder.AppendLine();
             }
-            message = sbuilder.ToString();
+            message = sbuilder.ToString().Trim();
             return message.Length == 0;
         }
 
