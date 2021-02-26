@@ -41,7 +41,6 @@ dotnet_csproj:
 # platform: Any CPU
 configuration : 
 - Release
-- Release.Signed
 
 before_build:
   - cmd: nuget update -self
@@ -59,3 +58,13 @@ artifacts:
 nuget:
   project_feed: true
   disable_publish_on_pr: true
+
+deploy:
+  provider: NuGet
+  server: https://int.nugettest.org/api/v2/package
+  api_key:
+    secure: dja9vwlYlbNBT06mCCsPPidkQwhNdSWHcSJAbZbNdx1mrt8a3tr+FiNM7lMhDROs
+  skip_symbols: true
+  artifact: /.*(\.|\.s)nupkg/
+  on:
+    branch: nugetPublish
