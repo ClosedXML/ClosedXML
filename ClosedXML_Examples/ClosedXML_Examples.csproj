@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net40;net46</TargetFrameworks>
+    <TargetFrameworks>net5</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <OutputType>Exe</OutputType>
     <Version>0.95.2</Version>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release;Release.Signed</Configurations>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
     <OutputPath>bin\Release.Signed\</OutputPath>
     <SignAssembly>true</SignAssembly>
@@ -39,8 +39,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
-    <PackageReference Include="morelinq" Version="2.10.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.12.3" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
   </ItemGroup>
 
 </Project>
