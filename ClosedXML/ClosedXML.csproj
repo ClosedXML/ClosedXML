@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>ClosedXML</AssemblyName>
     <PackageId>ClosedXML.DP</PackageId>
@@ -37,7 +37,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Optimize>true</Optimize>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>TRACE;_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
   </PropertyGroup>
@@ -74,7 +74,7 @@
 
     <!-- SourceLink , see https://github.com/ctaggart/SourceLink -->
     <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.3" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

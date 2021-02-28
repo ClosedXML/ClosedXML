@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.0;net40;net46</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
     <Version>0.95.2</Version>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
@@ -21,8 +21,7 @@
     <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET46_</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'"></ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <Reference Include="System.ComponentModel.DataAnnotations" />
