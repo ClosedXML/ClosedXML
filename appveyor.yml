@@ -6,37 +6,14 @@ image: Visual Studio 2019
 environment:
   AppVeyor: APPVEYOR
 
-init:
-
-- ps: >-
-    if ($env:APPVEYOR_REPO_TAG -eq 'true')
-    {
-      $env:fileVersion = $env:APPVEYOR_REPO_TAG_NAME -replace '(\d+)\.(\d+)\.(\d+)(-.+)?', '$1.$2.$3'
-      if ($env:fileVersion -eq $env:APPVEYOR_REPO_TAG_NAME) { $env:fileVersion = $($env:fileVersion + '.0') }
-      else { $env:fileVersion = $($env:fileVersion + '.' + $env:APPVEYOR_BUILD_NUMBER) }
-      $env:productVersion = $env:APPVEYOR_REPO_TAG_NAME
-    }
-    else
-    {
-      $env:fileVersion = $env:APPVEYOR_BUILD_VERSION -replace '(\d+)\.(\d+)\.([^.]+)\.(\d+)', '$1.$2.999.$4'
-      $env:productVersion = $env:fileVersion
-    }
-    
-    Update-AppveyorBuild -Version $env:fileVersion
-    
-    Write-Host $env:fileVersion $env:productVersion
-    
-    Write-Host $env:APPVEYOR_REPO_TAG $env:APPVEYOR_REPO_TAG_NAME
-
-
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '$(productVersion)'
-  package_version: '$(productVersion)'
-  assembly_version: '$(fileVersion)'
-  file_version: '$(fileVersion)'
-  informational_version: '$(productVersion)'
+  version: "{version}"
+  package_version: "{version}-prerelease"
+  assembly_version: "{version}"
+  file_version: "{version}"
+  informational_version: "{version}"
 
 # platform: Any CPU
 configuration : 
@@ -49,6 +26,9 @@ before_build:
 build:
   parallel: true
   project: ClosedXML.sln
+  publish_nuget: true
+  publish_nuget_symbols: true
+  use_snupkg_format: true
   verbosity: minimal
 
 artifacts:
@@ -64,7 +44,7 @@ deploy:
   server: https://int.nugettest.org/api/v2/package
   api_key:
     secure: dja9vwlYlbNBT06mCCsPPidkQwhNdSWHcSJAbZbNdx1mrt8a3tr+FiNM7lMhDROs
-  skip_symbols: true
+  skip_symbols: false
   artifact: /.*(\.|\.s)nupkg/
   on:
     branch: nugetPublish
