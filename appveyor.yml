@@ -40,11 +40,11 @@ nuget:
   disable_publish_on_pr: true
 
 deploy:
-  provider: NuGet
-  server: https://int.nugettest.org/api/v2/package
-  api_key:
-    secure: dja9vwlYlbNBT06mCCsPPidkQwhNdSWHcSJAbZbNdx1mrt8a3tr+FiNM7lMhDROs
-  skip_symbols: false
-  artifact: /.*(\.|\.s)nupkg/
-  on:
-    branch: nugetPublish
+  - provider: NuGet
+    server: https://int.nugettest.org/api/v2/package
+    api_key:
+      secure: dja9vwlYlbNBT06mCCsPPidkQwhNdSWHcSJAbZbNdx1mrt8a3tr+FiNM7lMhDROs
+    skip_symbols: false
+    artifact: /.*(\.|\.s)nupkg/
+    on:
+      branch: nugetPublish
