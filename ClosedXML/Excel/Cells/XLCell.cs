@@ -360,19 +360,18 @@ namespace ClosedXML.Excel
 
         public string GetFormattedString()
         {
-            var format = GetFormat();
-            try
+            string format = GetFormat();
+            if (!string.IsNullOrEmpty(format))
             {
-                return Value.ToExcelFormat(format);
+                if (Value != null)
+                {
+                    return Value.ToExcelFormat(format);
+                }
+                else if (CachedValue != null)
+                {
+                    return CachedValue.ToExcelFormat(format);
+                }
             }
-            catch { }
-
-            try
-            {
-                return CachedValue.ToExcelFormat(format);
-            }
-            catch { }
-
             return _cellValue;
         }
 
