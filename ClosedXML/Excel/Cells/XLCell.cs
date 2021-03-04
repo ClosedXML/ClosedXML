@@ -1253,19 +1253,19 @@ namespace ClosedXML.Excel
         }
 
         public bool HasRichText
-            {
+        {
             get { return _richText != null; }
         }
 
         public IXLRichText CreateRichText()
-                {
-                    var style = GetStyleForRead();
-                    _richText = _cellValue.Length == 0
-                                    ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
-                                    : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
+        {
+            var style = GetStyleForRead();
+            _richText = _cellValue.Length == 0
+                            ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
+                            : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
 
-                return _richText;
-            }
+            return _richText;
+        }
 
         IXLComment IXLCell.GetComment()
         {
