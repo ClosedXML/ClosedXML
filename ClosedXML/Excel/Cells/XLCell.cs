@@ -362,16 +362,23 @@ namespace ClosedXML.Excel
         public string GetFormattedString()
         {
             var format = GetFormat();
-            object valRef = NeedsRecalculation ? Value : CachedValue;
-
-            if (format.IsNumber())
+            var valRef = NeedsRecalculation ? Value : CachedValue;
+            try
             {
-                return valRef.ToExcelFormat(format);
+                if (format.IsNumber())
+                {
+                    return valRef.ToExcelFormat(format);
+                }
+                else
+                {
+                    return String.Format(CultureInfo.InvariantCulture, "{0}", valRef);
+                }
             }
-            else
+            catch
             {
-                return String.Format(CultureInfo.InvariantCulture,"{0}", valRef);
+                return _cellValue;
             }
+           
             //{
             //    return Value.ToExcelFormat(format);
             //}
