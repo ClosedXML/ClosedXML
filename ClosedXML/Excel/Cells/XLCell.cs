@@ -365,20 +365,23 @@ namespace ClosedXML.Excel
             var valRef = NeedsRecalculation ? Value : CachedValue;
             try
             {
-                if (format.IsNumber())
+                if (!string.IsNullOrWhiteSpace(format))
                 {
                     return valRef.ToExcelFormat(format);
                 }
-                else
+                var provider = CultureInfo.InvariantCulture;
+                return valRef switch
                 {
-                    return String.Format(CultureInfo.InvariantCulture, "{0}", valRef);
-                }
+                    double d => d.ToString("G15", provider),
+                    float f => f.ToString("G7", provider),
+                    _ => Convert.ToString(valRef, provider),
+                };
             }
             catch
             {
                 return _cellValue;
             }
-           
+
             //{
             //    return Value.ToExcelFormat(format);
             //}
