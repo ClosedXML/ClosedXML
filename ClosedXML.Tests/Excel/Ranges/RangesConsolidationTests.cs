@@ -26,9 +26,9 @@ namespace ClosedXML.Tests.Excel.Ranges
             var consRanges = ranges.Consolidate().ToList();
 
             Assert.AreEqual(6, consRanges.Count);
-            Assert.AreEqual("A1:E9",   consRanges[0].RangeAddress.ToString());
-            Assert.AreEqual("F2:F12",  consRanges[1].RangeAddress.ToString());
-            Assert.AreEqual("G6:I9",   consRanges[2].RangeAddress.ToString());
+            Assert.AreEqual("A1:E9", consRanges[0].RangeAddress.ToString());
+            Assert.AreEqual("F2:F12", consRanges[1].RangeAddress.ToString());
+            Assert.AreEqual("G6:I9", consRanges[2].RangeAddress.ToString());
             Assert.AreEqual("A10:B10", consRanges[3].RangeAddress.ToString());
             Assert.AreEqual("E10:E12", consRanges[4].RangeAddress.ToString());
             Assert.AreEqual("I10:I13", consRanges[5].RangeAddress.ToString());
@@ -83,7 +83,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             ranges.Add(ws1.Range("H9:H9"));
             ranges.Add(ws1.Range("I9:I13"));
             ranges.Add(ws1.Range("C4:D5"));
-            
+
             var consRanges = ranges.Consolidate()
                 .OrderBy(r => r.Worksheet.Name)
                 .ThenBy(r => r.RangeAddress.FirstAddress.RowNumber)

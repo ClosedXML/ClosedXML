@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML.Tests.Excel.DataValidations
 {
@@ -63,7 +61,6 @@ namespace ClosedXML.Tests.Excel.DataValidations
                     Assert.IsNull(foundDv);
             }
         }
-
 
         [TestCase("A1:A1", 1)]
         [TestCase("A1:A3", 1)]

@@ -1,10 +1,5 @@
 ﻿using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClosedXML.Tests.Excel.Styles
 {
@@ -39,15 +34,15 @@ namespace ClosedXML.Tests.Excel.Styles
                 ws.Range("A1:B2").Style.Font.FontColor = XLColor.PowderBlue;
 
                 //Assert
-                Assert.AreEqual(XLColor.Red,    ws.Cell("A1").Style.Fill.BackgroundColor);
-                Assert.AreEqual(XLColor.Green,  ws.Cell("A2").Style.Fill.BackgroundColor);
-                Assert.AreEqual(XLColor.Blue,   ws.Cell("B1").Style.Fill.BackgroundColor);
-                Assert.AreEqual(XLColor.Pink,   ws.Cell("B2").Style.Fill.BackgroundColor);
-                
-                Assert.AreEqual("Arial",            ws.Cell("A1").Style.Font.FontName);
-                Assert.AreEqual("Times New Roman",  ws.Cell("A2").Style.Font.FontName);
-                Assert.AreEqual("Calibri",          ws.Cell("B1").Style.Font.FontName);
-                Assert.AreEqual("Cambria",          ws.Cell("B2").Style.Font.FontName);
+                Assert.AreEqual(XLColor.Red, ws.Cell("A1").Style.Fill.BackgroundColor);
+                Assert.AreEqual(XLColor.Green, ws.Cell("A2").Style.Fill.BackgroundColor);
+                Assert.AreEqual(XLColor.Blue, ws.Cell("B1").Style.Fill.BackgroundColor);
+                Assert.AreEqual(XLColor.Pink, ws.Cell("B2").Style.Fill.BackgroundColor);
+
+                Assert.AreEqual("Arial", ws.Cell("A1").Style.Font.FontName);
+                Assert.AreEqual("Times New Roman", ws.Cell("A2").Style.Font.FontName);
+                Assert.AreEqual("Calibri", ws.Cell("B1").Style.Font.FontName);
+                Assert.AreEqual("Cambria", ws.Cell("B2").Style.Font.FontName);
 
                 Assert.AreEqual(XLColor.PowderBlue, ws.Cell("A1").Style.Font.FontColor);
                 Assert.AreEqual(XLColor.PowderBlue, ws.Cell("A2").Style.Font.FontColor);
@@ -55,7 +50,6 @@ namespace ClosedXML.Tests.Excel.Styles
                 Assert.AreEqual(XLColor.PowderBlue, ws.Cell("B2").Style.Font.FontColor);
             }
         }
-
 
         [Test]
         public void ChangeDetachedStyleAlignment()
@@ -87,7 +81,6 @@ namespace ClosedXML.Tests.Excel.Styles
             Assert.AreEqual(XLColor.Red, style.Fill.BackgroundColor);
         }
 
-
         [Test]
         public void ChangeDetachedStyleFont()
         {
@@ -97,7 +90,6 @@ namespace ClosedXML.Tests.Excel.Styles
 
             Assert.AreEqual(50, style.Font.FontSize);
         }
-
 
         [Test]
         public void ChangeDetachedStyleNumberFormat()

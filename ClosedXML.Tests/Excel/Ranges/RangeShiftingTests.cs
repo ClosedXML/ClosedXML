@@ -77,6 +77,5 @@ namespace ClosedXML.Tests.Excel.Ranges
                 Assert.AreSame(f8, ws.Cell("F5"));
             }
         }
-
     }
 }

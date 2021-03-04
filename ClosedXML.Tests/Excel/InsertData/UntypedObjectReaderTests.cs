@@ -63,7 +63,7 @@ namespace ClosedXML.Tests.Excel.InsertData
 
             var result = reader.GetData().ToArray();
 
-            Assert.AreEqual(new object [] { null }, result[0]);
+            Assert.AreEqual(new object[] { null }, result[0]);
             Assert.AreEqual(new object[] { "Value 2", "Value 1", 4, 3 }, result[1]);
             Assert.AreEqual(new object[] { null }, result[2]);
             Assert.AreEqual(new object[] { null }, result[3]);
@@ -75,4 +75,3 @@ namespace ClosedXML.Tests.Excel.InsertData
         }
     }
 }
-

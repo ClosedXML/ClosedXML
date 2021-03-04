@@ -374,7 +374,7 @@ namespace ClosedXML.Tests
                 }
             }
 
-            EXIT:
+        EXIT:
             List<PartPair> sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();

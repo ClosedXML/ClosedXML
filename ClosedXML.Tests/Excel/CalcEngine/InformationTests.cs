@@ -77,6 +77,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(true, actual);
             }
         }
+
         #endregion IsBlank Tests
 
         #region IsEven Tests
@@ -156,6 +157,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(true, actual);
             }
         }
+
         #endregion IsLogical Tests
 
         [Test]
@@ -210,6 +212,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(true, actual);
             }
         }
+
         #endregion IsNotText Tests
 
         #region IsNumber Tests
@@ -254,6 +257,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(true, actual);
             }
         }
+
         #endregion IsNumber Tests
 
         #region IsOdd Test
@@ -297,6 +301,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(true, actual);
             }
         }
+
         #endregion IsOdd Test
 
         [Test]
@@ -366,6 +371,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(true, actual);
             }
         }
+
         #endregion IsText Tests
 
         #region N Tests
@@ -431,6 +437,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(1, actual);
             }
         }
+
         #endregion N Tests
     }
 }

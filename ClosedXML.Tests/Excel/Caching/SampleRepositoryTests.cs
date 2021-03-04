@@ -1,9 +1,7 @@
-using System;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Caching;
 using NUnit.Framework;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClosedXML.Tests.Excel.Caching
@@ -30,7 +28,6 @@ namespace ClosedXML.Tests.Excel.Caching
             Assert.AreNotSame(entity2, storedEntity2);
         }
 
-
         [Test]
         public void NonUsedReferencesAreGCed()
         {
@@ -40,13 +37,13 @@ namespace ClosedXML.Tests.Excel.Caching
             var sampleRepository = this.CreateSampleRepository();
 
             // Act
-            var storedEntityRef1 = new WeakReference(sampleRepository.Store(ref key, new SampleEntity(key)));
+            var storedEntityRef1 = new System.WeakReference(sampleRepository.Store(ref key, new SampleEntity(key)));
 
             int count = 0;
             do
             {
-                Thread.Sleep(50);
-                GC.Collect();
+                System.Threading.Thread.Sleep(50);
+                System.GC.Collect();
                 count++;
             } while (storedEntityRef1.IsAlive && count < 10);
 
@@ -59,7 +56,6 @@ namespace ClosedXML.Tests.Excel.Caching
             Assert.Ignore("Can't run in DEBUG");
 #endif
         }
-
 
         [Test]
         public void NonUsedReferencesAreGCed2()
@@ -87,8 +83,8 @@ namespace ClosedXML.Tests.Excel.Caching
                     sampleRepository.Store(ref key, e);
                 });
 
-            Thread.Sleep(50);
-            GC.Collect();
+            System.Threading.Thread.Sleep(50);
+            System.GC.Collect();
             var storedEntries = sampleRepository.ToList();
 
             // Assert
@@ -211,7 +207,6 @@ namespace ClosedXML.Tests.Excel.Caching
             }
         }
 
-
         /// <summary>
         /// Class under testing
         /// </summary>
@@ -232,6 +227,4 @@ namespace ClosedXML.Tests.Excel.Caching
             }
         }
     }
-
-
 }

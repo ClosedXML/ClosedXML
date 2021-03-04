@@ -1,7 +1,7 @@
-using System.Drawing;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
+using System.Drawing;
+using System.Linq;
 
 namespace ClosedXML.Tests
 {

@@ -15,19 +15,19 @@ namespace ClosedXML.Tests
         {
             Assert.DoesNotThrow(() =>
             {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
-            using (var wb = new XLWorkbook(stream))
-            {
-                var ws = wb.Worksheet("PastrySalesData");
-                var table = ws.Table("PastrySalesData");
-                var ptSheet = wb.Worksheets.Add("BlankPivotTable");
-                ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table);
-
-                using (var ms = new MemoryStream())
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+                using (var wb = new XLWorkbook(stream))
                 {
-                    wb.SaveAs(ms, true);
+                    var ws = wb.Worksheet("PastrySalesData");
+                    var table = ws.Table("PastrySalesData");
+                    var ptSheet = wb.Worksheets.Add("BlankPivotTable");
+                    ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table);
+
+                    using (var ms = new MemoryStream())
+                    {
+                        wb.SaveAs(ms, true);
+                    }
                 }
-            }
             });
         }
 

@@ -68,7 +68,8 @@ namespace ClosedXML.Tests.Excel
                 PatternColor = XLColor.Blue
             };
 
-            var fill2 = new XLFill {
+            var fill2 = new XLFill
+            {
                 PatternType = XLFillPatternValues.Solid,
                 BackgroundColor = XLColor.Red,
                 PatternColor = XLColor.Green
