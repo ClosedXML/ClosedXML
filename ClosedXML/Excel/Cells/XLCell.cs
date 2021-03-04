@@ -362,6 +362,10 @@ namespace ClosedXML.Excel
         {
            
             var format = GetFormat();
+            if (string.IsNullOrWhiteSpace(format)||string.IsNullOrEmpty(format))
+            {
+                return _cellValue;
+            }
             try
             {
                 return Value.ToExcelFormat(format);
