@@ -8,7 +8,7 @@
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release;</Configurations>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\ClosedXML.snk</AssemblyOriginatorKeyFile>
     <AssemblyName>ClosedXML.Tests</AssemblyName>
     <RootNamespace>ClosedXML.Tests</RootNamespace>
   </PropertyGroup>
