@@ -20,7 +20,7 @@ namespace ClosedXML_Tests
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
                 using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
                 {
                     var picture = ws.AddPicture(bitmap, "MyPicture")
@@ -42,7 +42,7 @@ namespace ClosedXML_Tests
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
                 {
                     var picture = ws.AddPicture(resourceStream, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
@@ -67,7 +67,7 @@ namespace ClosedXML_Tests
 
                 try
                 {
-                    using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                    using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
                     using (var fileStream = File.Create(path))
                     {
                         resourceStream.Seek(0, SeekOrigin.Begin);
@@ -98,7 +98,7 @@ namespace ClosedXML_Tests
 
             try
             {
-                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
                 using (var fileStream = File.Create(path))
                 {
                     resourceStream.Seek(0, SeekOrigin.Begin);

@@ -1,6 +1,6 @@
-using ClosedXML_Examples;
-using ClosedXML_Examples.Misc;
-using ClosedXML_Examples.Ranges;
+using ClosedXML.Examples;
+using ClosedXML.Examples.Misc;
+using ClosedXML.Examples.Ranges;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples

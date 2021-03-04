@@ -291,7 +291,7 @@ namespace ClosedXML_Tests.Excel.Saving
         {
             using (var ms = new MemoryStream())
             using (var wb = new XLWorkbook())
-            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
             using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
             {
                 var ws = wb.AddWorksheet("Sheet1");

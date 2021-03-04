@@ -1,4 +1,4 @@
-using ClosedXML_Examples;
+using ClosedXML.Examples;
 using NUnit.Framework;
 using System.IO;
 

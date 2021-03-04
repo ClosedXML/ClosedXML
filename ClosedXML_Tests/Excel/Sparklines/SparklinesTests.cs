@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using ClosedXML_Examples.Sparklines;
+using ClosedXML.Examples.Sparklines;
 using NUnit.Framework;
 using System;
 using System.IO;
