@@ -163,7 +163,6 @@ namespace ClosedXML.Tests.Examples
             TestHelper.RunTestExample<InsertingData>(@"Misc\InsertingData.xlsx");
         }
 
-
         [Test]
         public void LambdaExpressions()
         {

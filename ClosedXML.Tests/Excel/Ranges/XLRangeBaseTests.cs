@@ -414,7 +414,6 @@ namespace ClosedXML.Tests
             Assert.AreEqual("C1:C2", rangesCopy.Last().RangeAddress.ToString());
         }
 
-
         [Test]
         public void RangesRemoveAllByCriteria()
         {
@@ -483,7 +482,6 @@ namespace ClosedXML.Tests
             Assert.IsFalse(ws.Cell("B1").HasSparkline);
             Assert.IsFalse(ws.Cell("B2").HasSparkline);
             Assert.IsTrue(ws.Cell("B3").HasSparkline);
-
         }
 
         [TestCase("B2:G7", "D4:E5", true, "B2:G3,B4:C5,D4:E5,F4:G5,B6:G7")]
@@ -514,7 +512,6 @@ namespace ClosedXML.Tests
             var actualAddresses = string.Join(",", result.Select(r => r.RangeAddress.ToString()));
 
             Assert.AreEqual(expectedResult, actualAddresses);
-
         }
     }
 }

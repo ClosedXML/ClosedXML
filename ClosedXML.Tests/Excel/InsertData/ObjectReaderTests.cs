@@ -102,7 +102,7 @@ namespace ClosedXML.Tests.Excel.InsertData
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
             return reader.GetPropertiesCount();
         }
-        
+
         private static IEnumerable<TestCaseData> PropertyCounts
         {
             get

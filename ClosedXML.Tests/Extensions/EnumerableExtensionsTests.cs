@@ -27,9 +27,9 @@ namespace ClosedXML.Tests.Extensions
 
             enumerable = new List<int[]>();
             Assert.AreEqual(typeof(int[]), enumerable.GetItemType());
-            
+
             var anonymousIterator = new List<TablesTests.TestObjectWithoutAttributes>()
-                .Select(o => new { FirstName = o.Column1, LastName = o.Column2});
+                .Select(o => new { FirstName = o.Column1, LastName = o.Column2 });
 
             //expectedType can be something like <>f__AnonymousType9`2[System.String,System.String]
             //but since that `9` may differ with new anonymous types declare in the assembly

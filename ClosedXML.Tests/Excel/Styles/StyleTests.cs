@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 

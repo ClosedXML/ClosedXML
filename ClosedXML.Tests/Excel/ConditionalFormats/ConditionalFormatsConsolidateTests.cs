@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.Linq;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System.Linq;
 
 namespace ClosedXML.Tests.Excel.ConditionalFormats
 {
@@ -49,7 +48,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         {
             var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
-            
+
             SetFormat1(ws.Range("B11:D12").AddConditionalFormat());
             SetFormat1(ws.Range("C12:D12").AddConditionalFormat());
 
@@ -127,7 +126,6 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             Assert.AreNotEqual((ws.ConditionalFormats.First().Style as XLStyle).Value, (ws.ConditionalFormats.ElementAt(1).Style as XLStyle).Value);
         }
 
-
         [Test]
         public void ConsolidatePreservesPriorities2()
         {
@@ -149,7 +147,6 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             Assert.AreEqual("A2:A3", ws.ConditionalFormats.ElementAt(1).Ranges.Single().RangeAddress.ToString());
             Assert.AreEqual("A2:A8", ws.ConditionalFormats.ElementAt(2).Ranges.Single().RangeAddress.ToString());
         }
-
 
         [Test]
         public void ConsolidateShiftsFormulaRelativelyToTopMostCell()
@@ -195,7 +192,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
 
         private static void SetFormat1(IXLConditionalFormat format)
         {
-            format.WhenEquals("="+format.Range.FirstCell().CellRight(4).Address.ToStringRelative()).Fill.SetBackgroundColor(XLColor.Blue);
+            format.WhenEquals("=" + format.Range.FirstCell().CellRight(4).Address.ToStringRelative()).Fill.SetBackgroundColor(XLColor.Blue);
         }
 
         private static void SetFormat2(IXLConditionalFormat format)

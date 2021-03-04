@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace ClosedXML.Tests.Excel.ConditionalFormats
 {
@@ -91,8 +91,8 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             TestDelegate action = () => format.CopyTo(ws1);
 
             Assert.Throws(typeof(InvalidOperationException), action);
-
         }
+
         [Test]
         public void FullCopyConditionalFormatDifferentWorksheets()
         {

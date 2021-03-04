@@ -503,7 +503,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var stream = new MemoryStream())
             {
-                using (var wb = new XLWorkbook ())
+                using (var wb = new XLWorkbook())
                 {
                     var sheet = wb.AddWorksheet("sheet1");
 
@@ -520,25 +520,25 @@ namespace ClosedXML.Tests.Excel
                     wb.Properties.Company = company;
                     wb.Properties.Manager = manager;
 
-                    wb.SaveAs (stream, true);
+                    wb.SaveAs(stream, true);
                 }
 
                 stream.Position = 0;
 
                 using (var wb = new XLWorkbook(stream))
                 {
-                    Assert.AreEqual (author, wb.Properties.Author);
-                    Assert.AreEqual (title, wb.Properties.Title);
-                    Assert.AreEqual (subject, wb.Properties.Subject);
-                    Assert.AreEqual (category, wb.Properties.Category);
-                    Assert.AreEqual (keywords, wb.Properties.Keywords);
-                    Assert.AreEqual (comments, wb.Properties.Comments);
-                    Assert.AreEqual (status, wb.Properties.Status);
-                    Assert.AreEqual (created, wb.Properties.Created);
-                    Assert.AreEqual (modified, wb.Properties.Modified);
-                    Assert.AreEqual (lastModifiedBy, wb.Properties.LastModifiedBy);
-                    Assert.AreEqual (company, wb.Properties.Company);
-                    Assert.AreEqual (manager, wb.Properties.Manager);
+                    Assert.AreEqual(author, wb.Properties.Author);
+                    Assert.AreEqual(title, wb.Properties.Title);
+                    Assert.AreEqual(subject, wb.Properties.Subject);
+                    Assert.AreEqual(category, wb.Properties.Category);
+                    Assert.AreEqual(keywords, wb.Properties.Keywords);
+                    Assert.AreEqual(comments, wb.Properties.Comments);
+                    Assert.AreEqual(status, wb.Properties.Status);
+                    Assert.AreEqual(created, wb.Properties.Created);
+                    Assert.AreEqual(modified, wb.Properties.Modified);
+                    Assert.AreEqual(lastModifiedBy, wb.Properties.LastModifiedBy);
+                    Assert.AreEqual(company, wb.Properties.Company);
+                    Assert.AreEqual(manager, wb.Properties.Manager);
                 }
             }
         }

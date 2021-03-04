@@ -1,9 +1,7 @@
-using System;
-using System.IO;
-using System.Linq;
 using ClosedXML.Excel;
 using NUnit.Framework;
-using ClosedXML.Tests.Utils;
+using System;
+using System.Linq;
 
 namespace ClosedXML.Tests.Excel
 {
@@ -73,7 +71,6 @@ namespace ClosedXML.Tests.Excel
 
             Assert.AreEqual("X", ws.Column(3).Cell(2).GetString());
 
-
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, columnIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, columnIns.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, columnIns.Cell(3).Style.Fill.BackgroundColor);
@@ -127,7 +124,6 @@ namespace ClosedXML.Tests.Excel
 
             Assert.AreEqual("X", ws.Column(3).Cell(2).GetString());
 
-
             Assert.AreEqual(XLColor.Red, columnIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, columnIns.Cell(2).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, columnIns.Cell(3).Style.Fill.BackgroundColor);
@@ -180,7 +176,6 @@ namespace ClosedXML.Tests.Excel
             Assert.AreEqual(XLColor.Red, ws.Column(4).Cell(3).Style.Fill.BackgroundColor);
 
             Assert.AreEqual("X", ws.Column(2).Cell(2).GetString());
-
 
             Assert.AreEqual(XLColor.Yellow, columnIns.Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Green, columnIns.Cell(2).Style.Fill.BackgroundColor);

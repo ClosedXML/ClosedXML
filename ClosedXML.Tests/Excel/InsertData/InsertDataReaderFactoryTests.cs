@@ -105,7 +105,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         [Test]
         public void CanCreateSimpleReaderFromIEnumerableOfString()
         {
-            IEnumerable<string> data = new []
+            IEnumerable<string> data = new[]
             {
                 "String 1",
                 "String 2",

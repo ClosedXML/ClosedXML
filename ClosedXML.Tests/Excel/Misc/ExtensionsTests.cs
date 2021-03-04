@@ -1,7 +1,7 @@
-﻿using System;
-using ClosedXML.Excel;
-using NUnit.Framework;
+﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
+using NUnit.Framework;
+using System;
 
 namespace ClosedXML.Tests.Excel
 {

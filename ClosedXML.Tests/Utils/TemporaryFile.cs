@@ -19,7 +19,6 @@ namespace ClosedXML.Tests.Utils
             this.Preserve = preserve;
         }
 
-
         public string Path { get; private set; }
         public bool Preserve { get; private set; }
 
