@@ -1,4 +1,4 @@
-﻿using ClosedXML_Examples.Tables;
+﻿using ClosedXML.Examples.Tables;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples

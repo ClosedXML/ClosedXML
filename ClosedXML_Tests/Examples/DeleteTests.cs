@@ -1,4 +1,4 @@
-using ClosedXML_Examples.Delete;
+using ClosedXML.Examples.Delete;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples

@@ -713,8 +713,8 @@ namespace ClosedXML_Tests
         public void CopyWorksheetPreservesPictures()
         {
             using (var ms = new MemoryStream())
-            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable))
-                .GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable))
+                .GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
             using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
             using (var wb1 = new XLWorkbook())
             {

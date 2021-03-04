@@ -1,5 +1,5 @@
-using ClosedXML_Examples;
-using ClosedXML_Examples.Columns;
+using ClosedXML.Examples;
+using ClosedXML.Examples.Columns;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples

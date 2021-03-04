@@ -56,7 +56,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
-    <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
+    <ProjectReference Include="..\ClosedXML.Examples\ClosedXML.Examples.csproj" />
   </ItemGroup>
 
 </Project>

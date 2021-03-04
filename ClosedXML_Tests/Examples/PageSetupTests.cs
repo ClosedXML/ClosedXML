@@ -1,4 +1,4 @@
-using ClosedXML_Examples.PageSetup;
+using ClosedXML.Examples.PageSetup;
 using NUnit.Framework;
 
 namespace ClosedXML_Tests.Examples
