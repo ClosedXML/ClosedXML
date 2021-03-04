@@ -7,6 +7,8 @@
     <Version>0.95.4</Version>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release</Configurations>
+    <AssemblyName>ClosedXML.Sandbox</AssemblyName>
+    <RootNamespace>ClosedXML.Sandbox</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">

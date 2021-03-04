@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace ClosedXML_Sandbox
+namespace ClosedXML.Sandbox
 {
     internal static class ReflectionExtensions
     {
