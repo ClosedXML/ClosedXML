@@ -18,6 +18,19 @@ namespace ClosedXML_Tests.Excel.Saving
     public class SavingTests
     {
         [Test]
+        public void BooleanValueSavesAsLowerCase()
+        {
+            // When a cell evaluates to a boolean value, the text in the XML has to be true/false (lowercase only) or 0/1
+            TestHelper.CreateAndCompare(() =>
+            {
+                var wb = new XLWorkbook();
+                var ws = wb.AddWorksheet();
+                ws.FirstCell().FormulaA1 = "=TRUE";
+                return wb;
+            }, @"Other\Formulas\BooleanFormulaValues.xlsx", evaluateFormulae: true);
+        }
+
+        [Test]
         public void CanSaveEmptyFile()
         {
             using (var ms = new MemoryStream())
