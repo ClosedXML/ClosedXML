@@ -7,9 +7,6 @@ using System.Threading;
 
 namespace ClosedXML.Tests.Excel.DataValidations
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
     [TestFixture]
     public class DateAndTimeTests
     {

@@ -10,9 +10,6 @@ using System.Linq;
 
 namespace ClosedXML.Tests.Excel
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
     [TestFixture]
     public class TablesTests
     {

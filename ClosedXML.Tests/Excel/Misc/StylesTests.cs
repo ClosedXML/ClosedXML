@@ -3,9 +3,6 @@ using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.Misc
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
     [TestFixture]
     public class StylesTests
     {
