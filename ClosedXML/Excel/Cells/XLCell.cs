@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel.InsertData;
 using ClosedXML.Extensions;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -360,25 +361,29 @@ namespace ClosedXML.Excel
 
         public string GetFormattedString()
         {
-           
             var format = GetFormat();
-            if (string.IsNullOrWhiteSpace(format)||string.IsNullOrEmpty(format))
-            {
-                return _cellValue;
-            }
-            try
-            {
-                return Value.ToExcelFormat(format);
-            }
-            catch { }
+            object valRef = NeedsRecalculation ? Value : CachedValue;
 
-            try
+            if (format.IsNumber())
             {
-                return CachedValue.ToExcelFormat(format);
+                return valRef.ToExcelFormat(format);
             }
-            catch { }
+            else
+            {
+                return String.Format(CultureInfo.InvariantCulture,"{0}", valRef);
+            }
+            //{
+            //    return Value.ToExcelFormat(format);
+            //}
+            //catch { }
 
-            return _cellValue;
+            //try
+            //{
+            //    return CachedValue.ToExcelFormat(format);
+            //}
+            //catch { }
+
+            //return _cellValue;
         }
 
         /// <summary>
@@ -1258,19 +1263,19 @@ namespace ClosedXML.Excel
         }
 
         public bool HasRichText
-            {
+        {
             get { return _richText != null; }
         }
 
         public IXLRichText CreateRichText()
-                {
-                    var style = GetStyleForRead();
-                    _richText = _cellValue.Length == 0
-                                    ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
-                                    : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
+        {
+            var style = GetStyleForRead();
+            _richText = _cellValue.Length == 0
+                            ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
+                            : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
 
-                return _richText;
-            }
+            return _richText;
+        }
 
         IXLComment IXLCell.GetComment()
         {
