@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClosedXML_Sandbox
+namespace ClosedXML.Sandbox
 {
     public class OneRow
     {

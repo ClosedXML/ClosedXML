@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ClosedXML_Sandbox
+namespace ClosedXML.Sandbox
 {
     internal class PerformanceRunner
     {
