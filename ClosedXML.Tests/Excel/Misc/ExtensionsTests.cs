@@ -5,9 +5,6 @@ using System;
 
 namespace ClosedXML.Tests.Excel
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
     [TestFixture]
     public class ExtensionsTests
     {

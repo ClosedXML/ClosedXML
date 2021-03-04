@@ -4,9 +4,6 @@ using System.Linq;
 
 namespace ClosedXML.Tests.Excel.Misc
 {
-    /// <summary>
-    ///     Summary description for UnitTest1
-    /// </summary>
     [TestFixture]
     public class CopyContentsTests
     {
