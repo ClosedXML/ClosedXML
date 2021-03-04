@@ -365,17 +365,7 @@ namespace ClosedXML.Excel
             var valRef = NeedsRecalculation ? Value : CachedValue;
             try
             {
-                if (!string.IsNullOrWhiteSpace(format))
-                {
                     return valRef.ToExcelFormat(format);
-                }
-                var provider = CultureInfo.InvariantCulture;
-                return valRef switch
-                {
-                    double d => d.ToString("G15", provider),
-                    float f => f.ToString("G7", provider),
-                    _ => Convert.ToString(valRef, provider),
-                };
             }
             catch
             {
