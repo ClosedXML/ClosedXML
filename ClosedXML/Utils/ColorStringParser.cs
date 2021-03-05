@@ -9,6 +9,9 @@ namespace ClosedXML.Utils
         {
             try
             {
+                if (htmlColor[0] != '#')
+                    htmlColor = '#' + htmlColor;
+
                 return ColorTranslator.FromHtml(htmlColor);
             }
             catch
