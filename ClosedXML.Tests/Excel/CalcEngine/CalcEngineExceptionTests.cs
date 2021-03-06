@@ -19,15 +19,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void InvalidCharNumber()
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("CHAR(-2)"));
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("CHAR(270)"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr("CHAR(-2)"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr("CHAR(270)"));
         }
 
         [Test]
         public void DivisionByZero()
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("0/0"));
-            Assert.Throws<DivisionByZeroException>(() => new XLWorkbook().AddWorksheet().Evaluate("0/0"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr("0/0"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, new XLWorkbook().AddWorksheet().Evaluate("0/0"));
         }
 
         [Test]

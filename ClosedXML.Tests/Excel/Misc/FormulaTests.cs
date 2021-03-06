@@ -178,13 +178,13 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void FormulasWithErrors()
         {
-            Assert.Throws<CellReferenceException>(() => XLWorkbook.EvaluateExpr("YEAR(#REF!)"));
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#VALUE!)"));
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("YEAR(#DIV/0!)"));
-            Assert.Throws<NameNotRecognizedException>(() => XLWorkbook.EvaluateExpr("YEAR(#NAME?)"));
-            Assert.Throws<NoValueAvailableException>(() => XLWorkbook.EvaluateExpr("YEAR(#N/A)"));
-            Assert.Throws<NullValueException>(() => XLWorkbook.EvaluateExpr("YEAR(#NULL!)"));
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("YEAR(#NUM!)"));
+            Assert.AreEqual(XLCalculationErrorType.CellReference, XLWorkbook.EvaluateExpr("YEAR(#REF!)"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr("YEAR(#VALUE!)"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr("YEAR(#DIV/0!)"));
+            Assert.AreEqual(XLCalculationErrorType.NameNotRecognized, XLWorkbook.EvaluateExpr("YEAR(#NAME?)"));
+            Assert.AreEqual(XLCalculationErrorType.NoValueAvailable, XLWorkbook.EvaluateExpr("YEAR(#N/A)"));
+            Assert.AreEqual(XLCalculationErrorType.NullValue, XLWorkbook.EvaluateExpr("YEAR(#NULL!)"));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr("YEAR(#NUM!)"));
         }
 
         [Test]

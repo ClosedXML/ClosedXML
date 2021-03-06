@@ -9,7 +9,7 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// Corresponds to the #NAME? error in Excel
     /// </summary>
     /// <seealso cref="System.ApplicationException" />
-    public class NameNotRecognizedException : CalcEngineException
+    internal class NameNotRecognizedException : CalcEngineException
     {
         internal NameNotRecognizedException()
             : base()

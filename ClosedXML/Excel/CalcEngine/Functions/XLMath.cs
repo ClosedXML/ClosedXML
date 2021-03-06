@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
@@ -93,6 +91,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             return Math.Abs(value % 2) == 0;
         }
+
         public static Boolean IsOdd(Int32 value)
         {
             return Math.Abs(value % 2) != 0;
@@ -103,7 +102,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if ((number < 0) || (number > 3999)) throw new ArgumentOutOfRangeException("insert value betwheen 1 and 3999");
             if (number < 1) return string.Empty;
             if (number >= 1000) return "M" + ToRoman(number - 1000);
-            if (number >= 900) return "CM" + ToRoman(number - 900); 
+            if (number >= 900) return "CM" + ToRoman(number - 900);
             if (number >= 500) return "D" + ToRoman(number - 500);
             if (number >= 400) return "CD" + ToRoman(number - 400);
             if (number >= 100) return "C" + ToRoman(number - 100);
@@ -148,7 +147,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 return 4 + RomanToArabic(text.Substring(2));
             if (text.StartsWith("I", StringComparison.InvariantCultureIgnoreCase))
                 return 1 + RomanToArabic(text.Substring(1));
-            
+
             throw new ArgumentOutOfRangeException("text is not a valid roman number");
         }
 

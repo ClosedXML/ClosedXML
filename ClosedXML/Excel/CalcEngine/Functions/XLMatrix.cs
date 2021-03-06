@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
@@ -18,10 +17,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             rows = iRows;
             cols = iCols;
-            mat = new double[rows,cols];
+            mat = new double[rows, cols];
         }
+
         public XLMatrix(Double[,] arr)
-            :this(arr.GetLength(0), arr.GetLength(1))
+            : this(arr.GetLength(0), arr.GetLength(1))
         {
             var roCount = arr.GetLength(0);
             var coCount = arr.GetLength(1);
@@ -105,13 +105,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 for (var i = k + 1; i < rows; i++)
                 {
-                    L[i, k] = U[i, k]/U[k, k];
+                    L[i, k] = U[i, k] / U[k, k];
                     for (var j = k; j < cols; j++)
-                        U[i, j] = U[i, j] - L[i, k]*U[k, j];
+                        U[i, j] = U[i, j] - L[i, k] * U[k, j];
                 }
             }
         }
-
 
         public XLMatrix SolveWith(XLMatrix v) // Function solves Ax = v in confirmity with solution vector "v"
         {
@@ -143,7 +142,6 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
             return inv;
         }
-
 
         public double Determinant() // Function for determinant
         {
@@ -180,8 +178,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             for (var i = 0; i < n; i++)
             {
                 x[i, 0] = b[i, 0];
-                for (var j = 0; j < i; j++) x[i, 0] -= A[i, j]*x[j, 0];
-                x[i, 0] = x[i, 0]/A[i, i];
+                for (var j = 0; j < i; j++) x[i, 0] -= A[i, j] * x[j, 0];
+                x[i, 0] = x[i, 0] / A[i, i];
             }
             return x;
         }
@@ -195,8 +193,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             for (var i = n - 1; i > -1; i--)
             {
                 x[i, 0] = b[i, 0];
-                for (var j = n - 1; j > i; j--) x[i, 0] -= A[i, j]*x[j, 0];
-                x[i, 0] = x[i, 0]/A[i, i];
+                for (var j = n - 1; j > i; j--) x[i, 0] -= A[i, j] * x[j, 0];
+                x[i, 0] = x[i, 0] / A[i, i];
             }
             return x;
         }
@@ -357,7 +355,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 for (var i = 0; i < R.rows; i++)
                     for (var j = 0; j < R.cols; j++)
                         for (var k = 0; k < A.cols; k++)
-                            R[i, j] += A[i, k]*B[k, j];
+                            R[i, j] += A[i, k] * B[k, j];
                 return R;
             }
 
@@ -368,11 +366,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 size *= 2;
                 n++;
             }
-            
-            var h = size/2;
 
+            var h = size / 2;
 
-            var mField = new XLMatrix[n,9];
+            var mField = new XLMatrix[n, 9];
 
             /*
              *  8x8, 8x8, 8x8, ...
@@ -383,7 +380,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             for (var i = 0; i < n - 4; i++) // rows
             {
-                var z = (int) Math.Pow(2, n - i - 1);
+                var z = (int)Math.Pow(2, n - i - 1);
                 for (var j = 0; j < 9; j++) mField[i, j] = new XLMatrix(z, z);
             }
 
@@ -425,17 +422,17 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             // C12
             for (var i = 0; i < Math.Min(h, R.rows); i++) // rows
-                for (var j = h; j < Math.Min(2*h, R.cols); j++) // cols
+                for (var j = h; j < Math.Min(2 * h, R.cols); j++) // cols
                     R[i, j] = mField[0, 1 + 3][i, j - h] + mField[0, 1 + 5][i, j - h];
 
             // C21
-            for (var i = h; i < Math.Min(2*h, R.rows); i++) // rows
+            for (var i = h; i < Math.Min(2 * h, R.rows); i++) // rows
                 for (var j = 0; j < Math.Min(h, R.cols); j++) // cols
                     R[i, j] = mField[0, 1 + 2][i - h, j] + mField[0, 1 + 4][i - h, j];
 
             // C22
-            for (var i = h; i < Math.Min(2*h, R.rows); i++) // rows
-                for (var j = h; j < Math.Min(2*h, R.cols); j++) // cols
+            for (var i = h; i < Math.Min(2 * h, R.rows); i++) // rows
+                for (var j = h; j < Math.Min(2 * h, R.cols); j++) // cols
                     R[i, j] = mField[0, 1 + 1][i - h, j - h] - mField[0, 1 + 2][i - h, j - h] +
                               mField[0, 1 + 3][i - h, j - h] + mField[0, 1 + 6][i - h, j - h];
 
@@ -445,10 +442,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         // function for square matrix 2^N x 2^N
 
         private static void StrassenMultiplyRun(XLMatrix A, XLMatrix B, XLMatrix C, int l, XLMatrix[,] f)
-            // A * B into C, level of recursion, matrix field
+        // A * B into C, level of recursion, matrix field
         {
             var size = A.rows;
-            var h = size/2;
+            var h = size / 2;
 
             if (size < 32)
             {
@@ -456,7 +453,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     for (var j = 0; j < C.cols; j++)
                     {
                         C[i, j] = 0;
-                        for (var k = 0; k < A.cols; k++) C[i, j] += A[i, k]*B[k, j];
+                        for (var k = 0; k < A.cols; k++) C[i, j] += A[i, k] * B[k, j];
                     }
                 return;
             }
@@ -519,7 +516,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             for (var i = 0; i < result.rows; i++)
                 for (var j = 0; j < result.cols; j++)
                     for (var k = 0; k < m1.cols; k++)
-                        result[i, j] += m1[i, k]*m2[k, j];
+                        result[i, j] += m1[i, k] * m2[k, j];
             return result;
         }
 
@@ -528,11 +525,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var r = new XLMatrix(m.rows, m.cols);
             for (var i = 0; i < m.rows; i++)
                 for (var j = 0; j < m.cols; j++)
-                    r[i, j] = m[i, j]*n;
+                    r[i, j] = m[i, j] * n;
             return r;
         }
 
-        private static XLMatrix Add(XLMatrix m1, XLMatrix m2) 
+        private static XLMatrix Add(XLMatrix m1, XLMatrix m2)
         {
             if (m1.rows != m2.rows || m1.cols != m2.cols)
                 throw new ArgumentException("Matrices must have the same dimensions!");

@@ -1,7 +1,6 @@
 // Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -81,7 +80,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTBLANK(A1)").CastTo<int>();
             Assert.AreEqual(1, value);
 
-            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
+            Assert.AreEqual(XLCalculationErrorType.NoValueAvailable, workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
             Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK()"));
             Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK(A3:A45,E3:E45)"));
         }
@@ -250,15 +249,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return workbook.Worksheets.First().Evaluate($"=GEOMEAN({sourceValue})").CastTo<double>();
         }
 
-        [TestCase("D3:D45", typeof(NumberException), "No numeric parameters.")]
-        [TestCase("-1, 0, 3", typeof(NumberException), "Incorrect parameters. Use only positive numbers in your data.")]
-        public void Geomean_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        [TestCase("D3:D45", ExpectedResult = XLCalculationErrorType.NumberInvalid)]
+        [TestCase("-1, 0, 3", ExpectedResult = XLCalculationErrorType.NumberInvalid)]
+        public XLCalculationErrorType Geomean_IncorrectCases(string sourceValue)
         {
             var ws = workbook.Worksheets.First();
 
-            Assert.Throws(
-                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => ws.Evaluate($"=GEOMEAN({sourceValue})"));
+            return (XLCalculationErrorType)ws.Evaluate($"=GEOMEAN({sourceValue})");
         }
 
         [SetUp]
@@ -285,14 +282,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             return workbook.Worksheets.First().Evaluate($"=DEVSQ({sourceValue})").CastTo<double>();
         }
 
-        [TestCase("D3:D45", typeof(CellValueException), "No numeric parameters.")]
-        public void Devsq_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        [TestCase("D3:D45", ExpectedResult = XLCalculationErrorType.CellValue)]
+        public XLCalculationErrorType Devsq_IncorrectCases(string sourceValue)
         {
             var ws = workbook.Worksheets.First();
 
-            Assert.Throws(
-                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => ws.Evaluate($"=DEVSQ({sourceValue})"));
+            return (XLCalculationErrorType)ws.Evaluate($"=DEVSQ({sourceValue})");
         }
 
         [TestCase(0, ExpectedResult = 0)]
@@ -313,14 +308,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         // TODO : the string case will be treated correctly when Coercion is implemented better
         //[TestCase("asdf", typeof(CellValueException), "Parameter non numeric.")]
-        [TestCase("5", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        [TestCase("-1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        [TestCase("1", typeof(NumberException), "Incorrect value. Should be: -1 > x < 1.")]
-        public void Fisher_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
+        [TestCase("5", ExpectedResult = XLCalculationErrorType.NumberInvalid)]
+        [TestCase("-1", ExpectedResult = XLCalculationErrorType.NumberInvalid)]
+        [TestCase("1", ExpectedResult = XLCalculationErrorType.NumberInvalid)]
+        public XLCalculationErrorType Fisher_IncorrectCases(string sourceValue)
         {
-            Assert.Throws(
-                Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
-                () => XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})"));
+            return (XLCalculationErrorType)XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})");
         }
 
         [Test]

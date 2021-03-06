@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -23,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("DVARP", 1, Dvarp); // Calculates variance based on the entire population of selected database entries
         }
 
-        static object Daverage(List<Expression> p)
+        private static object Daverage(List<Expression> p)
         {
             var b = true;
             foreach (var v in p)

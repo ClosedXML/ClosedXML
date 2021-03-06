@@ -21,13 +21,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Char_Empty_Input_String()
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char("""")"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr(@"Char("""")"));
         }
 
         [Test]
         public void Char_Input_Too_Large()
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(@"Char(9797)"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr(@"Char(9797)"));
         }
 
         [Test]
@@ -134,7 +134,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             // Calling cell doesn't share row with any cell in parameter range. Throw CellValueException
             //ws.Cell("A4").SetFormulaA1("=CONCATENATE(A1:A3)");
-            //Assert.Throws<CellValueException>(() => ws.Cell("A4").GetString());
+            //Assert.AreEqual(CalculationErrorType.CellValue, ws.Cell("A4").GetString());
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("B1").Value = "World";
 
             Assert.AreEqual("Hello World", ws.Evaluate(@"=CONCATENATE(A1, "" "", B1)"));
-            Assert.Throws<CellValueException>(() => ws.Evaluate(@"=CONCATENATE(A1:A2, "" "", B1:B2)"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, ws.Evaluate(@"=CONCATENATE(A1:A2, "" "", B1:B2)"));
         }
 
         [Test]
@@ -364,8 +364,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("NUMBERVALUE(\"-1.234567890E-310\")")] // Too tiny (negative)
         public void NumberValue_Invalid(string expression)
         {
-            TestDelegate action = () => XLWorkbook.EvaluateExpr(expression);
-            Assert.Throws<CellValueException>(action);
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr(expression));
         }
 
         [Test]
@@ -635,12 +634,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Cell("C1").FormulaA1 = formula;
 
-            TestDelegate action = () =>
-            {
-                var a = ws.Cell("C1").Value;
-            };
-
-            Assert.Throws<CellValueException>(action, explain);
+            Assert.AreEqual(XLCalculationErrorType.CellValue, ws.Cell("C1").Value);
         }
 
         [TestCase(2020, 11, 1, 9, 23, 11, "m/d/yyyy h:mm:ss", "11/1/2020 9:23:11")]

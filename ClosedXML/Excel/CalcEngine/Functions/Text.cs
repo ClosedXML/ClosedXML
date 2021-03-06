@@ -50,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var i = (int)p[0];
             if (i < 1 || i > 255)
-                throw new CellValueException(string.Format("The number {0} is out of the required range (1 to 255)", i));
+                return XLCalculationErrorType.CellValue;
 
             var c = (char)i;
             return c.ToString();
@@ -88,15 +88,15 @@ namespace ClosedXML.Excel.CalcEngine
                     if (objectExpression.Value is CellRangeReference cellRangeReference)
                     {
                         if (!cellRangeReference.Range.RangeAddress.IsValid)
-                            throw new CellReferenceException();
+                            return XLCalculationErrorType.CellReference;
 
                         // Only single cell range references allows at this stage. See unit test for more details
                         if (cellRangeReference.Range.RangeAddress.NumberOfCells > 1)
-                            throw new CellValueException("This function does not accept cell ranges as parameters.");
+                            return XLCalculationErrorType.CellValue;
                     }
                     else
                         // I'm unsure about what else objectExpression.Value could be, but let's throw CellReferenceException
-                        throw new CellReferenceException();
+                        return XLCalculationErrorType.CellReference;
                 }
 
                 sb.Append((string)x);
@@ -332,9 +332,9 @@ namespace ClosedXML.Excel.CalcEngine
                 delimiter = (string)p[0];
                 ignoreEmptyStrings = (bool)p[1];
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new CellValueException("Failed to parse arguments", e);
+                return XLCalculationErrorType.CellValue;
             }
 
             foreach (var param in p.Skip(2))
@@ -342,7 +342,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (param is XObjectExpression tableArray)
                 {
                     if (!(tableArray.Value is CellRangeReference rangeReference))
-                        throw new NoValueAvailableException("tableArray has to be a range");
+                        return XLCalculationErrorType.NoValueAvailable;
 
                     var range = rangeReference.Range;
                     IEnumerable<string> cellValues;
@@ -366,7 +366,7 @@ namespace ClosedXML.Excel.CalcEngine
             var retVal = string.Join(delimiter, values);
 
             if (retVal.Length > 32767)
-                throw new CellValueException();
+                return XLCalculationErrorType.CellValue;
 
             return retVal;
         }
@@ -400,7 +400,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (numberFormatInfo.NumberDecimalSeparator == numberFormatInfo.NumberGroupSeparator)
             {
-                throw new CellValueException("CurrencyDecimalSeparator and CurrencyGroupSeparator have to be different.");
+                return XLCalculationErrorType.CellValue;
             }
 
             //Remove all whitespace characters
@@ -413,10 +413,10 @@ namespace ClosedXML.Excel.CalcEngine
             if (double.TryParse(input, NumberStyles.Any, numberFormatInfo, out var result))
             {
                 if (result <= -1e308 || result >= 1e308)
-                    throw new CellValueException("The value is too large");
+                    return XLCalculationErrorType.CellValue;
 
                 if (result >= -1e-309 && result <= 1e-309 && result != 0)
-                    throw new CellValueException("The value is too tiny");
+                    return XLCalculationErrorType.CellValue;
 
                 if (result >= -1e-308 && result <= 1e-308)
                     result = 0d;
@@ -424,7 +424,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return result;
             }
 
-            throw new CellValueException("Could not convert the value to a number");
+            return XLCalculationErrorType.CellValue;
         }
 
         private static object Asc(List<Expression> p)

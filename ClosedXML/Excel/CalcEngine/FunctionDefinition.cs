@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
@@ -11,14 +7,18 @@ namespace ClosedXML.Excel.CalcEngine
     {
         // ** fields
         public int ParmMin, ParmMax;
+
         public CalcEngineFunction Function;
 
         // ** ctor
-        public FunctionDefinition(int parmMin, int parmMax, CalcEngineFunction function)
+        public FunctionDefinition(int parmMin, int parmMax, CalcEngineFunction function, bool evaluateParameters)
         {
             ParmMin = parmMin;
             ParmMax = parmMax;
             Function = function;
+            EvaluateParameters = evaluateParameters;
         }
+
+        public bool EvaluateParameters { get; }
     }
 }

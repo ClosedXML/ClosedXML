@@ -31,32 +31,44 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("VLOOKUP", 3, 4, Vlookup); // Looks in the first column of an array and moves across the row to return the value of a cell
         }
 
-        private static IXLRange ExtractRange(Expression expression)
+        private static bool TryExtractRange(Expression expression, out IXLRange range, out XLCalculationErrorType calculationErrorType)
         {
+            range = null;
+            calculationErrorType = XLCalculationErrorType.None;
+
             if (!(expression is XObjectExpression objectExpression))
-                throw new NoValueAvailableException("Parameter has to be a valid range");
+            {
+                calculationErrorType = XLCalculationErrorType.NoValueAvailable;
+                return false;
+            }
 
             if (!(objectExpression.Value is CellRangeReference cellRangeReference))
-                throw new NoValueAvailableException("lookup_array has to be a range");
+            {
+                calculationErrorType = XLCalculationErrorType.NoValueAvailable;
+                return false;
+            }
 
-            var range = cellRangeReference.Range;
-            return range;
+            range = cellRangeReference.Range;
+            return true;
         }
 
         private static object Hlookup(List<Expression> p)
         {
             var lookup_value = p[0];
-            var range = ExtractRange(p[1]);
+
+            if (!TryExtractRange(p[1], out IXLRange range, out XLCalculationErrorType calculationErrorType))
+                return calculationErrorType;
+
             var row_index_num = (int)p[2];
             var range_lookup = p.Count < 4
                                || p[3] is EmptyValueExpression
                                || (bool)(p[3]);
 
             if (row_index_num < 1)
-                throw new CellReferenceException("Row index has to be positive");
+                return XLCalculationErrorType.CellReference;
 
             if (row_index_num > range.RowCount())
-                throw new CellReferenceException("Row index has to be positive");
+                return XLCalculationErrorType.CellReference;
 
             IXLRangeColumn matching_column;
             matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
@@ -78,7 +90,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (matching_column == null)
-                throw new NoValueAvailableException("No matches found.");
+                return XLCalculationErrorType.NoValueAvailable;
 
             return matching_column
                 .Cell(row_index_num)
@@ -95,7 +107,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static object Index(List<Expression> p)
         {
             // This is one of the few functions that is "overloaded"
-            var range = ExtractRange(p[0]);
+            if (!TryExtractRange(p[0], out IXLRange range, out XLCalculationErrorType calculationErrorType))
+                return calculationErrorType;
 
             if (range.ColumnCount() > 1 && range.RowCount() > 1)
             {
@@ -103,10 +116,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var column_num = (int)p[2];
 
                 if (row_num > range.RowCount())
-                    throw new CellReferenceException("Out of bound row number");
+                    return XLCalculationErrorType.CellReference;
 
                 if (column_num > range.ColumnCount())
-                    throw new CellReferenceException("Out of bound column number");
+                    return XLCalculationErrorType.CellReference;
 
                 return range.Row(row_num).Cell(column_num).Value;
             }
@@ -114,7 +127,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 var cellOffset = (int)p[1];
                 if (cellOffset > range.RowCount() * range.ColumnCount())
-                    throw new CellReferenceException();
+                    return XLCalculationErrorType.CellReference;
 
                 return range.Cells().ElementAt(cellOffset - 1).Value;
             }
@@ -131,16 +144,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 var rangeIsRow = range.RowCount() == 1;
                 if (rangeIsRow && row_num > 1)
-                    throw new CellReferenceException();
+                    return XLCalculationErrorType.CellReference;
 
                 if (!rangeIsRow && column_num > 1)
-                    throw new CellReferenceException();
+                    return XLCalculationErrorType.CellReference;
 
                 if (row_num > range.RowCount())
-                    throw new CellReferenceException("Out of bound row number");
+                    return XLCalculationErrorType.CellReference;
 
                 if (column_num > range.ColumnCount())
-                    throw new CellReferenceException("Out of bound column number");
+                    return XLCalculationErrorType.CellReference;
 
                 return range.Row(row_num).Cell(column_num).Value;
             }
@@ -149,13 +162,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static object Match(List<Expression> p)
         {
             var lookup_value = p[0];
-            var range = ExtractRange(p[1]);
+
+            if (!TryExtractRange(p[1], out IXLRange range, out XLCalculationErrorType calculationErrorType))
+                return calculationErrorType;
+
             int match_type = 1;
             if (p.Count > 2)
                 match_type = Math.Sign((int)p[2]);
 
             if (range.ColumnCount() != 1 && range.RowCount() != 1)
-                throw new CellValueException("Range has to be 1-dimensional");
+                return XLCalculationErrorType.CellValue;
 
             Predicate<int> lookupPredicate = null;
             switch (match_type)
@@ -173,7 +189,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     break;
 
                 default:
-                    throw new NoValueAvailableException("Invalid match_type");
+                    return XLCalculationErrorType.NoValueAvailable;
             }
 
             IXLCell foundCell = null;
@@ -207,7 +223,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (foundCell == null)
-                throw new NoValueAvailableException();
+                return XLCalculationErrorType.NoValueAvailable;
 
             var firstCell = range.FirstCell();
 
@@ -217,26 +233,29 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static object Vlookup(List<Expression> p)
         {
             var lookup_value = p[0];
-            var range = ExtractRange(p[1]);
+
+            if (!TryExtractRange(p[1], out IXLRange range, out XLCalculationErrorType calculationErrorType))
+                return calculationErrorType;
+
             var col_index_num = (int)p[2];
             var range_lookup = p.Count < 4
                                || p[3] is EmptyValueExpression
                                || (bool)(p[3]);
 
             if (col_index_num < 1)
-                throw new CellReferenceException("Column index has to be positive");
+                return XLCalculationErrorType.CellReference;
 
             if (col_index_num > range.ColumnCount())
-                throw new CellReferenceException("Colum index must be smaller or equal to the number of columns in the table array");
+                return XLCalculationErrorType.CellReference;
 
             IXLRangeRow matching_row;
             try
             {
                 matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new NoValueAvailableException("No matches found", ex);
+                return XLCalculationErrorType.NoValueAvailable;
             }
             if (range_lookup && matching_row == null)
             {
@@ -256,7 +275,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (matching_row == null)
-                throw new NoValueAvailableException("No matches found.");
+                return XLCalculationErrorType.NoValueAvailable;
 
             return matching_row
                 .Cell(col_index_num)

@@ -119,7 +119,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object CountBlank(List<Expression> p)
         {
             if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
-                throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
+                return XLCalculationErrorType.NoValueAvailable;
 
             var e = p[0] as XObjectExpression;
             long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);

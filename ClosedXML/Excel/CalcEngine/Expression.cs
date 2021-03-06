@@ -358,19 +358,19 @@ namespace ClosedXML.Excel.CalcEngine
 
                 case TKID.DIV:
                     if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
+                        return XLCalculationErrorType.DivisionByZero;
 
                     return (double)LeftExpression / (double)RightExpression;
 
                 case TKID.DIVINT:
                     if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
+                        return XLCalculationErrorType.DivisionByZero;
 
                     return (double)(int)((double)LeftExpression / (double)RightExpression);
 
                 case TKID.MOD:
                     if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
+                        return XLCalculationErrorType.DivisionByZero;
 
                     return (double)(int)((double)LeftExpression % (double)RightExpression);
 
@@ -421,7 +421,47 @@ namespace ClosedXML.Excel.CalcEngine
         // ** object model
         override public object Evaluate()
         {
-            return FunctionDefinition.Function(Parameters);
+            if (FunctionDefinition.EvaluateParameters && Parameters != null)
+            {
+                foreach (var p in Parameters)
+                {
+                    if (p is ErrorExpression errorExpression)
+                        return errorExpression.Evaluate();
+                }
+            }
+
+            try
+            {
+                return FunctionDefinition.Function(Parameters);
+            }
+            catch (CellReferenceException)
+            {
+                return XLCalculationErrorType.CellReference;
+            }
+            catch (CellValueException)
+            {
+                return XLCalculationErrorType.CellValue;
+            }
+            catch (DivisionByZeroException)
+            {
+                return XLCalculationErrorType.DivisionByZero;
+            }
+            catch (NameNotRecognizedException)
+            {
+                return XLCalculationErrorType.NameNotRecognized;
+            }
+            catch (NoValueAvailableException)
+            {
+                return XLCalculationErrorType.NoValueAvailable;
+            }
+            catch (NullValueException)
+            {
+                return XLCalculationErrorType.NullValue;
+            }
+            catch (NumberException)
+            {
+                return XLCalculationErrorType.NumberInvalid;
+            }
         }
 
         public FunctionDefinition FunctionDefinition { get; }
@@ -549,18 +589,7 @@ namespace ClosedXML.Excel.CalcEngine
 
     internal class ErrorExpression : Expression
     {
-        internal enum ExpressionErrorType
-        {
-            CellReference,
-            CellValue,
-            DivisionByZero,
-            NameNotRecognized,
-            NoValueAvailable,
-            NullValue,
-            NumberInvalid
-        }
-
-        internal ErrorExpression(ExpressionErrorType eet)
+        internal ErrorExpression(XLCalculationErrorType eet)
             : base(new Token(eet, TKID.ATOM, TKTYPE.ERROR))
         { }
 
@@ -569,25 +598,26 @@ namespace ClosedXML.Excel.CalcEngine
             return this._token.Value;
         }
 
+        // To be used only in implicit operators
         public void ThrowApplicableException()
         {
-            var eet = (ExpressionErrorType)_token.Value;
+            var eet = (XLCalculationErrorType)_token.Value;
             switch (eet)
             {
                 // TODO: include last token in exception message
-                case ExpressionErrorType.CellReference:
+                case XLCalculationErrorType.CellReference:
                     throw new CellReferenceException();
-                case ExpressionErrorType.CellValue:
+                case XLCalculationErrorType.CellValue:
                     throw new CellValueException();
-                case ExpressionErrorType.DivisionByZero:
+                case XLCalculationErrorType.DivisionByZero:
                     throw new DivisionByZeroException();
-                case ExpressionErrorType.NameNotRecognized:
+                case XLCalculationErrorType.NameNotRecognized:
                     throw new NameNotRecognizedException();
-                case ExpressionErrorType.NoValueAvailable:
+                case XLCalculationErrorType.NoValueAvailable:
                     throw new NoValueAvailableException();
-                case ExpressionErrorType.NullValue:
+                case XLCalculationErrorType.NullValue:
                     throw new NullValueException();
-                case ExpressionErrorType.NumberInvalid:
+                case XLCalculationErrorType.NumberInvalid:
                     throw new NumberException();
             }
         }

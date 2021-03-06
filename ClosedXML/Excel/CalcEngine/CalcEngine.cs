@@ -174,9 +174,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="parmMin">Minimum parameter count.</param>
         /// <param name="parmMax">Maximum parameter count.</param>
         /// <param name="fn">Delegate that evaluates the function.</param>
-        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn)
+        /// <param name="evaluateParameters">Validate parameters before calling function. Some functions, e.g. ISNA should not have their parameters evaluated.</param>
+        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn, bool evaluateParameters = true)
         {
-            _fnTbl.Add(functionName, new FunctionDefinition(parmMin, parmMax, fn));
+            _fnTbl.Add(functionName, new FunctionDefinition(parmMin, parmMax, fn, evaluateParameters));
         }
 
         /// <summary>
@@ -185,9 +186,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="functionName">Function name.</param>
         /// <param name="parmCount">Parameter count.</param>
         /// <param name="fn">Delegate that evaluates the function.</param>
-        public void RegisterFunction(string functionName, int parmCount, CalcEngineFunction fn)
+        /// <param name="validateParameters">Validate parameters before calling function.</param>
+        public void RegisterFunction(string functionName, int parmCount, CalcEngineFunction fn, bool validateParameters = true)
         {
-            RegisterFunction(functionName, parmCount, parmCount, fn);
+            RegisterFunction(functionName, parmCount, parmCount, fn, validateParameters);
         }
 
         /// <summary>
@@ -256,15 +258,15 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** token/keyword tables
 
-        private static readonly IDictionary<string, ErrorExpression.ExpressionErrorType> ErrorMap = new Dictionary<string, ErrorExpression.ExpressionErrorType>()
+        private static readonly IDictionary<string, XLCalculationErrorType> ErrorMap = new Dictionary<string, XLCalculationErrorType>()
         {
-            ["#REF!"] = ErrorExpression.ExpressionErrorType.CellReference,
-            ["#VALUE!"] = ErrorExpression.ExpressionErrorType.CellValue,
-            ["#DIV/0!"] = ErrorExpression.ExpressionErrorType.DivisionByZero,
-            ["#NAME?"] = ErrorExpression.ExpressionErrorType.NameNotRecognized,
-            ["#N/A"] = ErrorExpression.ExpressionErrorType.NoValueAvailable,
-            ["#NULL!"] = ErrorExpression.ExpressionErrorType.NullValue,
-            ["#NUM!"] = ErrorExpression.ExpressionErrorType.NumberInvalid
+            ["#REF!"] = XLCalculationErrorType.CellReference,
+            ["#VALUE!"] = XLCalculationErrorType.CellValue,
+            ["#DIV/0!"] = XLCalculationErrorType.DivisionByZero,
+            ["#NAME?"] = XLCalculationErrorType.NameNotRecognized,
+            ["#N/A"] = XLCalculationErrorType.NoValueAvailable,
+            ["#NULL!"] = XLCalculationErrorType.NullValue,
+            ["#NUM!"] = XLCalculationErrorType.NumberInvalid
         };
 
         // build/get static token table
@@ -504,7 +506,7 @@ namespace ClosedXML.Excel.CalcEngine
                     break;
 
                 case TKTYPE.ERROR:
-                    x = new ErrorExpression((ErrorExpression.ExpressionErrorType)_token.Value);
+                    x = new ErrorExpression((XLCalculationErrorType)_token.Value);
                     break;
             }
 

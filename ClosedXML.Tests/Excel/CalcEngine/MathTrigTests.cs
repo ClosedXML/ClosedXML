@@ -58,14 +58,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Acos_ThrowsNumberExceptionOutsideRange([Range(1.1, 3, 0.1)] double input)
         {
             // checking input and it's additive inverse as both are outside range.
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture))));
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOS({0})", (-input).ToString(CultureInfo.InvariantCulture))));
         }
 
         [Theory]
         public void Acosh_NumbersBelow1ThrowNumberException([Range(-1, 0.9, 0.1)] double input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOSH({0})", input.ToString(CultureInfo.InvariantCulture))));
         }
 
         [TestCase(1.2, 0.622362504)]
@@ -122,7 +122,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void Acoth_ForPlusMinusXSmallerThan1_ThrowsNumberException([Range(-0.9, 0.9, 0.1)] double input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ACOTH({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ACOTH({0})", input.ToString(CultureInfo.InvariantCulture))));
         }
 
         [TestCase(-10, -0.100335348)]
@@ -164,14 +164,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Arabic_ThrowsNumberExceptionOnMinus()
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr("ARABIC(\"-\")"));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr("ARABIC(\"-\")"));
         }
 
         [TestCase("- I")]
         [TestCase("roman")]
         public void Arabic_ThrowsValueExceptionOnInvalidNumber(string invalidRoman)
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr($"ARABIC(\"{invalidRoman}\")"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr($"ARABIC(\"{invalidRoman}\")"));
         }
 
         [TestCase(-1, -1.570796327)]
@@ -204,8 +204,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void Asin_ThrowsNumberExceptionWhenAbsOfInputGreaterThan1([Range(-3, -1.1, 0.1)] double input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", input.ToString(CultureInfo.InvariantCulture))));
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ASIN({0})", (-input).ToString(CultureInfo.InvariantCulture))));
         }
 
         [TestCase(0, 0)]
@@ -330,7 +330,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Atan2_ThrowsDiv0ExceptionOn0And0()
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"ATAN2(0, 0)"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr(@"ATAN2(0, 0)"));
         }
 
         [TestCase(-0.99, -2.64665241236225)]
@@ -360,8 +360,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void Atanh_ThrowsNumberExceptionWhenAbsOfInput1OrGreater([Range(1, 5, 0.2)] double input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", input.ToString(CultureInfo.InvariantCulture))));
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", (-input).ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"ATANH({0})", (-input).ToString(CultureInfo.InvariantCulture))));
         }
 
         [TestCase(0, 36, "0")]
@@ -424,25 +424,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("0", "2", @"""x""")]
         public void Base_ThrowsCellValueExceptionOnAnyInputNotANumber(string input, string theBase, string minLength)
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr($"BASE({input}, {theBase}, {minLength})"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr($"BASE({input}, {theBase}, {minLength})"));
         }
 
         [Theory]
         public void Base_ThrowsNumberExceptionOnBaseSmallerThan2([Range(-2, 1)] int theBase)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE(0, {0})", theBase.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"BASE(0, {0})", theBase.ToString(CultureInfo.InvariantCulture))));
         }
 
         [Theory]
         public void Base_ThrowsNumberExceptionOnInputSmallerThan0([Range(-5, -1)] int input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, 2)", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"BASE({0}, 2)", input.ToString(CultureInfo.InvariantCulture))));
         }
 
         [Theory]
         public void Base_ThrowsNumberExceptionOnRadixGreaterThan36([Range(37, 40)] int radix)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"BASE(1, {0})", radix.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"BASE(1, {0})", radix.ToString(CultureInfo.InvariantCulture))));
         }
 
         [TestCase(24.3, 5, 25)]
@@ -462,7 +462,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(6.7, -1)]
         public void Ceiling_ThrowsNumberExceptionOnInvalidInput(double input, double significance)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"CEILING({input.ToInvariantString()}, {significance.ToInvariantString()})"));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr($"CEILING({input.ToInvariantString()}, {significance.ToInvariantString()})"));
         }
 
         [TestCase(24.3, 5, null, 25)]
@@ -538,13 +538,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void Combin_ThrowsNumberExceptionForAnyArgumentSmaller0([Range(-4, -1)] int smaller0)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"COMBIN({0}, {1})",
                     smaller0.ToString(CultureInfo.InvariantCulture),
                     (-smaller0).ToString(CultureInfo.InvariantCulture))));
 
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"COMBIN({0}, {1})",
                     (-smaller0).ToString(CultureInfo.InvariantCulture),
@@ -555,12 +555,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("\"\"")]
         public void Combin_ThrowsNumericExceptionForAnyArgumentNotNumeric(string input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"COMBIN({0}, 1)",
                     input?.ToString(CultureInfo.InvariantCulture))));
 
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"COMBIN(1, {0})",
                     input?.ToString(CultureInfo.InvariantCulture))));
@@ -586,7 +586,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(2, -2)]
         public void Combina_ThrowsNumExceptionOnInvalidValues(int number, int chosen)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"COMBINA({0}, {1})",
                     number.ToString(CultureInfo.InvariantCulture),
@@ -688,13 +688,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Cot_Input0()
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("COT(0)"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr("COT(0)"));
         }
 
         [Test]
         public void Cot_On0_ThrowsDivisionByZeroException()
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"COTH(0)"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr(@"COTH(0)"));
         }
 
         [TestCase(-10, -1.000000004)]
@@ -726,7 +726,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Csc_On0_ThrowsDivisionByZeroException()
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr(@"CSC(0)"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr(@"CSC(0)"));
         }
 
         [TestCase(-10, 1.838163961)]
@@ -774,7 +774,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Csch_ReturnsDivisionByZeroErrorOnInput0()
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("CSCH(0)"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr("CSCH(0)"));
         }
 
         [TestCase("FF", 16, 255)]
@@ -789,13 +789,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void Decimal_ReturnsErrorForRadiansGreater36([Range(37, 255)] int radix)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
         }
 
         [Theory]
         public void Decimal_ReturnsErrorForRadiansSmaller2([Range(-5, 1)] int radix)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr($"DECIMAL(\"0\", {radix})"));
         }
 
         [Test]
@@ -887,13 +887,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void Fact_ThrowsNumberExceptionForNegativeInput([Range(-10, -1)] int input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACT({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"FACT({0})", input.ToString(CultureInfo.InvariantCulture))));
         }
 
         [Test]
         public void Fact_ThrowsValueExceptionForNonNumericInput()
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACT(""x"")")));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr(string.Format(@"FACT(""x"")")));
         }
 
         [TestCase(0, 1L)]
@@ -928,13 +928,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Theory]
         public void FactDouble_ThrowsNumberExceptionForInputSmallerThanMinus1([Range(-10, -2)] int input)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE({0})", input.ToString(CultureInfo.InvariantCulture))));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE({0})", input.ToString(CultureInfo.InvariantCulture))));
         }
 
         [Test]
         public void FactDouble_ThrowsValueExceptionForNonNumericInput()
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE(""x"")")));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr(string.Format(@"FACTDOUBLE(""x"")")));
         }
 
         [TestCase(24.3, 5, 20)]
@@ -953,13 +953,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-6.7, 0)]
         public void Floor_ThrowsDivisionByZeroOnZeroSignificance(double input, double significance)
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
+            Assert.AreEqual(XLCalculationErrorType.DivisionByZero, XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
         }
 
         [TestCase(6.7, -1)]
         public void Floor_ThrowsNumberExceptionOnInvalidInput(double input, double significance)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr($"FLOOR({input.ToInvariantString()}, {significance.ToInvariantString()})"));
         }
 
         [Test]
@@ -1071,7 +1071,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-123456.123, 5)]
         public void MRoundExceptions(double number, double multiple)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})"));
+            Assert.AreEqual(XLCalculationErrorType.NumberInvalid, XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})"));
         }
 
         [TestCase(0, 1)]
@@ -1134,7 +1134,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Sec_ThrowsCellValueExceptionOnNonNumericValue()
         {
-            Assert.Throws<CellValueException>(() => XLWorkbook.EvaluateExpr(@"SEC(""number"")"));
+            Assert.AreEqual(XLCalculationErrorType.CellValue, XLWorkbook.EvaluateExpr(@"SEC(""number"")"));
         }
 
         [TestCase(-9, 0.00024682)]
@@ -1438,7 +1438,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
                 Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
 
-                Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
+                Assert.AreEqual(XLCalculationErrorType.NoValueAvailable, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
 
                 // Blank cells and cells with text should be treated as zeros
                 ws.Range("A1:A5").Clear();

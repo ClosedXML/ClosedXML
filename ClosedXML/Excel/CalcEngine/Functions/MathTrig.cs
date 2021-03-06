@@ -99,7 +99,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (Math.Abs(input) > 1)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             return Math.Acos(p[0]);
         }
@@ -108,7 +108,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (Math.Abs(input) > 1)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             return Math.Asin(input);
         }
@@ -123,7 +123,7 @@ namespace ClosedXML.Excel.CalcEngine
             double x = p[0];
             double y = p[1];
             if (x == 0 && y == 0)
-                throw new DivisionByZeroException();
+                return XLCalculationErrorType.DivisionByZero;
 
             return Math.Atan2(y, x);
         }
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (significance == 0)
                 return 0d;
             else if (significance < 0 && number > 0)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
             else if (significance < 0)
                 return -Math.Ceiling(-number / -significance) * -significance;
             else
@@ -174,10 +174,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Cot(List<Expression> p)
         {
-            var tan = (double)Math.Tan(p[0]);
+            var tan = Math.Tan(p[0]);
 
             if (tan == 0)
-                throw new DivisionByZeroException();
+                return XLCalculationErrorType.DivisionByZero;
 
             return 1 / tan;
         }
@@ -186,7 +186,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (input == 0)
-                throw new DivisionByZeroException();
+                return XLCalculationErrorType.DivisionByZero;
 
             return 1 / Math.Tanh(input);
         }
@@ -195,7 +195,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (input == 0)
-                throw new DivisionByZeroException();
+                return XLCalculationErrorType.DivisionByZero;
 
             return 1 / Math.Sin(input);
         }
@@ -203,7 +203,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Csch(List<Expression> p)
         {
             if (Math.Abs((double)p[0].Evaluate()) < Double.Epsilon)
-                throw new DivisionByZeroException();
+                return XLCalculationErrorType.DivisionByZero;
 
             return 1 / Math.Sinh(p[0]);
         }
@@ -214,7 +214,7 @@ namespace ClosedXML.Excel.CalcEngine
             double radix = p[1];
 
             if (radix < 2 || radix > 36)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             var asciiValues = Encoding.ASCII.GetBytes(source.ToUpperInvariant());
 
@@ -225,7 +225,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (digit > 90)
                 {
-                    throw new NumberException();
+                    return XLCalculationErrorType.NumberInvalid;
                 }
 
                 int digitNumber = digit >= 48 && digit < 58
@@ -233,7 +233,7 @@ namespace ClosedXML.Excel.CalcEngine
                     : digit - 55;
 
                 if (digitNumber > radix - 1)
-                    throw new NumberException();
+                    return XLCalculationErrorType.NumberInvalid;
 
                 result = result * radix + digitNumber;
                 i++;
@@ -253,9 +253,9 @@ namespace ClosedXML.Excel.CalcEngine
             double significance = p[1];
 
             if (significance == 0)
-                throw new DivisionByZeroException();
+                return XLCalculationErrorType.DivisionByZero;
             else if (significance < 0 && number > 0)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
             else if (significance < 0)
                 return -Math.Floor(-number / -significance) * -significance;
             else
@@ -404,7 +404,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var criteriaRange = p[criteriaPair * 2 + 1] as IEnumerable;
 
                 if (criteriaRange == null)
-                    throw new CellReferenceException($"Expected parameter {criteriaPair * 2 + 2} to be a range");
+                    return XLCalculationErrorType.CellReference;
 
                 var criterion = p[criteriaPair * 2 + 2].Evaluate();
                 var criteriaRangeValues = criteriaRange.Cast<Object>().ToList();
@@ -442,7 +442,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // all parameters should be IEnumerable
             if (p.Any(param => !(param is IEnumerable)))
-                throw new NoValueAvailableException();
+                return XLCalculationErrorType.NoValueAvailable;
 
             var counts = p.Cast<IEnumerable>().Select(param =>
             {
@@ -455,7 +455,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             // All parameters should have the same length
             if (counts.Count() > 1)
-                throw new NoValueAvailableException();
+                return XLCalculationErrorType.NoValueAvailable;
 
             var values = p
                 .Cast<IEnumerable>()
@@ -544,7 +544,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double number = p[0];
             if (number < 1)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             return XLMath.ACosh(p[0]);
         }
@@ -565,7 +565,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double number = p[0];
             if (Math.Abs(number) < 1)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             return 0.5 * Math.Log((number + 1) / (number - 1));
         }
@@ -579,7 +579,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (input.Length == 0)
                     return 0;
                 if (input == "-")
-                    throw new NumberException();
+                    return XLCalculationErrorType.NumberInvalid;
                 else if (input[0] == '-')
                     return -XLMath.RomanToArabic(input.Substring(1));
                 else
@@ -587,7 +587,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
             catch (ArgumentOutOfRangeException)
             {
-                throw new CellValueException();
+                return XLCalculationErrorType.CellValue;
             }
             catch
             {
@@ -604,7 +604,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (Math.Abs(input) >= 1)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             return XLMath.ATanh(p[0]);
         }
@@ -619,13 +619,13 @@ namespace ClosedXML.Excel.CalcEngine
             if (rawNumber is long || rawNumber is int || rawNumber is byte || rawNumber is double || rawNumber is float)
                 number = Convert.ToInt64(rawNumber);
             else
-                throw new CellValueException();
+                return XLCalculationErrorType.CellValue;
 
             var rawRadix = p[1].Evaluate();
             if (rawRadix is long || rawRadix is int || rawRadix is byte || rawRadix is double || rawRadix is float)
                 radix = Convert.ToInt32(rawRadix);
             else
-                throw new CellValueException();
+                return XLCalculationErrorType.CellValue;
 
             if (p.Count > 2)
             {
@@ -633,11 +633,11 @@ namespace ClosedXML.Excel.CalcEngine
                 if (rawMinLength is long || rawMinLength is int || rawMinLength is byte || rawMinLength is double || rawMinLength is float)
                     minLength = Convert.ToInt32(rawMinLength);
                 else
-                    throw new CellValueException();
+                    return XLCalculationErrorType.CellValue;
             }
 
             if (number < 0 || radix < 2 || radix > 36)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             return XLMath.ChangeBase(number, radix).PadLeft(minLength, '0');
         }
@@ -652,18 +652,18 @@ namespace ClosedXML.Excel.CalcEngine
             if (rawN is long || rawN is int || rawN is byte || rawN is double || rawN is float)
                 n = (int)Math.Floor((double)rawN);
             else
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             if (rawK is long || rawK is int || rawK is byte || rawK is double || rawK is float)
                 k = (int)Math.Floor((double)rawK);
             else
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             n = (int)p[0];
             k = (int)p[1];
 
             if (n < 0 || n < k || k < 0)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             return XLMath.Combin(n, k);
         }
@@ -674,9 +674,9 @@ namespace ClosedXML.Excel.CalcEngine
             Int32 chosen = (int)p[1];
 
             if (number < 0 || number < chosen)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
             if (chosen < 0)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             int n = number + chosen - 1;
             int k = number - 1;
@@ -696,13 +696,13 @@ namespace ClosedXML.Excel.CalcEngine
             var input = p[0].Evaluate();
 
             if (!(input is long || input is int || input is byte || input is double || input is float))
-                throw new CellValueException();
+                return XLCalculationErrorType.CellValue;
 
             var num = Math.Floor((double)input);
             double fact = 1.0;
 
             if (num < 0)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             if (num > 1)
                 for (int i = 2; i <= num; i++)
@@ -715,13 +715,13 @@ namespace ClosedXML.Excel.CalcEngine
             var input = p[0].Evaluate();
 
             if (!(input is long || input is int || input is byte || input is double || input is float))
-                throw new CellValueException();
+                return XLCalculationErrorType.CellValue;
 
             var num = Math.Floor(p[0]);
             double fact = 1.0;
 
             if (num < -1)
-                throw new NumberException();
+                return XLCalculationErrorType.NumberInvalid;
 
             if (num > 1)
             {
@@ -905,7 +905,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (double.TryParse(p[0], out double number))
                 return 1.0 / Math.Cos(number);
             else
-                throw new CellValueException();
+                return XLCalculationErrorType.CellValue;
         }
 
         private static object Sech(List<Expression> p)
