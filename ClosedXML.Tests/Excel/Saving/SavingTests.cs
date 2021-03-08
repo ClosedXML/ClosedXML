@@ -753,5 +753,21 @@ namespace ClosedXML.Tests.Excel.Saving
             ws.Cell(1, 1).CreateComment().AddText("Test");
             Assert.DoesNotThrow(() => wb.SaveAs(ms));
         }
+
+        [Test]
+        public void CanSaveFileToDefaultDirectory()
+        {
+            var filename = $"test-{Guid.NewGuid()}.xlsx";
+            try
+            {
+                using var wb = new XLWorkbook();
+                wb.AddWorksheet().FirstCell().SetValue("Hello, world!");
+                Assert.DoesNotThrow(() => wb.SaveAs(filename));
+            }
+            finally
+            {
+                File.Delete(filename);
+            }
+        }
     }
 }
