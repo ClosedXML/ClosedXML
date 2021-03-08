@@ -115,7 +115,9 @@ namespace ClosedXML.Excel
 
         private void CreatePackage(String filePath, SpreadsheetDocumentType spreadsheetDocumentType, SaveOptions options)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            var directoryName = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrWhiteSpace(directoryName)) Directory.CreateDirectory(directoryName);
+
             var package = File.Exists(filePath)
                 ? SpreadsheetDocument.Open(filePath, true)
                 : SpreadsheetDocument.Create(filePath, spreadsheetDocumentType);
