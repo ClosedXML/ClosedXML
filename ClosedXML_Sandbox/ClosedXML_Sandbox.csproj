@@ -7,6 +7,7 @@
     <Version>0.95.2</Version>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release;Release.Signed</Configurations>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
