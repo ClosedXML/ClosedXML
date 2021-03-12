@@ -15,7 +15,7 @@
     <Copyright>MIT</Copyright>
     <PackageProjectUrl>https://github.com/rominator1983/ClosedXML</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <!--<PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png</PackageIconUrl>-->
+    <!--<PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png </PackageIconUrl>-->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
