@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net40;net46</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net46</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <Version>0.95.2</Version>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release;Release.Signed</Configurations>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
     <DefineConstants>$(AppVeyor)</DefineConstants>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
     <OutputPath>bin\Release.Signed\</OutputPath>
     <SignAssembly>true</SignAssembly>
@@ -58,7 +59,7 @@
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
     <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />

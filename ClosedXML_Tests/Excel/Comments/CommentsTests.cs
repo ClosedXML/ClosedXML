@@ -190,5 +190,107 @@ namespace ClosedXML_Tests.Excel.Comments
                 Assert.False(ws.Cell("A4").Comment.Visible);
             }
         }
+
+        [Test]
+        public void CanRemoveCommentsWithoutAddingOthers() // see #1575
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var wb = new XLWorkbook())
+                {
+                    var sheet = wb.AddWorksheet("sheet1");
+
+                    //guard
+                    var cellsWithComments1 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+                    Assert.That(cellsWithComments1, Is.Empty);
+
+                    var a1 = sheet.Cell("A1");
+                    var b5 = sheet.Cell("B5");
+
+                    a1.SetValue("test a1");
+                    b5.SetValue("test b5");
+
+                    var cellsWithComments2 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+                    Assert.That(cellsWithComments2, Is.Empty);
+
+                    a1.Comment.AddText("no comment");
+
+                    //guard
+                    var cellsWithComments3 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+                    Assert.That(cellsWithComments3.Length, Is.EqualTo(1));
+
+                    wb.SaveAs(ms, true);
+                }
+
+                ms.Position = 0;
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var cellsWithComments = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
+
+                    Assert.That(cellsWithComments.Length, Is.EqualTo(1));
+
+                    // act
+                    cellsWithComments.ForEach(_ => _.Clear(XLClearOptions.Comments));
+
+                    wb.Save();
+                }
+
+                ms.Position = 0;
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    // assert
+                    var cellsWithComments = wb.Worksheets.SelectMany(_ => _.Cells(true, XLCellsUsedOptions.Comments)).ToArray();
+
+                    Assert.That(cellsWithComments, Is.Empty);
+                }
+            }
+        }
+
+        [Test]
+        public void CanDeleteFormattedNote ()
+        {
+            using (var stream = TestHelper.GetStreamFromResource (TestHelper.GetResourcePath (@"TryToLoad\CommentFormatted.xlsx")))
+            using (var wb = new XLWorkbook (stream))
+            {
+                var ws = wb.Worksheets.First ();
+
+                var cellsWithComments = ws.CellsUsed (XLCellsUsedOptions.Comments).ToArray ();
+
+                Assert.That (cellsWithComments.Length, Is.EqualTo (2));
+
+                Assert.That (cellsWithComments[0].Comment.Text, Is.EqualTo (@"normal Note"));
+                Assert.That (cellsWithComments[1].Comment.Text, Is.EqualTo ("Author:\r\nboldAndUnderlinenormal bold italic normal"));
+
+                cellsWithComments[0].Clear (XLClearOptions.Comments);
+                cellsWithComments[1].Clear (XLClearOptions.Comments);
+
+                cellsWithComments = ws.CellsUsed (XLCellsUsedOptions.Comments).ToArray ();
+                // TODO: this breaks when it should not
+                Assert.That (cellsWithComments.Length, Is.EqualTo (0));
+
+            }
+        }
+
+        [Test]
+        public void CanReadThreadedCommentNote ()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\ThreadedComment.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                var c = ws.FirstCellUsed();
+
+                Assert.AreEqual(c.Comment.Text, @"[Threaded comment]
+
+Your version of Excel allows you to read this threaded comment; however, any edits to it will get removed if the file is opened in a newer version of Excel. Learn more: https://go.microsoft.com/fwlink/?linkid=870924
+
+Comment:
+    This is a threaded comment.
+Reply:
+    This is a reply.");
+            }
+        }
     }
 }

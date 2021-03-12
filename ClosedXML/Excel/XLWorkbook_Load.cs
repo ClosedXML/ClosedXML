@@ -429,6 +429,10 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
+                        var texts = c.GetFirstChild<CommentText>().Elements<Text> ();
+                        foreach (var text in texts)
+                            xlComment.AddText(text.InnerText.FixNewLines());
+
                         if (shape != null)
                         {
                             LoadShapeProperties(xlComment, shape);
@@ -3028,6 +3032,8 @@ namespace ClosedXML.Excel
             Properties.Comments = p.Description;
             if (p.Created != null)
                 Properties.Created = p.Created.Value;
+            if (p.Modified != null)
+                Properties.Modified = p.Modified.Value;
             Properties.Keywords = p.Keywords;
             Properties.LastModifiedBy = p.LastModifiedBy;
             Properties.Status = p.ContentStatus;
