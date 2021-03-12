@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
@@ -65,7 +66,7 @@ namespace ClosedXML.Excel
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations(this);
             PivotTables = new XLPivotTables(this);
-            Protection = new XLSheetProtection();
+            Protection = new XLSheetProtection(DefaultProtectionAlgorithm);
             AutoFilter = new XLAutoFilter();
             ConditionalFormats = new XLConditionalFormats();
             SparklineGroups = new XLSparklineGroups(this);
@@ -661,7 +662,7 @@ namespace ClosedXML.Excel
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
             SelectedRanges.ForEach(sr => targetSheet.SelectedRanges.Add(targetSheet.Range(((XLRangeAddress)sr.RangeAddress).WithoutWorksheet())));
 
-            if (AutoFilter.Enabled)
+            if (AutoFilter.IsEnabled)
             {
                 var range = targetSheet.Range(((XLRangeAddress)AutoFilter.Range.RangeAddress).WithoutWorksheet());
                 range.SetAutoFilter();
@@ -703,7 +704,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        IXLSheetProtection IXLWorksheet.Protection
+        IXLSheetProtection IXLProtectable<IXLSheetProtection, XLSheetProtectionElements>.Protection
         {
             get => Protection;
             set => Protection = value as XLSheetProtection;
@@ -714,9 +715,24 @@ namespace ClosedXML.Excel
             return Protection.Protect();
         }
 
-        public IXLSheetProtection Protect(String password)
+        public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
         {
-            return Protection.Protect(password);
+            return Protection.Protect(password, algorithm, XLSheetProtectionElements.SelectEverything);
+        }
+
+        public IXLSheetProtection Protect(String password, Algorithm algorithm, XLSheetProtectionElements allowedElements)
+        {
+            return Protection.Protect(password, algorithm, allowedElements);
+        }
+
+        IXLElementProtection IXLProtectable.Protect()
+        {
+            return Protect();
+        }
+
+        IXLElementProtection IXLProtectable.Protect(String password, Algorithm algorithm)
+        {
+            return Protect(password, algorithm);
         }
 
         public IXLSheetProtection Unprotect()
@@ -727,6 +743,16 @@ namespace ClosedXML.Excel
         public IXLSheetProtection Unprotect(String password)
         {
             return Protection.Unprotect(password);
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect()
+        {
+            return Unprotect();
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect(String password)
+        {
+            return Unprotect(password);
         }
 
         public new IXLRange Sort()
@@ -1564,7 +1590,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
         {
-            CheckRangeNotInTable(range);
+            CheckRangeNotOverlappingOtherEntities(range);
             XLRangeAddress rangeAddress;
             if (range.Rows().Count() == 1)
             {
@@ -1574,7 +1600,8 @@ namespace ClosedXML.Excel
             else
                 rangeAddress = range.RangeAddress;
 
-            var table = (XLTable)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Table, rangeAddress));
+            var rangeKey = new XLRangeKey(XLRangeType.Table, rangeAddress);
+            var table = (XLTable)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (table.Name != name)
                 table.Name = name;
@@ -1590,22 +1617,33 @@ namespace ClosedXML.Excel
             return table;
         }
 
-        private void CheckRangeNotInTable(XLRange range)
+        private void CheckRangeNotOverlappingOtherEntities(XLRange range)
         {
-            var overlappingTables = Tables.Where(t => t.RangeUsed().Intersects(range));
-            if (overlappingTables.Any())
-                throw new ArgumentException(nameof(range), $"The range {range.RangeAddress.ToStringRelative(true)} is already part of table '{overlappingTables.First().Name}'");
+            // Check that the range doesn't overlap with any existing tables
+            var firstOverlappingTable = Tables.FirstOrDefault(t => t.RangeUsed().Intersects(range));
+            if (firstOverlappingTable != null)
+                throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
+
+            // Check that the range doesn't overlap with any filters
+            if (AutoFilter.IsEnabled && this.AutoFilter.Range.Intersects(range))
+                throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} overlaps with the worksheet's autofilter.");
         }
 
         private string GetNewTableName(string baseName)
         {
+            var existingTableNames = new HashSet<String>(
+                this.Workbook.Worksheets
+                    .SelectMany(ws => ws.Tables)
+                    .Select(t => t.Name),
+                StringComparer.OrdinalIgnoreCase);
+
             var i = 1;
             string tableName;
             do
             {
                 tableName = baseName + i.ToString();
                 i++;
-            } while (Tables.Any(t => t.Name == tableName));
+            } while (existingTableNames.Contains(tableName));
 
             return tableName;
         }
@@ -1741,6 +1779,10 @@ namespace ClosedXML.Excel
 
         public IXLPictures Pictures { get; private set; }
 
+        public Boolean IsPasswordProtected => Protection.IsPasswordProtected;
+
+        public bool IsProtected => Protection.IsProtected;
+
         public IXLPicture Picture(string pictureName)
         {
             return Pictures.Picture(pictureName);
@@ -1833,7 +1875,8 @@ namespace ClosedXML.Excel
 
         public XLRange GetOrCreateRange(XLRangeParameters xlRangeParameters)
         {
-            var range = _rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress));
+            var rangeKey = new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress);
+            var range = _rangeRepository.GetOrCreate(ref rangeKey);
             if (xlRangeParameters.DefaultStyle != null && range.StyleValue == StyleValue)
                 range.InnerStyle = xlRangeParameters.DefaultStyle;
 
@@ -1848,7 +1891,8 @@ namespace ClosedXML.Excel
         /// <returns>Range row with the specified address.</returns>
         public XLRangeRow RangeRow(XLRangeAddress address, IXLStyle defaultStyle = null)
         {
-            var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.RangeRow, address));
+            var rangeKey = new XLRangeKey(XLRangeType.RangeRow, address);
+            var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (defaultStyle != null && rangeRow.StyleValue == StyleValue)
                 rangeRow.InnerStyle = defaultStyle;
@@ -1864,7 +1908,8 @@ namespace ClosedXML.Excel
         /// <returns>Range column with the specified address.</returns>
         public XLRangeColumn RangeColumn(XLRangeAddress address, IXLStyle defaultStyle = null)
         {
-            var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(new XLRangeKey(XLRangeType.RangeColumn, address));
+            var rangeKey = new XLRangeKey(XLRangeType.RangeColumn, address);
+            var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (defaultStyle != null && rangeColumn.StyleValue == StyleValue)
                 rangeColumn.InnerStyle = defaultStyle;
@@ -1881,8 +1926,9 @@ namespace ClosedXML.Excel
             if (_rangeRepository == null)
                 return;
 
-            var range = _rangeRepository.Replace(new XLRangeKey(rangeType, oldAddress),
-                                                 new XLRangeKey(rangeType, newAddress));
+            var oldKey = new XLRangeKey(rangeType, oldAddress);
+            var newKey = new XLRangeKey(rangeType, newAddress);
+            var range = _rangeRepository.Replace(ref oldKey, ref newKey);
 
             foreach (var rangeIndex in _rangeIndices)
             {
@@ -1931,7 +1977,8 @@ namespace ClosedXML.Excel
 
         internal void DeleteRange(XLRangeAddress rangeAddress)
         {
-            _rangeRepository.Remove(new XLRangeKey(XLRangeType.Range, rangeAddress));
+            var rangeKey = new XLRangeKey(XLRangeType.Range, rangeAddress);
+            _rangeRepository.Remove(ref rangeKey);
         }
     }
 }

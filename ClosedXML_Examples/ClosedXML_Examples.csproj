@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
-    <LangVersion>7.2</LangVersion>
+    <TargetFrameworks>netcoreapp2.0;net46</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
     <OutputType>Exe</OutputType>
     <Version>0.95.2</Version>
     <NoWarn>$(NoWarn);NU1605</NoWarn>

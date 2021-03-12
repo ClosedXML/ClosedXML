@@ -306,7 +306,7 @@ namespace ClosedXML_Tests
                 range.Unmerge();
 
                 Assert.IsTrue(range.Cells().All(c => c.Style.Fill.BackgroundColor == XLColor.Red));
-                Assert.IsTrue(range.Cells().Where(c => c != firstCell).All(c => c.Value == ""));
+                Assert.IsTrue(range.Cells().Where(c => c != firstCell).All(c => c.GetString().Length == 0));
                 Assert.AreEqual("B2", firstCell.Value);
 
                 Assert.AreEqual(XLBorderStyleValues.Thick, ws.Cell("B2").Style.Border.TopBorder);
@@ -425,6 +425,19 @@ namespace ClosedXML_Tests
                 ws.Cell("B1").SetFormulaR1C1("SUM(A:A)");
                 Assert.AreEqual(1, ws.Cell("B1").Value);
             }
+        }
+
+        [Test]
+        public void MergeSingleCellRangeDoesNothing()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range = ws.Range(1, 1, 1, 1);
+
+            range.Merge();
+
+            Assert.IsFalse(range.IsMerged());
+            Assert.AreEqual(0, ws.MergedRanges.Count);
         }
     }
 }

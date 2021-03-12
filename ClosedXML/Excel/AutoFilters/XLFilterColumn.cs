@@ -45,7 +45,7 @@ namespace ClosedXML.Excel
         {
             Func<Object, Boolean> condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
 
-            _autoFilter.Enabled = true;
+            _autoFilter.IsEnabled = true;
 
             if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
                 filterList.Add(
@@ -228,7 +228,7 @@ namespace ClosedXML.Excel
 
         private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop = true)
         {
-            _autoFilter.Enabled = true;
+            _autoFilter.IsEnabled = true;
             _autoFilter.Column(_column).SetFilterType(XLFilterType.TopBottom)
                                        .SetTopBottomValue(value)
                                        .SetTopBottomType(type);
@@ -301,7 +301,7 @@ namespace ClosedXML.Excel
 
         private void ShowAverage(Boolean aboveAverage)
         {
-            _autoFilter.Enabled = true;
+            _autoFilter.IsEnabled = true;
             _autoFilter.Column(_column).SetFilterType(XLFilterType.Dynamic)
                 .SetDynamicType(aboveAverage
                                     ? XLFilterDynamicType.AboveAverage
@@ -371,7 +371,7 @@ namespace ClosedXML.Excel
                                                         XLFilterType filterType = XLFilterType.Custom)
             where T : IComparable<T>
         {
-            _autoFilter.Enabled = true;
+            _autoFilter.IsEnabled = true;
             if (filterType == XLFilterType.Custom)
             {
                 Clear();

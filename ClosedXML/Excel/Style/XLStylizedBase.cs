@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Read-only style property.
         /// </summary>
-        internal XLStyleValue StyleValue { get; private set; }
+        internal XLStyleValue StyleValue { get; private protected set; }
         XLStyleValue IXLStylized.StyleValue
         {
             get { return StyleValue; }
@@ -66,7 +66,10 @@ namespace ClosedXML.Excel
             if (style is XLStyle xlStyle)
                 SetStyle(xlStyle.Value, propagate);
             else
-                SetStyle(XLStyleValue.FromKey(XLStyle.GenerateKey(style)), propagate);
+            {
+                var styleKey = XLStyle.GenerateKey(style);
+                SetStyle(XLStyleValue.FromKey(ref styleKey), propagate);
+            }
         }
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace ClosedXML.Excel
             foreach (var group in children)
             {
                 var styleKey = modification(group.Key.Key);
-                var styleValue = XLStyleValue.FromKey(styleKey);
+                var styleValue = XLStyleValue.FromKey(ref styleKey);
                 foreach (var child in group)
                 {
                     child.StyleValue = styleValue;

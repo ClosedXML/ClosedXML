@@ -379,9 +379,9 @@ namespace ClosedXML_Tests.Excel
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsTrue(wb.IsPasswordProtected);
-                Assert.Throws(typeof(InvalidOperationException), delegate { wb.Protect(); });
-                Assert.Throws(typeof(InvalidOperationException), delegate { wb.Unprotect(); });
-                Assert.Throws(typeof(ArgumentException), delegate { wb.Unprotect("Cde@345"); });
+                Assert.Throws<InvalidOperationException>(() => wb.Protect());
+                Assert.Throws<InvalidOperationException>(() => wb.Unprotect());
+                Assert.Throws<ArgumentException>(() => wb.Unprotect("Cde@345"));
             }
         }
 
@@ -395,6 +395,7 @@ namespace ClosedXML_Tests.Excel
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsFalse(wb.IsPasswordProtected);
+                wb.Unprotect();
                 wb.Protect("Abc@123");
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
@@ -440,6 +441,23 @@ namespace ClosedXML_Tests.Excel
                     Assert.AreEqual(Environment.UserName, wb.FileSharing.UserName);
                 }
             }
+        }
+
+#if _NET40_
+        [Ignore(".NET 40 does not support Janitor.Fody")]
+#endif
+
+        [Test]
+        public void AccessDisposedWorkbookThrowsException()
+        {
+            IXLWorkbook wb;
+            using (wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                ws.FirstCell().SetValue("Hello world");
+            }
+
+            Assert.Throws<ObjectDisposedException>(() => Console.WriteLine(wb.Worksheets.First().FirstCell().Value));
         }
     }
 }

@@ -1,5 +1,4 @@
 using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Extensions;
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
@@ -644,6 +644,7 @@ namespace ClosedXML.Excel
         private XLLoadSource _loadSource = XLLoadSource.New;
         private String _originalFile;
         private Stream _originalStream;
+        private XLWorkbookProtection _workbookProtection;
 
         #endregion Fields
 
@@ -666,6 +667,7 @@ namespace ClosedXML.Excel
         public XLWorkbook(XLEventTracking eventTracking)
         {
             EventTracking = eventTracking;
+            Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
             Style = new XLStyle(null, DefaultStyle);
@@ -797,10 +799,26 @@ namespace ClosedXML.Excel
 
         internal XLIdManager ShapeIdManager { get; private set; }
 
-        public void Dispose()
+        // Used by Janitor.Fody
+        private void DisposeManaged()
         {
             Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
         }
+
+#if _NET40_
+        public void Dispose()
+        {
+            // net40 doesn't support Janitor.Fody, so let's dispose manually
+            DisposeManaged();
+        }
+#else
+
+        public void Dispose()
+        {
+            // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
+        }
+
+#endif
 
         public Boolean Use1904DateSystem { get; set; }
 
@@ -891,80 +909,130 @@ namespace ClosedXML.Excel
 
         public String Author { get; set; }
 
-        public Boolean LockStructure { get; set; }
+        public Boolean LockStructure
+        {
+            get => Protection.IsProtected && !Protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Structure);
+            set
+            {
+                if (!Protection.IsProtected)
+                    throw new InvalidOperationException($"Enable workbook protection before setting the {nameof(LockStructure)} property");
+
+                Protection.AllowElement(XLWorkbookProtectionElements.Structure, value);
+            }
+        }
 
         public XLWorkbook SetLockStructure(Boolean value)
         {
             LockStructure = value; return this;
         }
 
-        public Boolean LockWindows { get; set; }
+        public Boolean LockWindows
+        {
+            get => Protection.IsProtected && !Protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Windows);
+            set
+            {
+                if (!Protection.IsProtected)
+                    throw new InvalidOperationException($"Enable workbook protection before setting the {nameof(LockWindows)} property");
+
+                Protection.AllowElement(XLWorkbookProtectionElements.Windows, value);
+            }
+        }
 
         public XLWorkbook SetLockWindows(Boolean value)
         {
             LockWindows = value; return this;
         }
 
-        internal HexBinaryValue LockPassword { get; set; }
-        public Boolean IsPasswordProtected { get { return LockPassword != null; } }
+        public Boolean IsPasswordProtected => Protection.IsPasswordProtected;
+        public Boolean IsProtected => Protection.IsProtected;
 
-        public void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword)
+        IXLWorkbookProtection IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>.Protection
         {
-            if (IsPasswordProtected && workbookPassword == null)
-                throw new InvalidOperationException("The workbook is password protected");
+            get => Protection;
+            set => Protection = value as XLWorkbookProtection;
+        }
 
-            var hashPassword = workbookPassword.HashPassword();
-            if (IsPasswordProtected && LockPassword != hashPassword)
-                throw new ArgumentException("Invalid password");
-
-            if (IsPasswordProtected && (lockStructure || lockWindows))
-                throw new InvalidOperationException("The workbook is already protected");
-
-            if (IsPasswordProtected && hashPassword != null && !lockStructure && !lockWindows)
+        internal XLWorkbookProtection Protection
+        {
+            get => _workbookProtection;
+            set
             {
-                // Workbook currently protected, but we're unsetting the 2 flags
-                // Hence unprotect workbook using password.
-                LockPassword = null;
+                _workbookProtection = value.Clone().CastTo<XLWorkbookProtection>();
             }
-
-            if (!IsPasswordProtected && hashPassword != null && (lockStructure || lockWindows))
-            {
-                //Protect workbook using password.
-                LockPassword = hashPassword;
-            }
-
-            LockStructure = lockStructure;
-            LockWindows = lockWindows;
         }
 
-        public void Protect()
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
+        public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password)
         {
-            Protect(true);
+            var allowedElements = XLWorkbookProtectionElements.Everything;
+
+            var protection = Protection.Protect(password, DefaultProtectionAlgorithm, allowedElements);
+
+            if (lockStructure)
+                protection.DisallowElement(XLWorkbookProtectionElements.Structure);
+
+            if (lockWindows)
+                protection.DisallowElement(XLWorkbookProtectionElements.Windows);
+
+            return protection;
         }
 
-        public void Protect(string workbookPassword)
+        public IXLWorkbookProtection Protect()
         {
-            Protect(true, false, workbookPassword);
+            return Protection.Protect();
         }
 
-        public void Protect(Boolean lockStructure)
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
+        public IXLWorkbookProtection Protect(Boolean lockStructure)
         {
-            Protect(lockStructure, false);
+            return Protect(lockStructure, lockWindows: false, password: null);
         }
 
-        public void Protect(Boolean lockStructure, Boolean lockWindows)
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
+        public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows)
         {
-            Protect(lockStructure, lockWindows, null);
+            return Protect(lockStructure, lockWindows, null);
         }
 
-        public void Unprotect()
+        public IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
+
         {
-            Protect(false, false);
+            return Protect(password, algorithm, XLWorkbookProtectionElements.Windows);
         }
 
-        public void Unprotect(string workbookPassword)
+        public IXLWorkbookProtection Protect(String password, Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
         {
-            Protect(false, false, workbookPassword);
+            return Protection.Protect(password, algorithm, allowedElements);
+        }
+
+        IXLElementProtection IXLProtectable.Protect()
+        {
+            return Protect();
+        }
+
+        IXLElementProtection IXLProtectable.Protect(string password, Algorithm algorithm)
+        {
+            return Protect(password, algorithm);
+        }
+
+        public IXLWorkbookProtection Unprotect()
+        {
+            return Protection.Unprotect();
+        }
+
+        public IXLWorkbookProtection Unprotect(String password)
+        {
+            return Protection.Unprotect(password);
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect()
+        {
+            return Unprotect();
+        }
+
+        IXLElementProtection IXLProtectable.Unprotect(String password)
+        {
+            return Unprotect(password);
         }
 
         public override string ToString()

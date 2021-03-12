@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
         internal XLProtectionKey Key
         {
             get { return _value.Key; }
-            private set { _value = XLProtectionValue.FromKey(value); }
+            private set { _value = XLProtectionValue.FromKey(ref value); }
         }
 
         #endregion Properties
@@ -49,7 +49,7 @@ namespace ClosedXML.Excel
             _value = value;
         }
 
-        public XLProtection(XLStyle style, XLProtectionKey key) : this(style, XLProtectionValue.FromKey(key))
+        public XLProtection(XLStyle style, XLProtectionKey key) : this(style, XLProtectionValue.FromKey(ref key))
         {
         }
 

@@ -552,7 +552,7 @@ namespace ClosedXML_Tests.Excel
             }
         }
 
-       [Test]
+        [Test]
         public void CanDeleteTableField()
         {
             var l = new List<TestObjectWithAttributes>()
@@ -895,8 +895,26 @@ namespace ClosedXML_Tests.Excel
             {
                 IXLWorksheet ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(l);
-                Assert.Throws<ArgumentException>(() => ws.RangeUsed().CreateTable());
+                Assert.Throws<InvalidOperationException>(() => ws.RangeUsed().CreateTable());
             }
+        }
+
+        [Test]
+        public void CannotCreateTableOverExistingAutoFilter()
+        {
+            using var wb = new XLWorkbook();
+
+            var data = Enumerable.Range(1, 10).Select(i => new
+            {
+                Index = i,
+                String = $"String {i}"
+            });
+
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().InsertTable(data, createTable: false);
+            ws.RangeUsed().SetAutoFilter().Column(1).AddFilter(5);
+
+            Assert.Throws<InvalidOperationException>(() => ws.RangeUsed().CreateTable());
         }
 
         [Test]
@@ -1111,6 +1129,21 @@ namespace ClosedXML_Tests.Excel
                 var ws = wb.AddWorksheet("Sheet1");
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.Table("dummy"));
                 Assert.Throws<ArgumentOutOfRangeException>(() => wb.Table("dummy"));
+            }
+        }
+
+        [Test]
+        public void SecondTableOnNewSheetHasUniqueName()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws1 = wb.AddWorksheet();
+                var t1 = ws1.FirstCell().InsertTable(Enumerable.Range(1, 10).Select(i => new { Number = i }));
+                Assert.AreEqual("Table1", t1.Name);
+
+                var ws2 = wb.AddWorksheet();
+                var t2 = ws2.FirstCell().InsertTable(Enumerable.Range(1, 10).Select(i => new { Number = i }));
+                Assert.AreEqual("Table2", t2.Name);
             }
         }
 

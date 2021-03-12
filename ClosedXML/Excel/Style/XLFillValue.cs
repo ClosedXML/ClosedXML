@@ -6,17 +6,19 @@ namespace ClosedXML.Excel
     {
         private static readonly XLFillRepository Repository = new XLFillRepository(key => new XLFillValue(key));
 
-        public static XLFillValue FromKey(XLFillKey key)
+        public static XLFillValue FromKey(ref XLFillKey key)
         {
-            return Repository.GetOrCreate(key);
+            return Repository.GetOrCreate(ref key);
         }
 
-        internal static readonly XLFillValue Default = FromKey(new XLFillKey
+        private static readonly XLFillKey DefaultKey = new XLFillKey
         {
             BackgroundColor = XLColor.FromIndex(64).Key,
             PatternType = XLFillPatternValues.None,
             PatternColor = XLColor.FromIndex(64).Key
-        });
+        };
+
+        internal static readonly XLFillValue Default = FromKey(ref DefaultKey);
 
         public XLFillKey Key { get; private set; }
 
@@ -29,8 +31,10 @@ namespace ClosedXML.Excel
         private XLFillValue(XLFillKey key)
         {
             Key = key;
-            BackgroundColor = XLColor.FromKey(Key.BackgroundColor);
-            PatternColor = XLColor.FromKey(Key.PatternColor);
+            var backgroundColorKey = Key.BackgroundColor;
+            var patternColorKey = Key.PatternColor;
+            BackgroundColor = XLColor.FromKey(ref backgroundColorKey);
+            PatternColor = XLColor.FromKey(ref patternColorKey);
         }
 
         public override bool Equals(object obj)

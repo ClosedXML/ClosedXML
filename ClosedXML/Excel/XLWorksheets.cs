@@ -162,7 +162,7 @@ namespace ClosedXML.Excel
         public IXLWorksheet Add(DataTable dataTable, String sheetName)
         {
             var ws = Add(sheetName);
-            ws.Cell(1, 1).InsertTable(dataTable);
+            ws.Cell(1, 1).InsertTable(dataTable, sheetName);
             return ws;
         }
 

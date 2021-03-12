@@ -78,7 +78,9 @@ namespace ClosedXML_Tests
             Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.PositiveInfinitySymbol, cell.Value);
 
             cell.Value = 5;
-            Assert.Throws<ArgumentException>(() => cell.SetValue(doubleList));
+            cell.SetValue(doubleList);
+            Assert.AreEqual(XLDataType.Text, cell.DataType);
+            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.PositiveInfinitySymbol, cell.Value);
         }
 
         [Test]
@@ -94,7 +96,21 @@ namespace ClosedXML_Tests
             Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.NaNSymbol, cell.Value);
 
             cell.Value = 5;
-            Assert.Throws<ArgumentException>(() => cell.SetValue(doubleList));
+            cell.SetValue(doubleList);
+            Assert.AreEqual(XLDataType.Text, cell.DataType);
+            Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.NaNSymbol, cell.Value);
+        }
+
+        [Test]
+        public void GetValue_Nullable()
+        {
+            var cell = new XLWorkbook().AddWorksheet().FirstCell();
+
+            Assert.IsNull(cell.Clear().GetValue<double?>());
+            Assert.AreEqual(1.5, cell.SetValue(1.5).GetValue<double?>());
+            Assert.AreEqual(2, cell.SetValue(1.5).GetValue<int?>());
+            Assert.AreEqual(2.5, cell.SetValue("2.5").GetValue<double?>());
+            Assert.Throws<FormatException>(() => cell.SetValue("text").GetValue<double?>());
         }
 
         [Test]
@@ -476,6 +492,29 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void TryGetValue_DateTime_Good2()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            bool success = ws.Cell("A1").SetFormulaA1("=TODAY() + 10").TryGetValue(out DateTime outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(DateTime.Today.AddDays(10), outValue);
+        }
+
+        [Test]
+        public void TryGetValue_DateTime_BadButFormulaGood()
+        {
+            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            bool success = ws.Cell("A1").SetFormulaA1("=\"44\"&\"020\"").TryGetValue(out DateTime outValue);
+            Assert.IsFalse(success);
+
+            ws.Cell("B1").SetFormulaA1("=A1+1");
+
+            success = ws.Cell("B1").TryGetValue(out outValue);
+            Assert.IsTrue(success);
+            Assert.AreEqual(new DateTime(2020, 07, 09), outValue);
+        }
+
+        [Test]
         public void TryGetValue_DateTime_BadString()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
@@ -492,6 +531,26 @@ namespace ClosedXML_Tests
             ws.FirstCell().SetValue(date).DataType = XLDataType.DateTime;
             bool success = ws.FirstCell().TryGetValue(out DateTime outValue);
             Assert.IsFalse(success);
+        }
+
+        [Test]
+        public void TryGetValue_Enum_Good()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles value));
+            Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value);
+
+            // Nullable alternative
+            Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles? value2));
+            Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value2);
+        }
+
+        [Test]
+        public void TryGetValue_Enum_BadString()
+        {
+            var ws = new XLWorkbook().AddWorksheet();
+            Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles value));
+            Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles? value2));
         }
 
         [Test]
@@ -655,6 +714,25 @@ namespace ClosedXML_Tests
 
             Assert.IsTrue(success);
             Assert.AreEqual("Site_x005F_x0020_Column_x005F_x0020_Test", outValue);
+        }
+
+        [Test]
+        public void TryGetValue_Nullable()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            ws.Cell("A1").Clear();
+            ws.Cell("A2").SetValue(1.5);
+            ws.Cell("A3").SetValue("2.5");
+            ws.Cell("A4").SetValue("text");
+
+            foreach (var cell in ws.Range("A1:A3").Cells())
+            {
+                Assert.IsTrue(cell.TryGetValue(out double? value));
+            }
+
+            Assert.IsFalse(ws.Cell("A4").TryGetValue(out double? _));
         }
 
         [Test]
@@ -1197,6 +1275,23 @@ namespace ClosedXML_Tests
                 Assert.IsFalse(A2.TryGetValue(out String _));
                 Assert.IsTrue(A3.TryGetValue(out String _));
             }
+        }
+
+        [Test]
+        public void SetValue_IEnumerable()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            object[] values = { "Text", 45, DateTime.Today, true, "More text" };
+
+            ws.FirstCell().SetValue(values);
+
+            Assert.AreEqual("Text", ws.FirstCell().GetString());
+            Assert.AreEqual(45, ws.Cell("A2").GetDouble());
+            Assert.AreEqual(DateTime.Today, ws.Cell("A3").GetDateTime());
+            Assert.AreEqual(true, ws.Cell("A4").GetBoolean());
+            Assert.AreEqual("More text", ws.Cell("A5").GetString());
+            Assert.IsTrue(ws.Cell("A6").IsEmpty());
         }
     }
 }

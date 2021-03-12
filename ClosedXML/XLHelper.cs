@@ -277,7 +277,7 @@ namespace ClosedXML.Excel
                 if (split.Length == 1) return column + row; // A1
                 if (split.Length == 3) return match.Groups["one"].Value; // $A$1
                 var a = XLAddress.Create(match.Groups["one"].Value);
-                if (split[0] == String.Empty) return "$" + a.ColumnLetter + row; // $A1
+                if (split[0].Length == 0) return "$" + a.ColumnLetter + row; // $A1
                 return column + "$" + a.RowNumber;
             }
 

@@ -19,8 +19,10 @@ namespace ClosedXML.Excel
 
         #region IXLAutoFilter Members
 
-        public Boolean Enabled { get; set; }
+        [Obsolete("Use IsEnabled")]
+        public Boolean Enabled { get => IsEnabled; set => IsEnabled = value; }
         public IEnumerable<IXLRangeRow> HiddenRows { get => Range.Rows(r => r.WorksheetRow().IsHidden); }
+        public Boolean IsEnabled { get; set; }
         public IXLRange Range { get; set; }
         public Int32 SortColumn { get; set; }
         public Boolean Sorted { get; set; }
@@ -133,9 +135,9 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter Clear()
         {
-            if (!Enabled) return this;
+            if (!IsEnabled) return this;
 
-            Enabled = false;
+            IsEnabled = false;
             Filters.Clear();
             foreach (IXLRangeRow row in Range.Rows().Where(r => r.RowNumber() > 1))
                 row.WorksheetRow().Unhide();
@@ -144,14 +146,18 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter Set(IXLRangeBase range)
         {
+            var firstOverlappingTable = range.Worksheet.Tables.FirstOrDefault(t => t.RangeUsed().Intersects(range));
+            if (firstOverlappingTable != null)
+                throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
+
             Range = range.AsRange();
-            Enabled = true;
+            IsEnabled = true;
             return this;
         }
 
         public XLAutoFilter Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase, Boolean ignoreBlanks)
         {
-            if (!Enabled)
+            if (!IsEnabled)
                 throw new InvalidOperationException("Filter has not been enabled.");
 
             var ws = Range.Worksheet as XLWorksheet;

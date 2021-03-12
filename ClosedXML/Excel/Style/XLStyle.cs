@@ -45,7 +45,7 @@ namespace ClosedXML.Excel
             get { return Value.Key; }
             private set
             {
-                Value = XLStyleValue.FromKey(value);
+                Value = XLStyleValue.FromKey(ref value);
             }
         }
 
@@ -57,7 +57,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        public XLStyle(IXLStylized container, XLStyleKey key) : this(container, XLStyleValue.FromKey(key))
+        public XLStyle(IXLStylized container, XLStyleKey key) : this(container, XLStyleValue.FromKey(ref key))
         {
         }
 

@@ -9,3 +9,6 @@ trim_trailing_whitespace = true
 [*.cs]
 indent_style = space
 indent_size = 4
+
+# CA1820: Test for empty strings using string length
+dotnet_diagnostic.CA1820.severity = error

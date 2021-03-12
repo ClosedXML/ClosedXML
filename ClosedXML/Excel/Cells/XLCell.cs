@@ -199,7 +199,13 @@ namespace ClosedXML.Excel
 
         public IXLCell SetValue<T>(T value)
         {
-            return SetValue(value, true);
+            if (value is IEnumerable ie && !(value is string))
+            {
+                this.InsertData(ie);
+                return this;
+            }
+            else
+                return SetValue(value, true);
         }
 
         internal IXLCell SetValue<T>(T value, bool setTableHeader)
@@ -1138,13 +1144,13 @@ namespace ClosedXML.Excel
                             case DateTime d:
                                 _cellValue = d.ToOADate().ToInvariantString();
 
-                                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                                if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                                     Style.NumberFormat.NumberFormatId = _cellValue.Contains('.') ? 22 : 14;
 
                                 break;
 
                             case TimeSpan ts:
-                                if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+                                if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                                     Style.NumberFormat.NumberFormatId = 46;
 
                                 break;
@@ -1438,9 +1444,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        [Obsolete("Use CachedValue instead")]
-        public string ValueCached { get; internal set; }
-
         public IXLRichText RichText
         {
             get
@@ -1664,6 +1667,10 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetValue<T>(out T value)
         {
+            var targetType = typeof(T);
+            var underlyingType = targetType.GetUnderlyingType();
+            var isNullable = targetType.IsNullableType();
+
             Object currentValue;
             try
             {
@@ -1676,13 +1683,13 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            if (currentValue == null)
+            if (isNullable && (currentValue == null || currentValue is string s && String.IsNullOrEmpty(s)))
             {
                 value = default;
                 return true;
             }
 
-            if (typeof(T) != typeof(String) // Strings are handled later and have some specifics to UTF handling
+            if (targetType != typeof(String) // Strings are handled later and have some specifics to UTF handling
                 && currentValue is T t)
             {
                 value = t;
@@ -1705,7 +1712,7 @@ namespace ClosedXML.Excel
             {
                 try
                 {
-                    value = (T)Convert.ChangeType(currentValue, typeof(T));
+                    value = (T)Convert.ChangeType(currentValue, underlyingType);
                     return true;
                 }
                 catch (Exception)
@@ -1717,21 +1724,32 @@ namespace ClosedXML.Excel
 
             var strValue = currentValue.ToString();
 
-            if (typeof(T) == typeof(sbyte)) return TryGetBasicValue<T, sbyte>(strValue, sbyte.TryParse, out value);
-            if (typeof(T) == typeof(byte)) return TryGetBasicValue<T, byte>(strValue, byte.TryParse, out value);
-            if (typeof(T) == typeof(short)) return TryGetBasicValue<T, short>(strValue, short.TryParse, out value);
-            if (typeof(T) == typeof(ushort)) return TryGetBasicValue<T, ushort>(strValue, ushort.TryParse, out value);
-            if (typeof(T) == typeof(int)) return TryGetBasicValue<T, int>(strValue, int.TryParse, out value);
-            if (typeof(T) == typeof(uint)) return TryGetBasicValue<T, uint>(strValue, uint.TryParse, out value);
-            if (typeof(T) == typeof(long)) return TryGetBasicValue<T, long>(strValue, long.TryParse, out value);
-            if (typeof(T) == typeof(ulong)) return TryGetBasicValue<T, ulong>(strValue, ulong.TryParse, out value);
-            if (typeof(T) == typeof(float)) return TryGetBasicValue<T, float>(strValue, float.TryParse, out value);
-            if (typeof(T) == typeof(double)) return TryGetBasicValue<T, double>(strValue, double.TryParse, out value);
-            if (typeof(T) == typeof(decimal)) return TryGetBasicValue<T, decimal>(strValue, decimal.TryParse, out value);
+            if (underlyingType == typeof(sbyte)) return TryGetBasicValue<T, sbyte>(strValue, sbyte.TryParse, out value);
+            if (underlyingType == typeof(byte)) return TryGetBasicValue<T, byte>(strValue, byte.TryParse, out value);
+            if (underlyingType == typeof(short)) return TryGetBasicValue<T, short>(strValue, short.TryParse, out value);
+            if (underlyingType == typeof(ushort)) return TryGetBasicValue<T, ushort>(strValue, ushort.TryParse, out value);
+            if (underlyingType == typeof(int)) return TryGetBasicValue<T, int>(strValue, int.TryParse, out value);
+            if (underlyingType == typeof(uint)) return TryGetBasicValue<T, uint>(strValue, uint.TryParse, out value);
+            if (underlyingType == typeof(long)) return TryGetBasicValue<T, long>(strValue, long.TryParse, out value);
+            if (underlyingType == typeof(ulong)) return TryGetBasicValue<T, ulong>(strValue, ulong.TryParse, out value);
+            if (underlyingType == typeof(float)) return TryGetBasicValue<T, float>(strValue, float.TryParse, out value);
+            if (underlyingType == typeof(double)) return TryGetBasicValue<T, double>(strValue, double.TryParse, out value);
+            if (underlyingType == typeof(decimal)) return TryGetBasicValue<T, decimal>(strValue, decimal.TryParse, out value);
+
+            if (underlyingType.IsEnum)
+            {
+                if (Enum.IsDefined(underlyingType, strValue))
+                {
+                    value = (T)Enum.Parse(underlyingType, strValue, ignoreCase: false);
+                    return true;
+                }
+                value = default;
+                return false;
+            }
 
             try
             {
-                value = (T)Convert.ChangeType(currentValue, typeof(T));
+                value = (T)Convert.ChangeType(currentValue, targetType);
                 return true;
             }
             catch
@@ -1743,29 +1761,52 @@ namespace ClosedXML.Excel
 
         private static bool TryGetDateTimeValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) != typeof(DateTime))
+            if (typeof(T) != typeof(DateTime) && typeof(T) != typeof(DateTime?))
             {
                 value = default;
                 return false;
             }
 
-            if (!DateTime.TryParse(currentValue.ToString(), out DateTime ts))
+            if (currentValue is T v) { value = v; return true; }
+
+            if (currentValue.IsNumber())
             {
-                value = default;
-                return false;
+                var dbl1 = Convert.ToDouble(currentValue);
+                if (dbl1.IsValidOADateNumber())
+                {
+                    value = (T)Convert.ChangeType(DateTime.FromOADate(dbl1), typeof(T));
+                    return true;
+                }
             }
 
-            value = (T)Convert.ChangeType(ts, typeof(T));
-            return true;
+            if (DateTime.TryParse(currentValue.ToString(), out DateTime ts))
+            {
+                value = (T)Convert.ChangeType(ts, typeof(T));
+                return true;
+            }
+
+            // If the cell value is a string, e.g. "42020", we could theoretically coerce it to a DateTime, but this seems to go against what is expected.
+            // Leaving this code block here, though. Maybe we revert our decision later.
+
+            //if (Double.TryParse(currentValue.ObjectToInvariantString(), out Double dbl2) && dbl2.IsValidOADateNumber())
+            //{
+            //    value = (T)Convert.ChangeType(DateTime.FromOADate(dbl2), typeof(T));
+            //    return true;
+            //}
+
+            value = default;
+            return false;
         }
 
         private static bool TryGetTimeSpanValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) != typeof(TimeSpan))
+            if (typeof(T) != typeof(TimeSpan) && typeof(T) != typeof(TimeSpan?))
             {
                 value = default;
                 return false;
             }
+
+            if (currentValue is T v) { value = v; return true; }
 
             if (!TimeSpan.TryParse(currentValue.ToString(), out TimeSpan ts))
             {
@@ -1827,11 +1868,13 @@ namespace ClosedXML.Excel
 
         private static Boolean TryGetBooleanValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) != typeof(Boolean))
+            if (typeof(T) != typeof(Boolean) && typeof(T) != typeof(Boolean?))
             {
                 value = default;
                 return false;
             }
+
+            if (currentValue is T v) { value = v; return true; }
 
             if (!Boolean.TryParse(currentValue.ToString(), out Boolean b))
             {
@@ -1865,10 +1908,8 @@ namespace ClosedXML.Excel
         {
             if (parseFunction.Invoke(currentValue, NumberStyles.Any, null, out U result))
             {
-                value = (T)Convert.ChangeType(result, typeof(T));
-                {
-                    return true;
-                }
+                value = (T)Convert.ChangeType(result, typeof(T).GetUnderlyingType());
+                return true;
             }
 
             value = default;
@@ -1885,6 +1926,13 @@ namespace ClosedXML.Excel
             {
                 yield return Style;
             }
+        }
+
+        void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
+        {
+            //XLCell cannot have children so the base method may be optimized
+            var styleKey = modification(StyleValue.Key);
+            StyleValue = XLStyleValue.FromKey(ref styleKey);
         }
 
         protected override IEnumerable<XLStylizedBase> Children
@@ -2300,7 +2348,7 @@ namespace ClosedXML.Excel
         {
             _dataType = XLDataType.DateTime;
 
-            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = onlyDatePart ? 14 : 22;
         }
 
@@ -2308,7 +2356,7 @@ namespace ClosedXML.Excel
         {
             _dataType = XLDataType.TimeSpan;
 
-            if (style.NumberFormat.Format == String.Empty && style.NumberFormat.NumberFormatId == 0)
+            if (style.NumberFormat.Format.Length == 0 && style.NumberFormat.NumberFormatId == 0)
                 Style.NumberFormat.NumberFormatId = 46;
         }
 

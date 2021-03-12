@@ -129,16 +129,7 @@ namespace ClosedXML.Excel
                 FileSharing.UserName = wbFilesharing.UserName?.Value;
             }
 
-            var wbProtection = dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection;
-            if (wbProtection != null)
-            {
-                if (wbProtection.LockStructure != null)
-                    LockStructure = wbProtection.LockStructure.Value;
-                if (wbProtection.LockWindows != null)
-                    LockWindows = wbProtection.LockWindows.Value;
-                if (wbProtection.WorkbookPassword != null)
-                    LockPassword = wbProtection.WorkbookPassword.Value;
-            }
+            LoadWorkbookProtection(dSpreadsheet.WorkbookPart.Workbook.WorkbookProtection, this);
 
             var calculationProperties = dSpreadsheet.WorkbookPart.Workbook.CalculationProperties;
             if (calculationProperties != null)
@@ -1887,12 +1878,7 @@ namespace ClosedXML.Excel
             if (xlCell.HasFormula)
             {
                 if (cell.CellValue != null)
-                {
-#pragma warning disable 618
-                    xlCell.ValueCached = cell.CellValue.Text;
-#pragma warning restore 618
                     xlCell.SetInternalCellValueString(cell.CellValue.Text);
-                }
 
                 xlCell.NeedsRecalculation = (xlCell.CachedValue == null);
             }
@@ -2510,18 +2496,20 @@ namespace ClosedXML.Excel
         {
             if (sp == null) return;
 
-            if (sp.Sheet != null) ws.Protection.IsProtected = sp.Sheet.Value;
+            ws.Protection.IsProtected = OpenXmlHelper.GetBooleanValueAsBool(sp.Sheet, false);
 
             var algorithmName = sp.AlgorithmName?.Value ?? string.Empty;
             if (String.IsNullOrEmpty(algorithmName))
             {
                 ws.Protection.PasswordHash = sp.Password?.Value ?? string.Empty;
+                ws.Protection.Base64EncodedSalt = string.Empty;
             }
-            else
+            else if (DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.IsValidDescription(algorithmName))
             {
-                //var hashValue = sp.HashValue?.Value ?? string.Empty;
-                //var saltValue = sp.SaltValue?.Value ?? string.Empty;
-                // Continue for now.
+                ws.Protection.Algorithm = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.FromDescription(algorithmName);
+                ws.Protection.PasswordHash = sp.HashValue?.Value ?? string.Empty;
+                ws.Protection.SpinCount = sp.SpinCount?.Value ?? 0;
+                ws.Protection.Base64EncodedSalt = sp.SaltValue?.Value ?? string.Empty;
             }
 
             ws.Protection.AllowElement(XLSheetProtectionElements.FormatCells, !OpenXmlHelper.GetBooleanValueAsBool(sp.FormatCells, true));
@@ -2745,6 +2733,30 @@ namespace ClosedXML.Excel
             }
         }
 
+        private static void LoadWorkbookProtection(WorkbookProtection wp, XLWorkbook wb)
+        {
+            if (wp == null) return;
+
+            wb.Protection.IsProtected = true;
+
+            var algorithmName = wp.WorkbookAlgorithmName?.Value ?? string.Empty;
+            if (String.IsNullOrEmpty(algorithmName))
+            {
+                wb.Protection.PasswordHash = wp.WorkbookPassword?.Value ?? string.Empty;
+                wb.Protection.Base64EncodedSalt = string.Empty;
+            }
+            else if (DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.IsValidDescription(algorithmName))
+            {
+                wb.Protection.Algorithm = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.FromDescription(algorithmName);
+                wb.Protection.PasswordHash = wp.WorkbookHashValue?.Value ?? string.Empty;
+                wb.Protection.SpinCount = wp.WorkbookSpinCount?.Value ?? 0;
+                wb.Protection.Base64EncodedSalt = wp.WorkbookSaltValue?.Value ?? string.Empty;
+            }
+
+            wb.Protection.AllowElement(XLWorkbookProtectionElements.Structure, !OpenXmlHelper.GetBooleanValueAsBool(wp.LockStructure, false));
+            wb.Protection.AllowElement(XLWorkbookProtectionElements.Windows, !OpenXmlHelper.GetBooleanValueAsBool(wp.LockWindows, false));
+        }
+
         private static XLFormula GetFormula(String value)
         {
             var formula = new XLFormula();
@@ -2926,8 +2938,8 @@ namespace ClosedXML.Excel
                 ws.PageSetup.PrintErrorValue = pageSetup.Errors.Value.ToClosedXml();
             if (pageSetup.HorizontalDpi != null) ws.PageSetup.HorizontalDpi = (Int32)pageSetup.HorizontalDpi.Value;
             if (pageSetup.VerticalDpi != null) ws.PageSetup.VerticalDpi = (Int32)pageSetup.VerticalDpi.Value;
-            if (pageSetup.FirstPageNumber != null)
-                ws.PageSetup.FirstPageNumber = UInt32.Parse(pageSetup.FirstPageNumber.InnerText);
+            if (pageSetup.FirstPageNumber?.HasValue ?? false)
+                ws.PageSetup.FirstPageNumber = pageSetup.FirstPageNumber.Value;
         }
 
         private static void LoadPageMargins(PageMargins pageMargins, XLWorksheet ws)

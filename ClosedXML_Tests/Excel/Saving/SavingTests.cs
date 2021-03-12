@@ -138,7 +138,6 @@ namespace ClosedXML_Tests.Excel.Saving
                 {
                     var ws = book2.Worksheet(1);
 
-                    Assert.IsNull(ws.Cell("A2").ValueCached);
                     Assert.IsNull(ws.Cell("A2").CachedValue);
                 }
             }
@@ -165,10 +164,8 @@ namespace ClosedXML_Tests.Excel.Saving
                 {
                     var ws = book2.Worksheet(1);
 
-                    Assert.AreEqual("1230", ws.Cell("A2").ValueCached);
                     Assert.AreEqual(1230, ws.Cell("A2").CachedValue);
 
-                    Assert.AreEqual("1 230", ws.Cell("A3").ValueCached);
                     Assert.AreEqual("1 230", ws.Cell("A3").CachedValue);
                 }
             }
@@ -657,7 +654,80 @@ namespace ClosedXML_Tests.Excel.Saving
             {
                 Assert.DoesNotThrow(() => wb.SaveAs(ms));
             }
+        }
 
+        [Test]
+        public void CanEnableWorkbookFilterPrivacyAndSaveInWorkbook()
+        {
+            using var ms = new MemoryStream();
+
+            using (var wb = new XLWorkbook())
+            {
+                wb.AddWorksheet();
+                wb.SaveAs(ms, new SaveOptions { FilterPrivacy = true });
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (var wb = SpreadsheetDocument.Open(ms, false))
+            {
+                Assert.IsTrue(wb.WorkbookPart.Workbook.WorkbookProperties.FilterPrivacy);
+            }
+        }
+
+        [Test]
+        public void WorkbookFilterPrivacyIsNotSetByDefault()
+        {
+            using var ms = new MemoryStream();
+
+            using (var wb = new XLWorkbook())
+            {
+                wb.AddWorksheet();
+                wb.SaveAs(ms);
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            using (var wb = SpreadsheetDocument.Open(ms, false))
+            {
+                Assert.IsNull(wb.WorkbookPart.Workbook.WorkbookProperties.FilterPrivacy);
+            }
+        }
+
+        [Test]
+        public void WorkbookFilterPrivacyIsReadCorrectly()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\FilterPrivacyEnabledWorkbook.xlsx")))
+            using (var wb = SpreadsheetDocument.Open(stream, false))
+            {
+                Assert.IsTrue(wb.WorkbookPart.Workbook.WorkbookProperties.FilterPrivacy);
+            }
+        }
+
+        [Test]
+        public void CanSaveAsWithDataValidationAfterInsertFirstRowsAboveAndInsertFirstColumnsBefore()
+        {
+            using (var wb = new XLWorkbook())
+            using (var ms = new MemoryStream())
+            {
+                var ws = wb.AddWorksheet("WithDataValidation");
+                ws.Range("B4:B4").SetDataValidation().WholeNumber.Between(0, 1);
+
+                ws.Row(1).InsertRowsAbove(1);
+                var dv = ws.DataValidations.ToArray();
+                Assert.AreEqual(1, dv.Length);
+                Assert.AreEqual("B5:B5", dv[0].Ranges.Single().RangeAddress.ToString());
+
+                Assert.DoesNotThrow(() => wb.SaveAs(ms));
+
+
+                ws.Column(1).InsertColumnsBefore(1);
+                dv = ws.DataValidations.ToArray();
+                Assert.AreEqual(1, dv.Length);
+                Assert.AreEqual("C5:C5", dv[0].Ranges.Single().RangeAddress.ToString());
+
+                Assert.DoesNotThrow(() => wb.SaveAs(ms));
+            }
         }
     }
 }

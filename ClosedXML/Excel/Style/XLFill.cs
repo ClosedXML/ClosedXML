@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
         internal XLFillKey Key
         {
             get { return _value.Key; }
-            private set { _value = XLFillValue.FromKey(value); }
+            private set { _value = XLFillValue.FromKey(ref value); }
         }
 
         #endregion Properties
@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
             _value = value;
         }
 
-        public XLFill(XLStyle style, XLFillKey key) : this(style, XLFillValue.FromKey(key))
+        public XLFill(XLStyle style, XLFillKey key) : this(style, XLFillValue.FromKey(ref key))
         {
         }
 
@@ -85,7 +85,11 @@ namespace ClosedXML.Excel
 
         public XLColor BackgroundColor
         {
-            get { return XLColor.FromKey(Key.BackgroundColor); }
+            get
+            {
+                var backgroundColorKey = Key.BackgroundColor;
+                return XLColor.FromKey(ref backgroundColorKey);
+            }
             set
             {
                 if (value == null)
@@ -110,7 +114,11 @@ namespace ClosedXML.Excel
 
         public XLColor PatternColor
         {
-            get { return XLColor.FromKey(Key.PatternColor); }
+            get
+            {
+                var patternColorKey = Key.PatternColor;
+                return XLColor.FromKey(ref patternColorKey);
+            }
             set
             {
                 if (value == null)

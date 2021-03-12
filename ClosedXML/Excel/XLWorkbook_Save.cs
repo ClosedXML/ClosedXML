@@ -257,7 +257,7 @@ namespace ClosedXML.Excel
 
             GenerateExtendedFilePropertiesPartContent(extendedFilePropertiesPart);
 
-            GenerateWorkbookPartContent(workbookPart, context);
+            GenerateWorkbookPartContent(workbookPart, options, context);
 
             var sharedStringTablePart = workbookPart.SharedStringTablePart ??
                                         workbookPart.AddNewPart<SharedStringTablePart>(
@@ -615,7 +615,7 @@ namespace ClosedXML.Excel
             return namedRanges;
         }
 
-        private void GenerateWorkbookPartContent(WorkbookPart workbookPart, SaveContext context)
+        private void GenerateWorkbookPartContent(WorkbookPart workbookPart, SaveOptions options, SaveContext context)
         {
             if (workbookPart.Workbook == null)
                 workbookPart.Workbook = new Workbook();
@@ -637,8 +637,10 @@ namespace ClosedXML.Excel
             if (workbook.WorkbookProperties.CodeName == null)
                 workbook.WorkbookProperties.CodeName = "ThisWorkbook";
 
-            if (Use1904DateSystem)
-                workbook.WorkbookProperties.Date1904 = true;
+            workbook.WorkbookProperties.Date1904 = OpenXmlHelper.GetBooleanValue(this.Use1904DateSystem, false);
+
+            if (options.FilterPrivacy.HasValue)
+                workbook.WorkbookProperties.FilterPrivacy = OpenXmlHelper.GetBooleanValue(options.FilterPrivacy.Value, false);
 
             #endregion WorkbookProperties
 
@@ -657,16 +659,36 @@ namespace ClosedXML.Excel
 
             #region WorkbookProtection
 
-            if (LockStructure || LockWindows)
+            if (this.Protection.IsProtected)
             {
                 if (workbook.WorkbookProtection == null)
                     workbook.WorkbookProtection = new WorkbookProtection();
 
-                workbook.WorkbookProtection.LockStructure = LockStructure;
-                workbook.WorkbookProtection.LockWindows = LockWindows;
+                var workbookProtection = workbook.WorkbookProtection;
 
-                if (LockPassword != null)
-                    workbook.WorkbookProtection.WorkbookPassword = LockPassword;
+                var protection = this.Protection;
+
+                workbookProtection.WorkbookPassword = null;
+                workbookProtection.WorkbookAlgorithmName = null;
+                workbookProtection.WorkbookHashValue = null;
+                workbookProtection.WorkbookSpinCount = null;
+                workbookProtection.WorkbookSaltValue = null;
+
+                if (protection.Algorithm == XLProtectionAlgorithm.Algorithm.SimpleHash)
+                {
+                    if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
+                        workbookProtection.WorkbookPassword = protection.PasswordHash;
+                }
+                else
+                {
+                    workbookProtection.WorkbookAlgorithmName = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.ToDescription(protection.Algorithm);
+                    workbookProtection.WorkbookHashValue = protection.PasswordHash;
+                    workbookProtection.WorkbookSpinCount = protection.SpinCount;
+                    workbookProtection.WorkbookSaltValue = protection.Base64EncodedSalt;
+                }
+
+                workbookProtection.LockStructure = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Structure), false);
+                workbookProtection.LockWindows = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Windows), false);
             }
             else
             {
@@ -840,7 +862,7 @@ namespace ClosedXML.Excel
                     definedNames.AppendChild(definedName);
                 }
 
-                if (worksheet.AutoFilter.Enabled)
+                if (worksheet.AutoFilter.IsEnabled)
                 {
                     var definedName = new DefinedName
                     {
@@ -1046,7 +1068,9 @@ namespace ClosedXML.Excel
                     phoneticRun.Append(text);
                     rstType.Append(phoneticRun);
                 }
-                var f = XLFontValue.FromKey(XLFont.GenerateKey(cell.RichText.Phonetics));
+
+                var fontKey = XLFont.GenerateKey(cell.RichText.Phonetics);
+                var f = XLFontValue.FromKey(ref fontKey);
 
                 if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
                 {
@@ -3707,11 +3731,12 @@ namespace ClosedXML.Excel
 
             foreach (var pivotNumberFormat in pivotTableNumberFormats.Where(nf => nf.NumberFormatId == -1))
             {
-                var numberFormat = XLNumberFormatValue.FromKey(new XLNumberFormatKey
+                var numberFormatKey = new XLNumberFormatKey
                 {
                     NumberFormatId = -1,
                     Format = pivotNumberFormat.Format
-                });
+                };
+                var numberFormat = XLNumberFormatValue.FromKey(ref numberFormatKey);
 
                 if (sharedNumberFormats.ContainsKey(numberFormat))
                     continue;
@@ -4734,8 +4759,8 @@ namespace ClosedXML.Excel
             svcm.SetElement(XLSheetViewContents.Pane, pane);
 
             pane.State = PaneStateValues.FrozenSplit;
-            Double hSplit = xlWorksheet.SheetView.SplitColumn;
-            Double ySplit = xlWorksheet.SheetView.SplitRow;
+            int hSplit = xlWorksheet.SheetView.SplitColumn;
+            int ySplit = xlWorksheet.SheetView.SplitRow;
 
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
@@ -5120,7 +5145,6 @@ namespace ClosedXML.Excel
                             // reset some stuff that we'll populate later
                             cell.DataType = null;
                             cell.RemoveAllChildren<InlineString>();
-
                         }
 
                         if (!isEmpty)
@@ -5258,8 +5282,8 @@ namespace ClosedXML.Excel
                 if (existingSheetDataRows.TryGetValue(r, out Row row))
                 {
                     sheetData.RemoveChild(row);
-                existingSheetDataRows.Remove(r);
-            }
+                    existingSheetDataRows.Remove(r);
+                }
             }
 
             #endregion SheetData
@@ -5278,9 +5302,26 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWorksheetContents.SheetProtection, sheetProtection);
 
                 var protection = xlWorksheet.Protection;
-                sheetProtection.Sheet = protection.IsProtected;
-                if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
-                    sheetProtection.Password = protection.PasswordHash;
+                sheetProtection.Sheet = OpenXmlHelper.GetBooleanValue(protection.IsProtected, false);
+
+                sheetProtection.Password = null;
+                sheetProtection.AlgorithmName = null;
+                sheetProtection.HashValue = null;
+                sheetProtection.SpinCount = null;
+                sheetProtection.SaltValue = null;
+
+                if (protection.Algorithm == XLProtectionAlgorithm.Algorithm.SimpleHash)
+                {
+                    if (!String.IsNullOrWhiteSpace(protection.PasswordHash))
+                        sheetProtection.Password = protection.PasswordHash;
+                }
+                else
+                {
+                    sheetProtection.AlgorithmName = DescribedEnumParser<XLProtectionAlgorithm.Algorithm>.ToDescription(protection.Algorithm);
+                    sheetProtection.HashValue = protection.PasswordHash;
+                    sheetProtection.SpinCount = protection.SpinCount;
+                    sheetProtection.SaltValue = protection.Base64EncodedSalt;
+                }
 
                 // default value of "1"
                 sheetProtection.FormatCells = OpenXmlHelper.GetBooleanValue(!protection.AllowedElements.HasFlag(XLSheetProtectionElements.FormatCells), true);
@@ -5312,7 +5353,7 @@ namespace ClosedXML.Excel
             #region AutoFilter
 
             worksheetPart.Worksheet.RemoveAllChildren<AutoFilter>();
-            if (xlWorksheet.AutoFilter.Enabled)
+            if (xlWorksheet.AutoFilter.IsEnabled)
             {
                 var previousElement = cm.GetPreviousElementFor(XLWorksheetContents.AutoFilter);
                 worksheetPart.Worksheet.InsertAfter(new AutoFilter(), previousElement);
@@ -5396,7 +5437,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && c.Colors.Count > 1 && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
+            var exlst = from c in xlWorksheet.ConditionalFormats where c.ConditionalFormatType == XLConditionalFormatType.DataBar && typeof(IXLConditionalFormat).IsAssignableFrom(c.GetType()) select c;
             if (exlst != null && exlst.Any())
             {
                 if (!worksheetPart.Worksheet.Elements<WorksheetExtensionList>().Any())
@@ -5730,9 +5771,9 @@ namespace ClosedXML.Excel
             pageSetup.CellComments = xlWorksheet.PageSetup.ShowComments.ToOpenXml();
             pageSetup.Errors = xlWorksheet.PageSetup.PrintErrorValue.ToOpenXml();
 
-            if (xlWorksheet.PageSetup.FirstPageNumber > 0)
+            if (xlWorksheet.PageSetup.FirstPageNumber.HasValue)
             {
-                pageSetup.FirstPageNumber = (UInt32)xlWorksheet.PageSetup.FirstPageNumber;
+                pageSetup.FirstPageNumber = UInt32Value.FromUInt32(xlWorksheet.PageSetup.FirstPageNumber.Value);
                 pageSetup.UseFirstPageNumber = true;
             }
             else
@@ -6331,7 +6372,7 @@ namespace ClosedXML.Excel
                 ((left.Style == null && right.Style == null)
                  || (left.Style != null && right.Style != null && left.Style.Value == right.Style.Value))
                 && ((left.Width == null && right.Width == null)
-                    || (left.Width != null && right.Width != null && left.Width.Value == right.Width.Value))
+                    || (left.Width != null && right.Width != null && (Math.Abs(left.Width.Value - right.Width.Value) < XLHelper.Epsilon)))
                 && ((left.Hidden == null && right.Hidden == null)
                     || (left.Hidden != null && right.Hidden != null && left.Hidden.Value == right.Hidden.Value))
                 && ((left.Collapsed == null && right.Collapsed == null)

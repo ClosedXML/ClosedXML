@@ -138,11 +138,10 @@ namespace ClosedXML.Excel.CalcEngine
             CalcEngine ce = new CalcEngine();
             var cnt = 0.0;
             long processedCount = 0;
-            var ienum = p[0] as XObjectExpression;
-            if (ienum != null)
+            if (p[0] is XObjectExpression ienum)
             {
                 long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
-                var criteria = (string)p[1].Evaluate();
+                var criteria = p[1].Evaluate();
                 foreach (var value in ienum)
                 {
                     if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))

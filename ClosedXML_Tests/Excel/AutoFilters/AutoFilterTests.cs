@@ -66,13 +66,13 @@ namespace ClosedXML_Tests
             ws.Cell("A4").Value = "Dagny";
 
             ws.AutoFilter.Clear(); // We should be able to clear a filter even if it hasn't been set.
-            Assert.That(!ws.AutoFilter.Enabled);
+            Assert.That(!ws.AutoFilter.IsEnabled);
 
             ws.RangeUsed().SetAutoFilter();
-            Assert.That(ws.AutoFilter.Enabled);
+            Assert.That(ws.AutoFilter.IsEnabled);
 
             ws.AutoFilter.Clear();
-            Assert.That(!ws.AutoFilter.Enabled);
+            Assert.That(!ws.AutoFilter.IsEnabled);
         }
 
         [Test]
@@ -87,13 +87,13 @@ namespace ClosedXML_Tests
                 ws.Cell("A4").Value = "Dagny";
 
                 ws.SetAutoFilter(false);
-                Assert.That(!ws.AutoFilter.Enabled);
+                Assert.That(!ws.AutoFilter.IsEnabled);
 
                 ws.RangeUsed().SetAutoFilter();
-                Assert.That(ws.AutoFilter.Enabled);
+                Assert.That(ws.AutoFilter.IsEnabled);
 
                 ws.RangeUsed().SetAutoFilter(false);
-                Assert.That(!ws.AutoFilter.Enabled);
+                Assert.That(!ws.AutoFilter.IsEnabled);
             }
         }
 
@@ -122,9 +122,26 @@ namespace ClosedXML_Tests
 
                 using (var wb2 = new XLWorkbook(ms2))
                 {
-                    Assert.IsTrue(wb2.Worksheets.First().AutoFilter.Enabled);
+                    Assert.IsTrue(wb2.Worksheets.First().AutoFilter.IsEnabled);
                 }
             }
+        }
+
+        [Test]
+        public void CannotAddAutoFilterOverExistingTable()
+        {
+            using var wb = new XLWorkbook();
+
+            var data = Enumerable.Range(1, 10).Select(i => new
+            {
+                Index = i,
+                String = $"String {i}"
+            });
+
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().InsertTable(data);
+
+            Assert.Throws<InvalidOperationException>(() => ws.RangeUsed().SetAutoFilter());
         }
 
         [Test]

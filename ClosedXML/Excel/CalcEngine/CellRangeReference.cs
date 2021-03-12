@@ -23,12 +23,21 @@ namespace ClosedXML.Excel.CalcEngine
         // ** IEnumerable
         public IEnumerator GetEnumerator()
         {
+            if (Range.Worksheet.IsEmpty(XLCellsUsedOptions.AllContents))
+                yield break;
+
             var lastCellAddress = Range.Worksheet.LastCellUsed().Address;
             var maxRow = Math.Min(Range.RangeAddress.LastAddress.RowNumber, lastCellAddress.RowNumber);
             var maxColumn = Math.Min(Range.RangeAddress.LastAddress.ColumnNumber, lastCellAddress.ColumnNumber);
-            var trimmedRange = (XLRangeBase)Range.Worksheet.Range(Range.FirstCell().Address,
-                new XLAddress(maxRow, maxColumn, fixedRow: false, fixedColumn: false));
-            return trimmedRange.CellValues().GetEnumerator();
+
+            var trimmedRange = (XLRangeBase)Range.Worksheet
+                .Range(
+                    Range.FirstCell().Address,
+                    new XLAddress(maxRow, maxColumn, fixedRow: false, fixedColumn: false)
+                );
+
+            foreach (var c in trimmedRange.CellValues())
+                yield return c;
         }
 
         private Boolean _evaluating;

@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
 
-    public interface IXLWorksheet : IXLRangeBase
+    public interface IXLWorksheet : IXLRangeBase, IXLProtectable<IXLSheetProtection, XLSheetProtectionElements>
     {
         /// <summary>
         /// Gets the workbook that contains this worksheet
@@ -362,16 +362,6 @@ namespace ClosedXML.Excel
         IXLWorksheet Hide();
 
         IXLWorksheet Unhide();
-
-        IXLSheetProtection Protection { get; set; }
-
-        IXLSheetProtection Protect();
-
-        IXLSheetProtection Protect(String password);
-
-        IXLSheetProtection Unprotect();
-
-        IXLSheetProtection Unprotect(String password);
 
         IXLSortElements SortRows { get; }
 

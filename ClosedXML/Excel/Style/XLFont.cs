@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
         internal XLFontKey Key
         {
             get { return _value.Key; }
-            private set { _value = XLFontValue.FromKey(value); }
+            private set { _value = XLFontValue.FromKey(ref value); }
         }
 
         #region Constructors
@@ -77,7 +77,7 @@ namespace ClosedXML.Excel
             _value = value;
         }
 
-        public XLFont(XLStyle style, XLFontKey key) : this(style, XLFontValue.FromKey(key))
+        public XLFont(XLStyle style, XLFontKey key) : this(style, XLFontValue.FromKey(ref key))
         {
         }
 
@@ -166,7 +166,11 @@ namespace ClosedXML.Excel
 
         public XLColor FontColor
         {
-            get { return XLColor.FromKey(Key.FontColor); }
+            get
+            {
+                var fontColorKey = Key.FontColor;
+                return XLColor.FromKey(ref fontColorKey);
+            }
             set
             {
                 if (value == null)

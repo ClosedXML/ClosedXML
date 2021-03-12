@@ -1,9 +1,10 @@
+// Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Linq;
-using ClosedXML.Excel.CalcEngine;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
@@ -116,11 +117,27 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(expectedResult, value);
         }
 
+        [TestCase(@"=COUNTIF(A1:A10, 1)", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, 2.0)", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, ""3"")", 2)]
+        [TestCase(@"=COUNTIF(A1:A10, 3)", 2)]
+        [TestCase(@"=COUNTIF(A1:A10, 43831)", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, DATE(2020, 1, 1))", 1)]
+        [TestCase(@"=COUNTIF(A1:A10, TRUE)", 1)]
+        public void CountIf_MixedData(string formula, int expected)
+        {
+            // We follow to Excel's convention.
+            // Excel treats 1 and TRUE as unequal, but 3 and "3" as equal
+            // LibreOffice Calc handles some SUMIF and COUNTIF differently, e.g. it treats 1 and TRUE as equal, but 3 and "3" differently
+            var ws = workbook.Worksheet("MixedData");
+            Assert.AreEqual(expected, ws.Evaluate(formula));
+        }
+
         [TestCase("x", @"=COUNTIF(A1:A1, ""?"")", 1)]
         [TestCase("x", @"=COUNTIF(A1:A1, ""~?"")", 0)]
         [TestCase("?", @"=COUNTIF(A1:A1, ""~?"")", 1)]
-        [TestCase("~?", @"=COUNTIF(A1:A1, ""~?"")", 0)] 
-        [TestCase("~?", @"=COUNTIF(A1:A1, ""~~~?"")", 1)] 
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~?"")", 0)]
+        [TestCase("~?", @"=COUNTIF(A1:A1, ""~~~?"")", 1)]
         [TestCase("?", @"=COUNTIF(A1:A1, ""~~?"")", 0)]
         [TestCase("~?", @"=COUNTIF(A1:A1, ""~~?"")", 1)]
         [TestCase("~x", @"=COUNTIF(A1:A1, ""~~?"")", 1)]
@@ -295,6 +312,52 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(46.79135458, value, tolerance);
         }
 
+        [TestCase(@"=SUMIF(A1:A10, 1, A1:A10)", 1)]
+        [TestCase(@"=SUMIF(A1:A10, 2.0, A1:A10)", 2)]
+        [TestCase(@"=SUMIF(A1:A10, 3, A1:A10)", 3)]
+        [TestCase(@"=SUMIF(A1:A10, ""3"", A1:A10)", 3)]
+        [TestCase(@"=SUMIF(A1:A10, 43831, A1:A10)", 43831)]
+        [TestCase(@"=SUMIF(A1:A10, DATE(2020, 1, 1), A1:A10)", 43831)]
+        [TestCase(@"=SUMIF(A1:A10, TRUE, A1:A10)", 0)]
+        public void SumIf_MixedData(string formula, double expected)
+        {
+            // We follow to Excel's convention.
+            // Excel treats 1 and TRUE as unequal, but 3 and "3" as equal
+            // LibreOffice Calc handles some SUMIF and COUNTIF differently, e.g. it treats 1 and TRUE as equal, but 3 and "3" differently
+            var ws = workbook.Worksheet("MixedData");
+            Assert.AreEqual(expected, ws.Evaluate(formula));
+        }
+
+        [Test]
+        [TestCase("COUNT(G:I,G:G,H:I)", 258d, Description = "COUNT overlapping columns")]
+        [TestCase("COUNT(6:8,6:6,7:8)", 30d, Description = "COUNT overlapping rows")]
+        [TestCase("COUNTBLANK(H:J)", 3145640d, Description = "COUNTBLANK columns")]
+        [TestCase("COUNTBLANK(7:9)", 49128d, Description = "COUNTBLANK rows")]
+        [TestCase("COUNT(1:1048576)", 216d, Description = "COUNT worksheet")]
+        [TestCase("COUNTBLANK(1:1048576)", 17179868831d, Description = "COUNTBLANK worksheet")]
+        [TestCase("SUM(H:J)", 20501.15d, Description = "SUM columns")]
+        [TestCase("SUM(4:5)", 85366.12d, Description = "SUM rows")]
+        [TestCase("SUMIF(G:G,50,H:H)", 24.98d, Description = "SUMIF columns")]
+        [TestCase("SUMIF(G23:G52,\"\",H3:H32)", 53.24d, Description = "SUMIF ranges")]
+        [TestCase("SUMIFS(H:H,G:G,50,I:I,\">900\")", 19.99d, Description = "SUMIFS columns")]
+        public void TallySkipsEmptyCells(string formulaA1, double expectedResult)
+        {
+            using (var wb = SetupWorkbook())
+            {
+                var ws = wb.Worksheets.First();
+                //Let's pre-initialize cells we need so they didn't affect the result
+                ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
+                ws.Cell("ZZ1000").Value = 1;
+                int initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                var actualResult = (double)ws.Evaluate(formulaA1);
+                int cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+
+                Assert.AreEqual(expectedResult, actualResult, tolerance);
+                Assert.AreEqual(initialCount, cellsCount);
+            }
+        }
+
         [Test]
         public void Var()
         {
@@ -329,40 +392,10 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             Assert.AreEqual(2189.430863, value, tolerance);
         }
 
-        [Test]
-        [TestCase("COUNT(G:I,G:G,H:I)", 258d, Description = "COUNT overlapping columns")]
-        [TestCase("COUNT(6:8,6:6,7:8)", 30d, Description = "COUNT overlapping rows")]
-        [TestCase("COUNTBLANK(H:J)", 3145640d, Description = "COUNTBLANK columns")]
-        [TestCase("COUNTBLANK(7:9)", 49128d, Description = "COUNTBLANK rows")]
-        [TestCase("COUNT(1:1048576)", 216d, Description = "COUNT worksheet")]
-        [TestCase("COUNTBLANK(1:1048576)", 17179868831d, Description = "COUNTBLANK worksheet")]
-        [TestCase("SUM(H:J)", 20501.15d, Description = "SUM columns")]
-        [TestCase("SUM(4:5)", 85366.12d, Description = "SUM rows")]
-        [TestCase("SUMIF(G:G,50,H:H)", 24.98d, Description = "SUMIF columns")]
-        [TestCase("SUMIF(G23:G52,\"\",H3:H32)", 53.24d, Description = "SUMIF ranges")]
-        [TestCase("SUMIFS(H:H,G:G,50,I:I,\">900\")", 19.99d, Description = "SUMIFS columns")]
-        public void TallySkipsEmptyCells(string formulaA1, double expectedResult)
-        {
-            using (var wb = SetupWorkbook())
-            {
-                var ws = wb.Worksheets.First();
-                //Let's pre-initialize cells we need so they didn't affect the result
-                ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
-                ws.Cell("ZZ1000").Value = 1;
-                int initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
-
-                var actualResult = (double)ws.Evaluate(formulaA1);
-                int cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
-
-                Assert.AreEqual(expectedResult, actualResult, tolerance);
-                Assert.AreEqual(initialCount, cellsCount);
-            }
-        }
-
         private XLWorkbook SetupWorkbook()
         {
             var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Data");
+            var ws1 = wb.AddWorksheet("Data");
             var data = new object[]
             {
                 new {Id=1, OrderDate = DateTime.Parse("2015-01-06"), Region = "East", Rep = "Jones", Item = "Pencil", Units = 95, UnitCost = 1.99, Total = 189.05 },
@@ -409,10 +442,14 @@ namespace ClosedXML_Tests.Excel.CalcEngine
                 new {Id=42, OrderDate = DateTime.Parse("2016-12-04"), Region = "Central", Rep = "Jardine", Item = "Binder", Units = 94, UnitCost = 19.99, Total = 1879.06},
                 new {Id=43, OrderDate = DateTime.Parse("2016-12-21"), Region = "Central", Rep = "Andrews", Item = "Binder", Units = 28, UnitCost = 4.99, Total = 139.72}
             };
-            ws.FirstCell()
+
+            ws1.FirstCell()
                 .CellBelow()
                 .CellRight()
                 .InsertTable(data, "Table1");
+
+            var ws2 = wb.AddWorksheet("MixedData");
+            ws2.FirstCell().InsertData(new object[] { 1, 2.0, "3", 3, new DateTime(2020, 1, 1), true, new TimeSpan(10, 5, 30, 10) });
 
             return wb;
         }

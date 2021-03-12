@@ -7,7 +7,7 @@ using System.IO;
 
 namespace ClosedXML.Excel
 {
-    public interface IXLWorkbook : IDisposable
+    public interface IXLWorkbook : IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>, IDisposable
     {
         String Author { get; set; }
 
@@ -50,7 +50,9 @@ namespace ClosedXML.Excel
 
         Boolean FullPrecision { get; set; }
 
-        Boolean IsPasswordProtected { get; }
+        //Boolean IsPasswordProtected { get; }
+
+        //Boolean IsProtected { get; }
 
         Boolean LockStructure { get; set; }
 
@@ -155,15 +157,14 @@ namespace ClosedXML.Excel
 
         IXLNamedRange NamedRange(String rangeName);
 
-        void Protect(Boolean lockStructure, Boolean lockWindows, String workbookPassword);
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
+        IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password);
 
-        void Protect();
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
+        IXLWorkbookProtection Protect(Boolean lockStructure);
 
-        void Protect(string workbookPassword);
-
-        void Protect(Boolean lockStructure);
-
-        void Protect(Boolean lockStructure, Boolean lockWindows);
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
+        IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows);
 
         IXLRange Range(String range);
 
@@ -236,13 +237,9 @@ namespace ClosedXML.Excel
         /// <param name="comparisonType">One of the enumeration values that specifies how the strings will be compared.</param>
         /// <returns>The table with given name</returns>
         /// <exception cref="ArgumentOutOfRangeException">If no tables with this name could be found in the workbook.</exception>
-        IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
+        IXLTable Table(String tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
 
         Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet);
-
-        void Unprotect();
-
-        void Unprotect(string workbookPassword);
 
         IXLWorksheet Worksheet(String name);
 

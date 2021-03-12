@@ -120,7 +120,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public static int RomanToArabic(string text)
         {
-            if (text == "")
+            if (text.Length == 0)
                 return 0;
             if (text.StartsWith("M", StringComparison.InvariantCultureIgnoreCase))
                 return 1000 + RomanToArabic(text.Substring(1));

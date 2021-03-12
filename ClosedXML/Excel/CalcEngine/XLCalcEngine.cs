@@ -101,7 +101,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (TryGetNamedRange(identifier, _ws, out IXLNamedRange namedRange))
                 {
                     var references = (namedRange as XLNamedRange).RangeList.Select(r =>
-                        XLHelper.IsValidRangeAddress(r) 
+                        XLHelper.IsValidRangeAddress(r)
                             ? GetCellRangeReference(_ws.Workbook.Range(r))
                             : new XLCalcEngine(_ws).Evaluate(r.ToString())
                         );
@@ -110,14 +110,12 @@ namespace ClosedXML.Excel.CalcEngine
                     return references;
                 }
 
-                var cellRangeReference = GetCellRangeReference(_ws.Range(identifier));
-                if (cellRangeReference == null)
-                    return identifier;
-                else
-                    return cellRangeReference;
+                return GetCellRangeReference(_ws.Range(identifier));
             }
-            else
+            else if (XLHelper.IsValidRangeAddress(identifier))
                 return identifier;
+            else
+                return null;
         }
 
         private bool TryGetNamedRange(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)
