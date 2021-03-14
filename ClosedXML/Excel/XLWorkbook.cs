@@ -664,6 +664,8 @@ namespace ClosedXML.Excel
         internal XLWorkbook(String file, Boolean asTemplate)
             : this(new LoadOptions())
         {
+            if (!asTemplate) throw new NotSupportedException();
+
             LoadSheetsFromTemplate(file);
         }
 
