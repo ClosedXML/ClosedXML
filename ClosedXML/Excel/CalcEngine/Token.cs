@@ -1,8 +1,11 @@
+using System.Diagnostics;
+
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
     /// Represents a node in the expression tree.
     /// </summary>
+    [DebuggerDisplay("{Value} ({ID} {Type})")]
     internal class Token
     {
         // ** fields
