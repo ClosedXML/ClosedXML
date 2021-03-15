@@ -620,5 +620,20 @@ namespace ClosedXML.Tests.Excel
             Assert.IsFalse(result2);
             Assert.IsNull(range2);
         }
+
+        [Test]
+        public void NamedRangeWithSameNameAsAFunction()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+
+            var a1 = ws.FirstCell();
+            var a2 = a1.CellBelow();
+
+            a1.SetValue(5).AddToNamed("RAND");
+            a2.FormulaA1 = "=RAND * 10";
+
+            Assert.AreEqual(50, a2.GetDouble());
+        }
     }
 }
