@@ -736,6 +736,14 @@ namespace ClosedXML.Excel.CalcEngine
             // got identifier
             var id = _expr.Substring(_ptr, i);
             _ptr += i;
+
+            // If we have a true/false, return a literal
+            if (bool.TryParse(id, out var b))
+            {
+                _token = new Token(b, TKID.ATOM, TKTYPE.LITERAL);
+                return;
+            }
+
             _token = new Token(id, TKID.ATOM, TKTYPE.IDENTIFIER);
         }
 
