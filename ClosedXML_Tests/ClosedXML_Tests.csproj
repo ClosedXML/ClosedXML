@@ -9,7 +9,6 @@
     <Configurations>Debug;Release;Release.Signed</Configurations>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
-    <Optimize>true</Optimize>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
   </PropertyGroup>
