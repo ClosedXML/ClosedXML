@@ -10,7 +10,6 @@
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
