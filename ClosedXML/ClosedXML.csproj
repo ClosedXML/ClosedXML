@@ -83,7 +83,6 @@
     <PackageReference Include="ExcelNumberFormat" Version="1.0.10" />
 
     <!-- SourceLink , see https://github.com/ctaggart/SourceLink -->
-    <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.3" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>
