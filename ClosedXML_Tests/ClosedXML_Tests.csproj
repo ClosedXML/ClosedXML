@@ -8,18 +8,14 @@
     <NoWarn>$(NoWarn);NU1605</NoWarn>
     <Configurations>Debug;Release;Release.Signed</Configurations>
     <IsPackable>false</IsPackable>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <DefineConstants>$(AppVeyor)</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release.Signed'">
-    <OutputPath>bin\Release.Signed\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <Optimize>true</Optimize>
     <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(AppVeyor)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
