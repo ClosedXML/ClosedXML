@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <AssemblyName>ClosedXML</AssemblyName>
     <PackageId>ClosedXML.DP</PackageId>
@@ -10,7 +10,7 @@
     <Owners>Francois Botha, Aleksei Pankratev</Owners>
     <Company />
     <Product>ClosedXML</Product>
-    <PackageReleaseNotes>See https://github.com/ClosedXML/ClosedXML/releases/tag/$(productVersion)</PackageReleaseNotes>
+    <PackageReleaseNotes>$(APPVEYOR_REPO_COMMIT_MESSAGE)</PackageReleaseNotes>
     <Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
     <Copyright>MIT</Copyright>
     <PackageProjectUrl>https://github.com/rominator1983/ClosedXML</PackageProjectUrl>
