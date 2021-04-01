@@ -317,19 +317,25 @@ namespace ClosedXML.Excel
                     if (cell1 == null) cell1 = worksheet.Cell(sp1.Row, sp1.Column);
                     if (cell2 == null) cell2 = worksheet.Cell(sp2.Row, sp2.Column);
 
-                    //if (cell1 != null)
-                    //{
+
+                    // Force evaluation of FormulaR1C1 and clear FormulaA1 - this will preserve the relative formula
+                    if (cell1.HasFormula && !string.IsNullOrWhiteSpace(cell1.FormulaR1C1))
+                    {
+                        cell1.ClearFormulaA1();
+                    }
+
                     cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
                     Remove(sp1);
-                    //if (cell2 != null)
                     Add(sp1, cell2);
-                    //}
 
-                    //if (cell2 == null) continue;
+                    // Force evaluation of FormulaR1C1 and clear FormulaA1 - this will preserve the relative formula
+                    if (cell2.HasFormula && !string.IsNullOrWhiteSpace(cell2.FormulaR1C1))
+                    {
+                        cell2.ClearFormulaA1();
+                    }
 
                     cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
                     Remove(sp2);
-                    //if (cell1 != null)
                     Add(sp2, cell1);
                 }
             }
