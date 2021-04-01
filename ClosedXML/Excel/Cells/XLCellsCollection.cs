@@ -316,6 +316,16 @@ namespace ClosedXML.Excel
             }
         }
 
+        internal void ChangeColumnNumbers(IDictionary<int, int> columnNumberMappings, XLRangeAddress affectedRange)
+        {
+            ChangeColumnNumbers(columnNumberMappings, this.RowsCollection, affectedRange);
+        }
+
+        internal void ChangeRowNumbers(IDictionary<int, int> rowNumberMappings, XLRangeAddress affectedRange)
+        {
+            ChangeRowNumbers(rowNumberMappings, this.RowsCollection, affectedRange);
+        }
+
         internal IEnumerable<XLCell> GetCells(Int32 rowStart, Int32 columnStart,
                                             Int32 rowEnd, Int32 columnEnd,
                                             Func<IXLCell, Boolean> predicate = null)
@@ -421,6 +431,90 @@ namespace ClosedXML.Excel
                 dictionary[key] = value + 1;
             else
                 dictionary.Add(key, 1);
+        }
+
+        private void ChangeColumnNumbers(IDictionary<int, int> columnNumberMappings, Dictionary<int, Dictionary<int, XLCell>> rowsCollection, XLRangeAddress affectedRange)
+        {
+            foreach (var kvp in rowsCollection)
+                ChangeColumnNumbers(columnNumberMappings, kvp.Value, affectedRange);
+        }
+
+        private Dictionary<int, XLCell> ChangeColumnNumbers(IDictionary<int, int> columnNumberMappings, Dictionary<int, XLCell> cellsCollection, XLRangeAddress affectedRange)
+        {
+            var currentColumns = columnNumberMappings
+                .Where(kvp => cellsCollection.TryGetValue(kvp.Key, out var c)
+                              && c.Address.RowNumber >= affectedRange.FirstAddress.RowNumber && c.Address.RowNumber <= affectedRange.LastAddress.RowNumber
+                              && c.Address.ColumnNumber != kvp.Value)
+                .Select(kvp =>
+                {
+                    var c = cellsCollection[kvp.Key];
+                    // Force evaluation of FormulaR1C1 and clear FormulaA1 - this will preserve the relative formula
+                    if (c.HasFormula && !string.IsNullOrWhiteSpace(c.FormulaR1C1)) c.ClearFormulaA1();
+                    c.Address = new XLAddress(c.Worksheet, c.Address.RowNumber, kvp.Value, c.Address.FixedRow, c.Address.FixedColumn);
+
+                    return new
+                    {
+                        OldColumnNumber = kvp.Key,
+                        NewColumnNumber = kvp.Value,
+                        Cell = c
+                    };
+                }).ToArray();
+
+            currentColumns.Select(c => c.OldColumnNumber).ForEach(c => cellsCollection.Remove(c));
+            currentColumns.ForEach(c => cellsCollection.Add(c.NewColumnNumber, c.Cell));
+
+            return cellsCollection;
+        }
+
+        private Dictionary<int, Dictionary<int, XLCell>> ChangeRowNumbers(IDictionary<int, int> rowNumberMappings, Dictionary<int, Dictionary<int, XLCell>> rowsCollection, XLRangeAddress affectedRange)
+        {
+            var currentRows = rowNumberMappings
+                .Select(kvp =>
+                {
+                    var cellsCollection = rowsCollection[kvp.Key];
+
+                    // Change the row numbers
+                    cellsCollection.Values.ForEach(c =>
+                    {
+                        if (c.Address.ColumnNumber >= affectedRange.FirstAddress.ColumnNumber && c.Address.ColumnNumber <= affectedRange.LastAddress.ColumnNumber &&
+                            rowNumberMappings.TryGetValue(c.Address.RowNumber, out var newRowNumber) && c.Address.RowNumber != newRowNumber)
+                        {
+                            // Force evaluation of FormulaR1C1 and clear FormulaA1 - this will preserve the relative formula
+                            if (c.HasFormula && !string.IsNullOrWhiteSpace(c.FormulaR1C1))
+                            {
+                                c.ClearFormulaA1();
+                            }
+
+                            c.Address = new XLAddress(c.Worksheet, rowNumberMappings[c.Address.RowNumber], c.Address.ColumnNumber, c.Address.FixedRow, c.Address.FixedColumn);
+                        }
+                    });
+
+                    return new
+                    {
+                        OldRowNumber = kvp.Key,
+                        NewRowNumber = kvp.Value,
+                        Cells = cellsCollection
+                    };
+                }).ToArray();
+
+            currentRows.Select(r => r.OldRowNumber).ForEach(r => rowsCollection.Remove(r));
+            currentRows.ForEach(r => rowsCollection.Add(r.NewRowNumber, r.Cells));
+
+            var cellsToMove = rowsCollection
+                .SelectMany(kvp => kvp.Value.Select(kvp2 => new { Row = kvp.Key, Column = kvp2.Key, Cell = kvp2.Value }))
+                .Where(a => a.Row != a.Cell.Address.RowNumber || a.Column != a.Cell.Address.ColumnNumber)
+                .ToArray();
+
+            cellsToMove.ForEach(c =>
+            {
+                rowsCollection[c.Row].Remove(c.Column);
+            });
+
+            cellsToMove.ForEach(c =>
+            {
+                Add(c.Cell.Address.RowNumber, c.Cell.Address.ColumnNumber, c.Cell);
+            });
+            return rowsCollection;
         }
     }
 }

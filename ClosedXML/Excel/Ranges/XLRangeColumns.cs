@@ -10,6 +10,8 @@ namespace ClosedXML.Excel
     internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns, IXLStylized
     {
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
+        private IXLRangeColumn _firstColumn;
+        private IXLRangeColumn _lastColumn;
 
         public XLRangeColumns() : base(XLWorkbook.DefaultStyleValue)
         {
@@ -17,9 +19,15 @@ namespace ClosedXML.Excel
 
         #region IXLRangeColumns Members
 
-        public void Add(IXLRangeColumn range)
+        public void Add(IXLRangeColumn rangeColumn)
         {
-            _ranges.Add((XLRangeColumn)range);
+            _ranges.Add((XLRangeColumn)rangeColumn);
+
+            if (rangeColumn.ColumnNumber() < (_firstColumn?.ColumnNumber() ?? int.MaxValue))
+                _firstColumn = rangeColumn;
+
+            if (rangeColumn.ColumnNumber() > (_lastColumn?.ColumnNumber() ?? 0))
+                _lastColumn = rangeColumn;
         }
 
         public IXLCells Cells()
@@ -61,24 +69,58 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLRangeColumns Contiguous()
+        {
+            var rangeColumns = new XLRangeColumns();
+
+            if (_ranges.Count > 0)
+            {
+                var ws = (XLWorksheet)_firstColumn.Worksheet;
+
+                int previousColumnNumber = _firstColumn.ColumnNumber();
+
+                foreach (var c in this)
+                {
+                    while (previousColumnNumber < c.ColumnNumber() - 1)
+                    {
+                        previousColumnNumber++;
+                        var firstCellAddress = new XLAddress(ws, _firstColumn.RangeAddress.FirstAddress.RowNumber, previousColumnNumber, fixedRow: false, fixedColumn: false);
+                        var lastCellAddress = new XLAddress(ws, _firstColumn.RangeAddress.LastAddress.RowNumber, previousColumnNumber, fixedRow: false, fixedColumn: false);
+                        var column = ws.RangeColumn(new XLRangeAddress(firstCellAddress, lastCellAddress));
+                        rangeColumns.Add(column);
+                    }
+                    rangeColumns.Add(c);
+                    previousColumnNumber = c.ColumnNumber();
+                }
+            }
+
+            return rangeColumns;
+        }
+
         public void Delete()
         {
             _ranges.OrderByDescending(c => c.ColumnNumber()).ForEach(r => r.Delete());
             _ranges.Clear();
+            _firstColumn = null;
+            _lastColumn = null;
         }
+
+        public IXLRangeColumn FirstColumn() => _firstColumn;
 
         public IEnumerator<IXLRangeColumn> GetEnumerator()
         {
             return _ranges.Cast<IXLRangeColumn>()
-              .OrderBy(r => r.Worksheet.Position)
-              .ThenBy(r => r.ColumnNumber())
-              .GetEnumerator();
+                .OrderBy(r => r.Worksheet.Position)
+                .ThenBy(r => r.ColumnNumber())
+                .GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
+
+        public IXLRangeColumn LastColumn() => _lastColumn;
 
         public void Select()
         {

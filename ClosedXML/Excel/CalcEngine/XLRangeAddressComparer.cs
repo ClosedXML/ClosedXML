@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿// Keep this file CodeMaid organised and cleaned
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine
 {

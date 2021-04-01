@@ -11,8 +11,8 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adds a row range to this group.
         /// </summary>
-        /// <param name="rowRange">The row range to add.</param>
-        void Add(IXLRangeRow rowRange);
+        /// <param name="rangeRow">The range row to add.</param>
+        void Add(IXLRangeRow rangeRow);
 
         /// <summary>
         /// Returns the collection of cells.
@@ -40,9 +40,24 @@ namespace ClosedXML.Excel
         IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         /// <summary>
+        /// Returns a set of range rows that are all touching or connected throughout in an unbroken sequence.
+        /// </summary>
+        IXLRangeRows Contiguous();
+
+        /// <summary>
         /// Deletes all rows and shifts the rows below them accordingly.
         /// </summary>
         void Delete();
+
+        /// <summary>
+        /// Returns the first row
+        /// </summary>
+        IXLRangeRow FirstRow();
+
+        /// <summary>
+        /// Returns the last row
+        /// </summary>
+        IXLRangeRow LastRow();
 
         void Select();
 

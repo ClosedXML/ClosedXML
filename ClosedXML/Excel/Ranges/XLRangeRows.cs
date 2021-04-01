@@ -10,6 +10,8 @@ namespace ClosedXML.Excel
     internal class XLRangeRows : XLStylizedBase, IXLRangeRows, IXLStylized
     {
         private readonly List<XLRangeRow> _ranges = new List<XLRangeRow>();
+        private IXLRangeRow _firstRow;
+        private IXLRangeRow _lastRow;
 
         public XLRangeRows() : base(XLStyle.Default.Value)
         {
@@ -17,9 +19,15 @@ namespace ClosedXML.Excel
 
         #region IXLRangeRows Members
 
-        public void Add(IXLRangeRow range)
+        public void Add(IXLRangeRow rangeRow)
         {
-            _ranges.Add((XLRangeRow)range);
+            _ranges.Add((XLRangeRow)rangeRow);
+
+            if (rangeRow.RowNumber() < (_firstRow?.RowNumber() ?? int.MaxValue))
+                _firstRow = rangeRow;
+
+            if (rangeRow.RowNumber() > (_lastRow?.RowNumber() ?? 0))
+                _lastRow = rangeRow;
         }
 
         public IXLCells Cells()
@@ -60,11 +68,43 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLRangeRows Contiguous()
+        {
+            var rangeRows = new XLRangeRows();
+
+            if (_ranges.Count > 0)
+            {
+                var ws = (XLWorksheet)_firstRow.Worksheet;
+
+                int previousRowNumber = _firstRow.RowNumber();
+
+                foreach (var r in this)
+                {
+                    while (previousRowNumber < r.RowNumber() - 1)
+                    {
+                        previousRowNumber++;
+                        var firstCellAddress = new XLAddress(ws, previousRowNumber, _firstRow.RangeAddress.FirstAddress.ColumnNumber, fixedRow: false, fixedColumn: false);
+                        var lastCellAddress = new XLAddress(ws, previousRowNumber, _firstRow.RangeAddress.LastAddress.ColumnNumber, fixedRow: false, fixedColumn: false);
+                        var row = ws.RangeRow(new XLRangeAddress(firstCellAddress, lastCellAddress));
+                        rangeRows.Add(row);
+                    }
+                    rangeRows.Add(r);
+                    previousRowNumber = r.RowNumber();
+                }
+            }
+
+            return rangeRows;
+        }
+
         public void Delete()
         {
             _ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
             _ranges.Clear();
+            _firstRow = null;
+            _lastRow = null;
         }
+
+        public IXLRangeRow FirstRow() => _firstRow;
 
         public IEnumerator<IXLRangeRow> GetEnumerator()
         {
@@ -78,6 +118,8 @@ namespace ClosedXML.Excel
         {
             return GetEnumerator();
         }
+
+        public IXLRangeRow LastRow() => _lastRow;
 
         public void Select()
         {

@@ -8,6 +8,32 @@ namespace ClosedXML.Tests
     public class SortTests
     {
         [Test]
+        public void SortIsFast()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell(1, 1).Value = "A";
+            ws.Cell(1, 2).Value = "B";
+            for (int i = 0; i < 14000; i++)
+            {
+                ws.Cell(i + 2, 1).Value = i;
+                ws.Cell(i + 2, 2).Value = i % 2;
+            }
+
+            var autoFilter = ws.Range(1, 1, 14001, 2).SetAutoFilter();
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
+            // Before the fix, sorting this used to take about 12min on my laptop
+            autoFilter.Sort(2);
+
+            stopwatch.Stop();
+
+            Assert.True(stopwatch.ElapsedMilliseconds < 10000);
+        }
+
+        [Test]
         public void SortPreservesFixedFormula()
         {
             using var wb = new XLWorkbook();
