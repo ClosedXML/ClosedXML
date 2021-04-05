@@ -24,6 +24,16 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void ColumnsUsedIsFast()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().SetValue("Hello world!");
+            var columnsUsed = ws.Row(1).AsRange().ColumnsUsed();
+            Assert.AreEqual(1, columnsUsed.Count());
+        }
+
+        [Test]
         public void CopyColumn()
         {
             var wb = new XLWorkbook();

@@ -5,6 +5,10 @@ namespace ClosedXML.Excel
     [Flags]
     public enum XLCellsUsedOptions
     {
+
+        None                    = 0,
+        NoConstraints           = None,
+
         Contents                = 1 << 0,
         DataType                = 1 << 1,
         NormalFormats           = 1 << 2,
