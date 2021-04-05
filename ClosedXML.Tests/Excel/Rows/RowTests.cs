@@ -9,6 +9,16 @@ namespace ClosedXML.Tests.Excel
     public class RowTests
     {
         [Test]
+        public void RowsUsedIsFast()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().SetValue("Hello world!");
+            var rowsUsed = ws.Column(1).AsRange().RowsUsed();
+            Assert.AreEqual(1, rowsUsed.Count());
+        }
+
+        [Test]
         public void CopyRow()
         {
             var wb = new XLWorkbook();
@@ -237,6 +247,34 @@ namespace ClosedXML.Tests.Excel
 
             IXLRangeRow fromRange = ws.Range("A1:E1").FirstRow().RowUsed();
             Assert.AreEqual("B1:C1", fromRange.RangeAddress.ToStringRelative());
+        }
+
+        [Test]
+        public void RowsUsedWithDataValidation()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().SetValue("Hello world!");
+            ws.Range("A1:A100").CreateDataValidation().WholeNumber.EqualTo(1);
+
+            var range = ws.Column(1).AsRange();
+
+            Assert.AreEqual(100, range.RowsUsed(XLCellsUsedOptions.DataValidation).Count());
+            Assert.AreEqual(100, range.RowsUsed(XLCellsUsedOptions.All).Count());
+        }
+
+        [Test]
+        public void RowsUsedWithConditionalFormatting()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().SetValue("Hello world!");
+            ws.Range("A1:A100").AddConditionalFormat().WhenStartsWith("Hell").Fill.SetBackgroundColor(XLColor.Red).Font.SetFontColor(XLColor.White);
+
+            var range = ws.Column(1).AsRange();
+
+            Assert.AreEqual(100, range.RowsUsed(XLCellsUsedOptions.ConditionalFormats).Count());
+            Assert.AreEqual(100, range.RowsUsed(XLCellsUsedOptions.All).Count());
         }
 
         [Test]

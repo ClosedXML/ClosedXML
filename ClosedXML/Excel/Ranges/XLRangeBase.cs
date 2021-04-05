@@ -690,47 +690,9 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        internal XLCell FirstCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate)
+        internal XLCell FirstCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate = null)
         {
-            predicate = predicate ?? (t => true);
-
-            //To avoid unnecessary initialization of thousands cells
-            var opt = options
-                      & ~XLCellsUsedOptions.ConditionalFormats
-                      & ~XLCellsUsedOptions.DataValidation
-                      & ~XLCellsUsedOptions.MergedRanges;
-
-            IEnumerable<IXLCell> cellsUsed = CellsUsed(opt, predicate);
-
-            if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
-            {
-                cellsUsed = cellsUsed.Union(
-                    Worksheet.ConditionalFormats
-                        .SelectMany(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
-                        .Select(r => r.FirstCell())
-                        .Where(predicate)
-                );
-            }
-            if (options.HasFlag(XLCellsUsedOptions.DataValidation))
-            {
-                cellsUsed = cellsUsed.Union(
-                    Worksheet.DataValidations
-                        .GetAllInRange(RangeAddress)
-                        .SelectMany(dv => dv.Ranges)
-                        .Select(r => r.FirstCell())
-                        .Where(predicate)
-                );
-            }
-            if (options.HasFlag(XLCellsUsedOptions.MergedRanges))
-            {
-                cellsUsed = cellsUsed.Union(
-                    Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
-                        .Select(r => r.FirstCell())
-                        .Where(predicate)
-                );
-            }
-
-            cellsUsed = cellsUsed.ToList();
+            var cellsUsed = CellsUsedInternal(options, r => r.FirstCell(), predicate).ToList();
 
             if (!cellsUsed.Any())
                 return null;
@@ -772,47 +734,9 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        internal XLCell LastCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate)
+        internal XLCell LastCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate = null)
         {
-            predicate = predicate ?? (t => true);
-
-            //To avoid unnecessary initialization of thousands cells
-            var opt = options
-                      & ~XLCellsUsedOptions.ConditionalFormats
-                      & ~XLCellsUsedOptions.DataValidation
-                      & ~XLCellsUsedOptions.MergedRanges;
-
-            IEnumerable<IXLCell> cellsUsed = CellsUsed(opt, predicate);
-
-            if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
-            {
-                cellsUsed = cellsUsed.Union(
-                    Worksheet.ConditionalFormats
-                        .SelectMany(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
-                        .Select(r => r.LastCell())
-                        .Where(predicate)
-                );
-            }
-            if (options.HasFlag(XLCellsUsedOptions.DataValidation))
-            {
-                cellsUsed = cellsUsed.Union(
-                    Worksheet.DataValidations
-                        .GetAllInRange(RangeAddress)
-                        .SelectMany(dv => dv.Ranges)
-                        .Select(r => r.LastCell())
-                        .Where(predicate)
-                );
-            }
-            if (options.HasFlag(XLCellsUsedOptions.MergedRanges))
-            {
-                cellsUsed = cellsUsed.Union(
-                    Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
-                        .Select(r => r.LastCell())
-                        .Where(predicate)
-                );
-            }
-
-            cellsUsed = cellsUsed.ToList();
+            var cellsUsed = CellsUsedInternal(options, r => r.LastCell(), predicate).ToList();
 
             if (!cellsUsed.Any())
                 return null;
@@ -912,6 +836,17 @@ namespace ClosedXML.Excel
             return RangeAddress.LastAddress.RowNumber - RangeAddress.FirstAddress.RowNumber + 1;
         }
 
+        public Int32 RowCount(XLCellsUsedOptions cellsUsedOptions)
+        {
+            var lcu = LastCellUsed(cellsUsedOptions);
+            if (lcu == null) return 0;
+
+            var fcu = FirstCellUsed(cellsUsedOptions);
+            if (fcu == null) return 0;
+
+            return lcu.Address.RowNumber - fcu.Address.RowNumber + 1;
+        }
+
         public Int32 RowNumber()
         {
             return RangeAddress.FirstAddress.RowNumber;
@@ -920,6 +855,17 @@ namespace ClosedXML.Excel
         public Int32 ColumnCount()
         {
             return RangeAddress.LastAddress.ColumnNumber - RangeAddress.FirstAddress.ColumnNumber + 1;
+        }
+
+        public Int32 ColumnCount(XLCellsUsedOptions cellsUsedOptions)
+        {
+            var lcu = LastCellUsed(cellsUsedOptions);
+            if (lcu == null) return 0;
+
+            var fcu = FirstCellUsed(cellsUsedOptions);
+            if (fcu == null) return 0;
+
+            return lcu.Address.ColumnNumber - fcu.Address.ColumnNumber + 1;
         }
 
         public Int32 ColumnNumber()
@@ -2282,6 +2228,53 @@ namespace ClosedXML.Excel
 
             this.Cells(c => thisRangePredicate(c) && !otherRange.Cells(otherRangePredicate).Contains(c)).ForEach(c => cells.Add(c as XLCell));
             return cells;
+        }
+
+        private IEnumerable<IXLCell> CellsUsedInternal(XLCellsUsedOptions options, Func<IXLRange, IXLCell> selector, Func<IXLCell, bool> predicate)
+        {
+            predicate ??= (t => true);
+
+            //To avoid unnecessary initialization of thousands cells
+            var opt = options
+                      & ~XLCellsUsedOptions.ConditionalFormats
+                      & ~XLCellsUsedOptions.DataValidation
+                      & ~XLCellsUsedOptions.MergedRanges;
+
+            // If opt == 0 then we're basically back at unconstrained, so just set back the original options
+            if (opt == XLCellsUsedOptions.NoConstraints)
+                opt = options;
+
+            IEnumerable<IXLCell> cellsUsed = CellsUsed(opt, predicate);
+
+            if (options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.ConditionalFormats
+                        .SelectMany(cf => cf.Ranges.GetIntersectedRanges(RangeAddress))
+                        .Select(selector)
+                        .Where(predicate)
+                );
+            }
+            if (options.HasFlag(XLCellsUsedOptions.DataValidation))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.DataValidations
+                        .GetAllInRange(RangeAddress)
+                        .SelectMany(dv => dv.Ranges)
+                        .Select(selector)
+                        .Where(predicate)
+                );
+            }
+            if (options.HasFlag(XLCellsUsedOptions.MergedRanges))
+            {
+                cellsUsed = cellsUsed.Union(
+                    Worksheet.MergedRanges.GetIntersectedRanges(RangeAddress)
+                        .Select(selector)
+                        .Where(predicate)
+                );
+            }
+
+            return cellsUsed;
         }
     }
 }

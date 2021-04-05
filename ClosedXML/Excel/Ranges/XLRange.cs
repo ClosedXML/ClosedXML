@@ -1,4 +1,3 @@
-using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -650,7 +649,8 @@ namespace ClosedXML.Excel
         internal XLRangeRows RowsUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null)
         {
             XLRangeRows rows = new XLRangeRows();
-            Int32 rowCount = RowCount();
+            Int32 rowCount = RowCount(options);
+
             for (Int32 ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
@@ -686,7 +686,8 @@ namespace ClosedXML.Excel
         internal virtual XLRangeColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null)
         {
             XLRangeColumns columns = new XLRangeColumns();
-            Int32 columnCount = ColumnCount();
+            Int32 columnCount = ColumnCount(options);
+
             for (Int32 co = 1; co <= columnCount; co++)
             {
                 var column = Column(co);
