@@ -71,5 +71,7 @@ namespace ClosedXML.Excel
         {
             elements.RemoveAt(elementNumber - 1);
         }
+
+        internal void AddRange(IEnumerable<XLSortElement> sortElements) => elements.AddRange(sortElements);
     }
 }
