@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,34 +17,9 @@ namespace ClosedXML.Excel
 
         #region IXLRangeRows Members
 
-        public IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
-        {
-            _ranges.ForEach(c => c.Clear(clearOptions));
-            return this;
-        }
-
-        public void Delete()
-        {
-            _ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
-            _ranges.Clear();
-        }
-
         public void Add(IXLRangeRow range)
         {
             _ranges.Add((XLRangeRow)range);
-        }
-
-        public IEnumerator<IXLRangeRow> GetEnumerator()
-        {
-            return _ranges.Cast<IXLRangeRow>()
-                          .OrderBy(r => r.Worksheet.Position)
-                          .ThenBy(r => r.RowNumber())
-                          .GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public IXLCells Cells()
@@ -78,6 +54,37 @@ namespace ClosedXML.Excel
             return cells;
         }
 
+        public IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
+        {
+            _ranges.ForEach(c => c.Clear(clearOptions));
+            return this;
+        }
+
+        public void Delete()
+        {
+            _ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
+            _ranges.Clear();
+        }
+
+        public IEnumerator<IXLRangeRow> GetEnumerator()
+        {
+            return _ranges.Cast<IXLRangeRow>()
+                          .OrderBy(r => r.Worksheet.Position)
+                          .ThenBy(r => r.RowNumber())
+                          .GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Select()
+        {
+            foreach (var range in this)
+                range.Select();
+        }
+
         public IXLRangeRows SetDataType(XLDataType dataType)
         {
             _ranges.ForEach(c => c.DataType = dataType);
@@ -87,6 +94,16 @@ namespace ClosedXML.Excel
         #endregion IXLRangeRows Members
 
         #region IXLStylized Members
+
+        public override IXLRanges RangesUsed
+        {
+            get
+            {
+                var retVal = new XLRanges();
+                this.ForEach(c => retVal.Add(c.AsRange()));
+                return retVal;
+            }
+        }
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -115,23 +132,6 @@ namespace ClosedXML.Excel
             }
         }
 
-
-        public override IXLRanges RangesUsed
-        {
-            get
-            {
-                var retVal = new XLRanges();
-                this.ForEach(c => retVal.Add(c.AsRange()));
-                return retVal;
-            }
-        }
-
         #endregion IXLStylized Members
-
-        public void Select()
-        {
-            foreach (var range in this)
-                range.Select();
-        }
     }
 }

@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 
@@ -5,6 +6,8 @@ namespace ClosedXML.Excel
 {
     public interface IXLRangeColumns : IEnumerable<IXLRangeColumn>
     {
+        IXLStyle Style { get; set; }
+
         /// <summary>
         /// Adds a column range to this group.
         /// </summary>
@@ -31,20 +34,18 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed(XLCellsUsedOptions options);
 
         /// <summary>
-        /// Deletes all columns and shifts the columns at the right of them accordingly.
-        /// </summary>
-        void Delete();
-
-        IXLStyle Style { get; set; }
-
-        IXLRangeColumns SetDataType(XLDataType dataType);
-
-        /// <summary>
         /// Clears the contents of these columns.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
+        /// <summary>
+        /// Deletes all columns and shifts the columns at the right of them accordingly.
+        /// </summary>
+        void Delete();
+
         void Select();
+
+        IXLRangeColumns SetDataType(XLDataType dataType);
     }
 }
