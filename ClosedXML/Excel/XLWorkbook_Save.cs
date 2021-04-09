@@ -2252,22 +2252,22 @@ namespace ClosedXML.Excel
                 };
 
                 var sourceHeaderRow = source.FirstRow().RowNumber();
-                var fieldValueCells = source.CellsUsed(cell => cell.Address.ColumnNumber == columnNumber
-                                                           && cell.Address.RowNumber > sourceHeaderRow);
+                var cellsUsed = source.CellsUsed(XLCellsUsedOptions.All,
+                                                 cell => cell.Address.ColumnNumber == columnNumber
+                                                         && cell.Address.RowNumber > sourceHeaderRow)
+                                                 .ToArray();
+                var fieldValueCells = cellsUsed.Where(cell => !cell.IsEmpty()).ToArray();
                 var types = fieldValueCells.Select(cell => cell.DataType).Distinct().ToArray();
-                var containsBlank = source.CellsUsed(XLCellsUsedOptions.All,
-                    cell => cell.Address.ColumnNumber == columnNumber
-                            && cell.Address.RowNumber > sourceHeaderRow
-                            && cell.IsEmpty()).Any();
+                var containsBlank = cellsUsed.Any(cell => cell.IsEmpty());
 
                 // For a totally blank column, we need to check that all cells in column are unused
-                if (!fieldValueCells.Any())
+                if (fieldValueCells.Length == 0)
                 {
                     ptfi.IsTotallyBlankField = true;
                     containsBlank = true;
                 }
 
-                if (types.Any())
+                if (types.Length > 0)
                 {
                     if (types.Length == 1 && types.Single() == XLDataType.Number)
                     {
