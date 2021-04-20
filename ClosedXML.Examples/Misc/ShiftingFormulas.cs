@@ -79,7 +79,8 @@ namespace ClosedXML.Examples.Misc
             dataGrid.LastColumn().FormulaR1C1 = String.Format("SUM(RC[-{0}]:RC[-1])", dataGrid.ColumnCount() - 1);
             ws.Cell(1, 1).InsertCellsBelow(1);
             ws.Column(1).InsertColumnsBefore(1);
-            ws.Row(4).Delete();
+            ws.Range("B2:E3").Delete(XLShiftDeletedCells.ShiftCellsUp);
+            ws.Range("F2:G2").Delete(XLShiftDeletedCells.ShiftCellsUp);
             wb.SaveAs(filePath);
         }
 

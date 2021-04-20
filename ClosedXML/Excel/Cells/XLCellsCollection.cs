@@ -305,6 +305,17 @@ namespace ClosedXML.Excel
         {
             Int32 rowCount = sheetRange1.LastPoint.Row - sheetRange1.FirstPoint.Row + 1;
             Int32 columnCount = sheetRange1.LastPoint.Column - sheetRange1.FirstPoint.Column + 1;
+
+            // Calculate the amount of shift experienced by range 2. Range 1's shift will be
+            // the negative of this amount.
+            Int32 rowShift = sheetRange1.FirstPoint.Row - sheetRange2.FirstPoint.Row;
+            Int32 columnShift = sheetRange1.FirstPoint.Column - sheetRange2.FirstPoint.Column;
+
+            // Create row and column ranges, starting at A1 and with bounds equal to the shift amount.
+            // These ranges will be used to shift cell formulas by simulating an insert or delete above.
+            var rowRange = rowShift == 0 ? null : worksheet.Range(1, 1, Math.Abs(rowShift), XLHelper.MaxColumnNumber);
+            var columnRange = columnShift == 0 ? null : worksheet.Range(1, 1, XLHelper.MaxRowNumber, Math.Abs(columnShift));
+
             for (int row = 0; row < rowCount; row++)
             {
                 for (int column = 0; column < columnCount; column++)
@@ -317,19 +328,17 @@ namespace ClosedXML.Excel
                     if (cell1 == null) cell1 = worksheet.Cell(sp1.Row, sp1.Column);
                     if (cell2 == null) cell2 = worksheet.Cell(sp2.Row, sp2.Column);
 
-                    //if (cell1 != null)
-                    //{
-                    cell1.Address = new XLAddress(cell1.Worksheet, sp2.Row, sp2.Column, false, false);
+                    cell1.ShiftFormulaRows(rowRange, -rowShift);
+                    cell1.ShiftFormulaColumns(columnRange, -columnShift);
+                    cell2.ShiftFormulaRows(rowRange, rowShift);
+                    cell2.ShiftFormulaColumns(columnRange, columnShift);
+
+                    cell1.Address = new XLAddress(worksheet, sp2.Row, sp2.Column, false, false);
                     Remove(sp1);
-                    //if (cell2 != null)
                     Add(sp1, cell2);
-                    //}
 
-                    //if (cell2 == null) continue;
-
-                    cell2.Address = new XLAddress(cell2.Worksheet, sp1.Row, sp1.Column, false, false);
+                    cell2.Address = new XLAddress(worksheet, sp1.Row, sp1.Column, false, false);
                     Remove(sp2);
-                    //if (cell1 != null)
                     Add(sp2, cell1);
                 }
             }

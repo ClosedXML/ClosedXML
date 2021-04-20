@@ -47,16 +47,17 @@ namespace ClosedXML.Excel
 
         internal sealed class RelIdGenerator
         {
-            private readonly Dictionary<RelType, List<String>> _relIds = new Dictionary<RelType, List<String>>();
+            private readonly Dictionary<RelType, HashSet<String>> _relIds = new Dictionary<RelType, HashSet<String>>();
 
             public void AddValues(IEnumerable<String> values, RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<String> list))
+                if (!_relIds.TryGetValue(relType, out HashSet<String> existingValues))
                 {
-                    list = new List<String>();
-                    _relIds.Add(relType, list);
+                    existingValues = new HashSet<String>();
+                    _relIds.Add(relType, existingValues);
                 }
-                list.AddRange(values.Where(v => !list.Contains(v)));
+
+                values.ForEach(v => existingValues.Add(v));
             }
 
             public String GetNext()
@@ -66,19 +67,18 @@ namespace ClosedXML.Excel
 
             public String GetNext(RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<String> list))
+                if (!_relIds.TryGetValue(relType, out HashSet<String> existingValues))
                 {
-                    list = new List<String>();
-                    _relIds.Add(relType, list);
+                    existingValues = new HashSet<String>();
+                    _relIds.Add(relType, existingValues);
                 }
 
-                Int32 id = list.Count + 1;
+                Int32 id = existingValues.Count + 1;
                 while (true)
                 {
                     String relId = String.Concat("rId", id);
-                    if (!list.Contains(relId))
+                    if (existingValues.Add(relId))
                     {
-                        list.Add(relId);
                         return relId;
                     }
                     id++;
@@ -87,8 +87,7 @@ namespace ClosedXML.Excel
 
             public void Reset(RelType relType)
             {
-                if (_relIds.ContainsKey(relType))
-                    _relIds.Remove(relType);
+                _relIds.Remove(relType);
             }
         }
 

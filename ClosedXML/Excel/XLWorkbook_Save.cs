@@ -4562,20 +4562,24 @@ namespace ClosedXML.Excel
             var allSharedNumberFormats = new Dictionary<XLNumberFormatValue, NumberFormatInfo>();
             foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
-                var numberingFormatId = XLConstants.NumberOfBuiltInStyles; // 0-based
+                int numberingFormatId = -1;
+                var highestFormatId = XLConstants.NumberOfBuiltInStyles; // should be -1, but following old code
                 var foundOne = false;
                 foreach (NumberingFormat nf in workbookStylesPart.Stylesheet.NumberingFormats)
                 {
+                    var actualFormatId = (Int32)nf.NumberFormatId.Value;
                     if (NumberFormatsAreEqual(nf, numberFormatInfo.NumberFormat))
                     {
                         foundOne = true;
-                        numberingFormatId = (Int32)nf.NumberFormatId.Value;
+                        numberingFormatId = actualFormatId;
                         break;
                     }
-                    numberingFormatId++;
+
+                    highestFormatId = Math.Max(highestFormatId, actualFormatId);
                 }
                 if (!foundOne)
                 {
+                    numberingFormatId = highestFormatId + 1;
                     var numberingFormat = new NumberingFormat
                     {
                         NumberFormatId = (UInt32)numberingFormatId,

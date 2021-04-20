@@ -90,6 +90,17 @@ namespace ClosedXML.Examples.Misc
 
                 #endregion Sort Dates
 
+                #region Sort Formulas
+
+                var wsFormulas = wb.Worksheets.Add("Formulas");
+                AddTestColumnFormulas(wsFormulas);
+
+                table = wsFormulas.RangeUsed().AsTable();
+                table.Sort("Sum Desc, Addend1 Desc");
+
+
+                #endregion Sort Formulas
+
                 #region Do Not Ignore Blanks
 
                 var wsIncludeBlanks = wb.Worksheets.Add("Include Blanks");
@@ -252,6 +263,34 @@ namespace ClosedXML.Examples.Misc
             ws.Cell("C6").SetValue("b").Style.Fill.SetBackgroundColor(XLColor.DodgerBlue);
             ws.Cell("C7").SetValue("A").Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("C8").SetValue("").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
+        }
+
+        private void AddTestColumnFormulas(IXLWorksheet ws)
+        {
+            ws.Cell("A1").SetValue("Addend1").Style.Font.Bold = true;
+            ws.Cell("B1").SetValue("Addend2").Style.Font.Bold = true;
+            ws.Cell("C1").SetValue("Sum").Style.Font.Bold = true;
+
+            ws.Cell("A2").SetValue(1).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
+            ws.Cell("B2").SetValue(3).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
+            ws.Cell("C2").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
+            ws.Cell("C2").FormulaR1C1 = "RC[-2] + RC[-1]";
+
+            ws.Cell("A3").SetValue(1).Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
+            ws.Cell("B3").SetValue(5).Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
+            ws.Cell("C3").Style.Fill.SetBackgroundColor(XLColor.DarkTurquoise);
+            ws.Cell("C3").FormulaR1C1 = "RC[-2] + RC[-1]";
+
+            ws.Cell("A4").SetValue(0).Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
+            ws.Cell("B4").SetValue(4).Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
+            ws.Cell("C4").Style.Fill.SetBackgroundColor(XLColor.BurlyWood);
+            ws.Cell("C4").FormulaR1C1 = "RC[-2] + RC[-1]";
+
+            ws.Cell("A5").SetValue(0).Style.Fill.SetBackgroundColor(XLColor.DarkGray);
+            ws.Cell("B5").SetValue(6).Style.Fill.SetBackgroundColor(XLColor.DarkGray);
+            ws.Cell("C5").Style.Fill.SetBackgroundColor(XLColor.DarkGray);
+            ws.Cell("C5").FormulaR1C1 = "RC[-2] + RC[-1]";
+
         }
     }
 }
