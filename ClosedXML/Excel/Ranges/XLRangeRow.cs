@@ -228,7 +228,7 @@ namespace ClosedXML.Excel
             {
                 var thisCell = (XLCell)Cell(e.ElementNumber);
                 var otherCell = (XLCell)otherRow.Cell(e.ElementNumber);
-                int comparison;
+                int comparison = 0;
                 bool thisCellIsBlank = thisCell.IsEmpty();
                 bool otherCellIsBlank = otherCell.IsEmpty();
                 if (e.IgnoreBlanks && (thisCellIsBlank || otherCellIsBlank))
@@ -245,40 +245,66 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    if (thisCell.DataType == otherCell.DataType)
+                    object thisCellValue;
+                    object otherCellValue;
+                    switch (thisCell.DataType)
                     {
-                        switch (thisCell.DataType)
+                        case XLDataType.Text:
+                            thisCellValue = !string.IsNullOrWhiteSpace(thisCell.FormulaA1)
+                                                ? thisCell.Value
+                                                : thisCell.InnerText;
+                            break;
+
+                        case XLDataType.TimeSpan:
+                            thisCellValue = thisCell.GetTimeSpan();
+                            break;
+
+                        default:
+                            thisCellValue = Double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture);
+                            break;
+                    }
+
+                    switch (otherCell.DataType)
+                    {
+                        case XLDataType.Text:
+                            otherCellValue = !string.IsNullOrWhiteSpace(otherCell.FormulaA1)
+                                                ? otherCell.Value
+                                                : otherCell.InnerText;
+                            break;
+
+                        case XLDataType.TimeSpan:
+                            otherCellValue = otherCell.GetTimeSpan();
+                            break;
+
+                        default:
+                            otherCellValue = Double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture);
+                            break;
+                    }
+
+                    bool comparisonMade = false;
+                    if (thisCellValue.GetType() == otherCellValue.GetType())
+                    {
+                        if (thisCellValue is string)
                         {
-                            case XLDataType.Text:
-                                comparison = e.MatchCase
-                                                 ? thisCell.InnerText.CompareTo(otherCell.InnerText)
-                                                 : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
-                                break;
-
-                            case XLDataType.TimeSpan:
-                                comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());
-                                break;
-
-                            case XLDataType.DateTime:
-                                comparison = thisCell.GetDateTime().CompareTo(otherCell.GetDateTime());
-                                break;
-
-                            case XLDataType.Number:
-                                comparison = thisCell.GetDouble().CompareTo(otherCell.GetDouble());
-                                break;
-
-                            case XLDataType.Boolean:
-                                comparison = thisCell.GetBoolean().CompareTo(otherCell.GetBoolean());
-                                break;
-
-                            default:
-                                throw new NotImplementedException();
+                            comparison = e.MatchCase
+                                             ? ((string)thisCellValue).CompareTo((string)otherCellValue)
+                                             : String.Compare((string)thisCellValue, (string)otherCellValue, true);
+                            comparisonMade = true;
+                        }
+                        else if (thisCellValue is IComparable)
+                        {
+                            comparison = ((IComparable)thisCellValue).CompareTo((IComparable)otherCellValue);
+                            comparisonMade = true;
                         }
                     }
-                    else if (e.MatchCase)
-                        comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), true);
-                    else
-                        comparison = thisCell.GetString().CompareTo(otherCell.GetString());
+
+                    if (!comparisonMade)
+                    {
+                        if (e.MatchCase)
+                            comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), true);
+                        else
+                            comparison = thisCell.GetString().CompareTo(otherCell.GetString());
+                    }
                 }
 
                 if (comparison != 0)

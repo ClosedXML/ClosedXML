@@ -2,24 +2,103 @@
 
 namespace ClosedXML.Excel
 {
+    using DocumentFormat.OpenXml.Office2010.PowerPoint;
+
     internal struct XLStyleKey : IEquatable<XLStyleKey>
     {
-        public XLAlignmentKey Alignment { get; set; }
+        private XLAlignmentKey _alignment;
 
-        public XLBorderKey Border { get; set; }
+        private XLBorderKey _border;
 
-        public XLFillKey Fill { get; set; }
+        private XLFillKey _fill;
 
-        public XLFontKey Font { get; set; }
+        private XLFontKey _font;
 
-        public Boolean IncludeQuotePrefix { get; set; }
+        private Boolean _includeQuotePrefix;
 
-        public XLNumberFormatKey NumberFormat { get; set; }
+        private XLNumberFormatKey _numberFormat;
 
-        public XLProtectionKey Protection { get; set; }
+        private XLProtectionKey _protection;
+
+        private int _cachedHashCode;
+
+        public XLAlignmentKey Alignment
+        {
+            get { return _alignment; }
+            set
+            {
+                _alignment = value;
+                _cachedHashCode = 0;
+            }
+        }
+
+        public XLBorderKey Border
+        {
+            get { return _border; }
+            set
+            {
+                _border = value;
+                _cachedHashCode = 0;
+            }
+        }
+
+        public XLFillKey Fill
+        {
+            get { return _fill; }
+            set
+            {
+                _fill = value;
+                _cachedHashCode = 0;
+            }
+        }
+
+        public XLFontKey Font
+        {
+            get { return _font; }
+            set
+            {
+                _font = value;
+                _cachedHashCode = 0;
+            }
+        }
+
+        public Boolean IncludeQuotePrefix
+        {
+            get { return _includeQuotePrefix; }
+            set
+            {
+                _includeQuotePrefix = value;
+                _cachedHashCode = 0;
+            }
+        }
+
+        public XLNumberFormatKey NumberFormat
+        {
+            get { return _numberFormat; }
+            set
+            {
+                _numberFormat = value;
+                _cachedHashCode = 0;
+            }
+        }
+
+        public XLProtectionKey Protection
+        {
+            get { return _protection; }
+            set
+            {
+                _protection = value;
+                _cachedHashCode = 0;
+            }
+        }
 
         public override int GetHashCode()
         {
+            if (_cachedHashCode != 0)
+            {
+                return _cachedHashCode;
+            }
+
             var hashCode = -476701294;
             hashCode = hashCode * -1521134295 + Alignment.GetHashCode();
             hashCode = hashCode * -1521134295 + Border.GetHashCode();
@@ -28,6 +107,10 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + IncludeQuotePrefix.GetHashCode();
             hashCode = hashCode * -1521134295 + NumberFormat.GetHashCode();
             hashCode = hashCode * -1521134295 + Protection.GetHashCode();
+
+            if (hashCode == 0) hashCode = 1;
+            _cachedHashCode = hashCode;
+
             return hashCode;
         }
 

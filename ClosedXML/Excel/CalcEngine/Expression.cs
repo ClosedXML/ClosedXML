@@ -237,6 +237,10 @@ namespace ClosedXML.Excel.CalcEngine
                         c2 = ((DateTime)other);
                     else if (c2 is DateTime)
                         c1 = ((DateTime)this);
+                    else if (c1 is double && c2 is string c2String && string.IsNullOrWhiteSpace(c2String))
+                        c2 = 0.0;
+                    else if (c2 is double && c1 is string c1String && string.IsNullOrWhiteSpace(c1String))
+                        c1 = 0.0;
                     else
                         c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
                 }

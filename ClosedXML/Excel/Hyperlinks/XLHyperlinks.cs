@@ -21,6 +21,11 @@ namespace ClosedXML.Excel
             _hyperlinks.Add(hyperlink.Cell.Address, hyperlink);
         }
 
+        public void AddOrReplace(XLHyperlink hyperlink)
+        {
+            _hyperlinks[hyperlink.Cell.Address] = hyperlink;
+        }
+
         public void Delete(XLHyperlink hyperlink)
         {
             _hyperlinks.Remove(hyperlink.Cell.Address);

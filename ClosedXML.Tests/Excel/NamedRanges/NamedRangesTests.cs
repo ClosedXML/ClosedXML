@@ -253,7 +253,7 @@ namespace ClosedXML.Tests.Excel
             sheet2.NamedRanges.ForEach(nr => Assert.AreEqual(XLNamedRangeScope.Worksheet, nr.Scope));
         }
 
-        [Test, Ignore("Muted until shifting is fixed (see #880)")]
+        [Test]
         public void NamedRangeBecomesInvalidOnRangeAndWorksheetDeleting()
         {
             using (var wb = new XLWorkbook())
@@ -273,11 +273,11 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual(2, wb.NamedRanges.Count());
                 Assert.AreEqual(0, wb.NamedRanges.ValidNamedRanges().Count());
                 Assert.AreEqual("#REF!#REF!", wb.NamedRanges.ElementAt(0).RefersTo);
-                Assert.AreEqual("#REF!#REF!,'Sheet 2'!A10:D15", wb.NamedRanges.ElementAt(0).RefersTo);
+                Assert.AreEqual("#REF!#REF!,'Sheet 2'!$A$10:$D$15", wb.NamedRanges.ElementAt(1).RefersTo);
             }
         }
 
-        [Test, Ignore("Muted until shifting is fixed (see #880)")]
+        [Test]
         public void NamedRangeBecomesInvalidOnRangeDeleting()
         {
             using (var wb = new XLWorkbook())
@@ -295,7 +295,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual(2, wb.NamedRanges.Count());
                 Assert.AreEqual(0, wb.NamedRanges.ValidNamedRanges().Count());
                 Assert.AreEqual("'Sheet 1'!#REF!", wb.NamedRanges.ElementAt(0).RefersTo);
-                Assert.AreEqual("'Sheet 1'!#REF!,'Sheet 1'!A5:D10", wb.NamedRanges.ElementAt(0).RefersTo);
+                Assert.AreEqual("'Sheet 1'!#REF!,'Sheet 1'!$A$5:$D$10", wb.NamedRanges.ElementAt(1).RefersTo);
             }
         }
 

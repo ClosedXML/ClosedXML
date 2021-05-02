@@ -53,18 +53,18 @@ namespace ClosedXML.Excel.CalcEngine
         // remove all dead references from the cache
         void RemoveDeadReferences()
         {
-            for (bool done = false; !done; )
+            var keysToRemove = new List<string>();
+            foreach (var k in _dct.Keys)
             {
-                done = true;
-                foreach (var k in _dct.Keys)
+                if (!_dct[k].IsAlive)
                 {
-                    if (!_dct[k].IsAlive)
-                    {
-                        _dct.Remove(k);
-                        done = false;
-                        break;
-                    }
+                    keysToRemove.Add(k);
                 }
+            }
+
+            foreach (var k in keysToRemove)
+            {
+                _dct.Remove(k);
             }
         }
     }
