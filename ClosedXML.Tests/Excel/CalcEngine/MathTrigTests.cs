@@ -1176,6 +1176,53 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void MMult_HandlesNonSquareMatrices()
+        {
+            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+
+            // 2x3
+            ws.Cell("A1").SetValue(1).CellRight().SetValue(3).CellRight().SetValue(5);
+            ws.Cell("A2").SetValue(2).CellRight().SetValue(4).CellRight().SetValue(6);
+
+            // 3x4
+            ws.Cell("A3").SetValue(10).CellRight().SetValue(13).CellRight().SetValue(16).CellRight().SetValue(19);
+            ws.Cell("A4").SetValue(11).CellRight().SetValue(14).CellRight().SetValue(17).CellRight().SetValue(20);
+            ws.Cell("A5").SetValue(12).CellRight().SetValue(15).CellRight().SetValue(18).CellRight().SetValue(21);
+
+            Object actual;
+
+            // 2x4 output expected:
+            // 103, 130, 157, 184
+            // 136, 172, 208, 244
+            ws.Cell("A6").FormulaA1 = "MMult(A1:C2, A3:D5)";
+
+            actual = ws.Cell("A6").Value;
+            Assert.AreEqual(103.0, actual);
+
+            ws.Cell("A7").FormulaA1 = "Sum(MMult(A1:C2, A3:D5))";
+            actual = ws.Cell("A7").Value;
+
+            Assert.AreEqual(1334, actual);
+        }
+
+        [TestCase("A2:C2", "A3:C3")] // 1x3 and 1x3
+        [TestCase("A2:C4", "A5:C5")] // 3x3 and 1x3
+        [TestCase("A2:C5", "A6:D6")] // 3x4 and 1x4
+        public void MMult_ThrowsWhenArray1RowsNotEqualToArray2Cols(string array1Range, string array2Range)
+        {
+            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+
+            ws.Cells($"{array1Range}").Value = 1.0;
+            ws.Cells($"{array2Range}").Value = 1.0;
+
+            ws.Cell("A1").FormulaA1 = $"MMULT({array1Range},{array2Range})";
+
+            var error = Assert.Throws<ArgumentException>(() => { var _ = ws.Cell("A1").Value; });
+
+            Assert.AreEqual("Range 1 must have the same number of columns as range 2 has rows.", error.Message);
+        }
+
+        [Test]
         public void Mod()
         {
             double actual;
