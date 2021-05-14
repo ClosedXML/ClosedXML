@@ -1037,10 +1037,10 @@ namespace ClosedXML.Excel.CalcEngine
             Double[,] A = GetArray(p[0]);
             Double[,] B = GetArray(p[1]);
 
-            if (A.GetLength(0) != B.GetLength(0) || A.GetLength(1) != B.GetLength(1))
-                throw new ArgumentException("Ranges must have the same number of rows and columns.");
+            if (A.GetLength(1) != B.GetLength(0))
+                throw new ArgumentException("Range 1 must have the same number of columns as range 2 has rows.");
 
-            var C = new double[A.GetLength(0), A.GetLength(1)];
+            var C = new double[A.GetLength(0), B.GetLength(1)];
             for (int i = 0; i < A.GetLength(0); i++)
             {
                 for (int j = 0; j < B.GetLength(1); j++)
