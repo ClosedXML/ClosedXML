@@ -3383,8 +3383,8 @@ namespace ClosedXML.Excel
             if (existingAnchor != null)
                 worksheetDrawing.RemoveChild(existingAnchor);
 
-            var extentsCx = ConvertToEnglishMetricUnits(pic.Width, GraphicsUtils.Graphics.DpiX);
-            var extentsCy = ConvertToEnglishMetricUnits(pic.Height, GraphicsUtils.Graphics.DpiY);
+            var extentsCx = ConvertToEnglishMetricUnits(pic.Width, pic.DpiX);
+            var extentsCy = ConvertToEnglishMetricUnits(pic.Height, pic.DpiY);
 
             var nvps = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>();
             var nvpId = nvps.Any() ?
@@ -3399,8 +3399,8 @@ namespace ClosedXML.Excel
                     var absoluteAnchor = new Xdr.AbsoluteAnchor(
                         new Xdr.Position
                         {
-                            X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
-                            Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
+                            X = ConvertToEnglishMetricUnits(pic.Left, pic.DpiX),
+                            Y = ConvertToEnglishMetricUnits(pic.Top, pic.DpiY)
                         },
                         new Xdr.Extent
                         {
@@ -3437,8 +3437,8 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.ColumnNumber - 1).ToInvariantString()),
                         RowId = new Xdr.RowId((moveAndSizeFromMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, pic.DpiX).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, pic.DpiY).ToInvariantString())
                     };
 
                     var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
@@ -3447,8 +3447,8 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.ColumnNumber - 1).ToInvariantString()),
                         RowId = new Xdr.RowId((moveAndSizeToMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, pic.DpiX).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, pic.DpiY).ToInvariantString())
                     };
 
                     var twoCellAnchor = new Xdr.TwoCellAnchor(
@@ -3484,8 +3484,8 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId((moveFromMarker.ColumnNumber - 1).ToInvariantString()),
                         RowId = new Xdr.RowId((moveFromMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, pic.DpiX).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, pic.DpiY).ToInvariantString())
                     };
 
                     var oneCellAnchor = new Xdr.OneCellAnchor(

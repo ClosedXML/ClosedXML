@@ -57,17 +57,17 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
-        public IXLPicture Add(Stream stream, int width, int height, XLPictureFormat format)
+        public IXLPicture Add(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format)
         {
-            var picture = new XLPicture(_worksheet, stream, width, height, format);
+            var picture = new XLPicture(_worksheet, stream, width, height, dpiX, dpiY, format);
             _pictures.Add(picture);
             picture.Name = GetNextPictureName();
             return picture;
         }
 
-        public IXLPicture Add(Stream stream, int width, int height, XLPictureFormat format, string name)
+        public IXLPicture Add(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format, string name)
         {
-            var picture = Add(stream, width, height, format);
+            var picture = Add(stream, width, height, dpiX, dpiY, format);
             picture.Name = name;
             return picture;
         }

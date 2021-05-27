@@ -31,6 +31,8 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
                     Assert.AreEqual(200, picture.Width);
                     Assert.AreEqual(200, picture.Height);
+                    Assert.AreEqual(72, picture.DpiX);
+                    Assert.AreEqual(72, picture.DpiY);
                 }
             }
         }
@@ -52,6 +54,8 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
                     Assert.AreEqual(200, picture.Width);
                     Assert.AreEqual(200, picture.Height);
+                    Assert.AreEqual(72, picture.DpiX);
+                    Assert.AreEqual(72, picture.DpiY);
                 }
             }
         }
@@ -66,7 +70,7 @@ namespace ClosedXML.Tests
 
                 using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
                 {
-                    var picture = ws.AddPicture(resourceStream, 400, 400, XLPictureFormat.Jpeg)
+                    var picture = ws.AddPicture(resourceStream, 400, 400, 72, 72, XLPictureFormat.Jpeg)
                         .WithPlacement(XLPicturePlacement.FreeFloating)
                         .MoveTo(50, 50)
                         .WithSize(200, 200);
@@ -74,6 +78,8 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
                     Assert.AreEqual(200, picture.Width);
                     Assert.AreEqual(200, picture.Height);
+                    Assert.AreEqual(72, picture.DpiX);
+                    Assert.AreEqual(72, picture.DpiY);
                 }
             }
         }

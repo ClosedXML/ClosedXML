@@ -37,6 +37,10 @@ namespace ClosedXML.Excel.Drawings
 
         Int32 Width { get; set; }
 
+        Single DpiX { get; set; }
+
+        Single DpiY { get; set; }
+
         IXLWorksheet Worksheet { get; }
 
         /// <summary>

@@ -79,7 +79,7 @@ namespace ClosedXML.Excel.Drawings
             this.Format = formats.Single().Key;
         }
 
-        internal XLPicture(IXLWorksheet worksheet, Stream stream, int width, int height, XLPictureFormat format)
+        internal XLPicture(IXLWorksheet worksheet, Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format)
             : this(worksheet)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -92,6 +92,8 @@ namespace ClosedXML.Excel.Drawings
 
             this.OriginalWidth = this._width = width;
             this.OriginalHeight = this._height = height;
+            this.DpiX = dpiX;
+            this.DpiY = dpiY;
         }
 
         private XLPicture(IXLWorksheet worksheet)
@@ -225,6 +227,10 @@ namespace ClosedXML.Excel.Drawings
                 _width = value;
             }
         }
+
+        public Single DpiX { get; set; }
+
+        public Single DpiY { get; set; }
 
         public IXLWorksheet Worksheet { get; }
 
@@ -457,6 +463,9 @@ namespace ClosedXML.Excel.Drawings
         {
             this.OriginalWidth = image.Width;
             this.OriginalHeight = image.Height;
+
+            this.DpiX = image.HorizontalResolution;
+            this.DpiY = image.VerticalResolution;
 
             this._width = image.Width;
             this._height = image.Height;

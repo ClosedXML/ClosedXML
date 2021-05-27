@@ -474,9 +474,9 @@ namespace ClosedXML.Excel
 
         IXLPicture AddPicture(Stream stream, XLPictureFormat format, String name);
 
-        IXLPicture AddPicture(Stream stream, int width, int height, XLPictureFormat format);
+        IXLPicture AddPicture(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format);
 
-        IXLPicture AddPicture(Stream stream, int width, int height, XLPictureFormat format, String name);
+        IXLPicture AddPicture(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format, String name);
 
         IXLPicture AddPicture(Bitmap bitmap);
 

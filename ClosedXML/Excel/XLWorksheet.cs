@@ -1792,14 +1792,14 @@ namespace ClosedXML.Excel
             return Pictures.Add(stream, format, name);
         }
 
-        public IXLPicture AddPicture(Stream stream, int width, int height, XLPictureFormat format)
+        public IXLPicture AddPicture(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format)
         {
-            return Pictures.Add(stream, width, height, format);
+            return Pictures.Add(stream, width, height, dpiX, dpiY, format);
         }
 
-        public IXLPicture AddPicture(Stream stream, int width, int height, XLPictureFormat format, string name)
+        public IXLPicture AddPicture(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format, string name)
         {
-            return Pictures.Add(stream, width, height, format, name);
+            return Pictures.Add(stream, width, height, dpiX, dpiY, format, name);
         }
 
         public IXLPicture AddPicture(Bitmap bitmap)

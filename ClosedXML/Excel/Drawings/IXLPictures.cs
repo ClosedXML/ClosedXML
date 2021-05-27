@@ -17,9 +17,9 @@ namespace ClosedXML.Excel.Drawings
 
         IXLPicture Add(Stream stream, XLPictureFormat format, String name);
 
-        IXLPicture Add(Stream stream, int width, int height, XLPictureFormat format);
+        IXLPicture Add(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format);
 
-        IXLPicture Add(Stream stream, int width, int height, XLPictureFormat format, String name);
+        IXLPicture Add(Stream stream, int width, int height, float dpiX, float dpiY, XLPictureFormat format, String name);
 
         IXLPicture Add(Bitmap bitmap);
 
