@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ClosedXML.Utils;
 
 namespace ClosedXML.Excel.Drawings
 {
@@ -464,8 +465,8 @@ namespace ClosedXML.Excel.Drawings
             this.OriginalWidth = image.Width;
             this.OriginalHeight = image.Height;
 
-            this.DpiX = image.HorizontalResolution;
-            this.DpiY = image.VerticalResolution;
+            this.DpiX = GraphicsUtils.Graphics.DpiX;
+            this.DpiY = GraphicsUtils.Graphics.DpiY;
 
             this._width = image.Width;
             this._height = image.Height;
