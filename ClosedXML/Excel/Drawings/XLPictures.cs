@@ -57,6 +57,21 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+        public IXLPicture Add(Stream stream, int width, int height, XLPictureFormat format)
+        {
+            var picture = new XLPicture(_worksheet, stream, width, height, format);
+            _pictures.Add(picture);
+            picture.Name = GetNextPictureName();
+            return picture;
+        }
+
+        public IXLPicture Add(Stream stream, int width, int height, XLPictureFormat format, string name)
+        {
+            var picture = Add(stream, width, height, format);
+            picture.Name = name;
+            return picture;
+        }
+
         public IXLPicture Add(Bitmap bitmap)
         {
             var picture = new XLPicture(_worksheet, bitmap);

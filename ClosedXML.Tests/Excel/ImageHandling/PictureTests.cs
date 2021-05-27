@@ -56,6 +56,28 @@ namespace ClosedXML.Tests
             }
         }
 
+
+        [Test]
+        public void CanAddPictureFromStreamWithImageInfo()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
+                {
+                    var picture = ws.AddPicture(resourceStream, 400, 400, XLPictureFormat.Jpeg)
+                        .WithPlacement(XLPicturePlacement.FreeFloating)
+                        .MoveTo(50, 50)
+                        .WithSize(200, 200);
+
+                    Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
+                    Assert.AreEqual(200, picture.Width);
+                    Assert.AreEqual(200, picture.Height);
+                }
+            }
+        }
+
         [Test]
         public void CanAddPictureFromFile()
         {

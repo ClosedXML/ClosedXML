@@ -79,6 +79,21 @@ namespace ClosedXML.Excel.Drawings
             this.Format = formats.Single().Key;
         }
 
+        internal XLPicture(IXLWorksheet worksheet, Stream stream, int width, int height, XLPictureFormat format)
+            : this(worksheet)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            this.Format = format;
+
+            this.ImageStream = new MemoryStream();
+            stream.Position = 0;
+            stream.CopyTo(ImageStream);
+            ImageStream.Seek(0, SeekOrigin.Begin);
+
+            this.OriginalWidth = this._width = width;
+            this.OriginalHeight = this._height = height;
+        }
+
         private XLPicture(IXLWorksheet worksheet)
         {
             this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
