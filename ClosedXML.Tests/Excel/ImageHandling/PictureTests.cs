@@ -31,8 +31,6 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
                     Assert.AreEqual(200, picture.Width);
                     Assert.AreEqual(200, picture.Height);
-                    Assert.AreEqual(72, picture.DpiX);
-                    Assert.AreEqual(72, picture.DpiY);
                 }
             }
         }
@@ -54,8 +52,6 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
                     Assert.AreEqual(200, picture.Width);
                     Assert.AreEqual(200, picture.Height);
-                    Assert.AreEqual(72, picture.DpiX);
-                    Assert.AreEqual(72, picture.DpiY);
                 }
             }
         }
