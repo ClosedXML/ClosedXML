@@ -601,11 +601,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MMult(List<Expression> p)
         {
-            Double[,] A = GetArray(p[0]);
-            Double[,] B = GetArray(p[1]);
+            Double[,] A, B;
+
+            try
+            {
+                A = GetArray(p[0]);
+                B = GetArray(p[1]);
+            }
+            catch (FormatException e)
+            {
+                throw new CellValueException("Cells are empty or contain text.", e);
+            }
 
             if (A.GetLength(1) != B.GetLength(0))
-                throw new ArgumentException("The number of columns in array1 must be the same as the number of rows in array2, and both arrays must contain only numbers.");
+                throw new CellValueException("The number of columns in array1 is different from the number of rows in array2.");
 
             var C = new double[A.GetLength(0), B.GetLength(1)];
             for (int i = 0; i < A.GetLength(0); i++)

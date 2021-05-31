@@ -1217,9 +1217,32 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Cell("A1").FormulaA1 = $"MMULT({array1Range},{array2Range})";
 
-            var error = Assert.Throws<ArgumentException>(() => { var _ = ws.Cell("A1").Value; });
+            var error = Assert.Throws<CellValueException>(() => { var _ = ws.Cell("A1").Value; });
 
-            Assert.AreEqual("Range 1 must have the same number of columns as range 2 has rows.", error.Message);
+            Assert.AreEqual("The number of columns in array1 is different from the number of rows in array2.", error.Message);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("Text")]
+        public void MMult_ThrowsWhenCellsContainInvalidInput(object invalidInput)
+        {
+            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+
+            // 2x3
+            ws.Cell("A1").SetValue(1).CellRight().SetValue(3).CellRight().SetValue(invalidInput);
+            ws.Cell("A2").SetValue(2).CellRight().SetValue(4).CellRight().SetValue(6);
+
+            // 3x4
+            ws.Cell("A3").SetValue(10).CellRight().SetValue(13).CellRight().SetValue(16).CellRight().SetValue(19);
+            ws.Cell("A4").SetValue(11).CellRight().SetValue(14).CellRight().SetValue(17).CellRight().SetValue(20);
+            ws.Cell("A5").SetValue(12).CellRight().SetValue(15).CellRight().SetValue(18).CellRight().SetValue(21);
+
+            ws.Cell("A6").FormulaA1 = $"MMULT(A1:C2,A3:D4)";
+
+            var error = Assert.Throws<CellValueException>(() => { var _ = ws.Cell("A6").Value; });
+
+            Assert.AreEqual("Cells are empty or contain text.", error.Message);
         }
 
         [Test]
