@@ -27,26 +27,64 @@ namespace ClosedXML.Excel
     {
         private readonly Dictionary<String, Color> _colorList = new Dictionary<string, Color>();
 
-        private void Load(String file)
+        private void Load(String file, LoadOptions loadOptions)
         {
-            LoadSheets(file);
+            LoadSheets(file, loadOptions);
         }
 
-        private void Load(Stream stream)
+        private void Load(Stream stream, LoadOptions loadOptions)
         {
-            LoadSheets(stream);
+            LoadSheets(stream, loadOptions);
         }
 
-        private void LoadSheets(String fileName)
+        private void LoadSheets(String fileName, LoadOptions loadOptions)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(fileName, false))
+            var isEditable = loadOptions.RelationshipErrorHandlerFactory != null;
+
+            using var fs = File.OpenRead(fileName);
+
+            Stream stream;
+            if (!isEditable)
+            {
+                stream = fs;
+            }
+            else
+            {
+                stream = new MemoryStream();
+                fs.CopyTo(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+            }
+
+            using (var dSpreadsheet = SpreadsheetDocument.Open(stream, isEditable, loadOptions.ToOpenSettings()))
+            {
+                if (isEditable) dSpreadsheet.Save();
                 LoadSpreadsheetDocument(dSpreadsheet);
+            }
+            if (isEditable) stream.Dispose();
         }
 
-        private void LoadSheets(Stream stream)
+        private void LoadSheets(Stream stream, LoadOptions loadOptions)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(stream, false))
+            var isEditable = loadOptions.RelationshipErrorHandlerFactory != null;
+
+            Stream stream2;
+            if (!isEditable)
+            {
+                stream2 = stream;
+            }
+            else
+            {
+                stream2 = new MemoryStream();
+                stream.CopyTo(stream2);
+                stream2.Seek(0, SeekOrigin.Begin);
+            }
+
+            using (var dSpreadsheet = SpreadsheetDocument.Open(stream2, isEditable, loadOptions.ToOpenSettings()))
+            {
+                if (isEditable) dSpreadsheet.Save();
                 LoadSpreadsheetDocument(dSpreadsheet);
+            }
+            if (isEditable) stream2.Dispose();
         }
 
         private void LoadSheetsFromTemplate(String fileName)

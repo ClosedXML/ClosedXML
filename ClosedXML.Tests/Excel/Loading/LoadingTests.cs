@@ -32,6 +32,19 @@ namespace ClosedXML.Tests.Excel
             TestHelper.LoadFile(file);
         }
 
+#if !_NET40_
+        // .NET 4.0 does not recognise the malformed mailto URI in the file
+        [TestCaseSource(nameof(MalformedFiles))]
+        public void CanSuccessfullyLoadMalformedFilesWithRemoveMalformedHyperlinksRelationshipErrorHandlerFactory(string file)
+        {
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(file));
+            var loadOptions = new LoadOptions { RelationshipErrorHandlerFactory = LoadOptions.RemoveMalformedHyperlinksRelationshipErrorHandlerFactory };
+            using var wb = new XLWorkbook(stream, loadOptions);
+            var ws = wb.Worksheets.First();
+            Assert.AreEqual(0, ws.Hyperlinks.Count());
+        }
+#endif
+
         private static IEnumerable<string> LOFiles
         {
             get
@@ -63,6 +76,8 @@ namespace ClosedXML.Tests.Excel
                 return TestHelper.ListResourceFiles(s => s.Contains(".LO.") && !parkedForLater.Any(i => s.Contains(i)));
             }
         }
+
+        private static IEnumerable<string> MalformedFiles => TestHelper.ListResourceFiles(s => s.Contains(".Malformed."));
 
         [Test]
         public void CanLoadAndManipulateFileWithEmptyTable()
