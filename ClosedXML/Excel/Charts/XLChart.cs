@@ -1,161 +1,134 @@
+using ClosedXML.Excel.Charts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal enum XLChartTypeCategory { Bar3D }
-    internal enum XLBarOrientation { Vertical, Horizontal }
-    internal enum XLBarGrouping { Clustered, Percent, Stacked, Standard }
-    internal class XLChart: XLDrawing<IXLChart>, IXLChart
+    public class XLChart : XLDrawing<IXLChart>, IXLChart
     {
-        internal IXLWorksheet worksheet;
-        public XLChart(XLWorksheet worksheet)
+        private List<ChartSeriesData> m_series;
+
+        public XLChart(XLChartType type, IXLWorksheet worksheet)
         {
             Container = this;
-            this.worksheet = worksheet;
-            Int32 zOrder;
-            if (worksheet.Charts.Any())
-                zOrder = worksheet.Charts.Max(c => c.ZOrder) + 1;
-            else
-                zOrder = 1;
-            ZOrder = zOrder;
-            ShapeId = worksheet.Workbook.ShapeIdManager.GetNext();
-            RightAngleAxes = true;
+            this.Worksheet = worksheet;
+            ChartType = type;
+
+            m_series = new List<ChartSeriesData>();
+            Axes = new List<ChartAxis>();
         }
 
-        public Boolean RightAngleAxes { get; set; }
-        public IXLChart SetRightAngleAxes()
+        public XLChart(XLChartType type)
         {
-            RightAngleAxes = true;
-            return this;
+            ChartType = type;
+
+            m_series = new List<ChartSeriesData>();
+            Axes = new List<ChartAxis>();
         }
-        public IXLChart SetRightAngleAxes(Boolean rightAngleAxes)
-        {
-            RightAngleAxes = rightAngleAxes;
-            return this;
-        }
+        public String RelId { get; set; }
+        public IXLWorksheet Worksheet { get; set; }
+        public System.Drawing.Point ChartPosition { get; set; }
 
         public XLChartType ChartType { get; set; }
-        public IXLChart SetChartType(XLChartType chartType)
-        {
-            ChartType = chartType;
-            return this;
-        }
-
-        public XLChartTypeCategory ChartTypeCategory
+        public string ChartTitle { get; set; }
+        public System.Drawing.Size Size { get; set; }
+        public int SeriesCount
         {
             get
             {
-                if (Bar3DCharts.Contains(ChartType))
-                    return XLChartTypeCategory.Bar3D;
-                else
-                    throw new NotImplementedException();
-
+                return m_series.Count();
             }
         }
-
-        private HashSet<XLChartType> Bar3DCharts = new HashSet<XLChartType> { 
-            XLChartType.BarClustered3D, 
-            XLChartType.BarStacked100Percent3D, 
-            XLChartType.BarStacked3D, 
-            XLChartType.Column3D, 
-            XLChartType.ColumnClustered3D, 
-            XLChartType.ColumnStacked100Percent3D, 
-            XLChartType.ColumnStacked3D
-        };
-
-        public XLBarOrientation BarOrientation
+        public bool SecondaryValueAxisEnabled
         {
             get
             {
-                if (HorizontalCharts.Contains(ChartType))
-                    return XLBarOrientation.Horizontal;
-                else
-                    return XLBarOrientation.Vertical;
+                if (Series.Count() > 1 && ChartType != XLChartType.BarStacked && ChartType != XLChartType.BarStacked100Percent && ChartType != XLChartType.ColumnStacked && ChartType != XLChartType.ColumnStacked100Percent)
+                    return true;
+                return false;
             }
         }
 
-        private HashSet<XLChartType> HorizontalCharts = new HashSet<XLChartType>{
-            XLChartType.BarClustered, 
-            XLChartType.BarClustered3D, 
-            XLChartType.BarStacked, 
-            XLChartType.BarStacked100Percent, 
-            XLChartType.BarStacked100Percent3D, 
-            XLChartType.BarStacked3D, 
-            XLChartType.ConeHorizontalClustered, 
-            XLChartType.ConeHorizontalStacked, 
-            XLChartType.ConeHorizontalStacked100Percent, 
-            XLChartType.CylinderHorizontalClustered, 
-            XLChartType.CylinderHorizontalStacked, 
-            XLChartType.CylinderHorizontalStacked100Percent, 
-            XLChartType.PyramidHorizontalClustered, 
-            XLChartType.PyramidHorizontalStacked, 
-            XLChartType.PyramidHorizontalStacked100Percent
-        };
-
-        public XLBarGrouping BarGrouping
+        public bool ShowLegend { get; set; }
+        public bool Border { get; set; }
+        public bool ShowMarkers { get; set; }
+        public bool CreateChartPerSeries
         {
             get
             {
-                if (ClusteredCharts.Contains(ChartType))
-                    return XLBarGrouping.Clustered;
-                else if (PercentCharts.Contains(ChartType))
-                    return XLBarGrouping.Percent;
-                else if (StackedCharts.Contains(ChartType))
-                    return XLBarGrouping.Stacked;
-                else
-                    return XLBarGrouping.Standard;
+                if (ChartType == XLChartType.Pie)
+                    return true;
+                return false;
             }
         }
-
-        public HashSet<XLChartType> ClusteredCharts = new HashSet<XLChartType>()
+        public bool Rotated
         {
-            XLChartType.BarClustered,
-            XLChartType.BarClustered3D,
-            XLChartType.ColumnClustered,
-            XLChartType.ColumnClustered3D,
-            XLChartType.ConeClustered,
-            XLChartType.ConeHorizontalClustered,
-            XLChartType.CylinderClustered,
-            XLChartType.CylinderHorizontalClustered,
-            XLChartType.PyramidClustered,
-            XLChartType.PyramidHorizontalClustered
-        };
+            get
+            {
+                if (ChartType != XLChartType.Pie)
+                {
+                    if (m_series.Any(x => x.SeriesType == ChartSeriesType.Bar))
+                        return true;
+                }
+                return false;
+            }
+        }
+        public bool HasFill { get; set; }
+        public bool HasTickLabel { get; set; }
+        public bool TableReferenced { get; set; }
 
-        public HashSet<XLChartType> PercentCharts = new HashSet<XLChartType>() { 
-            XLChartType.AreaStacked100Percent,
-            XLChartType.AreaStacked100Percent3D,
-            XLChartType.BarStacked100Percent,
-            XLChartType.BarStacked100Percent3D,
-            XLChartType.ColumnStacked100Percent,
-            XLChartType.ColumnStacked100Percent3D,
-            XLChartType.ConeHorizontalStacked100Percent,
-            XLChartType.ConeStacked100Percent,
-            XLChartType.CylinderHorizontalStacked100Percent,
-            XLChartType.CylinderStacked100Percent,
-            XLChartType.LineStacked100Percent,
-            XLChartType.LineWithMarkersStacked100Percent,
-            XLChartType.PyramidHorizontalStacked100Percent,
-            XLChartType.PyramidStacked100Percent
-        };
-
-        public HashSet<XLChartType> StackedCharts = new HashSet<XLChartType>()
+        public List<ChartAxis> Axes { get; set; }
+        public IEnumerable<ChartSeriesData> Series
         {
-            XLChartType.AreaStacked,
-            XLChartType.AreaStacked3D,
-            XLChartType.BarStacked,
-            XLChartType.BarStacked3D,
-            XLChartType.ColumnStacked,
-            XLChartType.ColumnStacked3D,
-            XLChartType.ConeHorizontalStacked,
-            XLChartType.ConeStacked,
-            XLChartType.CylinderHorizontalStacked,
-            XLChartType.CylinderStacked,
-            XLChartType.LineStacked,
-            XLChartType.LineWithMarkersStacked,
-            XLChartType.PyramidHorizontalStacked,
-            XLChartType.PyramidStacked
-        };
+            get { return m_series; }
+        }
+
+        public ChartSeriesData AddSeries(ReferenceData category, ReferenceData value)
+        {
+            ChartSeriesData series = new ChartSeriesData(category, value);
+            m_series.Add(series);
+            return series;
+        }
+        public void AddSeries(ChartSeriesData series)
+        {
+            m_series.Add(series);
+        }
+        public ChartSeriesData GetSeries(int index)
+        {
+            if (index >= 0 && index < m_series.Count)
+                return m_series[index] as ChartSeriesData;
+            return null;
+        }
+        public List<ChartSeriesData> GetAllSeries()
+        {
+            List<ChartSeriesData> series = new List<ChartSeriesData>();
+            foreach (var serie in m_series)
+            {
+                series.Add(serie);
+            }
+            return series;
+        }
+        public void DeleteSeries()
+        {
+            m_series.Clear();
+        }
+
+        public XLChart CopyPieChart(IXLChart chartToCopy)
+        {
+            int x = chartToCopy.ChartPosition.X;
+            int y = chartToCopy.ChartPosition.Y + chartToCopy.Size.Height + 2;
+            XLChart newChart = new XLChart(chartToCopy.ChartType)
+            {
+                Axes = chartToCopy.Axes,
+                Border = chartToCopy.Border,
+                ChartTitle = chartToCopy.ChartTitle,
+                m_series = new List<ChartSeriesData>(),
+                ShowLegend = chartToCopy.ShowLegend,
+                Size = chartToCopy.Size,
+                ChartPosition = new System.Drawing.Point(x, y)
+            };
+            return newChart;
+        }
     }
 }

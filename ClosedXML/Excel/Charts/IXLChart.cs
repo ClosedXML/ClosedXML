@@ -1,8 +1,13 @@
+using ClosedXML.Excel.Charts;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    public enum XLChartType {
+    public enum XLChartType
+    {
         Area,
         Area3D,
         AreaStacked,
@@ -77,14 +82,37 @@ namespace ClosedXML.Excel
         XYScatterStraightLinesNoMarkers,
         XYScatterStraightLinesWithMarkers
     }
-    public interface IXLChart: IXLDrawing<IXLChart>
+    public interface IXLChart : IXLDrawing<IXLChart>
     {
-        Boolean RightAngleAxes { get; set; }
-        IXLChart SetRightAngleAxes();
-        IXLChart SetRightAngleAxes(Boolean rightAngleAxes);
+        String RelId { get; set; }
+        IXLWorksheet Worksheet { get; set; }
+
+        System.Drawing.Point ChartPosition { get; set; }
 
         XLChartType ChartType { get; set; }
-        IXLChart SetChartType(XLChartType chartType);
+        string ChartTitle { get; set; }
+        System.Drawing.Size Size { get; set; }
+
+        bool SecondaryValueAxisEnabled { get; }
+        bool ShowLegend { get; set; }
+        bool Border { get; set; }
+        bool ShowMarkers { get; set; }
+        bool TableReferenced { get; set; }
+
+        int SeriesCount { get; }
+
+        List<ChartAxis> Axes { get; set; }
+
+        ChartSeriesData AddSeries(ReferenceData category, ReferenceData value);
+        void AddSeries(ChartSeriesData series);
+
+        XLChart CopyPieChart(IXLChart chartToCopy);
+
+        ChartSeriesData GetSeries(int index);
+
+        List<ChartSeriesData> GetAllSeries();
+
+        void DeleteSeries();
 
     }
 }
