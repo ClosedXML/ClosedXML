@@ -1973,13 +1973,12 @@ namespace ClosedXML.Excel
                 if (!Int32.TryParse(columnName, out Int32 columnNumber))
                     columnNumber = XLHelper.GetColumnNumberFromLetter(columnName);
 
-                yield return new XLSortElement
-                {
-                    ElementNumber = columnNumber,
-                    SortOrder = sortOrder,
-                    MatchCase = matchCase,
-                    IgnoreBlanks = ignoreBlanks
-                };
+                yield return new XLSortElement(
+                    columnNumber,
+                    sortOrder,
+                    matchCase,
+                    ignoreBlanks
+                );
             }
         }
 

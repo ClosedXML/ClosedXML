@@ -20,13 +20,12 @@ namespace ClosedXML.Excel
         }
         public void Add(Int32 elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks, Boolean matchCase)
         {
-            elements.Add(new XLSortElement()
-            {
-                ElementNumber = elementNumber,
-                SortOrder = sortOrder,
-                IgnoreBlanks = ignoreBlanks,
-                MatchCase = matchCase
-            });
+            elements.Add(new XLSortElement(
+                elementNumber,
+                sortOrder,
+                matchCase,
+                ignoreBlanks
+            ));
         }
 
         public void Add(String elementNumber)
@@ -43,13 +42,12 @@ namespace ClosedXML.Excel
         }
         public void Add(String elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks, Boolean matchCase)
         {
-            elements.Add(new XLSortElement()
-            {
-                ElementNumber = XLHelper.GetColumnNumberFromLetter(elementNumber),
-                SortOrder = sortOrder,
-                IgnoreBlanks = ignoreBlanks,
-                MatchCase = matchCase
-            });
+            elements.Add(new XLSortElement(
+                XLHelper.GetColumnNumberFromLetter(elementNumber),
+                sortOrder,
+                matchCase,
+                ignoreBlanks
+            ));
         }
 
         public IEnumerator<IXLSortElement> GetEnumerator()
