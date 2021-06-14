@@ -1072,9 +1072,11 @@ namespace ClosedXML.Excel
 
                 _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
-                _formulaR1C1 = null;
+                ClearFormulaR1C1();
             }
         }
+
+        internal void ClearFormulaA1() => _formulaA1 = null;
 
         public string FormulaR1C1
         {
@@ -1095,9 +1097,11 @@ namespace ClosedXML.Excel
 
                 _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
 
-                _formulaA1 = null;
+                ClearFormulaA1();
             }
         }
+
+        internal void ClearFormulaR1C1() => _formulaR1C1 = null;
 
         public bool ShareString { get; set; }
 

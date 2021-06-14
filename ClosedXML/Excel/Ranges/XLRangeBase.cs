@@ -1851,7 +1851,7 @@ namespace ClosedXML.Excel
         {
             if (!SortColumns.Any())
             {
-                return Sort(DefaultSortString());
+                SortColumns.CastTo<XLSortElements>().AddRange(ParseSortOrder(DefaultSortString(), XLSortOrder.Ascending, matchCase: false, ignoreBlanks: true));
             }
 
             SortRangeRows();
@@ -1861,32 +1861,13 @@ namespace ClosedXML.Excel
         public IXLRangeBase Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
         {
             SortColumns.Clear();
+
             if (String.IsNullOrWhiteSpace(columnsToSortBy))
             {
                 columnsToSortBy = DefaultSortString();
             }
 
-            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
-            {
-                String coString;
-                String order;
-                if (coPairTrimmed.Contains(' '))
-                {
-                    var pair = coPairTrimmed.Split(' ');
-                    coString = pair[0];
-                    order = pair[1];
-                }
-                else
-                {
-                    coString = coPairTrimmed;
-                    order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
-                }
-
-                if (!Int32.TryParse(coString, out Int32 co))
-                    co = XLHelper.GetColumnNumberFromLetter(coString);
-
-                SortColumns.Add(co, String.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, ignoreBlanks, matchCase);
-            }
+            SortColumns.CastTo<XLSortElements>().AddRange(ParseSortOrder(columnsToSortBy, sortOrder, matchCase, ignoreBlanks));
 
             SortRangeRows();
             return this;
@@ -1913,139 +1894,93 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        #region Sort Rows
-
         private void SortRangeRows()
         {
-            Int32 maxRow = RowCount();
-            if (maxRow == XLHelper.MaxRowNumber)
-                maxRow = (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All).Address.RowNumber;
-
-            SortingRangeRows(1, maxRow);
-        }
-
-        private void SwapRows(Int32 row1, Int32 row2)
-        {
-            int row1InWs = RangeAddress.FirstAddress.RowNumber + row1 - 1;
-            int row2InWs = RangeAddress.FirstAddress.RowNumber + row2 - 1;
-
-            Int32 firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            Int32 lastColumn = RangeAddress.LastAddress.ColumnNumber;
-
-            var range1Sp1 = new XLSheetPoint(row1InWs, firstColumn);
-            var range1Sp2 = new XLSheetPoint(row1InWs, lastColumn);
-            var range2Sp1 = new XLSheetPoint(row2InWs, firstColumn);
-            var range2Sp2 = new XLSheetPoint(row2InWs, lastColumn);
-
-            Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
-                                                           new XLSheetRange(range2Sp1, range2Sp2), Worksheet);
-        }
-
-        private int SortRangeRows(int begPoint, int endPoint)
-        {
-            int pivot = begPoint;
-            int m = begPoint + 1;
-            int n = endPoint;
-            while ((m < endPoint) && RowQuick(pivot).CompareTo(RowQuick(m), SortColumns) >= 0)
-                m++;
-
-            while (n > begPoint && RowQuick(pivot).CompareTo(RowQuick(n), SortColumns) <= 0)
-                n--;
-
-            while (m < n)
+            var r = this.AsRange();
+            IXLRangeRows rows;
+            if (r.RangeAddress.IsEntireColumn())
             {
-                SwapRows(m, n);
-
-                while (m < endPoint && RowQuick(pivot).CompareTo(RowQuick(m), SortColumns) >= 0)
-                    m++;
-
-                while (n > begPoint && RowQuick(pivot).CompareTo(RowQuick(n), SortColumns) <= 0)
-                    n--;
+                // If we're dealing with the entire column, we're not interested in the unused cells
+                rows = r
+                    .RowsUsed()
+                    .Contiguous();
+            }
+            else
+            {
+                // If not entire column, the unused cells have to be sorted in the mix
+                rows = r.Rows();
             }
 
-            if (pivot != n)
-                SwapRows(n, pivot);
+            IComparer<IXLRangeRow> comparer = new XLRangeRowComparer(SortColumns);
+            var ordered = rows.OrderBy(r => r, comparer).ToArray();
 
-            return n;
+            var rowRemappings = ordered.Select((row, index) => new
+            {
+                oldRowNumber = row.RowNumber(),
+                newRowNumber = rows.FirstRow().RowNumber() + index
+            }).ToDictionary(a => a.oldRowNumber, a => a.newRowNumber);
+
+            Worksheet.Internals.CellsCollection.ChangeRowNumbers(rowRemappings, RangeAddress);
         }
-
-        private void SortingRangeRows(int beg, int end)
-        {
-            if (beg == end)
-                return;
-            int pivot = SortRangeRows(beg, end);
-            if (pivot > beg)
-                SortingRangeRows(beg, pivot - 1);
-            if (pivot < end)
-                SortingRangeRows(pivot + 1, end);
-        }
-
-        #endregion Sort Rows
-
-        #region Sort Columns
 
         private void SortRangeColumns()
         {
-            Int32 maxColumn = ColumnCount();
-            if (maxColumn == XLHelper.MaxColumnNumber)
-                maxColumn = (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
-            SortingRangeColumns(1, maxColumn);
-        }
-
-        private void SwapColumns(Int32 column1, Int32 column2)
-        {
-            int col1InWs = RangeAddress.FirstAddress.ColumnNumber + column1 - 1;
-            int col2InWs = RangeAddress.FirstAddress.ColumnNumber + column2 - 1;
-
-            Int32 firstRow = RangeAddress.FirstAddress.RowNumber;
-            Int32 lastRow = RangeAddress.LastAddress.RowNumber;
-
-            var range1Sp1 = new XLSheetPoint(firstRow, col1InWs);
-            var range1Sp2 = new XLSheetPoint(lastRow, col1InWs);
-            var range2Sp1 = new XLSheetPoint(firstRow, col2InWs);
-            var range2Sp2 = new XLSheetPoint(lastRow, col2InWs);
-
-            Worksheet.Internals.CellsCollection.SwapRanges(new XLSheetRange(range1Sp1, range1Sp2),
-                                                           new XLSheetRange(range2Sp1, range2Sp2), Worksheet);
-        }
-
-        private int SortRangeColumns(int begPoint, int endPoint)
-        {
-            int pivot = begPoint;
-            int m = begPoint + 1;
-            int n = endPoint;
-            while ((m < endPoint) && ColumnQuick(pivot).CompareTo((ColumnQuick(m)), SortRows) >= 0)
-                m++;
-
-            while ((n > begPoint) && ((ColumnQuick(pivot)).CompareTo((ColumnQuick(n)), SortRows) <= 0))
-                n--;
-            while (m < n)
+            var r = this.AsRange();
+            IXLRangeColumns columns;
+            if (r.RangeAddress.IsEntireRow())
             {
-                SwapColumns(m, n);
-
-                while ((m < endPoint) && (ColumnQuick(pivot)).CompareTo((ColumnQuick(m)), SortRows) >= 0)
-                    m++;
-
-                while ((n > begPoint) && (ColumnQuick(pivot)).CompareTo((ColumnQuick(n)), SortRows) <= 0)
-                    n--;
+                // If we're dealing with the entire row, we're not interested in the unused cells
+                columns = r
+                    .ColumnsUsed()
+                    .Contiguous();
             }
-            if (pivot != n)
-                SwapColumns(n, pivot);
-            return n;
+            else
+            {
+                // If not entire row, the unused cells have to be sorted in the mix
+                columns = r.Columns();
+            }
+
+            IComparer<IXLRangeColumn> comparer = new XLRangeColumnComparer(SortRows);
+            var ordered = columns.OrderBy(c => c, comparer).ToArray();
+
+            var columnRemappings = ordered.Select((column, index) => new
+            {
+                oldColumnNumber = column.ColumnNumber(),
+                newColumnNumber = columns.FirstColumn().ColumnNumber() + index
+            }).ToDictionary(a => a.oldColumnNumber, a => a.newColumnNumber);
+
+            Worksheet.Internals.CellsCollection.ChangeColumnNumbers(columnRemappings, RangeAddress);
         }
 
-        private void SortingRangeColumns(int beg, int end)
+        private IEnumerable<XLSortElement> ParseSortOrder(string columnsToSortBy, XLSortOrder defaultSortOrder, bool matchCase, bool ignoreBlanks)
         {
-            if (end == beg)
-                return;
-            int pivot = SortRangeColumns(beg, end);
-            if (pivot > beg)
-                SortingRangeColumns(beg, pivot - 1);
-            if (pivot < end)
-                SortingRangeColumns(pivot + 1, end);
-        }
+            foreach (var sortColumn in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
+            {
+                var sortOrder = defaultSortOrder;
 
-        #endregion Sort Columns
+                String columnName;
+                if (sortColumn.Contains(' '))
+                {
+                    var pair = sortColumn.Split(' ');
+                    columnName = pair[0];
+                    sortOrder = pair[1].Equals("ASC", StringComparison.OrdinalIgnoreCase) ? XLSortOrder.Ascending : XLSortOrder.Descending;
+                }
+                else
+                {
+                    columnName = sortColumn;
+                }
+
+                if (!Int32.TryParse(columnName, out Int32 columnNumber))
+                    columnNumber = XLHelper.GetColumnNumberFromLetter(columnName);
+
+                yield return new XLSortElement(
+                    columnNumber,
+                    sortOrder,
+                    matchCase,
+                    ignoreBlanks
+                );
+            }
+        }
 
         #endregion Sort
 

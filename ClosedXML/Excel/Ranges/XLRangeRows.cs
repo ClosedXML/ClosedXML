@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace ClosedXML.Excel
     internal class XLRangeRows : XLStylizedBase, IXLRangeRows, IXLStylized
     {
         private readonly List<XLRangeRow> _ranges = new List<XLRangeRow>();
+        private IXLRangeRow _firstRow;
+        private IXLRangeRow _lastRow;
 
         public XLRangeRows() : base(XLStyle.Default.Value)
         {
@@ -16,34 +19,15 @@ namespace ClosedXML.Excel
 
         #region IXLRangeRows Members
 
-        public IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
+        public void Add(IXLRangeRow rangeRow)
         {
-            _ranges.ForEach(c => c.Clear(clearOptions));
-            return this;
-        }
+            _ranges.Add((XLRangeRow)rangeRow);
 
-        public void Delete()
-        {
-            _ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
-            _ranges.Clear();
-        }
+            if (rangeRow.RowNumber() < (_firstRow?.RowNumber() ?? int.MaxValue))
+                _firstRow = rangeRow;
 
-        public void Add(IXLRangeRow range)
-        {
-            _ranges.Add((XLRangeRow)range);
-        }
-
-        public IEnumerator<IXLRangeRow> GetEnumerator()
-        {
-            return _ranges.Cast<IXLRangeRow>()
-                          .OrderBy(r => r.Worksheet.Position)
-                          .ThenBy(r => r.RowNumber())
-                          .GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            if (rangeRow.RowNumber() > (_lastRow?.RowNumber() ?? 0))
+                _lastRow = rangeRow;
         }
 
         public IXLCells Cells()
@@ -78,6 +62,71 @@ namespace ClosedXML.Excel
             return cells;
         }
 
+        public IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All)
+        {
+            _ranges.ForEach(c => c.Clear(clearOptions));
+            return this;
+        }
+
+        public IXLRangeRows Contiguous()
+        {
+            var rangeRows = new XLRangeRows();
+
+            if (_ranges.Count > 0)
+            {
+                var ws = (XLWorksheet)_firstRow.Worksheet;
+
+                int previousRowNumber = _firstRow.RowNumber();
+
+                foreach (var r in this)
+                {
+                    while (previousRowNumber < r.RowNumber() - 1)
+                    {
+                        previousRowNumber++;
+                        var firstCellAddress = new XLAddress(ws, previousRowNumber, _firstRow.RangeAddress.FirstAddress.ColumnNumber, fixedRow: false, fixedColumn: false);
+                        var lastCellAddress = new XLAddress(ws, previousRowNumber, _firstRow.RangeAddress.LastAddress.ColumnNumber, fixedRow: false, fixedColumn: false);
+                        var row = ws.RangeRow(new XLRangeAddress(firstCellAddress, lastCellAddress));
+                        rangeRows.Add(row);
+                    }
+                    rangeRows.Add(r);
+                    previousRowNumber = r.RowNumber();
+                }
+            }
+
+            return rangeRows;
+        }
+
+        public void Delete()
+        {
+            _ranges.OrderByDescending(r => r.RowNumber()).ForEach(r => r.Delete());
+            _ranges.Clear();
+            _firstRow = null;
+            _lastRow = null;
+        }
+
+        public IXLRangeRow FirstRow() => _firstRow;
+
+        public IEnumerator<IXLRangeRow> GetEnumerator()
+        {
+            return _ranges.Cast<IXLRangeRow>()
+                          .OrderBy(r => r.Worksheet.Position)
+                          .ThenBy(r => r.RowNumber())
+                          .GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IXLRangeRow LastRow() => _lastRow;
+
+        public void Select()
+        {
+            foreach (var range in this)
+                range.Select();
+        }
+
         public IXLRangeRows SetDataType(XLDataType dataType)
         {
             _ranges.ForEach(c => c.DataType = dataType);
@@ -87,6 +136,16 @@ namespace ClosedXML.Excel
         #endregion IXLRangeRows Members
 
         #region IXLStylized Members
+
+        public override IXLRanges RangesUsed
+        {
+            get
+            {
+                var retVal = new XLRanges();
+                this.ForEach(c => retVal.Add(c.AsRange()));
+                return retVal;
+            }
+        }
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -115,23 +174,6 @@ namespace ClosedXML.Excel
             }
         }
 
-
-        public override IXLRanges RangesUsed
-        {
-            get
-            {
-                var retVal = new XLRanges();
-                this.ForEach(c => retVal.Add(c.AsRange()));
-                return retVal;
-            }
-        }
-
         #endregion IXLStylized Members
-
-        public void Select()
-        {
-            foreach (var range in this)
-                range.Select();
-        }
     }
 }

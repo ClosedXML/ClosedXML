@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace ClosedXML.Excel
     internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns, IXLStylized
     {
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
+        private IXLRangeColumn _firstColumn;
+        private IXLRangeColumn _lastColumn;
 
         public XLRangeColumns() : base(XLWorkbook.DefaultStyleValue)
         {
@@ -16,34 +19,15 @@ namespace ClosedXML.Excel
 
         #region IXLRangeColumns Members
 
-        public IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.All)
+        public void Add(IXLRangeColumn rangeColumn)
         {
-            _ranges.ForEach(c => c.Clear(clearOptions));
-            return this;
-        }
+            _ranges.Add((XLRangeColumn)rangeColumn);
 
-        public void Delete()
-        {
-            _ranges.OrderByDescending(c => c.ColumnNumber()).ForEach(r => r.Delete());
-            _ranges.Clear();
-        }
+            if (rangeColumn.ColumnNumber() < (_firstColumn?.ColumnNumber() ?? int.MaxValue))
+                _firstColumn = rangeColumn;
 
-        public void Add(IXLRangeColumn range)
-        {
-            _ranges.Add((XLRangeColumn)range);
-        }
-
-        public IEnumerator<IXLRangeColumn> GetEnumerator()
-        {
-            return _ranges.Cast<IXLRangeColumn>()
-              .OrderBy(r => r.Worksheet.Position)
-              .ThenBy(r => r.ColumnNumber())
-              .GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            if (rangeColumn.ColumnNumber() > (_lastColumn?.ColumnNumber() ?? 0))
+                _lastColumn = rangeColumn;
         }
 
         public IXLCells Cells()
@@ -79,6 +63,71 @@ namespace ClosedXML.Excel
             return cells;
         }
 
+        public IXLRangeColumns Clear(XLClearOptions clearOptions = XLClearOptions.All)
+        {
+            _ranges.ForEach(c => c.Clear(clearOptions));
+            return this;
+        }
+
+        public IXLRangeColumns Contiguous()
+        {
+            var rangeColumns = new XLRangeColumns();
+
+            if (_ranges.Count > 0)
+            {
+                var ws = (XLWorksheet)_firstColumn.Worksheet;
+
+                int previousColumnNumber = _firstColumn.ColumnNumber();
+
+                foreach (var c in this)
+                {
+                    while (previousColumnNumber < c.ColumnNumber() - 1)
+                    {
+                        previousColumnNumber++;
+                        var firstCellAddress = new XLAddress(ws, _firstColumn.RangeAddress.FirstAddress.RowNumber, previousColumnNumber, fixedRow: false, fixedColumn: false);
+                        var lastCellAddress = new XLAddress(ws, _firstColumn.RangeAddress.LastAddress.RowNumber, previousColumnNumber, fixedRow: false, fixedColumn: false);
+                        var column = ws.RangeColumn(new XLRangeAddress(firstCellAddress, lastCellAddress));
+                        rangeColumns.Add(column);
+                    }
+                    rangeColumns.Add(c);
+                    previousColumnNumber = c.ColumnNumber();
+                }
+            }
+
+            return rangeColumns;
+        }
+
+        public void Delete()
+        {
+            _ranges.OrderByDescending(c => c.ColumnNumber()).ForEach(r => r.Delete());
+            _ranges.Clear();
+            _firstColumn = null;
+            _lastColumn = null;
+        }
+
+        public IXLRangeColumn FirstColumn() => _firstColumn;
+
+        public IEnumerator<IXLRangeColumn> GetEnumerator()
+        {
+            return _ranges.Cast<IXLRangeColumn>()
+                .OrderBy(r => r.Worksheet.Position)
+                .ThenBy(r => r.ColumnNumber())
+                .GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IXLRangeColumn LastColumn() => _lastColumn;
+
+        public void Select()
+        {
+            foreach (var range in this)
+                range.Select();
+        }
+
         public IXLRangeColumns SetDataType(XLDataType dataType)
         {
             _ranges.ForEach(c => c.DataType = dataType);
@@ -88,7 +137,17 @@ namespace ClosedXML.Excel
         #endregion IXLRangeColumns Members
 
         #region IXLStylized Members
-        
+
+        public override IXLRanges RangesUsed
+        {
+            get
+            {
+                var retVal = new XLRanges();
+                this.ForEach(c => retVal.Add(c.AsRange()));
+                return retVal;
+            }
+        }
+
         public override IEnumerable<IXLStyle> Styles
         {
             get
@@ -116,22 +175,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRanges RangesUsed
-        {
-            get
-            {
-                var retVal = new XLRanges();
-                this.ForEach(c => retVal.Add(c.AsRange()));
-                return retVal;
-            }
-        }
-
         #endregion IXLStylized Members
-
-        public void Select()
-        {
-            foreach (var range in this)
-                range.Select();
-        }
     }
 }

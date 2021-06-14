@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 
@@ -5,11 +6,13 @@ namespace ClosedXML.Excel
 {
     public interface IXLRangeRows : IEnumerable<IXLRangeRow>
     {
+        IXLStyle Style { get; set; }
+
         /// <summary>
         /// Adds a row range to this group.
         /// </summary>
-        /// <param name="rowRange">The row range to add.</param>
-        void Add(IXLRangeRow rowRange);
+        /// <param name="rangeRow">The range row to add.</param>
+        void Add(IXLRangeRow rangeRow);
 
         /// <summary>
         /// Returns the collection of cells.
@@ -31,20 +34,33 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed(XLCellsUsedOptions options);
 
         /// <summary>
-        /// Deletes all rows and shifts the rows below them accordingly.
-        /// </summary>
-        void Delete();
-
-        IXLStyle Style { get; set; }
-
-        IXLRangeRows SetDataType(XLDataType dataType);
-
-        /// <summary>
         /// Clears the contents of these rows.
         /// </summary>
         /// <param name="clearOptions">Specify what you want to clear.</param>
         IXLRangeRows Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
+        /// <summary>
+        /// Returns a set of range rows that are all touching or connected throughout in an unbroken sequence.
+        /// </summary>
+        IXLRangeRows Contiguous();
+
+        /// <summary>
+        /// Deletes all rows and shifts the rows below them accordingly.
+        /// </summary>
+        void Delete();
+
+        /// <summary>
+        /// Returns the first row
+        /// </summary>
+        IXLRangeRow FirstRow();
+
+        /// <summary>
+        /// Returns the last row
+        /// </summary>
+        IXLRangeRow LastRow();
+
         void Select();
+
+        IXLRangeRows SetDataType(XLDataType dataType);
     }
 }
