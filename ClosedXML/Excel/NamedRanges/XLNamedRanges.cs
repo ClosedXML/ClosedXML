@@ -105,6 +105,7 @@ namespace ClosedXML.Excel
 
             var namedRange = new XLNamedRange(this, rangeName, validateName, rangeAddress, comment);
             _namedRanges.Add(rangeName, namedRange);
+            Workbook.InvalidateFormulas();
             return namedRange;
         }
 
@@ -118,28 +119,33 @@ namespace ClosedXML.Excel
         {
             var namedRange = new XLNamedRange(this, rangeName, ranges, comment);
             _namedRanges.Add(rangeName, namedRange);
+            Workbook.InvalidateFormulas();
             return namedRange;
         }
 
         public IXLNamedRange Add(String rangeName, IXLNamedRange namedRange)
         {
             _namedRanges.Add(rangeName, namedRange);
+            Workbook.InvalidateFormulas();
             return namedRange;
         }
 
         public void Delete(String rangeName)
         {
             _namedRanges.Remove(rangeName);
+            Workbook.InvalidateFormulas();
         }
 
         public void Delete(Int32 rangeIndex)
         {
             _namedRanges.Remove(_namedRanges.ElementAt(rangeIndex).Key);
+            Workbook.InvalidateFormulas();
         }
 
         public void DeleteAll()
         {
             _namedRanges.Clear();
+            Workbook.InvalidateFormulas();
         }
 
         /// <summary>

@@ -1,14 +1,18 @@
-using ClosedXML.Extensions;
+using ClosedXML.Excel.CalcEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLNamedRange : IXLNamedRange
+    internal class XLNamedRange : IXLNamedRange, IXLVersionable
     {
         private String _name;
         private readonly XLNamedRanges _namedRanges;
+        /// <summary>
+        /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of named range last modification.
+        /// </summary>
+        public long ModifiedAtVersion { get; private set; }
 
         internal XLWorkbook Workbook => _namedRanges.Workbook;
 
@@ -41,6 +45,7 @@ namespace ClosedXML.Excel
                 SetNameWithoutValidation(rangeName);
 
             Comment = comment;
+            ModifiedAtVersion = Workbook.RecalculationCounter;
         }
 
         /// <summary>
@@ -140,32 +145,38 @@ namespace ClosedXML.Excel
         public IXLRanges Add(IXLRanges ranges)
         {
             ranges.ForEach(r => RangeList.Add(r.ToString()));
+            InvalidateFormulas();
             return ranges;
         }
 
         public void Delete()
         {
             _namedRanges.Delete(Name);
+            InvalidateFormulas();
         }
 
         public void Clear()
         {
             RangeList.Clear();
+            InvalidateFormulas();
         }
 
         public void Remove(String rangeAddress)
         {
             RangeList.Remove(rangeAddress);
+            InvalidateFormulas();
         }
 
         public void Remove(IXLRange range)
         {
             RangeList.Remove(range.ToString());
+            InvalidateFormulas();
         }
 
         public void Remove(IXLRanges ranges)
         {
             ranges.ForEach(r => RangeList.Remove(r.ToString()));
+            InvalidateFormulas();
         }
 
         public override string ToString()
@@ -182,6 +193,7 @@ namespace ClosedXML.Excel
             {
                 RangeList.Clear();
                 RangeList.Add(value);
+                InvalidateFormulas();
             }
         }
 
@@ -215,6 +227,7 @@ namespace ClosedXML.Excel
         {
             RangeList.Clear();
             RangeList.Add(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
+            InvalidateFormulas();
             return this;
         }
 
@@ -222,6 +235,7 @@ namespace ClosedXML.Excel
         {
             RangeList.Clear();
             ranges.ForEach(r => RangeList.Add(r.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true)));
+            InvalidateFormulas();
             return this;
         }
 
@@ -236,6 +250,12 @@ namespace ClosedXML.Excel
                                      ? "#REF!" + r.Substring(escapedSheetName.Length + 1)
                                      : r))
                 ).ToList();
+        }
+
+        private void InvalidateFormulas()
+        {
+            Workbook.InvalidateFormulas();
+            ModifiedAtVersion = Workbook.RecalculationCounter;
         }
     }
 }
