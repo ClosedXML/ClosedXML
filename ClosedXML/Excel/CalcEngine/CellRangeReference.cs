@@ -15,9 +15,9 @@ namespace ClosedXML.Excel.CalcEngine
         public IXLRange Range { get; }
 
         // ** IValueObject
-        public object GetValue()
+        public object GetValue(bool emptyStringAsNull)
         {
-            return GetValue(Range.FirstCell());
+            return GetValue(Range.FirstCell(), emptyStringAsNull);
         }
 
         // ** IEnumerable
@@ -43,7 +43,7 @@ namespace ClosedXML.Excel.CalcEngine
         private Boolean _evaluating;
 
         // ** implementation
-        private object GetValue(IXLCell cell)
+        private object GetValue(IXLCell cell, bool emptyStringAsNull)
         {
             if (_evaluating || (cell as XLCell).IsEvaluating)
             {
@@ -54,7 +54,14 @@ namespace ClosedXML.Excel.CalcEngine
                 _evaluating = true;
                 var f = cell.FormulaA1;
                 if (String.IsNullOrWhiteSpace(f))
-                    return cell.Value;
+                {
+                    var v = cell.Value;
+
+                    if (emptyStringAsNull && v is string s && s == "")
+                        return null;
+
+                    return v;
+                }
                 else
                 {
                     return (cell as XLCell).Evaluate();

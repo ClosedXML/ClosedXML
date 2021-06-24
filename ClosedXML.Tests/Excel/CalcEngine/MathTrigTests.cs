@@ -157,7 +157,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("MCMLXXXIII ", 1983)]
         public void Arabic_ReturnsCorrectNumber(string roman, int arabic)
         {
-            var actual = (int)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
             Assert.AreEqual(arabic, actual);
         }
 
@@ -569,10 +569,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(4, 3, 20)]
         [TestCase(10, 3, 220)]
         [TestCase(0, 0, 1)]
-        public void Combina_CalculatesCorrectValues(int number, int chosen, int expectedResult)
+        public void Combina_CalculatesCorrectValues(int number, int chosen, double expectedResult)
         {
             var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})");
-            Assert.AreEqual(expectedResult, (long)actualResult);
+            Assert.AreEqual(expectedResult, (double)actualResult);
         }
 
         [Theory]
@@ -596,14 +596,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(4.23, 3, 20)]
         [TestCase(10.4, 3.14, 220)]
         [TestCase(0, 0.4, 1)]
-        public void Combina_TruncatesNumbersCorrectly(double number, double chosen, int expectedResult)
+        public void Combina_TruncatesNumbersCorrectly(double number, double chosen, double expectedResult)
         {
             var actualResult = XLWorkbook.EvaluateExpr(string.Format(
                 @"COMBINA({0}, {1})",
                 number.ToString(CultureInfo.InvariantCulture),
                 chosen.ToString(CultureInfo.InvariantCulture)));
 
-            Assert.AreEqual(expectedResult, (long)actualResult);
+            Assert.AreEqual(expectedResult, (double)actualResult);
         }
 
         [TestCase(0, 1)]
@@ -835,7 +835,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(Math.PI, 4)]
         public void Even_ReturnsCorrectResults(double input, int expectedResult)
         {
-            var actual = (int)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedResult, actual);
         }
 

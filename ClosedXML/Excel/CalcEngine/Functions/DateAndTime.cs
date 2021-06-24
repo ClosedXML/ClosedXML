@@ -142,9 +142,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static object Datevalue(List<Expression> p)
         {
-            var date = (string)p[0];
+            var value = p[0].Evaluate();
 
-            return (int)Math.Floor(DateTime.Parse(date).ToOADate());
+            if (value is string s && DateTime.TryParse(s, out var dt))
+                return dt.ToOADate();
+
+            throw new CellValueException("Cannot parse value to date");
         }
 
         private static object Day(List<Expression> p)
@@ -156,32 +159,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static object Days(List<Expression> p)
         {
-            Type type;
+            var end_date = (DateTime)p[0];
+            var start_date = (DateTime)p[1];
 
-            int end_date;
-
-            type = p[0]._token.Value.GetType();
-            if (type == typeof(string))
-                end_date = (int)Datevalue(new List<Expression>() { p[0] });
-            else
-                end_date = (int)p[0];
-
-            int start_date;
-
-            type = p[1]._token.Value.GetType();
-            if (type == typeof(string))
-                start_date = (int)Datevalue(new List<Expression>() { p[1] });
-            else
-                start_date = (int)p[1];
-
-            return end_date - start_date;
+            return end_date.Subtract(start_date).TotalDays;
         }
 
         private static object Days360(List<Expression> p)
         {
             var date1 = (DateTime)p[0];
             var date2 = (DateTime)p[1];
-            var isEuropean = p.Count == 3 ? p[2] : false;
+            var isEuropean = false;
+            if (p.Count > 2)
+                isEuropean = p[2];
 
             return Days360(date1, date2, isEuropean);
         }

@@ -310,15 +310,15 @@ namespace ClosedXML.Excel
         public static DateTime GetDate(Object v)
         {
             // handle dates
-            if (v is DateTime)
+            if (v is DateTime dt)
             {
-                return (DateTime)v;
+                return dt;
             }
 
             // handle doubles
-            if (v is double && ((double)v).IsValidOADateNumber())
+            if (v is double dbl && dbl.IsValidOADateNumber())
             {
-                return DateTime.FromOADate((double)v);
+                return DateTime.FromOADate(dbl);
             }
 
             // handle everything else

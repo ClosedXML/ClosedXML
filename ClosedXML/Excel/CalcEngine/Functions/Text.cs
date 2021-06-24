@@ -48,7 +48,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object _Char(List<Expression> p)
         {
-            var i = (int)p[0];
+            var i = (int)p[0].WithCoercionConvention(CoercionConvention.StringOrNullAsZero);
             if (i < 1 || i > 255)
                 throw new CellValueException(string.Format("The number {0} is out of the required range (1 to 255)", i));
 

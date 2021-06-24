@@ -59,5 +59,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             actual = XLWorkbook.EvaluateExpr(@"IF(""text""=""TEXT"", 1, 2)");
             Assert.AreEqual(1, actual);
         }
+
+        [Test]
+        public void If_Empty_String()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.FirstCell().SetFormulaA1(@"=""""");
+            var actual = ws.Evaluate(@"IF(TRUE, A1, 1)");
+            Assert.AreEqual("", actual);
+        }
     }
 }
