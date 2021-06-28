@@ -15,24 +15,26 @@ namespace ClosedXML.Excel.Drawings
     internal class XLPicture : IXLPicture
     {
         private const String InvalidNameChars = @":\/?*[]";
-        private static readonly IDictionary<XLPictureFormat, ImageFormat> _formatMap = BuildFormatMap();
-        private static readonly IDictionary<Guid, XLPictureFormat> _formatReverseMap = _formatMap.ToDictionary(v => v.Value.Guid, v => v.Key);
         private Int32 _height;
         private Int32 _id;
         private String _name = string.Empty;
         private Int32 _width;
 
+        // Only build format map when needed
+        private static readonly Lazy<IDictionary<Guid, XLPictureFormat>> _lazyFormatReverseMap =
+            new Lazy<IDictionary<Guid, XLPictureFormat>>(BuildFormatReverseMap);
+
         #region Static Methods
 
-        private static IDictionary<XLPictureFormat, ImageFormat> BuildFormatMap()
+        private static IDictionary<Guid, XLPictureFormat> BuildFormatReverseMap()
         {
             var properties = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
             return Enum.GetValues(typeof(XLPictureFormat))
                 .Cast<XLPictureFormat>()
                 .Where(pf => properties.Any(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)))
                 .ToDictionary(
-                    pf => pf,
-                    pf => properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null) as ImageFormat
+                    pf => ((ImageFormat)properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null)).Guid,
+                    pf => pf
                 );
         }
 
@@ -56,7 +58,7 @@ namespace ClosedXML.Excel.Drawings
 
         private static XLPictureFormat DeduceFormatFromBitmap(Image bitmap)
         {
-            if (!_formatReverseMap.TryGetValue(bitmap.RawFormat.Guid, out var format))
+            if (!_lazyFormatReverseMap.Value.TryGetValue(bitmap.RawFormat.Guid, out var format))
                 throw new ArgumentException("Unsupported or unknown image format in bitmap");
             return format;
         }
