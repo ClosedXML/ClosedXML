@@ -246,8 +246,8 @@ namespace ClosedXML.Excel.CalcEngine
             var oldText = (string)p[1];
             var newText = (string)p[2];
 
-            if ("" == text) return "";
-            if ("" == oldText) return text;
+            if (text.Length == 0) return "";
+            if (oldText.Length == 0) return text;
 
             // if index not supplied, replace all
             if (p.Count == 3)
