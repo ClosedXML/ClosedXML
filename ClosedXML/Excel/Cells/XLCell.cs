@@ -116,8 +116,6 @@ namespace ClosedXML.Excel
             }
             internal set
             {
-                if (value == null)
-                    return;
                 _rowNumber = value.RowNumber;
                 _columnNumber = value.ColumnNumber;
                 _fixedRow = value.FixedRow;
