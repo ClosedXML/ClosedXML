@@ -231,7 +231,7 @@ namespace ClosedXML.Excel.CalcEngine
             var search = WildcardToRegex(p[0]);
             var text = (string)p[1];
 
-            if ("" == text) throw new ArgumentException("Invalid input string.");
+            if (string.IsNullOrEmpty(text)) throw new ArgumentException("Invalid input string.");
 
             var start = 0;
             if (p.Count > 2)
@@ -259,8 +259,8 @@ namespace ClosedXML.Excel.CalcEngine
             var oldText = (string)p[1];
             var newText = (string)p[2];
 
-            if ("" == text) return "";
-            if ("" == oldText) return text;
+            if (0 == text.Length) return "";
+            if (0 == oldText.Length) return text;
 
             // if index not supplied, replace all
             if (p.Count == 3)
