@@ -22,6 +22,9 @@
     <file src="bin\Release\net46\ClosedXML.xml" target="lib\net46\ClosedXML.xml" />
     <file src="bin\Release\netstandard2.0\ClosedXML.dll" target="lib\netstandard2.0\ClosedXML.dll" />
     <file src="bin\Release\netstandard2.0\ClosedXML.pdb" target="lib\netstandard2.0\ClosedXML.pdb" />
-    <file src="bin\Release\netstandard2.0\ClosedXML.xml" target="lib\netstandard2.0\ClosedXML.xml" />
+    <file src="bin\Release\net5\ClosedXML.xml" target="lib\netstandard2.0\ClosedXML.xml" />
+    <file src="bin\Release\net5\ClosedXML.dll" target="lib\net5.0\ClosedXML.dll" />
+    <file src="bin\Release\net5\ClosedXML.pdb" target="lib\net5.0\ClosedXML.pdb" />
+    <file src="bin\Release\net5\ClosedXML.xml" target="lib\net5.0\ClosedXML.xml" />
   </files>
 </package>
