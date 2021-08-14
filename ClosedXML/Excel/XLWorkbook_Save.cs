@@ -2438,7 +2438,8 @@ namespace ClosedXML.Excel
                 PrintDrill = OpenXmlHelper.GetBooleanValue(pt.PrintExpandCollapsedButtons, false),
                 ItemPrintTitles = OpenXmlHelper.GetBooleanValue(pt.RepeatRowLabels, false),
                 FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, false),
-                EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true)
+                EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true),
+                CreatedVersion = XLConstants.PivotTable.CreatedVersion
             };
 
             if (!String.IsNullOrEmpty(pt.ColumnHeaderCaption))
