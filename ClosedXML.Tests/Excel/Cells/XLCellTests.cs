@@ -11,6 +11,7 @@ using System.Threading;
 namespace ClosedXML.Tests
 {
     [TestFixture]
+    [SetCulture("")]
     public class XLCellTests
     {
         [Test]

@@ -9,6 +9,7 @@ using System.Linq;
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
+    [SetCulture("")]
     public class MathTrigTests
     {
         private readonly double tolerance = 1e-10;
