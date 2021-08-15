@@ -945,6 +945,23 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CanInsertDateTimeOffset()
+        {
+            var now = DateTimeOffset.Now;
+
+            using var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet();
+            ws1.FirstCell().InsertTable(new[] { new { TimeStamp = now } });
+
+            // C# Supports 7 digits milliseconds, but excel only 3
+            const string format = "yyyy-MM-dd HH:mm:ss.fff";
+
+            var actual = ws1.Cell("A2").GetDateTime().ToString(format);
+            var expected = now.DateTime.ToString(format);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void CopyDetachedTableDifferentWorksheets()
         {
             var wb = new XLWorkbook();

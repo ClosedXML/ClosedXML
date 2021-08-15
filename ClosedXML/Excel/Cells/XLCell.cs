@@ -219,6 +219,7 @@ namespace ClosedXML.Excel
             {
                 DBNull dbnull when dbnull.Equals(DBNull.Value) => string.Empty,
                 Guid _ or char _ or Enum _ => value.ObjectToInvariantString(),
+                DateTimeOffset dto => dto.DateTime,
                 _ => value,
             };
         }
