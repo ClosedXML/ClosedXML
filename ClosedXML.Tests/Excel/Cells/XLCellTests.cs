@@ -569,6 +569,21 @@ namespace ClosedXML.Tests
             Assert.IsFalse(ws.Cell("A4").TryGetValue(out double? _));
         }
 
+        [TestCase(2019, 11, 5, 11, 30, 5, 0, ExpectedResult = "2019-11-05 11:30:05.000")]
+        [TestCase(2019, 11, 5, 11, 30, 5, 2, ExpectedResult = "2019-11-05 11:30:05.000")]
+        [TestCase(2019, 11, 5, 11, 30, 5, -10, ExpectedResult = "2019-11-05 11:30:05.000")]
+        public string ValueSetDateTimeOffset(int year, int month, int days, int hours, int minutes, int seconds, int offsetInHours)
+        {
+            var cell = new XLWorkbook().Worksheets.Add("Sheet1").FirstCell();
+
+            cell.Value = new DateTimeOffset(year, month, days, hours, minutes, seconds, new TimeSpan(offsetInHours * TimeSpan.TicksPerHour));
+
+            // C# Supports 7 digits milliseconds, but excel only 3
+            const string format = "yyyy-MM-dd HH:mm:ss.fff";
+
+            return cell.GetDateTime().ToString(format);
+        }
+
         [Test]
         public void SetCellValueToGuid()
         {
@@ -1182,6 +1197,7 @@ namespace ClosedXML.Tests
         {
             Assert.AreEqual("", XLCell.ConvertOtherSupportedTypes(DBNull.Value));
             Assert.AreEqual("748bdf0c-3e7d-415e-967d-a875a27634ed", XLCell.ConvertOtherSupportedTypes(new Guid("748BDF0C-3E7D-415E-967D-A875A27634ED")));
+            Assert.AreEqual(new DateTime(2022, 06, 30, 12, 57, 00), XLCell.ConvertOtherSupportedTypes(new DateTimeOffset(2022, 06, 30, 12, 57, 00, new TimeSpan(2 * TimeSpan.TicksPerHour))));
             Assert.AreEqual(DateTime.Today, XLCell.ConvertOtherSupportedTypes(DateTime.Today));
         }
     }
