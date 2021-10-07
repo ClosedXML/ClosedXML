@@ -77,6 +77,29 @@ namespace ClosedXML.Excel.CalcEngine
             return nums.Average();
         }
 
+        public double Median()
+        {
+            var nums = NumericValuesInternal()
+                        .OrderBy(n => n)
+                        .ToArray();
+
+            if (nums.Length == 0) throw new ApplicationException("No values");
+
+            bool hasEvenCount = nums.Length % 2 == 0;
+            if (hasEvenCount)
+            {
+                int numElementsToSkip = (nums.Length / 2) - 1;
+
+                return nums.Skip(numElementsToSkip)
+                           .Take(2)
+                           .Average();
+            }
+
+            int medianIndex = (int)Math.Floor(nums.Length / 2d);
+
+            return nums[medianIndex];
+        }
+
         public double Count()
         {
             return Count(NumbersOnly);
