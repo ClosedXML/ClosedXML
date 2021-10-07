@@ -216,6 +216,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return GetTally(p, false).Max();
         }
+
         private static object Median(List<Expression> p)
         {
             return GetTally(p, false).Median();
