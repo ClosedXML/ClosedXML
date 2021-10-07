@@ -342,6 +342,65 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        public void Median_CellRangeOfNonNumericValues_ThrowsApplicationException()
+        {
+            //Arrange
+            var ws = workbook.Worksheets.First();
+
+            //Act - Assert
+            Assert.Throws<ApplicationException>(() =>
+            {
+                ws.Evaluate("AVERAGE(D3:D45)");
+            });
+        }
+
+        [Test]
+        public void Median_EvenCountOfCellRange_ReturnsAverageOfTwoElementsInMiddleOfSortedList()
+        {
+            //Arrange
+            var ws = workbook.Worksheets.First();
+
+            //Act
+            double value = ws.Evaluate("MEDIAN(I3:I10)").CastTo<double>();
+
+            //Assert
+            Assert.AreEqual(244.225, value, tolerance);
+        }
+
+        [Test]
+        public void Median_EvenCountOfManualNumbers_ReturnsAverageOfTwoElementsInMiddleOfSortedList()
+        {
+            //Act
+            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)").CastTo<double>();
+
+            //Assert
+            Assert.AreEqual(18.505, value, tolerance);
+        }
+
+        [Test]
+        public void Median_OddCountOfCellRange_ReturnsElementInMiddleOfSortedList()
+        {
+            //Arrange
+            var ws = workbook.Worksheets.First();
+
+            //Act
+            double value = ws.Evaluate("MEDIAN(I3:I11)").CastTo<double>();
+
+            //Assert
+            Assert.AreEqual(189.05, value, tolerance);
+        }
+
+        [Test]
+        public void Median_OddCountOfManualNumbers_ReturnsElementInMiddleOfSortedList()
+        {
+            //Act
+            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)").CastTo<double>();
+
+            //Assert
+            Assert.AreEqual(64.51, value, tolerance);
+        }
+
+        [Test]
         public void Min()
         {
             var ws = workbook.Worksheets.First();
@@ -472,66 +531,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = workbook.Evaluate(@"=VARP(Data!H:H)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);
         }
-
-        [Test]
-        public void Median_OddCountOfManualNumbers_ReturnsElementInMiddleOfSortedList()
-        {
-            //Act
-            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)").CastTo<double>();
-
-            //Assert
-            Assert.AreEqual(64.51, value, tolerance);
-        }
-
-        [Test]
-        public void Median_OddCountOfCellRange_ReturnsElementInMiddleOfSortedList()
-        {
-            //Arrange
-            var ws = workbook.Worksheets.First();
-
-            //Act
-            double value = ws.Evaluate("MEDIAN(I3:I11)").CastTo<double>();
-
-            //Assert
-            Assert.AreEqual(189.05, value, tolerance);
-        }
-
-        [Test]
-        public void Median_EvenCountOfManualNumbers_ReturnsAverageOfTwoElementsInMiddleOfSortedList()
-        {
-            //Act
-            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)").CastTo<double>();
-
-            //Assert
-            Assert.AreEqual(18.505, value, tolerance);
-        }
-
-        [Test]
-        public void Median_EvenCountOfCellRange_ReturnsAverageOfTwoElementsInMiddleOfSortedList()
-        {
-            //Arrange
-            var ws = workbook.Worksheets.First();
-
-            //Act
-            double value = ws.Evaluate("MEDIAN(I3:I10)").CastTo<double>();
-
-            //Assert
-            Assert.AreEqual(244.225, value, tolerance);
-        }
-
-        [Test]
-        public void Median_CellRangeOfNonNumericValues_ThrowsApplicationException()
-        {
-            //Arrange
-            var ws = workbook.Worksheets.First();
-
-            //Act - Assert
-            Assert.Throws<ApplicationException>(() =>
-            {
-                ws.Evaluate("AVERAGE(D3:D45)");
-            });
-        }
-
         private XLWorkbook SetupWorkbook()
         {
             var wb = new XLWorkbook();
