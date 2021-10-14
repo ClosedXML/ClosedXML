@@ -9,20 +9,44 @@ namespace ClosedXML.Excel.Drawings
     {
         int Count { get; }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(Stream stream);
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(Stream stream, String name);
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(Stream stream, XLPictureFormat format);
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(Stream stream, XLPictureFormat format, String name);
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(Bitmap bitmap);
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(Bitmap bitmap, String name);
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(String imageFile);
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLPicture Add(String imageFile, String name);
 
         bool Contains(String pictureName);

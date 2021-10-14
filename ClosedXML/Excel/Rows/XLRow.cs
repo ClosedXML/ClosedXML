@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Versioning;
 
 namespace ClosedXML.Excel
 {
@@ -187,26 +188,41 @@ namespace ClosedXML.Excel
                          + XLHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLRow AdjustToContents(Int32 startColumn)
         {
             return AdjustToContents(startColumn, XLHelper.MaxColumnNumber);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn)
         {
             return AdjustToContents(startColumn, endColumn, 0, Double.MaxValue);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLRow AdjustToContents(Double minHeight, Double maxHeight)
         {
             return AdjustToContents(1, XLHelper.MaxColumnNumber, minHeight, maxHeight);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
         {
             return AdjustToContents(startColumn, XLHelper.MaxColumnNumber, minHeight, maxHeight);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
             var fontCache = new Dictionary<IXLFontBase, Font>();
@@ -515,6 +531,9 @@ namespace ClosedXML.Excel
             return Range(rangeAddress);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLRow AdjustToContents()
         {
             return AdjustToContents(1);

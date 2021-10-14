@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Versioning;
 
 namespace ClosedXML.Excel
 {
@@ -41,12 +42,18 @@ namespace ClosedXML.Excel
         /// <param name="numberOfRows">The number of rows to insert.</param>
         IXLRows InsertRowsAbove(Int32 numberOfRows);
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLRow AdjustToContents();
 
         /// <summary>
         /// Adjusts the height of the row based on its contents, starting from the startColumn.
         /// </summary>
         /// <param name="startColumn">The column to start calculating the row height.</param>
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLRow AdjustToContents(Int32 startColumn);
 
         /// <summary>
@@ -54,12 +61,24 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="startColumn">The column to start calculating the row height.</param>
         /// <param name="endColumn">The column to end calculating the row height.</param>
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn);
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLRow AdjustToContents(Double minHeight, Double maxHeight);
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLRow AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight);
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight);
 
         /// <summary>Hides this row.</summary>

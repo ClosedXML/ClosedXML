@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 
 namespace ClosedXML.Excel
 {
@@ -83,36 +84,54 @@ namespace ClosedXML.Excel
             }
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumns AdjustToContents()
         {
             Columns.ForEach(c => c.AdjustToContents());
             return this;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumns AdjustToContents(Int32 startRow)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow));
             return this;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumns AdjustToContents(Int32 startRow, Int32 endRow)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow, endRow));
             return this;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumns AdjustToContents(Double minWidth, Double maxWidth)
         {
             Columns.ForEach(c => c.AdjustToContents(minWidth, maxWidth));
             return this;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumns AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow, minWidth, maxWidth));
             return this;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumns AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow, endRow, minWidth, maxWidth));

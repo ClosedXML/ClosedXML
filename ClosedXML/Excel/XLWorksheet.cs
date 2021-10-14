@@ -1767,46 +1767,73 @@ namespace ClosedXML.Excel
             return Pictures.Picture(pictureName);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(Stream stream)
         {
             return Pictures.Add(stream);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(Stream stream, string name)
         {
             return Pictures.Add(stream, name);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         internal IXLPicture AddPicture(Stream stream, string name, int Id)
         {
             return (Pictures as XLPictures).Add(stream, name, Id);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(Stream stream, XLPictureFormat format)
         {
             return Pictures.Add(stream, format);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(Stream stream, XLPictureFormat format, string name)
         {
             return Pictures.Add(stream, format, name);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(Bitmap bitmap)
         {
             return Pictures.Add(bitmap);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(Bitmap bitmap, string name)
         {
             return Pictures.Add(bitmap, name);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(string imageFile)
         {
             return Pictures.Add(imageFile);
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture AddPicture(string imageFile, string name)
         {
             return Pictures.Add(imageFile, name);

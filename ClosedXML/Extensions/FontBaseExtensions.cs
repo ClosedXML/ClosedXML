@@ -3,6 +3,7 @@ using ClosedXML.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.Versioning;
 
 namespace ClosedXML.Excel
 {
@@ -23,6 +24,9 @@ namespace ClosedXML.Excel
             font.FontCharSet = sourceFont.FontCharSet;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public static Double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             var font = GetCachedFont(fontBase, fontCache);
@@ -30,6 +34,9 @@ namespace ClosedXML.Excel
             return (double)textHeight * 0.85;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, Font> fontCache)
         {
             if (String.IsNullOrWhiteSpace(text))
@@ -44,6 +51,9 @@ namespace ClosedXML.Excel
             return width;
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         private static Font GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, Font> fontCache)
         {
             if (!fontCache.TryGetValue(fontBase, out Font font))

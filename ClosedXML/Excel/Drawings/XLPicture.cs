@@ -222,6 +222,9 @@ namespace ClosedXML.Excel.Drawings
         /// </summary>
         /// <param name="targetSheet">The worksheet to which the picture will be copied.</param>
         /// <returns>A created copy of the picture.</returns>
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture CopyTo(IXLWorksheet targetSheet)
         {
             return CopyTo((XLWorksheet)targetSheet);
@@ -263,6 +266,9 @@ namespace ClosedXML.Excel.Drawings
         /// Create a copy of the picture on the same worksheet.
         /// </summary>
         /// <returns>A created copy of the picture.</returns>
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Duplicate()
         {
             return CopyTo(Worksheet);
@@ -355,6 +361,9 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         internal IXLPicture CopyTo(XLWorksheet targetSheet)
         {
             if (targetSheet == null)

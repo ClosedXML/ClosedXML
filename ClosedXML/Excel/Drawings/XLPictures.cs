@@ -27,6 +27,9 @@ namespace ClosedXML.Excel.Drawings
 
         internal ICollection<String> Deleted { get; private set; }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(Stream stream)
         {
             var picture = new XLPicture(_worksheet, stream);
@@ -35,6 +38,9 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(Stream stream, string name)
         {
             var picture = Add(stream);
@@ -42,6 +48,9 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(Stream stream, XLPictureFormat format)
         {
             var picture = new XLPicture(_worksheet, stream, format);
@@ -50,6 +59,9 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(Stream stream, XLPictureFormat format, string name)
         {
             var picture = Add(stream, format);
@@ -57,6 +69,9 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(Bitmap bitmap)
         {
             var picture = new XLPicture(_worksheet, bitmap);
@@ -65,6 +80,9 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(Bitmap bitmap, string name)
         {
             var picture = Add(bitmap);
@@ -72,6 +90,9 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(string imageFile)
         {
             using (var fs = File.OpenRead(imageFile))
@@ -83,6 +104,9 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLPicture Add(string imageFile, string name)
         {
             var picture = Add(imageFile);
@@ -153,6 +177,9 @@ namespace ClosedXML.Excel.Drawings
             return false;
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         internal IXLPicture Add(Stream stream, string name, int Id)
         {
             var picture = Add(stream) as XLPicture;

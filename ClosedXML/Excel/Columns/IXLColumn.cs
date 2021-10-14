@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Versioning;
 
 namespace ClosedXML.Excel
 {
@@ -64,12 +65,18 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Adjusts the width of the column based on its contents.
         /// </summary>
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLColumn AdjustToContents();
 
         /// <summary>
         /// Adjusts the width of the column based on its contents, starting from the startRow.
         /// </summary>
         /// <param name="startRow">The row to start calculating the column width.</param>
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+# endif
         IXLColumn AdjustToContents(Int32 startRow);
 
         /// <summary>
@@ -77,12 +84,24 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="startRow">The row to start calculating the column width.</param>
         /// <param name="endRow">The row to end calculating the column width.</param>
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         IXLColumn AdjustToContents(Int32 startRow, Int32 endRow);
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLColumn AdjustToContents(Double minWidth, Double maxWidth);
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth);
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth);
 
         /// <summary>

@@ -386,7 +386,9 @@ namespace ClosedXML.Excel
 
                 #endregion LoadTables
 
+#pragma warning disable CA1416 //We have no control on whether file will contain pictures.
                 LoadDrawings(worksheetPart, ws);
+#pragma warning restore CA1416
 
                 #region LoadComments
 
@@ -1105,6 +1107,9 @@ namespace ClosedXML.Excel
             }
         }
 
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatformAttribute("windows")]
+#endif
         private void LoadDrawings(WorksheetPart wsPart, IXLWorksheet ws)
         {
             if (wsPart.DrawingsPart != null)

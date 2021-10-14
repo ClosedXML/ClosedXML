@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Versioning;
 
 namespace ClosedXML.Excel
 {
@@ -144,31 +145,49 @@ namespace ClosedXML.Excel
             }
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumn AdjustToContents()
         {
             return AdjustToContents(1);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumn AdjustToContents(Int32 startRow)
         {
             return AdjustToContents(startRow, XLHelper.MaxRowNumber);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow)
         {
             return AdjustToContents(startRow, endRow, 0, Double.MaxValue);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumn AdjustToContents(Double minWidth, Double maxWidth)
         {
             return AdjustToContents(1, XLHelper.MaxRowNumber, minWidth, maxWidth);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumn AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth)
         {
             return AdjustToContents(startRow, XLHelper.MaxRowNumber, minWidth, maxWidth);
         }
 
+#if NET5_0_OR_GREATER
+        [SupportedOSPlatformAttribute("windows")]
+#endif
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
             var fontCache = new Dictionary<IXLFontBase, Font>();
