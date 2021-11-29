@@ -486,6 +486,21 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CanCorrectlyInterpretDateTimesWithLocalePrefix()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CorrectlyInterpretDateTimesWithLocalePrefix.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+
+                Assert.AreEqual("21 January 2019", ws.Cell(1, 1).GetFormattedString());
+                Assert.AreEqual("21-Jan-19", ws.Cell(2, 1).GetFormattedString());
+                Assert.AreEqual("Monday, 21 January 2019", ws.Cell(3, 1).GetFormattedString());
+                Assert.AreEqual("21 Jan 2019", ws.Cell(4, 1).GetFormattedString());
+            }
+        }
+
+        [Test]
         public void CanLoadProperties()
         {
             const string author = "TestAuthor";
