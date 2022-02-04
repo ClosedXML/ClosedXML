@@ -251,19 +251,6 @@ namespace ClosedXML.Excel
             return rows;
         }
 
-#if false
-// Not using this anymore, but keeping it around for in case we bring back .NET3.5 support.
-        public static bool IsNullOrWhiteSpace(string value)
-        {
-#if _NET35_
-            if (value == null) return true;
-            return value.All(c => char.IsWhiteSpace(c));
-#else
-            return String.IsNullOrWhiteSpace(value);
-#endif
-        }
-#endif
-
         private static readonly Regex A1RegexRelative = new Regex(
       @"(?<=\W)(?<one>\$?[a-zA-Z]{1,3}\$?\d{1,7})(?=\W)" // A1
     + @"|(?<=\W)(?<two>\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1

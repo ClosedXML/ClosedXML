@@ -1,4 +1,4 @@
-﻿#if !APPVEYOR && _NETFRAMEWORK_
+﻿#if !APPVEYOR && NETFRAMEWORK
 using ClosedXML.Excel;
 using ClosedXML.Tests.Utils;
 using NUnit.Framework;

@@ -590,7 +590,7 @@ namespace ClosedXML.Excel
                     }));
             }
 
-#if _NET40_
+#if NET40
 
             public void Dispose()
             {
