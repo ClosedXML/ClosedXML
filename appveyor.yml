@@ -16,7 +16,7 @@ dotnet_csproj:
   informational_version: "{version}"
 
 # platform: Any CPU
-configuration : 
+configuration :
 - Release
 
 before_build:
@@ -38,11 +38,11 @@ nuget:
   project_feed: true
   disable_publish_on_pr: true
 
-deploy:
-  - provider: NuGet
-    api_key:
-      secure: KsK/blrJeju4zoEUWucBUBvN3uQ5tJSVpN8MqXG9O1GOgSyACkON4rP5kL1ylyO8
-    skip_symbols: false
-    artifact: /.*(\.|\.s)nupkg/
-    on:
-      branch: nugetPublish
+# deploy:
+#   - provider: NuGet
+#     api_key:
+#       secure: KsK/blrJeju4zoEUWucBUBvN3uQ5tJSVpN8MqXG9O1GOgSyACkON4rP5kL1ylyO8
+#     skip_symbols: false
+#     artifact: /.*(\.|\.s)nupkg/
+#     on:
+#       branch: nugetPublish
