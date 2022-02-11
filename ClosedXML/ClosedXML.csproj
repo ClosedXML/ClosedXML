@@ -12,7 +12,7 @@
 		<Version Condition="'$(CURRENT_VERSION)' == ''">0.0.1</Version>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
-		<PackageVersion>$(Version)</PackageVersion>
+		<PackageVersion>$(Version)-Prerelease</PackageVersion>
 		<PackageReleaseNotes>$(LAST_COMMIT_MESSAGE)</PackageReleaseNotes>
 		<Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
 		<Copyright>MIT</Copyright>
