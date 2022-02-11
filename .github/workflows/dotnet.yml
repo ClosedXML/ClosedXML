@@ -29,7 +29,7 @@ jobs:
   deployRelease:
     if: github.ref == 'refs/heads/main'
     runs-on: windows-latest
-    needs: build 
+    needs: build
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -42,7 +42,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: NugetPush
       run: |
-          dotnet nuget push .\ClosedXML/bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
+          dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -56,7 +56,7 @@ jobs:
   deployTest:
     if: github.ref != 'refs/heads/main'
     runs-on: windows-latest
-    needs: build 
+    needs: build
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
