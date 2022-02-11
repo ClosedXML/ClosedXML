@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<LangVersion>8.0</LangVersion>
 		<AssemblyName>ClosedXML</AssemblyName>
 		<PackageId>DocumentPartner.ClosedXML</PackageId>
@@ -34,24 +33,11 @@
 		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
-
 	<ItemGroup>
 		<None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
-
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<DefineConstants>TRACE;_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
-	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
-		<DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET46_</DefineConstants>
-	</PropertyGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-	</ItemGroup>
-
 	<ItemGroup>
+		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 		<PackageReference Include="Fody" Version="6.6.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -59,11 +45,9 @@
 		<PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
 		<PackageReference Include="ExcelNumberFormat" Version="1.1.0" />

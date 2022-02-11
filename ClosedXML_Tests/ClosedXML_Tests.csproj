@@ -1,54 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <Version>0.95.2</Version>
-    <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);NU1605</NoWarn>
-    <Configurations>Debug;Release;Release.Signed</Configurations>
-    <IsPackable>false</IsPackable>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net48;net6.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(OS)' != 'Windows_NT' ">net6.0</TargetFrameworks>
+		<LangVersion>8.0</LangVersion>
+		<Version>0.95.2</Version>
+		<IsPackable>false</IsPackable>
+		<NoWarn>$(NoWarn);NU1605</NoWarn>
+		<Configurations>Debug;Release</Configurations>
+		<IsPackable>false</IsPackable>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants>$(AppVeyor)</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="**\*.xlsx" Exclude="**\~$*.xlsx;bin\**" />
+		<EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
+		<EmbeddedResource Include="Resource\Images\*.png" />
+		<EmbeddedResource Include="Resource\Images\*.jpg" />
+	</ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <DefineConstants>$(DefineConstants);_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+		<PackageReference Include="System.IO.Packaging" Version="6.0.0" />
+	</ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET40_</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="NUnit" Version="3.13.2" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+		<PackageReference Include="System.Data.OleDb" Version="6.0.0" />
+	</ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET46_</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="**\*.xlsx" Exclude="**\~$*.xlsx;bin\**" />
-    <EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
-    <EmbeddedResource Include="Resource\Images\*.png" />
-    <EmbeddedResource Include="Resource\Images\*.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
-    <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
+		<ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
+	</ItemGroup>
 
 </Project>
