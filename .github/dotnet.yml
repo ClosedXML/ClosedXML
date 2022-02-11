@@ -1,0 +1,82 @@
+name: .NET build and test
+env:
+  CURRENT_VERSION: 0.95.3.${{ github.run_number }}
+  LAST_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal --configuration Release
+
+  deployRelease:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: NugetPush
+      run: |
+          dotnet nuget push ./ClosedXML/bin/Release/*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: ${{ env.CURRENT_VERSION }}
+        prerelease: false
+        title: "Release Build"
+        files: |
+          ./ClosedXML/bin/Release/*.nupkg
+          ./ClosedXML/bin/Release/*.snupkg
+
+  deployTest:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: NugetPush
+      run: |
+          ls ./ClosedXML/bin/Release
+          dotnet nuget push ./ClosedXML/bin/Release/*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TEST_TOKEN}} --source https://apiint.nugettest.org/v3/index.json
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest-prerelease"
+        prerelease: true
+        title: "Prerelease Build"
+        files: |
+          ./ClosedXML/bin/Release/*.nupkg
+          ./ClosedXML/bin/Release/*.snupkg
