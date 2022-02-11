@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+    <TargetFrameworks>net6.0;net48</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <OutputType>Exe</OutputType>
     <Version>0.95.2</Version>
@@ -36,8 +36,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.3" />
-    <PackageReference Include="morelinq" Version="2.10.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
   </ItemGroup>
 
 </Project>

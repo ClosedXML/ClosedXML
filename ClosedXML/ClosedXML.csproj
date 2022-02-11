@@ -1,67 +1,72 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <AssemblyName>ClosedXML</AssemblyName>
-    <PackageId>ClosedXML.DP</PackageId>
-    <Version>0.95.3.3</Version>
-    <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash, Roman Brandstetter, Stefan Seeland</Authors>
-    <Owners>Francois Botha, Aleksei Pankratev</Owners>
-    <Product>ClosedXML</Product>
-    <PackageReleaseNotes>$(APPVEYOR_REPO_COMMIT_MESSAGE)</PackageReleaseNotes>
-    <Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
-    <Copyright>MIT</Copyright>
-    <PackageProjectUrl>https://github.com/stesee/ClosedXML</PackageProjectUrl>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Configurations>Debug;Release</Configurations>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <SignAssembly>true</SignAssembly>
-    <Optimize>true</Optimize>
-    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
+		<LangVersion>8.0</LangVersion>
+		<AssemblyName>ClosedXML</AssemblyName>
+		<PackageId>DocumentPartner.ClosedXML</PackageId>
+		<Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash, Roman Brandstetter, Stefan Seeland</Authors>
+		<Owners>Francois Botha, Aleksei Pankratev</Owners>
+		<Product>ClosedXML</Product>
+		<Version Condition="'$(CURRENT_VERSION)' != ''">$(CURRENT_VERSION)</Version>
+		<Version Condition="'$(CURRENT_VERSION)' == ''">0.0.1</Version>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
+		<FileVersion>$(Version)</FileVersion>
+		<PackageVersion>$(Version)-Prerelease</PackageVersion>
+		<PackageReleaseNotes>$(LAST_COMMIT_MESSAGE)</PackageReleaseNotes>
+		<Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
+		<Copyright>MIT</Copyright>
+		<PackageProjectUrl>https://github.com/stesee/ClosedXML</PackageProjectUrl>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Configurations>Debug;Release</Configurations>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<SignAssembly>true</SignAssembly>
+		<Optimize>true</Optimize>
+		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+		<DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageReadmeFile>nugetReadme.md</PackageReadmeFile>
+		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>TRACE;_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup>
+		<None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET46_</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<DefineConstants>TRACE;_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Fody" Version="5.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Janitor.Fody" Version="1.6.8" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
-  </ItemGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
+		<DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET46_</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
-    <PackageReference Include="Fody" Version="5.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Janitor.Fody" Version="1.6.8" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Fody" Version="6.6.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.3" />
-    <PackageReference Include="ExcelNumberFormat" Version="1.0.10" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
+		<PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
 </Project>
