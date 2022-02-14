@@ -1,3 +1,5 @@
+using ClosedXML.Excel;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -5,8 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using ClosedXML.Excel;
-using NUnit.Framework;
 
 namespace ClosedXML_Tests
 {
@@ -476,7 +476,7 @@ namespace ClosedXML_Tests
         public void TryGetValue_Boolean_Good()
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            var cell = ws.Cell("A1").SetValue("True");
+            var cell = ws.Cell("A1").SetValue("true");
             var success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
             Assert.IsTrue(outValue);

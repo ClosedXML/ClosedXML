@@ -334,7 +334,6 @@ namespace ClosedXML_Tests.Excel
         }
 
         [Test]
-        [Ignore("TODO Fix before marking nuget package as stable")]
         [TestCase("A1*10", 1230)]
         [TestCase("A1/10", 12.3)]
         [TestCase("A1&\" cells\"", "123 cells")]
