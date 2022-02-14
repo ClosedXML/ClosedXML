@@ -27,7 +27,6 @@ jobs:
       run: dotnet test --no-build --verbosity normal --configuration Release
 
   deployRelease:
-    if: github.ref == 'refs/heads/main'
     runs-on: windows-latest
     needs: build
     steps:
@@ -43,30 +42,3 @@ jobs:
     - name: NugetPush
       run: |
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: ${{ env.CURRENT_VERSION }}
-        prerelease: false
-        title: "Release Build"
-        files: |
-          ./ClosedXML/bin/Release/*.nupkg
-          ./ClosedXML/bin/Release/*.snupkg
-
-  deployTest:
-    runs-on: windows-latest
-    needs: build
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: NugetPush
-      run: |
-          ls ./ClosedXML/bin/Release
-          dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TEST_TOKEN}} --source https://apiint.nugettest.org/v3/index.json
