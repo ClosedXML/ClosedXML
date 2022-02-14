@@ -1121,7 +1121,7 @@ namespace ClosedXML.Excel
                                 break;
 
                             case Boolean b:
-                                _cellValue = b ? "True" : "False";
+                                _cellValue = b ? "true" : "false";
                                 break;
 
                             default:
@@ -1504,7 +1504,7 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            if (options.HasFlag (XLCellsUsedOptions.Contents))
+            if (options.HasFlag(XLCellsUsedOptions.Contents))
             {
                 if (InnerText.Length > 0)
                     return false;
@@ -3096,9 +3096,11 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula
+        { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
 
-        public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
+        public Boolean HasArrayFormula
+        { get { return FormulaA1.StartsWith("{"); } }
 
         public IXLRangeAddress FormulaReference { get; set; }
 

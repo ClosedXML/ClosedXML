@@ -126,6 +126,9 @@ namespace ClosedXML.Excel
                 case DateTime d:
                     return d.ToString(CultureInfo.InvariantCulture);
 
+                case Boolean b:
+                    return b.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
+
                 default:
                     return value.ToString();
             }
