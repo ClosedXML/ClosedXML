@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
             {
                 if (IsAtPositionIndicator(i))
                 {
-                    if ("" != hfElement) parsedElements.Add(new ParsedHeaderFooterElement()
+                    if (!string.IsNullOrEmpty(hfElement)) parsedElements.Add(new ParsedHeaderFooterElement()
                     {
                         Position = currentPosition,
                         Text = hfElement
@@ -104,7 +104,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if ("" != hfElement)
+            if (!string.IsNullOrEmpty(hfElement))
                 parsedElements.Add(new ParsedHeaderFooterElement()
                 {
                     Position = currentPosition,

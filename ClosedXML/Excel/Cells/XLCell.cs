@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
                 if (HasRichText)
                     return _richText.ToString();
 
-                return string.Empty == _cellValue ? FormulaA1 : _cellValue;
+                return string.IsNullOrEmpty(_cellValue) ? FormulaA1 : _cellValue;
             }
         }
 
@@ -583,7 +583,7 @@ namespace ClosedXML.Excel
         private Object ParseCellValueFromString(String cellValue, XLDataType dataType, out String error)
         {
             error = "";
-            if ("" == cellValue)
+            if (string.IsNullOrEmpty(cellValue))
                 return "";
 
             if (dataType == XLDataType.Boolean)

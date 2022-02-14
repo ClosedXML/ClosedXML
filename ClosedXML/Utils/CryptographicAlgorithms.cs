@@ -37,7 +37,7 @@ namespace ClosedXML.Utils
             if (salt == null)
                 throw new ArgumentNullException(nameof(salt));
 
-            if ("" == password) return "";
+            if (string.IsNullOrEmpty(password)) return "";
 
             switch (algorithm)
             {
