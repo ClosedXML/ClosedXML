@@ -54,7 +54,6 @@ jobs:
           ./ClosedXML/bin/Release/*.snupkg
 
   deployTest:
-    if: github.ref != 'refs/heads/PublishSymbolFilesFix'
     runs-on: windows-latest
     needs: build
     steps:
@@ -71,12 +70,3 @@ jobs:
       run: |
           ls ./ClosedXML/bin/Release
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TEST_TOKEN}} --source https://apiint.nugettest.org/v3/index.json
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest-prerelease"
-        prerelease: true
-        title: "Prerelease Build"
-        files: |
-          ./ClosedXML/bin/Release/*.nupkg
-          ./ClosedXML/bin/Release/*.snupkg
