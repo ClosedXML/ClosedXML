@@ -5210,6 +5210,8 @@ namespace ClosedXML.Excel
                                         valueCalculated = ((int)xlCell.CachedValue).ToInvariantString();
                                     else if (xlCell.CachedValue is double)
                                         valueCalculated = ((double)xlCell.CachedValue).ToInvariantString();
+                                    else if (xlCell.CachedValue is bool)
+                                        valueCalculated = ((bool)xlCell.CachedValue).ToInvariantString().ToLowerInvariant();
                                     else
                                         valueCalculated = xlCell.CachedValue.ToString();
 
