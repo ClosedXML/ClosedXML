@@ -1939,7 +1939,7 @@ namespace ClosedXML.Excel
                 var tableColumn = new TableColumn
                 {
                     Id = columnId,
-                    Name = fieldName.Replace("_x000a_", "_x005f_x000a_").Replace(Environment.NewLine, "_x000a_")
+                    Name = fieldName.Replace("_x000a_", "_x005f_x000a_").Replace(XLConstants.NewLine, "_x000a_")
                 };
 
                 // https://github.com/ClosedXML/ClosedXML/issues/513

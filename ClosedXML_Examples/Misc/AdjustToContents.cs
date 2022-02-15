@@ -62,11 +62,11 @@ namespace ClosedXML_Examples.Misc
                     var c = ws4.Cell(1, (co / 5) + 2);
 
                     c.RichText.AddText("Text to adjust - " + co).SetBold();
-                    c.RichText.AddText(Environment.NewLine);
+                    c.RichText.AddText(XLConstants.NewLine);
                     c.RichText.AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(25);
-                    c.RichText.AddText(Environment.NewLine);
+                    c.RichText.AddText(XLConstants.NewLine);
                     c.RichText.AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(20);
-                    c.RichText.AddText(Environment.NewLine);
+                    c.RichText.AddText(XLConstants.NewLine);
                     c.RichText.AddText("Hello").SetBold();
                     c.Style.Alignment.SetTextRotation(co);
                 }
@@ -87,11 +87,11 @@ namespace ClosedXML_Examples.Misc
                 {
                     var c = ws5.Cell((ro / 5) + 2, 1);
                     c.RichText.AddText("Text to adjust - " + ro).SetBold();
-                    c.RichText.AddText(Environment.NewLine);
+                    c.RichText.AddText(XLConstants.NewLine);
                     c.RichText.AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(10);
-                    c.RichText.AddText(Environment.NewLine);
+                    c.RichText.AddText(XLConstants.NewLine);
                     c.RichText.AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(15);
-                    c.RichText.AddText(Environment.NewLine);
+                    c.RichText.AddText(XLConstants.NewLine);
                     c.RichText.AddText("Hello").SetBold();
                     c.Style.Alignment.SetTextRotation(ro);
                 }

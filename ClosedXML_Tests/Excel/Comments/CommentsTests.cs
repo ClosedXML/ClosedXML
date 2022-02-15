@@ -56,16 +56,16 @@ namespace ClosedXML_Tests.Excel.Comments
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                string strExcelComment = "1) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "1) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "2) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "3) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "4) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "5) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "6) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "7) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "8) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
-                strExcelComment = strExcelComment + "9) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + Environment.NewLine;
+                string strExcelComment = "1) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "1) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "2) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "3) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "4) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "5) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "6) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "7) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "8) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                strExcelComment = strExcelComment + "9) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
 
                 var cell = ws.Cell(2, 2).SetValue("Comment 1");
 
@@ -249,32 +249,31 @@ namespace ClosedXML_Tests.Excel.Comments
         }
 
         [Test]
-        public void CanDeleteFormattedNote ()
+        public void CanDeleteFormattedNote()
         {
-            using (var stream = TestHelper.GetStreamFromResource (TestHelper.GetResourcePath (@"TryToLoad\CommentFormatted.xlsx")))
-            using (var wb = new XLWorkbook (stream))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentFormatted.xlsx")))
+            using (var wb = new XLWorkbook(stream))
             {
-                var ws = wb.Worksheets.First ();
+                var ws = wb.Worksheets.First();
 
-                var cellsWithComments = ws.CellsUsed (XLCellsUsedOptions.Comments).ToArray ();
+                var cellsWithComments = ws.CellsUsed(XLCellsUsedOptions.Comments).ToArray();
 
-                Assert.That (cellsWithComments.Length, Is.EqualTo (2));
+                Assert.That(cellsWithComments.Length, Is.EqualTo(2));
 
-                Assert.That (cellsWithComments[0].Comment.Text, Is.EqualTo (@"normal Note"));
-                Assert.That (cellsWithComments[1].Comment.Text, Is.EqualTo ("Author:\r\nboldAndUnderlinenormal bold italic normal"));
+                Assert.That(cellsWithComments[0].Comment.Text, Is.EqualTo(@"normal Note"));
+                Assert.That(cellsWithComments[1].Comment.Text, Is.EqualTo("Author:\r\nboldAndUnderlinenormal bold italic normal"));
 
-                cellsWithComments[0].Clear (XLClearOptions.Comments);
-                cellsWithComments[1].Clear (XLClearOptions.Comments);
+                cellsWithComments[0].Clear(XLClearOptions.Comments);
+                cellsWithComments[1].Clear(XLClearOptions.Comments);
 
-                cellsWithComments = ws.CellsUsed (XLCellsUsedOptions.Comments).ToArray ();
+                cellsWithComments = ws.CellsUsed(XLCellsUsedOptions.Comments).ToArray();
                 // TODO: this breaks when it should not
-                Assert.That (cellsWithComments.Length, Is.EqualTo (0));
-
+                Assert.That(cellsWithComments.Length, Is.EqualTo(0));
             }
         }
 
         [Test]
-        public void CanReadThreadedCommentNote ()
+        public void CanReadThreadedCommentNote()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\ThreadedComment.xlsx")))
             using (var wb = new XLWorkbook(stream))

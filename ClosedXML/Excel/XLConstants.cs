@@ -5,6 +5,7 @@ namespace ClosedXML.Excel
     public static class XLConstants
     {
         internal const int NumberOfBuiltInStyles = 164; // But they are stored as 0-based (0 - 163)
+        public static readonly string NewLine = "\r\n";
 
         #region Pivot Table constants
 

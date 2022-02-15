@@ -1242,7 +1242,7 @@ namespace ClosedXML.Excel
 
         private String GetTableColumnName(string name)
         {
-            return name.Replace("_x000a_", Environment.NewLine).Replace("_x005f_x000a_", "_x000a_");
+            return name.Replace("_x000a_", XLConstants.NewLine).Replace("_x005f_x000a_", "_x000a_");
         }
 
         // This may be part of XLHelper or XLColor

@@ -393,7 +393,7 @@ namespace ClosedXML_Tests
         [Test]
         public void SourceSheetWithWhitespace()
         {
-            var expectedFilePath = @"Other\PivotTableReferenceFiles\outputfile.xlsx";
+            var expectedFilePath = @"Other\PivotTableReferenceFiles\SourceSheetWithWhitespace\outputfile.xlsx";
 
             using (var ms = new MemoryStream())
             {

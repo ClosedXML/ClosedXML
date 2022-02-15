@@ -216,7 +216,7 @@ namespace ClosedXML.Excel
             {
                 Double thisHeight;
                 Int32 textRotation = c.StyleValue.Alignment.TextRotation;
-                if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
+                if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(XLConstants.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
                     if (c.HasRichText)
@@ -224,13 +224,13 @@ namespace ClosedXML.Excel
                         foreach (IXLRichString rt in c.RichText)
                         {
                             String formattedString = rt.Text;
-                            var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                            var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
                             Int32 arrCount = arr.Count();
                             for (Int32 i = 0; i < arrCount; i++)
                             {
                                 String s = arr[i];
                                 if (i < arrCount - 1)
-                                    s += Environment.NewLine;
+                                    s += XLConstants.NewLine;
                                 kpList.Add(new KeyValuePair<IXLFontBase, String>(rt, s));
                             }
                         }
@@ -238,20 +238,20 @@ namespace ClosedXML.Excel
                     else
                     {
                         String formattedString = c.GetFormattedString();
-                        var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                        var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
                         Int32 arrCount = arr.Count();
                         for (Int32 i = 0; i < arrCount; i++)
                         {
                             String s = arr[i];
                             if (i < arrCount - 1)
-                                s += Environment.NewLine;
+                                s += XLConstants.NewLine;
                             kpList.Add(new KeyValuePair<IXLFontBase, String>(c.Style.Font, s));
                         }
                     }
 
                     Double maxLongCol = kpList.Max(kp => kp.Value.Length);
                     Double maxHeightCol = kpList.Max(kp => kp.Key.GetHeight(fontCache));
-                    Int32 lineCount = kpList.Count(kp => kp.Value.Contains(Environment.NewLine)) + 1;
+                    Int32 lineCount = kpList.Count(kp => kp.Value.Contains(XLConstants.NewLine)) + 1;
                     if (textRotation == 0)
                         thisHeight = maxHeightCol * lineCount;
                     else
