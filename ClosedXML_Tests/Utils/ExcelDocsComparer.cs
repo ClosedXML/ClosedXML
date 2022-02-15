@@ -20,7 +20,11 @@ namespace ClosedXML_Tests
             using (var leftPackage = Package.Open(left, FileMode.Open, FileAccess.Read))
             using (var rightPackage = Package.Open(right, FileMode.Open, FileAccess.Read))
             {
-                return PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
+                bool v = PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
+                if (v)
+
+                    return v;
+                return v;
             }
         }
 
