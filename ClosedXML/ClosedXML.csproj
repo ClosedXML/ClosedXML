@@ -21,6 +21,7 @@
 		<Configurations>Debug;Release</Configurations>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
+		<Optimize Condition="'$(GITHUB_ACTIONS)' == 'true'">true</Optimize>
 		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
 		<PackageIcon>Product.png</PackageIcon>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
