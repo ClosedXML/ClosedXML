@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace ClosedXML_Tests.Excel.Saving
@@ -250,7 +251,8 @@ namespace ClosedXML_Tests.Excel.Saving
                     };
 
                     // Assert
-                    Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
                 }
                 finally
                 {
