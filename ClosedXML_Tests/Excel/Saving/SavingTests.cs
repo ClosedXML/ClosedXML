@@ -4,8 +4,8 @@ using ClosedXML_Tests.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
+using SkiaSharp;
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -292,7 +292,7 @@ namespace ClosedXML_Tests.Excel.Saving
             using (var ms = new MemoryStream())
             using (var wb = new XLWorkbook())
             using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
-            using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+            using (var bitmap = SKCodec.Create(resourceStream))
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("D4").Value = "Hello world.";
@@ -385,7 +385,7 @@ namespace ClosedXML_Tests.Excel.Saving
                 }
             }
         }
-        
+
         [Test]
         public void SaveAsWithNoExtensionFails()
         {
@@ -719,7 +719,6 @@ namespace ClosedXML_Tests.Excel.Saving
                 Assert.AreEqual("B5:B5", dv[0].Ranges.Single().RangeAddress.ToString());
 
                 Assert.DoesNotThrow(() => wb.SaveAs(ms));
-
 
                 ws.Column(1).InsertColumnsBefore(1);
                 dv = ws.DataValidations.ToArray();

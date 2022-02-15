@@ -1,6 +1,6 @@
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -209,7 +209,7 @@ namespace ClosedXML.Excel
 
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
-            var fontCache = new Dictionary<IXLFontBase, Font>();
+            var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
             Double rowMaxHeight = minHeight;
             foreach (XLCell c in from XLCell c in Row(startColumn, endColumn).CellsUsed() where !c.IsMerged() select c)

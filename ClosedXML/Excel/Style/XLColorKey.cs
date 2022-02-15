@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 
 namespace ClosedXML.Excel
 {
@@ -6,7 +7,7 @@ namespace ClosedXML.Excel
     {
         public XLColorType ColorType { get; set; }
 
-        public System.Drawing.Color Color { get; set; }
+        public SKColor Color { get; set; }
 
         public int Indexed { get; set; }
 
@@ -21,7 +22,7 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Indexed ? Indexed : 0);
             hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Theme ? (int)ThemeColor : 0);
             hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Theme ? ThemeTint.GetHashCode() : 0);
-            hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Color ? Color.ToArgb() : 0);
+            hashCode = hashCode * -1521134295 + (ColorType == XLColorType.Color ? Color.GetHashCode() : 0);
             return hashCode;
         }
 
@@ -31,9 +32,7 @@ namespace ClosedXML.Excel
             {
                 if (ColorType == XLColorType.Color)
                 {
-                    // .NET Color.Equals() will return false for Color.FromArgb(255, 255, 255, 255) == Color.White
-                    // Therefore we compare the ToArgb() values
-                    return Color.ToArgb() == other.Color.ToArgb();
+                    return Color.Alpha == other.Color.Alpha && Color.Red == other.Color.Red && Color.Green == other.Color.Green && Color.Blue == other.Color.Blue;
                 }
                 if (ColorType == XLColorType.Theme)
                 {
@@ -60,10 +59,13 @@ namespace ClosedXML.Excel
             {
                 case XLColorType.Color:
                     return Color.ToString();
+
                 case XLColorType.Theme:
                     return $"{ThemeColor} ({ThemeTint})";
+
                 case XLColorType.Indexed:
                     return $"Indexed: {Indexed}";
+
                 default:
                     return base.ToString();
             }

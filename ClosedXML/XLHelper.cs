@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -19,11 +18,8 @@ namespace ClosedXML.Excel
         public const String MaxColumnLetter = "XFD";
         public const Double Epsilon = 1e-10;
 
-        public static String LastCell { get { return $"{MaxColumnLetter}{MaxRowNumber}"; } }
-
-        private static readonly Lazy<Graphics> graphics = new Lazy<Graphics>(() => Graphics.FromImage(new Bitmap(200, 200)));
-        internal static Graphics Graphics { get => graphics.Value; }
-        internal static Double DpiX { get => Graphics.DpiX; }
+        public static String LastCell
+        { get { return $"{MaxColumnLetter}{MaxRowNumber}"; } }
 
         internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
@@ -223,12 +219,12 @@ namespace ClosedXML.Excel
 
         public static Int32 GetPtFromPx(Double px)
         {
-            return Convert.ToInt32(px * 72.0 / DpiX);
+            return Convert.ToInt32(px * 72.0);
         }
 
         public static Double GetPxFromPt(Int32 pt)
         {
-            return Convert.ToDouble(pt) * DpiX / 72.0;
+            return Convert.ToDouble(pt) / 72.0;
         }
 
         internal static IXLTableRows InsertRowsWithoutEvents(Func<int, bool, IXLRangeRows> insertFunc,

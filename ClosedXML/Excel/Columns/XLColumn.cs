@@ -1,6 +1,6 @@
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -171,7 +171,7 @@ namespace ClosedXML.Excel
 
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
-            var fontCache = new Dictionary<IXLFontBase, Font>();
+            var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
             Double colMaxWidth = minWidth;
 

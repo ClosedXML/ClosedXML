@@ -1,6 +1,7 @@
 // Keep this file CodeMaid organised and cleaned
+using DocumentFormat.OpenXml.Spreadsheet;
+using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace ClosedXML.Excel
 {
@@ -8,17 +9,17 @@ namespace ClosedXML.Excel
     {
         private static readonly char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-        public static String ToHex(this Color color)
+        public static String ToHex(this SKColor color)
         {
             byte[] bytes = new byte[4];
 
-            bytes[0] = color.A;
+            bytes[0] = color.Alpha;
 
-            bytes[1] = color.R;
+            bytes[1] = color.Red;
 
-            bytes[2] = color.G;
+            bytes[2] = color.Green;
 
-            bytes[3] = color.B;
+            bytes[3] = color.Blue;
 
             char[] chars = new char[bytes.Length * 2];
 
@@ -32,6 +33,13 @@ namespace ClosedXML.Excel
             }
 
             return new string(chars);
+        }
+
+        internal static Color ConvertToOpenXmlColor(this SKColor sKColor)
+        {
+            Color color = new Color();
+            color.Rgb = new DocumentFormat.OpenXml.HexBinaryValue(sKColor.ToHex());
+            return color;
         }
     }
 }

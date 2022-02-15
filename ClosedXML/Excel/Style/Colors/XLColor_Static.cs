@@ -1,8 +1,9 @@
 using ClosedXML.Excel.Caching;
 using ClosedXML.Utils;
+using DocumentFormat.OpenXml.Spreadsheet;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace ClosedXML.Excel
 {
@@ -10,7 +11,7 @@ namespace ClosedXML.Excel
     {
         private static readonly XLColorRepository Repository = new XLColorRepository(key => new XLColor(key));
 
-        private static readonly Dictionary<Color, XLColor> ByColor = new Dictionary<Color, XLColor>();
+        private static readonly Dictionary<SKColors, XLColor> ByColor = new Dictionary<SKColors, XLColor>();
         private static readonly Object ByColorLock = new Object();
 
         internal static XLColor FromKey(ref XLColorKey key)
@@ -18,7 +19,7 @@ namespace ClosedXML.Excel
             return Repository.GetOrCreate(ref key);
         }
 
-        public static XLColor FromColor(Color color)
+        public static XLColor FromColor(SKColor color)
         {
             var key = new XLColorKey
             {
@@ -28,24 +29,34 @@ namespace ClosedXML.Excel
             return FromKey(ref key);
         }
 
+        public static XLColor FromColor(Color color)
+        {
+            var key = new XLColorKey
+            {
+                ColorType = XLColorType.Color,
+                Color = SKColor.Parse(color.Rgb.Value)
+            };
+            return FromKey(ref key);
+        }
+
         public static XLColor FromArgb(Int32 argb)
         {
-            return FromColor(Color.FromArgb(argb));
+            return FromColor(ColorStringParser.FromArgb(argb));
         }
 
         public static XLColor FromArgb(Int32 r, Int32 g, Int32 b)
         {
-            return FromColor(Color.FromArgb(r, g, b));
+            return FromColor(ColorStringParser.FromArgb(r, g, b));
         }
 
         public static XLColor FromArgb(Int32 a, Int32 r, Int32 g, Int32 b)
         {
-            return FromColor(Color.FromArgb(a, r, g, b));
+            return FromColor(ColorStringParser.FromArgb(a, r, g, b));
         }
 
         public static XLColor FromName(String name)
         {
-            return FromColor(Color.FromName(name));
+            return FromColor(ColorStringParser.FromName(name));
         }
 
         public static XLColor FromHtml(String htmlColor)
@@ -158,7 +169,7 @@ namespace ClosedXML.Excel
                             {61, FromHtml("#FF993366")},
                             {62, FromHtml("#FF333399")},
                             {63, FromHtml("#FF333333")},
-                            {64, FromColor(Color.Transparent)}
+                            {64, FromColor(SKColors.Transparent)}
                         };
                     _indexedColors = retVal;
                 }
@@ -182,424 +193,424 @@ namespace ClosedXML.Excel
         public static XLColor NoColor { get; } = new XLColor();
 
         public static XLColor AliceBlue
-        { get { return FromColor(Color.AliceBlue); } }
+        { get { return FromColor(SKColors.AliceBlue); } }
 
         public static XLColor AntiqueWhite
-        { get { return FromColor(Color.AntiqueWhite); } }
+        { get { return FromColor(SKColors.AntiqueWhite); } }
 
         public static XLColor Aqua
-        { get { return FromColor(Color.Aqua); } }
+        { get { return FromColor(SKColors.Aqua); } }
 
         public static XLColor Aquamarine
-        { get { return FromColor(Color.Aquamarine); } }
+        { get { return FromColor(SKColors.Aquamarine); } }
 
         public static XLColor Azure
-        { get { return FromColor(Color.Azure); } }
+        { get { return FromColor(SKColors.Azure); } }
 
         public static XLColor Beige
-        { get { return FromColor(Color.Beige); } }
+        { get { return FromColor(SKColors.Beige); } }
 
         public static XLColor Bisque
-        { get { return FromColor(Color.Bisque); } }
+        { get { return FromColor(SKColors.Bisque); } }
 
         public static XLColor Black
-        { get { return FromColor(Color.Black); } }
+        { get { return FromColor(SKColors.Black); } }
 
         public static XLColor BlanchedAlmond
-        { get { return FromColor(Color.BlanchedAlmond); } }
+        { get { return FromColor(SKColors.BlanchedAlmond); } }
 
         public static XLColor Blue
-        { get { return FromColor(Color.Blue); } }
+        { get { return FromColor(SKColors.Blue); } }
 
         public static XLColor BlueViolet
-        { get { return FromColor(Color.BlueViolet); } }
+        { get { return FromColor(SKColors.BlueViolet); } }
 
         public static XLColor Brown
-        { get { return FromColor(Color.Brown); } }
+        { get { return FromColor(SKColors.Brown); } }
 
         public static XLColor BurlyWood
-        { get { return FromColor(Color.BurlyWood); } }
+        { get { return FromColor(SKColors.BurlyWood); } }
 
         public static XLColor CadetBlue
-        { get { return FromColor(Color.CadetBlue); } }
+        { get { return FromColor(SKColors.CadetBlue); } }
 
         public static XLColor Chartreuse
-        { get { return FromColor(Color.Chartreuse); } }
+        { get { return FromColor(SKColors.Chartreuse); } }
 
         public static XLColor Chocolate
-        { get { return FromColor(Color.Chocolate); } }
+        { get { return FromColor(SKColors.Chocolate); } }
 
         public static XLColor Coral
-        { get { return FromColor(Color.Coral); } }
+        { get { return FromColor(SKColors.Coral); } }
 
         public static XLColor CornflowerBlue
-        { get { return FromColor(Color.CornflowerBlue); } }
+        { get { return FromColor(SKColors.CornflowerBlue); } }
 
         public static XLColor Cornsilk
-        { get { return FromColor(Color.Cornsilk); } }
+        { get { return FromColor(SKColors.Cornsilk); } }
 
         public static XLColor Crimson
-        { get { return FromColor(Color.Crimson); } }
+        { get { return FromColor(SKColors.Crimson); } }
 
         public static XLColor Cyan
-        { get { return FromColor(Color.Cyan); } }
+        { get { return FromColor(SKColors.Cyan); } }
 
         public static XLColor DarkBlue
-        { get { return FromColor(Color.DarkBlue); } }
+        { get { return FromColor(SKColors.DarkBlue); } }
 
         public static XLColor DarkCyan
-        { get { return FromColor(Color.DarkCyan); } }
+        { get { return FromColor(SKColors.DarkCyan); } }
 
         public static XLColor DarkGoldenrod
-        { get { return FromColor(Color.DarkGoldenrod); } }
+        { get { return FromColor(SKColors.DarkGoldenrod); } }
 
         public static XLColor DarkGray
-        { get { return FromColor(Color.DarkGray); } }
+        { get { return FromColor(SKColors.DarkGray); } }
 
         public static XLColor DarkGreen
-        { get { return FromColor(Color.DarkGreen); } }
+        { get { return FromColor(SKColors.DarkGreen); } }
 
         public static XLColor DarkKhaki
-        { get { return FromColor(Color.DarkKhaki); } }
+        { get { return FromColor(SKColors.DarkKhaki); } }
 
         public static XLColor DarkMagenta
-        { get { return FromColor(Color.DarkMagenta); } }
+        { get { return FromColor(SKColors.DarkMagenta); } }
 
         public static XLColor DarkOliveGreen
-        { get { return FromColor(Color.DarkOliveGreen); } }
+        { get { return FromColor(SKColors.DarkOliveGreen); } }
 
         public static XLColor DarkOrange
-        { get { return FromColor(Color.DarkOrange); } }
+        { get { return FromColor(SKColors.DarkOrange); } }
 
         public static XLColor DarkOrchid
-        { get { return FromColor(Color.DarkOrchid); } }
+        { get { return FromColor(SKColors.DarkOrchid); } }
 
         public static XLColor DarkRed
-        { get { return FromColor(Color.DarkRed); } }
+        { get { return FromColor(SKColors.DarkRed); } }
 
         public static XLColor DarkSalmon
-        { get { return FromColor(Color.DarkSalmon); } }
+        { get { return FromColor(SKColors.DarkSalmon); } }
 
         public static XLColor DarkSeaGreen
-        { get { return FromColor(Color.DarkSeaGreen); } }
+        { get { return FromColor(SKColors.DarkSeaGreen); } }
 
         public static XLColor DarkSlateBlue
-        { get { return FromColor(Color.DarkSlateBlue); } }
+        { get { return FromColor(SKColors.DarkSlateBlue); } }
 
         public static XLColor DarkSlateGray
-        { get { return FromColor(Color.DarkSlateGray); } }
+        { get { return FromColor(SKColors.DarkSlateGray); } }
 
         public static XLColor DarkTurquoise
-        { get { return FromColor(Color.DarkTurquoise); } }
+        { get { return FromColor(SKColors.DarkTurquoise); } }
 
         public static XLColor DarkViolet
-        { get { return FromColor(Color.DarkViolet); } }
+        { get { return FromColor(SKColors.DarkViolet); } }
 
         public static XLColor DeepPink
-        { get { return FromColor(Color.DeepPink); } }
+        { get { return FromColor(SKColors.DeepPink); } }
 
         public static XLColor DeepSkyBlue
-        { get { return FromColor(Color.DeepSkyBlue); } }
+        { get { return FromColor(SKColors.DeepSkyBlue); } }
 
         public static XLColor DimGray
-        { get { return FromColor(Color.DimGray); } }
+        { get { return FromColor(SKColors.DimGray); } }
 
         public static XLColor DodgerBlue
-        { get { return FromColor(Color.DodgerBlue); } }
+        { get { return FromColor(SKColors.DodgerBlue); } }
 
         public static XLColor Firebrick
-        { get { return FromColor(Color.Firebrick); } }
+        { get { return FromColor(SKColors.Firebrick); } }
 
         public static XLColor FloralWhite
-        { get { return FromColor(Color.FloralWhite); } }
+        { get { return FromColor(SKColors.FloralWhite); } }
 
         public static XLColor ForestGreen
-        { get { return FromColor(Color.ForestGreen); } }
+        { get { return FromColor(SKColors.ForestGreen); } }
 
         public static XLColor Fuchsia
-        { get { return FromColor(Color.Fuchsia); } }
+        { get { return FromColor(SKColors.Fuchsia); } }
 
         public static XLColor Gainsboro
-        { get { return FromColor(Color.Gainsboro); } }
+        { get { return FromColor(SKColors.Gainsboro); } }
 
         public static XLColor GhostWhite
-        { get { return FromColor(Color.GhostWhite); } }
+        { get { return FromColor(SKColors.GhostWhite); } }
 
         public static XLColor Gold
-        { get { return FromColor(Color.Gold); } }
+        { get { return FromColor(SKColors.Gold); } }
 
         public static XLColor Goldenrod
-        { get { return FromColor(Color.Goldenrod); } }
+        { get { return FromColor(SKColors.Goldenrod); } }
 
         public static XLColor Gray
-        { get { return FromColor(Color.Gray); } }
+        { get { return FromColor(SKColors.Gray); } }
 
         public static XLColor Green
-        { get { return FromColor(Color.Green); } }
+        { get { return FromColor(SKColors.Green); } }
 
         public static XLColor GreenYellow
-        { get { return FromColor(Color.GreenYellow); } }
+        { get { return FromColor(SKColors.GreenYellow); } }
 
         public static XLColor Honeydew
-        { get { return FromColor(Color.Honeydew); } }
+        { get { return FromColor(SKColors.Honeydew); } }
 
         public static XLColor HotPink
-        { get { return FromColor(Color.HotPink); } }
+        { get { return FromColor(SKColors.HotPink); } }
 
         public static XLColor IndianRed
-        { get { return FromColor(Color.IndianRed); } }
+        { get { return FromColor(SKColors.IndianRed); } }
 
         public static XLColor Indigo
-        { get { return FromColor(Color.Indigo); } }
+        { get { return FromColor(SKColors.Indigo); } }
 
         public static XLColor Ivory
-        { get { return FromColor(Color.Ivory); } }
+        { get { return FromColor(SKColors.Ivory); } }
 
         public static XLColor Khaki
-        { get { return FromColor(Color.Khaki); } }
+        { get { return FromColor(SKColors.Khaki); } }
 
         public static XLColor Lavender
-        { get { return FromColor(Color.Lavender); } }
+        { get { return FromColor(SKColors.Lavender); } }
 
         public static XLColor LavenderBlush
-        { get { return FromColor(Color.LavenderBlush); } }
+        { get { return FromColor(SKColors.LavenderBlush); } }
 
         public static XLColor LawnGreen
-        { get { return FromColor(Color.LawnGreen); } }
+        { get { return FromColor(SKColors.LawnGreen); } }
 
         public static XLColor LemonChiffon
-        { get { return FromColor(Color.LemonChiffon); } }
+        { get { return FromColor(SKColors.LemonChiffon); } }
 
         public static XLColor LightBlue
-        { get { return FromColor(Color.LightBlue); } }
+        { get { return FromColor(SKColors.LightBlue); } }
 
         public static XLColor LightCoral
-        { get { return FromColor(Color.LightCoral); } }
+        { get { return FromColor(SKColors.LightCoral); } }
 
         public static XLColor LightCyan
-        { get { return FromColor(Color.LightCyan); } }
+        { get { return FromColor(SKColors.LightCyan); } }
 
         public static XLColor LightGoldenrodYellow
-        { get { return FromColor(Color.LightGoldenrodYellow); } }
+        { get { return FromColor(SKColors.LightGoldenrodYellow); } }
 
         public static XLColor LightGray
-        { get { return FromColor(Color.LightGray); } }
+        { get { return FromColor(SKColors.LightGray); } }
 
         public static XLColor LightGreen
-        { get { return FromColor(Color.LightGreen); } }
+        { get { return FromColor(SKColors.LightGreen); } }
 
         public static XLColor LightPink
-        { get { return FromColor(Color.LightPink); } }
+        { get { return FromColor(SKColors.LightPink); } }
 
         public static XLColor LightSalmon
-        { get { return FromColor(Color.LightSalmon); } }
+        { get { return FromColor(SKColors.LightSalmon); } }
 
         public static XLColor LightSeaGreen
-        { get { return FromColor(Color.LightSeaGreen); } }
+        { get { return FromColor(SKColors.LightSeaGreen); } }
 
         public static XLColor LightSkyBlue
-        { get { return FromColor(Color.LightSkyBlue); } }
+        { get { return FromColor(SKColors.LightSkyBlue); } }
 
         public static XLColor LightSlateGray
-        { get { return FromColor(Color.LightSlateGray); } }
+        { get { return FromColor(SKColors.LightSlateGray); } }
 
         public static XLColor LightSteelBlue
-        { get { return FromColor(Color.LightSteelBlue); } }
+        { get { return FromColor(SKColors.LightSteelBlue); } }
 
         public static XLColor LightYellow
-        { get { return FromColor(Color.LightYellow); } }
+        { get { return FromColor(SKColors.LightYellow); } }
 
         public static XLColor Lime
-        { get { return FromColor(Color.Lime); } }
+        { get { return FromColor(SKColors.Lime); } }
 
         public static XLColor LimeGreen
-        { get { return FromColor(Color.LimeGreen); } }
+        { get { return FromColor(SKColors.LimeGreen); } }
 
         public static XLColor Linen
-        { get { return FromColor(Color.Linen); } }
+        { get { return FromColor(SKColors.Linen); } }
 
         public static XLColor Magenta
-        { get { return FromColor(Color.Magenta); } }
+        { get { return FromColor(SKColors.Magenta); } }
 
         public static XLColor Maroon
-        { get { return FromColor(Color.Maroon); } }
+        { get { return FromColor(SKColors.Maroon); } }
 
         public static XLColor MediumAquamarine
-        { get { return FromColor(Color.MediumAquamarine); } }
+        { get { return FromColor(SKColors.MediumAquamarine); } }
 
         public static XLColor MediumBlue
-        { get { return FromColor(Color.MediumBlue); } }
+        { get { return FromColor(SKColors.MediumBlue); } }
 
         public static XLColor MediumOrchid
-        { get { return FromColor(Color.MediumOrchid); } }
+        { get { return FromColor(SKColors.MediumOrchid); } }
 
         public static XLColor MediumPurple
-        { get { return FromColor(Color.MediumPurple); } }
+        { get { return FromColor(SKColors.MediumPurple); } }
 
         public static XLColor MediumSeaGreen
-        { get { return FromColor(Color.MediumSeaGreen); } }
+        { get { return FromColor(SKColors.MediumSeaGreen); } }
 
         public static XLColor MediumSlateBlue
-        { get { return FromColor(Color.MediumSlateBlue); } }
+        { get { return FromColor(SKColors.MediumSlateBlue); } }
 
         public static XLColor MediumSpringGreen
-        { get { return FromColor(Color.MediumSpringGreen); } }
+        { get { return FromColor(SKColors.MediumSpringGreen); } }
 
         public static XLColor MediumTurquoise
-        { get { return FromColor(Color.MediumTurquoise); } }
+        { get { return FromColor(SKColors.MediumTurquoise); } }
 
         public static XLColor MediumVioletRed
-        { get { return FromColor(Color.MediumVioletRed); } }
+        { get { return FromColor(SKColors.MediumVioletRed); } }
 
         public static XLColor MidnightBlue
-        { get { return FromColor(Color.MidnightBlue); } }
+        { get { return FromColor(SKColors.MidnightBlue); } }
 
         public static XLColor MintCream
-        { get { return FromColor(Color.MintCream); } }
+        { get { return FromColor(SKColors.MintCream); } }
 
         public static XLColor MistyRose
-        { get { return FromColor(Color.MistyRose); } }
+        { get { return FromColor(SKColors.MistyRose); } }
 
         public static XLColor Moccasin
-        { get { return FromColor(Color.Moccasin); } }
+        { get { return FromColor(SKColors.Moccasin); } }
 
         public static XLColor NavajoWhite
-        { get { return FromColor(Color.NavajoWhite); } }
+        { get { return FromColor(SKColors.NavajoWhite); } }
 
         public static XLColor Navy
-        { get { return FromColor(Color.Navy); } }
+        { get { return FromColor(SKColors.Navy); } }
 
         public static XLColor OldLace
-        { get { return FromColor(Color.OldLace); } }
+        { get { return FromColor(SKColors.OldLace); } }
 
         public static XLColor Olive
-        { get { return FromColor(Color.Olive); } }
+        { get { return FromColor(SKColors.Olive); } }
 
         public static XLColor OliveDrab
-        { get { return FromColor(Color.OliveDrab); } }
+        { get { return FromColor(SKColors.OliveDrab); } }
 
         public static XLColor Orange
-        { get { return FromColor(Color.Orange); } }
+        { get { return FromColor(SKColors.Orange); } }
 
         public static XLColor OrangeRed
-        { get { return FromColor(Color.OrangeRed); } }
+        { get { return FromColor(SKColors.OrangeRed); } }
 
         public static XLColor Orchid
-        { get { return FromColor(Color.Orchid); } }
+        { get { return FromColor(SKColors.Orchid); } }
 
         public static XLColor PaleGoldenrod
-        { get { return FromColor(Color.PaleGoldenrod); } }
+        { get { return FromColor(SKColors.PaleGoldenrod); } }
 
         public static XLColor PaleGreen
-        { get { return FromColor(Color.PaleGreen); } }
+        { get { return FromColor(SKColors.PaleGreen); } }
 
         public static XLColor PaleTurquoise
-        { get { return FromColor(Color.PaleTurquoise); } }
+        { get { return FromColor(SKColors.PaleTurquoise); } }
 
         public static XLColor PaleVioletRed
-        { get { return FromColor(Color.PaleVioletRed); } }
+        { get { return FromColor(SKColors.PaleVioletRed); } }
 
         public static XLColor PapayaWhip
-        { get { return FromColor(Color.PapayaWhip); } }
+        { get { return FromColor(SKColors.PapayaWhip); } }
 
         public static XLColor PeachPuff
-        { get { return FromColor(Color.PeachPuff); } }
+        { get { return FromColor(SKColors.PeachPuff); } }
 
         public static XLColor Peru
-        { get { return FromColor(Color.Peru); } }
+        { get { return FromColor(SKColors.Peru); } }
 
         public static XLColor Pink
-        { get { return FromColor(Color.Pink); } }
+        { get { return FromColor(SKColors.Pink); } }
 
         public static XLColor Plum
-        { get { return FromColor(Color.Plum); } }
+        { get { return FromColor(SKColors.Plum); } }
 
         public static XLColor PowderBlue
-        { get { return FromColor(Color.PowderBlue); } }
+        { get { return FromColor(SKColors.PowderBlue); } }
 
         public static XLColor Purple
-        { get { return FromColor(Color.Purple); } }
+        { get { return FromColor(SKColors.Purple); } }
 
         public static XLColor Red
-        { get { return FromColor(Color.Red); } }
+        { get { return FromColor(SKColors.Red); } }
 
         public static XLColor RosyBrown
-        { get { return FromColor(Color.RosyBrown); } }
+        { get { return FromColor(SKColors.RosyBrown); } }
 
         public static XLColor RoyalBlue
-        { get { return FromColor(Color.RoyalBlue); } }
+        { get { return FromColor(SKColors.RoyalBlue); } }
 
         public static XLColor SaddleBrown
-        { get { return FromColor(Color.SaddleBrown); } }
+        { get { return FromColor(SKColors.SaddleBrown); } }
 
         public static XLColor Salmon
-        { get { return FromColor(Color.Salmon); } }
+        { get { return FromColor(SKColors.Salmon); } }
 
         public static XLColor SandyBrown
-        { get { return FromColor(Color.SandyBrown); } }
+        { get { return FromColor(SKColors.SandyBrown); } }
 
         public static XLColor SeaGreen
-        { get { return FromColor(Color.SeaGreen); } }
+        { get { return FromColor(SKColors.SeaGreen); } }
 
         public static XLColor SeaShell
-        { get { return FromColor(Color.SeaShell); } }
+        { get { return FromColor(SKColors.SeaShell); } }
 
         public static XLColor Sienna
-        { get { return FromColor(Color.Sienna); } }
+        { get { return FromColor(SKColors.Sienna); } }
 
         public static XLColor Silver
-        { get { return FromColor(Color.Silver); } }
+        { get { return FromColor(SKColors.Silver); } }
 
         public static XLColor SkyBlue
-        { get { return FromColor(Color.SkyBlue); } }
+        { get { return FromColor(SKColors.SkyBlue); } }
 
         public static XLColor SlateBlue
-        { get { return FromColor(Color.SlateBlue); } }
+        { get { return FromColor(SKColors.SlateBlue); } }
 
         public static XLColor SlateGray
-        { get { return FromColor(Color.SlateGray); } }
+        { get { return FromColor(SKColors.SlateGray); } }
 
         public static XLColor Snow
-        { get { return FromColor(Color.Snow); } }
+        { get { return FromColor(SKColors.Snow); } }
 
         public static XLColor SpringGreen
-        { get { return FromColor(Color.SpringGreen); } }
+        { get { return FromColor(SKColors.SpringGreen); } }
 
         public static XLColor SteelBlue
-        { get { return FromColor(Color.SteelBlue); } }
+        { get { return FromColor(SKColors.SteelBlue); } }
 
         public static XLColor Tan
-        { get { return FromColor(Color.Tan); } }
+        { get { return FromColor(SKColors.Tan); } }
 
         public static XLColor Teal
-        { get { return FromColor(Color.Teal); } }
+        { get { return FromColor(SKColors.Teal); } }
 
         public static XLColor Thistle
-        { get { return FromColor(Color.Thistle); } }
+        { get { return FromColor(SKColors.Thistle); } }
 
         public static XLColor Tomato
-        { get { return FromColor(Color.Tomato); } }
+        { get { return FromColor(SKColors.Tomato); } }
 
         public static XLColor Turquoise
-        { get { return FromColor(Color.Turquoise); } }
+        { get { return FromColor(SKColors.Turquoise); } }
 
         public static XLColor Violet
-        { get { return FromColor(Color.Violet); } }
+        { get { return FromColor(SKColors.Violet); } }
 
         public static XLColor Wheat
-        { get { return FromColor(Color.Wheat); } }
+        { get { return FromColor(SKColors.Wheat); } }
 
         public static XLColor White
-        { get { return FromColor(Color.White); } }
+        { get { return FromColor(SKColors.White); } }
 
         public static XLColor WhiteSmoke
-        { get { return FromColor(Color.WhiteSmoke); } }
+        { get { return FromColor(SKColors.WhiteSmoke); } }
 
         public static XLColor Yellow
-        { get { return FromColor(Color.Yellow); } }
+        { get { return FromColor(SKColors.Yellow); } }
 
         public static XLColor YellowGreen
-        { get { return FromColor(Color.YellowGreen); } }
+        { get { return FromColor(SKColors.YellowGreen); } }
 
         public static XLColor AirForceBlue
         { get { return FromHtml("#FF5D8AA8"); } }
@@ -2381,6 +2392,6 @@ namespace ClosedXML.Excel
         { get { return FromHtml("#FF2C1608"); } }
 
         public static XLColor Transparent
-        { get { return FromColor(Color.Transparent); } }
+        { get { return FromColor(SKColors.Transparent); } }
     }
 }

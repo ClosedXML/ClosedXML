@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace ClosedXML.Excel.Drawings
@@ -17,9 +17,9 @@ namespace ClosedXML.Excel.Drawings
 
         IXLPicture Add(Stream stream, XLPictureFormat format, String name);
 
-        IXLPicture Add(Bitmap bitmap);
+        IXLPicture Add(SKCodec bitmap);
 
-        IXLPicture Add(Bitmap bitmap, String name);
+        IXLPicture Add(SKCodec bitmap, String name);
 
         IXLPicture Add(String imageFile);
 

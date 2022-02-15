@@ -50,10 +50,10 @@ namespace ClosedXML.Excel
 
             var barAxisColor = new BarAxisColor { Rgb = XLColor.Black.Color.ToHex() };
 
-            var negativeFillColor = new NegativeFillColor { Rgb = cf.Colors[1].Color.ToHex() };
+            var negativeFillColor = new NegativeFillColor { Rgb = (cf.Colors[1].Color.ToHex()) };
             if (cf.Colors.Count == 2)
             {
-                negativeFillColor = new NegativeFillColor { Rgb = cf.Colors[2].Color.ToHex() };
+                negativeFillColor = new NegativeFillColor { Rgb = (cf.Colors[2].Color.ToHex()) };
             }
 
             dataBar.Append(cfMin);
@@ -73,16 +73,22 @@ namespace ClosedXML.Excel
             {
                 case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Max:
                     return ConditionalFormattingValueObjectTypeValues.AutoMax;
+
                 case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Min:
                     return ConditionalFormattingValueObjectTypeValues.AutoMin;
+
                 case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Number:
                     return ConditionalFormattingValueObjectTypeValues.Numeric;
+
                 case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Percent:
                     return ConditionalFormattingValueObjectTypeValues.Percent;
+
                 case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Percentile:
                     return ConditionalFormattingValueObjectTypeValues.Percentile;
+
                 case DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValueObjectValues.Formula:
                     return ConditionalFormattingValueObjectTypeValues.Formula;
+
                 default:
                     throw new NotImplementedException();
             }
