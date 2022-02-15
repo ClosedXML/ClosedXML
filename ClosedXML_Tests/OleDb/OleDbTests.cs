@@ -1,4 +1,5 @@
 ﻿#if NETFRAMEWORK
+
 using ClosedXML.Excel;
 using ClosedXML_Tests.Utils;
 using NUnit.Framework;
@@ -25,7 +26,19 @@ namespace ClosedXML_Tests.OleDb
                 {
                     // Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255 if required
                     // Also check that test runner is running under correct architecture:
-                    connection.Open();
+                    try
+                    {
+                        connection.Open();
+                    }
+                    catch (System.InvalidOperationException excpetion)
+                    {
+                        if (excpetion.Message == "The 'Microsoft.ACE.OLEDB.12.0' provider is not registered on the local machine.")
+                        {
+                            Assert.Ignore("Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255");
+                        }
+                        else
+                            throw;
+                    }
                     using (var command = new OleDbCommand("select * from [Sheet1$]", connection))
                     using (var dataAdapter = new OleDbDataAdapter())
                     {
@@ -117,4 +130,5 @@ namespace ClosedXML_Tests.OleDb
         }
     }
 }
+
 #endif

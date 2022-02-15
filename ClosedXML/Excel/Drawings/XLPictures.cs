@@ -156,12 +156,6 @@ namespace ClosedXML.Excel.Drawings
         internal IXLPicture Add(Stream stream, string name, int Id)
         {
             stream.Position = 0;
-
-            using (FileStream fs = File.OpenWrite($"c:/temp/{name}-{Id}.bmp"))
-            {
-                stream.CopyTo(fs);
-            }
-
             var picture = Add(stream) as XLPicture;
             picture.SetName(name);
             picture.Id = Id;
