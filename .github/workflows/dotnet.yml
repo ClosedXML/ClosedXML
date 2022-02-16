@@ -55,7 +55,7 @@ jobs:
 
   deployTest:
     if: github.ref != 'refs/heads/main'
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build 
     steps:
     - uses: actions/checkout@v2
