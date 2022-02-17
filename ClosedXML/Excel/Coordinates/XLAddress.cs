@@ -298,13 +298,7 @@ namespace ClosedXML.Excel
 
         public static Boolean operator ==(XLAddress left, XLAddress right)
         {
-#pragma warning disable CA2013 // False positive
-            if (ReferenceEquals(left, right))
-            {
-                return true;
-            }
-            return !ReferenceEquals(left, null) && left.Equals(right);
-#pragma warning restore CA2013 // False positive
+            return Object.Equals(left, right);
         }
 
         public static Boolean operator !=(XLAddress left, XLAddress right)
