@@ -5,12 +5,10 @@
 		<LangVersion>8.0</LangVersion>
 		<OutputType>Exe</OutputType>
 		<Version>0.95.2</Version>
-		<NoWarn>$(NoWarn);NU1605</NoWarn>
 		<Configurations>Debug;Release</Configurations>
 		<IsPackable>false</IsPackable>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-		<DefineConstants>$(DefineConstants);STRONGNAME</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\*.jpg" />
@@ -22,5 +20,6 @@
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
 	</ItemGroup>
+
 
 </Project>

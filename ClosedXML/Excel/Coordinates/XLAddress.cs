@@ -1,4 +1,3 @@
-using ClosedXML.Extensions;
 using System;
 using System.Diagnostics;
 
@@ -7,6 +6,7 @@ namespace ClosedXML.Excel
     internal struct XLAddress : IXLAddress, IEquatable<XLAddress>
     {
         #region Static
+
         /// <summary>
         /// Create address without worksheet. For calculation only!
         /// </summary>
@@ -73,10 +73,10 @@ namespace ClosedXML.Excel
         #region Private fields
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool _fixedRow;
+        private readonly bool _fixedRow;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool _fixedColumn;
+        private readonly bool _fixedColumn;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly int _rowNumber;
@@ -298,11 +298,13 @@ namespace ClosedXML.Excel
 
         public static Boolean operator ==(XLAddress left, XLAddress right)
         {
+#pragma warning disable CA2013 // False positive
             if (ReferenceEquals(left, right))
             {
                 return true;
             }
             return !ReferenceEquals(left, null) && left.Equals(right);
+#pragma warning restore CA2013 // False positive
         }
 
         public static Boolean operator !=(XLAddress left, XLAddress right)

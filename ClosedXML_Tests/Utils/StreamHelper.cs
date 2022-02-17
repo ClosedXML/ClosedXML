@@ -157,9 +157,8 @@ namespace ClosedXML_Tests
             if (ignoreGuids)
                 s = RemoveGuids(s);
 
-            s = RemoveNonCodingXmlFormatDiff(s);
+            return RemoveNonCodingXmlFormatDiff(s);
 
-            return s;
         }
 
         private static string RemoveNonCodingXmlFormatDiff(string s)

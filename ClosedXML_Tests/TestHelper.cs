@@ -54,7 +54,7 @@ namespace ClosedXML_Tests
             }
         }
 
-        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string? expectedDiff = null)
+        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string expectedDiff = null)
                 where T : IXLExample, new()
         {
             // Make sure tests run on a deterministic culture
