@@ -9,7 +9,6 @@
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="..\.editorconfig" Link=".editorconfig" />
 		<None Update="test.xlsx">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

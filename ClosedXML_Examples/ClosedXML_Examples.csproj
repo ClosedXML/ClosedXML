@@ -18,10 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\.editorconfig" Link=".editorconfig" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />

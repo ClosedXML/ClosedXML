@@ -21,8 +21,8 @@ namespace ClosedXML_Tests
             using (var rightPackage = Package.Open(right, FileMode.Open, FileAccess.Read))
             {
                 bool v = PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
-                if (v)
 
+                if (v)
                     return v;
                 return v;
             }

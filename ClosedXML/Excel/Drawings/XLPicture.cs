@@ -6,7 +6,6 @@ using System.Diagnostics;
 
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace ClosedXML.Excel.Drawings
 {
@@ -14,7 +13,8 @@ namespace ClosedXML.Excel.Drawings
     internal class XLPicture : IXLPicture
     {
         private const String InvalidNameChars = @":\/?*[]";
-        private static IDictionary<XLPictureFormat, SKEncodedImageFormat> FormatMap;
+        private const int ImageQuality = 70;
+        private static readonly IDictionary<XLPictureFormat, SKEncodedImageFormat> FormatMap;
         private Int32 height;
         private Int32 id;
         private String name = string.Empty;
@@ -22,7 +22,6 @@ namespace ClosedXML.Excel.Drawings
 
         static XLPicture()
         {
-            var properties = typeof(SKEncodedImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
             List<SKEncodedImageFormat> SKEncodedImageFormatValues = Enum.GetValues(typeof(SKEncodedImageFormat)).OfType<SKEncodedImageFormat>().ToList();
 
             FormatMap = new Dictionary<XLPictureFormat, SKEncodedImageFormat>();
@@ -88,7 +87,7 @@ namespace ClosedXML.Excel.Drawings
             this.ImageStream = new MemoryStream();
 
             using (var bitmap = SKBitmap.Decode(codec))
-            using (var data = bitmap.Encode(codec.EncodedFormat, 70))
+            using (var data = bitmap.Encode(codec.EncodedFormat, ImageQuality))
             {
                 data.SaveTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);

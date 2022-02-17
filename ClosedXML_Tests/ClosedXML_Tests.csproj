@@ -32,12 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\.editorconfig" Link=".editorconfig" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
-		<ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
+	  <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
 	</ItemGroup>
 
 </Project>

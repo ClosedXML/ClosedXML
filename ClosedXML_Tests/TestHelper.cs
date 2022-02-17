@@ -54,7 +54,7 @@ namespace ClosedXML_Tests
             }
         }
 
-        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string? allowedDiff = null)
+        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string? expectedDiff = null)
                 where T : IXLExample, new()
         {
             // Make sure tests run on a deterministic culture
@@ -103,12 +103,12 @@ namespace ClosedXML_Tests
                         return;
                     }
 
-                    if (string.IsNullOrEmpty(allowedDiff))
+                    if (string.IsNullOrEmpty(expectedDiff))
                     {
                         Assert.Fail(formattedMessage);
                     }
 
-                    Assert.That(message, Is.EqualTo(allowedDiff));
+                    Assert.That(message, Is.EqualTo(expectedDiff), $"Actual diff '{message}' differs to expected diff '{expectedDiff}', file '{resourcePath}'");
                 }
             }
         }

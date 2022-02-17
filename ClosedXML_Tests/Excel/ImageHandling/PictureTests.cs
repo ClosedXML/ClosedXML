@@ -26,7 +26,7 @@ namespace ClosedXML_Tests
                 {
                     var picture = ws.AddPicture(bitmap, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
-                        .MoveTo(50, 50)
+                        .MoveTo(50.1f, 50.1f)
                         .WithSize(200, 200);
 
                     Assert.AreEqual(XLPictureFormat.Jpeg, picture.Format);
