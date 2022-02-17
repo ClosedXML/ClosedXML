@@ -47,8 +47,6 @@ namespace ClosedXML_Tests
 
         private readonly ResourceFileExtractor m_baseExtractor;
 
-        //private string ResourceFilePath { get; }
-
         #endregion Private fields
 
         #region Constructors

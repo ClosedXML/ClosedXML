@@ -15,23 +15,21 @@
 		<PackageReleaseNotes>$(LAST_COMMIT_MESSAGE)</PackageReleaseNotes>
 		<Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
 		<Copyright>MIT</Copyright>
+		<PackageIcon>Product.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/stesee/ClosedXML</PackageProjectUrl>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Configurations>Debug;Release</Configurations>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
 		<Optimize Condition="'$(GITHUB_ACTIONS)' == 'true'">true</Optimize>
 		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-		<DefineConstants>$(DefineConstants);RELEASE;STRONGNAME</DefineConstants>
+		<PackageIcon>Product.png</PackageIcon>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<RepositoryUrl>https://github.com/stesee/ClosedXML</RepositoryUrl>
+		<DebugType>embedded</DebugType>
 		<PackageReadmeFile>nugetReadme.md</PackageReadmeFile>
 		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
@@ -45,7 +43,7 @@
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\.editorconfig" Link=".editorconfig" />
+		<None Include="Product.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
