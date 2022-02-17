@@ -1,8 +1,9 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
+using SkiaSharp;
 using System;
-using System.Drawing;
+
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -21,7 +22,7 @@ namespace ClosedXML_Tests
                 var ws = wb.AddWorksheet("Sheet1");
 
                 using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
-                using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+                using (var bitmap = SKCodec.Create(resourceStream))
                 {
                     var picture = ws.AddPicture(bitmap, "MyPicture")
                         .WithPlacement(XLPicturePlacement.FreeFloating)
@@ -133,7 +134,6 @@ namespace ClosedXML_Tests
             }
         }
 
-
         [Test]
         public void CanScaleImage()
         {
@@ -241,7 +241,7 @@ namespace ClosedXML_Tests
         public void XLMarkerTests()
         {
             IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
-            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10), new Point(100, 0));
+            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10), new SKPoint(100, 0));
 
             Assert.AreEqual(10, firstMarker.ColumnNumber);
             Assert.AreEqual(1, firstMarker.RowNumber);

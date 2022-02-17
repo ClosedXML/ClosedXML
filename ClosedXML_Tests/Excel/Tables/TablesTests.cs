@@ -137,7 +137,7 @@ namespace ClosedXML_Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-                string columnName = "Line1" + Environment.NewLine + "Line2";
+                string columnName = "Line1" + XLConstants.NewLine + "Line2";
                 ws.FirstCell().SetValue(columnName)
                     .CellBelow().SetValue("A");
                 ws.RangeUsed().CreateTable();
@@ -161,7 +161,7 @@ namespace ClosedXML_Tests.Excel
                 IXLWorksheet ws = wb.Worksheets.Add("Test");
 
                 var dt = new DataTable();
-                string columnName = "Line1" + Environment.NewLine + "Line2";
+                string columnName = "Line1" + XLConstants.NewLine + "Line2";
                 dt.Columns.Add(columnName);
 
                 DataRow dr = dt.NewRow();

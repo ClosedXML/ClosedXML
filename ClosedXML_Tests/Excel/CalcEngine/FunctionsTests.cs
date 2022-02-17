@@ -1,11 +1,9 @@
-using System;
 using ClosedXML.Excel;
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
+using System;
 
 namespace ClosedXML_Tests.Excel.CalcEngine
 {
-
     [TestFixture]
     public class FunctionsTests
     {
@@ -30,7 +28,7 @@ namespace ClosedXML_Tests.Excel.CalcEngine
         {
             Object actual;
 
-            actual = XLWorkbook.EvaluateExpr(String.Format(@"Clean(""A{0}B"")", Environment.NewLine));
+            actual = XLWorkbook.EvaluateExpr(String.Format(@"Clean(""A{0}B"")", XLConstants.NewLine));
             Assert.AreEqual("AB", actual);
         }
 
@@ -180,7 +178,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
 
-
             Object actual;
 
             ws.Cell("A5").FormulaA1 = "MDeterm(A1:B2)";
@@ -206,7 +203,6 @@ namespace ClosedXML_Tests.Excel.CalcEngine
             ws.Cell("A1").SetValue(1).CellRight().SetValue(2).CellRight().SetValue(1);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
             ws.Cell("A3").SetValue(0).CellRight().SetValue(2).CellRight().SetValue(0);
-
 
             Object actual;
 

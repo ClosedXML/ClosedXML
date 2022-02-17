@@ -1,9 +1,9 @@
 // Keep this file CodeMaid organised and cleaned
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
+
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +14,7 @@ namespace ClosedXML.Excel.Drawings
     internal class XLPicture : IXLPicture
     {
         private const String InvalidNameChars = @":\/?*[]";
-        private static IDictionary<XLPictureFormat, ImageFormat> FormatMap;
+        private static IDictionary<XLPictureFormat, SKEncodedImageFormat> FormatMap;
         private Int32 height;
         private Int32 id;
         private String name = string.Empty;
@@ -22,20 +22,23 @@ namespace ClosedXML.Excel.Drawings
 
         static XLPicture()
         {
-            var properties = typeof(ImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
-            FormatMap = Enum.GetValues(typeof(XLPictureFormat))
-                .Cast<XLPictureFormat>()
-                .Where(pf => properties.Any(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)))
-                .ToDictionary(
-                    pf => pf,
-                    pf => properties.Single(pi => pi.Name.Equals(pf.ToString(), StringComparison.OrdinalIgnoreCase)).GetValue(null, null) as ImageFormat
-                );
+            var properties = typeof(SKEncodedImageFormat).GetProperties(BindingFlags.Static | BindingFlags.Public);
+            List<SKEncodedImageFormat> SKEncodedImageFormatValues = Enum.GetValues(typeof(SKEncodedImageFormat)).OfType<SKEncodedImageFormat>().ToList();
+
+            FormatMap = new Dictionary<XLPictureFormat, SKEncodedImageFormat>();
+
+            foreach (var xlpPiscutreFormat in Enum.GetValues(typeof(XLPictureFormat)))
+            {
+                var xlpPiscutreFormatName = xlpPiscutreFormat.ToString();
+                var mathcingSKEncodedImageFormat = SKEncodedImageFormatValues.FirstOrDefault(value => value.ToString().Equals(xlpPiscutreFormatName, StringComparison.OrdinalIgnoreCase));
+                FormatMap.Add((XLPictureFormat)xlpPiscutreFormat, mathcingSKEncodedImageFormat);
+            }
         }
 
         internal XLPicture(IXLWorksheet worksheet, Stream stream)
             : this(worksheet)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream == null) { throw new ArgumentNullException(nameof(stream)); }
 
             this.ImageStream = new MemoryStream();
             {
@@ -43,10 +46,11 @@ namespace ClosedXML.Excel.Drawings
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
-                using (var bitmap = new Bitmap(ImageStream))
+                var codec = SKCodec.Create(this.ImageStream, out var result);
+                using (var bitmap = SKBitmap.Decode(codec))
                 {
-                    if (FormatMap.Values.Select(f => f.Guid).Contains(bitmap.RawFormat.Guid))
-                        this.Format = FormatMap.Single(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid)).Key;
+                    if (FormatMap.Values.Contains(codec.EncodedFormat))
+                        this.Format = FormatMap.Single(f => f.Value.Equals(codec.EncodedFormat)).Key;
 
                     DeduceDimensionsFromBitmap(bitmap);
                 }
@@ -65,10 +69,11 @@ namespace ClosedXML.Excel.Drawings
                 stream.Position = 0;
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
+                var codec = SKCodec.Create(ImageStream, out var result);
 
-                using (var bitmap = new Bitmap(ImageStream))
+                using (var bitmap = SKBitmap.Decode(codec))
                 {
-                    if (FormatMap.TryGetValue(this.Format, out ImageFormat imageFormat) && imageFormat.Guid != bitmap.RawFormat.Guid)
+                    if (FormatMap.TryGetValue(this.Format, out var imageFormat) && imageFormat != codec.EncodedFormat)
                         throw new ArgumentException("The picture format in the stream and the parameter don't match");
 
                     DeduceDimensionsFromBitmap(bitmap);
@@ -77,18 +82,22 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        internal XLPicture(IXLWorksheet worksheet, Bitmap bitmap)
-            : this(worksheet)
+        internal XLPicture(IXLWorksheet worksheet, SKCodec codec) : this(worksheet)
         {
-            if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
+            if (codec == null) throw new ArgumentNullException(nameof(codec));
             this.ImageStream = new MemoryStream();
-            bitmap.Save(ImageStream, bitmap.RawFormat);
-            ImageStream.Seek(0, SeekOrigin.Begin);
-            DeduceDimensionsFromBitmap(bitmap);
 
-            var formats = FormatMap.Where(f => f.Value.Guid.Equals(bitmap.RawFormat.Guid));
+            using (var bitmap = SKBitmap.Decode(codec))
+            using (var data = bitmap.Encode(codec.EncodedFormat, 70))
+            {
+                data.SaveTo(ImageStream);
+                ImageStream.Seek(0, SeekOrigin.Begin);
+                DeduceDimensionsFromBitmap(bitmap);
+            }
+
+            var formats = FormatMap.Where(f => f.Value.Equals(codec.EncodedFormat));
             if (!formats.Any() || formats.Count() > 1)
-                throw new ArgumentException("Unsupported or unknown image format in bitmap");
+                throw new ArgumentException($"Unsupported or unknown image format '{codec.EncodedFormat}' in bitmap");
 
             this.Format = formats.Single().Key;
         }
@@ -154,7 +163,7 @@ namespace ClosedXML.Excel.Drawings
 
         public MemoryStream ImageStream { get; private set; }
 
-        public Int32 Left
+        public float Left
         {
             get { return Markers[XLMarkerPosition.TopLeft]?.Offset.X ?? 0; }
             set
@@ -162,7 +171,7 @@ namespace ClosedXML.Excel.Drawings
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the left-hand offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new Point(value, this.Top));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new SKPoint(value, this.Top));
             }
         }
 
@@ -186,7 +195,7 @@ namespace ClosedXML.Excel.Drawings
 
         public XLPicturePlacement Placement { get; set; }
 
-        public Int32 Top
+        public float Top
         {
             get { return Markers[XLMarkerPosition.TopLeft]?.Offset.Y ?? 0; }
             set
@@ -194,7 +203,7 @@ namespace ClosedXML.Excel.Drawings
                 if (this.Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the top offset, the placement should be FreeFloating");
 
-                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new Point(this.Left, value));
+                Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new SKPoint(this.Left, value));
             }
         }
 
@@ -278,12 +287,12 @@ namespace ClosedXML.Excel.Drawings
             return CopyTo(Worksheet);
         }
 
-        public Point GetOffset(XLMarkerPosition position)
+        public SKPoint GetOffset(XLMarkerPosition position)
         {
             return Markers[position].Offset;
         }
 
-        public IXLPicture MoveTo(Int32 left, Int32 top)
+        public IXLPicture MoveTo(float left, float top)
         {
             this.Placement = XLPicturePlacement.FreeFloating;
             this.Left = left;
@@ -298,10 +307,10 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset)
         {
-            return MoveTo(cell, new Point(xOffset, yOffset));
+            return MoveTo(cell, new SKPoint(xOffset, yOffset));
         }
 
-        public IXLPicture MoveTo(IXLCell cell, Point offset)
+        public IXLPicture MoveTo(IXLCell cell, SKPoint offset)
         {
             if (cell == null) throw new ArgumentNullException(nameof(cell));
             this.Placement = XLPicturePlacement.Move;
@@ -317,10 +326,10 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset)
         {
-            return MoveTo(fromCell, new Point(fromCellXOffset, fromCellYOffset), toCell, new Point(toCellXOffset, toCellYOffset));
+            return MoveTo(fromCell, new SKPoint(fromCellXOffset, fromCellYOffset), toCell, new SKPoint(toCellXOffset, toCellYOffset));
         }
 
-        public IXLPicture MoveTo(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset)
+        public IXLPicture MoveTo(IXLCell fromCell, SKPoint fromOffset, IXLCell toCell, SKPoint toOffset)
         {
             if (fromCell == null) throw new ArgumentNullException(nameof(fromCell));
             if (toCell == null) throw new ArgumentNullException(nameof(toCell));
@@ -414,29 +423,7 @@ namespace ClosedXML.Excel.Drawings
             name = value;
         }
 
-        private static ImageFormat FromMimeType(string mimeType)
-        {
-            var guid = ImageCodecInfo.GetImageDecoders().FirstOrDefault(c => c.MimeType.Equals(mimeType, StringComparison.OrdinalIgnoreCase))?.FormatID;
-            if (!guid.HasValue) return null;
-            var property = typeof(System.Drawing.Imaging.ImageFormat).GetProperties(BindingFlags.Public | BindingFlags.Static)
-                .FirstOrDefault(pi => (pi.GetValue(null, null) as ImageFormat).Guid.Equals(guid.Value));
-
-            if (property == null) return null;
-            return (property.GetValue(null, null) as ImageFormat);
-        }
-
-        private static string GetMimeType(Image i)
-        {
-            var imgguid = i.RawFormat.Guid;
-            foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageDecoders())
-            {
-                if (codec.FormatID == imgguid)
-                    return codec.MimeType;
-            }
-            return "image/unknown";
-        }
-
-        private void DeduceDimensionsFromBitmap(Bitmap bitmap)
+        private void DeduceDimensionsFromBitmap(SKBitmap bitmap)
         {
             this.OriginalWidth = bitmap.Width;
             this.OriginalHeight = bitmap.Height;

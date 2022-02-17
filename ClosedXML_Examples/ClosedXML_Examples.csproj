@@ -1,43 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net48;net6.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(OS)' != 'Windows_NT' ">net6.0</TargetFrameworks>
+		<LangVersion>8.0</LangVersion>
+		<OutputType>Exe</OutputType>
+		<Version>0.95.2</Version>
+		<NoWarn>$(NoWarn);NU1605</NoWarn>
+		<Configurations>Debug;Release</Configurations>
+		<IsPackable>false</IsPackable>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+		<DefineConstants>$(DefineConstants);STRONGNAME</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\*.jpg" />
+		<EmbeddedResource Include="Resources\*.png" />
+	</ItemGroup>
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net48</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <OutputType>Exe</OutputType>
-    <Version>0.95.2</Version>
-    <NoWarn>$(NoWarn);NU1605</NoWarn>
-    <Configurations>Debug;Release;Release.Signed</Configurations>
-    <IsPackable>false</IsPackable>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>$(DefineConstants);STRONGNAME</DefineConstants>
-  </PropertyGroup>
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
-    <DefineConstants>$(DefineConstants);_NETSTANDARD_;_NETSTANDARD2_0_</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET40_</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <DefineConstants>$(DefineConstants);_NETFRAMEWORK_;_NET46_</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\*.jpg" />
-    <EmbeddedResource Include="Resources\*.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
-    <PackageReference Include="morelinq" Version="3.3.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
+		<PackageReference Include="morelinq" Version="3.3.2" />
+	</ItemGroup>
 
 </Project>

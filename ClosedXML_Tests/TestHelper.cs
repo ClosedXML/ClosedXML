@@ -42,7 +42,8 @@ namespace ClosedXML_Tests
         // the columns widths after AdjustToContents() will
         // cause the tests to fail.
         // Therefore we ignore the width attribute when running on Unix
-        public static bool StripColumnWidths { get { return IsRunningOnUnix; } }
+        public static bool StripColumnWidths
+        { get { return IsRunningOnUnix; } }
 
         public static bool IsRunningOnUnix
         {
@@ -53,7 +54,7 @@ namespace ClosedXML_Tests
             }
         }
 
-        public static void RunTestExample<T>(string filePartName, bool evaluateFormulae = false)
+        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string? allowedDiff = null)
                 where T : IXLExample, new()
         {
             // Make sure tests run on a deterministic culture
@@ -76,13 +77,17 @@ namespace ClosedXML_Tests
             //Run test
             example.Create(filePath1);
             using (var wb = new XLWorkbook(filePath1))
-                wb.SaveAs(filePath2, validate: true, evaluateFormulae);
+                wb.SaveAs(filePath2, validate: true, evaluateFormula);
 
             // Also load from template and save it again - but not necessary to test against reference file
             // We're just testing that it can save.
             using (var ms = new MemoryStream())
             using (var wb = XLWorkbook.OpenFromTemplate(filePath1))
-                wb.SaveAs(ms, validate: true, evaluateFormulae);
+                wb.SaveAs(ms, validate: true, evaluateFormula);
+
+            // Uncomment to replace expectation running .net6.0,
+            //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", "Examples", filePartName.Replace("\\", "/")));
+            //File.Copy(filePath2, expectedFileInVsSolution, true);
 
             if (CompareWithResources)
             {
@@ -91,12 +96,19 @@ namespace ClosedXML_Tests
                 using (var streamActual = File.OpenRead(filePath2))
                 {
                     var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
-                    var formattedMessage =
-                        String.Format(
-                            "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
-                            filePath2, resourcePath, message);
+                    var formattedMessage = $"Actual file is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
 
-                    Assert.IsTrue(success, formattedMessage);
+                    if (success)
+                    {
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(allowedDiff))
+                    {
+                        Assert.Fail(formattedMessage);
+                    }
+
+                    Assert.That(message, Is.EqualTo(allowedDiff));
                 }
             }
         }
@@ -128,7 +140,7 @@ namespace ClosedXML_Tests
                 {
                     var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
                     var formattedMessage =
-                        String.Format(
+                        string.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
                             filePath2, resourcePath, message);
 

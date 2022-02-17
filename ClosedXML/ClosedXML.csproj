@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<LangVersion>8.0</LangVersion>
 		<AssemblyName>ClosedXML</AssemblyName>
 		<PackageId>DocumentPartner.ClosedXML</PackageId>
@@ -32,16 +31,9 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 	</PropertyGroup>
-
 	<ItemGroup>
 		<None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
-
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Fody" Version="6.6.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -50,13 +42,14 @@
 		<PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<None Include="Product.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
 		<PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<None Include="Product.png" Pack="true" PackagePath="\" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="SkiaSharp" Version="2.80.2" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
 	</ItemGroup>
 </Project>

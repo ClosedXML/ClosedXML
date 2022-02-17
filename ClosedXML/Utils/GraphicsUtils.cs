@@ -1,31 +1,23 @@
+using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace ClosedXML.Utils
 {
     internal static class GraphicsUtils
     {
-        [ThreadStatic]
-        private static Graphics threadLocalGraphics;
-
-        internal static Graphics Graphics
+        public static SKRect MeasureString(string text, SKTypeface fontName)
         {
-            get
+            using (var paint = new SKPaint())
             {
-                if (threadLocalGraphics == null)
-                {
-                    var image = new Bitmap(1, 1);
-                    threadLocalGraphics = Graphics.FromImage(image);
-                }
-                return threadLocalGraphics;
-            }
-        }
+                paint.Typeface = fontName;
 
-        private static StringFormat defaultStringFormat = StringFormat.GenericTypographic;
-        public static SizeF MeasureString(string s, Font font)
-        {
-            SizeF result = Graphics.MeasureString(s, font, Int32.MaxValue, defaultStringFormat);
-            return result;
+                // Size: 12px
+                paint.TextSize = 12f;
+
+                var skBounds = SKRect.Empty;
+                var textWidth = paint.MeasureText(text.AsSpan(), ref skBounds);
+                return skBounds;
+            }
         }
     }
 }

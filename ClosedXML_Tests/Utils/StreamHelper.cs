@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace ClosedXML_Tests
 {
@@ -156,7 +157,39 @@ namespace ClosedXML_Tests
             if (ignoreGuids)
                 s = RemoveGuids(s);
 
+            s = RemoveNonCodingXmlFormatDiff(s);
+
             return s;
+        }
+
+        private static string RemoveNonCodingXmlFormatDiff(string s)
+        {
+            try
+            {
+                var original = XDocument.Parse(s);
+
+                var normalized = new XDocument(original);
+
+                string v = normalized.ToString();
+                return v;
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                if (ex.Message.Contains("Data at the root level is invalid."))
+                {
+                    return s;
+                }
+
+                if (ex.Message.Contains("hexadecimal value 0x00, is an invalid character."))
+                {
+                    return s;
+                }
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private static IEnumerable<KeyValuePair<string, Regex>> uriSpecificIgnores = new List<KeyValuePair<string, Regex>>()

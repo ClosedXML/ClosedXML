@@ -12,6 +12,7 @@ using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.VariantTypes;
 using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -1227,52 +1228,52 @@ namespace ClosedXML.Excel
             light1Color1.AppendChild(systemColor2);
 
             var dark2Color1 = new Dark2Color();
-            var rgbColorModelHex1 = new RgbColorModelHex { Val = Theme.Text2.Color.ToHex().Substring(2) };
+            var rgbColorModelHex1 = new RgbColorModelHex { Val = (Theme.Text2.Color.ToHex()).Substring(2) };
 
             dark2Color1.AppendChild(rgbColorModelHex1);
 
             var light2Color1 = new Light2Color();
-            var rgbColorModelHex2 = new RgbColorModelHex { Val = Theme.Background2.Color.ToHex().Substring(2) };
+            var rgbColorModelHex2 = new RgbColorModelHex { Val = (Theme.Background2.Color.ToHex()).Substring(2) };
 
             light2Color1.AppendChild(rgbColorModelHex2);
 
             var accent1Color1 = new Accent1Color();
-            var rgbColorModelHex3 = new RgbColorModelHex { Val = Theme.Accent1.Color.ToHex().Substring(2) };
+            var rgbColorModelHex3 = new RgbColorModelHex { Val = (Theme.Accent1.Color.ToHex()).Substring(2) };
 
             accent1Color1.AppendChild(rgbColorModelHex3);
 
             var accent2Color1 = new Accent2Color();
-            var rgbColorModelHex4 = new RgbColorModelHex { Val = Theme.Accent2.Color.ToHex().Substring(2) };
+            var rgbColorModelHex4 = new RgbColorModelHex { Val = (Theme.Accent2.Color.ToHex()).Substring(2) };
 
             accent2Color1.AppendChild(rgbColorModelHex4);
 
             var accent3Color1 = new Accent3Color();
-            var rgbColorModelHex5 = new RgbColorModelHex { Val = Theme.Accent3.Color.ToHex().Substring(2) };
+            var rgbColorModelHex5 = new RgbColorModelHex { Val = (Theme.Accent3.Color.ToHex()).Substring(2) };
 
             accent3Color1.AppendChild(rgbColorModelHex5);
 
             var accent4Color1 = new Accent4Color();
-            var rgbColorModelHex6 = new RgbColorModelHex { Val = Theme.Accent4.Color.ToHex().Substring(2) };
+            var rgbColorModelHex6 = new RgbColorModelHex { Val = (Theme.Accent4.Color.ToHex()).Substring(2) };
 
             accent4Color1.AppendChild(rgbColorModelHex6);
 
             var accent5Color1 = new Accent5Color();
-            var rgbColorModelHex7 = new RgbColorModelHex { Val = Theme.Accent5.Color.ToHex().Substring(2) };
+            var rgbColorModelHex7 = new RgbColorModelHex { Val = (Theme.Accent5.Color.ToHex()).Substring(2) };
 
             accent5Color1.AppendChild(rgbColorModelHex7);
 
             var accent6Color1 = new Accent6Color();
-            var rgbColorModelHex8 = new RgbColorModelHex { Val = Theme.Accent6.Color.ToHex().Substring(2) };
+            var rgbColorModelHex8 = new RgbColorModelHex { Val = (Theme.Accent6.Color.ToHex()).Substring(2) };
 
             accent6Color1.AppendChild(rgbColorModelHex8);
 
             var hyperlink1 = new DocumentFormat.OpenXml.Drawing.Hyperlink();
-            var rgbColorModelHex9 = new RgbColorModelHex { Val = Theme.Hyperlink.Color.ToHex().Substring(2) };
+            var rgbColorModelHex9 = new RgbColorModelHex { Val = (Theme.Hyperlink.Color.ToHex()).Substring(2) };
 
             hyperlink1.AppendChild(rgbColorModelHex9);
 
             var followedHyperlinkColor1 = new FollowedHyperlinkColor();
-            var rgbColorModelHex10 = new RgbColorModelHex { Val = Theme.FollowedHyperlink.Color.ToHex().Substring(2) };
+            var rgbColorModelHex10 = new RgbColorModelHex { Val = (Theme.FollowedHyperlink.Color.ToHex()).Substring(2) };
 
             followedHyperlinkColor1.AppendChild(rgbColorModelHex10);
 
@@ -1938,7 +1939,7 @@ namespace ClosedXML.Excel
                 var tableColumn = new TableColumn
                 {
                     Id = columnId,
-                    Name = fieldName.Replace("_x000a_", "_x005f_x000a_").Replace(Environment.NewLine, "_x000a_")
+                    Name = fieldName.Replace("_x000a_", "_x005f_x000a_").Replace(XLConstants.NewLine, "_x000a_")
                 };
 
                 // https://github.com/ClosedXML/ClosedXML/issues/513
@@ -3330,7 +3331,7 @@ namespace ClosedXML.Excel
         // http://polymathprogrammer.com/2009/10/22/english-metric-units-and-open-xml/
         // http://archive.oreilly.com/pub/post/what_is_an_emu.html
         // https://en.wikipedia.org/wiki/Office_Open_XML_file_formats#DrawingML
-        private static Int64 ConvertToEnglishMetricUnits(Int32 pixels, Double resolution)
+        private static Int64 ConvertToEnglishMetricUnits(float pixels, Double resolution)
         {
             return Convert.ToInt64(914400L * pixels / resolution);
         }
@@ -3378,8 +3379,8 @@ namespace ClosedXML.Excel
             if (existingAnchor != null)
                 worksheetDrawing.RemoveChild(existingAnchor);
 
-            var extentsCx = ConvertToEnglishMetricUnits(pic.Width, GraphicsUtils.Graphics.DpiX);
-            var extentsCy = ConvertToEnglishMetricUnits(pic.Height, GraphicsUtils.Graphics.DpiY);
+            var extentsCx = ConvertToEnglishMetricUnits(pic.Width, 72);
+            var extentsCy = ConvertToEnglishMetricUnits(pic.Height, 72);
 
             var nvps = worksheetDrawing.Descendants<Xdr.NonVisualDrawingProperties>();
             var nvpId = nvps.Any() ?
@@ -3394,8 +3395,8 @@ namespace ClosedXML.Excel
                     var absoluteAnchor = new Xdr.AbsoluteAnchor(
                         new Xdr.Position
                         {
-                            X = ConvertToEnglishMetricUnits(pic.Left, GraphicsUtils.Graphics.DpiX),
-                            Y = ConvertToEnglishMetricUnits(pic.Top, GraphicsUtils.Graphics.DpiY)
+                            X = ConvertToEnglishMetricUnits(pic.Left, 72),
+                            Y = ConvertToEnglishMetricUnits(pic.Top, 72)
                         },
                         new Xdr.Extent
                         {
@@ -3432,18 +3433,18 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId((moveAndSizeFromMarker.ColumnNumber - 1).ToInvariantString()),
                         RowId = new Xdr.RowId((moveAndSizeFromMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.X, 72).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeFromMarker.Offset.Y, 72).ToInvariantString())
                     };
 
                     var moveAndSizeToMarker = pic.Markers[Drawings.XLMarkerPosition.BottomRight];
-                    if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"), new System.Drawing.Point(picture.Width, picture.Height));
+                    if (moveAndSizeToMarker == null) moveAndSizeToMarker = new Drawings.XLMarker(picture.Worksheet.Cell("A1"), new SKPoint(picture.Width, picture.Height));
                     tMark = new Xdr.ToMarker
                     {
                         ColumnId = new Xdr.ColumnId((moveAndSizeToMarker.ColumnNumber - 1).ToInvariantString()),
                         RowId = new Xdr.RowId((moveAndSizeToMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.X, 72).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveAndSizeToMarker.Offset.Y, 72).ToInvariantString())
                     };
 
                     var twoCellAnchor = new Xdr.TwoCellAnchor(
@@ -3479,8 +3480,8 @@ namespace ClosedXML.Excel
                     {
                         ColumnId = new Xdr.ColumnId((moveFromMarker.ColumnNumber - 1).ToInvariantString()),
                         RowId = new Xdr.RowId((moveFromMarker.RowNumber - 1).ToInvariantString()),
-                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, GraphicsUtils.Graphics.DpiX).ToInvariantString()),
-                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, GraphicsUtils.Graphics.DpiY).ToInvariantString())
+                        ColumnOffset = new Xdr.ColumnOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.X, 72).ToInvariantString()),
+                        RowOffset = new Xdr.RowOffset(ConvertToEnglishMetricUnits(moveFromMarker.Offset.Y, 72).ToInvariantString())
                     };
 
                     var oneCellAnchor = new Xdr.OneCellAnchor(
