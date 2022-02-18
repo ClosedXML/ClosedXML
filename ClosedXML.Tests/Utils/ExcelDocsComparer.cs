@@ -20,25 +20,14 @@ namespace ClosedXML.Tests
             using (var leftPackage = Package.Open(left, FileMode.Open, FileAccess.Read))
             using (var rightPackage = Package.Open(right, FileMode.Open, FileAccess.Read))
             {
-                bool v = PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
-
-                if (v)
-                    return v;
-                return v;
+                return PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
             }
         }
 
-        private static bool ExcludeMethod(Uri uri)
-        {
-            //Exclude service data
-            if (uri.OriginalString.EndsWith(".rels") ||
+        //Exclude service data
+        private static bool ExcludeMethod(Uri uri) =>
+            uri.OriginalString.EndsWith(".rels") ||
                 uri.OriginalString.EndsWith(".psmdcp") ||
-                uri.OriginalString.EndsWith("app.xml"))
-
-            {
-                return true;
-            }
-            return false;
-        }
+                uri.OriginalString.EndsWith("app.xml");
     }
 }
