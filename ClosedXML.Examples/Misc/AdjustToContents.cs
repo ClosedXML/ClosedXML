@@ -62,11 +62,11 @@ namespace ClosedXML.Examples.Misc
                     var c = ws4.Cell(1, (co / 5) + 2);
 
                     c.GetRichText().AddText("Text to adjust - " + co).SetBold();
-                    c.GetRichText().AddText(Environment.NewLine);
+                    c.GetRichText().AddText(XLConstants.NewLine);
                     c.GetRichText().AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(25);
-                    c.GetRichText().AddText(Environment.NewLine);
+                    c.GetRichText().AddText(XLConstants.NewLine);
                     c.GetRichText().AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(20);
-                    c.GetRichText().AddText(Environment.NewLine);
+                    c.GetRichText().AddText(XLConstants.NewLine);
                     c.GetRichText().AddText("Hello").SetBold();
                     c.Style.Alignment.SetTextRotation(co);
                 }
@@ -87,11 +87,11 @@ namespace ClosedXML.Examples.Misc
                 {
                     var c = ws5.Cell((ro / 5) + 2, 1);
                     c.GetRichText().AddText("Text to adjust - " + ro).SetBold();
-                    c.GetRichText().AddText(Environment.NewLine);
+                    c.GetRichText().AddText(XLConstants.NewLine);
                     c.GetRichText().AddText("World!").SetBold().SetFontColor(XLColor.Blue).SetFontSize(10);
-                    c.GetRichText().AddText(Environment.NewLine);
+                    c.GetRichText().AddText(XLConstants.NewLine);
                     c.GetRichText().AddText("Hello Cruel and unsusual world").SetBold().SetFontSize(15);
-                    c.GetRichText().AddText(Environment.NewLine);
+                    c.GetRichText().AddText(XLConstants.NewLine);
                     c.GetRichText().AddText("Hello").SetBold();
                     c.Style.Alignment.SetTextRotation(ro);
                 }

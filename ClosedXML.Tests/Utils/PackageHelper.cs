@@ -334,7 +334,7 @@ namespace ClosedXML.Tests
 
             if (compareToFirstDifference && pairs.Any(pair => pair.Value.Status != CompareStatus.Equal))
             {
-                goto EXIT;
+                return AgregateCompareResult(out message, pairs);
             }
 
             foreach (PartPair pair in pairs.Values)
@@ -368,13 +368,30 @@ namespace ClosedXML.Tests
                         pair.Status = CompareStatus.NonEqual;
                         if (compareToFirstDifference)
                         {
-                            goto EXIT;
+                            return AgregateCompareResult(out message, pairs);
                         }
                     }
                 }
             }
 
-        EXIT:
+            List<PartPair> sortedPairs = pairs.Values.ToList();
+            sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
+            var sbuilder = new StringBuilder();
+            foreach (PartPair pair in sortedPairs)
+            {
+                if (pair.Status == CompareStatus.Equal)
+                {
+                    continue;
+                }
+                sbuilder.AppendFormat("{0} :{1}", pair.Uri, pair.Status);
+                sbuilder.AppendLine();
+            }
+            message = sbuilder.ToString();
+            return message.Length == 0;
+        }
+
+        private static bool AgregateCompareResult(out string message, Dictionary<Uri, PartPair> pairs)
+        {
             List<PartPair> sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();

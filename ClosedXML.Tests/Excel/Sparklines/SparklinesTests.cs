@@ -727,8 +727,8 @@ namespace ClosedXML.Tests.Excel.Sparklines
                 Assert.IsTrue(group.HorizontalAxis.RightToLeft);
                 Assert.IsTrue(group.HorizontalAxis.DateAxis);
 
-                Assert.AreEqual(6.6, group.VerticalAxis.ManualMax, XLHelper.Epsilon);
-                Assert.AreEqual(1.2, group.VerticalAxis.ManualMin, XLHelper.Epsilon);
+                Assert.That(group.VerticalAxis.ManualMax, Is.EqualTo(6.6));
+                Assert.That(group.VerticalAxis.ManualMin, Is.EqualTo(1.2));
                 Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.VerticalAxis.MaxAxisType);
                 Assert.AreEqual(XLSparklineAxisMinMax.Custom, group.VerticalAxis.MinAxisType);
             }
@@ -893,7 +893,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
             axis.ManualMin = 100;
 
-            Assert.AreEqual(100, axis.ManualMin, XLHelper.Epsilon);
+            Assert.That(axis.ManualMin, Is.EqualTo(100));
             Assert.AreEqual(XLSparklineAxisMinMax.Custom, axis.MinAxisType);
         }
 
@@ -907,7 +907,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
             axis.ManualMax = 100;
 
-            Assert.AreEqual(100, axis.ManualMax, XLHelper.Epsilon);
+            Assert.That(axis.ManualMax, Is.EqualTo(100));
             Assert.AreEqual(XLSparklineAxisMinMax.Custom, axis.MaxAxisType);
         }
 

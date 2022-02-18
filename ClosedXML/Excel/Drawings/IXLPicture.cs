@@ -1,6 +1,7 @@
 // Keep this file CodeMaid organised and cleaned
+using SkiaSharp;
 using System;
-using System.Drawing;
+
 using System.IO;
 
 namespace ClosedXML.Excel.Drawings
@@ -21,7 +22,7 @@ namespace ClosedXML.Excel.Drawings
 
         MemoryStream ImageStream { get; }
 
-        Int32 Left { get; set; }
+        float Left { get; set; }
 
         String Name { get; set; }
 
@@ -31,7 +32,7 @@ namespace ClosedXML.Excel.Drawings
 
         XLPicturePlacement Placement { get; set; }
 
-        Int32 Top { get; set; }
+        float Top { get; set; }
 
         IXLCell TopLeftCell { get; }
 
@@ -57,21 +58,21 @@ namespace ClosedXML.Excel.Drawings
         /// <returns>A created copy of the picture.</returns>
         IXLPicture Duplicate();
 
-        Point GetOffset(XLMarkerPosition position);
+        SKPoint GetOffset(XLMarkerPosition position);
 
-        IXLPicture MoveTo(Int32 left, Int32 top);
+        IXLPicture MoveTo(float left, float top);
 
         IXLPicture MoveTo(IXLCell cell);
 
         IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset);
 
-        IXLPicture MoveTo(IXLCell cell, Point offset);
+        IXLPicture MoveTo(IXLCell cell, SKPoint offset);
 
         IXLPicture MoveTo(IXLCell fromCell, IXLCell toCell);
 
         IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset);
 
-        IXLPicture MoveTo(IXLCell fromCell, Point fromOffset, IXLCell toCell, Point toOffset);
+        IXLPicture MoveTo(IXLCell fromCell, SKPoint fromOffset, IXLCell toCell, SKPoint toOffset);
 
         IXLPicture Scale(Double factor, Boolean relativeToOriginal = false);
 

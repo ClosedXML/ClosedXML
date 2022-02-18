@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace ClosedXML.Tests
 {
@@ -156,18 +157,48 @@ namespace ClosedXML.Tests
             if (ignoreGuids)
                 s = RemoveGuids(s);
 
-            return s;
+            return RemoveNonCodingXmlFormatDiff(s);
+
         }
 
-        private static IEnumerable<KeyValuePair<string, Regex>> uriSpecificIgnores = new List<KeyValuePair<string, Regex>>()
+        private static string RemoveNonCodingXmlFormatDiff(string s)
+        {
+            try
+            {
+                var original = XDocument.Parse(s);
+
+                var normalized = new XDocument(original);
+
+                return normalized.ToString();
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                if (ex.Message.Contains("Data at the root level is invalid."))
+                {
+                    return s;
+                }
+
+                if (ex.Message.Contains("hexadecimal value 0x00, is an invalid character."))
+                {
+                    return s;
+                }
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private static readonly IEnumerable<KeyValuePair<string, Regex>> uriSpecificIgnores = new List<KeyValuePair<string, Regex>>()
         {
             // Remove dcterms elements
             new KeyValuePair<string, Regex>("/docProps/core.xml", new Regex(@"<dcterms:(\w+).*?<\/dcterms:\1>", RegexOptions.Compiled))
         };
 
-        private static Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
-        private static Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
-        private static Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);
+        private static readonly Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
+        private static readonly Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
+        private static readonly Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);
 
         private static String RemoveColumnWidths(String s)
         {
@@ -187,7 +218,7 @@ namespace ClosedXML.Tests
             return s;
         }
 
-        private static Regex guidRegex = new Regex(@"{[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}}", RegexOptions.Compiled | RegexOptions.Multiline);
+        private static readonly Regex guidRegex = new Regex(@"{[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}}", RegexOptions.Compiled | RegexOptions.Multiline);
 
         private static String RemoveGuids(String s)
         {

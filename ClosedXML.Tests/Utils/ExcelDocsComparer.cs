@@ -8,8 +8,8 @@ namespace ClosedXML.Tests
     {
         public static bool Compare(string left, string right, out string message)
         {
-            using (FileStream leftStream = File.OpenRead(left))
-            using (FileStream rightStream = File.OpenRead(right))
+            using (var leftStream = File.OpenRead(left))
+            using (var rightStream = File.OpenRead(right))
             {
                 return Compare(leftStream, rightStream, out message);
             }
@@ -17,10 +17,14 @@ namespace ClosedXML.Tests
 
         public static bool Compare(Stream left, Stream right, out string message)
         {
-            using (Package leftPackage = Package.Open(left, FileMode.Open, FileAccess.Read))
-            using (Package rightPackage = Package.Open(right, FileMode.Open, FileAccess.Read))
+            using (var leftPackage = Package.Open(left, FileMode.Open, FileAccess.Read))
+            using (var rightPackage = Package.Open(right, FileMode.Open, FileAccess.Read))
             {
-                return PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
+                bool v = PackageHelper.Compare(leftPackage, rightPackage, false, ExcludeMethod, out message);
+
+                if (v)
+                    return v;
+                return v;
             }
         }
 
@@ -28,7 +32,9 @@ namespace ClosedXML.Tests
         {
             //Exclude service data
             if (uri.OriginalString.EndsWith(".rels") ||
-                uri.OriginalString.EndsWith(".psmdcp"))
+                uri.OriginalString.EndsWith(".psmdcp") ||
+                uri.OriginalString.EndsWith("app.xml"))
+
             {
                 return true;
             }

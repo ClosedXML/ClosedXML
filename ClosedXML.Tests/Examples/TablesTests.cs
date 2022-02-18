@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Examples.Tables;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace ClosedXML.Tests.Examples
 {
@@ -9,7 +10,14 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void InsertingTables()
         {
-            TestHelper.RunTestExample<InsertingTables>(@"Tables\InsertingTables.xlsx");
+            var allowedDiff = "/xl/worksheets/sheet1.xml :NonEqual\n";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                allowedDiff = null;
+            }
+
+            TestHelper.RunTestExample<InsertingTables>(@"Tables\InsertingTables.xlsx", false, allowedDiff);
         }
 
         [Test]

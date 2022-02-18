@@ -2,7 +2,7 @@ using ClosedXML.Excel;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Spreadsheet;
 using NUnit.Framework;
-using Color = System.Drawing.Color;
+using SkiaSharp;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace ClosedXML.Tests.Excel
@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void ColorNamedVsHTML()
         {
-            Assert.IsTrue(XLColor.Black == XLColor.FromHtml("#000000"));
+            Assert.That(XLColor.Black, Is.EqualTo(XLColor.FromHtml("#FF000000")));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace ClosedXML.Tests.Excel
             XLColor color = ws.FirstCell().Style.Fill.BackgroundColor;
             Assert.AreEqual(XLColorType.Indexed, color.ColorType);
             Assert.AreEqual(64, color.Indexed);
-            Assert.AreEqual(Color.Transparent, color.Color);
+            Assert.AreEqual(SKColors.Transparent, color.Color);
         }
 
         [Test]

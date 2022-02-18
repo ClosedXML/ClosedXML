@@ -380,7 +380,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
                 cell.DataType = XLDataType.Number;
                 Assert.AreEqual(value, (double)cell.CachedValue, 1e-10);
-                Assert.AreEqual("0.15625", cell.GetFormattedString());
+                Assert.AreEqual("03:45", cell.GetFormattedString());
 
                 cell.DataType = XLDataType.TimeSpan;
                 Assert.AreEqual(TimeSpan.FromDays(value), (TimeSpan)cell.CachedValue);

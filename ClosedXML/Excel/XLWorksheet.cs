@@ -2,9 +2,9 @@ using ClosedXML.Excel.Caching;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
 using ClosedXML.Excel.Ranges.Index;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
@@ -1693,7 +1693,8 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        public IXLRanges MergedRanges { get { return Internals.MergedRanges; } }
+        public IXLRanges MergedRanges
+        { get { return Internals.MergedRanges; } }
 
         public IXLConditionalFormats ConditionalFormats { get; private set; }
 
@@ -1792,12 +1793,12 @@ namespace ClosedXML.Excel
             return Pictures.Add(stream, format, name);
         }
 
-        public IXLPicture AddPicture(Bitmap bitmap)
+        public IXLPicture AddPicture(SKCodec bitmap)
         {
             return Pictures.Add(bitmap);
         }
 
-        public IXLPicture AddPicture(Bitmap bitmap, string name)
+        public IXLPicture AddPicture(SKCodec bitmap, string name)
         {
             return Pictures.Add(bitmap, name);
         }

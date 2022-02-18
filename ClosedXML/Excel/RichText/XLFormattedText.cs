@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace ClosedXML.Excel
 {
-    internal class XLFormattedText<T>: IXLFormattedText<T>
+    internal class XLFormattedText<T> : IXLFormattedText<T>
     {
-        List<IXLRichString> _richTexts = new List<IXLRichString>();
+        private List<IXLRichString> _richTexts = new List<IXLRichString>();
 
         protected T Container;
-        readonly IXLFontBase _defaultFont;
+        private readonly IXLFontBase _defaultFont;
+
         public XLFormattedText(IXLFontBase defaultFont)
         {
             Length = 0;
@@ -29,18 +30,20 @@ namespace ClosedXML.Excel
         }
 
         public XLFormattedText(String text, IXLFontBase defaultFont)
-            :this(defaultFont)
+            : this(defaultFont)
         {
             AddText(text);
         }
 
-        public Int32 Count { get { return _richTexts.Count; } }
+        public Int32 Count
+        { get { return _richTexts.Count; } }
         public int Length { get; private set; }
 
         public IXLRichString AddText(String text)
         {
             return AddText(text, _defaultFont);
         }
+
         public IXLRichString AddText(String text, IXLFontBase font)
         {
             var richText = new XLRichString(text, font, this);
@@ -56,7 +59,7 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddNewLine()
         {
-            return AddText(Environment.NewLine);
+            return AddText(XLConstants.NewLine);
         }
 
         public IXLFormattedText<T> ClearText()
@@ -65,6 +68,7 @@ namespace ClosedXML.Excel
             Length = 0;
             return this;
         }
+
         public IXLFormattedText<T> ClearFont()
         {
             String text = Text;
@@ -84,6 +88,7 @@ namespace ClosedXML.Excel
         {
             return Substring(index, Length - index);
         }
+
         public IXLFormattedText<T> Substring(Int32 index, Int32 length)
         {
             if (index + 1 > Length || (Length - index + 1) < length || length <= 0)
@@ -139,27 +144,71 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Boolean Bold { set { _richTexts.ForEach(rt => rt.Bold = value); } }
-        public Boolean Italic { set { _richTexts.ForEach(rt => rt.Italic = value); } }
-        public XLFontUnderlineValues Underline { set { _richTexts.ForEach(rt => rt.Underline = value); } }
-        public Boolean Strikethrough { set { _richTexts.ForEach(rt => rt.Strikethrough = value); } }
-        public XLFontVerticalTextAlignmentValues VerticalAlignment { set { _richTexts.ForEach(rt => rt.VerticalAlignment = value); } }
-        public Boolean Shadow { set { _richTexts.ForEach(rt => rt.Shadow = value); } }
-        public Double FontSize { set { _richTexts.ForEach(rt => rt.FontSize = value); } }
-        public XLColor FontColor { set { _richTexts.ForEach(rt => rt.FontColor = value); } }
-        public String FontName { set { _richTexts.ForEach(rt => rt.FontName = value); } }
-        public XLFontFamilyNumberingValues FontFamilyNumbering { set { _richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
+        public Boolean Bold
+        { set { _richTexts.ForEach(rt => rt.Bold = value); } }
+        public Boolean Italic
+        { set { _richTexts.ForEach(rt => rt.Italic = value); } }
+        public XLFontUnderlineValues Underline
+        { set { _richTexts.ForEach(rt => rt.Underline = value); } }
+        public Boolean Strikethrough
+        { set { _richTexts.ForEach(rt => rt.Strikethrough = value); } }
+        public XLFontVerticalTextAlignmentValues VerticalAlignment
+        { set { _richTexts.ForEach(rt => rt.VerticalAlignment = value); } }
+        public Boolean Shadow
+        { set { _richTexts.ForEach(rt => rt.Shadow = value); } }
+        public Double FontSize
+        { set { _richTexts.ForEach(rt => rt.FontSize = value); } }
+        public XLColor FontColor
+        { set { _richTexts.ForEach(rt => rt.FontColor = value); } }
+        public String FontName
+        { set { _richTexts.ForEach(rt => rt.FontName = value); } }
+        public XLFontFamilyNumberingValues FontFamilyNumbering
+        { set { _richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
 
-        public IXLFormattedText<T> SetBold() { Bold = true; return this; }	public IXLFormattedText<T> SetBold(Boolean value) { Bold = value; return this; }
-        public IXLFormattedText<T> SetItalic() { Italic = true; return this; }	public IXLFormattedText<T> SetItalic(Boolean value) { Italic = value; return this; }
-        public IXLFormattedText<T> SetUnderline() { Underline = XLFontUnderlineValues.Single; return this; }	public IXLFormattedText<T> SetUnderline(XLFontUnderlineValues value) { Underline = value; return this; }
-        public IXLFormattedText<T> SetStrikethrough() { Strikethrough = true; return this; }	public IXLFormattedText<T> SetStrikethrough(Boolean value) { Strikethrough = value; return this; }
-        public IXLFormattedText<T> SetVerticalAlignment(XLFontVerticalTextAlignmentValues value) { VerticalAlignment = value; return this; }
-        public IXLFormattedText<T> SetShadow() { Shadow = true; return this; }	public IXLFormattedText<T> SetShadow(Boolean value) { Shadow = value; return this; }
-        public IXLFormattedText<T> SetFontSize(Double value) { FontSize = value; return this; }
-        public IXLFormattedText<T> SetFontColor(XLColor value) { FontColor = value; return this; }
-        public IXLFormattedText<T> SetFontName(String value) { FontName = value; return this; }
-        public IXLFormattedText<T> SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return this; }
+        public IXLFormattedText<T> SetBold()
+        { Bold = true; return this; }
+
+        public IXLFormattedText<T> SetBold(Boolean value)
+        { Bold = value; return this; }
+
+        public IXLFormattedText<T> SetItalic()
+        { Italic = true; return this; }
+
+        public IXLFormattedText<T> SetItalic(Boolean value)
+        { Italic = value; return this; }
+
+        public IXLFormattedText<T> SetUnderline()
+        { Underline = XLFontUnderlineValues.Single; return this; }
+
+        public IXLFormattedText<T> SetUnderline(XLFontUnderlineValues value)
+        { Underline = value; return this; }
+
+        public IXLFormattedText<T> SetStrikethrough()
+        { Strikethrough = true; return this; }
+
+        public IXLFormattedText<T> SetStrikethrough(Boolean value)
+        { Strikethrough = value; return this; }
+
+        public IXLFormattedText<T> SetVerticalAlignment(XLFontVerticalTextAlignmentValues value)
+        { VerticalAlignment = value; return this; }
+
+        public IXLFormattedText<T> SetShadow()
+        { Shadow = true; return this; }
+
+        public IXLFormattedText<T> SetShadow(Boolean value)
+        { Shadow = value; return this; }
+
+        public IXLFormattedText<T> SetFontSize(Double value)
+        { FontSize = value; return this; }
+
+        public IXLFormattedText<T> SetFontColor(XLColor value)
+        { FontColor = value; return this; }
+
+        public IXLFormattedText<T> SetFontName(String value)
+        { FontName = value; return this; }
+
+        public IXLFormattedText<T> SetFontFamilyNumbering(XLFontFamilyNumberingValues value)
+        { FontFamilyNumbering = value; return this; }
 
         public bool Equals(IXLFormattedText<T> other)
         {
@@ -176,14 +225,17 @@ namespace ClosedXML.Excel
             return _phonetics == null || Phonetics.Equals(other.Phonetics);
         }
 
-        public String Text { get { return ToString(); } }
+        public String Text
+        { get { return ToString(); } }
 
         private IXLPhonetics _phonetics;
-        public IXLPhonetics Phonetics 
+
+        public IXLPhonetics Phonetics
         {
             get { return _phonetics ?? (_phonetics = new XLPhonetics(_defaultFont)); }
         }
 
-        public Boolean HasPhonetics { get { return _phonetics != null; } }
+        public Boolean HasPhonetics
+        { get { return _phonetics != null; } }
     }
 }

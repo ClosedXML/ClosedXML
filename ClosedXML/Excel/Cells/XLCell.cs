@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
                 if (HasRichText)
                     return _richText.ToString();
 
-                return string.Empty == _cellValue ? FormulaA1 : _cellValue;
+                return string.IsNullOrEmpty(_cellValue) ? FormulaA1 : _cellValue;
             }
         }
 
@@ -221,7 +221,7 @@ namespace ClosedXML.Excel
             {
                 parsedValue = value.ObjectToInvariantString();
                 _dataType = XLDataType.Text;
-                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (parsedValue.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
 
                 parsed = true;
@@ -292,7 +292,7 @@ namespace ClosedXML.Excel
                 value = value.Substring(1, value.Length - 1);
 
                 _dataType = XLDataType.Text;
-                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (value.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
 
                 this.Style.SetIncludeQuotePrefix();
@@ -318,7 +318,7 @@ namespace ClosedXML.Excel
             else
             {
                 _dataType = XLDataType.Text;
-                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (value.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
             }
 
@@ -547,7 +547,7 @@ namespace ClosedXML.Excel
         private Object ParseCellValueFromString(String cellValue, XLDataType dataType, out String error)
         {
             error = "";
-            if ("" == cellValue)
+            if (string.IsNullOrEmpty(cellValue))
                 return "";
 
             if (dataType == XLDataType.Boolean)
@@ -925,7 +925,7 @@ namespace ClosedXML.Excel
                                 break;
 
                             case Boolean b:
-                                _cellValue = b ? "True" : "False";
+                                _cellValue = b ? "true" : "false";
                                 break;
 
                             default:
@@ -1311,8 +1311,11 @@ namespace ClosedXML.Excel
 
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
-            if (InnerText.Length > 0)
-                return false;
+            if (options.HasFlag(XLCellsUsedOptions.Contents))
+            {
+                if (InnerText.Length > 0)
+                    return false;
+            }
 
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats))
             {
@@ -1346,6 +1349,9 @@ namespace ClosedXML.Excel
                 return false;
 
             if (options.HasFlag(XLCellsUsedOptions.Sparklines) && HasSparkline)
+                return false;
+
+            if (options.HasFlag(XLCellsUsedOptions.DataType) && DataType != XLDataType.Text)
                 return false;
 
             return true;
@@ -2123,7 +2129,7 @@ namespace ClosedXML.Excel
                 parsedValue = value.ObjectToInvariantString();
 
                 _dataType = XLDataType.Text;
-                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (parsedValue.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
 
                 parsed = true;
@@ -2902,9 +2908,11 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula
+        { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
 
-        public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
+        public Boolean HasArrayFormula
+        { get { return FormulaA1.StartsWith("{"); } }
 
         public IXLRangeAddress FormulaReference { get; set; }
 

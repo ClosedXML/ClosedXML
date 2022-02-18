@@ -11,10 +11,10 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void FixNewLines()
         {
-            Assert.AreEqual("\n".FixNewLines(), Environment.NewLine);
-            Assert.AreEqual("\r\n".FixNewLines(), Environment.NewLine);
-            Assert.AreEqual("\rS\n".FixNewLines(), "\rS" + Environment.NewLine);
-            Assert.AreEqual("\r\n\n".FixNewLines(), Environment.NewLine + Environment.NewLine);
+            Assert.AreEqual("\n".FixNewLines(), XLConstants.NewLine);
+            Assert.AreEqual("\r\n".FixNewLines(), XLConstants.NewLine);
+            Assert.AreEqual("\rS\n".FixNewLines(), "\rS" + XLConstants.NewLine);
+            Assert.AreEqual("\r\n\n".FixNewLines(), XLConstants.NewLine + XLConstants.NewLine);
         }
 
         [Test]

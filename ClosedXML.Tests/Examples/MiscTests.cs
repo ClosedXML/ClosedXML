@@ -1,6 +1,7 @@
 using ClosedXML.Examples;
 using ClosedXML.Examples.Misc;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace ClosedXML.Tests.Examples
 {
@@ -22,7 +23,14 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void AdjustToContents()
         {
-            TestHelper.RunTestExample<AdjustToContents>(@"Misc\AdjustToContents.xlsx");
+            var allowedDiff = "/xl/worksheets/sheet1.xml :NonEqual\n/xl/worksheets/sheet4.xml :NonEqual\n/xl/worksheets/sheet5.xml :NonEqual\n";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                allowedDiff = null;
+            }
+
+            TestHelper.RunTestExample<AdjustToContents>(@"Misc\AdjustToContents.xlsx", false, allowedDiff);
         }
 
         [Test]

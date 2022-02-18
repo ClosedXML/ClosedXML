@@ -28,7 +28,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             Object actual;
 
-            actual = XLWorkbook.EvaluateExpr(String.Format(@"Clean(""A{0}B"")", Environment.NewLine));
+            actual = XLWorkbook.EvaluateExpr(String.Format(@"Clean(""A{0}B"")", XLConstants.NewLine));
             Assert.AreEqual("AB", actual);
         }
 

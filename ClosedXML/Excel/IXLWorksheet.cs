@@ -1,11 +1,12 @@
 using ClosedXML.Excel.Drawings;
+using SkiaSharp;
 using System;
-using System.Drawing;
 using System.IO;
 
 namespace ClosedXML.Excel
 {
-    public enum XLWorksheetVisibility { Visible, Hidden, VeryHidden }
+    public enum XLWorksheetVisibility
+    { Visible, Hidden, VeryHidden }
 
     public interface IXLWorksheet : IXLRangeBase, IXLProtectable<IXLSheetProtection, XLSheetProtectionElements>
     {
@@ -474,9 +475,9 @@ namespace ClosedXML.Excel
 
         IXLPicture AddPicture(Stream stream, XLPictureFormat format, String name);
 
-        IXLPicture AddPicture(Bitmap bitmap);
+        IXLPicture AddPicture(SKCodec bitmap);
 
-        IXLPicture AddPicture(Bitmap bitmap, String name);
+        IXLPicture AddPicture(SKCodec bitmap, String name);
 
         IXLPicture AddPicture(String imageFile);
 

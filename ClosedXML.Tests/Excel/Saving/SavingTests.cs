@@ -4,12 +4,13 @@ using ClosedXML.Tests.Utils;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
+using SkiaSharp;
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace ClosedXML.Tests.Excel.Saving
@@ -263,7 +264,8 @@ namespace ClosedXML.Tests.Excel.Saving
                     };
 
                     // Assert
-                    Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
                 }
                 finally
                 {
@@ -304,8 +306,8 @@ namespace ClosedXML.Tests.Excel.Saving
         {
             using (var ms = new MemoryStream())
             using (var wb = new XLWorkbook())
-            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
-            using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+            using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+            using (var bitmap = SKCodec.Create(resourceStream))
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("D4").Value = "Hello world.";
