@@ -15,6 +15,10 @@ namespace ClosedXML.Excel.Drawings
         private const String InvalidNameChars = @":\/?*[]";
         private const int ImageQuality = 70;
         private static readonly IDictionary<XLPictureFormat, SKEncodedImageFormat> FormatMap;
+
+        // TODO: can this be handlled without getting height etc. of image?
+        private bool unreadableImage = false;
+
         private Int32 height;
         private Int32 id;
         private String name = string.Empty;
@@ -46,13 +50,19 @@ namespace ClosedXML.Excel.Drawings
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
                 var codec = SKCodec.Create(this.ImageStream, out var result);
-                using (var bitmap = SKBitmap.Decode(codec))
+                if (codec != null)
                 {
-                    if (FormatMap.Values.Contains(codec.EncodedFormat))
-                        this.Format = FormatMap.Single(f => f.Value.Equals(codec.EncodedFormat)).Key;
+                    using (var bitmap = SKBitmap.Decode(codec))
+                    {
+                        if (FormatMap.Values.Contains(codec.EncodedFormat))
+                            this.Format = FormatMap.Single(f => f.Value.Equals(codec.EncodedFormat)).Key;
 
-                    DeduceDimensionsFromBitmap(bitmap);
+                        DeduceDimensionsFromBitmap(bitmap);
+                    }
                 }
+                else
+                    unreadableImage = true;
+
                 ImageStream.Seek(0, SeekOrigin.Begin);
             }
         }
@@ -69,14 +79,19 @@ namespace ClosedXML.Excel.Drawings
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
                 var codec = SKCodec.Create(ImageStream, out var result);
-
-                using (var bitmap = SKBitmap.Decode(codec))
+                if (codec != null)
                 {
-                    if (FormatMap.TryGetValue(this.Format, out var imageFormat) && imageFormat != codec.EncodedFormat)
-                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
+                    using (var bitmap = SKBitmap.Decode(codec))
+                    {
+                        if (FormatMap.TryGetValue(this.Format, out var imageFormat) && imageFormat != codec.EncodedFormat)
+                            throw new ArgumentException("The picture format in the stream and the parameter don't match");
 
-                    DeduceDimensionsFromBitmap(bitmap);
+                        DeduceDimensionsFromBitmap(bitmap);
+                    }
                 }
+                else
+                    unreadableImage = true;
+
                 ImageStream.Seek(0, SeekOrigin.Begin);
             }
         }
@@ -87,11 +102,13 @@ namespace ClosedXML.Excel.Drawings
             this.ImageStream = new MemoryStream();
 
             using (var bitmap = SKBitmap.Decode(codec))
-            using (var data = bitmap.Encode(codec.EncodedFormat, ImageQuality))
             {
-                data.SaveTo(ImageStream);
-                ImageStream.Seek(0, SeekOrigin.Begin);
-                DeduceDimensionsFromBitmap(bitmap);
+                using (var data = bitmap.Encode(codec.EncodedFormat, ImageQuality))
+                {
+                    data.SaveTo(ImageStream);
+                    ImageStream.Seek(0, SeekOrigin.Begin);
+                    DeduceDimensionsFromBitmap(bitmap);
+                }
             }
 
             var formats = FormatMap.Where(f => f.Value.Equals(codec.EncodedFormat));

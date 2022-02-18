@@ -12,7 +12,7 @@ namespace ClosedXML.Tests
     [TestFixture]
     public class XLWorksheetTests
     {
-        private readonly static char[] illegalWorksheetCharacters = "\u0000\u0003:\\/?*[]".ToCharArray();
+        private static readonly char[] illegalWorksheetCharacters = "\u0000\u0003:\\/?*[]".ToCharArray();
 
         [Test]
         public void ColumnCountTime()
@@ -714,7 +714,7 @@ namespace ClosedXML.Tests
         {
             using (var ms = new MemoryStream())
             using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable))
-                .GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                .GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
             using (var bitmap = SKCodec.Create(resourceStream))
             using (var wb1 = new XLWorkbook())
             {
