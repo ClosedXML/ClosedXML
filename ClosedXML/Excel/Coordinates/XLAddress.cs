@@ -298,7 +298,7 @@ namespace ClosedXML.Excel
 
         public static Boolean operator ==(XLAddress left, XLAddress right)
         {
-            return Object.Equals(left, right);
+            return object.Equals(left, right);
         }
 
         public static Boolean operator !=(XLAddress left, XLAddress right)
