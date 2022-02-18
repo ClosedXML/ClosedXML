@@ -8,7 +8,7 @@
 		<Configurations>Debug;Release</Configurations>
 		<IsPackable>false</IsPackable>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>..\ClosedXML.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\*.jpg" />

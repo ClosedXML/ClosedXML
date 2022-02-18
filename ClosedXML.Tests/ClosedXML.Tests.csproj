@@ -9,7 +9,7 @@
 		<Configurations>Debug;Release</Configurations>
 		<IsPackable>false</IsPackable>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>..\ClosedXML.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,15 +24,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="NUnit" Version="3.13.2" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
 		<PackageReference Include="System.Data.OleDb" Version="6.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\ClosedXML_Examples\ClosedXML_Examples.csproj" />
+	  <ProjectReference Include="..\ClosedXML.Examples\ClosedXML.Examples.csproj" />
 	</ItemGroup>
 
 </Project>

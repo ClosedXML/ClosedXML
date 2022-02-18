@@ -274,7 +274,7 @@ namespace ClosedXML.Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
-            cell.Comment.AddText("comment");
+            cell.GetComment().AddText("comment");
             var actual = cell.IsEmpty();
             var expected = false;
             Assert.AreEqual(expected, actual);
@@ -285,7 +285,7 @@ namespace ClosedXML.Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
-            cell.Comment.AddText("comment");
+            cell.GetComment().AddText("comment");
             cell.SetValue("value");
 
             var actual = cell.IsEmpty();
@@ -309,7 +309,7 @@ namespace ClosedXML.Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
-            cell.Comment.AddText("comment");
+            cell.GetComment().AddText("comment");
 
             var actual = cell.IsEmpty(options);
 
@@ -332,7 +332,7 @@ namespace ClosedXML.Tests
         {
             var ws = new XLWorkbook().Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
-            cell.Comment.AddText("comment");
+            cell.GetComment().AddText("comment");
             cell.SetValue("value");
 
             var actual = cell.IsEmpty(options);

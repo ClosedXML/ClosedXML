@@ -21,7 +21,7 @@ namespace ClosedXML.Tests
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
+                using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML.Examples.BasicTable)).GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
                 using (var bitmap = SKCodec.Create(resourceStream))
                 {
                     var picture = ws.AddPicture(bitmap, "MyPicture")

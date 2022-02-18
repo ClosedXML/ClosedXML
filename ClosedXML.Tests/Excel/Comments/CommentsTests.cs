@@ -213,7 +213,7 @@ namespace ClosedXML.Tests.Excel.Comments
                     var cellsWithComments2 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
                     Assert.That(cellsWithComments2, Is.Empty);
 
-                    a1.Comment.AddText("no comment");
+                    a1.GetComment().AddText("no comment");
 
                     //guard
                     var cellsWithComments3 = wb.Worksheets.SelectMany(_ => _.CellsUsed(XLCellsUsedOptions.Comments)).ToArray();
@@ -260,8 +260,8 @@ namespace ClosedXML.Tests.Excel.Comments
 
                 Assert.That(cellsWithComments.Length, Is.EqualTo(2));
 
-                Assert.That(cellsWithComments[0].Comment.Text, Is.EqualTo(@"normal Note"));
-                Assert.That(cellsWithComments[1].Comment.Text, Is.EqualTo("Author:\r\nboldAndUnderlinenormal bold italic normal"));
+                Assert.That(cellsWithComments[0].GetComment().Text, Is.EqualTo(@"normal Note"));
+                Assert.That(cellsWithComments[1].GetComment().Text, Is.EqualTo("Author:\r\nboldAndUnderlinenormal bold italic normal"));
 
                 cellsWithComments[0].Clear(XLClearOptions.Comments);
                 cellsWithComments[1].Clear(XLClearOptions.Comments);
@@ -281,7 +281,7 @@ namespace ClosedXML.Tests.Excel.Comments
                 var ws = wb.Worksheets.First();
                 var c = ws.FirstCellUsed();
 
-                Assert.AreEqual(c.Comment.Text, @"[Threaded comment]
+                Assert.AreEqual(c.GetComment().Text, @"[Threaded comment]
 
 Your version of Excel allows you to read this threaded comment; however, any edits to it will get removed if the file is opened in a newer version of Excel. Learn more: https://go.microsoft.com/fwlink/?linkid=870924
 
