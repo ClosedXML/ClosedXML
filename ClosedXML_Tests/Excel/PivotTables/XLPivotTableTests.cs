@@ -310,6 +310,7 @@ namespace ClosedXML_Tests
         [Test]
         public void BlankPivotTableField()
         {
+            var expectedFilePath = @"Other\PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx";
             using (var ms = new MemoryStream())
             {
                 TestHelper.CreateAndCompare(() =>
@@ -380,14 +381,20 @@ namespace ClosedXML_Tests
                         ptSheet.Columns().AdjustToContents();
                     }
 
+                    // Uncomment to replace expectation running .net6.0,
+                    //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
+                    //wb.SaveAs(expectedFileInVsSolution);
+
                     return wb;
-                }, @"Other\PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx");
+                }, expectedFilePath);
             }
         }
 
         [Test]
         public void SourceSheetWithWhitespace()
         {
+            var expectedFilePath = @"Other\PivotTableReferenceFiles\SourceSheetWithWhitespace\outputfile.xlsx";
+
             using (var ms = new MemoryStream())
             {
                 TestHelper.CreateAndCompare(() =>
@@ -445,8 +452,12 @@ namespace ClosedXML_Tests
 
                     ptSheet.Columns().AdjustToContents();
 
+                    // Uncomment to replace expectation running .net6.0,
+                    //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", expectedFilePath));
+                    //wb.SaveAs(expectedFileInVsSolution);
+
                     return wb;
-                }, @"Other\PivotTableReferenceFiles\SourceSheetWithWhitespace\outputfile.xlsx");
+                }, expectedFilePath);
             }
         }
 

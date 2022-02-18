@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -57,7 +57,7 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
-        public IXLPicture Add(Bitmap bitmap)
+        public IXLPicture Add(SKCodec bitmap)
         {
             var picture = new XLPicture(_worksheet, bitmap);
             _pictures.Add(picture);
@@ -65,7 +65,7 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
-        public IXLPicture Add(Bitmap bitmap, string name)
+        public IXLPicture Add(SKCodec bitmap, string name)
         {
             var picture = Add(bitmap);
             picture.Name = name;
@@ -155,6 +155,7 @@ namespace ClosedXML.Excel.Drawings
 
         internal IXLPicture Add(Stream stream, string name, int Id)
         {
+            stream.Position = 0;
             var picture = Add(stream) as XLPicture;
             picture.SetName(name);
             picture.Id = Id;

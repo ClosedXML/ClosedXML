@@ -1,7 +1,6 @@
-using System;
-using System.Drawing;
 using ClosedXML.Excel;
-
+using SkiaSharp;
+using System;
 
 namespace ClosedXML_Examples.Styles
 {
@@ -44,7 +43,7 @@ namespace ClosedXML_Examples.Styles
             ro++;
 
             // FromColor(Color color)
-            ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.FromColor(Color.Red);
+            ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.FromColor(SKColors.Red);
             ws.Cell(ro, 2).Value = "XLColor.FromColor(Color.Red)";
 
             ro++;
@@ -74,7 +73,6 @@ namespace ClosedXML_Examples.Styles
             // From Theme color with tint
             ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
             ws.Cell(ro, 2).Value = "XLColor.FromTheme(XLThemeColor.Accent1, 0.5)";
-
 
             ws.Columns().AdjustToContents();
 

@@ -1,8 +1,8 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
 using NUnit.Framework;
+using SkiaSharp;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -700,7 +700,7 @@ namespace ClosedXML_Tests
             using (var ms = new MemoryStream())
             using (var resourceStream = Assembly.GetAssembly(typeof(ClosedXML_Examples.BasicTable))
                 .GetManifestResourceStream("ClosedXML_Examples.Resources.SampleImage.jpg"))
-            using (var bitmap = Bitmap.FromStream(resourceStream) as Bitmap)
+            using (var bitmap = SKCodec.Create(resourceStream))
             using (var wb1 = new XLWorkbook())
             {
                 var ws1 = wb1.Worksheets.Add("Original");
@@ -1173,7 +1173,7 @@ namespace ClosedXML_Tests
         [TestCase("noactive_twoselected.xlsx")]
         public void FirstSheetIsActive_WhenNotSpecified(string fileName)
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NoActiveSheet\"+fileName)))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\NoActiveSheet\" + fileName)))
             using (var wb = new XLWorkbook(stream))
             {
                 Assert.IsTrue(wb.Worksheets.First().TabActive);

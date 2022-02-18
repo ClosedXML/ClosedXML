@@ -362,7 +362,9 @@ namespace ClosedXML_Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Sheet1");
+#pragma warning disable CS0618 // Type or member is obsolete, but still should be tested
                 wb.Protect(true, false);
+#pragma warning restore CS0618 // Type or member is obsolete, but still should be tested
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsFalse(wb.IsPasswordProtected);
@@ -409,7 +411,9 @@ namespace ClosedXML_Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Sheet1");
+#pragma warning disable CS0618 // Type or member is obsolete, but still should be tested
                 wb.Protect(true, false, "Abc@123");
+#pragma warning restore CS0618 // Type or member is obsolete, but still should be tested
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsTrue(wb.IsPasswordProtected);

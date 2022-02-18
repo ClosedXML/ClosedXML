@@ -1,5 +1,5 @@
+using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace ClosedXML.Excel
 {
@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
             HasValue = false;
         }
 
-        private XLColor(Color color) : this(new XLColorKey
+        private XLColor(SKColor color) : this(new XLColorKey
         {
             Color = color,
             ColorType = XLColorType.Color

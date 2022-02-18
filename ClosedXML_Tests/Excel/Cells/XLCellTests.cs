@@ -61,7 +61,9 @@ namespace ClosedXML_Tests
             ws.SparklineGroups.Add("B2", "C3:E3");
             ws.SparklineGroups.Add("F5", "C4:E4");
 
+#pragma warning disable CS0618 // Type or member is obsolete, but still should be tested
             var range = ws.RangeUsed(true).RangeAddress.ToString();
+#pragma warning restore CS0618 // Type or member is obsolete, but still should be tested
             Assert.AreEqual("B2:F5", range);
         }
 

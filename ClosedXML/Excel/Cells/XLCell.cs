@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
                 if (HasRichText)
                     return _richText.ToString();
 
-                return string.Empty == _cellValue ? FormulaA1 : _cellValue;
+                return string.IsNullOrEmpty(_cellValue) ? FormulaA1 : _cellValue;
             }
         }
 
@@ -257,7 +257,7 @@ namespace ClosedXML.Excel
             {
                 parsedValue = value.ObjectToInvariantString();
                 _dataType = XLDataType.Text;
-                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (parsedValue.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
 
                 parsed = true;
@@ -328,7 +328,7 @@ namespace ClosedXML.Excel
                 value = value.Substring(1, value.Length - 1);
 
                 _dataType = XLDataType.Text;
-                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (value.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
 
                 this.Style.SetIncludeQuotePrefix();
@@ -354,7 +354,7 @@ namespace ClosedXML.Excel
             else
             {
                 _dataType = XLDataType.Text;
-                if (value.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (value.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
             }
 
@@ -583,7 +583,7 @@ namespace ClosedXML.Excel
         private Object ParseCellValueFromString(String cellValue, XLDataType dataType, out String error)
         {
             error = "";
-            if ("" == cellValue)
+            if (string.IsNullOrEmpty(cellValue))
                 return "";
 
             if (dataType == XLDataType.Boolean)
@@ -2317,7 +2317,7 @@ namespace ClosedXML.Excel
                 parsedValue = value.ObjectToInvariantString();
 
                 _dataType = XLDataType.Text;
-                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                if (parsedValue.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
 
                 parsed = true;

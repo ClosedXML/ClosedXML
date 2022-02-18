@@ -1,6 +1,6 @@
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -171,7 +171,7 @@ namespace ClosedXML.Excel
 
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
-            var fontCache = new Dictionary<IXLFontBase, Font>();
+            var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
             Double colMaxWidth = minWidth;
 
@@ -194,7 +194,7 @@ namespace ClosedXML.Excel
 
                 Double thisWidthMax = 0;
                 Int32 textRotation = cellStyle.Alignment.TextRotation;
-                if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(Environment.NewLine))
+                if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(XLConstants.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
 
@@ -205,13 +205,13 @@ namespace ClosedXML.Excel
                         foreach (IXLRichString rt in c.RichText)
                         {
                             String formattedString = rt.Text;
-                            var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                            var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
                             Int32 arrCount = arr.Count();
                             for (Int32 i = 0; i < arrCount; i++)
                             {
                                 String s = arr[i];
                                 if (i < arrCount - 1)
-                                    s += Environment.NewLine;
+                                    s += XLConstants.NewLine;
                                 kpList.Add(new KeyValuePair<IXLFontBase, String>(rt, s));
                             }
                         }
@@ -219,13 +219,13 @@ namespace ClosedXML.Excel
                     else
                     {
                         String formattedString = c.GetFormattedString();
-                        var arr = formattedString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                        var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
                         Int32 arrCount = arr.Count();
                         for (Int32 i = 0; i < arrCount; i++)
                         {
                             String s = arr[i];
                             if (i < arrCount - 1)
-                                s += Environment.NewLine;
+                                s += XLConstants.NewLine;
                             kpList.Add(new KeyValuePair<IXLFontBase, String>(cellStyle.Font, s));
                         }
                     }
@@ -243,7 +243,7 @@ namespace ClosedXML.Excel
                         var f = kp.Key;
                         String formattedString = kp.Value;
 
-                        Int32 newLinePosition = formattedString.IndexOf(Environment.NewLine);
+                        Int32 newLinePosition = formattedString.IndexOf(XLConstants.NewLine);
                         if (textRotation == 0)
                         {
                             #region if (newLinePosition >= 0)

@@ -1,5 +1,5 @@
+using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace ClosedXML.Excel
 {
@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
             get { return Key.ColorType; }
         }
 
-        public Color Color
+        public SKColor Color
         {
             get
             {
@@ -52,7 +52,10 @@ namespace ClosedXML.Excel
 
                 if (ColorType == XLColorType.Indexed)
                     if (Indexed == TOOLTIPCOLORINDEX)
-                        return Color.FromArgb(255, Color.Black);
+                    {
+                        var tooltipColor = SKColors.Black.WithAlpha(255);
+                        return tooltipColor;
+                    }
                     else
                         return IndexedColors[Indexed].Color;
 
@@ -98,7 +101,7 @@ namespace ClosedXML.Excel
                 if (ColorType == XLColorType.Indexed)
                     throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
 
-                return Color.A / 255.0;
+                return Color.Alpha / 255.0;
             }
         }
 

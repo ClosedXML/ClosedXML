@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
                 (lastColorPosition >= 0 && !RichText.FontColor.Equals(XLColor.FromHtml("#" + prevText.Substring(lastColorPosition + 2, 6))))
                 || (lastColorPosition == -1 && !RichText.FontColor.Equals(wsFont.FontColor))
                 )
-                sb.Append("&K" + RichText.FontColor.Color.ToHex().Substring(2));
+                sb.Append("&K" + (RichText.FontColor.Color.ToHex()).Substring(2));
 
             sb.Append(RichText.Text);
 

@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Ap = DocumentFormat.OpenXml.ExtendedProperties;
 using Op = DocumentFormat.OpenXml.CustomProperties;
-using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ClosedXML.Excel
@@ -21,7 +20,7 @@ namespace ClosedXML.Excel
     using Ap;
     using Drawings;
     using Op;
-    using System.Drawing;
+    using SkiaSharp;
 
     public partial class XLWorkbook
     {
@@ -429,7 +428,7 @@ namespace ClosedXML.Excel
                             LoadFont(runProperties, rt);
                         }
 
-                        var texts = c.GetFirstChild<CommentText>().Elements<Text> ();
+                        var texts = c.GetFirstChild<CommentText>().Elements<Text>();
                         foreach (var text in texts)
                             xlComment.AddText(text.InnerText.FixNewLines());
 
@@ -1136,17 +1135,17 @@ namespace ClosedXML.Excel
                         picture.Placement = XLPicturePlacement.FreeFloating;
 
                         if (spPr?.Transform2D?.Extents?.Cx.HasValue ?? false)
-                            picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, GraphicsUtils.Graphics.DpiX);
+                            picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, 72);
 
                         if (spPr?.Transform2D?.Extents?.Cy.HasValue ?? false)
-                            picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, GraphicsUtils.Graphics.DpiY);
+                            picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, 72);
 
                         if (anchor is Xdr.AbsoluteAnchor)
                         {
                             var absoluteAnchor = anchor as Xdr.AbsoluteAnchor;
                             picture.MoveTo(
-                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, GraphicsUtils.Graphics.DpiX),
-                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, GraphicsUtils.Graphics.DpiY)
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, 72),
+                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, 72)
                             );
                         }
                         else if (anchor is Xdr.OneCellAnchor)
@@ -1171,8 +1170,8 @@ namespace ClosedXML.Excel
                                 if (shapeProperties != null)
                                 {
                                     picture.MoveTo(
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.X, GraphicsUtils.Graphics.DpiX),
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.Y, GraphicsUtils.Graphics.DpiY)
+                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.X, 72),
+                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.Y, 72)
                                     );
                                 }
                             }
@@ -1197,9 +1196,9 @@ namespace ClosedXML.Excel
             var column = Math.Min(XLHelper.MaxColumnNumber, Math.Max(1, Convert.ToInt32(marker.ColumnId.InnerText) + 1));
             return new XLMarker(
                 ws.Cell(row, column),
-                new Point(
-                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), GraphicsUtils.Graphics.DpiX),
-                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), GraphicsUtils.Graphics.DpiY)
+                new SKPoint(
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.ColumnOffset.InnerText), 72),
+                    ConvertFromEnglishMetricUnits(Convert.ToInt32(marker.RowOffset.InnerText), 72)
                 )
             );
         }
@@ -1243,7 +1242,7 @@ namespace ClosedXML.Excel
 
         private String GetTableColumnName(string name)
         {
-            return name.Replace("_x000a_", Environment.NewLine).Replace("_x005f_x000a_", "_x000a_");
+            return name.Replace("_x000a_", XLConstants.NewLine).Replace("_x005f_x000a_", "_x000a_");
         }
 
         // This may be part of XLHelper or XLColor
@@ -2688,8 +2687,8 @@ namespace ClosedXML.Excel
             }
 
             foreach (var slg in extensions
-                .Descendants<X14.SparklineGroups>()
-                .SelectMany(sparklineGroups => sparklineGroups.Descendants<X14.SparklineGroup>()))
+                .Descendants<DocumentFormat.OpenXml.Office2010.Excel.SparklineGroups>()
+                .SelectMany(sparklineGroups => sparklineGroups.Descendants<DocumentFormat.OpenXml.Office2010.Excel.SparklineGroup>()))
             {
                 var xlSparklineGroup = (ws.SparklineGroups as XLSparklineGroups).Add();
 
@@ -2728,7 +2727,7 @@ namespace ClosedXML.Excel
                 if (slg.MinAxisType != null) xlSparklineGroup.VerticalAxis.MinAxisType = slg.MinAxisType.Value.ToClosedXml();
                 if (slg.MaxAxisType != null) xlSparklineGroup.VerticalAxis.MaxAxisType = slg.MaxAxisType.Value.ToClosedXml();
 
-                slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
+                slg.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Sparklines>().SelectMany(sls => sls.Descendants<DocumentFormat.OpenXml.Office2010.Excel.Sparkline>())
                     .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
             }
         }

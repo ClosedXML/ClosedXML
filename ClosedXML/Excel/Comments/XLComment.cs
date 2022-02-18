@@ -37,7 +37,7 @@ namespace ClosedXML.Excel
         public IXLRichString AddSignature()
         {
             AddText(Author + ":").SetBold();
-            return AddText(Environment.NewLine);
+            return AddText(XLConstants.NewLine);
         }
 
         public void Delete()

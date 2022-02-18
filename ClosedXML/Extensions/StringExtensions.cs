@@ -47,12 +47,12 @@ namespace ClosedXML.Excel
 
         internal static String FixNewLines(this String value)
         {
-            return value.Contains("\n") ? RegexNewLine.Replace(value, Environment.NewLine) : value;
+            return value.Contains("\n") ? RegexNewLine.Replace(value, XLConstants.NewLine) : value;
         }
 
         internal static Boolean PreserveSpaces(this String value)
         {
-            return value.StartsWith(" ") || value.EndsWith(" ") || value.Contains(Environment.NewLine);
+            return value.StartsWith(" ") || value.EndsWith(" ") || value.Contains(XLConstants.NewLine);
         }
 
         internal static String ToCamel(this String value)
