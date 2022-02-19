@@ -19,9 +19,7 @@
 		<EmbeddedResource Include="Resource\Images\*.jpg" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-		<PackageReference Include="System.IO.Packaging" Version="6.0.0" />
-	</ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
