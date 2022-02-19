@@ -1,60 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
-		<LangVersion>8.0</LangVersion>
-		<AssemblyName>ClosedXML</AssemblyName>
-		<PackageId>DocumentPartner.ClosedXML</PackageId>
-		<Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash, Roman Brandstetter, Stefan Seeland</Authors>
-		<Owners>Francois Botha, Aleksei Pankratev</Owners>
-		<Product>ClosedXML</Product>
-		<Version Condition="'$(CURRENT_VERSION)' != ''">$(CURRENT_VERSION)</Version>
-		<Version Condition="'$(CURRENT_VERSION)' == ''">0.0.1</Version>
-		<AssemblyVersion>$(Version)</AssemblyVersion>
-		<FileVersion>$(Version)</FileVersion>
-		<PackageVersion>$(Version)</PackageVersion>
-		<PackageReleaseNotes>$(LAST_COMMIT_MESSAGE)</PackageReleaseNotes>
-		<Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
-		<Copyright>MIT</Copyright>
-		<PackageIcon>Product.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/stesee/ClosedXML</PackageProjectUrl>
-		<Configurations>Debug;Release</Configurations>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
-		<PackageIcon>Product.png</PackageIcon>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<RepositoryUrl>https://github.com/stesee/ClosedXML</RepositoryUrl>
-		<DebugType>embedded</DebugType>
-		<PackageReadmeFile>nugetReadme.md</PackageReadmeFile>
-		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<EnableNETAnalyzers>True</EnableNETAnalyzers>
-		<PackageTags>Excel XLSX OpenXml Windows Linux MacOs</PackageTags>
-		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-	  <Optimize>True</Optimize>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Fody" Version="6.6.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="Product.png" Pack="true" PackagePath="\" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
-		<PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
-		<PackageReference Include="SkiaSharp" Version="2.80.2" />
-		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
-	</ItemGroup>
+  <PropertyGroup>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net48;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT' ">netstandard2.0</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>ClosedXML</AssemblyName>
+    <PackageId>DocumentPartner.ClosedXML</PackageId>
+    <Authors>Francois Botha, Aleksei Pankratev, Manuel de Leon, Amir Ghezelbash, Roman Brandstetter, Stefan Seeland</Authors>
+    <Owners>Francois Botha, Aleksei Pankratev</Owners>
+    <Product>ClosedXML</Product>
+    <Version Condition="'$(CURRENT_VERSION)' != ''">$(CURRENT_VERSION)</Version>
+    <Version Condition="'$(CURRENT_VERSION)' == ''">0.0.1</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <PackageVersion>$(Version)</PackageVersion>
+    <PackageReleaseNotes>$(LAST_COMMIT_MESSAGE)</PackageReleaseNotes>
+    <Description>ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying OpenXML API.</Description>
+    <Copyright>MIT</Copyright>
+    <PackageIcon>Product.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/stesee/ClosedXML</PackageProjectUrl>
+    <Configurations>Debug;Release</Configurations>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+    <PackageIcon>Product.png</PackageIcon>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryUrl>https://github.com/stesee/ClosedXML</RepositoryUrl>
+    <DebugType>embedded</DebugType>
+    <PackageReadmeFile>nugetReadme.md</PackageReadmeFile>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <PackageTags>Excel XLSX OpenXml Windows Linux MacOs</PackageTags>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fody" Version="6.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Product.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
+    <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
+    <PackageReference Include="SkiaSharp" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
+  </ItemGroup>
 </Project>

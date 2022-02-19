@@ -16,7 +16,4 @@
 		<ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-		<PackageReference Include="System.IO.Packaging" Version="6.0.0" />
-	</ItemGroup>
 </Project>
