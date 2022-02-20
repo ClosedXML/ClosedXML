@@ -644,6 +644,29 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void SetDateTime_in_Regular_and_Strict_Mode()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var cell = ws.FirstCell() as XLCell;
+
+                //Test non-strict mode
+                cell.SetDateValue("1/1/2000");
+
+                Assert.AreEqual("36526", cell.Value);
+                Assert.AreEqual(DateTime.Parse("1/1/2000"), DateTime.FromOADate(double.Parse(cell.Value as string)));
+
+                //Test strict mode
+                cell.SetDateValue("30000");
+
+                Assert.AreEqual("30000", cell.Value);
+                Assert.AreEqual(DateTime.Parse("2/18/1982"), DateTime.FromOADate(double.Parse(cell.Value as string)));
+            }
+        }
+
+        [Test]
         public void SetDateOutOfRange()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-ZA");
