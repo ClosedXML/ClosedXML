@@ -2414,7 +2414,6 @@ namespace ClosedXML.Excel
             {
                 Name = pt.Name,
                 CacheId = cacheId,
-                DataCaption = "Values",
                 MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, false),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
                 PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
@@ -2441,6 +2440,20 @@ namespace ClosedXML.Excel
                 FieldPrintTitles = OpenXmlHelper.GetBooleanValue(pt.PrintTitles, false),
                 EnableDrill = OpenXmlHelper.GetBooleanValue(pt.EnableShowDetails, true)
             };
+
+            if (!String.IsNullOrEmpty(pt.GrandTotalCaption))
+            {
+                pivotTableDefinition.GrandTotalCaption = pt.GrandTotalCaption;
+            }
+
+            if (!String.IsNullOrEmpty(pt.DataCaption))
+            {
+                pivotTableDefinition.DataCaption = pt.DataCaption;
+            }
+            else
+            {
+                pivotTableDefinition.DataCaption = "Values";
+            }
 
             if (!String.IsNullOrEmpty(pt.ColumnHeaderCaption))
                 pivotTableDefinition.ColumnHeaderCaption = StringValue.FromString(pt.ColumnHeaderCaption);
