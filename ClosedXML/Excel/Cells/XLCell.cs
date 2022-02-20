@@ -570,6 +570,14 @@ namespace ClosedXML.Excel
             }
         }
 
+        internal void SetDateValue(string text)
+        {
+            if (Double.TryParse(text, XLHelper.NumberStyle, XLHelper.ParseCulture, out double doubleValue))
+                SetInternalCellValueString(doubleValue.ToInvariantString());
+            else
+                SetInternalCellValueString(DateTime.Parse(text).ToOADate().ToInvariantString());
+        }
+
         internal void SetDataTypeFast(XLDataType dataType)
         {
             this._dataType = dataType;
