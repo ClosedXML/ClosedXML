@@ -28,110 +28,49 @@ namespace ClosedXML.Excel
 
         public static string ToInvariantString<T>(this T value) where T : struct
         {
-            switch (value)
+            return value switch
             {
-                case sbyte v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case byte v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case short v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case ushort v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case int v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case uint v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case long v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case ulong v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case float v:
-                    // Specify precision explicitly for backward compatibility
-                    return v.ToString("G7", CultureInfo.InvariantCulture);
-
-                case double v:
-                    // Specify precision explicitly for backward compatibility
-                    return v.ToString("G15", CultureInfo.InvariantCulture);
-
-                case decimal v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case TimeSpan ts:
-                    return ts.ToString("c", CultureInfo.InvariantCulture);
-
-                case DateTime d:
-                    return d.ToString(CultureInfo.InvariantCulture);
-
-                default:
-                    return value.ToString();
-            }
+                sbyte v => v.ToString(CultureInfo.InvariantCulture),
+                byte v => v.ToString(CultureInfo.InvariantCulture),
+                short v => v.ToString(CultureInfo.InvariantCulture),
+                ushort v => v.ToString(CultureInfo.InvariantCulture),
+                int v => v.ToString(CultureInfo.InvariantCulture),
+                uint v => v.ToString(CultureInfo.InvariantCulture),
+                long v => v.ToString(CultureInfo.InvariantCulture),
+                ulong v => v.ToString(CultureInfo.InvariantCulture),
+                float v => v.ToString("G7", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+                double v => v.ToString("G15", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+                decimal v => v.ToString(CultureInfo.InvariantCulture),
+                TimeSpan ts => ts.ToString("c", CultureInfo.InvariantCulture),
+                DateTime d => d.ToString(CultureInfo.InvariantCulture),
+                bool b => b.ToString().ToLowerInvariant(),
+                _ => value.ToString(),
+            };
         }
 
         // This method may cause boxing of value types so it is better to replace its calls with
         // the generic version, where applicable
         public static string ObjectToInvariantString(this object value)
         {
-            if (value == null)
-                return string.Empty;
-
-            switch (value)
+            return value switch
             {
-                case sbyte v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case byte v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case short v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case ushort v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case int v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case uint v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case long v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case ulong v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case float v:
-                    // Specify precision explicitly for backward compatibility
-                    return v.ToString("G7", CultureInfo.InvariantCulture);
-
-                case double v:
-                    // Specify precision explicitly for backward compatibility
-                    return v.ToString("G15", CultureInfo.InvariantCulture);
-
-                case decimal v:
-                    return v.ToString(CultureInfo.InvariantCulture);
-
-                case TimeSpan ts:
-                    return ts.ToString("c", CultureInfo.InvariantCulture);
-
-                case DateTime d:
-                    return d.ToString(CultureInfo.InvariantCulture);
-
-                case Boolean b:
-                    return b.ToString(CultureInfo.InvariantCulture).ToLowerInvariant();
-
-                default:
-                    return value.ToString();
-            }
+                null => string.Empty,
+                sbyte v => v.ToString(CultureInfo.InvariantCulture),
+                byte v => v.ToString(CultureInfo.InvariantCulture),
+                short v => v.ToString(CultureInfo.InvariantCulture),
+                ushort v => v.ToString(CultureInfo.InvariantCulture),
+                int v => v.ToString(CultureInfo.InvariantCulture),
+                uint v => v.ToString(CultureInfo.InvariantCulture),
+                long v => v.ToString(CultureInfo.InvariantCulture),
+                ulong v => v.ToString(CultureInfo.InvariantCulture),
+                float v => v.ToString("G7", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+                double v => v.ToString("G15", CultureInfo.InvariantCulture), // Specify precision explicitly for backward compatibility
+                decimal v => v.ToString(CultureInfo.InvariantCulture),
+                TimeSpan ts => ts.ToString("c", CultureInfo.InvariantCulture),
+                DateTime d => d.ToString(CultureInfo.InvariantCulture),
+                bool b => b.ToString().ToLowerInvariant(),
+                _ => value.ToString(),
+            };
         }
     }
 }

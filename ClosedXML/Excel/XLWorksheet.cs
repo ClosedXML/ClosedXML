@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
 
             Pictures = new XLPictures(this);
             NamedRanges = new XLNamedRanges(this);
-            SheetView = new XLSheetView();
+            SheetView = new XLSheetView(this);
             Tables = new XLTables();
             Hyperlinks = new XLHyperlinks();
             DataValidations = new XLDataValidations(this);
@@ -99,9 +99,6 @@ namespace ClosedXML.Excel
         {
             get { return XLRangeType.Worksheet; }
         }
-
-        //private IXLStyle _style;
-        private const String InvalidNameChars = @":\/?*[]";
 
         public string LegacyDrawingId;
         public Boolean LegacyDrawingIsNew;
@@ -202,21 +199,7 @@ namespace ClosedXML.Excel
             {
                 if (_name == value) return;
 
-                if (String.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Worksheet names cannot be empty");
-
-                if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
-                    throw new ArgumentException("Worksheet names cannot contain any of the following characters: " +
-                                                InvalidNameChars);
-
-                if (value.Length > 31)
-                    throw new ArgumentException("Worksheet names cannot be more than 31 characters");
-
-                if (value.StartsWith("'", StringComparison.Ordinal))
-                    throw new ArgumentException("Worksheet names cannot start with an apostrophe");
-
-                if (value.EndsWith("'", StringComparison.Ordinal))
-                    throw new ArgumentException("Worksheet names cannot end with an apostrophe");
+                XLHelper.ValidateSheetName(value);
 
                 Workbook.WorksheetsInternal.Rename(_name, value);
                 _name = value;
@@ -347,18 +330,12 @@ namespace ClosedXML.Excel
 
         public IXLColumns Columns()
         {
-            var retVal = new XLColumns(this, StyleValue);
-            var columnList = new List<Int32>();
+            var columnMap = new HashSet<Int32>();
 
-            if (Internals.CellsCollection.Count > 0)
-                columnList.AddRange(Internals.CellsCollection.ColumnsUsed.Keys);
+            columnMap.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
+            columnMap.UnionWith(Internals.ColumnsCollection.Keys);
 
-            if (Internals.ColumnsCollection.Count > 0)
-                columnList.AddRange(Internals.ColumnsCollection.Keys.Where(c => !columnList.Contains(c)));
-
-            foreach (int c in columnList)
-                retVal.Add(Column(c));
-
+            var retVal = new XLColumns(this, StyleValue, columnMap.Select(Column));
             return retVal;
         }
 
@@ -413,18 +390,12 @@ namespace ClosedXML.Excel
 
         public IXLRows Rows()
         {
-            var retVal = new XLRows(this, StyleValue);
-            var rowList = new List<Int32>();
+            var rowMap = new HashSet<Int32>();
 
-            if (Internals.CellsCollection.Count > 0)
-                rowList.AddRange(Internals.CellsCollection.RowsUsed.Keys);
+            rowMap.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
+            rowMap.UnionWith(Internals.RowsCollection.Keys);
 
-            if (Internals.RowsCollection.Count > 0)
-                rowList.AddRange(Internals.RowsCollection.Keys.Where(r => !rowList.Contains(r)));
-
-            foreach (int r in rowList)
-                retVal.Add(Row(r));
-
+            var retVal = new XLRows(this, StyleValue, rowMap.Select(Row));
             return retVal;
         }
 
@@ -602,7 +573,9 @@ namespace ClosedXML.Excel
             return NamedRanges.NamedRange(rangeName);
         }
 
-        public IXLSheetView SheetView { get; private set; }
+        IXLSheetView IXLWorksheet.SheetView { get => SheetView; }
+
+        public XLSheetView SheetView { get; private set; }
 
         public IXLTables Tables { get; private set; }
 
@@ -624,6 +597,11 @@ namespace ClosedXML.Excel
         public IXLWorksheet CopyTo(String newSheetName, Int32 position)
         {
             return CopyTo(Workbook, newSheetName, position);
+        }
+
+        public IXLWorksheet CopyTo(XLWorkbook workbook)
+        {
+            return CopyTo(workbook, Name, workbook.WorksheetsInternal.Count + 1);
         }
 
         public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName)
@@ -651,12 +629,13 @@ namespace ClosedXML.Excel
             (targetSheet.PageSetup.Header as XLHeaderFooter).Changed = true;
             (targetSheet.PageSetup.Footer as XLHeaderFooter).Changed = true;
             targetSheet.Outline = new XLOutline(Outline);
-            targetSheet.SheetView = new XLSheetView(SheetView);
+            targetSheet.SheetView = new XLSheetView(targetSheet, SheetView);
             targetSheet.SelectedRanges.RemoveAll();
 
             Pictures.ForEach(picture => picture.CopyTo(targetSheet));
             NamedRanges.ForEach(nr => nr.CopyTo(targetSheet));
             Tables.Cast<XLTable>().ForEach(t => t.CopyTo(targetSheet, false));
+            PivotTables.ForEach(pt => pt.CopyTo(targetSheet.Cell(pt.TargetCell.Address.CastTo<XLAddress>().WithoutWorksheet())));
             ConditionalFormats.ForEach(cf => cf.CopyTo(targetSheet));
             SparklineGroups.CopyTo(targetSheet);
             MergedRanges.ForEach(mr => targetSheet.Range(((XLRangeAddress)mr.RangeAddress).WithoutWorksheet()).Merge());
@@ -1847,11 +1826,11 @@ namespace ClosedXML.Excel
         internal void SetValue<T>(T value, int ro, int co) where T : class
         {
             if (value == null)
-                this.Cell(ro, co).SetValue(String.Empty);
+                this.Cell(ro, co).SetValue(String.Empty, setTableHeader: true, checkMergedRanges: false);
             else if (value is IConvertible)
-                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)));
+                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)), setTableHeader: true, checkMergedRanges: false);
             else
-                this.Cell(ro, co).SetValue(value);
+                this.Cell(ro, co).SetValue(value, setTableHeader: true, checkMergedRanges: false);
         }
 
         /// <summary>
@@ -1949,10 +1928,8 @@ namespace ClosedXML.Excel
         {
             Internals.ColumnsCollection.Remove(columnNumber);
 
-            var columnsToMove = new List<Int32>();
-            columnsToMove.AddRange(
-                Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key));
-            foreach (int column in columnsToMove.OrderBy(c => c))
+            var columnsToMove = new List<Int32>(Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key).OrderBy(c => c));
+            foreach (int column in columnsToMove)
             {
                 Internals.ColumnsCollection.Add(column - 1, Internals.ColumnsCollection[column]);
                 Internals.ColumnsCollection.Remove(column);
@@ -1965,9 +1942,8 @@ namespace ClosedXML.Excel
         {
             Internals.RowsCollection.Remove(rowNumber);
 
-            var rowsToMove = new List<Int32>();
-            rowsToMove.AddRange(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key));
-            foreach (int row in rowsToMove.OrderBy(r => r))
+            var rowsToMove = new List<Int32>(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key).OrderBy(r => r));
+            foreach (int row in rowsToMove)
             {
                 Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
                 Internals.RowsCollection.Remove(row);

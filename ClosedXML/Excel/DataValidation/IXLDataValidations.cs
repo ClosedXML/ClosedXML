@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 using System.Collections.Generic;
 
@@ -23,6 +24,11 @@ namespace ClosedXML.Excel
         void Delete(Predicate<IXLDataValidation> predicate);
 
         /// <summary>
+        /// Get all data validation rules applied to ranges that intersect the specified range.
+        /// </summary>
+        IEnumerable<IXLDataValidation> GetAllInRange(IXLRangeAddress rangeAddress);
+
+        /// <summary>
         /// Get the data validation rule for the range with the specified address if it exists.
         /// </summary>
         /// <param name="rangeAddress">A range address.</param>
@@ -32,10 +38,5 @@ namespace ClosedXML.Excel
         /// return True for ranges A1:A3, C1:C2, A2:A3, and False for ranges A1:C3, A1:C1, etc.</param>
         /// <returns>True is the data validation rule was found, false otherwise.</returns>
         bool TryGet(IXLRangeAddress rangeAddress, out IXLDataValidation dataValidation);
-
-        /// <summary>
-        /// Get all data validation rules applied to ranges that intersect the specified range.
-        /// </summary>
-        IEnumerable<IXLDataValidation> GetAllInRange(IXLRangeAddress rangeAddress);
     }
 }

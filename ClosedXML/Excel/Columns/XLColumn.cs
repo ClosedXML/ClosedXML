@@ -202,7 +202,7 @@ namespace ClosedXML.Excel
 
                     if (c.HasRichText)
                     {
-                        foreach (IXLRichString rt in c.RichText)
+                        foreach (IXLRichString rt in c.GetRichText())
                         {
                             String formattedString = rt.Text;
                             var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);

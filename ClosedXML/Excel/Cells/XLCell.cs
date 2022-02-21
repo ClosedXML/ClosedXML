@@ -1,19 +1,17 @@
-﻿using System;
+﻿using ClosedXML.Excel.InsertData;
+using ClosedXML.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel
 {
-    using Attributes;
-    using ClosedXML.Extensions;
-
     [DebuggerDisplay("{Address}")]
     internal class XLCell : XLStylizedBase, IXLCell, IXLStylized
     {
@@ -137,36 +135,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLDataValidation NewDataValidation
+        internal XLComment GetComment()
         {
-            get
-            {
-                return AsRange().NewDataValidation; // Call the data validation without breaking it into pieces
-            }
-        }
-
-        /// <summary>
-        /// Get the data validation rule containing current cell or create a new one if no rule was defined for cell.
-        /// </summary>
-        public IXLDataValidation DataValidation
-        {
-            get
-            {
-                return SetDataValidation();
-            }
-        }
-
-        internal XLComment Comment
-        {
-            get
-            {
-                if (_comment == null)
-                {
-                    CreateComment();
-                }
-
-                return _comment;
-            }
+            return _comment ?? CreateComment();
         }
 
         internal XLComment CreateComment(int? shapeId = null)
@@ -176,11 +147,6 @@ namespace ClosedXML.Excel
         }
 
         #region IXLCell Members
-
-        IXLDataValidation IXLCell.DataValidation
-        {
-            get { return DataValidation; }
-        }
 
         IXLWorksheet IXLCell.Worksheet
         {
@@ -205,19 +171,21 @@ namespace ClosedXML.Excel
                 return this;
             }
             else
-                return SetValue(value, true);
+                return SetValue(value, setTableHeader: true, checkMergedRanges: true);
         }
 
-        internal IXLCell SetValue<T>(T value, bool setTableHeader)
+        internal IXLCell SetValue<T>(T value, bool setTableHeader, bool checkMergedRanges)
         {
-            if (IsInferiorMergedCell())
+            if (checkMergedRanges && IsInferiorMergedCell())
                 return this;
 
             if (value == null)
                 return this.Clear(XLClearOptions.Contents);
 
-            FormulaA1 = String.Empty;
             _richText = null;
+            _formulaA1 = String.Empty;
+            _formulaR1C1 = null;
+            cachedValue = null;
 
             if (setTableHeader)
             {
@@ -226,14 +194,12 @@ namespace ClosedXML.Excel
             }
 
             var style = GetStyleForRead();
-            Boolean parsed;
-            string parsedValue;
 
             // For SetValue<T> we set the cell value directly to the parameter
             // as opposed to the other SetValue(object value) where we parse the string and try to decude the value
             var tuple = SetKnownTypedValue(value, style, acceptString: true);
-            parsedValue = tuple.Item1;
-            parsed = tuple.Item2;
+            var parsedValue = tuple.Item1;
+            var parsed = tuple.Item2;
 
             // If parsing was unsuccessful, we throw an ArgumentException
             // because we are using SetValue<T> (typed).
@@ -242,8 +208,6 @@ namespace ClosedXML.Excel
                 throw new ArgumentException($"Unable to set cell value to {value.ObjectToInvariantString()}");
 
             SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
-
-            CachedValue = null;
 
             return this;
         }
@@ -570,6 +534,14 @@ namespace ClosedXML.Excel
             }
         }
 
+        internal void SetDateValue(string text)
+        {
+            if (Double.TryParse(text, XLHelper.NumberStyle, XLHelper.ParseCulture, out double doubleValue))
+                SetInternalCellValueString(doubleValue.ToInvariantString());
+            else
+                SetInternalCellValueString(DateTime.Parse(text).ToOADate().ToInvariantString());
+        }
+
         internal void SetDataTypeFast(XLDataType dataType)
         {
             this._dataType = dataType;
@@ -650,6 +622,22 @@ namespace ClosedXML.Excel
             return cellValue;
         }
 
+        public override string ToString() => ToString("A");
+
+        public string ToString(string format)
+        {
+            return (format.ToUpper()) switch
+            {
+                "A" => this.Address.ToString(),
+                "F" => HasFormula ? this.FormulaA1 : string.Empty,
+                "NF" => Style.NumberFormat.Format,
+                "FG" => Style.Font.FontColor.ToString(),
+                "BG" => Style.Fill.BackgroundColor.ToString(),
+                "V" => GetFormattedString(),
+                _ => throw new FormatException($"Format {format} was not recognised."),
+            };
+        }
+
         public object Value
         {
             get
@@ -715,10 +703,17 @@ namespace ClosedXML.Excel
 
         public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
         {
+            var reader = InsertDataReaderFactory.Instance.CreateReader(data);
+            return InsertTableInternal(reader, tableName, createTable, addHeadings, transpose);
+        }
+
+        private IXLTable InsertTableInternal(IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings,
+            Boolean transpose)
+        {
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
                 throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
-            var range = InsertDataInternal(data, addHeadings, transpose);
+            var range = InsertDataInternal(reader, addHeadings, transpose);
 
             if (createTable)
                 // Create a table and save it in the file
@@ -749,57 +744,35 @@ namespace ClosedXML.Excel
                 return null;
 
             if (XLHelper.IsValidA1Address(tableName) || XLHelper.IsValidRCAddress(tableName))
-                throw new InvalidOperationException(string.Format("Table name cannot be a valid Cell Address '{0}'.", tableName));
+                throw new InvalidOperationException($"Table name cannot be a valid Cell Address '{tableName}'.");
 
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
-                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
+                throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
 
-            if (data.Rows.Cast<DataRow>().Any())
-                return InsertTable(data.Rows.Cast<DataRow>(), tableName, createTable);
-
-            var co = _columnNumber;
-
-            foreach (DataColumn col in data.Columns)
-            {
-                Worksheet.SetValue(col.ColumnName, _rowNumber, co);
-                co++;
-            }
-
-            ClearMerged();
-            var range = Worksheet.Range(
-                _rowNumber,
-                _columnNumber,
-                _rowNumber,
-                co - 1);
-
-            if (createTable)
-                // Create a table and save it in the file
-                return tableName == null ? range.CreateTable() : range.CreateTable(tableName);
-            else
-                // Create a table, but keep it in memory. Saved file will contain only "raw" data and column headers
-                return tableName == null ? range.AsTable() : range.AsTable(tableName);
+            var reader = InsertDataReaderFactory.Instance.CreateReader(data);
+            return InsertTableInternal(reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
-        internal XLRange InsertDataInternal<T>(IEnumerable<T> data, Boolean addHeadings, Boolean transpose)
+        internal XLRange InsertDataInternal(IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
         {
-            if (data == null || data is String)
+            if (reader == null)
                 return null;
 
             var currentRowNumber = _rowNumber;
-            if (addHeadings && !transpose) currentRowNumber++;
-
             var currentColumnNumber = _columnNumber;
-            if (addHeadings && transpose) currentColumnNumber++;
-
-            var firstRowNumber = _rowNumber;
-            var hasHeadings = false;
             var maximumColumnNumber = currentColumnNumber;
             var maximumRowNumber = currentRowNumber;
 
-            var itemType = data.GetItemType();
-            var isArray = itemType.IsArray;
-            var isDataTable = itemType == typeof(DataTable);
-            var isDataReader = itemType == typeof(IDataReader);
+            if (transpose)
+            {
+                maximumColumnNumber += reader.GetRecordsCount() - 1;
+                maximumRowNumber += reader.GetPropertiesCount() - 1;
+            }
+            else
+            {
+                maximumColumnNumber += reader.GetPropertiesCount() - 1;
+                maximumRowNumber += reader.GetRecordsCount() - 1;
+            }
 
             // Inline functions to handle looping with transposing
             //////////////////////////////////////////////////////
@@ -840,206 +813,43 @@ namespace ClosedXML.Excel
             }
             //////////////////////////////////////////////////////
 
-            if (!data.Any())
+            var empty = maximumRowNumber <= _rowNumber ||
+                        maximumColumnNumber <= _columnNumber;
+
+            if (!empty)
             {
-                if (itemType.IsSimpleType())
-                    maximumColumnNumber = _columnNumber;
-                else
-                    maximumColumnNumber = _columnNumber + itemType.GetFields().Length + itemType.GetProperties().Length - 1;
+                Worksheet.Range(
+                        _rowNumber,
+                        _columnNumber,
+                        maximumRowNumber,
+                        maximumColumnNumber)
+                    .Clear();
             }
-            else if (itemType.IsSimpleType())
+
+            if (addHeadings)
             {
-                foreach (object o in data)
+                for (int i = 0; i < reader.GetPropertiesCount(); i++)
                 {
-                    resetRecordPosition();
-
-                    if (addHeadings && !hasHeadings)
-                    {
-                        var fieldName = XLColumnAttribute.GetHeader(itemType);
-                        if (String.IsNullOrWhiteSpace(fieldName))
-                            fieldName = itemType.Name;
-
-                        Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                        hasHeadings = true;
-                        resetRecordPosition();
-                    }
-
-                    Worksheet.SetValue(o, currentRowNumber, currentColumnNumber);
+                    var propertyName = reader.GetPropertyName(i);
+                    Worksheet.SetValue(propertyName, currentRowNumber, currentColumnNumber);
                     incrementFieldPosition();
-                    incrementRecordPosition();
                 }
+
+                incrementRecordPosition();
             }
-            else
+
+            var data = reader.GetData();
+
+            foreach (var item in data)
             {
-                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-                var memberCache = new Dictionary<Type, MemberInfo[]>();
-                MemberInfo[] members = null;
-                bool isPlainObject = itemType == typeof(object);
-
-                if (!isPlainObject)
+                resetRecordPosition();
+                foreach (var value in item)
                 {
-                    members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
-                         .Concat(itemType.GetProperties(bindingFlags))
-                         .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                         .OrderBy(mi => XLColumnAttribute.GetOrder(mi))
-                         .ToArray();
+                    Worksheet.SetValue(value, currentRowNumber, currentColumnNumber);
+                    incrementFieldPosition();
                 }
-
-                foreach (T m in data)
-                {
-                    resetRecordPosition();
-
-                    if (m == null)
-                    {
-                        Worksheet.SetValue(String.Empty, currentRowNumber, currentColumnNumber);
-                        incrementRecordPosition();
-                        continue;
-                    }
-
-                    if (m.GetType().IsSimpleType())
-                    {
-                        if (addHeadings && !hasHeadings)
-                        {
-                            var fieldName = XLColumnAttribute.GetHeader(itemType);
-                            if (String.IsNullOrWhiteSpace(fieldName))
-                                fieldName = itemType.Name;
-
-                            Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                            hasHeadings = true;
-                            resetRecordPosition();
-                        }
-
-                        Worksheet.SetValue(m as object, currentRowNumber, currentColumnNumber);
-                        incrementFieldPosition();
-                    }
-                    else
-                    {
-                        if (isPlainObject)
-                        {
-                            // In this case data is just IEnumerable<object>, which means we have to determine the runtime type of each element
-                            // This is very inefficient and we prefer type of T to be a concrete class or struct
-                            var type = m.GetType();
-
-                            isArray |= type.IsArray;
-                            isDataTable |= type == typeof(DataRow);
-                            isDataReader |= type == typeof(IDataRecord);
-
-                            if (!memberCache.TryGetValue(type, out members))
-                            {
-                                members = type.GetFields(bindingFlags).Cast<MemberInfo>()
-                                     .Concat(type.GetProperties(bindingFlags))
-                                     .Where(mi => !XLColumnAttribute.IgnoreMember(mi))
-                                     .OrderBy(mi => XLColumnAttribute.GetOrder(mi))
-                                     .ToArray();
-
-                                memberCache.Add(type, members);
-                            }
-                        }
-
-                        if (isArray)
-                        {
-                            foreach (var item in (m as Array))
-                            {
-                                Worksheet.SetValue(item, currentRowNumber, currentColumnNumber);
-                                incrementFieldPosition();
-                            }
-                        }
-                        else if (isDataTable || m is DataRow)
-                        {
-                            var row = m as DataRow;
-                            if (!isDataTable)
-                                isDataTable = true;
-
-                            if (addHeadings && !hasHeadings)
-                            {
-                                foreach (var fieldName in from DataColumn column in row.Table.Columns
-                                                          select String.IsNullOrWhiteSpace(column.Caption)
-                                                                     ? column.ColumnName
-                                                                     : column.Caption)
-                                {
-                                    Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                                    incrementFieldPosition();
-                                }
-
-                                resetRecordPosition();
-                                hasHeadings = true;
-                            }
-
-                            foreach (var item in row.ItemArray)
-                            {
-                                Worksheet.SetValue(item, currentRowNumber, currentColumnNumber);
-                                incrementFieldPosition();
-                            }
-                        }
-                        else if (isDataReader || m is IDataRecord)
-                        {
-                            if (!isDataReader)
-                                isDataReader = true;
-
-                            var record = m as IDataRecord;
-
-                            var fieldCount = record.FieldCount;
-                            if (addHeadings && !hasHeadings)
-                            {
-                                for (var i = 0; i < fieldCount; i++)
-                                {
-                                    Worksheet.SetValue(record.GetName(i), firstRowNumber, currentColumnNumber);
-                                    incrementFieldPosition();
-                                }
-
-                                resetRecordPosition();
-                                hasHeadings = true;
-                            }
-
-                            for (var i = 0; i < fieldCount; i++)
-                            {
-                                Worksheet.SetValue(record[i], currentRowNumber, currentColumnNumber);
-                                incrementFieldPosition();
-                            }
-                        }
-                        else
-                        {
-                            if (addHeadings && !hasHeadings)
-                            {
-                                foreach (var mi in members)
-                                {
-                                    if (!(mi is IEnumerable))
-                                    {
-                                        var fieldName = XLColumnAttribute.GetHeader(mi);
-                                        if (String.IsNullOrWhiteSpace(fieldName))
-                                            fieldName = mi.Name;
-
-                                        Worksheet.SetValue(fieldName, firstRowNumber, currentColumnNumber);
-                                    }
-
-                                    incrementFieldPosition();
-                                }
-
-                                resetRecordPosition();
-                                hasHeadings = true;
-                            }
-
-                            foreach (var mi in members)
-                            {
-                                if (mi.MemberType == MemberTypes.Property && (mi as PropertyInfo).GetGetMethod().IsStatic)
-                                    Worksheet.SetValue((mi as PropertyInfo).GetValue(null, null), currentRowNumber, currentColumnNumber);
-                                else if (mi.MemberType == MemberTypes.Field && (mi as FieldInfo).IsStatic)
-                                    Worksheet.SetValue((mi as FieldInfo).GetValue(null), currentRowNumber, currentColumnNumber);
-                                else if (mi.MemberType == MemberTypes.Property)
-                                    Worksheet.SetValue((mi as PropertyInfo).GetValue(m, null), currentRowNumber, currentColumnNumber);
-                                else if (mi.MemberType == MemberTypes.Field)
-                                    Worksheet.SetValue((mi as FieldInfo).GetValue(m), currentRowNumber, currentColumnNumber);
-
-                                incrementFieldPosition();
-                            }
-                        }
-                    }
-
-                    incrementRecordPosition();
-                }
+                incrementRecordPosition();
             }
-
-            ClearMerged();
 
             var range = Worksheet.Range(
                 _rowNumber,
@@ -1066,7 +876,7 @@ namespace ClosedXML.Excel
             if (data == null || data is String)
                 return null;
 
-            return InsertDataInternal(data?.Cast<object>(), addHeadings: false, transpose: false);
+            return InsertData(data, transpose: false);
         }
 
         public IXLRange InsertData(IEnumerable data, Boolean transpose)
@@ -1074,7 +884,8 @@ namespace ClosedXML.Excel
             if (data == null || data is String)
                 return null;
 
-            return InsertDataInternal(data?.Cast<object>(), addHeadings: false, transpose: transpose);
+            var reader = InsertDataReaderFactory.Instance.CreateReader(data);
+            return InsertDataInternal(reader, addHeadings: false, transpose: transpose);
         }
 
         public IXLRange InsertData(DataTable dataTable)
@@ -1082,7 +893,8 @@ namespace ClosedXML.Excel
             if (dataTable == null)
                 return null;
 
-            return InsertDataInternal(dataTable?.Rows?.Cast<DataRow>(), addHeadings: false, transpose: false);
+            var reader = InsertDataReaderFactory.Instance.CreateReader(dataTable);
+            return InsertDataInternal(reader, addHeadings: false, transpose: false);
         }
 
         public IXLCell SetDataType(XLDataType dataType)
@@ -1190,7 +1002,7 @@ namespace ClosedXML.Excel
             {
                 if (clearOptions.HasFlag(XLClearOptions.Contents))
                 {
-                    Hyperlink = null;
+                    SetHyperlink(null);
                     _richText = null;
                     _cellValue = String.Empty;
                     FormulaA1 = String.Empty;
@@ -1217,7 +1029,7 @@ namespace ClosedXML.Excel
 
                 if (clearOptions.HasFlag(XLClearOptions.DataValidation) && HasDataValidation)
                 {
-                    var validation = NewDataValidation;
+                    var validation = CreateDataValidation();
                     Worksheet.DataValidations.Delete(validation);
                 }
 
@@ -1297,38 +1109,37 @@ namespace ClosedXML.Excel
 
         public bool ShareString { get; set; }
 
-        public XLHyperlink Hyperlink
+        public XLHyperlink GetHyperlink()
         {
-            get
-            {
-                if (_hyperlink == null)
-                    Hyperlink = new XLHyperlink();
+            return _hyperlink ?? CreateHyperlink();
+        }
 
-                return _hyperlink;
-            }
+        public void SetHyperlink(XLHyperlink hyperlink)
+        {
+            Worksheet.Hyperlinks.TryDelete(Address);
 
-            set
-            {
-                if (Worksheet.Hyperlinks.Any(hl => Address.Equals(hl.Cell.Address)))
-                    Worksheet.Hyperlinks.Delete(Address);
+            _hyperlink = hyperlink;
 
-                _hyperlink = value;
+            if (_hyperlink == null) return;
 
-                if (_hyperlink == null) return;
+            _hyperlink.Worksheet = Worksheet;
+            _hyperlink.Cell = this;
 
-                _hyperlink.Worksheet = Worksheet;
-                _hyperlink.Cell = this;
+            Worksheet.Hyperlinks.Add(_hyperlink);
 
-                Worksheet.Hyperlinks.Add(_hyperlink);
+            if (SettingHyperlink) return;
 
-                if (SettingHyperlink) return;
+            if (GetStyleForRead().Font.FontColor.Equals(Worksheet.StyleValue.Font.FontColor))
+                Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
 
-                if (GetStyleForRead().Font.FontColor.Equals(Worksheet.StyleValue.Font.FontColor))
-                    Style.Font.FontColor = XLColor.FromTheme(XLThemeColor.Hyperlink);
+            if (GetStyleForRead().Font.Underline == Worksheet.StyleValue.Font.Underline)
+                Style.Font.Underline = XLFontUnderlineValues.Single;
+        }
 
-                if (GetStyleForRead().Font.Underline == Worksheet.StyleValue.Font.Underline)
-                    Style.Font.Underline = XLFontUnderlineValues.Single;
-            }
+        public XLHyperlink CreateHyperlink()
+        {
+            SetHyperlink(new XLHyperlink());
+            return GetHyperlink();
         }
 
         public IXLCells InsertCellsAbove(int numberOfRows)
@@ -1444,20 +1255,9 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLRichText RichText
+        public IXLRichText GetRichText()
         {
-            get
-            {
-                if (_richText == null)
-                {
-                    var style = GetStyleForRead();
-                    _richText = _cellValue.Length == 0
-                                    ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
-                                    : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
-                }
-
-                return _richText;
-            }
+            return _richText ?? CreateRichText();
         }
 
         public bool HasRichText
@@ -1465,14 +1265,29 @@ namespace ClosedXML.Excel
             get { return _richText != null; }
         }
 
-        IXLComment IXLCell.Comment
+        public IXLRichText CreateRichText()
         {
-            get { return Comment; }
+            var style = GetStyleForRead();
+            _richText = _cellValue.Length == 0
+                            ? new XLRichText(new XLFont(Style as XLStyle, style.Font))
+                            : new XLRichText(GetFormattedString(), new XLFont(Style as XLStyle, style.Font));
+
+            return _richText;
+        }
+
+        IXLComment IXLCell.GetComment()
+        {
+            return GetComment();
         }
 
         public bool HasComment
         {
             get { return _comment != null; }
+        }
+
+        IXLComment IXLCell.CreateComment()
+        {
+            return CreateComment(shapeId: null);
         }
 
         public Boolean IsMerged()
@@ -1598,21 +1413,34 @@ namespace ClosedXML.Excel
         /// <summary> The sparkline assigned to the cell </summary>
         public IXLSparkline Sparkline => Worksheet.SparklineGroups.GetSparkline(this);
 
+        public IXLDataValidation GetDataValidation()
+        {
+            return FindDataValidation() ?? CreateDataValidation();
+        }
+
         public Boolean HasDataValidation
         {
-            get { return GetDataValidation() != null; }
+            get { return FindDataValidation() != null; }
         }
 
         /// <summary>
         /// Get the data validation rule containing current cell.
         /// </summary>
         /// <returns>The data validation rule applying to the current cell or null if there is no such rule.</returns>
-        private IXLDataValidation GetDataValidation()
+        private IXLDataValidation FindDataValidation()
         {
             Worksheet.DataValidations.TryGet(AsRange().RangeAddress, out var dataValidation);
             return dataValidation;
         }
 
+        public IXLDataValidation CreateDataValidation()
+        {
+            var validation = new XLDataValidation(AsRange());
+            Worksheet.DataValidations.Add(validation);
+            return validation;
+        }
+
+        [Obsolete("Use GetDataValidation() to access the existing rule, or CreateDataValidation() to create a new one.")]
         public IXLDataValidation SetDataValidation()
         {
             var validation = GetDataValidation();
@@ -1655,14 +1483,6 @@ namespace ClosedXML.Excel
         public Boolean HasHyperlink
         {
             get { return _hyperlink != null; }
-        }
-
-        public XLHyperlink GetHyperlink()
-        {
-            if (HasHyperlink)
-                return Hyperlink;
-
-            return Value as XLHyperlink;
         }
 
         public Boolean TryGetValue<T>(out T value)
@@ -1822,7 +1642,7 @@ namespace ClosedXML.Excel
         {
             if (typeof(T) == typeof(IXLRichText))
             {
-                value = (T)RichText;
+                value = (T)GetRichText();
                 return true;
             }
             value = default;
@@ -1890,7 +1710,7 @@ namespace ClosedXML.Excel
         {
             if (typeof(T) == typeof(XLHyperlink))
             {
-                var hyperlink = GetHyperlink();
+                var hyperlink = _hyperlink ?? Value as XLHyperlink;
                 if (hyperlink != null)
                 {
                     value = (T)Convert.ChangeType(hyperlink, typeof(T));
@@ -2192,7 +2012,7 @@ namespace ClosedXML.Excel
                         var dvTargetRange = Worksheet.Range(dvTargetAddress);
                         if (newDataValidation == null)
                         {
-                            newDataValidation = dvTargetRange.SetDataValidation() as XLDataValidation;
+                            newDataValidation = dvTargetRange.CreateDataValidation() as XLDataValidation;
                             newDataValidation.CopyFrom(dataValidation);
                         }
                         else
@@ -2572,7 +2392,7 @@ namespace ClosedXML.Excel
             if (source._hyperlink != null)
             {
                 SettingHyperlink = true;
-                Hyperlink = new XLHyperlink(source.Hyperlink);
+                SetHyperlink(new XLHyperlink(source.GetHyperlink()));
                 SettingHyperlink = false;
             }
         }
@@ -2656,7 +2476,7 @@ namespace ClosedXML.Excel
             var eventTracking = Worksheet.EventTrackingEnabled;
             Worksheet.EventTrackingEnabled = false;
             if (otherCell.HasDataValidation)
-                CopyDataValidation(otherCell, otherCell.DataValidation);
+                CopyDataValidation(otherCell, otherCell.GetDataValidation());
             else if (HasDataValidation)
             {
                 Worksheet.DataValidations.Delete(AsRange());
@@ -2666,7 +2486,7 @@ namespace ClosedXML.Excel
 
         internal void CopyDataValidation(XLCell otherCell, IXLDataValidation otherDv)
         {
-            var thisDv = SetDataValidation() as XLDataValidation;
+            var thisDv = GetDataValidation() as XLDataValidation;
             thisDv.CopyFrom(otherDv);
             thisDv.Value = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.Value));
             thisDv.MinValue = GetFormulaA1(otherCell.GetFormulaR1C1(otherDv.MinValue));

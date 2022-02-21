@@ -173,6 +173,8 @@ namespace ClosedXML.Excel
         XLItemsToRetain ItemsToRetainPerField { get; set; }
         Boolean EnableCellEditing { get; set; }
 
+        IXLPivotTable CopyTo(IXLCell targetCell);
+
         IXLPivotTable SetName(String value);
 
         IXLPivotTable SetTitle(String value);

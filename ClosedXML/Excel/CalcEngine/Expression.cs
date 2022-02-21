@@ -536,6 +536,8 @@ namespace ClosedXML.Excel.CalcEngine
     internal class EmptyValueExpression : Expression
     {
         internal EmptyValueExpression()
+            // Ensures a token of type LITERAL, with value of null is created
+            : base(value: null) 
         {
         }
 

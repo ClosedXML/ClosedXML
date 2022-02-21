@@ -1653,8 +1653,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                sheetName = sections[0].UnescapeSheetName();
-                sheetArea = sections[1];
+                sheetName = string.Join("!", sections.Take(sections.Length - 1)).UnescapeSheetName();
+                sheetArea = sections[sections.Length - 1];
             }
         }
 
@@ -1824,7 +1824,7 @@ namespace ClosedXML.Excel
                     xlCell.SetDataTypeFast(XLDataType.DateTime);
 
                     if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
+                        xlCell.SetDateValue(cell.CellValue.Text);
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {
@@ -1911,10 +1911,10 @@ namespace ClosedXML.Excel
                 String text = run.Text.InnerText.FixNewLines();
 
                 if (runProperties == null)
-                    xlCell.RichText.AddText(text, xlCell.Style.Font);
+                    xlCell.GetRichText().AddText(text, xlCell.Style.Font);
                 else
                 {
-                    var rt = xlCell.RichText.AddText(text);
+                    var rt = xlCell.GetRichText().AddText(text);
                     LoadFont(runProperties, rt);
                 }
                 if (!hasRuns)
@@ -1930,11 +1930,11 @@ namespace ClosedXML.Excel
             if (pp != null)
             {
                 if (pp.Alignment != null)
-                    xlCell.RichText.Phonetics.Alignment = pp.Alignment.Value.ToClosedXml();
+                    xlCell.GetRichText().Phonetics.Alignment = pp.Alignment.Value.ToClosedXml();
                 if (pp.Type != null)
-                    xlCell.RichText.Phonetics.Type = pp.Type.Value.ToClosedXml();
+                    xlCell.GetRichText().Phonetics.Type = pp.Type.Value.ToClosedXml();
 
-                LoadFont(pp, xlCell.RichText.Phonetics);
+                LoadFont(pp, xlCell.GetRichText().Phonetics);
             }
 
             #endregion Load PhoneticProperties
@@ -1943,7 +1943,7 @@ namespace ClosedXML.Excel
 
             foreach (PhoneticRun pr in phoneticRuns)
             {
-                xlCell.RichText.Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
+                xlCell.GetRichText().Phonetics.Add(pr.Text.InnerText.FixNewLines(), (Int32)pr.BaseTextStartIndex.Value,
                                               (Int32)pr.EndingBaseIndex.Value);
             }
 
@@ -2804,11 +2804,11 @@ namespace ClosedXML.Excel
                     xlCell.SettingHyperlink = true;
 
                     if (hl.Id != null)
-                        xlCell.Hyperlink = new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip);
+                        xlCell.SetHyperlink(new XLHyperlink(hyperlinkDictionary[hl.Id], tooltip));
                     else if (hl.Location != null)
-                        xlCell.Hyperlink = new XLHyperlink(hl.Location.Value, tooltip);
+                        xlCell.SetHyperlink(new XLHyperlink(hl.Location.Value, tooltip));
                     else
-                        xlCell.Hyperlink = new XLHyperlink(hl.Reference.Value, tooltip);
+                        xlCell.SetHyperlink(new XLHyperlink(hl.Reference.Value, tooltip));
 
                     xlCell.SettingHyperlink = false;
                 }
@@ -3012,15 +3012,16 @@ namespace ClosedXML.Excel
                 ws.SheetView.ZoomScaleSheetLayoutView = (int)UInt32Value.ToUInt32(sheetView.ZoomScaleSheetLayoutView);
 
             var pane = sheetView.Elements<Pane>().FirstOrDefault();
-            if (pane == null) return;
+            if (new[] { PaneStateValues.Frozen, PaneStateValues.FrozenSplit }.Contains(pane?.State?.Value ?? PaneStateValues.Split))
+            {
+                if (pane.HorizontalSplit != null)
+                    ws.SheetView.SplitColumn = (Int32)pane.HorizontalSplit.Value;
+                if (pane.VerticalSplit != null)
+                    ws.SheetView.SplitRow = (Int32)pane.VerticalSplit.Value;
+            }
 
-            if (pane.State == null ||
-                (pane.State != PaneStateValues.FrozenSplit && pane.State != PaneStateValues.Frozen)) return;
-
-            if (pane.HorizontalSplit != null)
-                ws.SheetView.SplitColumn = (Int32)pane.HorizontalSplit.Value;
-            if (pane.VerticalSplit != null)
-                ws.SheetView.SplitRow = (Int32)pane.VerticalSplit.Value;
+            if (XLHelper.IsValidA1Address(sheetView.TopLeftCell))
+                ws.SheetView.TopLeftCellAddress = ws.Cell(sheetView.TopLeftCell.Value).Address;
         }
 
         private void SetProperties(SpreadsheetDocument dSpreadsheet)

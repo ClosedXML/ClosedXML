@@ -345,6 +345,8 @@ namespace ClosedXML.Excel
 
         IXLWorksheet CopyTo(String newSheetName, Int32 position);
 
+        IXLWorksheet CopyTo(XLWorkbook workbook);
+
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName);
 
         IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position);

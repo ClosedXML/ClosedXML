@@ -1,3 +1,4 @@
+// Keep this file CodeMaid organised and cleaned
 using System;
 
 namespace ClosedXML.Excel
@@ -16,7 +17,17 @@ namespace ClosedXML.Excel
         /// </summary>
         Int32 SplitRow { get; set; }
 
+        /// <summary>
+        /// Gets or sets the location of the top left visible cell
+        /// </summary>
+        /// <value>
+        /// The scroll position's top left cell.
+        /// </value>
+        IXLAddress TopLeftCellAddress { get; set; }
+
         XLSheetViewOptions View { get; set; }
+
+        IXLWorksheet Worksheet { get; }
 
         /// <summary>
         /// Window zoom magnification for current view representing percent values. Horizontal and vertical scale together.

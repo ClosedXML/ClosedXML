@@ -27,11 +27,11 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COUNTIFS", 2, 144, CountIfs);
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
-            //DEVSQ	Returns the sum of squares of deviations
+            ce.RegisterFunction("DEVSQ", 1, 255, DevSq); // Returns the sum of squares of deviations
             //EXPONDIST	Returns the exponential distribution
             //FDIST	Returns the F probability distribution
             //FINV	Returns the inverse of the F probability distribution
-            //FISHER	Returns the Fisher transformation
+            ce.RegisterFunction("FISHER", 1, Fisher); // Returns the Fisher transformation
             //FISHERINV	Returns the inverse of the Fisher transformation
             //FORECAST	Returns a value along a linear trend
             //FREQUENCY	Returns a frequency distribution as a vertical array
@@ -39,7 +39,7 @@ namespace ClosedXML.Excel.CalcEngine
             //GAMMADIST	Returns the gamma distribution
             //GAMMAINV	Returns the inverse of the gamma cumulative distribution
             //GAMMALN	Returns the natural logarithm of the gamma function, Γ(x)
-            //GEOMEAN	Returns the geometric mean
+            ce.RegisterFunction("GEOMEAN", 1, 255, Geomean); // Returns the geometric mean
             //GROWTH	Returns values along an exponential trend
             //HARMEAN	Returns the harmonic mean
             //HYPGEOMDIST	Returns the hypergeometric distribution
@@ -205,6 +205,24 @@ namespace ClosedXML.Excel.CalcEngine
 
             // done
             return count;
+        }
+
+        private static object DevSq(List<Expression> p)
+        {
+            return GetTally(p, true).DevSq();
+        }
+
+        private static object Fisher(List<Expression> p)
+        {
+            var x = (double)p[0];
+            if (x <= -1 || x >= 1) throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
+
+            return 0.5 * Math.Log((1 + x) / (1 - x));
+        }
+
+        private static object Geomean(List<Expression> p)
+        {
+            return GetTally(p, true).Geomean();
         }
 
         private static object Max(List<Expression> p)

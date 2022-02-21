@@ -31,7 +31,8 @@ namespace ClosedXML.Excel.CalcEngine
         private int _len;                               // length of the expression being parsed
         private int _ptr;                               // current pointer into expression
         private char[] _idChars;                        // valid characters in identifiers (besides alpha and digits)
-        private Token _token;                           // current token being parsed
+        private Token _currentToken;                    // current token being parsed
+        private Token _nextToken;                       // next token being parsed. to be used by Peek
         private Dictionary<object, Token> _tkTbl;       // table with tokens (+, -, etc)
         private Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
         private Dictionary<string, object> _vars;       // table with variables
@@ -77,6 +78,8 @@ namespace ClosedXML.Excel.CalcEngine
             _expr = expression;
             _len = _expr.Length;
             _ptr = 0;
+            _currentToken = null;
+            _nextToken = null;
 
             // skip leading equals sign
             if (_len > 0 && _expr[0] == '=')
@@ -90,9 +93,9 @@ namespace ClosedXML.Excel.CalcEngine
             var expr = ParseExpression();
 
             // check for errors
-            if (_token.ID == TKID.OPEN)
+            if (_currentToken.ID == TKID.OPEN)
                 Throw("Unknown function: " + expr.LastParseItem);
-            else if (_token.ID != TKID.END)
+            else if (_currentToken.ID != TKID.END)
                 Throw("Expected end of expression");
 
             // optimize expression
@@ -341,9 +344,9 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression ParseCompare()
         {
             var x = ParseAddSub();
-            while (_token.Type == TKTYPE.COMPARE)
+            while (_currentToken.Type == TKTYPE.COMPARE)
             {
-                var t = _token;
+                var t = _currentToken;
                 GetToken();
                 var exprArg = ParseAddSub();
                 x = new BinaryExpression(t, x, exprArg);
@@ -354,9 +357,9 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression ParseAddSub()
         {
             var x = ParseMulDiv();
-            while (_token.Type == TKTYPE.ADDSUB)
+            while (_currentToken.Type == TKTYPE.ADDSUB)
             {
-                var t = _token;
+                var t = _currentToken;
                 GetToken();
                 var exprArg = ParseMulDiv();
                 x = new BinaryExpression(t, x, exprArg);
@@ -367,9 +370,9 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression ParseMulDiv()
         {
             var x = ParsePower();
-            while (_token.Type == TKTYPE.MULDIV)
+            while (_currentToken.Type == TKTYPE.MULDIV)
             {
-                var t = _token;
+                var t = _currentToken;
                 GetToken();
                 var a = ParsePower();
                 x = new BinaryExpression(t, x, a);
@@ -380,9 +383,9 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression ParsePower()
         {
             var x = ParseMulDivUnary();
-            while (_token.Type == TKTYPE.POWER)
+            while (_currentToken.Type == TKTYPE.POWER)
             {
-                var t = _token;
+                var t = _currentToken;
                 GetToken();
                 var a = ParseMulDivUnary();
                 x = new BinaryExpression(t, x, a);
@@ -393,7 +396,7 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression ParseMulDivUnary()
         {
             var x = ParseUnary();
-            while (_token.Type == TKTYPE.MULDIV_UNARY)
+            while (_currentToken.Type == TKTYPE.MULDIV_UNARY)
             {
                 var t = _tkTbl['/'];
                 var a = new Expression(100);
@@ -406,15 +409,15 @@ namespace ClosedXML.Excel.CalcEngine
         private Expression ParseUnary()
         {
             // unary plus and minus
-            if (_token.Type == TKTYPE.ADDSUB)
+            if (_currentToken.Type == TKTYPE.ADDSUB)
             {
                 var sign = 1;
                 do
                 {
-                    if (_token.ID == TKID.SUB)
+                    if (_currentToken.ID == TKID.SUB)
                         sign = -sign;
                     GetToken();
-                } while (_token.Type == TKTYPE.ADDSUB);
+                } while (_currentToken.Type == TKTYPE.ADDSUB);
                 var a = ParseAtom();
                 var t = (sign == 1)
                     ? _tkTbl['+']
@@ -431,27 +434,31 @@ namespace ClosedXML.Excel.CalcEngine
             string id;
             Expression x = null;
 
-            switch (_token.Type)
+            switch (_currentToken.Type)
             {
                 // literals
                 case TKTYPE.LITERAL:
-                    x = new Expression(_token);
+                    x = new Expression(_currentToken);
                     break;
 
                 // identifiers
                 case TKTYPE.IDENTIFIER:
 
                     // get identifier
-                    id = (string)_token.Value;
-                    FunctionDefinition functionDefinition;
+                    id = (string)_currentToken.Value;
 
-                    var foundFunction = _fnTbl.TryGetValue(id, out functionDefinition);
-                    if (!foundFunction && id.StartsWith($"{defaultFunctionNameSpace}."))
-                        foundFunction = _fnTbl.TryGetValue(id.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
-
-                    // look for functions
-                    if (foundFunction)
+                    // Peek ahead to see whether we have a function name (which will be followed by parenthesis
+                    // Or another identifier, like a named range or cell reference
+                    if (PeekToken().ID == TKID.OPEN)
                     {
+                        // look for functions
+                        var foundFunction = _fnTbl.TryGetValue(id, out FunctionDefinition functionDefinition);
+                        if (!foundFunction && id.StartsWith($"{defaultFunctionNameSpace}."))
+                            foundFunction = _fnTbl.TryGetValue(id.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
+
+                        if (!foundFunction)
+                            throw new NameNotRecognizedException($"The identifier `{id}` was not recognised.");
+
                         var p = GetParameters();
                         var pCnt = p == null ? 0 : p.Count;
                         if (functionDefinition.ParmMin != -1 && pCnt < functionDefinition.ParmMin)
@@ -486,7 +493,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                     // Normally anything other than opening parenthesis is illegal here
                     // but Excel allows omitted parameters so return empty value expression.
-                    if (_token.ID != TKID.OPEN)
+                    if (_currentToken.ID != TKID.OPEN)
                     {
                         return new EmptyValueExpression();
                     }
@@ -496,7 +503,7 @@ namespace ClosedXML.Excel.CalcEngine
                     x = ParseCompare();
 
                     // check that the parenthesis was closed
-                    if (_token.ID != TKID.CLOSE)
+                    if (_currentToken.ID != TKID.CLOSE)
                     {
                         Throw("Unbalanced parenthesis.");
                     }
@@ -504,7 +511,7 @@ namespace ClosedXML.Excel.CalcEngine
                     break;
 
                 case TKTYPE.ERROR:
-                    x = new ErrorExpression((ErrorExpression.ExpressionErrorType)_token.Value);
+                    x = new ErrorExpression((ErrorExpression.ExpressionErrorType)_currentToken.Value);
                     break;
             }
 
@@ -531,7 +538,7 @@ namespace ClosedXML.Excel.CalcEngine
             { '[',  ']' }
         };
 
-        private void GetToken()
+        private Token ParseToken()
         {
             // eat white space
             while (_ptr < _len && _expr[_ptr] <= ' ')
@@ -542,8 +549,7 @@ namespace ClosedXML.Excel.CalcEngine
             // are we done?
             if (_ptr >= _len)
             {
-                _token = new Token(null, TKID.END, TKTYPE.GROUP);
-                return;
+                return new Token(null, TKID.END, TKTYPE.GROUP);
             }
 
             // prepare to parse
@@ -568,29 +574,28 @@ namespace ClosedXML.Excel.CalcEngine
                     // look up localized list separator
                     if (c == _listSep)
                     {
-                        _token = new Token(c, TKID.COMMA, TKTYPE.GROUP);
                         _ptr++;
-                        return;
+                        return new Token(c, TKID.COMMA, TKTYPE.GROUP);
                     }
 
                     // look up single-char tokens on table
-                    if (_tkTbl.TryGetValue(c, out Token tk))
+                    if (_tkTbl.TryGetValue(c, out Token t))
                     {
                         // save token we found
-                        _token = tk;
+                        var token = t;
                         _ptr++;
 
                         // look for double-char tokens (special case)
                         if (_ptr < _len
                             && (c == '>' || c == '<')
-                            && _tkTbl.TryGetValue(_expr.Substring(_ptr - 1, 2), out tk))
+                            && _tkTbl.TryGetValue(_expr.Substring(_ptr - 1, 2), out t))
                         {
-                            _token = tk;
+                            token = t;
                             _ptr++;
                         }
 
                         // found token on the table
-                        return;
+                        return token;
                     }
                 }
             }
@@ -653,12 +658,11 @@ namespace ClosedXML.Excel.CalcEngine
 
                 if (c != ':')
                 {
-                    // build token
-                    _token = new Token(val, TKID.ATOM, TKTYPE.LITERAL);
-
                     // advance pointer and return
                     _ptr += i;
-                    return;
+
+                    // build token
+                    return new Token(val, TKID.ATOM, TKTYPE.LITERAL);
                 }
             }
 
@@ -684,8 +688,7 @@ namespace ClosedXML.Excel.CalcEngine
                 // end of string
                 var lit = _expr.Substring(_ptr + 1, i - 1);
                 _ptr += i + 1;
-                _token = new Token(lit.Replace("\"\"", "\""), TKID.ATOM, TKTYPE.LITERAL);
-                return;
+                return new Token(lit.Replace("\"\"", "\""), TKID.ATOM, TKTYPE.LITERAL);
             }
 
             // parse #REF! (and other errors) in formula
@@ -693,8 +696,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var errorPair = ErrorMap.Single(pair => _len > _ptr + pair.Key.Length && _expr.Substring(_ptr, pair.Key.Length).Equals(pair.Key, StringComparison.OrdinalIgnoreCase));
                 _ptr += errorPair.Key.Length;
-                _token = new Token(errorPair.Value, TKID.ATOM, TKTYPE.ERROR);
-                return;
+                return new Token(errorPair.Value, TKID.ATOM, TKTYPE.ERROR);
             }
 
             // identifiers (functions, objects) must start with alpha or underscore
@@ -736,8 +738,28 @@ namespace ClosedXML.Excel.CalcEngine
             // got identifier
             var id = _expr.Substring(_ptr, i);
             _ptr += i;
-            _token = new Token(id, TKID.ATOM, TKTYPE.IDENTIFIER);
+
+            // If we have a true/false, return a literal
+            if (bool.TryParse(id, out var b))
+                return new Token(b, TKID.ATOM, TKTYPE.LITERAL);
+
+            return new Token(id, TKID.ATOM, TKTYPE.IDENTIFIER);
         }
+
+        private void GetToken()
+        {
+            if (_nextToken == null)
+            {
+                _currentToken = ParseToken();
+            }
+            else
+            {
+                _currentToken = _nextToken;
+                _nextToken = null;
+            }
+        }
+
+        private Token PeekToken() => _nextToken ??= ParseToken();
 
         private static double ParseDouble(string str, CultureInfo ci)
         {
@@ -754,19 +776,19 @@ namespace ClosedXML.Excel.CalcEngine
             // check whether next token is a (,
             // restore state and bail if it's not
             var pos = _ptr;
-            var tk = _token;
+            var tk = _currentToken;
             GetToken();
-            if (_token.ID != TKID.OPEN)
+            if (_currentToken.ID != TKID.OPEN)
             {
                 _ptr = pos;
-                _token = tk;
+                _currentToken = tk;
                 return null;
             }
 
             // check for empty Parameter list
             pos = _ptr;
             GetToken();
-            if (_token.ID == TKID.CLOSE)
+            if (_currentToken.ID == TKID.CLOSE)
             {
                 return null;
             }
@@ -776,16 +798,16 @@ namespace ClosedXML.Excel.CalcEngine
             var parms = new List<Expression>();
             var expr = ParseExpression();
             parms.Add(expr);
-            while (_token.ID == TKID.COMMA)
+            while (_currentToken.ID == TKID.COMMA)
             {
                 expr = ParseExpression();
                 parms.Add(expr);
             }
 
             // make sure the list was closed correctly
-            if (_token.ID == TKID.OPEN)
+            if (_currentToken.ID == TKID.OPEN)
                 Throw("Unknown function: " + expr.LastParseItem);
-            else if (_token.ID != TKID.CLOSE)
+            else if (_currentToken.ID != TKID.CLOSE)
                 Throw("Syntax error: expected ')'");
 
             // done
@@ -797,22 +819,22 @@ namespace ClosedXML.Excel.CalcEngine
             // check whether next token is a MEMBER token ('.'),
             // restore state and bail if it's not
             var pos = _ptr;
-            var tk = _token;
+            var tk = _currentToken;
             GetToken();
-            if (_token.ID != TKID.PERIOD)
+            if (_currentToken.ID != TKID.PERIOD)
             {
                 _ptr = pos;
-                _token = tk;
+                _currentToken = tk;
                 return null;
             }
 
             // skip member token
             GetToken();
-            if (_token.Type != TKTYPE.IDENTIFIER)
+            if (_currentToken.Type != TKTYPE.IDENTIFIER)
             {
                 Throw("Identifier expected");
             }
-            return _token;
+            return _currentToken;
         }
 
         #endregion ** parser

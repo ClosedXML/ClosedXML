@@ -763,16 +763,13 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MRound(List<Expression> p)
         {
-            var n = (Decimal)(Double)p[0];
-            var k = (Decimal)(Double)p[1];
+            var number = (Double)p[0];
+            var multiple = (Double)p[1];
 
-            var mod = n % k;
-            var mult = Math.Floor(n / k);
-            var div = k / 2;
+            if (Math.Sign(number) != Math.Sign(multiple))
+                throw new NumberException($"The Number and Multiple arguments must have the same sign.");
 
-            if (Math.Abs(mod - div) <= (Decimal)XLHelper.Epsilon) return (k * mult) + k;
-
-            return k * mult;
+            return Math.Round(number / multiple, MidpointRounding.AwayFromZero) * multiple;
         }
 
         private static object Multinomial(List<Expression> p)

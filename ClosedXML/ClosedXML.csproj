@@ -21,7 +21,7 @@
 		<Configurations>Debug;Release</Configurations>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>ClosedXML.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>..\ClosedXML.snk</AssemblyOriginatorKeyFile>
 		<PackageIcon>Product.png</PackageIcon>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<RepositoryUrl>https://github.com/stesee/ClosedXML</RepositoryUrl>

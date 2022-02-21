@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net48;net6.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(OS)' != 'Windows_NT' ">net6.0</TargetFrameworks>
+		<LangVersion>8.0</LangVersion>
+		<Version>0.95.2</Version>
+		<IsPackable>false</IsPackable>
+		<Configurations>Debug;Release</Configurations>
+		<IsPackable>false</IsPackable>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\ClosedXML.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="**\*.xlsx" Exclude="**\~$*.xlsx;bin\**" />
+		<EmbeddedResource Include="**\*.xlsm" Exclude="**\~$*.xlsm;bin\**" />
+		<EmbeddedResource Include="Resource\Images\*.png" />
+		<EmbeddedResource Include="Resource\Images\*.jpg" />
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="NUnit" Version="3.13.2" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+		<PackageReference Include="System.Data.OleDb" Version="6.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ClosedXML.Examples\ClosedXML.Examples.csproj" />
+	</ItemGroup>
+
+</Project>

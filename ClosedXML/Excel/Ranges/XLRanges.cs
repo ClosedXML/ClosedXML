@@ -159,7 +159,7 @@ namespace ClosedXML.Excel
 
         public IEnumerable<IXLDataValidation> DataValidation
         {
-            get { return Ranges.Select(range => range.DataValidation).Where(dv => dv != null); }
+            get { return Ranges.Select(range => range.GetDataValidation()).Where(dv => dv != null); }
         }
 
         public IXLRanges AddToNamed(String rangeName)
@@ -291,7 +291,7 @@ namespace ClosedXML.Excel
             return Ranges.Aggregate(0, (current, r) => current ^ r.GetHashCode());
         }
 
-        public IXLDataValidation SetDataValidation()
+        public IXLDataValidation CreateDataValidation()
         {
             var firstRange = Ranges.First();
             var dataValidation = new XLDataValidation(firstRange);
@@ -302,6 +302,12 @@ namespace ClosedXML.Excel
 
             firstRange.Worksheet.DataValidations.Add(dataValidation);
             return dataValidation;
+        }
+
+        [Obsolete("Use CreateDataValidation() instead.")]
+        public IXLDataValidation SetDataValidation()
+        {
+            return CreateDataValidation();
         }
 
         public void Select()

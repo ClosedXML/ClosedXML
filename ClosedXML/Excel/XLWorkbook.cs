@@ -406,7 +406,10 @@ namespace ClosedXML.Excel
         public void SaveAs(String file, SaveOptions options)
         {
             checkForWorksheetsPresent();
-            PathHelper.CreateDirectory(Path.GetDirectoryName(file));
+
+            var directoryName = Path.GetDirectoryName(file);
+            if (!string.IsNullOrWhiteSpace(directoryName)) Directory.CreateDirectory(directoryName);
+
             if (_loadSource == XLLoadSource.New)
             {
                 if (File.Exists(file))

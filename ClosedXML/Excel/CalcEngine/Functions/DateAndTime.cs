@@ -1,3 +1,4 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +11,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(CalcEngine ce)
         {
             ce.RegisterFunction("DATE", 3, Date); // Returns the serial number of a particular date
+            ce.RegisterFunction("DATEDIF", 3, Datedif); // Calculates the number of days, months, or years between two dates
             ce.RegisterFunction("DATEVALUE", 1, Datevalue); // Converts a date in the form of text to a serial number
             ce.RegisterFunction("DAY", 1, Day); // Converts a serial number to a day of the month
             ce.RegisterFunction("DAYS", 2, Days); // Returns the number of days between two dates.
@@ -111,6 +113,31 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             return (int)Math.Floor(new DateTime(year, month, day).AddDays(daysAdjustment).ToOADate());
+        }
+
+        private static object Datedif(List<Expression> p)
+        {
+            DateTime startDate = p[0];
+            DateTime endDate = p[1];
+            string unit = p[2];
+
+            if (startDate > endDate)
+                throw new NumberException("The start date is greater than the end date");
+
+            return (unit.ToUpper()) switch
+            {
+                "Y" => endDate.Year - startDate.Year - (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0),
+                "M" => Math.Truncate((endDate.Year - startDate.Year) * 12d + endDate.Month - startDate.Month - (endDate.Day < startDate.Day ? 1 : 0)),
+                "D" => Math.Truncate(endDate.Date.Subtract(startDate.Date).TotalDays),
+
+                // Microsoft discouranges the use of the MD parameter
+                // https://support.microsoft.com/en-us/office/datedif-function-25dba1a4-2812-480b-84dd-8b32a451b35c
+                "MD" => (endDate.Day - startDate.Day + DateTime.DaysInMonth(startDate.Year, startDate.Month)) % DateTime.DaysInMonth(startDate.Year, startDate.Month),
+
+                "YM" => (endDate.Month - startDate.Month + 12) % 12 - (endDate.Day < startDate.Day ? 1 : 0),
+                "YD" => Math.Truncate(new DateTime(startDate.Year + (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0), endDate.Month, endDate.Day).Subtract(startDate).TotalDays),
+                _ => throw new NumberException(),
+            };
         }
 
         private static object Datevalue(List<Expression> p)
