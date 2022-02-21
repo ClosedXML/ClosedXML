@@ -68,6 +68,30 @@ namespace ClosedXML.Excel.CalcEngine
             _numericValues = null;
         }
 
+        public double Median()
+        {
+            var nums = NumericValuesInternal()
+                        .OrderBy(n => n)
+                        .ToArray();
+
+            if (nums.Length == 0) throw new ApplicationException("No values");
+
+            var hasEvenCount = nums.Length % 2 == 0;
+
+            if (hasEvenCount)
+            {
+                var numElementsToSkip = (nums.Length / 2) - 1;
+
+                return nums.Skip(numElementsToSkip)
+                           .Take(2)
+                           .Average();
+            }
+
+            var medianIndex = (nums.Length - 1) / 2;
+
+            return nums[medianIndex];
+        }
+
         public double Count()
         {
             return Count(NumbersOnly);
