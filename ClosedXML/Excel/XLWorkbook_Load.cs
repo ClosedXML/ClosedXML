@@ -1824,7 +1824,7 @@ namespace ClosedXML.Excel
                     xlCell.SetDataTypeFast(XLDataType.DateTime);
 
                     if (cell.CellValue != null && !String.IsNullOrWhiteSpace(cell.CellValue.Text))
-                        xlCell.SetInternalCellValueString(Double.Parse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture).ToInvariantString());
+                        xlCell.SetDateValue(cell.CellValue.Text);
                 }
                 else if (cell.DataType == CellValues.Boolean)
                 {

@@ -111,19 +111,18 @@ namespace ClosedXML.Tests
             // Set thread culture to French, which should format numbers using a space as thousands separator
             try
             {
-                var culture = CultureInfo.CreateSpecificCulture ("fr-FR");
+                var culture = CultureInfo.CreateSpecificCulture("fr-FR");
                 // but use a period instead of a comma as for decimal separator
                 culture.NumberFormat.CurrencyDecimalSeparator = ".";
                 Thread.CurrentThread.CurrentCulture = culture;
 
-                var cell = new XLWorkbook ().AddWorksheet ().FirstCell ();
+                var cell = new XLWorkbook().AddWorksheet().FirstCell();
 
-                Assert.IsNull (cell.Clear ().GetValue<double?> ());
-                Assert.AreEqual (1.5, cell.SetValue (1.5).GetValue<double?> ());
-                Assert.AreEqual (2, cell.SetValue (1.5).GetValue<int?> ());
-                Assert.AreEqual (2.5, cell.SetValue ("2.5").GetValue<double?> ());
-                Assert.Throws<FormatException> (() => cell.SetValue ("text").GetValue<double?> ());
-
+                Assert.IsNull(cell.Clear().GetValue<double?>());
+                Assert.AreEqual(1.5, cell.SetValue(1.5).GetValue<double?>());
+                Assert.AreEqual(2, cell.SetValue(1.5).GetValue<int?>());
+                Assert.AreEqual(2.5, cell.SetValue("2.5").GetValue<double?>());
+                Assert.Throws<FormatException>(() => cell.SetValue("text").GetValue<double?>());
             }
             finally
             {
@@ -904,6 +903,30 @@ namespace ClosedXML.Tests
 
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().Value = new string('A', 32768));
                 Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().SetValue(new string('A', 32768)));
+            }
+        }
+
+        [Test]
+        [Culture("en-GB")]
+        public void SetDateTime_in_Regular_and_Strict_Mode()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet1");
+
+                var cell = ws.FirstCell() as XLCell;
+
+                //Test non-strict mode
+                cell.SetDateValue("1/1/2000");
+
+                Assert.AreEqual("36526", cell.Value);
+                Assert.AreEqual(DateTime.Parse("1/1/2000"), DateTime.FromOADate(double.Parse(cell.Value as string)));
+
+                //Test strict mode
+                cell.SetDateValue("30000");
+
+                Assert.AreEqual("30000", cell.Value);
+                Assert.AreEqual(DateTime.Parse("2/18/1982"), DateTime.FromOADate(double.Parse(cell.Value as string)));
             }
         }
 
