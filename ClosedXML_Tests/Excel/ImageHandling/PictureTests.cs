@@ -290,6 +290,31 @@ namespace ClosedXML_Tests
         }
 
         [Test]
+        public void CanDeletePictureOnlyOne()
+        {
+            using (var ms = new MemoryStream())
+            {
+                int originalCount;
+
+                using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
+                using (var wb = new XLWorkbook(stream))
+                {
+                    var ws = wb.Worksheets.First();
+                    originalCount = ws.Pictures.Count;
+
+                    ws.Pictures.Delete(ws.Pictures.First());
+                    wb.SaveAs(ms);
+                }
+
+                using (var wb = new XLWorkbook(ms))
+                {
+                    var ws = wb.Worksheets.First();
+                    Assert.AreEqual(originalCount - 1, ws.Pictures.Count);
+                }
+            }
+        }
+
+        [Test]
         public void CanDeletePictures()
         {
             using (var ms = new MemoryStream())
