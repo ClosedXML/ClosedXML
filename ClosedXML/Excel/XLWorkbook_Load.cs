@@ -1922,7 +1922,7 @@ namespace ClosedXML.Excel
             }
 
             if (!hasRuns)
-                xlCell.SetInternalCellValueString(XmlEncoder.DecodeString(element.Text.InnerText));
+                xlCell.SetInternalCellValueString(XmlEncoder.DecodeString(element.Text?.InnerText));
 
             #region Load PhoneticProperties
 
