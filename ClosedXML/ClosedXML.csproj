@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net48;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(OS)' != 'Windows_NT' ">netstandard2.0</TargetFrameworks>
 		<LangVersion>8.0</LangVersion>
 		<AssemblyName>ClosedXML</AssemblyName>
 		<PackageId>DocumentPartner.ClosedXML</PackageId>
@@ -33,7 +34,7 @@
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-	  <Optimize>True</Optimize>
+		<Optimize>True</Optimize>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
 	</PropertyGroup>
@@ -56,5 +57,9 @@
 		<PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
 		<PackageReference Include="SkiaSharp" Version="2.80.2" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+		<PackageReference Include="System.IO.Packaging" Version="6.0.0" />
 	</ItemGroup>
 </Project>
