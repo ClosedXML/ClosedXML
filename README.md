@@ -25,7 +25,10 @@ ClosedXML allows you to create Excel files without the Excel application. The ty
 ```c#
 using (var workbook = new XLWorkbook())
 {
-	@@ -34,20 +32,24 @@ using (var workbook = new XLWorkbook())
+    var worksheet = workbook.Worksheets.Add("Sample Sheet");
+    worksheet.Cell("A1").Value = "Hello World!";
+    worksheet.Cell("A2").FormulaA1 = "=MID(A1, 7, 5)";
+    workbook.SaveAs("HelloWorld.xlsx");
 }
 ```
 
