@@ -17,8 +17,3 @@ updates:
       - dependency-name: "morelinq"
       - dependency-name: "Microsoft.NET.Test.Sdk"
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: weekly
-    rebase-strategy: auto
