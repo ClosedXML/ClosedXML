@@ -34,7 +34,6 @@ using (var workbook = new XLWorkbook())
 
 ### Frequent answers
 - ClosedXML is not thread-safe. There is no guarantee that [parallel operations](https://github.com/ClosedXML/ClosedXML/issues/1662) will work. The underlying OpenXML library is also not thread-safe.
-- If you get an exception `The type initializer for 'Gdip' threw an exception.` on Linux, try [these](https://stackoverflow.com/a/67092403/179494) [solutions](https://github.com/dotnet/runtime/issues/27200#issuecomment-415327256).
 
 ## Extensions
 
@@ -51,9 +50,3 @@ The [OpenXML specification](https://www.ecma-international.org/publications/stan
 
 Please read the [full developer guidelines](CONTRIBUTING.md).
 
-## Credits
-
-- Project originally created by Manuel de Leon
-- Current maintainer: [Francois Botha](https://github.com/igitur)
-- Master of Computing Patterns: [Aleksei Pankratev](https://github.com/Pankraty)
-- Logo design by [@Tobaloidee](https://github.com/Tobaloidee)
