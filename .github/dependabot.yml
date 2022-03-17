@@ -1,5 +1,11 @@
 version: 2
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
+    rebase-strategy: auto
+
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
@@ -10,3 +16,4 @@ updates:
       - dependency-name: "SonarAnalyzer.CSharp"
       - dependency-name: "morelinq"
       - dependency-name: "Microsoft.NET.Test.Sdk"
+
