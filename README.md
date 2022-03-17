@@ -1,5 +1,5 @@
 # ClosedXML
-[![Release](https://img.shields.io/badge/release-0.95.2-blue.svg)](https://github.com/ClosedXML/ClosedXML/releases/latest) [![NuGet Badge](https://buildstats.info/nuget/ClosedXML)](https://www.nuget.org/packages/ClosedXML/) [![.NET Framework](https://img.shields.io/badge/.NET%20Framework-%3E%3D%204.0-red.svg)](#) [![.NET Standard](https://img.shields.io/badge/.NET%20Standard-%3E%3D%202.0-red.svg)](#) [![Build status](https://ci.appveyor.com/api/projects/status/wobbmnlbukxejjgb?svg=true)](https://ci.appveyor.com/project/ClosedXML/ClosedXML/branch/develop/artifacts)
+
 [![.NET build and test](https://github.com/stesee/ClosedXML/actions/workflows/dotnet.yml/badge.svg)](https://github.com/stesee/ClosedXML/actions/workflows/dotnet.yml) [![NuGet Badge](https://buildstats.info/nuget/DocumentPartner.ClosedXML)](https://www.nuget.org/packages/DocumentPartner.ClosedXML/)
 
 ClosedXML is a .NET library for reading, manipulating and writing Excel 2007+ (.xlsx, .xlsm) files. It aims to provide an intuitive and user-friendly interface to dealing with the underlying [OpenXML](https://github.com/OfficeDev/Open-XML-SDK) API.
@@ -33,6 +33,7 @@ using (var workbook = new XLWorkbook())
 ```
 
 ### Frequent answers
+
 - ClosedXML is not thread-safe. There is no guarantee that [parallel operations](https://github.com/ClosedXML/ClosedXML/issues/1662) will work. The underlying OpenXML library is also not thread-safe.
 
 ## Extensions
@@ -49,4 +50,3 @@ Be sure to check out our `ClosedXML` extension projects
 The [OpenXML specification](https://www.ecma-international.org/publications/standards/Ecma-376.htm) is a large and complicated beast. In order for ClosedXML, the wrapper around OpenXML, to support all the features, we rely on community contributions. Before opening an issue to request a new feature, we'd like to urge you to try to implement it yourself and log a pull request.
 
 Please read the [full developer guidelines](CONTRIBUTING.md).
-
