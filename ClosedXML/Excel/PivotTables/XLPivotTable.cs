@@ -243,17 +243,7 @@ namespace ClosedXML.Excel
         
         public string GrandTotalCaption { get; set; }
 
-        public IXLPivotTable SetGrandTotalCaption(String value)
-        {
-            GrandTotalCaption = value; return this;
-        }
-        
         public string DataCaption { get; set; }
-
-        public IXLPivotTable SetDataCaption(String value)
-        {
-            DataCaption = value; return this;
-        }
 
         public String ColumnHeaderCaption { get; set; }
 
