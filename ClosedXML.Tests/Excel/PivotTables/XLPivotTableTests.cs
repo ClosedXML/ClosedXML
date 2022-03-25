@@ -170,6 +170,38 @@ namespace ClosedXML.Tests
             }
         }
 
+        [Test]
+        public void PivotTableOptionsSaveTest_CaptionsNotSet()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("PastrySalesData");
+                var table = ws.Table("PastrySalesData");
+                var ptSheet = wb.Worksheets.Add("BlankPivotTable");
+                var pt = ptSheet.PivotTables.Add("pvtOptionsTest", ptSheet.Cell(1, 1), table);
+
+                pt.DataCaption = null;
+                pt.GrandTotalCaption = null;
+
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+
+                    ms.Position = 0;
+
+                    using (var wbassert = new XLWorkbook(ms))
+                    {
+                        var wsassert = wbassert.Worksheet("BlankPivotTable");
+                        var ptassert = wsassert.PivotTable("pvtOptionsTest");
+
+                        Assert.AreEqual("Values", ptassert.DataCaption, "DataCaption save failure");
+                        Assert.AreEqual(null, ptassert.GrandTotalCaption, "GrandTotalCaption save failure");
+                    }
+                }
+            }
+        }
+
         [TestCase(true)]
         [TestCase(false)]
         public void PivotFieldOptionsSaveTest(bool withDefaults)
