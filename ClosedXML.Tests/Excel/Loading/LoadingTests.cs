@@ -394,6 +394,23 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CanLoadNullText()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\TextNull.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ws.Cell("C9").Value, Is.EqualTo(""));
+                    Assert.That(ws.Cell("A1").Value, Is.EqualTo("姓名"));
+                    Assert.That(ws.Cell("B1").Value, Is.EqualTo("年龄"));
+                    Assert.That(ws.Cell("C11").Value, Is.EqualTo("服务"));
+                });
+            }
+        }
+
+        [Test]
         public void CanCorrectLoadWorkbookCellWithStringDataType()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CellWithStringDataType.xlsx")))
