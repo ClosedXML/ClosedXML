@@ -41,8 +41,11 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: NugetPush
+      env: 
+          NUGET_TOKEN_EXISTS: ${{ secrets.NUGET_TOKEN }}
+      if:  env.NUGET_TOKEN_EXISTS != ''
       run: |
-          if: env.CLEAN_MVN_REPO != null
+          ls ./ClosedXML/bin/Release
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - name: GithubReleasesPush
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -69,14 +72,12 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: NugetPush
+      env: 
+          NUGET_TOKEN_EXISTS: ${{ secrets.NUGET_TEST_TOKEN }}
+      if:  env.NUGET_TOKEN_EXISTS != ''
       run: |
-         if [[ "${{ secrets.NUGET_TOKEN }}" != "" ]];
-         then
           ls ./ClosedXML/bin/Release
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TEST_TOKEN}} --source https://apiint.nugettest.org/v3/index.json
-         else
-           echo 'NugetPush will only run if the secret is missing.'
-         fi
     - name: GithubReleasesPush
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
