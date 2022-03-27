@@ -42,6 +42,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: NugetPush
       run: |
+          if: env.CLEAN_MVN_REPO != null
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -51,7 +52,6 @@ jobs:
         title: "Release Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
-          ./ClosedXML/bin/Release/*.snupkg
 
   deployTest:
     if: github.ref != 'refs/heads/main'
@@ -67,6 +67,10 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
+    - if: ${{ env.NUGET_TEST_TOKEN != '' }}
+      run: echo 'This step will only run if the secret has a value set.'
+    - if: ${{ env.NUGET_TEST_TOKEN == '' }}
+      run: echo 'This step will only run if the secret does not have a value set.'
     - name: NugetPush
       run: |
           ls ./ClosedXML/bin/Release
@@ -79,4 +83,3 @@ jobs:
         title: "Prerelease Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
-          ./ClosedXML/bin/Release/*.snupkg
