@@ -78,7 +78,7 @@ jobs:
            echo 'NugetPush will only run if the secret is missing.'
          fi
     - name: GithubReleasesPush
-    - uses: "marvinpinto/action-automatic-releases@latest"
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest-prerelease"
