@@ -45,7 +45,7 @@ jobs:
           if: env.CLEAN_MVN_REPO != null
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
     - name: GithubReleasesPush
-    - uses: "marvinpinto/action-automatic-releases@latest"
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: ${{ env.CURRENT_VERSION }}
