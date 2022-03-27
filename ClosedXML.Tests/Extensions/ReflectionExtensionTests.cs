@@ -15,15 +15,9 @@ namespace ClosedXML.Tests.Extensions
             }
 
             public static int StaticProperty { get; set; }
-#pragma warning disable 0649
             public static int StaticField;
-#pragma warning restore 0649
-
-#pragma warning disable 0067
 
             public static event EventHandler<EventArgs> StaticEvent;
-
-#pragma warning restore 0067
 
             public static void StaticMethod()
             {
@@ -36,15 +30,9 @@ namespace ClosedXML.Tests.Extensions
             }
 
             public int InstanceProperty { get; set; }
-#pragma warning disable 0649
             public int InstanceField;
-#pragma warning restore 0649
-
-#pragma warning disable 0067
 
             public event EventHandler<EventArgs> InstanceEvent;
-
-#pragma warning restore 0067
 
             public void InstanceMethod()
             {
