@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
@@ -41,9 +41,14 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: NugetPush
+      env: 
+          NUGET_TOKEN_EXISTS: ${{ secrets.NUGET_TOKEN }}
+      if:  env.NUGET_TOKEN_EXISTS != ''
       run: |
+          ls ./ClosedXML/bin/Release
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TOKEN}} --source https://api.nuget.org/v3/index.json
-    - uses: "marvinpinto/action-automatic-releases@latest"
+    - name: GithubReleasesPush
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: ${{ env.CURRENT_VERSION }}
@@ -51,7 +56,6 @@ jobs:
         title: "Release Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
-          ./ClosedXML/bin/Release/*.snupkg
 
   deployTest:
     if: github.ref != 'refs/heads/main'
@@ -68,10 +72,14 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: NugetPush
+      env: 
+          NUGET_TOKEN_EXISTS: ${{ secrets.NUGET_TEST_TOKEN }}
+      if:  env.NUGET_TOKEN_EXISTS != ''
       run: |
           ls ./ClosedXML/bin/Release
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TEST_TOKEN}} --source https://apiint.nugettest.org/v3/index.json
-    - uses: "marvinpinto/action-automatic-releases@latest"
+    - name: GithubReleasesPush
+      uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest-prerelease"
@@ -79,4 +87,3 @@ jobs:
         title: "Prerelease Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
-          ./ClosedXML/bin/Release/*.snupkg
