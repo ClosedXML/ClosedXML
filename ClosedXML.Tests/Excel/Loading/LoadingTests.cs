@@ -77,6 +77,22 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CanLoadAndSaveCommentAsNoteWithNoTextBox()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentAsNoteWithNoTextBox.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual("Author:\r\nbla", ws.Cell("A3").GetComment().Text);
+
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+                }
+            }
+        }
+
+        [Test]
         public void CanLoadDate1904SystemCorrectly()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\Date1904System.xlsx")))
