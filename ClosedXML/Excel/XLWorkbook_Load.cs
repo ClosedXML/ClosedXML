@@ -439,8 +439,9 @@ namespace ClosedXML.Excel
                             var clientData = shape.Elements().First(e => e.Name.LocalName == "ClientData");
                             LoadClientData(xlComment, clientData);
 
-                            var textBox = shape.Elements().First(e => e.Name.LocalName == "textbox");
-                            LoadTextBox(xlComment, textBox);
+                            var textBox = shape.Elements().FirstOrDefault(e => e.Name.LocalName == "textbox");
+                            if (textBox != null)
+                                LoadTextBox(xlComment, textBox);
 
                             var alt = shape.Attribute("alt");
                             if (alt != null) xlComment.Style.Web.SetAlternateText(alt.Value);
@@ -606,7 +607,9 @@ namespace ClosedXML.Excel
                             if (pivotTableDefinition.FieldPrintTitles != null) pt.PrintTitles = pivotTableDefinition.FieldPrintTitles.Value;
                             if (pivotTableDefinition.EnableDrill != null) pt.EnableShowDetails = pivotTableDefinition.EnableDrill.Value;
                             if (pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData != null) pt.SaveSourceData = pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData.Value;
-
+                            if (pivotTableDefinition.DataCaption != null) pt.DataCaption = pivotTableDefinition.DataCaption.Value;
+                            if (pivotTableDefinition.GrandTotalCaption != null) pt.GrandTotalCaption = pivotTableDefinition.GrandTotalCaption.Value;
+                            
                             if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit != null)
                             {
                                 if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == 0U)

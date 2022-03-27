@@ -111,6 +111,9 @@ namespace ClosedXML.Tests
                 pt.ShowColumnStripes = true;
                 pt.Theme = XLPivotTableTheme.PivotStyleDark13;
 
+                pt.DataCaption = "Test Caption Values";
+                pt.GrandTotalCaption = "Test Grand Total Caption";
+
                 using (var ms = new MemoryStream())
                 {
                     wb.SaveAs(ms, true);
@@ -160,6 +163,40 @@ namespace ClosedXML.Tests
                         Assert.AreEqual(false, ptassert.ShowColumnHeaders, "ShowColumnHeaders save failure");
                         Assert.AreEqual(true, ptassert.ShowRowStripes, "ShowRowStripes save failure");
                         Assert.AreEqual(true, ptassert.ShowColumnStripes, "ShowColumnStripes save failure");
+                        Assert.AreEqual("Test Caption Values", ptassert.DataCaption, "DataCaption save failure");
+                        Assert.AreEqual("Test Grand Total Caption", ptassert.GrandTotalCaption, "GrandTotalCaption save failure");
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void PivotTableOptionsSaveTest_CaptionsNotSet()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\PivotTables\PivotTables.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet("PastrySalesData");
+                var table = ws.Table("PastrySalesData");
+                var ptSheet = wb.Worksheets.Add("BlankPivotTable");
+                var pt = ptSheet.PivotTables.Add("pvtOptionsTest", ptSheet.Cell(1, 1), table);
+
+                pt.DataCaption = null;
+                pt.GrandTotalCaption = null;
+
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+
+                    ms.Position = 0;
+
+                    using (var wbassert = new XLWorkbook(ms))
+                    {
+                        var wsassert = wbassert.Worksheet("BlankPivotTable");
+                        var ptassert = wsassert.PivotTable("pvtOptionsTest");
+
+                        Assert.AreEqual("Values", ptassert.DataCaption, "DataCaption save failure");
+                        Assert.AreEqual(null, ptassert.GrandTotalCaption, "GrandTotalCaption save failure");
                     }
                 }
             }

@@ -41,6 +41,8 @@ namespace ClosedXML.Tests
 
                 && StringComparer.CurrentCulture.Equals(x.Title, y.Title)
                 && StringComparer.CurrentCulture.Equals(x.Description, y.Description)
+                && StringComparer.CurrentCulture.Equals(x.GrandTotalCaption, y.GrandTotalCaption)
+                && StringComparer.CurrentCulture.Equals(x.DataCaption, y.DataCaption)
                 && StringComparer.CurrentCulture.Equals(x.ColumnHeaderCaption, y.ColumnHeaderCaption)
                 && StringComparer.CurrentCulture.Equals(x.RowHeaderCaption, y.RowHeaderCaption)
                 && x.MergeAndCenterWithLabels.Equals(y.MergeAndCenterWithLabels)

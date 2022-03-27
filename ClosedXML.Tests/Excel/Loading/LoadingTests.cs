@@ -77,6 +77,22 @@ namespace ClosedXML.Tests.Excel
         }
 
         [Test]
+        public void CanLoadAndSaveCommentAsNoteWithNoTextBox()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\CommentAsNoteWithNoTextBox.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheets.First();
+                Assert.AreEqual("Author:\r\nbla", ws.Cell("A3").GetComment().Text);
+
+                using (var ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms, true);
+                }
+            }
+        }
+
+        [Test]
         public void CanLoadDate1904SystemCorrectly()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\Date1904System.xlsx")))
@@ -390,6 +406,23 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual("Arial", ws.Style.Font.FontName);
                 Assert.AreEqual(8, ws.Cell("A1").Style.Font.FontSize);
                 Assert.AreEqual("Arial", ws.Cell("A1").Style.Font.FontName);
+            }
+        }
+
+        [Test]
+        public void CanLoadNullText()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\TextNull.xlsx")))
+            using (var wb = new XLWorkbook(stream))
+            {
+                var ws = wb.Worksheet(1);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(ws.Cell("C9").Value, Is.EqualTo(""));
+                    Assert.That(ws.Cell("A1").Value, Is.EqualTo("姓名"));
+                    Assert.That(ws.Cell("B1").Value, Is.EqualTo("年龄"));
+                    Assert.That(ws.Cell("C11").Value, Is.EqualTo("服务"));
+                });
             }
         }
 
