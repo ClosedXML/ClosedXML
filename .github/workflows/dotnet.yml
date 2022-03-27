@@ -1,6 +1,6 @@
 name: .NET build and test
 env:
-  CURRENT_VERSION: 0.95.3.${{ github.run_number }}
+  CURRENT_VERSION: 0.95.${{ github.run_number }}
   LAST_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
 on:
@@ -14,7 +14,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -29,11 +29,11 @@ jobs:
   deployRelease:
     if: github.ref == 'refs/heads/main'
     runs-on: windows-latest
-    needs: build 
+    needs: build
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
@@ -48,7 +48,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: ${{ env.CURRENT_VERSION }}
         prerelease: false
-        title: "Release Build"
+        title: "Release Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
           ./ClosedXML/bin/Release/*.snupkg
@@ -56,11 +56,11 @@ jobs:
   deployTest:
     if: github.ref != 'refs/heads/main'
     runs-on: windows-latest
-    needs: build 
+    needs: build
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
@@ -76,7 +76,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest-prerelease"
         prerelease: true
-        title: "Prerelease Build"
+        title: "Prerelease Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
           ./ClosedXML/bin/Release/*.snupkg
