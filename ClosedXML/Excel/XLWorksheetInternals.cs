@@ -4,12 +4,13 @@ namespace ClosedXML.Excel
 {
     internal class XLWorksheetInternals : IDisposable
     {
+        private bool _disposed = false;
+
         public XLWorksheetInternals(
             XLCellsCollection cellsCollection,
             XLColumnsCollection columnsCollection,
             XLRowsCollection rowsCollection,
-            XLRanges mergedRanges
-            )
+            XLRanges mergedRanges)
         {
             CellsCollection = cellsCollection;
             ColumnsCollection = columnsCollection;
@@ -22,30 +23,28 @@ namespace ClosedXML.Excel
         public XLRowsCollection RowsCollection { get; private set; }
         public XLRanges MergedRanges { get; internal set; }
 
-        // Used by Janitor.Fody
-        private void DisposeManaged()
-        {
-            CellsCollection.Clear();
-            ColumnsCollection.Clear();
-            RowsCollection.Clear();
-            MergedRanges.RemoveAll();
-        }
-
-#if _NET40_
-
         public void Dispose()
         {
-            // net40 doesn't support Janitor.Fody, so let's dispose manually
-            DisposeManaged();
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
 
-#else
-
-        public void Dispose()
+        public void Dispose(bool disposing)
         {
-            // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
-        }
+            if (_disposed)
+                return;
 
-#endif
+            if (disposing)
+            {
+                CellsCollection?.Clear();
+                ColumnsCollection?.Clear();
+                RowsCollection?.Clear();
+                MergedRanges?.RemoveAll();
+            }
+
+            _disposed = true;
+        }
     }
 }

@@ -530,6 +530,8 @@ namespace ClosedXML.Excel
         /// </summary>
         private class RestoreOutsideBorder : IDisposable
         {
+            private bool _disposed = false;
+
             private readonly IXLRange _range;
             private readonly Dictionary<int, XLBorderKey> _topBorders;
             private readonly Dictionary<int, XLBorderKey> _bottomBorders;
@@ -557,55 +559,53 @@ namespace ClosedXML.Excel
                     c => (c.Style as XLStyle).Key.Border);
             }
 
-            // Used by Janitor.Fody
-            private void DisposeManaged()
-            {
-                _topBorders.ForEach(kp => (_range.FirstRow().Cell(kp.Key).Style
-                    .Border as XLBorder).Modify(k =>
-                    {
-                        k.TopBorder = kp.Value.TopBorder;
-                        k.TopBorderColor = kp.Value.TopBorderColor;
-                        return k;
-                    }));
-                _bottomBorders.ForEach(kp => (_range.LastRow().Cell(kp.Key).Style
-                    .Border as XLBorder).Modify(k =>
-                    {
-                        k.BottomBorder = kp.Value.BottomBorder;
-                        k.BottomBorderColor = kp.Value.BottomBorderColor;
-                        return k;
-                    }));
-                _leftBorders.ForEach(kp => (_range.FirstColumn().Cell(kp.Key).Style
-                    .Border as XLBorder).Modify(k =>
-                    {
-                        k.LeftBorder = kp.Value.LeftBorder;
-                        k.LeftBorderColor = kp.Value.LeftBorderColor;
-                        return k;
-                    }));
-                _rightBorders.ForEach(kp => (_range.LastColumn().Cell(kp.Key).Style
-                    .Border as XLBorder).Modify(k =>
-                    {
-                        k.RightBorder = kp.Value.RightBorder;
-                        k.RightBorderColor = kp.Value.RightBorderColor;
-                        return k;
-                    }));
-            }
-
-#if _NET40_
-
             public void Dispose()
             {
-                // net40 doesn't support Janitor.Fody, so let's dispose manually
-                DisposeManaged();
+                // Dispose of unmanaged resources.
+                Dispose(true);
+                // Suppress finalization.
+                GC.SuppressFinalize(this);
             }
 
-#else
-
-            public void Dispose()
+            public void Dispose(bool disposing)
             {
-                // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
-            }
+                if (_disposed)
+                    return;
 
-#endif
+                if (disposing)
+                {
+                    _topBorders.ForEach(kp => (_range.FirstRow().Cell(kp.Key).Style
+                        .Border as XLBorder).Modify(k =>
+                        {
+                            k.TopBorder = kp.Value.TopBorder;
+                            k.TopBorderColor = kp.Value.TopBorderColor;
+                            return k;
+                        }));
+                    _bottomBorders.ForEach(kp => (_range.LastRow().Cell(kp.Key).Style
+                        .Border as XLBorder).Modify(k =>
+                        {
+                            k.BottomBorder = kp.Value.BottomBorder;
+                            k.BottomBorderColor = kp.Value.BottomBorderColor;
+                            return k;
+                        }));
+                    _leftBorders.ForEach(kp => (_range.FirstColumn().Cell(kp.Key).Style
+                        .Border as XLBorder).Modify(k =>
+                        {
+                            k.LeftBorder = kp.Value.LeftBorder;
+                            k.LeftBorderColor = kp.Value.LeftBorderColor;
+                            return k;
+                        }));
+                    _rightBorders.ForEach(kp => (_range.LastColumn().Cell(kp.Key).Style
+                        .Border as XLBorder).Modify(k =>
+                        {
+                            k.RightBorder = kp.Value.RightBorder;
+                            k.RightBorderColor = kp.Value.RightBorderColor;
+                            return k;
+                        }));
+                }
+
+                _disposed = true;
+            }
         }
     }
 }
