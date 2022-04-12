@@ -81,9 +81,9 @@ namespace ClosedXML.Tests
 
             // Also load from template and save it again - but not necessary to test against reference file
             // We're just testing that it can save.
-            using (var ms = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             using (var wb = XLWorkbook.OpenFromTemplate(filePath1))
-                wb.SaveAs(ms, validate: true, evaluateFormula);
+                wb.SaveAs(memoryStream, validate: true, evaluateFormula);
 
             // Uncomment to replace expectation running .net6.0,
             //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", "Examples", filePartName.Replace("\\", "/")));
@@ -103,6 +103,9 @@ namespace ClosedXML.Tests
                         return;
                     }
 
+                    SaveToTestresults(streamExpected, "Expected" + resourcePath);
+                    SaveToTestresults(streamActual, "Actual" + resourcePath);
+
                     if (string.IsNullOrEmpty(expectedDiff))
                     {
                         Assert.Fail(formattedMessage);
@@ -111,6 +114,18 @@ namespace ClosedXML.Tests
                     Assert.That(message, Is.EqualTo(expectedDiff), $"Actual diff '{message}' differs to expected diff '{expectedDiff}', file '{resourcePath}'");
                 }
             }
+        }
+
+        private static void SaveToTestresults(Stream streamExpected, string filename)
+        {
+            var testResultDirectory = "./TestResult";
+            if (!Directory.Exists(testResultDirectory))
+            {
+                Directory.CreateDirectory(testResultDirectory);
+            }
+            streamExpected.Position = 0;
+            using var expectedFile = new FileStream($"./{testResultDirectory}/{filename}", FileMode.Create);
+            streamExpected.CopyTo(expectedFile);
         }
 
         public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false)
