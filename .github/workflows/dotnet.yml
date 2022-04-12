@@ -26,10 +26,11 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
+      uses: actions/upload-artifact@v3
       if: always()
       with:
-        files: "TestResult/**/*"
+        name: TestResult
+        path: "TestResult/**/*"
 
   deployRelease:
     if: github.ref == 'refs/heads/main'
