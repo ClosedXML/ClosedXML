@@ -17,7 +17,6 @@ namespace ClosedXML.Tests
             get { return Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol; }
         }
 
-        //Note: Run example tests parameters
         public static string TestsOutputDirectory
         {
             get
@@ -118,13 +117,20 @@ namespace ClosedXML.Tests
 
         private static void SaveToTestresults(Stream streamExpected, string filename)
         {
-            var testResultDirectory = "./TestResult";
+            var testResultDirectory = Path.Combine(TestsOutputDirectory, "../../../../../TestResult");
             if (!Directory.Exists(testResultDirectory))
             {
                 Directory.CreateDirectory(testResultDirectory);
             }
             streamExpected.Position = 0;
-            using var expectedFile = new FileStream($"./{testResultDirectory}/{filename}", FileMode.Create);
+            string path = Path.Combine(testResultDirectory, filename);
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            using var expectedFile = new FileStream(path, FileMode.Create);
             streamExpected.CopyTo(expectedFile);
         }
 
