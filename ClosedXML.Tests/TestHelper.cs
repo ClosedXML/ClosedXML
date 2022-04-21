@@ -37,23 +37,7 @@ namespace ClosedXML.Tests
             workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
         }
 
-        // Because different fonts are installed on Unix,
-        // the columns widths after AdjustToContents() will
-        // cause the tests to fail.
-        // Therefore we ignore the width attribute when running on Unix
-        public static bool StripColumnWidths
-        { get { return IsRunningOnUnix; } }
-
-        public static bool IsRunningOnUnix
-        {
-            get
-            {
-                int p = (int)Environment.OSVersion.Platform;
-                return ((p == 4) || (p == 6) || (p == 128));
-            }
-        }
-
-        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string expectedDiff = null)
+        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string expectedDiff = null, bool ignoreColumnFormats = false)
                 where T : IXLExample, new()
         {
             // Make sure tests run on a deterministic culture
@@ -80,9 +64,9 @@ namespace ClosedXML.Tests
 
             // Also load from template and save it again - but not necessary to test against reference file
             // We're just testing that it can save.
-            using (var memoryStream = new MemoryStream())
+            using (var ms = new MemoryStream())
             using (var wb = XLWorkbook.OpenFromTemplate(filePath1))
-                wb.SaveAs(memoryStream, validate: true, evaluateFormula);
+                wb.SaveAs(ms, validate: true, evaluateFormula);
 
             // Uncomment to replace expectation running .net6.0,
             //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", "Examples", filePartName.Replace("\\", "/")));
@@ -94,7 +78,7 @@ namespace ClosedXML.Tests
                 using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message, ignoreColumnFormats);
                     var formattedMessage = $"Actual file is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
 
                     if (success)
@@ -134,7 +118,7 @@ namespace ClosedXML.Tests
             streamExpected.CopyTo(expectedFile);
         }
 
-        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false)
+        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool ignoreColumnFormats = false)
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
@@ -159,7 +143,7 @@ namespace ClosedXML.Tests
                 using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message, ignoreColumnFormats);
                     var formattedMessage =
                         string.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",
