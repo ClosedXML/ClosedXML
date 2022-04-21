@@ -1,5 +1,6 @@
 using ClosedXML.Examples;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace ClosedXML.Tests.Examples
 {
@@ -33,7 +34,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void DateTimeGroupAutoFilter()
         {
-            TestHelper.RunTestExample<DateTimeGroupAutoFilter>(@"AutoFilter\DateTimeGroupAutoFilter.xlsx");
+            TestHelper.RunTestExample<DateTimeGroupAutoFilter>(@"AutoFilter\DateTimeGroupAutoFilter.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
     }
 }

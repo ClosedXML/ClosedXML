@@ -2,6 +2,7 @@ using ClosedXML.Examples;
 using ClosedXML.Examples.Misc;
 using ClosedXML.Examples.Ranges;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace ClosedXML.Tests.Examples
 {
@@ -17,13 +18,13 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void CopyingRanges()
         {
-            TestHelper.RunTestExample<CopyingRanges>(@"Ranges\CopyingRanges.xlsx");
+            TestHelper.RunTestExample<CopyingRanges>(@"Ranges\CopyingRanges.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void CurrentRowColumn()
         {
-            TestHelper.RunTestExample<CurrentRowColumn>(@"Ranges\CurrentRowColumn.xlsx");
+            TestHelper.RunTestExample<CurrentRowColumn>(@"Ranges\CurrentRowColumn.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -59,7 +60,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void NamedRanges()
         {
-            TestHelper.RunTestExample<NamedRanges>(@"Ranges\NamedRanges.xlsx");
+            TestHelper.RunTestExample<NamedRanges>(@"Ranges\NamedRanges.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void ShiftingRanges()
         {
-            TestHelper.RunTestExample<ShiftingRanges>(@"Ranges\ShiftingRanges.xlsx");
+            TestHelper.RunTestExample<ShiftingRanges>(@"Ranges\ShiftingRanges.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -89,19 +90,19 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void TransposeRanges()
         {
-            TestHelper.RunTestExample<TransposeRanges>(@"Ranges\TransposeRanges.xlsx");
+            TestHelper.RunTestExample<TransposeRanges>(@"Ranges\TransposeRanges.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void TransposeRangesPlus()
         {
-            TestHelper.RunTestExample<TransposeRangesPlus>(@"Ranges\TransposeRangesPlus.xlsx");
+            TestHelper.RunTestExample<TransposeRangesPlus>(@"Ranges\TransposeRangesPlus.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void AddingRowToTables()
         {
-            TestHelper.RunTestExample<AddingRowToTables>(@"Ranges\AddingRowToTables.xlsx");
+            TestHelper.RunTestExample<AddingRowToTables>(@"Ranges\AddingRowToTables.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]

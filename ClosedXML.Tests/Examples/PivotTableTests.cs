@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Examples;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace ClosedXML.Tests.Examples
 {
@@ -9,7 +10,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void PivotTables()
         {
-            TestHelper.RunTestExample<PivotTables>(@"PivotTables\PivotTables.xlsx");
+            TestHelper.RunTestExample<PivotTables>(@"PivotTables\PivotTables.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
     }
 }

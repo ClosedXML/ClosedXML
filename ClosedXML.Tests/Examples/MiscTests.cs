@@ -11,13 +11,13 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void AddingDataSet()
         {
-            TestHelper.RunTestExample<AddingDataSet>(@"Misc\AddingDataSet.xlsx");
+            TestHelper.RunTestExample<AddingDataSet>(@"Misc\AddingDataSet.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void AddingDataTableAsWorksheet()
         {
-            TestHelper.RunTestExample<AddingDataTableAsWorksheet>(@"Misc\AddingDataTableAsWorksheet.xlsx");
+            TestHelper.RunTestExample<AddingDataTableAsWorksheet>(@"Misc\AddingDataTableAsWorksheet.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -30,13 +30,13 @@ namespace ClosedXML.Tests.Examples
                 allowedDiff = null;
             }
 
-            TestHelper.RunTestExample<AdjustToContents>(@"Misc\AdjustToContents.xlsx", false, allowedDiff);
+            TestHelper.RunTestExample<AdjustToContents>(@"Misc\AdjustToContents.xlsx", false, allowedDiff, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void AdjustToContentsWithAutoFilter()
         {
-            TestHelper.RunTestExample<AdjustToContentsWithAutoFilter>(@"Misc\AdjustToContentsWithAutoFilter.xlsx");
+            TestHelper.RunTestExample<AdjustToContentsWithAutoFilter>(@"Misc\AdjustToContentsWithAutoFilter.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void BasicTable()
         {
-            TestHelper.RunTestExample<BasicTable>(@"Misc\BasicTable.xlsx");
+            TestHelper.RunTestExample<BasicTable>(@"Misc\BasicTable.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -60,13 +60,13 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void CellValues()
         {
-            TestHelper.RunTestExample<CellValues>(@"Misc\CellValues.xlsx");
+            TestHelper.RunTestExample<CellValues>(@"Misc\CellValues.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void Collections()
         {
-            TestHelper.RunTestExample<Collections>(@"Misc\Collections.xlsx");
+            TestHelper.RunTestExample<Collections>(@"Misc\Collections.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -78,19 +78,19 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void CopyingWorksheets()
         {
-            TestHelper.RunTestExample<CopyingWorksheets>(@"Misc\CopyingWorksheets.xlsx");
+            TestHelper.RunTestExample<CopyingWorksheets>(@"Misc\CopyingWorksheets.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void DataTypes()
         {
-            TestHelper.RunTestExample<DataTypes>(@"Misc\DataTypes.xlsx");
+            TestHelper.RunTestExample<DataTypes>(@"Misc\DataTypes.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void DataTypesUnderDifferentCulture()
         {
-            TestHelper.RunTestExample<DataTypesUnderDifferentCulture>(@"Misc\DataTypesUnderDifferentCulture.xlsx");
+            TestHelper.RunTestExample<DataTypesUnderDifferentCulture>(@"Misc\DataTypesUnderDifferentCulture.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -132,13 +132,13 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void Formulas()
         {
-            TestHelper.RunTestExample<Formulas>(@"Misc\Formulas.xlsx");
+            TestHelper.RunTestExample<Formulas>(@"Misc\Formulas.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void FormulasWithEvaluation()
         {
-            TestHelper.RunTestExample<FormulasWithEvaluation>(@"Misc\FormulasWithEvaluation.xlsx", true);
+            TestHelper.RunTestExample<FormulasWithEvaluation>(@"Misc\FormulasWithEvaluation.xlsx", true, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -162,19 +162,19 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void Hyperlinks()
         {
-            TestHelper.RunTestExample<Hyperlinks>(@"Misc\Hyperlinks.xlsx");
+            TestHelper.RunTestExample<Hyperlinks>(@"Misc\Hyperlinks.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void InsertingData()
         {
-            TestHelper.RunTestExample<InsertingData>(@"Misc\InsertingData.xlsx");
+            TestHelper.RunTestExample<InsertingData>(@"Misc\InsertingData.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void LambdaExpressions()
         {
-            TestHelper.RunTestExample<LambdaExpressions>(@"Misc\LambdaExpressions.xlsx");
+            TestHelper.RunTestExample<LambdaExpressions>(@"Misc\LambdaExpressions.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -204,7 +204,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void SheetProtection()
         {
-            TestHelper.RunTestExample<SheetProtection>(@"Misc\SheetProtection.xlsx");
+            TestHelper.RunTestExample<SheetProtection>(@"Misc\SheetProtection.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -222,7 +222,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void ShowCase()
         {
-            TestHelper.RunTestExample<ShowCase>(@"Misc\ShowCase.xlsx");
+            TestHelper.RunTestExample<ShowCase>(@"Misc\ShowCase.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]

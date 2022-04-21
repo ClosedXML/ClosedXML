@@ -1,5 +1,4 @@
-﻿#if NETFRAMEWORK
-
+﻿
 using ClosedXML.Excel;
 using ClosedXML.Tests.Utils;
 using NUnit.Framework;
@@ -7,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace ClosedXML.Tests.OleDb
 {
@@ -16,6 +17,8 @@ namespace ClosedXML.Tests.OleDb
     public class OleDbTests
     {
         [Test]
+        [Platform("NET")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Using NUnit platform filter to achieve that this test does only run on .net4.x")]
         public void TestOleDbValues()
         {
             using (var tf = new TemporaryFile(CreateTestFile()))
@@ -24,21 +27,35 @@ namespace ClosedXML.Tests.OleDb
                 var connectionString = string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1';", tf.Path);
                 using (var connection = new OleDbConnection(connectionString))
                 {
-                    // Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255 if required
-                    // Also check that test runner is running under correct architecture:
+                    var currentUserCulture = Thread.CurrentThread.CurrentCulture;
+                    var currentUserUiCulture = Thread.CurrentThread.CurrentUICulture;
                     try
                     {
-                        connection.Open();
-                    }
-                    catch (System.InvalidOperationException excpetion)
-                    {
-                        if (excpetion.Message == "The 'Microsoft.ACE.OLEDB.12.0' provider is not registered on the local machine.")
+                        Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
+                        // Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255 if required
+                        // Also check that test runner is running under correct architecture:
+                        try
                         {
-                            Assert.Ignore("Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255");
+                            connection.Open();
                         }
-                        else
-                            throw;
+                        catch (InvalidOperationException excpetion)
+                        {
+                            if (excpetion.Message == "The 'Microsoft.ACE.OLEDB.12.0' provider is not registered on the local machine.")
+                            {
+                                Assert.Ignore("Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255");
+                            }
+                            else
+                                throw;
+                        }
                     }
+                    finally
+                    {
+                        Thread.CurrentThread.CurrentCulture = currentUserCulture;
+                        Thread.CurrentThread.CurrentUICulture = currentUserUiCulture;
+                    }
+
                     using (var command = new OleDbCommand("select * from [Sheet1$]", connection))
                     using (var dataAdapter = new OleDbDataAdapter())
                     {
@@ -131,4 +148,3 @@ namespace ClosedXML.Tests.OleDb
     }
 }
 
-#endif

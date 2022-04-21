@@ -10,27 +10,19 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void InsertingTables()
         {
-            var allowedDiff = "/xl/worksheets/sheet1.xml :NonEqual\n";
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                allowedDiff = null;
-            }
-
-            TestHelper.RunTestExample<InsertingTables>(@"Tables\InsertingTables.xlsx", false, allowedDiff);
+            TestHelper.RunTestExample<InsertingTables>(@"Tables\InsertingTables.xlsx", false, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
-        [Ignore("Don't know, why this new test of Francois Botha fails")]
         public void ResizingTables()
         {
-            TestHelper.RunTestExample<ResizingTables>(@"Tables\ResizingTables.xlsx");
+            TestHelper.RunTestExample<ResizingTables>(@"Tables\ResizingTables.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void UsingTables()
         {
-            TestHelper.RunTestExample<UsingTables>(@"Tables\UsingTables.xlsx");
+            TestHelper.RunTestExample<UsingTables>(@"Tables\UsingTables.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
     }
 }
