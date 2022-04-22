@@ -16,8 +16,7 @@ namespace ClosedXML.Excel.Drawings
         private const int ImageQuality = 70;
         private static readonly IDictionary<XLPictureFormat, SKEncodedImageFormat> FormatMap;
 
-        // TODO: can this be handlled without getting height etc. of image?
-        private readonly bool unreadableImage = false;
+        private bool _disposed = false;
 
         private Int32 height;
         private Int32 id;
@@ -50,6 +49,7 @@ namespace ClosedXML.Excel.Drawings
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
                 var codec = SKCodec.Create(ImageStream, out var result);
+
                 if (codec != null)
                 {
                     using (var bitmap = SKBitmap.Decode(codec))
@@ -60,8 +60,6 @@ namespace ClosedXML.Excel.Drawings
                         DeduceDimensionsFromBitmap(bitmap);
                     }
                 }
-                else
-                    unreadableImage = true;
 
                 ImageStream.Seek(0, SeekOrigin.Begin);
             }
@@ -89,8 +87,6 @@ namespace ClosedXML.Excel.Drawings
                         DeduceDimensionsFromBitmap(bitmap);
                     }
                 }
-                else
-                    unreadableImage = true;
 
                 ImageStream.Seek(0, SeekOrigin.Begin);
             }
@@ -140,11 +136,15 @@ namespace ClosedXML.Excel.Drawings
         {
             get
             {
+                ThrowIfDisposed();
+
                 return Markers[XLMarkerPosition.BottomRight].Cell;
             }
 
             private set
             {
+                ThrowIfDisposed();
+
                 if (!value.Worksheet.Equals(Worksheet))
                     throw new InvalidOperationException("A picture and its anchor cells must be on the same worksheet");
 
@@ -156,9 +156,16 @@ namespace ClosedXML.Excel.Drawings
 
         public Int32 Height
         {
-            get { return height; }
+            get
+            {
+                ThrowIfDisposed();
+
+                return height;
+            }
             set
             {
+                ThrowIfDisposed();
+
                 if (Placement == XLPicturePlacement.MoveAndSize)
                     throw new ArgumentException("To set the height, the placement should be FreeFloating or Move");
                 height = value;
@@ -167,9 +174,16 @@ namespace ClosedXML.Excel.Drawings
 
         public Int32 Id
         {
-            get { return id; }
+            get
+            {
+                ThrowIfDisposed();
+
+                return id;
+            }
             internal set
             {
+                ThrowIfDisposed();
+
                 if ((Worksheet.Pictures.FirstOrDefault(p => p.Id.Equals(value)) ?? this) != this)
                     throw new ArgumentException($"The picture ID '{value}' already exists.");
 
@@ -181,9 +195,16 @@ namespace ClosedXML.Excel.Drawings
 
         public float Left
         {
-            get { return Markers[XLMarkerPosition.TopLeft]?.Offset.X ?? 0; }
+            get
+            {
+                ThrowIfDisposed();
+
+                return Markers[XLMarkerPosition.TopLeft]?.Offset.X ?? 0;
+            }
             set
             {
+                ThrowIfDisposed();
+
                 if (Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the left-hand offset, the placement should be FreeFloating");
 
@@ -193,9 +214,16 @@ namespace ClosedXML.Excel.Drawings
 
         public String Name
         {
-            get { return name; }
+            get
+            {
+                ThrowIfDisposed();
+
+                return name;
+            }
             set
             {
+                ThrowIfDisposed();
+
                 if (name == value) return;
 
                 if ((Worksheet.Pictures.FirstOrDefault(p => p.Name.Equals(value, StringComparison.OrdinalIgnoreCase)) ?? this) != this)
@@ -213,9 +241,16 @@ namespace ClosedXML.Excel.Drawings
 
         public float Top
         {
-            get { return Markers[XLMarkerPosition.TopLeft]?.Offset.Y ?? 0; }
+            get
+            {
+                ThrowIfDisposed();
+
+                return Markers[XLMarkerPosition.TopLeft]?.Offset.Y ?? 0;
+            }
             set
             {
+                ThrowIfDisposed();
+
                 if (Placement != XLPicturePlacement.FreeFloating)
                     throw new ArgumentException("To set the top offset, the placement should be FreeFloating");
 
@@ -227,11 +262,15 @@ namespace ClosedXML.Excel.Drawings
         {
             get
             {
+                ThrowIfDisposed();
+
                 return Markers[XLMarkerPosition.TopLeft].Cell;
             }
 
             private set
             {
+                ThrowIfDisposed();
+
                 if (!value.Worksheet.Equals(Worksheet))
                     throw new InvalidOperationException("A picture and its anchor cells must be on the same worksheet");
 
@@ -241,9 +280,16 @@ namespace ClosedXML.Excel.Drawings
 
         public Int32 Width
         {
-            get { return width; }
+            get
+            {
+                ThrowIfDisposed();
+
+                return width;
+            }
             set
             {
+                ThrowIfDisposed();
+
                 if (Placement == XLPicturePlacement.MoveAndSize)
                     throw new ArgumentException("To set the width, the placement should be FreeFloating or Move");
                 width = value;
@@ -263,36 +309,46 @@ namespace ClosedXML.Excel.Drawings
         /// <returns>A created copy of the picture.</returns>
         public IXLPicture CopyTo(IXLWorksheet targetSheet)
         {
+            ThrowIfDisposed();
+
             return CopyTo((XLWorksheet)targetSheet);
         }
 
         public void Delete()
         {
+            ThrowIfDisposed();
+
             Worksheet.Pictures.Delete(Name);
         }
 
-        // Used by Janitor.Fody
-        private void DisposeManaged()
-        {
-            ImageStream.Dispose();
-        }
-
-#if _NET40_
-
         public void Dispose()
         {
-            // net40 doesn't support Janitor.Fody, so let's dispose manually
-            DisposeManaged();
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
 
-#else
-
-        public void Dispose()
+        public void Dispose(bool disposing)
         {
-            // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                ImageStream.Dispose();
+            }
+
+            _disposed = true;
         }
 
-#endif
+        void ThrowIfDisposed()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException("TemplateClass");
+            }
+        }
 
         /// <summary>
         /// Create a copy of the picture on the same worksheet.
@@ -300,16 +356,22 @@ namespace ClosedXML.Excel.Drawings
         /// <returns>A created copy of the picture.</returns>
         public IXLPicture Duplicate()
         {
+            ThrowIfDisposed();
+
             return CopyTo(Worksheet);
         }
 
         public SKPoint GetOffset(XLMarkerPosition position)
         {
+            ThrowIfDisposed();
+
             return Markers[position].Offset;
         }
 
         public IXLPicture MoveTo(float left, float top)
         {
+            ThrowIfDisposed();
+
             Placement = XLPicturePlacement.FreeFloating;
             Left = left;
             Top = top;
@@ -318,16 +380,22 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture MoveTo(IXLCell cell)
         {
+            ThrowIfDisposed();
+
             return MoveTo(cell, 0, 0);
         }
 
         public IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset)
         {
+            ThrowIfDisposed();
+
             return MoveTo(cell, new SKPoint(xOffset, yOffset));
         }
 
         public IXLPicture MoveTo(IXLCell cell, SKPoint offset)
         {
+            ThrowIfDisposed();
+
             if (cell == null) throw new ArgumentNullException(nameof(cell));
             Placement = XLPicturePlacement.Move;
             TopLeftCell = cell;
@@ -337,16 +405,22 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture MoveTo(IXLCell fromCell, IXLCell toCell)
         {
+            ThrowIfDisposed();
+
             return MoveTo(fromCell, 0, 0, toCell, 0, 0);
         }
 
         public IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset)
         {
+            ThrowIfDisposed();
+
             return MoveTo(fromCell, new SKPoint(fromCellXOffset, fromCellYOffset), toCell, new SKPoint(toCellXOffset, toCellYOffset));
         }
 
         public IXLPicture MoveTo(IXLCell fromCell, SKPoint fromOffset, IXLCell toCell, SKPoint toOffset)
         {
+            ThrowIfDisposed();
+
             if (fromCell == null) throw new ArgumentNullException(nameof(fromCell));
             if (toCell == null) throw new ArgumentNullException(nameof(toCell));
             Placement = XLPicturePlacement.MoveAndSize;
@@ -362,29 +436,39 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Scale(Double factor, Boolean relativeToOriginal = false)
         {
+            ThrowIfDisposed();
+
             return ScaleHeight(factor, relativeToOriginal).ScaleWidth(factor, relativeToOriginal);
         }
 
         public IXLPicture ScaleHeight(Double factor, Boolean relativeToOriginal = false)
         {
+            ThrowIfDisposed();
+
             Height = Convert.ToInt32((relativeToOriginal ? OriginalHeight : Height) * factor);
             return this;
         }
 
         public IXLPicture ScaleWidth(Double factor, Boolean relativeToOriginal = false)
         {
+            ThrowIfDisposed();
+
             Width = Convert.ToInt32((relativeToOriginal ? OriginalWidth : Width) * factor);
             return this;
         }
 
         public IXLPicture WithPlacement(XLPicturePlacement value)
         {
+            ThrowIfDisposed();
+
             Placement = value;
             return this;
         }
 
         public IXLPicture WithSize(Int32 width, Int32 height)
         {
+            ThrowIfDisposed();
+
             Width = width;
             Height = height;
             return this;
@@ -392,6 +476,8 @@ namespace ClosedXML.Excel.Drawings
 
         internal IXLPicture CopyTo(XLWorksheet targetSheet)
         {
+            ThrowIfDisposed();
+
             if (targetSheet == null)
                 targetSheet = Worksheet as XLWorksheet;
 
@@ -427,6 +513,8 @@ namespace ClosedXML.Excel.Drawings
 
         internal void SetName(string value)
         {
+            ThrowIfDisposed();
+
             if (String.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Picture names cannot be empty");
 

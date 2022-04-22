@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace ClosedXML.Tests
 {
@@ -463,7 +464,7 @@ namespace ClosedXML.Tests
                     //wb.SaveAs(expectedFileInVsSolution);
 
                     return wb;
-                }, expectedFilePath);
+                }, expectedFilePath, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
             }
         }
 
@@ -534,7 +535,7 @@ namespace ClosedXML.Tests
                     //wb.SaveAs(expectedFileInVsSolution);
 
                     return wb;
-                }, expectedFilePath);
+                }, expectedFilePath, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
             }
         }
 

@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         /// <summary>
-        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
         public XLColumn(XLWorksheet worksheet, Int32 column)
             : base(XLRangeAddress.EntireColumn(worksheet, column), worksheet.StyleValue)
@@ -332,7 +332,8 @@ namespace ClosedXML.Excel
                     thisWidthMax = cellStyle.Font.GetWidth(c.GetFormattedString(), fontCache);
 
                 if (autoFilterRows.Contains(c.Address.RowNumber))
-                    thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
+                    // Allow room for arrow icon in auto filter
+                    thisWidthMax += 2.7148;
 
                 if (thisWidthMax >= maxWidth)
                 {

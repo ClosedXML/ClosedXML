@@ -1,5 +1,6 @@
 using ClosedXML.Examples.Styles;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace ClosedXML.Tests.Examples
 {
@@ -39,19 +40,19 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void StyleFont()
         {
-            TestHelper.RunTestExample<StyleFont>(@"Styles\StyleFont.xlsx");
+            TestHelper.RunTestExample<StyleFont>(@"Styles\StyleFont.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void StyleNumberFormat()
         {
-            TestHelper.RunTestExample<StyleNumberFormat>(@"Styles\StyleNumberFormat.xlsx");
+            TestHelper.RunTestExample<StyleNumberFormat>(@"Styles\StyleNumberFormat.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
         public void StyleIncludeQuotePrefix()
         {
-            TestHelper.RunTestExample<StyleIncludeQuotePrefix>(@"Styles\StyleIncludeQuotePrefix.xlsx");
+            TestHelper.RunTestExample<StyleIncludeQuotePrefix>(@"Styles\StyleIncludeQuotePrefix.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -69,7 +70,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void UsingColors()
         {
-            TestHelper.RunTestExample<UsingColors>(@"Styles\UsingColors.xlsx");
+            TestHelper.RunTestExample<UsingColors>(@"Styles\UsingColors.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]
@@ -81,7 +82,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void UsingRichText()
         {
-            TestHelper.RunTestExample<UsingRichText>(@"Styles\UsingRichText.xlsx");
+            TestHelper.RunTestExample<UsingRichText>(@"Styles\UsingRichText.xlsx", ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
     }
 }

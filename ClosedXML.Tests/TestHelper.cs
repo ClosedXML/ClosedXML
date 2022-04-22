@@ -17,7 +17,6 @@ namespace ClosedXML.Tests
             get { return Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol; }
         }
 
-        //Note: Run example tests parameters
         public static string TestsOutputDirectory
         {
             get
@@ -38,23 +37,7 @@ namespace ClosedXML.Tests
             workbook.SaveAs(Path.Combine(new string[] { TestsOutputDirectory }.Concat(fileNameParts).ToArray()), true);
         }
 
-        // Because different fonts are installed on Unix,
-        // the columns widths after AdjustToContents() will
-        // cause the tests to fail.
-        // Therefore we ignore the width attribute when running on Unix
-        public static bool StripColumnWidths
-        { get { return IsRunningOnUnix; } }
-
-        public static bool IsRunningOnUnix
-        {
-            get
-            {
-                int p = (int)Environment.OSVersion.Platform;
-                return ((p == 4) || (p == 6) || (p == 128));
-            }
-        }
-
-        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string expectedDiff = null)
+        public static void RunTestExample<T>(string filePartName, bool evaluateFormula = false, string expectedDiff = null, bool ignoreColumnFormats = false)
                 where T : IXLExample, new()
         {
             // Make sure tests run on a deterministic culture
@@ -95,13 +78,16 @@ namespace ClosedXML.Tests
                 using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message, ignoreColumnFormats);
                     var formattedMessage = $"Actual file is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
 
                     if (success)
                     {
                         return;
                     }
+
+                    SaveToTestresults(streamExpected, "Expected" + resourcePath);
+                    SaveToTestresults(streamActual, "Actual" + resourcePath);
 
                     if (string.IsNullOrEmpty(expectedDiff))
                     {
@@ -113,7 +99,26 @@ namespace ClosedXML.Tests
             }
         }
 
-        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false)
+        private static void SaveToTestresults(Stream streamExpected, string filename)
+        {
+            var testResultDirectory = Path.Combine(TestsOutputDirectory, "../../../../../TestResult");
+            if (!Directory.Exists(testResultDirectory))
+            {
+                Directory.CreateDirectory(testResultDirectory);
+            }
+            streamExpected.Position = 0;
+            string path = Path.Combine(testResultDirectory, filename);
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            using var expectedFile = new FileStream(path, FileMode.Create);
+            streamExpected.CopyTo(expectedFile);
+        }
+
+        public static void CreateAndCompare(Func<IXLWorkbook> workbookGenerator, string referenceResource, bool evaluateFormulae = false, bool ignoreColumnFormats = false)
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
@@ -138,7 +143,7 @@ namespace ClosedXML.Tests
                 using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message, ignoreColumnFormats);
                     var formattedMessage =
                         string.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",

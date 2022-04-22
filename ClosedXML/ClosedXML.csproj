@@ -44,11 +44,6 @@
 		<None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Fody" Version="6.6.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Janitor.Fody" Version="1.9.0" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
 	<ItemGroup>

@@ -25,6 +25,12 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release
+    - name: Publish Unit Test Results
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: TestResult
+        path: "TestResult/**/*"
 
   deployRelease:
     if: github.ref == 'refs/heads/main'

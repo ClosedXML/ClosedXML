@@ -326,7 +326,7 @@ namespace ClosedXML.Excel
                     }
 
                     if (dTable.TotalsRowCount != null && dTable.TotalsRowCount.Value > 0)
-                        ((XLTable)xlTable)._showTotalsRow = true;
+                        xlTable._showTotalsRow = true;
 
                     if (dTable.TableStyleInfo != null)
                     {
@@ -609,7 +609,7 @@ namespace ClosedXML.Excel
                             if (pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData != null) pt.SaveSourceData = pivotTableCacheDefinitionPart.PivotCacheDefinition.SaveData.Value;
                             if (pivotTableDefinition.DataCaption != null) pt.DataCaption = pivotTableDefinition.DataCaption.Value;
                             if (pivotTableDefinition.GrandTotalCaption != null) pt.GrandTotalCaption = pivotTableDefinition.GrandTotalCaption.Value;
-                            
+
                             if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit != null)
                             {
                                 if (pivotTableCacheDefinitionPart.PivotCacheDefinition.MissingItemsLimit == 0U)
@@ -1589,7 +1589,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static Regex definedNameRegex = new Regex(@"\A'.*'!.*\z", RegexOptions.Compiled);
+        private static readonly Regex definedNameRegex = new Regex(@"\A'.*'!.*\z", RegexOptions.Compiled);
 
         private IEnumerable<String> validateDefinedNames(IEnumerable<String> definedNames)
         {
@@ -2155,7 +2155,6 @@ namespace ClosedXML.Excel
                 if (col.Width != null)
                 {
                     Double width = col.Width - ColumnWidthOffset;
-                    //if (width < 0) width = 0;
                     xlColumns.Width = width;
                 }
                 else

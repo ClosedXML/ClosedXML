@@ -115,6 +115,8 @@ namespace ClosedXML.Excel
 
         #endregion Static
 
+        private bool _disposed = false;
+
         internal readonly List<UnsupportedSheet> UnsupportedSheets =
             new List<UnsupportedSheet>();
 
@@ -153,7 +155,12 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLWorksheets Worksheets
         {
-            get { return WorksheetsInternal; }
+            get
+            {
+                ThrowIfDisposed();
+
+                return WorksheetsInternal;
+            }
         }
 
         /// <summary>
@@ -290,6 +297,8 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange NamedRange(String rangeName)
         {
+            ThrowIfDisposed();
+
             if (rangeName.Contains("!"))
             {
                 var split = rangeName.Split('!');
@@ -308,11 +317,15 @@ namespace ClosedXML.Excel
 
         public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
         {
+            ThrowIfDisposed();
+
             return Worksheets.TryGetWorksheet(name, out worksheet);
         }
 
         public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
         {
+            ThrowIfDisposed();
+
             ws = null;
             if (!rangeAddress.Contains('!')) return null;
 
@@ -327,6 +340,8 @@ namespace ClosedXML.Excel
 
         public IXLCell CellFromFullAddress(String cellAddress, out IXLWorksheet ws)
         {
+            ThrowIfDisposed();
+
             ws = null;
             if (!cellAddress.Contains('!')) return null;
 
@@ -344,6 +359,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public void Save()
         {
+            ThrowIfDisposed();
+
 #if DEBUG
             Save(true, false);
 #else
@@ -356,6 +373,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public void Save(Boolean validate, Boolean evaluateFormulae = false)
         {
+            ThrowIfDisposed();
+
             Save(new SaveOptions
             {
                 ValidatePackage = validate,
@@ -366,6 +385,8 @@ namespace ClosedXML.Excel
 
         public void Save(SaveOptions options)
         {
+            ThrowIfDisposed();
+
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
                 throw new InvalidOperationException("This is a new file. Please use one of the 'SaveAs' methods.");
@@ -383,6 +404,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(String file)
         {
+            ThrowIfDisposed();
+
 #if DEBUG
             SaveAs(file, true, false);
 #else
@@ -395,6 +418,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(String file, Boolean validate, Boolean evaluateFormulae = false)
         {
+            ThrowIfDisposed();
+
             SaveAs(file, new SaveOptions
             {
                 ValidatePackage = validate,
@@ -405,6 +430,8 @@ namespace ClosedXML.Excel
 
         public void SaveAs(String file, SaveOptions options)
         {
+            ThrowIfDisposed();
+
             checkForWorksheetsPresent();
 
             var directoryName = Path.GetDirectoryName(file);
@@ -480,6 +507,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(Stream stream)
         {
+            ThrowIfDisposed();
+
 #if DEBUG
             SaveAs(stream, true, false);
 #else
@@ -492,6 +521,8 @@ namespace ClosedXML.Excel
         /// </summary>
         public void SaveAs(Stream stream, Boolean validate, Boolean evaluateFormulae = false)
         {
+            ThrowIfDisposed();
+
             SaveAs(stream, new SaveOptions
             {
                 ValidatePackage = validate,
@@ -502,6 +533,8 @@ namespace ClosedXML.Excel
 
         public void SaveAs(Stream stream, SaveOptions options)
         {
+            ThrowIfDisposed();
+
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
             {
@@ -565,6 +598,8 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
         {
+            ThrowIfDisposed();
+
             var table = this.Worksheets
                 .SelectMany(ws => ws.Tables)
                 .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
@@ -577,21 +612,29 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Worksheet(String name)
         {
+            ThrowIfDisposed();
+
             return WorksheetsInternal.Worksheet(name);
         }
 
         public IXLWorksheet Worksheet(Int32 position)
         {
+            ThrowIfDisposed();
+
             return WorksheetsInternal.Worksheet(position);
         }
 
         public IXLCustomProperty CustomProperty(String name)
         {
+            ThrowIfDisposed();
+
             return CustomProperties.CustomProperty(name);
         }
 
         public IXLCells FindCells(Func<IXLCell, Boolean> predicate)
         {
+            ThrowIfDisposed();
+
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
@@ -606,6 +649,8 @@ namespace ClosedXML.Excel
 
         public IXLRows FindRows(Func<IXLRow, Boolean> predicate)
         {
+            ThrowIfDisposed();
+
             var rows = new XLRows(worksheet: null);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
@@ -617,6 +662,8 @@ namespace ClosedXML.Excel
 
         public IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate)
         {
+            ThrowIfDisposed();
+
             var columns = new XLColumns(worksheet: null);
             foreach (XLWorksheet ws in WorksheetsInternal)
             {
@@ -635,6 +682,8 @@ namespace ClosedXML.Excel
         /// <returns></returns>
         public IEnumerable<IXLCell> Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false)
         {
+            ThrowIfDisposed();
+
             foreach (var ws in WorksheetsInternal)
             {
                 foreach (var cell in ws.Search(searchText, compareOptions, searchFormulae))
@@ -766,6 +815,8 @@ namespace ClosedXML.Excel
 
         public IXLCell Cell(String namedCell)
         {
+            ThrowIfDisposed();
+
             var namedRange = NamedRange(namedCell);
             if (namedRange != null)
             {
@@ -777,11 +828,15 @@ namespace ClosedXML.Excel
 
         public IXLCells Cells(String namedCells)
         {
+            ThrowIfDisposed();
+
             return Ranges(namedCells).Cells();
         }
 
         public IXLRange Range(String range)
         {
+            ThrowIfDisposed();
+
             var namedRange = NamedRange(range);
             if (namedRange != null)
                 return namedRange.Ranges.FirstOrDefault();
@@ -791,6 +846,8 @@ namespace ClosedXML.Excel
 
         public IXLRanges Ranges(String ranges)
         {
+            ThrowIfDisposed();
+
             var retVal = new XLRanges();
             var rangePairs = ranges.Split(',');
             foreach (var range in rangePairs.Select(r => Range(r.Trim())).Where(range => range != null))
@@ -802,77 +859,77 @@ namespace ClosedXML.Excel
 
         internal XLIdManager ShapeIdManager { get; private set; }
 
-        // Used by Janitor.Fody
-        private void DisposeManaged()
-        {
-            Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
-        }
-
-#if _NET40_
-        public void Dispose()
-        {
-            // net40 doesn't support Janitor.Fody, so let's dispose manually
-            DisposeManaged();
-        }
-#else
-
-        public void Dispose()
-        {
-            // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
-        }
-
-#endif
-
         public Boolean Use1904DateSystem { get; set; }
 
         public XLWorkbook SetUse1904DateSystem()
         {
+            ThrowIfDisposed();
+
             return SetUse1904DateSystem(true);
         }
 
         public XLWorkbook SetUse1904DateSystem(Boolean value)
         {
+            ThrowIfDisposed();
+
             Use1904DateSystem = value;
             return this;
         }
 
         public IXLWorksheet AddWorksheet()
         {
+            ThrowIfDisposed();
+
             return Worksheets.Add();
         }
 
         public IXLWorksheet AddWorksheet(Int32 position)
         {
+            ThrowIfDisposed();
+
             return Worksheets.Add(position);
         }
 
         public IXLWorksheet AddWorksheet(String sheetName)
         {
+            ThrowIfDisposed();
+
             return Worksheets.Add(sheetName);
         }
 
         public IXLWorksheet AddWorksheet(String sheetName, Int32 position)
         {
+            ThrowIfDisposed();
+
             return Worksheets.Add(sheetName, position);
+
         }
 
         public IXLWorksheet AddWorksheet(DataTable dataTable)
         {
+            ThrowIfDisposed();
+
             return Worksheets.Add(dataTable);
         }
 
         public void AddWorksheet(DataSet dataSet)
         {
+            ThrowIfDisposed();
+
             Worksheets.Add(dataSet);
         }
 
         public void AddWorksheet(IXLWorksheet worksheet)
         {
+            ThrowIfDisposed();
+
             worksheet.CopyTo(this, worksheet.Name);
         }
 
         public IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName)
         {
+            ThrowIfDisposed();
+
             return Worksheets.Add(dataTable, sheetName);
         }
 
@@ -885,6 +942,8 @@ namespace ClosedXML.Excel
 
         public Object Evaluate(String expression)
         {
+            ThrowIfDisposed();
+
             return CalcEngine.Evaluate(expression);
         }
 
@@ -893,12 +952,15 @@ namespace ClosedXML.Excel
         /// </summary>
         public void RecalculateAllFormulas()
         {
+            ThrowIfDisposed();
+
             InvalidateFormulas();
             Worksheets.ForEach(sheet => sheet.RecalculateAllFormulas());
         }
 
-        private static XLCalcEngine _calcEngineExpr;
         private SpreadsheetDocumentType _spreadsheetDocumentType;
+
+        private static XLCalcEngine _calcEngineExpr;
 
         private static XLCalcEngine CalcEngineExpr
         {
@@ -917,6 +979,8 @@ namespace ClosedXML.Excel
             get => Protection.IsProtected && !Protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Structure);
             set
             {
+                ThrowIfDisposed();
+
                 if (!Protection.IsProtected)
                     throw new InvalidOperationException($"Enable workbook protection before setting the {nameof(LockStructure)} property");
 
@@ -926,6 +990,8 @@ namespace ClosedXML.Excel
 
         public XLWorkbook SetLockStructure(Boolean value)
         {
+            ThrowIfDisposed();
+
             LockStructure = value; return this;
         }
 
@@ -934,6 +1000,8 @@ namespace ClosedXML.Excel
             get => Protection.IsProtected && !Protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Windows);
             set
             {
+                ThrowIfDisposed();
+
                 if (!Protection.IsProtected)
                     throw new InvalidOperationException($"Enable workbook protection before setting the {nameof(LockWindows)} property");
 
@@ -943,6 +1011,8 @@ namespace ClosedXML.Excel
 
         public XLWorkbook SetLockWindows(Boolean value)
         {
+            ThrowIfDisposed();
+
             LockWindows = value; return this;
         }
 
@@ -960,6 +1030,8 @@ namespace ClosedXML.Excel
             get => _workbookProtection;
             set
             {
+                ThrowIfDisposed();
+
                 _workbookProtection = value.Clone().CastTo<XLWorkbookProtection>();
             }
         }
@@ -967,6 +1039,8 @@ namespace ClosedXML.Excel
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
         public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password)
         {
+            ThrowIfDisposed();
+
             var allowedElements = XLWorkbookProtectionElements.Everything;
 
             var protection = Protection.Protect(password, DefaultProtectionAlgorithm, allowedElements);
@@ -982,59 +1056,80 @@ namespace ClosedXML.Excel
 
         public IXLWorkbookProtection Protect()
         {
+            ThrowIfDisposed();
+
             return Protection.Protect();
         }
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
         public IXLWorkbookProtection Protect(Boolean lockStructure)
         {
+            ThrowIfDisposed();
+
             return Protect(lockStructure, lockWindows: false, password: null);
         }
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
         public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows)
         {
+            ThrowIfDisposed();
+
             return Protect(lockStructure, lockWindows, null);
         }
 
         public IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
-
         {
+            ThrowIfDisposed();
+
             return Protect(password, algorithm, XLWorkbookProtectionElements.Windows);
         }
 
         public IXLWorkbookProtection Protect(String password, Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
         {
+            ThrowIfDisposed();
+
             return Protection.Protect(password, algorithm, allowedElements);
         }
 
         IXLElementProtection IXLProtectable.Protect()
         {
+            ThrowIfDisposed();
+
             return Protect();
         }
 
         IXLElementProtection IXLProtectable.Protect(string password, Algorithm algorithm)
         {
+            ThrowIfDisposed();
+
             return Protect(password, algorithm);
         }
 
         public IXLWorkbookProtection Unprotect()
         {
+            ThrowIfDisposed();
+
             return Protection.Unprotect();
         }
 
         public IXLWorkbookProtection Unprotect(String password)
         {
+            ThrowIfDisposed();
+
             return Protection.Unprotect(password);
         }
 
         IXLElementProtection IXLProtectable.Unprotect()
         {
+            ThrowIfDisposed();
+
             return Unprotect();
         }
 
         IXLElementProtection IXLProtectable.Unprotect(String password)
         {
+            ThrowIfDisposed();
+
             return Unprotect(password);
         }
 
@@ -1058,6 +1153,8 @@ namespace ClosedXML.Excel
 
         public void SuspendEvents()
         {
+            ThrowIfDisposed();
+
             foreach (var ws in WorksheetsInternal)
             {
                 ws.SuspendEvents();
@@ -1066,9 +1163,40 @@ namespace ClosedXML.Excel
 
         public void ResumeEvents()
         {
+            ThrowIfDisposed();
+
             foreach (var ws in WorksheetsInternal)
             {
                 ws.ResumeEvents();
+            }
+        }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
+            }
+
+            _disposed = true;
+        }
+
+        void ThrowIfDisposed()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException("TemplateClass");
             }
         }
     }

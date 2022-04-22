@@ -5,6 +5,8 @@ namespace ClosedXML.Tests.Utils
 {
     internal class TemporaryFile : IDisposable
     {
+        private bool _disposed = false;
+
         internal TemporaryFile()
             : this(System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "xlsx"))
         { }
@@ -24,8 +26,24 @@ namespace ClosedXML.Tests.Utils
 
         public void Dispose()
         {
-            if (!Preserve)
-                File.Delete(Path);
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                if (!Preserve)
+                    File.Delete(Path);
+            }
+
+            _disposed = true;
         }
 
         public override string ToString()
