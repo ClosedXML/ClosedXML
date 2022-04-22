@@ -8,7 +8,7 @@ namespace ClosedXML.Examples.Misc
     {
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Protected No-Password");
 
             ws.Protect().AllowElement

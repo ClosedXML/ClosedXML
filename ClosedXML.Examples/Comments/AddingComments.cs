@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ClosedXML.Excel;
-using System.IO;
 using MoreLinq;
 
-namespace ClosedXML.Examples 
+namespace ClosedXML.Examples
 {
-    public class AddingComments : IXLExample 
+    public class AddingComments : IXLExample
     {
-
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook {Author = "Manuel"};
+            using var wb = new XLWorkbook { Author = "Manuel" };
             AddMiscComments(wb);
             AddVisibilityComments(wb);
             AddPosition(wb);
@@ -147,7 +141,6 @@ namespace ClosedXML.Examples
                 .Alignment.SetOrientation(XLDrawingTextOrientation.Vertical)
                 .Alignment.SetAutomaticSize();
 
-
             // Set all comments to visible
             ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.GetComment().SetVisible());
         }
@@ -228,7 +221,7 @@ namespace ClosedXML.Examples
 
             // By default comments are hidden
             ws.Cell("A1").SetValue("I have a hidden comment").GetComment().AddText("Hidden");
-            
+
             // Set the comment as visible
             ws.Cell("A2").GetComment().SetVisible().AddText("Visible");
 
@@ -240,7 +233,7 @@ namespace ClosedXML.Examples
             // so we set the ZOrder to something lower
             ws.Cell("A4").GetComment().SetZOrder(4).SetVisible().AddText("Underneath");
             ws.Cell("A4").GetComment().Style.Alignment.SetVertical(XLDrawingVerticalAlignment.Bottom);
-            
+
             // Alternatively you could set all comments to visible with the following line:
             // ws.CellsUsed(true, c => c.HasComment).ForEach(c => c.Comment.SetVisible());
 
@@ -250,7 +243,7 @@ namespace ClosedXML.Examples
         private void AddPosition(XLWorkbook wb)
         {
             var ws = wb.Worksheets.Add("Position");
-            
+
             ws.Columns().Width = 10;
 
             ws.Cell("A1").GetComment().AddText("This is an unusual place for a comment...");
@@ -276,7 +269,6 @@ namespace ClosedXML.Examples
                 .SetAuthor("MDeLeon")
                 .AddSignature()
                 .AddText("Hello World!");
-            
 
             // Set all comments to visible
             ws.CellsUsed(XLCellsUsedOptions.All, c => c.HasComment).ForEach(c => c.GetComment().SetVisible());

@@ -11,7 +11,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void ColumnUsed()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(2, 1).SetValue("Test");
             ws.Cell(3, 1).SetValue("Test");
@@ -36,7 +36,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyColumn()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Test").Style.Font.SetBold();
             ws.FirstColumn().CopyTo(ws.Column(2));
@@ -47,7 +47,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void InsertingColumnsBefore1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
 
             ws.Columns("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
@@ -100,7 +100,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void InsertingColumnsBefore2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
 
             ws.Columns("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
@@ -153,7 +153,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void InsertingColumnsBefore3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
 
             ws.Columns("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
@@ -206,7 +206,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NoColumnsUsed()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             Int32 count = 0;
 
@@ -222,7 +222,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void UngroupFromAll()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Columns(1, 2).Group();
             ws.Columns(1, 2).Ungroup(true);
         }
@@ -230,7 +230,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void LastColumnUsed()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "A1";
             ws.Cell("B1").Value = "B1";
             ws.Cell("A2").Value = "A2";
@@ -241,7 +241,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NegativeColumnNumberIsInvalid()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1") as XLWorksheet;
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1") as XLWorksheet;
 
             var column = new XLColumn(ws, -1);
 

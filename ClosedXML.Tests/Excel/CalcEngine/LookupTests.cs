@@ -8,29 +8,24 @@ using System.Linq;
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
-    public class LookupTests
+    public class LookupTests : IDisposable
     {
+        private XLWorkbook wb;
         private XLWorkbook workbook;
-
-        #region Setup and teardown
-
-        [OneTimeTearDown]
-        public void Dispose()
-        {
-            workbook.Dispose();
-        }
+        private bool disposedValue;
 
         [SetUp]
         public void Init()
         {
             // Make sure tests run on a deterministic culture
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
             workbook = SetupWorkbook();
         }
 
         private XLWorkbook SetupWorkbook()
         {
-            var wb = new XLWorkbook();
+            wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Data");
             var data = new object[]
             {
@@ -85,8 +80,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             return wb;
         }
-
-        #endregion Setup and teardown
 
         [Test]
         public void Hlookup()
@@ -245,6 +238,26 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
 
             Assert.Throws<CellReferenceException>(() => workbook.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    workbook?.Dispose();
+                    wb?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

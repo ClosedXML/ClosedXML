@@ -21,10 +21,11 @@ namespace ClosedXML.Tests.Excel.Saving
         [Test]
         public void BooleanValueSavesAsLowerCase()
         {
+            using var wb = new XLWorkbook();
+
             // When a cell evaluates to a boolean value, the text in the XML has to be true/false (lowercase only) or 0/1
             TestHelper.CreateAndCompare(() =>
             {
-                var wb = new XLWorkbook();
                 var ws = wb.AddWorksheet();
                 ws.FirstCell().FormulaA1 = "=TRUE";
                 return wb;
@@ -123,7 +124,7 @@ namespace ClosedXML.Tests.Excel.Saving
 
                 using (var wb = new XLWorkbook())
                 {
-                    var memoryStream = new MemoryStream();
+                    using var memoryStream = new MemoryStream();
                     var ws = wb.Worksheets.Add("Sheet1");
 
                     wb.SaveAs(memoryStream, true);
@@ -636,9 +637,10 @@ namespace ClosedXML.Tests.Excel.Saving
         [Test]
         public void PivotTableWithVeryLongField()
         {
+            using var wb = new XLWorkbook();
+
             TestHelper.CreateAndCompare(() =>
             {
-                var wb = new XLWorkbook();
                 var ws = wb.AddWorksheet();
 
                 var longText = string.Join(" ", Enumerable.Range(0, 40).Select(i => "1234567890"));

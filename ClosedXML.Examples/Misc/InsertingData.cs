@@ -35,7 +35,7 @@ namespace ClosedXML.Examples.Misc
                 ws.Cell(2, 3).InsertData(listOfArr);
 
                 // From a DataTable
-                var dataTable = GetTable();
+                using var dataTable = GetTable();
                 ws.Cell(6, 1).Value = "From DataTable";
                 ws.Range(6, 1, 6, 4).Merge().AddToNamed("Titles");
                 ws.Cell(7, 1).InsertData(dataTable);
@@ -83,7 +83,8 @@ namespace ClosedXML.Examples.Misc
             public String House { get; set; }
             public String Name { get; set; }
             public Int32 Age { get; set; }
-            public static String ClassType { get { return nameof(Person); } }
+            public static String ClassType
+            { get { return nameof(Person); } }
         }
 
         // Private

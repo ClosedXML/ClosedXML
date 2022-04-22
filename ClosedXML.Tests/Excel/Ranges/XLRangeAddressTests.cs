@@ -10,7 +10,8 @@ namespace ClosedXML.Tests
         [Test]
         public void ToStringTest()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            IXLWorksheet ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
@@ -31,7 +32,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ToStringTestWithSpace()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
             IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
@@ -62,7 +63,8 @@ namespace ClosedXML.Tests
         [TestCase("$B$5:$E$2", "$B$2:$E$5")]
         public void RangeAddressNormalizeTest(string inputAddress, string expectedAddress)
         {
-            XLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1") as XLWorksheet;
+            using var xLWorkbook = new XLWorkbook();
+            XLWorksheet ws = xLWorkbook.Worksheets.Add("Sheet 1") as XLWorksheet;
             var rangeAddress = new XLRangeAddress(ws, inputAddress);
 
             var normalizedAddress = rangeAddress.Normalize();
@@ -209,7 +211,7 @@ namespace ClosedXML.Tests
         [Test]
         public void RangeAddressIsNormalized()
         {
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
 
             XLRangeAddress rangeAddress;
 
@@ -249,7 +251,7 @@ namespace ClosedXML.Tests
             Assert.IsTrue(rangeAddress.IsNormalized);
             Assert.Throws<InvalidOperationException>(() => rangeAddress.AsRange());
 
-            var ws = new XLWorkbook().AddWorksheet() as XLWorksheet;
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet() as XLWorksheet;
             rangeAddress = new XLRangeAddress
             (
                 new XLAddress(ws, 1, 1, false, false),
@@ -264,7 +266,7 @@ namespace ClosedXML.Tests
         [Test]
         public void RelativeRanges()
         {
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
 
             IXLRangeAddress rangeAddress;
 
@@ -292,7 +294,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TestSpanProperties()
         {
-            var ws = new XLWorkbook().AddWorksheet() as XLWorksheet;
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet() as XLWorksheet;
 
             var range = ws.Range("B3:E5");
             var rangeAddress = range.RangeAddress as IXLRangeAddress;
@@ -321,7 +323,7 @@ namespace ClosedXML.Tests
 
         private IXLRangeAddress ProduceInvalidAddress()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
             var range = ws.Range("A1:B2");
 
             ws.Rows(1, 5).Delete();
@@ -330,7 +332,7 @@ namespace ClosedXML.Tests
 
         private IXLRangeAddress ProduceAddressOnDeletedWorksheet()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
             var address = ws.Range("A1:B2").RangeAddress;
 
             ws.Delete();

@@ -300,8 +300,8 @@ namespace ClosedXML.Tests
         [Test]
         public void SetWorkbookProtectionCloning()
         {
-            var wb1 = new XLWorkbook();
-            var wb2 = new XLWorkbook();
+            using var wb1 = new XLWorkbook();
+            using var wb2 = new XLWorkbook();
 
             wb1.AddWorksheet();
             wb2.AddWorksheet();

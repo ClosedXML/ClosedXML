@@ -1,9 +1,9 @@
-using System.IO;
 using ClosedXML.Excel;
+using System.IO;
 
 namespace ClosedXML.Examples.Delete
 {
-    public class DeleteFewWorksheets:IXLExample
+    public class DeleteFewWorksheets : IXLExample
     {
         public void Create(string filePath)
         {
@@ -12,7 +12,7 @@ namespace ClosedXML.Examples.Delete
             {
                 //Note: Prepare
                 {
-                    var workbook = new XLWorkbook();
+                    using var workbook = new XLWorkbook();
                     workbook.Worksheets.Add("1");
                     workbook.Worksheets.Add("2");
                     workbook.Worksheets.Add("3");
@@ -22,7 +22,7 @@ namespace ClosedXML.Examples.Delete
 
                 //Note: Delate few worksheet
                 {
-                    var workbook = new XLWorkbook(tempFile);
+                    using var workbook = new XLWorkbook(tempFile);
                     workbook.Worksheets.Delete("1");
                     workbook.Worksheets.Delete("2");
                     workbook.SaveAs(filePath);
@@ -35,7 +35,6 @@ namespace ClosedXML.Examples.Delete
                     File.Delete(tempFile);
                 }
             }
-            
         }
     }
 }

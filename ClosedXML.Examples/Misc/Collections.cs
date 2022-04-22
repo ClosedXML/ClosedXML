@@ -1,8 +1,8 @@
+using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using ClosedXML.Excel;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -14,8 +14,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -25,8 +24,7 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
@@ -36,15 +34,14 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Collections");
 
             // From a list of strings
@@ -72,9 +69,9 @@ namespace ClosedXML.Examples.Misc
 
             // From a query
             var list = new List<Person>();
-            list.Add(new Person() { Name = "John", Age = 30, House = "On Elm St."   });
-            list.Add(new Person() { Name = "Mary", Age = 15, House = "On Main St."  });
-            list.Add(new Person() { Name = "Luis", Age = 21, House = "On 23rd St."  });
+            list.Add(new Person() { Name = "John", Age = 30, House = "On Elm St." });
+            list.Add(new Person() { Name = "Mary", Age = 15, House = "On Main St." });
+            list.Add(new Person() { Name = "Luis", Age = 21, House = "On 23rd St." });
             list.Add(new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." });
 
             var people = from p in list
@@ -84,7 +81,6 @@ namespace ClosedXML.Examples.Misc
             ws.Cell(6, 6).Value = "Query";
             ws.Range(6, 6, 6, 8).Merge().AddToNamed("Titles");
             ws.Cell(7, 6).Value = people;
-
 
             // Prepare the style for the titles
             var titlesStyle = wb.Style;
@@ -100,7 +96,7 @@ namespace ClosedXML.Examples.Misc
             wb.SaveAs(filePath);
         }
 
-        class Person
+        private class Person
         {
             public String House { get; set; }
             public String Name { get; set; }
@@ -110,7 +106,6 @@ namespace ClosedXML.Examples.Misc
         // Private
         private DataTable GetTable()
         {
-
             DataTable table = new DataTable();
             table.Columns.Add("Dosage", typeof(int));
             table.Columns.Add("Drug", typeof(string));
@@ -126,7 +121,6 @@ namespace ClosedXML.Examples.Misc
         }
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

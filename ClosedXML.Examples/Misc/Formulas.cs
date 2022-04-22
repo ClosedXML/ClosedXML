@@ -7,7 +7,7 @@ namespace ClosedXML.Examples.Misc
     {
         public virtual void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Formulas");
 
             ws.Cell(1, 1).Value = "Num1";

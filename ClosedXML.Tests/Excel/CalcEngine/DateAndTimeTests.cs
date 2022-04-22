@@ -223,7 +223,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Networkdays_MultipleHolidaysGiven()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Date")
                 .CellBelow().SetValue(new DateTime(2008, 10, 1))
@@ -452,7 +452,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Workdays_MultipleHolidaysGiven()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Date")
                 .CellBelow().SetValue(new DateTime(2008, 10, 1))

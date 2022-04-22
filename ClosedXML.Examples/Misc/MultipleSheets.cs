@@ -1,15 +1,13 @@
-using System.Linq;
 using ClosedXML.Excel;
-
+using System.Linq;
 
 namespace ClosedXML.Examples.Misc
 {
     public class MultipleSheets : IXLExample
     {
-        
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             foreach (var wsNum in Enumerable.Range(1, 5))
             {
                 wb.Worksheets.Add("Original Pos. is " + wsNum.ToString());

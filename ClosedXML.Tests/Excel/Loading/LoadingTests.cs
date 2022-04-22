@@ -295,7 +295,7 @@ namespace ClosedXML.Tests.Excel
                     wb.SaveAs(tf1.Path);
                 }
 
-                var workbook = XLWorkbook.OpenFromTemplate(tf1.Path);
+                using var workbook = XLWorkbook.OpenFromTemplate(tf1.Path);
                 Assert.True(workbook.Worksheets.Any());
                 Assert.Throws<InvalidOperationException>(() => workbook.Save());
 
@@ -389,8 +389,10 @@ namespace ClosedXML.Tests.Excel
                 Assert.DoesNotThrow(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = false }));
                 Assert.Throws<ArgumentOutOfRangeException>(() => new XLWorkbook(stream, new LoadOptions { RecalculateAllFormulas = true }));
 
-                Assert.AreEqual(XLEventTracking.Disabled, new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Disabled }).EventTracking);
-                Assert.AreEqual(XLEventTracking.Enabled, new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Enabled }).EventTracking);
+                using var xLWorkbookExpectedDisabled = new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Disabled });
+                Assert.AreEqual(XLEventTracking.Disabled, xLWorkbookExpectedDisabled.EventTracking);
+                using var xLWorkbookExpectedEnabled = new XLWorkbook(stream, new LoadOptions { EventTracking = XLEventTracking.Enabled });
+                Assert.AreEqual(XLEventTracking.Enabled, xLWorkbookExpectedEnabled.EventTracking);
             }
         }
 

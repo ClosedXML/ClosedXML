@@ -1,19 +1,17 @@
-using System.IO;
 using ClosedXML.Excel;
-
+using System.IO;
 
 namespace ClosedXML.Examples.Misc
 {
     public class MergeMoves : IXLExample
     {
-
         public void Create(string filePath)
         {
             string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new MergeCells().Create(tempFile);
-                var workbook = new XLWorkbook(tempFile);
+                using var workbook = new XLWorkbook(tempFile);
 
                 var ws = workbook.Worksheet(1);
 
@@ -48,6 +46,5 @@ namespace ClosedXML.Examples.Misc
                 }
             }
         }
-
     }
 }

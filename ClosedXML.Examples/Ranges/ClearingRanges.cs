@@ -1,7 +1,6 @@
+using ClosedXML.Excel;
 using System;
 using System.Linq;
-using ClosedXML.Excel;
-
 
 namespace ClosedXML.Examples.Ranges
 {
@@ -12,7 +11,7 @@ namespace ClosedXML.Examples.Ranges
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Clearing Ranges");
             foreach (var ro in Enumerable.Range(1, 10))
             {
@@ -48,7 +47,6 @@ namespace ClosedXML.Examples.Ranges
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

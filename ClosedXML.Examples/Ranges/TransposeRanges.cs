@@ -1,10 +1,9 @@
-using System.IO;
 using ClosedXML.Excel;
-
+using System.IO;
 
 namespace ClosedXML.Examples
 {
-    public class TransposeRanges:IXLExample
+    public class TransposeRanges : IXLExample
     {
         public void Create(string filePath)
         {
@@ -12,7 +11,7 @@ namespace ClosedXML.Examples
             try
             {
                 new BasicTable().Create(tempFile);
-                var workbook = new XLWorkbook(tempFile);
+                using var workbook = new XLWorkbook(tempFile);
 
                 var ws = workbook.Worksheet(1);
 
@@ -31,7 +30,6 @@ namespace ClosedXML.Examples
                     File.Delete(tempFile);
                 }
             }
-            
         }
     }
 }

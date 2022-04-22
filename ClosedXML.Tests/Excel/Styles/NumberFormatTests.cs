@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                var table = new DataTable();
+                using var table = new DataTable();
                 table.Columns.Add("Date", typeof(DateTime));
 
                 for (int i = 0; i < 10; i++)

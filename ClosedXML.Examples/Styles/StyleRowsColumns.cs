@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Styles
 {
@@ -8,7 +7,7 @@ namespace ClosedXML.Examples.Styles
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Style Rows and Columns");
 
             //Set the entire worksheet's cells to be bold and with a light cyan background

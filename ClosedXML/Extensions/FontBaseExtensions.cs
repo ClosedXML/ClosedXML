@@ -48,7 +48,7 @@ namespace ClosedXML.Excel
         {
             if (!fontCache.TryGetValue(fontBase, out SKFont font))
             {
-                var fontManager = SKFontManager.CreateDefault();
+                using var fontManager = SKFontManager.CreateDefault();
                 var typeface = fontManager.MatchFamily(fontBase.FontName);
                 font = new SKFont(typeface, (float)fontBase.FontSize);
                 fontCache.Add(fontBase, font);

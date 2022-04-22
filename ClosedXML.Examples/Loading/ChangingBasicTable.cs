@@ -1,6 +1,5 @@
-using System.IO;
 using ClosedXML.Excel;
-
+using System.IO;
 
 namespace ClosedXML.Examples
 {
@@ -12,7 +11,7 @@ namespace ClosedXML.Examples
             try
             {
                 new BasicTable().Create(tempFile);
-                var workbook = new XLWorkbook(tempFile);
+                using var workbook = new XLWorkbook(tempFile);
                 var ws = workbook.Worksheet(1);
 
                 // Change the background color of the headers

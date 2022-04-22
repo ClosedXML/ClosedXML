@@ -29,7 +29,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CanGetNamedFromAnother()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             ws1.Cell("A1").SetValue(1).AddToNamed("value1");
 
@@ -169,7 +169,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyNamedRangeDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Sheet2");
             var ranges = new XLRanges();
@@ -194,7 +194,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyNamedRangeSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             ws1.Range("B2:E6").AddToNamed("Named range", XLScope.Worksheet);
             var nr = ws1.NamedRange("Named range");
@@ -226,7 +226,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void MovingRanges()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
 
             IXLWorksheet sheet1 = wb.Worksheets.Add("Sheet1");
             IXLWorksheet sheet2 = wb.Worksheets.Add("Sheet2");
@@ -558,7 +558,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WbContainsWsNamedRange()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().AddToNamed("Name", XLScope.Worksheet);
 
@@ -581,7 +581,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WorkbookContainsNamedRange()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().AddToNamed("Name");
 
@@ -603,7 +603,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WorksheetContainsNamedRange()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.FirstCell().AddToNamed("Name", XLScope.Worksheet);
 
             Assert.IsTrue(ws.NamedRanges.Contains("Name"));

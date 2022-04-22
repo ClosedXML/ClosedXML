@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.PageSetup
 {
@@ -11,15 +10,15 @@ namespace ClosedXML.Examples.PageSetup
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Headers and Footers");
-            
+
             // Simple left header to be placed on all pages
             ws.PageSetup.Header.Left.AddText("Created with ClosedXML");
 
             // Using various font decorations for the right header on the first page only
             // Here we show different methods for setting font decorations.
-            
+
             // Set single font decorations immediately
             ws.PageSetup.Header.Right.AddText("The ", XLHFOccurrence.FirstPage).SetBold();
             ws.PageSetup.Header.Right.AddText("First ", XLHFOccurrence.FirstPage).SetFontColor(XLColor.Red);
@@ -34,7 +33,6 @@ namespace ClosedXML.Examples.PageSetup
                 .SetBold()
                 .SetItalic()
                 .SetFontName("Broadway");
-
 
             // Using predefined header/footer text:
 
@@ -59,7 +57,6 @@ namespace ClosedXML.Examples.PageSetup
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

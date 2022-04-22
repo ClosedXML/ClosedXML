@@ -11,7 +11,8 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CanChangeWorksheetHeader()
         {
-            var wb = new XLWorkbook();
+            using var xLWorkbook = new XLWorkbook();
+            var wb = xLWorkbook;
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
 
             ws.PageSetup.Header.Center.AddText("Initial page header", XLHFOccurrence.EvenPages);
@@ -19,7 +20,8 @@ namespace ClosedXML.Tests.Excel
             var ms = new MemoryStream();
             wb.SaveAs(ms, true);
 
-            wb = new XLWorkbook(ms);
+            using var xLWorkbook1 = new XLWorkbook(ms);
+            wb = xLWorkbook1;
             ws = wb.Worksheets.First();
 
             ws.PageSetup.Header.Center.Clear();
@@ -27,7 +29,8 @@ namespace ClosedXML.Tests.Excel
 
             wb.SaveAs(ms, true);
 
-            wb = new XLWorkbook(ms);
+            using var xLWorkbook2 = new XLWorkbook(ms);
+            wb = xLWorkbook2;
             ws = wb.Worksheets.First();
 
             var newHeader = ws.PageSetup.Header.Center.GetText(XLHFOccurrence.EvenPages);

@@ -8,7 +8,7 @@ namespace ClosedXML.Examples.Styles
     {
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Using Colors");
 
             Int32 ro = 0;

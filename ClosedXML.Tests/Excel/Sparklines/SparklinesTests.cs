@@ -29,7 +29,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotCreateSparklineWithoutGroup()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             TestDelegate action = () => new XLSparkline(null, ws.Cell("A1"), ws.Range("A2:A5"));
             Assert.Throws<ArgumentNullException>(action);
         }
@@ -37,7 +37,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotCreateSparklineWithoutLocation()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var group = new XLSparklineGroup(ws);
             TestDelegate action = () => new XLSparkline(group, null, ws.Range("A2:A5"));
             Assert.Throws<ArgumentNullException>(action);
@@ -46,7 +46,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanCreateInvalidSparklineWithoutSourceData()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var group = new XLSparklineGroup(ws);
             var sparkline = new XLSparkline(group, ws.FirstCell(), null);
             Assert.IsFalse(sparkline.IsValid);
@@ -55,7 +55,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanAddSparklineGroupForSingleCell()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add(new XLSparklineGroup(ws, "A1", "B1:E1"));
             ws.SparklineGroups.Add("A2", "B2:E2");
@@ -77,7 +77,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanAddSparklineGroupForVerticalRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add(ws.Range("A1:A3"), ws.Range("B1:E3"));
 
@@ -95,7 +95,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanAddSparklineGroupForHorizontalRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add(ws.Range("A1:C1"), ws.Range("A2:C4"));
 
@@ -113,7 +113,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotAddSparklineForNonLinearRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:C2"), ws.Range("A3:C4"));
 
@@ -124,7 +124,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotAddSparklineWhenRangesHaveDifferentWidths()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:C1"), ws.Range("A3:D4"));
 
@@ -135,7 +135,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotAddSparklineWhenRangesHaveDifferentHeights()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:A3"), ws.Range("B1:B4"));
 
@@ -146,7 +146,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotAddSparklineForCellWhenDataRangeIsNotLinear()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:A1"), ws.Range("B1:C4"));
 
@@ -157,7 +157,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanAddSparklineToExistingGroup()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             var group = new XLSparklineGroup(ws);
 
@@ -176,7 +176,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotAddSparklineGroupFromDifferentWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.AddWorksheet("Sheet 1");
             var ws2 = wb.AddWorksheet("Sheet 2");
 
@@ -191,7 +191,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotAddSparklineFromDifferentWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.AddWorksheet("Sheet 1");
             var ws2 = wb.AddWorksheet("Sheet 2");
 
@@ -206,7 +206,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void AddSparklineToSameCellOverwritesItWhenSameGroup()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             var group = ws.SparklineGroups.Add("A1", "B1:E1");
             group.Add("A1", "B2:E2");
@@ -220,7 +220,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void AddSparklineToSameCellOverwritesItWhenDifferentGroup()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1", "B1:E1");
             ws.SparklineGroups.Add("A1", "B2:E2");
@@ -234,7 +234,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanAddSparklineReferringToDifferentWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.AddWorksheet("Sheet 1");
             var ws3 = wb.AddWorksheet("Sheet 3");
 
@@ -255,7 +255,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [TestCase("Z1", "Z2:Z100")]
         public void CanGetSparklineForExistingCell(string cellAddress, string expectedSourceDataRange)
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A2:A100", "B2:Z100");
             ws.SparklineGroups.Add("B1:Z1", "B2:Z100");
@@ -272,7 +272,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [TestCase("AA1")]
         public void CannotGetSparklineForNonExistingCell(string cellAddress)
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A2:A100", "B2:Z100");
             ws.SparklineGroups.Add("B1:Z1", "B2:Z100");
@@ -284,7 +284,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanGetSparklinesForRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A2:A100", "B2:Z100");
             ws.SparklineGroups.Add("B1:Z1", "B2:Z100");
@@ -314,7 +314,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanRemoveSparklineFromCell()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1:A3", "B1:Z3");
             ws.SparklineGroups.Remove(ws.Cell("A2"));
@@ -330,7 +330,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanRemoveSparklineFromRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1:A5", "B1:Z5");
             ws.SparklineGroups.Remove(ws.Range("A2:D4"));
@@ -346,7 +346,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void RemoveSparklineFromEmptyCellDoesNothing()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1:A2", "B1:Z2");
             ws.SparklineGroups.Remove(ws.Cell("F2"));
@@ -366,7 +366,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanChangeSparklineLocationInsideWorksheet()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1:A2", "B1:Z2");
             ws.SparklineGroups.Single().Last().SetLocation(ws.Cell("F2"));
@@ -385,7 +385,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void ChangeSparklineLocationOverwritesExistingSparklineSameGroup()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1:A2", "B1:Z2");
             ws.SparklineGroups.Single().Last().SetLocation(ws.Cell("A1"));
@@ -399,7 +399,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void ChangeSparklineLocationOverwritesExistingSparklineDifferentGroups()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1:A2", "B1:Z2");
             ws.SparklineGroups.Add("A3", "B3:Z3");
@@ -417,7 +417,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotChangeSparklineLocationToAnotherWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.AddWorksheet("Sheet 1");
             var ws2 = wb.AddWorksheet("Sheet 2");
 
@@ -432,7 +432,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanChangeSparklineSourceDataInsideWorksheet()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
             ws.SparklineGroups.Add("A1:A2", "B1:Z2");
             ws.SparklineGroups.Single().Last().SetSourceData(ws.Range("D4:D50"));
@@ -448,7 +448,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotChangeSparklineSourceDataToNonLinearRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1", "B1:Z1");
             var sparkline = group.Single();
 
@@ -461,7 +461,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanChangeSparklineStyle()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1", "B1:Z1");
 
             group.Style = XLSparklineTheme.Colorful1;
@@ -478,7 +478,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void ChangeSparklineStyleDoesNotAffectOriginal()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1", "B1:Z1");
             group.Style = XLSparklineTheme.Colorful1;
 
@@ -491,7 +491,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotSetSparklineStyleToNull()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1", "B1:Z1");
 
             TestDelegate action = () => group.Style = null;
@@ -502,7 +502,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklinesShiftOnRowInsert()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group1 = ws.SparklineGroups.Add("B2", "D4:F4");
             var group2 = ws.SparklineGroups.Add("B3", "D4:D8");
             var group3 = ws.SparklineGroups.Add("B4", "E1:E8");
@@ -520,7 +520,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklinesShiftOnRowDelete()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group1 = ws.SparklineGroups.Add("B2", "D7:F7");
             var group2 = ws.SparklineGroups.Add("B6", "D7:D11");
             var group3 = ws.SparklineGroups.Add("B7", "E1:E11");
@@ -538,7 +538,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklinesShiftOnColumnInsert()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group1 = ws.SparklineGroups.Add("B2", "D4:F4");
             var group2 = ws.SparklineGroups.Add("C3", "D4:D8");
             var group3 = ws.SparklineGroups.Add("D4", "A4:E4");
@@ -556,7 +556,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklinesShiftOnColumnDelete()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group1 = ws.SparklineGroups.Add("B2", "G4:I4");
             var group2 = ws.SparklineGroups.Add("F3", "G4:G8");
             var group3 = ws.SparklineGroups.Add("G4", "A4:H4");
@@ -574,7 +574,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklineRemovedWhenColumnDeleted()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:B1", "C2:D6");
 
             ws.Column(2).Delete();
@@ -587,7 +587,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklineRemovedWhenRowDeleted()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:A2", "C3:F4");
 
             ws.Row(2).Delete();
@@ -600,7 +600,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklineRemovedWhenShiftedTooFarRight()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("XFD1", "A1:Z1");
 
             ws.Column(1).InsertColumnsBefore(1);
@@ -611,7 +611,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklineRemovedWhenShiftedTooFarDown()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1048576", "A1:Z1");
 
             ws.Row(1).InsertRowsAbove(1);
@@ -622,7 +622,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SparklineRangeInvalidatedWhenDeleted()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:B1", "C2:D6");
 
             ws.Column(4).Delete();
@@ -886,7 +886,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SetManualMinChangesAxisTypeToCustom()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var axis = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
                 .VerticalAxis
                 .SetMinAxisType(XLSparklineAxisMinMax.SameForAll);
@@ -900,7 +900,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SetManualMaxChangesAxisTypeToCustom()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var axis = ws.SparklineGroups.Add("A1:A2", "B1:Z2")
                 .VerticalAxis
                 .SetMaxAxisType(XLSparklineAxisMinMax.SameForAll);
@@ -916,7 +916,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [TestCase(XLSparklineAxisMinMax.Automatic, null)]
         public void SetAxisTypeToNonCustomSetsManualMinToNull(XLSparklineAxisMinMax axisType, double? expectedManualMin)
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var axis = ws.SparklineGroups.Add("A1", "B1:Z1")
                 .VerticalAxis
                 .SetManualMin(100);
@@ -934,7 +934,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [TestCase(XLSparklineAxisMinMax.Automatic, null)]
         public void SetAxisTypeToNonCustomSetsManualMaxToNull(XLSparklineAxisMinMax axisType, double? expectedManualMax)
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var axis = ws.SparklineGroups.Add("A1", "B1:Z1")
                 .VerticalAxis
                 .SetManualMax(100);
@@ -950,7 +950,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SetDateRangeChangesAxisType()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
 
             group.DateRange = ws.Range("B3:Z3");
@@ -961,7 +961,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void SetDateRangeToNullChangesAxisType()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
             group.DateRange = ws.Range("B3:Z3");
 
@@ -973,7 +973,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotSetNonLinearDateRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
 
             TestDelegate action = () => group.DateRange = ws.Range("B3:Z4");
@@ -988,7 +988,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CopyCellToSameWorksheetCopiesSparkline()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             ws.SparklineGroups.Add("A1:A3", "B1:F3");
             var target = ws.Cell("D4");
 
@@ -1003,7 +1003,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CopyCellToDifferentWorksheetCopiesSparklineGroup()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.AddWorksheet("Sheet 1");
             var ws2 = wb.AddWorksheet("Sheet 2");
             var ws3 = wb.AddWorksheet("Sheet 3");
@@ -1026,7 +1026,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CopySparklineIfDateRangeOnSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.AddWorksheet("Sheet 1");
             var ws2 = wb.AddWorksheet("Sheet 2");
             var group = ws1.SparklineGroups.Add("A1:A3", "B1:F3");
@@ -1044,7 +1044,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CopySparklineIfDateRangeSourceOnDifferentWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.AddWorksheet("Sheet 1");
             var ws2 = wb.AddWorksheet("Sheet 2");
             var ws3 = wb.AddWorksheet("Sheet 3");

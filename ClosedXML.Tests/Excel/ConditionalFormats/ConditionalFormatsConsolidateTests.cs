@@ -10,7 +10,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void ConsecutivelyRowsConsolidateTest()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("B2:C2").AddConditionalFormat());
@@ -28,7 +28,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void ConsecutivelyColumnsConsolidateTest()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("D2:D3").AddConditionalFormat());
@@ -46,7 +46,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void Contains1ConsolidateTest()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("B11:D12").AddConditionalFormat());
@@ -63,7 +63,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void Contains2ConsolidateTest()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("B14:C14").AddConditionalFormat());
@@ -80,7 +80,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void SuperimposedConsolidateTest()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("B16:D18").AddConditionalFormat());
@@ -97,7 +97,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void DifferentFormatNoConsolidateTest()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("B11:D12").AddConditionalFormat());
@@ -111,7 +111,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void ConsolidatePreservesPriorities()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("A1:A5").AddConditionalFormat());
@@ -129,7 +129,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void ConsolidatePreservesPriorities2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             SetFormat1(ws.Range("A1:A1").AddConditionalFormat());
@@ -151,7 +151,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void ConsolidateShiftsFormulaRelativelyToTopMostCell()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();

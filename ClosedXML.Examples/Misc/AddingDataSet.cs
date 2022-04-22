@@ -1,7 +1,6 @@
 using ClosedXML.Excel;
 using System;
 using System.Data;
-using System.Linq;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -9,9 +8,9 @@ namespace ClosedXML.Examples.Misc
     {
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
 
-            var dataSet = GetDataSet();
+            using var dataSet = GetDataSet();
 
             // Add all DataTables in the DataSet as a worksheets
             wb.Worksheets.Add(dataSet);

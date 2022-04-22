@@ -36,7 +36,7 @@ namespace ClosedXML.Examples.Tables
                 ws.Cell(2, 3).InsertTable(listOfArr);
 
                 // From a DataTable
-                var dataTable = GetTable();
+                using var dataTable = GetTable();
                 ws.Cell(7, 1).Value = "From DataTable";
                 ws.Range(7, 1, 7, 4).Merge().AddToNamed("Titles");
                 ws.Cell(8, 1).InsertTable(dataTable);
@@ -84,7 +84,8 @@ namespace ClosedXML.Examples.Tables
             public Int32 Age { get; set; }
 
             [XLColumn(Header = "Class Type")]
-            public static String ClassType { get { return nameof(Person); } }
+            public static String ClassType
+            { get { return nameof(Person); } }
         }
 
         // Private

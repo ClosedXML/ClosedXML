@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net48;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">netstandard2.0;net48</TargetFrameworks>
 		<TargetFrameworks Condition="'$(OS)' != 'Windows_NT' ">netstandard2.0</TargetFrameworks>
 		<LangVersion>8.0</LangVersion>
 		<AssemblyName>ClosedXML</AssemblyName>
@@ -34,21 +34,15 @@
 		<PackageReadmeFile>nugetReadme.md</PackageReadmeFile>
 		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<PackageTags>Excel XLSX OpenXml Windows Linux MacOs</PackageTags>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-		<Optimize>True</Optimize>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-	</PropertyGroup>
+
 	<ItemGroup>
 		<None Include="docs\nugetReadme.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-	</ItemGroup>
+
 	<ItemGroup>
 		<None Include="Product.png" Pack="true" PackagePath="\" />
 	</ItemGroup>

@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Cell1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLCell cell = wb.Cell("ABC");
             Assert.IsNull(cell);
         }
@@ -20,7 +20,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Cell2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLCell cell = wb.Cell("Sheet1!Result");
@@ -31,7 +31,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Cell3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLCell cell = wb.Cell("Sheet1!Result");
@@ -42,7 +42,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Cells1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLCells cells = wb.Cells("ABC");
             Assert.IsNotNull(cells);
             Assert.AreEqual(0, cells.Count());
@@ -51,7 +51,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Cells2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLCells cells = wb.Cells("Sheet1!Result, ABC");
@@ -63,7 +63,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Cells3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLCells cells = wb.Cells("Sheet1!Result, ABC");
@@ -75,7 +75,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void GetCellFromFullAddress()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             IXLWorksheet ws2 = wb.AddWorksheet("O'Sheet 2");
             var c1 = ws.Cell("C123");
@@ -98,7 +98,7 @@ namespace ClosedXML.Tests.Excel
         [TestCase("Sheet1!A")]
         public void GetCellFromNonExistingFullAddress(string address)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
 
             var c = wb.Cell(address);
@@ -109,7 +109,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void GetRangeFromFullAddress()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             var r1 = ws.Range("C123:D125");
 
@@ -123,7 +123,7 @@ namespace ClosedXML.Tests.Excel
         [TestCase("Sheet1!A")]
         public void GetRangeFromNonExistingFullAddress(string rangeAddress)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
 
             var r = wb.Range(rangeAddress);
@@ -134,7 +134,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void GetRangesFromFullAddress()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             var r1 = ws.Ranges("A1:B2,C1:E3");
 
@@ -149,7 +149,7 @@ namespace ClosedXML.Tests.Excel
         [TestCase("Sheet1!A,Sheet1!B")]
         public void GetRangesFromNonExistingFullAddress(string rangesAddress)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
 
             var r = wb.Ranges(rangesAddress);
@@ -161,7 +161,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NamedRange1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLNamedRange range = wb.NamedRange("ABC");
             Assert.IsNull(range);
         }
@@ -169,7 +169,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NamedRange2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLNamedRange range = wb.NamedRange("Sheet1!Result");
@@ -182,7 +182,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NamedRange3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             IXLNamedRange range = wb.NamedRange("Sheet1!Result");
             Assert.IsNull(range);
@@ -191,7 +191,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NamedRange4()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLNamedRange range = wb.NamedRange("Sheet1!Result");
@@ -204,7 +204,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Range1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLRange range = wb.Range("ABC");
             Assert.IsNull(range);
         }
@@ -212,7 +212,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Range2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLRange range = wb.Range("Sheet1!Result");
@@ -224,7 +224,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Range3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLRange range = wb.Range("Sheet1!Result");
@@ -236,7 +236,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Ranges1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLRanges ranges = wb.Ranges("ABC");
             Assert.IsNotNull(ranges);
             Assert.AreEqual(0, ranges.Count());
@@ -245,7 +245,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Ranges2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLRanges ranges = wb.Ranges("Sheet1!Result, ABC");
@@ -257,7 +257,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void Ranges3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLRanges ranges = wb.Ranges("Sheet1!Result, ABC");
@@ -269,7 +269,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WbNamedCell()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell");
             Assert.AreEqual("Test", wb.Cell("TestCell").GetString());
@@ -279,7 +279,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WbNamedCells()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell");
             ws.Cell(2, 1).SetValue("B").AddToNamed("Test2");
@@ -295,7 +295,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WbNamedRange()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("A");
             ws.Cell(2, 1).SetValue("B");
@@ -308,7 +308,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WbNamedRanges()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("A");
             ws.Cell(2, 1).SetValue("B");
@@ -327,7 +327,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WbNamedRangesOneString()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             wb.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
 

@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Validation_1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Data Validation Issue");
             IXLCell cell = ws.Cell("E1");
             cell.SetValue("Value 1");
@@ -60,7 +60,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Validation_2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("Sheet1!A1");
@@ -75,7 +75,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test, Ignore("Wait for proper formula shifting (#686)")]
         public void Validation_3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
@@ -87,7 +87,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Validation_4()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
@@ -98,7 +98,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test, Ignore("Wait for proper formula shifting (#686)")]
         public void Validation_5()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
@@ -110,7 +110,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Validation_6()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
@@ -121,7 +121,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Validation_persists_on_Cell_DataValidation()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("People");
 
             ws.FirstCell().SetValue("Categories")
@@ -139,7 +139,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void Validation_persists_on_Worksheet_DataValidations()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("People");
 
             ws.FirstCell().SetValue("Categories")
@@ -163,7 +163,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void DataValidationShiftedOnRowInsert(string initialAddress, int rowNum, bool setValue, string expectedAddress)
         {
             //Arrange
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("DataValidation");
             var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);
@@ -189,7 +189,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void DataValidationShiftedOnColumnInsert(string initialAddress, int columnNum, bool setValue, string expectedAddress)
         {
             //Arrange
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("DataValidation");
             var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);

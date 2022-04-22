@@ -21,7 +21,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyRow()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Test").Style.Font.SetBold();
             ws.FirstRow().CopyTo(ws.Row(2));
@@ -32,7 +32,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void InsertingRowsAbove1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
 
             ws.Rows("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
@@ -85,7 +85,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void InsertingRowsAbove2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
 
             ws.Rows("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
@@ -138,7 +138,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void InsertingRowsAbove3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
 
             ws.Rows("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
@@ -221,7 +221,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NoRowsUsed()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             Int32 count = 0;
 
@@ -237,7 +237,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void RowUsed()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 2).SetValue("Test");
             ws.Cell(1, 3).SetValue("Test");
@@ -280,7 +280,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void UngroupFromAll()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Rows(1, 2).Group();
             ws.Rows(1, 2).Ungroup(true);
         }
@@ -288,7 +288,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void NegativeRowNumberIsInvalid()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1") as XLWorksheet;
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1") as XLWorksheet;
 
             var row = new XLRow(ws, -1);
 
@@ -298,7 +298,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void DeleteRowOnWorksheetWithComment()
         {
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
             ws.Cell(4, 1).GetComment().AddText("test");
             ws.Column(1).Width = 100;
             Assert.DoesNotThrow(() => ws.Row(1).Delete());

@@ -37,7 +37,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ex = Assert.Throws<NameNotRecognizedException>(() => XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
             Assert.That(ex.Message, Is.EqualTo("The identifier `XXX` was not recognised."));
 
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
             ex = Assert.Throws<NameNotRecognizedException>(() => ws.Evaluate("XXX(A1:A2)"));
             Assert.That(ex.Message, Is.EqualTo("The identifier `XXX` was not recognised."));
         }

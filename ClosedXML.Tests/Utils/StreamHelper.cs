@@ -128,8 +128,10 @@ namespace ClosedXML.Tests
                 throw new ArgumentException("Must be in position 0", "other");
             }
 
-            var stringOne = new StreamReader(tuple1.Item2).ReadToEnd().RemoveIgnoredParts(tuple1.Item1, stripColumnWidths, ignoreGuids: true);
-            var stringOther = new StreamReader(tuple2.Item2).ReadToEnd().RemoveIgnoredParts(tuple2.Item1, stripColumnWidths, ignoreGuids: true);
+            using var streamReader = new StreamReader(tuple1.Item2);
+            var stringOne = streamReader.ReadToEnd().RemoveIgnoredParts(tuple1.Item1, stripColumnWidths, ignoreGuids: true);
+            using var streamReaderOther = new StreamReader(tuple2.Item2);
+            var stringOther = streamReaderOther.ReadToEnd().RemoveIgnoredParts(tuple2.Item1, stripColumnWidths, ignoreGuids: true);
             return stringOne == stringOther;
         }
 

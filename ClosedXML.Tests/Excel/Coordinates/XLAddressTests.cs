@@ -9,7 +9,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ToStringTest()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLAddress address = ws.Cell(1, 1).Address;
 
             Assert.AreEqual("A1", address.ToString());
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ToStringTestWithSpace()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
             IXLAddress address = ws.Cell(1, 1).Address;
 
             Assert.AreEqual("A1", address.ToString());
@@ -163,7 +163,7 @@ namespace ClosedXML.Tests
 
         private IXLAddress ProduceInvalidAddress()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
             var range = ws.Range("A1:B2");
 
             ws.Rows(1, 5).Delete();
@@ -172,7 +172,7 @@ namespace ClosedXML.Tests
 
         private IXLAddress ProduceAddressOnDeletedWorksheet()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet 1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
             var address = ws.Cell("A1").Address;
 
             ws.Delete();

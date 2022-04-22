@@ -12,9 +12,8 @@ namespace ClosedXML.Tests
         private static XLColor backgroundColor = XLColor.LightBlue;
         private static XLColor foregroundColor = XLColor.DarkBrown;
 
-        private IXLWorkbook SetupWorkbook()
+        private IXLWorkbook SetupWorkbook(XLWorkbook wb)
         {
-            var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
 
             var c = ws.FirstCell()
@@ -79,7 +78,9 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearAll()
         {
-            using (var wb = SetupWorkbook())
+            using var emptyWb = new XLWorkbook();
+
+            using (var wb = SetupWorkbook(emptyWb))
             {
                 var ws = wb.Worksheets.First();
 
@@ -101,7 +102,9 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearContents()
         {
-            using (var wb = SetupWorkbook())
+            using var emptyWb = new XLWorkbook();
+
+            using (var wb = SetupWorkbook(emptyWb))
             {
                 var ws = wb.Worksheets.First();
 
@@ -127,7 +130,9 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearDataType()
         {
-            using (var wb = SetupWorkbook())
+            using var emptyWb = new XLWorkbook();
+
+            using (var wb = SetupWorkbook(emptyWb))
             {
                 var ws = wb.Worksheets.First();
 
@@ -150,7 +155,9 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearNormalFormats()
         {
-            using (var wb = SetupWorkbook())
+            using var emptyWb = new XLWorkbook();
+
+            using (var wb = SetupWorkbook(emptyWb))
             {
                 var ws = wb.Worksheets.First();
 
@@ -176,7 +183,9 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearConditionalFormats()
         {
-            using (var wb = SetupWorkbook())
+            using var emptyWb = new XLWorkbook();
+
+            using (var wb = SetupWorkbook(emptyWb))
             {
                 var ws = wb.Worksheets.First();
 
@@ -202,7 +211,9 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearComments()
         {
-            using (var wb = SetupWorkbook())
+            using var emptyWb = new XLWorkbook();
+
+            using (var wb = SetupWorkbook(emptyWb))
             {
                 var ws = wb.Worksheets.First();
 
@@ -228,7 +239,8 @@ namespace ClosedXML.Tests
         [Test]
         public void WorksheetClearDataValidation()
         {
-            using (var wb = SetupWorkbook())
+            using var emptyWb = new XLWorkbook();
+            using (var wb = SetupWorkbook(emptyWb))
             {
                 var ws = wb.Worksheets.First();
 
@@ -254,9 +266,10 @@ namespace ClosedXML.Tests
         [Test]
         public void DeleteClearedCellValue()
         {
+            using var emptyWb = new XLWorkbook();
             using (var ms = new MemoryStream())
             {
-                using (var wb = SetupWorkbook())
+                using (var wb = SetupWorkbook(emptyWb))
                 {
                     var ws = wb.Worksheets.First();
                     Assert.AreEqual("Hello world!", ws.Cell("A1").GetString());

@@ -240,7 +240,7 @@ namespace ClosedXML.Tests
         [Test]
         public void XLMarkerTests()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             XLMarker firstMarker = new XLMarker(ws.Cell(1, 10), new SKPoint(100, 0));
 
             Assert.AreEqual(10, firstMarker.ColumnNumber);
@@ -402,7 +402,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyImageSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
 
             IXLPicture original;
@@ -434,7 +434,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyImageDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             IXLPicture original;
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Tests.Resource.Images.ImageHandling.png"))

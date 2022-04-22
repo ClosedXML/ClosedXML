@@ -34,7 +34,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
                 ConsolidateConditionalFormatRanges = consolidateConditionalFormatRanges
             };
 
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
 
             ws.Range("D2:D3").AddConditionalFormat().DataBar(XLColor.Red).LowestValue().HighestValue();
@@ -48,7 +48,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             using (var ms = new MemoryStream())
             {
                 wb.SaveAs(ms, options);
-                var wb_saved = new XLWorkbook(ms);
+                using var wb_saved = new XLWorkbook(ms);
                 Assert.AreEqual(expectedCount, wb_saved.Worksheet("Sheet").ConditionalFormats.Count());
             }
         }
@@ -62,7 +62,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
                 ConsolidateDataValidationRanges = consolidateDataValidationRanges
             };
 
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet");
             ws.Range("C2:C5").CreateDataValidation().Decimal.Between(1, 5);
             ws.Range("D2:D5").CreateDataValidation().Decimal.Between(1, 5);
@@ -70,7 +70,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             using (var ms = new MemoryStream())
             {
                 wb.SaveAs(ms, options);
-                var wb_saved = new XLWorkbook(ms);
+                using var wb_saved = new XLWorkbook(ms);
                 Assert.AreEqual(expectedCount, wb_saved.Worksheet("Sheet").DataValidations.Count());
             }
         }

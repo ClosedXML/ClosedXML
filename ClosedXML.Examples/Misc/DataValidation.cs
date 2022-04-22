@@ -1,8 +1,5 @@
-using System;
 using ClosedXML.Excel;
-using System.Globalization;
-using System.Threading;
-
+using System;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -14,8 +11,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -25,8 +21,7 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
@@ -36,15 +31,14 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Data Validation");
 
             // Decimal between 1 and 5
@@ -76,7 +70,6 @@ namespace ClosedXML.Examples.Misc
             // Intersecting dataValidations
             ws.Range("B1:B4").CreateDataValidation().WholeNumber.EqualTo(1);
             ws.Range("B3:B4").CreateDataValidation().WholeNumber.EqualTo(2);
-
 
             // Validate with multiple ranges
             var ws2 = wb.Worksheets.Add("Validate Ranges");
@@ -141,7 +134,6 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.PageSetup
 {
@@ -11,7 +10,7 @@ namespace ClosedXML.Examples.PageSetup
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws1 = workbook.Worksheets.Add("Separate PrintAreas");
             ws1.PageSetup.PrintAreas.Add("A1:B2");
             ws1.PageSetup.PrintAreas.Add("D3:D5");
@@ -20,7 +19,7 @@ namespace ClosedXML.Examples.PageSetup
             ws2.PageSetup.PrintAreas.Add("A1:D5");
             ws2.PageSetup.AddHorizontalPageBreak(2);
             ws2.PageSetup.AddVerticalPageBreak(2);
-            
+
             workbook.SaveAs(filePath);
         }
 
@@ -28,7 +27,6 @@ namespace ClosedXML.Examples.PageSetup
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

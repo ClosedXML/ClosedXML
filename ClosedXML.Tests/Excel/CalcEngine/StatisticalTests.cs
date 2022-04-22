@@ -1,4 +1,3 @@
-// Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
@@ -12,16 +11,23 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     public class StatisticalTests
     {
         private double tolerance = 1e-6;
-        private XLWorkbook workbook;
+
+        [SetUp]
+        public void Init()
+        {
+            // Make sure tests run on a deterministic culture
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+        }
 
         [Test]
         public void Average()
         {
             double value;
-            value = workbook.Evaluate("AVERAGE(-27.5,93.93,64.51,-70.56)").CastTo<double>();
+            using var wb = SetupWorkbook();
+            value = wb.Evaluate("AVERAGE(-27.5,93.93,64.51,-70.56)").CastTo<double>();
             Assert.AreEqual(15.095, value, tolerance);
 
-            var ws = workbook.Worksheets.First();
+            var ws = wb.Worksheets.First();
             value = ws.Evaluate("AVERAGE(G3:G45)").CastTo<double>();
             Assert.AreEqual(49.3255814, value, tolerance);
 
@@ -31,7 +37,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Count()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             int value;
             value = ws.Evaluate(@"=COUNT(D3:D45)").CastTo<int>();
             Assert.AreEqual(0, value);
@@ -42,14 +48,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNT(G:G)").CastTo<int>();
             Assert.AreEqual(43, value);
 
-            value = workbook.Evaluate(@"=COUNT(Data!G:G)").CastTo<int>();
+            value = wb.Evaluate(@"=COUNT(Data!G:G)").CastTo<int>();
             Assert.AreEqual(43, value);
         }
 
         [Test]
         public void CountA()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             int value;
             value = ws.Evaluate(@"=COUNTA(D3:D45)").CastTo<int>();
             Assert.AreEqual(43, value);
@@ -60,14 +66,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTA(G:G)").CastTo<int>();
             Assert.AreEqual(44, value);
 
-            value = workbook.Evaluate(@"=COUNTA(Data!G:G)").CastTo<int>();
+            value = wb.Evaluate(@"=COUNTA(Data!G:G)").CastTo<int>();
             Assert.AreEqual(44, value);
         }
 
         [Test]
         public void CountBlank()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             int value;
             value = ws.Evaluate(@"=COUNTBLANK(B:B)").CastTo<int>();
             Assert.AreEqual(1048532, value);
@@ -81,7 +87,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTBLANK(A1)").CastTo<int>();
             Assert.AreEqual(1, value);
 
-            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=COUNTBLANK(E3:E45)"));
+            Assert.Throws<NoValueAvailableException>(() => wb.Evaluate(@"=COUNTBLANK(E3:E45)"));
             Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK()"));
             Assert.Throws<ExpressionParseException>(() => ws.Evaluate(@"=COUNTBLANK(A3:A45,E3:E45)"));
         }
@@ -89,7 +95,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void CountIf()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             int value;
             value = ws.Evaluate(@"=COUNTIF(D3:D45,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
@@ -97,7 +103,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTIF(D:D,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
 
-            value = workbook.Evaluate(@"=COUNTIF(Data!D:D,""Central"")").CastTo<int>();
+            value = wb.Evaluate(@"=COUNTIF(Data!D:D,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
         }
 
@@ -111,7 +117,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(@"=COUNTIF(Data!E1:E44, """")", 1)]
         public void CountIf_ConditionWithWildcards(string formula, int expectedResult)
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             int value = ws.Evaluate(formula).CastTo<int>();
             Assert.AreEqual(expectedResult, value);
@@ -129,7 +135,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // We follow to Excel's convention.
             // Excel treats 1 and TRUE as unequal, but 3 and "3" as equal
             // LibreOffice Calc handles some SUMIF and COUNTIF differently, e.g. it treats 1 and TRUE as equal, but 3 and "3" differently
-            var ws = workbook.Worksheet("MixedData");
+            using var wb = SetupWorkbook(); var ws = wb.Worksheet("MixedData");
             Assert.AreEqual(expected, ws.Evaluate(formula));
         }
 
@@ -200,7 +206,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void CountIfs_SingleCondition()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             int value;
             value = ws.Evaluate(@"=COUNTIFS(D3:D45,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
@@ -208,7 +214,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=COUNTIFS(D:D,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
 
-            value = workbook.Evaluate(@"=COUNTIFS(Data!D:D,""Central"")").CastTo<int>();
+            value = wb.Evaluate(@"=COUNTIFS(Data!D:D,""Central"")").CastTo<int>();
             Assert.AreEqual(24, value);
         }
 
@@ -222,16 +228,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(@"=COUNTIFS(Data!E1:E44, """")", 1)]
         public void CountIfs_SingleConditionWithWildcards(string formula, int expectedResult)
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             int value = ws.Evaluate(formula).CastTo<int>();
             Assert.AreEqual(expectedResult, value);
-        }
-
-        [OneTimeTearDown]
-        public void Dispose()
-        {
-            workbook.Dispose();
         }
 
         [TestCase(@"H3:H45", ExpectedResult = 7.51126069234216)]
@@ -247,26 +247,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [DefaultFloatingPointTolerance(1e-12)]
         public double Geomean(string sourceValue)
         {
-            return workbook.Worksheets.First().Evaluate($"=GEOMEAN({sourceValue})").CastTo<double>();
+            using var wb = SetupWorkbook();
+            return wb.Worksheets.First().Evaluate($"=GEOMEAN({sourceValue})").CastTo<double>();
         }
 
         [TestCase("D3:D45", typeof(NumberException), "No numeric parameters.")]
         [TestCase("-1, 0, 3", typeof(NumberException), "Incorrect parameters. Use only positive numbers in your data.")]
         public void Geomean_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             Assert.Throws(
                 Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
                 () => ws.Evaluate($"=GEOMEAN({sourceValue})"));
-        }
-
-        [SetUp]
-        public void Init()
-        {
-            // Make sure tests run on a deterministic culture
-            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-            workbook = SetupWorkbook();
         }
 
         [TestCase(@"H3:H45", ExpectedResult = 94145.5271162791)]
@@ -282,13 +275,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [DefaultFloatingPointTolerance(1e-10)]
         public double DevSq(string sourceValue)
         {
-            return workbook.Worksheets.First().Evaluate($"=DEVSQ({sourceValue})").CastTo<double>();
+            using var wb = SetupWorkbook();
+            return wb.Worksheets.First().Evaluate($"=DEVSQ({sourceValue})").CastTo<double>();
         }
 
         [TestCase("D3:D45", typeof(CellValueException), "No numeric parameters.")]
         public void Devsq_IncorrectCases(string sourceValue, Type exceptionType, string exceptionMessage)
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             Assert.Throws(
                 Is.TypeOf(exceptionType).And.Message.EqualTo(exceptionMessage),
@@ -308,6 +302,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [DefaultFloatingPointTolerance(1e-12)]
         public double Fisher(double sourceValue)
         {
+            using var wb = SetupWorkbook();
+
             return XLWorkbook.EvaluateExpr($"=FISHER({sourceValue})").CastTo<double>();
         }
 
@@ -326,7 +322,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Max()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             int value;
             value = ws.Evaluate(@"=MAX(D3:D45)").CastTo<int>();
             Assert.AreEqual(0, value);
@@ -337,7 +333,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=MAX(G:G)").CastTo<int>();
             Assert.AreEqual(96, value);
 
-            value = workbook.Evaluate(@"=MAX(Data!G:G)").CastTo<int>();
+            value = wb.Evaluate(@"=MAX(Data!G:G)").CastTo<int>();
             Assert.AreEqual(96, value);
         }
 
@@ -345,7 +341,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Median_CellRangeOfNonNumericValues_ThrowsApplicationException()
         {
             //Arrange
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             //Act - Assert
             Assert.Throws<ApplicationException>(() =>
@@ -358,7 +354,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Median_EvenCountOfCellRange_ReturnsAverageOfTwoElementsInMiddleOfSortedList()
         {
             //Arrange
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             //Act
             double value = ws.Evaluate("MEDIAN(I3:I10)").CastTo<double>();
@@ -370,8 +366,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Median_EvenCountOfManualNumbers_ReturnsAverageOfTwoElementsInMiddleOfSortedList()
         {
+            using var wb = SetupWorkbook();
+
             //Act
-            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)").CastTo<double>();
+            double value = wb.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)").CastTo<double>();
 
             //Assert
             Assert.AreEqual(18.505, value, tolerance);
@@ -381,7 +379,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Median_OddCountOfCellRange_ReturnsElementInMiddleOfSortedList()
         {
             //Arrange
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             //Act
             double value = ws.Evaluate("MEDIAN(I3:I11)").CastTo<double>();
@@ -393,8 +391,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Median_OddCountOfManualNumbers_ReturnsElementInMiddleOfSortedList()
         {
+            using var wb = SetupWorkbook();
+
             //Act
-            double value = workbook.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)").CastTo<double>();
+            double value = wb.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)").CastTo<double>();
 
             //Assert
             Assert.AreEqual(64.51, value, tolerance);
@@ -403,7 +403,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Min()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             int value;
             value = ws.Evaluate(@"=MIN(D3:D45)").CastTo<int>();
             Assert.AreEqual(0, value);
@@ -414,14 +414,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=MIN(G:G)").CastTo<int>();
             Assert.AreEqual(2, value);
 
-            value = workbook.Evaluate(@"=MIN(Data!G:G)").CastTo<int>();
+            value = wb.Evaluate(@"=MIN(Data!G:G)").CastTo<int>();
             Assert.AreEqual(2, value);
         }
 
         [Test]
         public void StDev()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             double value;
             Assert.That(() => ws.Evaluate(@"=STDEV(D3:D45)"), Throws.TypeOf<ApplicationException>());
 
@@ -431,14 +431,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=STDEV(H:H)").CastTo<double>();
             Assert.AreEqual(47.34511769, value, tolerance);
 
-            value = workbook.Evaluate(@"=STDEV(Data!H:H)").CastTo<double>();
+            value = wb.Evaluate(@"=STDEV(Data!H:H)").CastTo<double>();
             Assert.AreEqual(47.34511769, value, tolerance);
         }
 
         [Test]
         public void StDevP()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             double value;
             Assert.That(() => ws.Evaluate(@"=STDEVP(D3:D45)"), Throws.InvalidOperationException);
 
@@ -448,7 +448,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=STDEVP(H:H)").CastTo<double>();
             Assert.AreEqual(46.79135458, value, tolerance);
 
-            value = workbook.Evaluate(@"=STDEVP(Data!H:H)").CastTo<double>();
+            value = wb.Evaluate(@"=STDEVP(Data!H:H)").CastTo<double>();
             Assert.AreEqual(46.79135458, value, tolerance);
         }
 
@@ -464,7 +464,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // We follow to Excel's convention.
             // Excel treats 1 and TRUE as unequal, but 3 and "3" as equal
             // LibreOffice Calc handles some SUMIF and COUNTIF differently, e.g. it treats 1 and TRUE as equal, but 3 and "3" differently
-            var ws = workbook.Worksheet("MixedData");
+            using var wb = SetupWorkbook(); var ws = wb.Worksheet("MixedData");
             Assert.AreEqual(expected, ws.Evaluate(formula));
         }
 
@@ -501,7 +501,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Var()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             double value;
             Assert.That(() => ws.Evaluate(@"=VAR(D3:D45)"), Throws.InvalidOperationException);
 
@@ -511,14 +511,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=VAR(H:H)").CastTo<double>();
             Assert.AreEqual(2241.560169, value, tolerance);
 
-            value = workbook.Evaluate(@"=VAR(Data!H:H)").CastTo<double>();
+            value = wb.Evaluate(@"=VAR(Data!H:H)").CastTo<double>();
             Assert.AreEqual(2241.560169, value, tolerance);
         }
 
         [Test]
         public void VarP()
         {
-            var ws = workbook.Worksheets.First();
+            using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
             double value;
             Assert.That(() => ws.Evaluate(@"=VARP(D3:D45)"), Throws.InvalidOperationException);
 
@@ -528,9 +528,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             value = ws.Evaluate(@"=VARP(H:H)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);
 
-            value = workbook.Evaluate(@"=VARP(Data!H:H)").CastTo<double>();
+            value = wb.Evaluate(@"=VARP(Data!H:H)").CastTo<double>();
             Assert.AreEqual(2189.430863, value, tolerance);
         }
+
         private XLWorkbook SetupWorkbook()
         {
             var wb = new XLWorkbook();

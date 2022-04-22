@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.PageSetup
 {
@@ -11,7 +10,7 @@ namespace ClosedXML.Examples.PageSetup
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws1 = workbook.Worksheets.Add("Page Setup - Page1");
             ws1.PageSetup.PageOrientation = XLPageOrientation.Landscape;
             ws1.PageSetup.AdjustTo(80);
@@ -37,7 +36,6 @@ namespace ClosedXML.Examples.PageSetup
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

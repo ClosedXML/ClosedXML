@@ -1,15 +1,13 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples
 {
     public class ColumnCells : IXLExample
     {
-
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Column Cells");
 
             var columnFromWorksheet = ws.Column(1);
@@ -27,6 +25,5 @@ namespace ClosedXML.Examples
 
             workbook.SaveAs(filePath);
         }
-
     }
 }

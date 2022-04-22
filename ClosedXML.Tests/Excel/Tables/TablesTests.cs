@@ -36,7 +36,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CanSaveTableCreatedFromEmptyDataTable()
         {
-            var dt = new DataTable("sheet1");
+            using var dt = new DataTable("sheet1");
             dt.Columns.Add("col1", typeof(string));
             dt.Columns.Add("col2", typeof(double));
 
@@ -56,7 +56,7 @@ namespace ClosedXML.Tests.Excel
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                var dt = new DataTable();
+                using var dt = new DataTable();
                 var table = ws.FirstCell().InsertTable(dt);
 
                 Assert.AreEqual(null, table);
@@ -141,7 +141,7 @@ namespace ClosedXML.Tests.Excel
                 using (var ms = new MemoryStream())
                 {
                     wb.SaveAs(ms, true);
-                    var wb2 = new XLWorkbook(ms);
+                    using var wb2 = new XLWorkbook(ms);
                     IXLWorksheet ws2 = wb2.Worksheet(1);
                     IXLTable table2 = ws2.Table(0);
                     string fieldName = table2.Field(0).Name;
@@ -157,7 +157,7 @@ namespace ClosedXML.Tests.Excel
             {
                 IXLWorksheet ws = wb.Worksheets.Add("Test");
 
-                var dt = new DataTable();
+                using var dt = new DataTable();
                 string columnName = "Line1" + XLConstants.NewLine + "Line2";
                 dt.Columns.Add(columnName);
 
@@ -173,7 +173,7 @@ namespace ClosedXML.Tests.Excel
                 using (var ms = new MemoryStream())
                 {
                     wb.SaveAs(ms, true);
-                    var wb2 = new XLWorkbook(ms);
+                    using var wb2 = new XLWorkbook(ms);
                     IXLWorksheet ws2 = wb2.Worksheet(1);
                     IXLTable table2 = ws2.Table(0);
                     string fieldName2 = table2.Field(0).Name;
@@ -185,7 +185,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void TableCreatedFromEmptyDataTable()
         {
-            var dt = new DataTable("sheet1");
+            using var dt = new DataTable("sheet1");
             dt.Columns.Add("col1", typeof(string));
             dt.Columns.Add("col2", typeof(double));
 
@@ -550,7 +550,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void TableNameCannotBeValidCellName()
         {
-            var dt = new DataTable("sheet1");
+            using var dt = new DataTable("sheet1");
             dt.Columns.Add("Patient", typeof(string));
             dt.Rows.Add("David");
 
@@ -628,7 +628,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void OverlappingTablesThrowsException()
         {
-            var dt = new DataTable("sheet1");
+            using var dt = new DataTable("sheet1");
             dt.Columns.Add("col1", typeof(string));
             dt.Columns.Add("col2", typeof(double));
 
@@ -934,7 +934,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyTableSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
 
             var table = ws1.Range("A1:C2").AsTable();
@@ -947,7 +947,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyDetachedTableDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             ws1.Cell("A1").Value = "Custom column 1";
             ws1.Cell("B1").Value = "Custom column 2";
@@ -977,7 +977,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyTableDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             ws1.Cell("A1").Value = "Custom column 1";
             ws1.Cell("B1").Value = "Custom column 2";
@@ -1057,7 +1057,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyTableWithoutData()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             ws1.Cell("A1").Value = "Custom column 1";
             ws1.Cell("B1").Value = "Custom column 2";

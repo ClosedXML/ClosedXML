@@ -1,15 +1,19 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using System;
 using System.IO;
 using System.Reflection;
 
 namespace ClosedXML.Examples
 {
-    public class ImageFormats : IXLExample
+    public class ImageFormats : IXLExample, IDisposable
     {
+        private bool disposedValue;
+        private XLWorkbook wb;
+
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            wb = new XLWorkbook();
             IXLWorksheet ws;
 
             using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.jpg"))
@@ -35,6 +39,25 @@ namespace ClosedXML.Examples
 
                 wb.SaveAs(filePath);
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    wb?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

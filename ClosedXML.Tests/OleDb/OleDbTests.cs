@@ -1,5 +1,4 @@
-﻿
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using System;
@@ -60,7 +59,7 @@ namespace ClosedXML.Tests.OleDb
                     using (var dataAdapter = new OleDbDataAdapter())
                     {
                         dataAdapter.SelectCommand = command;
-                        var dt = new DataTable();
+                        using var dt = new DataTable();
                         dataAdapter.Fill(dt);
 
                         Assert.AreEqual("Base", dt.Columns[0].ColumnName);
@@ -79,7 +78,7 @@ namespace ClosedXML.Tests.OleDb
                     using (var dataAdapter = new OleDbDataAdapter())
                     {
                         dataAdapter.SelectCommand = command;
-                        var dt = new DataTable();
+                        using var dt = new DataTable();
                         dataAdapter.Fill(dt);
 
                         Assert.AreEqual("Ref1", dt.Columns[0].ColumnName);
@@ -147,4 +146,3 @@ namespace ClosedXML.Tests.OleDb
         }
     }
 }
-

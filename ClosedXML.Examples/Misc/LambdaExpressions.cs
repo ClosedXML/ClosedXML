@@ -1,7 +1,7 @@
-using System.IO;
-using System.Linq;
 using ClosedXML.Excel;
 using MoreLinq;
+using System.IO;
+using System.Linq;
 
 namespace ClosedXML.Examples
 {
@@ -9,12 +9,11 @@ namespace ClosedXML.Examples
     {
         public void Create(string filePath)
         {
-
             string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new BasicTable().Create(tempFile);
-                var workbook = new XLWorkbook(tempFile);
+                using var workbook = new XLWorkbook(tempFile);
                 var ws = workbook.Worksheet(1);
 
                 // Define a range with the data

@@ -1,7 +1,7 @@
+using ClosedXML.Excel;
 using System;
 using System.Data;
 using System.Linq;
-using ClosedXML.Excel;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -13,8 +13,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -24,8 +23,7 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
@@ -35,17 +33,16 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
 
-            var dataTable = GetTable("Information");
+            using var dataTable = GetTable("Information");
 
             // Add a DataTable as a worksheet
             wb.Worksheets.Add(dataTable);
@@ -73,7 +70,6 @@ namespace ClosedXML.Examples.Misc
         }
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

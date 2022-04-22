@@ -1,7 +1,6 @@
+using ClosedXML.Excel;
 using System;
 using System.Linq;
-using ClosedXML.Excel;
-
 
 namespace ClosedXML.Examples.Misc
 {
@@ -13,8 +12,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -24,8 +22,7 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
@@ -35,21 +32,21 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
 
             #region Sort a table
+
             var wsTable = wb.Worksheets.Add("Table");
             AddTestTable(wsTable);
             var header = wsTable.Row(1).InsertRowsAbove(1).First();
-            for(Int32 co = 1; co <= wsTable.LastColumnUsed().ColumnNumber(); co++)
+            for (Int32 co = 1; co <= wsTable.LastColumnUsed().ColumnNumber(); co++)
             {
                 header.Cell(co).Value = "Column" + co.ToString();
             }
@@ -57,14 +54,16 @@ namespace ClosedXML.Examples.Misc
             var table = rangeTable.CopyTo(wsTable.Column(wsTable.LastColumnUsed().ColumnNumber() + 3)).CreateTable();
 
             table.Sort("Column2, Column3 Desc, Column1 ASC");
-            
+
             wsTable.Row(1).InsertRowsAbove(2);
             wsTable.Cell(1, 1)
                 .SetValue(".Sort(\"Column2, Column3 Desc, Column1 ASC\") = Sort table Top to Bottom, Col 2 Asc, Col 3 Desc, Col 1 Asc, Ignore Blanks, Ignore Case")
                 .Style.Font.SetBold();
-            #endregion
+
+            #endregion Sort a table
 
             #region Sort a simple range left to right
+
             var wsLeftToRight = wb.Worksheets.Add("Sort Left to Right");
             AddTestTable(wsLeftToRight);
             wsLeftToRight.RangeUsed().Transpose(XLTransposeOptions.MoveCells);
@@ -77,9 +76,11 @@ namespace ClosedXML.Examples.Misc
             wsLeftToRight.Cell(1, 1)
                 .SetValue(".SortLeftToRight() = Sort Range Left to Right, Ascendingly, Ignore Blanks, Ignore Case")
                 .Style.Font.SetBold();
-            #endregion
+
+            #endregion Sort a simple range left to right
 
             #region Sort a range
+
             var wsComplex2 = wb.Worksheets.Add("Complex 2");
             AddTestTable(wsComplex2);
             var rangeComplex2 = wsComplex2.RangeUsed();
@@ -96,9 +97,11 @@ namespace ClosedXML.Examples.Misc
                 .SetValue(".SortColumns.Add(3, XLSortOrder.Descending) = Sort Col 3 Desc, Ignore Blanks, Ignore Case").Style.Font.SetBold();
             wsComplex2.Cell(3, 1)
                 .SetValue(".Sort() = Sort range using the parameters defined in SortColumns").Style.Font.SetBold();
-            #endregion
 
-            #region Sort a range 
+            #endregion Sort a range
+
+            #region Sort a range
+
             var wsComplex1 = wb.Worksheets.Add("Complex 1");
             AddTestTable(wsComplex1);
             var rangeComplex1 = wsComplex1.RangeUsed();
@@ -109,9 +112,11 @@ namespace ClosedXML.Examples.Misc
             wsComplex1.Row(1).InsertRowsAbove(2);
             wsComplex1.Cell(1, 1)
                 .SetValue(".Sort(\"2, 1 DESC\", XLSortOrder.Ascending, true) = Sort Range Top to Bottom, Col 2 Asc, Col 1 Desc, Ignore Blanks, Match Case").Style.Font.SetBold();
-            #endregion
+
+            #endregion Sort a range
 
             #region Sort a simple column
+
             var wsSimpleColumn = wb.Worksheets.Add("Simple Column");
             AddTestColumn(wsSimpleColumn);
             var rangeSimpleColumn = wsSimpleColumn.RangeUsed();
@@ -122,19 +127,22 @@ namespace ClosedXML.Examples.Misc
             wsSimpleColumn.Row(1).InsertRowsAbove(2);
             wsSimpleColumn.Cell(1, 1)
                 .SetValue(".Sort(XLSortOrder.Descending, true) = Sort Range Top to Bottom, Descendingly, Ignore Blanks, Match Case").Style.Font.SetBold();
-            #endregion
+
+            #endregion Sort a simple column
 
             #region Sort a simple range
+
             var wsSimple = wb.Worksheets.Add("Simple");
             AddTestTable(wsSimple);
             var rangeSimple = wsSimple.RangeUsed();
             var copySimple = rangeSimple.CopyTo(wsSimple.Column(wsSimple.LastColumnUsed().ColumnNumber() + 3));
-            
+
             copySimple.Sort();
 
             wsSimple.Row(1).InsertRowsAbove(2);
             wsSimple.Cell(1, 1).SetValue(".Sort() = Sort Range Top to Bottom, Ascendingly, Ignore Blanks, Ignore Case").Style.Font.SetBold();
-            #endregion
+
+            #endregion Sort a simple range
 
             wb.SaveAs(filePath);
         }
@@ -150,6 +158,7 @@ namespace ClosedXML.Examples.Misc
             ws.Cell("A7").SetValue(new TimeSpan(9, 4, 30)).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue(new DateTime(2011, 4, 15)).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
+
         private void AddTestColumnNumbers(IXLWorksheet ws)
         {
             ws.Cell("A1").SetValue(1.30).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
@@ -161,6 +170,7 @@ namespace ClosedXML.Examples.Misc
             ws.Cell("A7").SetValue(4.30).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue(4.15).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
+
         private void AddTestColumnTimeSpans(IXLWorksheet ws)
         {
             ws.Cell("A1").SetValue(new TimeSpan(0, 12, 35, 21)).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
@@ -172,6 +182,7 @@ namespace ClosedXML.Examples.Misc
             ws.Cell("A7").SetValue(new TimeSpan(1, 4, 30)).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue(new TimeSpan(1, 4, 15)).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
+
         private void AddTestColumnDates(IXLWorksheet ws)
         {
             ws.Cell("A1").SetValue(new DateTime(2011, 1, 30)).Style.Fill.SetBackgroundColor(XLColor.LightGreen);
@@ -183,6 +194,7 @@ namespace ClosedXML.Examples.Misc
             ws.Cell("A7").SetValue(new DateTime(2011, 4, 30)).Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue(new DateTime(2011, 4, 15)).Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
+
         private void AddTestColumn(IXLWorksheet ws)
         {
             ws.Cell("A1").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
@@ -194,6 +206,7 @@ namespace ClosedXML.Examples.Misc
             ws.Cell("A7").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.IndianRed);
             ws.Cell("A8").SetValue("c").Style.Fill.SetBackgroundColor(XLColor.DeepPink);
         }
+
         private void AddTestTable(IXLWorksheet ws)
         {
             ws.Cell("A1").SetValue("B").Style.Fill.SetBackgroundColor(XLColor.LightGreen);
@@ -227,7 +240,6 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

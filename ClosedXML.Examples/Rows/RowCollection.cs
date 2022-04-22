@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Rows
 {
@@ -12,8 +11,7 @@ namespace ClosedXML.Examples.Rows
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -23,9 +21,7 @@ namespace ClosedXML.Examples.Rows
 
         // Override
 
-
-        #endregion
-
+        #endregion Properties
 
         #region Events
 
@@ -35,15 +31,14 @@ namespace ClosedXML.Examples.Rows
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Rows of a Range");
 
             // All rows in a range
@@ -90,7 +85,6 @@ namespace ClosedXML.Examples.Rows
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

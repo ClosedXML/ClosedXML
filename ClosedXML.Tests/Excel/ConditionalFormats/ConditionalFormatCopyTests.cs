@@ -11,13 +11,13 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void StylesAreCreatedDuringCopy()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet");
             var format = ws.Range("A1:A1").AddConditionalFormat();
             format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill
                   .SetBackgroundColor(XLColor.Blue);
 
-            var wb2 = new XLWorkbook();
+            using var wb2 = new XLWorkbook();
             var ws2 = wb2.Worksheets.Add("Sheet2");
             ws2.FirstCell().CopyFrom(ws.FirstCell());
             Assert.That(ws2.ConditionalFormats.First().Style.Fill.BackgroundColor, Is.EqualTo(XLColor.Blue)); //Added blue style
@@ -26,7 +26,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void CopyConditionalFormatSingleWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet");
             var format = ws.Range("A1:A1").AddConditionalFormat();
             format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill
@@ -43,7 +43,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void CopyConditionalFormatSameRange()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet");
             var format = ws.Range("A1:C3").AddConditionalFormat();
             format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill
@@ -59,7 +59,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void CopyConditionalFormatsDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var format = ws1.Range("A1:A1").AddConditionalFormat();
             format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill
@@ -82,7 +82,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void FullCopyConditionalFormatSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var format = (XLConditionalFormat)ws1.Range("A1:A1").AddConditionalFormat();
             format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill
@@ -96,7 +96,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void FullCopyConditionalFormatDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var format = (XLConditionalFormat)ws1.Range("A1:C3").AddConditionalFormat();
             format.WhenEquals("=" + format.Ranges.First().FirstCell().CellRight(4).Address.ToStringRelative()).Fill

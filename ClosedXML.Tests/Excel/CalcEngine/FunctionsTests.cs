@@ -130,7 +130,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Formula_from_another_sheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws1 = wb.AddWorksheet("ws1");
             ws1.FirstCell().SetValue(1).CellRight().SetFormulaA1("A1 + 1");
             IXLWorksheet ws2 = wb.AddWorksheet("ws2");
@@ -174,7 +174,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void MDetem()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            IXLWorksheet ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
 
@@ -199,7 +200,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void MInverse()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            IXLWorksheet ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Cell("A1").SetValue(1).CellRight().SetValue(2).CellRight().SetValue(1);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
             ws.Cell("A3").SetValue(0).CellRight().SetValue(2).CellRight().SetValue(0);
@@ -225,7 +227,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void MMult()
         {
-            IXLWorksheet ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
             ws.Cell("A3").SetValue(2).CellRight().SetValue(4);
@@ -415,7 +417,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             object actual = XLWorkbook.EvaluateExpr("SERIESSUM(2,3,4,5)");
             Assert.AreEqual(40.0, actual);
 
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A2").FormulaA1 = "PI()/4";
             ws.Cell("A3").Value = 1;
@@ -544,7 +546,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalCalc()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.NamedRanges.Add("subtotalrange", "A37:A38");
 
@@ -612,7 +614,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Sum()
         {
-            IXLCell cell = new XLWorkbook().AddWorksheet("Sheet1").FirstCell();
+            using var xLWorkbook = new XLWorkbook();
+            IXLCell cell = xLWorkbook.AddWorksheet("Sheet1").FirstCell();
             IXLCell fCell = cell.SetValue(1).CellBelow().SetValue(2).CellBelow();
             fCell.FormulaA1 = "sum(A1:A2)";
 
@@ -647,7 +650,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void TextConcat()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = 1;
             ws.Cell("A2").Value = 1;
@@ -674,7 +677,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void TestEmptyTallyOperations()
         {
             //In these test no values have been set
-            XLWorkbook wb = new XLWorkbook();
+            using XLWorkbook wb = new XLWorkbook();
             wb.Worksheets.Add("TallyTests");
             var cell = wb.Worksheet(1).Cell(1, 1).SetFormulaA1("=MAX(D1,D2)");
             Assert.AreEqual(0, cell.Value);
