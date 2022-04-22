@@ -62,6 +62,7 @@ jobs:
         title: "Release Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
+          ./ClosedXML/bin/Release/*.snupkg
 
   deployTest:
     if: github.ref != 'refs/heads/main'
@@ -93,3 +94,4 @@ jobs:
         title: "Prerelease Build ${{ env.CURRENT_VERSION }}"
         files: |
           ./ClosedXML/bin/Release/*.nupkg
+          ./ClosedXML/bin/Release/*.snupkg
