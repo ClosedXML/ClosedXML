@@ -22,10 +22,10 @@ namespace ClosedXML.Excel
         public XLSheetView(XLWorksheet worksheet, XLSheetView sheetView)
             : this(worksheet)
         {
-            this.SplitRow = sheetView.SplitRow;
-            this.SplitColumn = sheetView.SplitColumn;
-            this.FreezePanes = sheetView.FreezePanes;
-            this.TopLeftCellAddress = new XLAddress(this.Worksheet, sheetView.TopLeftCellAddress.RowNumber, sheetView.TopLeftCellAddress.ColumnNumber, sheetView.TopLeftCellAddress.FixedRow, sheetView.TopLeftCellAddress.FixedColumn);
+            SplitRow = sheetView.SplitRow;
+            SplitColumn = sheetView.SplitColumn;
+            FreezePanes = sheetView.FreezePanes;
+            TopLeftCellAddress = new XLAddress(Worksheet, sheetView.TopLeftCellAddress.RowNumber, sheetView.TopLeftCellAddress.ColumnNumber, sheetView.TopLeftCellAddress.FixedRow, sheetView.TopLeftCellAddress.FixedColumn);
         }
 
         public bool FreezePanes { get; set; }
@@ -39,7 +39,7 @@ namespace ClosedXML.Excel
             get => _topLeftCellAddress;
             set
             {
-                if (value.HasWorksheet && !value.Worksheet.Equals(this.Worksheet))
+                if (value.HasWorksheet && !value.Worksheet.Equals(Worksheet))
                     throw new ArgumentException($"The value should be on the same worksheet as the sheet view.");
 
                 _topLeftCellAddress = value;

@@ -8,14 +8,14 @@ namespace ClosedXML.Excel
     {
         public XLSheetProtection(Algorithm algorithm)
         {
-            this.Algorithm = algorithm;
+            Algorithm = algorithm;
             AllowedElements = XLSheetProtectionElements.SelectEverything;
         }
 
         public Algorithm Algorithm { get; internal set; }
         public XLSheetProtectionElements AllowedElements { get; set; }
 
-        public bool IsPasswordProtected => this.IsProtected && !string.IsNullOrEmpty(PasswordHash);
+        public bool IsPasswordProtected => IsProtected && !string.IsNullOrEmpty(PasswordHash);
         public bool IsProtected { get; internal set; }
 
         internal string Base64EncodedSalt { get; set; }
@@ -44,13 +44,13 @@ namespace ClosedXML.Excel
 
         public object Clone()
         {
-            return new XLSheetProtection(this.Algorithm)
+            return new XLSheetProtection(Algorithm)
             {
-                IsProtected = this.IsProtected,
-                PasswordHash = this.PasswordHash,
-                SpinCount = this.SpinCount,
-                Base64EncodedSalt = this.Base64EncodedSalt,
-                AllowedElements = this.AllowedElements
+                IsProtected = IsProtected,
+                PasswordHash = PasswordHash,
+                SpinCount = SpinCount,
+                Base64EncodedSalt = Base64EncodedSalt,
+                AllowedElements = AllowedElements
             };
         }
 
@@ -58,12 +58,12 @@ namespace ClosedXML.Excel
         {
             if (sheetProtection is XLSheetProtection xlSheetProtection)
             {
-                this.IsProtected = xlSheetProtection.IsProtected;
-                this.Algorithm = xlSheetProtection.Algorithm;
-                this.PasswordHash = xlSheetProtection.PasswordHash;
-                this.SpinCount = xlSheetProtection.SpinCount;
-                this.Base64EncodedSalt = xlSheetProtection.Base64EncodedSalt;
-                this.AllowedElements = xlSheetProtection.AllowedElements;
+                IsProtected = xlSheetProtection.IsProtected;
+                Algorithm = xlSheetProtection.Algorithm;
+                PasswordHash = xlSheetProtection.PasswordHash;
+                SpinCount = xlSheetProtection.SpinCount;
+                Base64EncodedSalt = xlSheetProtection.Base64EncodedSalt;
+                AllowedElements = xlSheetProtection.AllowedElements;
             }
             return this;
         }
@@ -91,12 +91,12 @@ namespace ClosedXML.Excel
 
                 password = password ?? "";
 
-                this.Algorithm = algorithm;
-                this.Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(this.Algorithm);
-                this.PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
+                Algorithm = algorithm;
+                Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(Algorithm);
+                PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
             }
 
-            this.AllowedElements = allowedElements;
+            AllowedElements = allowedElements;
 
             return this;
         }
@@ -115,14 +115,14 @@ namespace ClosedXML.Excel
                 if (!string.IsNullOrEmpty(PasswordHash) && string.IsNullOrEmpty(password))
                     throw new InvalidOperationException("The worksheet is password protected");
 
-                var hash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
+                var hash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
                 if (hash != PasswordHash)
                     throw new ArgumentException("Invalid password");
                 else
                 {
                     IsProtected = false;
                     PasswordHash = string.Empty;
-                    this.Base64EncodedSalt = string.Empty;
+                    Base64EncodedSalt = string.Empty;
                 }
             }
 

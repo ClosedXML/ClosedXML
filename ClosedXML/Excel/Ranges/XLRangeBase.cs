@@ -434,7 +434,7 @@ namespace ClosedXML.Excel
         {
             var xlSourceBaseRangeAddress = (XLRangeAddress)sourceBaseRange.RangeAddress;
             var xlTargetBaseRangeAddress = (XLRangeAddress)targetBaseRange.RangeAddress;
-            var xlRangeAddress = this.RangeAddress.Relative(in xlSourceBaseRangeAddress, in xlTargetBaseRangeAddress);
+            var xlRangeAddress = RangeAddress.Relative(in xlSourceBaseRangeAddress, in xlTargetBaseRangeAddress);
 
             return ((XLRangeBase)targetBaseRange).Range(in xlRangeAddress);
         }
@@ -806,7 +806,7 @@ namespace ClosedXML.Excel
             if (cell != null)
                 return cell;
 
-            var styleValue = this.StyleValue;
+            var styleValue = StyleValue;
 
             if (styleValue == Worksheet.StyleValue)
             {
@@ -817,7 +817,7 @@ namespace ClosedXML.Excel
                     && column.StyleValue != Worksheet.StyleValue)
                     styleValue = column.StyleValue;
             }
-            var absoluteAddress = new XLAddress(this.Worksheet,
+            var absoluteAddress = new XLAddress(Worksheet,
                                  absRow,
                                  absColumn,
                                  cellAddressInRange.FixedRow,
@@ -900,10 +900,10 @@ namespace ClosedXML.Excel
 
         private XLRange GetRange(XLAddress newFirstCellAddress, XLAddress newLastCellAddress)
         {
-            if (!this.Worksheet.Equals(newFirstCellAddress.Worksheet))
+            if (!Worksheet.Equals(newFirstCellAddress.Worksheet))
                 throw new ArgumentException("The address refers to a different worksheet.", nameof(newFirstCellAddress));
 
-            if (!this.Worksheet.Equals(newLastCellAddress.Worksheet))
+            if (!Worksheet.Equals(newLastCellAddress.Worksheet))
                 throw new ArgumentException("The address refers to a different worksheet.", nameof(newLastCellAddress));
 
             var newRangeAddress = new XLRangeAddress(newFirstCellAddress, newLastCellAddress);
@@ -1194,7 +1194,7 @@ namespace ClosedXML.Excel
                             cellsToDelete.Add(oldKey);
                         }
 
-                        if (this.IsEntireColumn())
+                        if (IsEntireColumn())
                         {
                             Worksheet.Column(newColumn).Width = Worksheet.Column(co).Width;
                         }
@@ -1413,7 +1413,7 @@ namespace ClosedXML.Excel
                                 cellsToInsert.Add(newKey, oldCell);
                             cellsToDelete.Add(oldKey);
                         }
-                        if (this.IsEntireRow())
+                        if (IsEntireRow())
                         {
                             Worksheet.Row(newRow).Height = Worksheet.Row(ro).Height;
                         }
@@ -2126,13 +2126,13 @@ namespace ClosedXML.Excel
 
         public IXLRangeBase Grow(int growCount)
         {
-            var firstRow = Math.Max(1, this.RangeAddress.FirstAddress.RowNumber - growCount);
-            var firstColumn = Math.Max(1, this.RangeAddress.FirstAddress.ColumnNumber - growCount);
+            var firstRow = Math.Max(1, RangeAddress.FirstAddress.RowNumber - growCount);
+            var firstColumn = Math.Max(1, RangeAddress.FirstAddress.ColumnNumber - growCount);
 
-            var lastRow = Math.Min(XLHelper.MaxRowNumber, this.RangeAddress.LastAddress.RowNumber + growCount);
-            var lastColumn = Math.Min(XLHelper.MaxColumnNumber, this.RangeAddress.LastAddress.ColumnNumber + growCount);
+            var lastRow = Math.Min(XLHelper.MaxRowNumber, RangeAddress.LastAddress.RowNumber + growCount);
+            var lastColumn = Math.Min(XLHelper.MaxColumnNumber, RangeAddress.LastAddress.ColumnNumber + growCount);
 
-            return this.Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
+            return Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
         }
 
         public IXLRangeBase Shrink()
@@ -2142,16 +2142,16 @@ namespace ClosedXML.Excel
 
         public IXLRangeBase Shrink(int shrinkCount)
         {
-            var firstRow = this.RangeAddress.FirstAddress.RowNumber + shrinkCount;
-            var firstColumn = this.RangeAddress.FirstAddress.ColumnNumber + shrinkCount;
+            var firstRow = RangeAddress.FirstAddress.RowNumber + shrinkCount;
+            var firstColumn = RangeAddress.FirstAddress.ColumnNumber + shrinkCount;
 
-            var lastRow = this.RangeAddress.LastAddress.RowNumber - shrinkCount;
-            var lastColumn = this.RangeAddress.LastAddress.ColumnNumber - shrinkCount;
+            var lastRow = RangeAddress.LastAddress.RowNumber - shrinkCount;
+            var lastColumn = RangeAddress.LastAddress.ColumnNumber - shrinkCount;
 
             if (firstRow > lastRow || firstColumn > lastColumn)
                 return null;
 
-            return this.Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
+            return Worksheet.Range(firstRow, firstColumn, lastRow, lastColumn);
         }
 
         public IXLRangeAddress Intersection(IXLRangeBase otherRange, Func<IXLCell, bool> thisRangePredicate = null, Func<IXLCell, bool> otherRangePredicate = null)
@@ -2159,20 +2159,20 @@ namespace ClosedXML.Excel
             if (otherRange == null)
                 return null;
 
-            if (!this.Worksheet.Equals(otherRange.Worksheet))
+            if (!Worksheet.Equals(otherRange.Worksheet))
                 return null;
 
             if (thisRangePredicate == null && otherRangePredicate == null)
             {
                 // Special case, no predicates. We can optimise this a bit then.
-                return this.RangeAddress.Intersection(otherRange.RangeAddress);
+                return RangeAddress.Intersection(otherRange.RangeAddress);
             }
             else
             {
                 thisRangePredicate = thisRangePredicate ?? (c => true);
                 otherRangePredicate = otherRangePredicate ?? (c => true);
 
-                var intersectionCells = this.Cells(c => thisRangePredicate(c) && otherRange.Cells(otherRangePredicate).Contains(c));
+                var intersectionCells = Cells(c => thisRangePredicate(c) && otherRange.Cells(otherRangePredicate).Contains(c));
 
                 if (!intersectionCells.Any())
                     return null;
@@ -2185,8 +2185,8 @@ namespace ClosedXML.Excel
 
                 return new XLRangeAddress
                 (
-                    new XLAddress(this.Worksheet, firstRow, firstColumn, fixedRow: false, fixedColumn: false),
-                    new XLAddress(this.Worksheet, lastRow, lastColumn, fixedRow: false, fixedColumn: false)
+                    new XLAddress(Worksheet, firstRow, firstColumn, fixedRow: false, fixedColumn: false),
+                    new XLAddress(Worksheet, lastRow, lastColumn, fixedRow: false, fixedColumn: false)
                 );
             }
         }
@@ -2194,39 +2194,39 @@ namespace ClosedXML.Excel
         public IXLCells SurroundingCells(Func<IXLCell, bool> predicate = null)
         {
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents, predicate);
-            this.Grow().Cells(c => !this.Contains(c)).ForEach(c => cells.Add(c as XLCell));
+            Grow().Cells(c => !Contains(c)).ForEach(c => cells.Add(c as XLCell));
             return cells;
         }
 
         public IXLCells Union(IXLRangeBase otherRange, Func<IXLCell, bool> thisRangePredicate = null, Func<IXLCell, bool> otherRangePredicate = null)
         {
             if (otherRange == null)
-                return this.Cells(thisRangePredicate);
+                return Cells(thisRangePredicate);
 
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
-            if (!this.Worksheet.Equals(otherRange.Worksheet))
+            if (!Worksheet.Equals(otherRange.Worksheet))
                 return cells;
 
             if (thisRangePredicate == null) thisRangePredicate = c => true;
             if (otherRangePredicate == null) otherRangePredicate = c => true;
 
-            this.Cells(thisRangePredicate).Concat(otherRange.Cells(otherRangePredicate)).Distinct().ForEach(c => cells.Add(c as XLCell));
+            Cells(thisRangePredicate).Concat(otherRange.Cells(otherRangePredicate)).Distinct().ForEach(c => cells.Add(c as XLCell));
             return cells;
         }
 
         public IXLCells Difference(IXLRangeBase otherRange, Func<IXLCell, bool> thisRangePredicate = null, Func<IXLCell, bool> otherRangePredicate = null)
         {
             if (otherRange == null)
-                return this.Cells(thisRangePredicate);
+                return Cells(thisRangePredicate);
 
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
-            if (!this.Worksheet.Equals(otherRange.Worksheet))
+            if (!Worksheet.Equals(otherRange.Worksheet))
                 return cells;
 
             if (thisRangePredicate == null) thisRangePredicate = c => true;
             if (otherRangePredicate == null) otherRangePredicate = c => true;
 
-            this.Cells(c => thisRangePredicate(c) && !otherRange.Cells(otherRangePredicate).Contains(c)).ForEach(c => cells.Add(c as XLCell));
+            Cells(c => thisRangePredicate(c) && !otherRange.Cells(otherRangePredicate).Contains(c)).ForEach(c => cells.Add(c as XLCell));
             return cells;
         }
 

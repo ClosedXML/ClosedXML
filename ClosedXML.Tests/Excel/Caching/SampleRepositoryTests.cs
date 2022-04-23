@@ -16,7 +16,7 @@ namespace ClosedXML.Tests.Excel.Caching
             int key = 12345;
             var entity1 = new SampleEntity(key);
             var entity2 = new SampleEntity(key);
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
 
             // Act
             var storedEntity1 = sampleRepository.Store(ref key, entity1);
@@ -109,7 +109,7 @@ namespace ClosedXML.Tests.Excel.Caching
                 }
             }
 
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
 
             // Act
             Parallel.ForEach(entities, new ParallelOptions { MaxDegreeOfParallelism = 8 },
@@ -132,7 +132,7 @@ namespace ClosedXML.Tests.Excel.Caching
             int key1 = 12345;
             int key2 = 54321;
             var entity = new SampleEntity(key1);
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
             var storedEntity1 = sampleRepository.Store(ref key1, entity);
 
             // Act
@@ -172,7 +172,7 @@ namespace ClosedXML.Tests.Excel.Caching
             int key2 = 200;
             int key3 = 300;
             var entity = new SampleEntity(key1);
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
             sampleRepository.Store(ref key1, entity);
 
             sampleRepository.Replace(ref key2, ref key3);

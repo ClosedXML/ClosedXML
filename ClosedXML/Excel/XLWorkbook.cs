@@ -600,7 +600,7 @@ namespace ClosedXML.Excel
         {
             ThrowIfDisposed();
 
-            var table = this.Worksheets
+            var table = Worksheets
                 .SelectMany(ws => ws.Tables)
                 .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
 
@@ -773,7 +773,7 @@ namespace ClosedXML.Excel
             : this(file, loadOptions.EventTracking)
         {
             if (loadOptions.RecalculateAllFormulas)
-                this.RecalculateAllFormulas();
+                RecalculateAllFormulas();
         }
 
         /// <summary>
@@ -797,7 +797,7 @@ namespace ClosedXML.Excel
             : this(stream, loadOptions.EventTracking)
         {
             if (loadOptions.RecalculateAllFormulas)
-                this.RecalculateAllFormulas();
+                RecalculateAllFormulas();
         }
 
         #endregion Constructor

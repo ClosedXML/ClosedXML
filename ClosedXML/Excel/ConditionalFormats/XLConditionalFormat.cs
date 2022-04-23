@@ -230,7 +230,7 @@ namespace ClosedXML.Excel
 
         public IXLConditionalFormat SetStopIfTrue(bool value)
         {
-            this.StopIfTrue = value;
+            StopIfTrue = value;
             return this;
         }
 
@@ -548,7 +548,7 @@ namespace ClosedXML.Excel
 
         public DictionaryComparer(IEqualityComparer<TValue> valueComparer = null)
         {
-            this._valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+            _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
         }
 
         public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
@@ -577,7 +577,7 @@ namespace ClosedXML.Excel
 
         public EnumerableComparer(IEqualityComparer<T> valueComparer = null)
         {
-            this._valueComparer = valueComparer ?? EqualityComparer<T>.Default;
+            _valueComparer = valueComparer ?? EqualityComparer<T>.Default;
         }
 
         public bool Equals(IEnumerable<T> x, IEnumerable<T> y)

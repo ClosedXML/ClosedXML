@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
 
         public XLPivotTables(IXLWorksheet worksheet)
         {
-            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
         }
 
         internal void Add(string name, IXLPivotTable pivotTable)
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
         {
-            var pivotTable = new XLPivotTable(this.Worksheet)
+            var pivotTable = new XLPivotTable(Worksheet)
             {
                 Name = name,
                 TargetCell = targetCell,
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLTable table)
         {
-            var pivotTable = new XLPivotTable(this.Worksheet)
+            var pivotTable = new XLPivotTable(Worksheet)
             {
                 Name = name,
                 TargetCell = targetCell,

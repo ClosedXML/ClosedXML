@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
 
         public XLTableTheme(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         private static IEnumerable<XLTableTheme> allThemes;
@@ -103,17 +103,17 @@ namespace ClosedXML.Excel
             {
                 return false;
             }
-            return this.Name.Equals(theme.Name);
+            return Name.Equals(theme.Name);
         }
 
         public override int GetHashCode()
         {
-            return this.Name.GetHashCode();
+            return Name.GetHashCode();
         }
 
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         #endregion Overrides

@@ -17,8 +17,8 @@ namespace ClosedXML.Tests.Utils
 
         internal TemporaryFile(string path, bool preserve)
         {
-            this.Path = path;
-            this.Preserve = preserve;
+            Path = path;
+            Preserve = preserve;
         }
 
         public string Path { get; private set; }
@@ -48,7 +48,7 @@ namespace ClosedXML.Tests.Utils
 
         public override string ToString()
         {
-            return this.Path;
+            return Path;
         }
     }
 }

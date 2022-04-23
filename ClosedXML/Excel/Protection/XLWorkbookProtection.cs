@@ -13,13 +13,13 @@ namespace ClosedXML.Excel
 
         public XLWorkbookProtection(Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
         {
-            this.Algorithm = algorithm;
-            this.AllowedElements = allowedElements;
+            Algorithm = algorithm;
+            AllowedElements = allowedElements;
         }
 
         public Algorithm Algorithm { get; internal set; }
         public XLWorkbookProtectionElements AllowedElements { get; set; }
-        public bool IsPasswordProtected => this.IsProtected && !string.IsNullOrEmpty(PasswordHash);
+        public bool IsPasswordProtected => IsProtected && !string.IsNullOrEmpty(PasswordHash);
         public bool IsProtected { get; internal set; }
 
         internal string Base64EncodedSalt { get; set; }
@@ -50,12 +50,12 @@ namespace ClosedXML.Excel
 
         public object Clone()
         {
-            return new XLWorkbookProtection(this.Algorithm, this.AllowedElements)
+            return new XLWorkbookProtection(Algorithm, AllowedElements)
             {
-                IsProtected = this.IsProtected,
-                PasswordHash = this.PasswordHash,
-                SpinCount = this.SpinCount,
-                Base64EncodedSalt = this.Base64EncodedSalt
+                IsProtected = IsProtected,
+                PasswordHash = PasswordHash,
+                SpinCount = SpinCount,
+                Base64EncodedSalt = Base64EncodedSalt
             };
         }
 
@@ -63,12 +63,12 @@ namespace ClosedXML.Excel
         {
             if (workbookProtection is XLWorkbookProtection xlWorkbookProtection)
             {
-                this.IsProtected = xlWorkbookProtection.IsProtected;
-                this.Algorithm = xlWorkbookProtection.Algorithm;
-                this.PasswordHash = xlWorkbookProtection.PasswordHash;
-                this.SpinCount = xlWorkbookProtection.SpinCount;
-                this.Base64EncodedSalt = xlWorkbookProtection.Base64EncodedSalt;
-                this.AllowedElements = xlWorkbookProtection.AllowedElements;
+                IsProtected = xlWorkbookProtection.IsProtected;
+                Algorithm = xlWorkbookProtection.Algorithm;
+                PasswordHash = xlWorkbookProtection.PasswordHash;
+                SpinCount = xlWorkbookProtection.SpinCount;
+                Base64EncodedSalt = xlWorkbookProtection.Base64EncodedSalt;
+                AllowedElements = xlWorkbookProtection.AllowedElements;
             }
             return this;
         }
@@ -95,12 +95,12 @@ namespace ClosedXML.Excel
 
                 password = password ?? "";
 
-                this.Algorithm = algorithm;
-                this.Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(this.Algorithm);
-                this.PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
+                Algorithm = algorithm;
+                Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(Algorithm);
+                PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
             }
 
-            this.AllowedElements = allowedElements;
+            AllowedElements = allowedElements;
 
             return this;
         }
@@ -119,14 +119,14 @@ namespace ClosedXML.Excel
                 if (!string.IsNullOrEmpty(PasswordHash) && string.IsNullOrEmpty(password))
                     throw new InvalidOperationException("The workbook structure is password protected");
 
-                var hash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
+                var hash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
                 if (hash != PasswordHash)
                     throw new ArgumentException("Invalid password");
                 else
                 {
                     IsProtected = false;
                     PasswordHash = string.Empty;
-                    this.Base64EncodedSalt = string.Empty;
+                    Base64EncodedSalt = string.Empty;
                 }
             }
 

@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
         public XLPivotStyleFormats(IXLPivotField pivotField)
         {
-            this._pivotField = pivotField;
+            _pivotField = pivotField;
         }
 
         #region IXLPivotStyleFormats members

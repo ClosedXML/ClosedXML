@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
             {
                 if (_column == null)
                 {
-                    _column = table.AsRange().Column(this.Index + 1);
+                    _column = table.AsRange().Column(Index + 1);
                 }
                 return _column;
             }
@@ -158,21 +158,21 @@ namespace ClosedXML.Excel
 
             if (deleteUnderlyingRangeColumn)
             {
-                table.AsRange().ColumnQuick(this.Index + 1).Delete();
+                table.AsRange().ColumnQuick(Index + 1).Delete();
             }
 
-            fields.Where(f => f.Index > this.Index).ForEach(f => f.Index--);
-            table.FieldNames.Remove(this.Name);
+            fields.Where(f => f.Index > Index).ForEach(f => f.Index--);
+            table.FieldNames.Remove(Name);
         }
 
         public bool IsConsistentDataType()
         {
-            var dataTypes = this.Column
+            var dataTypes = Column
                 .Cells()
-                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Skip(table.ShowHeaderRow ? 1 : 0)
                 .Select(c => c.DataType);
 
-            if (this.table.ShowTotalsRow)
+            if (table.ShowTotalsRow)
                 dataTypes = dataTypes.Take(dataTypes.Count() - 1);
 
             var distinctDataTypes = dataTypes
@@ -184,12 +184,12 @@ namespace ClosedXML.Excel
 
         public bool IsConsistentFormula()
         {
-            var formulas = this.Column
+            var formulas = Column
                 .Cells()
-                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Skip(table.ShowHeaderRow ? 1 : 0)
                 .Select(c => c.FormulaR1C1);
 
-            if (this.table.ShowTotalsRow)
+            if (table.ShowTotalsRow)
                 formulas = formulas.Take(formulas.Count() - 1);
 
             var distinctFormulas = formulas
@@ -201,13 +201,13 @@ namespace ClosedXML.Excel
 
         public bool IsConsistentStyle()
         {
-            var styles = this.Column
+            var styles = Column
                 .Cells()
-                .Skip(this.table.ShowHeaderRow ? 1 : 0)
+                .Skip(table.ShowHeaderRow ? 1 : 0)
                 .OfType<XLCell>()
                 .Select(c => c.StyleValue);
 
-            if (this.table.ShowTotalsRow)
+            if (table.ShowTotalsRow)
                 styles = styles.Take(styles.Count() - 1);
 
             var distinctStyles = styles

@@ -49,7 +49,7 @@ namespace ClosedXML.Excel
 
         public void Remove(int index)
         {
-            this.Remove(_tables.ElementAt(index).Key);
+            Remove(_tables.ElementAt(index).Key);
         }
 
         public void Remove(string name)

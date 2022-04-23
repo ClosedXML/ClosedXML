@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddText(string text, XLHFOccurrence occurrence)
         {
-            XLRichString richText = new XLRichString(text, this.HeaderFooter.Worksheet.Style.Font, this);
+            XLRichString richText = new XLRichString(text, HeaderFooter.Worksheet.Style.Font, this);
 
             var hfText = new XLHFText(richText, this);
             if (occurrence == XLHFOccurrence.AllPages)
@@ -78,7 +78,7 @@ namespace ClosedXML.Excel
             else
                 texts.Add(occurrence, new List<XLHFText> { hfText });
 
-            this.HeaderFooter.Changed = true;
+            HeaderFooter.Changed = true;
         }
 
         public IXLRichString AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)

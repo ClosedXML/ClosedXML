@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
 
                 // Some totals row formula depend on the table name. Update them.
                 if (_fieldNames?.Any() ?? false)
-                    this.Fields.ForEach(f => (f as XLTableField).UpdateTableFieldTotalsRowFormula());
+                    Fields.ForEach(f => (f as XLTableField).UpdateTableFieldTotalsRowFormula());
 
                 if (!string.IsNullOrWhiteSpace(oldname) && !string.Equals(oldname, _name, StringComparison.OrdinalIgnoreCase))
                 {
@@ -231,7 +231,7 @@ namespace ClosedXML.Excel
                 _showTotalsRow = value;
 
                 // Invalidate fields' columns
-                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+                Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
                 if (_showTotalsRow)
                 {
@@ -318,24 +318,24 @@ namespace ClosedXML.Excel
 
         public IXLTable Resize(IXLRange range)
         {
-            if (!this.ShowHeaderRow)
+            if (!ShowHeaderRow)
                 throw new NotImplementedException("Resizing of tables with no headers not supported yet.");
 
-            if (this.Worksheet != range.Worksheet)
+            if (Worksheet != range.Worksheet)
                 throw new InvalidOperationException("You cannot resize a table to a range on a different sheet.");
 
-            var totalsRowChanged = this.ShowTotalsRow ? range.LastRow().RowNumber() - this.TotalsRow().RowNumber() : 0;
-            var oldTotalsRowNumber = this.ShowTotalsRow ? this.TotalsRow().RowNumber() : -1;
+            var totalsRowChanged = ShowTotalsRow ? range.LastRow().RowNumber() - TotalsRow().RowNumber() : 0;
+            var oldTotalsRowNumber = ShowTotalsRow ? TotalsRow().RowNumber() : -1;
 
-            var existingHeaders = this.FieldNames.Keys;
+            var existingHeaders = FieldNames.Keys;
             var newHeaders = new HashSet<string>();
 
             // Force evaluation of f.Column field
-            var tempArray = this.Fields.Select(f => f.Column).ToArray();
+            var tempArray = Fields.Select(f => f.Column).ToArray();
 
             var firstRow = range.Row(1);
-            if (!firstRow.FirstCell().Address.Equals(this.HeadersRow().FirstCell().Address)
-                || !firstRow.LastCell().Address.Equals(this.HeadersRow().LastCell().Address))
+            if (!firstRow.FirstCell().Address.Equals(HeadersRow().FirstCell().Address)
+                || !firstRow.LastCell().Address.Equals(HeadersRow().LastCell().Address))
             {
                 _uniqueNames.Clear();
                 var co = 1;
@@ -356,24 +356,24 @@ namespace ClosedXML.Excel
 
             if (totalsRowChanged < 0)
             {
-                range.Rows(r => r.RowNumber().Equals(this.TotalsRow().RowNumber() + totalsRowChanged)).Single().InsertRowsAbove(1);
+                range.Rows(r => r.RowNumber().Equals(TotalsRow().RowNumber() + totalsRowChanged)).Single().InsertRowsAbove(1);
                 range = Worksheet.Range(range.FirstCell(), range.LastCell().CellAbove());
                 oldTotalsRowNumber++;
             }
             else if (totalsRowChanged > 0)
             {
-                this.TotalsRow().RowBelow(totalsRowChanged + 1).InsertRowsAbove(1);
-                this.TotalsRow().AsRange().Delete(XLShiftDeletedCells.ShiftCellsUp);
+                TotalsRow().RowBelow(totalsRowChanged + 1).InsertRowsAbove(1);
+                TotalsRow().AsRange().Delete(XLShiftDeletedCells.ShiftCellsUp);
             }
 
-            this.RangeAddress = (XLRangeAddress)range.RangeAddress;
+            RangeAddress = (XLRangeAddress)range.RangeAddress;
             RescanFieldNames();
 
-            if (this.ShowTotalsRow)
+            if (ShowTotalsRow)
             {
-                foreach (var f in this._fieldNames.Values)
+                foreach (var f in _fieldNames.Values)
                 {
-                    var c = this.TotalsRow().Cell(f.Index + 1);
+                    var c = TotalsRow().Cell(f.Index + 1);
                     if (!c.IsEmpty() && newHeaders.Contains(f.Name))
                     {
                         f.TotalsRowLabel = c.GetFormattedString();
@@ -383,16 +383,16 @@ namespace ClosedXML.Excel
 
                 if (totalsRowChanged != 0)
                 {
-                    foreach (var f in this._fieldNames.Values.Cast<XLTableField>())
+                    foreach (var f in _fieldNames.Values.Cast<XLTableField>())
                     {
                         f.UpdateTableFieldTotalsRowFormula();
-                        var c = this.TotalsRow().Cell(f.Index + 1);
+                        var c = TotalsRow().Cell(f.Index + 1);
                         if (!string.IsNullOrWhiteSpace(f.TotalsRowLabel))
                         {
                             c.DataType = XLDataType.Text;
 
                             //Remove previous row's label
-                            var oldTotalsCell = this.Worksheet.Cell(oldTotalsRowNumber, f.Column.ColumnNumber());
+                            var oldTotalsCell = Worksheet.Cell(oldTotalsRowNumber, f.Column.ColumnNumber());
                             if (oldTotalsCell.Value.ToString() == f.TotalsRowLabel)
                                 oldTotalsCell.Value = null;
                         }
@@ -662,7 +662,7 @@ namespace ClosedXML.Excel
                 _showHeaderRow = value;
 
                 // Invalidate fields' columns
-                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+                Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
                 if (_showHeaderRow)
                     HeadersRow().DataType = XLDataType.Text;
@@ -758,10 +758,10 @@ namespace ClosedXML.Excel
 
         public IEnumerable<dynamic> AsDynamicEnumerable()
         {
-            foreach (var row in this.DataRange.Rows())
+            foreach (var row in DataRange.Rows())
             {
                 dynamic expando = new ExpandoObject();
-                foreach (var f in this.Fields)
+                foreach (var f in Fields)
                 {
                     var value = row.Cell(f.Index + 1).Value;
                     // ExpandoObject supports IDictionary so we can extend it like this
@@ -775,14 +775,14 @@ namespace ClosedXML.Excel
 
         public DataTable AsNativeDataTable()
         {
-            var table = new DataTable(this.Name);
+            var table = new DataTable(Name);
 
             foreach (var f in Fields.Cast<XLTableField>())
             {
                 Type type = typeof(object);
                 if (f.IsConsistentDataType())
                 {
-                    var c = f.Column.Cells().Skip(this.ShowHeaderRow ? 1 : 0).First();
+                    var c = f.Column.Cells().Skip(ShowHeaderRow ? 1 : 0).First();
                     switch (c.DataType)
                     {
                         case XLDataType.Text:
@@ -810,11 +810,11 @@ namespace ClosedXML.Excel
                 table.Columns.Add(f.Name, type);
             }
 
-            foreach (var row in this.DataRange.Rows())
+            foreach (var row in DataRange.Rows())
             {
                 var dr = table.NewRow();
 
-                foreach (var f in this.Fields)
+                foreach (var f in Fields)
                 {
                     dr[f.Name] = row.Cell(f.Index + 1).Value;
                 }
@@ -881,9 +881,9 @@ namespace ClosedXML.Excel
 
             var numberOfNewRows = castedData.Count();
 
-            var lastRowOfOldRange = this.DataRange.LastRow();
+            var lastRowOfOldRange = DataRange.LastRow();
             lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
-            this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+            Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
             var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(castedData, transpose);
 
@@ -907,9 +907,9 @@ namespace ClosedXML.Excel
             if (numberOfNewRows == 0)
                 return null;
 
-            var lastRowOfOldRange = this.DataRange.LastRow();
+            var lastRowOfOldRange = DataRange.LastRow();
             lastRowOfOldRange.InsertRowsBelow(numberOfNewRows);
-            this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+            Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
             var insertedRange = lastRowOfOldRange.RowBelow().FirstCell().InsertData(data);
 
@@ -929,16 +929,16 @@ namespace ClosedXML.Excel
             if (!(castedData?.Any() ?? false) || data is string)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
-            var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
-            var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
+            var firstDataRowNumber = DataRange.FirstRow().RowNumber();
+            var lastDataRowNumber = DataRange.LastRow().RowNumber();
 
             // Resize table
-            var sizeDifference = castedData.Count() - this.DataRange.RowCount();
+            var sizeDifference = castedData.Count() - DataRange.RowCount();
             if (sizeDifference > 0)
-                this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
+                DataRange.LastRow().InsertRowsBelow(sizeDifference);
             else if (sizeDifference < 0)
             {
-                this.DataRange.Rows
+                DataRange.Rows
                 (
                     lastDataRowNumber + sizeDifference + 1 - firstDataRowNumber + 1,
                     lastDataRowNumber - firstDataRowNumber + 1
@@ -951,9 +951,9 @@ namespace ClosedXML.Excel
 
             if (sizeDifference != 0)
                 // Invalidate table fields' columns
-                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+                Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var replacedRange = this.DataRange.FirstCell().InsertData(castedData, transpose);
+            var replacedRange = DataRange.FirstCell().InsertData(castedData, transpose);
 
             if (propagateExtraColumns)
                 PropagateExtraColumns(replacedRange.ColumnCount(), lastDataRowNumber);
@@ -971,16 +971,16 @@ namespace ClosedXML.Excel
             if (!(data?.Any() ?? false) || data is string)
                 throw new InvalidOperationException("Cannot replace table data with empty enumerable.");
 
-            var firstDataRowNumber = this.DataRange.FirstRow().RowNumber();
-            var lastDataRowNumber = this.DataRange.LastRow().RowNumber();
+            var firstDataRowNumber = DataRange.FirstRow().RowNumber();
+            var lastDataRowNumber = DataRange.LastRow().RowNumber();
 
             // Resize table
-            var sizeDifference = data.Count() - this.DataRange.RowCount();
+            var sizeDifference = data.Count() - DataRange.RowCount();
             if (sizeDifference > 0)
-                this.DataRange.LastRow().InsertRowsBelow(sizeDifference);
+                DataRange.LastRow().InsertRowsBelow(sizeDifference);
             else if (sizeDifference < 0)
             {
-                this.DataRange.Rows
+                DataRange.Rows
                 (
                     lastDataRowNumber + sizeDifference + 1 - firstDataRowNumber + 1,
                     lastDataRowNumber - firstDataRowNumber + 1
@@ -993,9 +993,9 @@ namespace ClosedXML.Excel
 
             if (sizeDifference != 0)
                 // Invalidate table fields' columns
-                this.Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
+                Fields.Cast<XLTableField>().ForEach(f => f.Column = null);
 
-            var replacedRange = this.DataRange.FirstCell().InsertData(data);
+            var replacedRange = DataRange.FirstCell().InsertData(data);
 
             if (propagateExtraColumns)
                 PropagateExtraColumns(replacedRange.ColumnCount(), lastDataRowNumber);
@@ -1005,11 +1005,11 @@ namespace ClosedXML.Excel
 
         private void PropagateExtraColumns(int numberOfNonExtraColumns, int previousLastDataRow)
         {
-            for (var i = numberOfNonExtraColumns; i < this.Fields.Count(); i++)
+            for (var i = numberOfNonExtraColumns; i < Fields.Count(); i++)
             {
-                var field = this.Field(i);
+                var field = Field(i);
 
-                var cell = this.Worksheet.Cell(previousLastDataRow, field.Column.ColumnNumber());
+                var cell = Worksheet.Cell(previousLastDataRow, field.Column.ColumnNumber());
                 field.Column.Cells(c => c.Address.RowNumber > previousLastDataRow)
                     .ForEach(c =>
                     {

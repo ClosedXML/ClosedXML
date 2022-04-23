@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
 
         public PivotLabelFieldReference(IXLPivotField pivotField, Predicate<object> predicate)
         {
-            this.PivotField = pivotField ?? throw new ArgumentNullException(nameof(pivotField));
+            PivotField = pivotField ?? throw new ArgumentNullException(nameof(pivotField));
             this.predicate = predicate;
         }
 

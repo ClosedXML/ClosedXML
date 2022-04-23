@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
         public SaveOptions()
         {
 #if DEBUG
-            this.ValidatePackage = true;
+            ValidatePackage = true;
 #else
             this.ValidatePackage = false;
 #endif

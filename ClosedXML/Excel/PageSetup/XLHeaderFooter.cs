@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
 
         public XLHeaderFooter(XLWorksheet worksheet)
         {
-            this.Worksheet = worksheet;
+            Worksheet = worksheet;
             Left = new XLHFItem(this);
             Right = new XLHFItem(this);
             Center = new XLHFItem(this);
@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
 
         public XLHeaderFooter(XLHeaderFooter defaultHF, XLWorksheet worksheet)
         {
-            this.Worksheet = worksheet;
+            Worksheet = worksheet;
             defaultHF.innerTexts.ForEach(kp => innerTexts.Add(kp.Key, kp.Value));
             Left = new XLHFItem(defaultHF.Left as XLHFItem, this);
             Center = new XLHFItem(defaultHF.Center as XLHFItem, this);
@@ -55,13 +55,13 @@ namespace ClosedXML.Excel
             var parsedElements = ParseFormattedHeaderFooterText(text);
 
             if (parsedElements.Any(e => e.Position == 'L'))
-                this.Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'L').Select(e => e.Text).ToArray()), occurrence);
+                Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'L').Select(e => e.Text).ToArray()), occurrence);
 
             if (parsedElements.Any(e => e.Position == 'C'))
-                this.Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'C').Select(e => e.Text).ToArray()), occurrence);
+                Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'C').Select(e => e.Text).ToArray()), occurrence);
 
             if (parsedElements.Any(e => e.Position == 'R'))
-                this.Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'R').Select(e => e.Text).ToArray()), occurrence);
+                Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'R').Select(e => e.Text).ToArray()), occurrence);
 
             innerTexts[occurrence] = text;
         }

@@ -26,7 +26,7 @@ namespace ClosedXML.Excel.Drawings
                 throw new ArgumentException("Range should contain only one cell.", nameof(rangeCell));
 
             this.rangeCell = rangeCell;
-            this.Offset = offset;
+            Offset = offset;
         }
 
         public IXLCell Cell { get => rangeCell.FirstCell(); }

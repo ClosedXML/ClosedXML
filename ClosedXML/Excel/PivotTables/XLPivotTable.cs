@@ -14,8 +14,8 @@ namespace ClosedXML.Excel
 
         public XLPivotTable(IXLWorksheet worksheet)
         {
-            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
-            this.Guid = Guid.NewGuid();
+            Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            Guid = Guid.NewGuid();
 
             Fields = new XLPivotFields(this);
             ReportFilters = new XLPivotFields(this);
@@ -55,7 +55,7 @@ namespace ClosedXML.Excel
 
         public IEnumerable<string> SourceRangeFieldsAvailable
         {
-            get { return this.SourceRange.FirstRow().Cells().Select(c => c.GetString()); }
+            get { return SourceRange.FirstRow().Cells().Select(c => c.GetString()); }
         }
 
         public IXLPivotFields Fields { get; private set; }
@@ -84,25 +84,25 @@ namespace ClosedXML.Excel
         public IXLPivotTable CopyTo(IXLCell targetCell)
         {
             var addressComparer = new XLAddressComparer(ignoreFixed: true);
-            if (addressComparer.Equals(targetCell.Address, this.TargetCell.Address))
+            if (addressComparer.Equals(targetCell.Address, TargetCell.Address))
                 throw new InvalidOperationException("Cannot copy pivot table to the target cell.");
 
             var targetSheet = targetCell.Worksheet;
 
-            var pivotTableName = this.Name;
+            var pivotTableName = Name;
 
             int i = 0;
             var pivotTableNames = targetSheet.PivotTables.Select(pvt => pvt.Name).ToList();
             while (!XLHelper.ValidateName("pivot table", pivotTableName, "", pivotTableNames, out var _))
             {
                 i++;
-                pivotTableName = this.Name + i.ToInvariantString();
+                pivotTableName = Name + i.ToInvariantString();
             }
 
-            var newPivotTable = this.SourceType switch
+            var newPivotTable = SourceType switch
             {
-                XLPivotTableSourceType.Table => targetSheet.PivotTables.Add(pivotTableName, targetCell, this.SourceTable) as XLPivotTable,
-                XLPivotTableSourceType.Range => targetSheet.PivotTables.Add(pivotTableName, targetCell, this.SourceRange) as XLPivotTable,
+                XLPivotTableSourceType.Table => targetSheet.PivotTables.Add(pivotTableName, targetCell, SourceTable) as XLPivotTable,
+                XLPivotTableSourceType.Range => targetSheet.PivotTables.Add(pivotTableName, targetCell, SourceRange) as XLPivotTable,
                 _ => throw new NotImplementedException(),
             };
 
@@ -728,10 +728,10 @@ namespace ClosedXML.Excel
         {
             get
             {
-                foreach (var styleFormat in this.StyleFormats.RowGrandTotalFormats)
+                foreach (var styleFormat in StyleFormats.RowGrandTotalFormats)
                     yield return styleFormat;
 
-                foreach (var styleFormat in this.StyleFormats.ColumnGrandTotalFormats)
+                foreach (var styleFormat in StyleFormats.ColumnGrandTotalFormats)
                     yield return styleFormat;
 
                 foreach (var pivotField in ImplementedFields)

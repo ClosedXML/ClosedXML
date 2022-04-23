@@ -190,7 +190,7 @@ namespace ClosedXML.Excel
 
         private string GetNextWorksheetName()
         {
-            var worksheetNumber = this.Count + 1;
+            var worksheetNumber = Count + 1;
             var sheetName = $"Sheet{worksheetNumber}";
             while (_worksheets.Values.Any(p => p.Name.Equals(sheetName, StringComparison.OrdinalIgnoreCase)))
             {

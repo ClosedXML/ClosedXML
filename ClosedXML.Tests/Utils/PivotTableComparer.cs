@@ -17,9 +17,9 @@ namespace ClosedXML.Tests
 
         public PivotTableComparer(bool compareName, bool compareRelId, bool compareTargetCellAddress)
         {
-            this._compareName = compareName;
-            this._compareRelId = compareRelId;
-            this._compareTargetCellAddress = compareTargetCellAddress;
+            _compareName = compareName;
+            _compareRelId = compareRelId;
+            _compareTargetCellAddress = compareTargetCellAddress;
         }
 
         public bool Equals(XLPivotTable x, XLPivotTable y)

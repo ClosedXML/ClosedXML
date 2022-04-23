@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
 
         internal XLPivotFields(IXLPivotTable pivotTable)
         {
-            this._pivotTable = pivotTable;
+            _pivotTable = pivotTable;
         }
 
         #region IXLPivotFields members
@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotField Add(string sourceName, string customName)
         {
-            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
                 throw new ArgumentOutOfRangeException(nameof(sourceName), string.Format("The column '{0}' does not appear in the source range.", sourceName));
 
             var pivotField = new XLPivotField(_pivotTable, sourceName) { CustomName = customName };

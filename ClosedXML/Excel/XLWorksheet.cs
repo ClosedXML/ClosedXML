@@ -611,8 +611,8 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet CopyTo(XLWorkbook workbook, string newSheetName, int position)
         {
-            if (this.IsDeleted)
-                throw new InvalidOperationException($"`{this.Name}` has been deleted and cannot be copied.");
+            if (IsDeleted)
+                throw new InvalidOperationException($"`{Name}` has been deleted and cannot be copied.");
 
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
             Internals.ColumnsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Column(kp.Key)));
@@ -1604,14 +1604,14 @@ namespace ClosedXML.Excel
                 throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
 
             // Check that the range doesn't overlap with any filters
-            if (AutoFilter.IsEnabled && this.AutoFilter.Range.Intersects(range))
+            if (AutoFilter.IsEnabled && AutoFilter.Range.Intersects(range))
                 throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} overlaps with the worksheet's autofilter.");
         }
 
         private string GetNewTableName(string baseName)
         {
             var existingTableNames = new HashSet<string>(
-                this.Workbook.Worksheets
+                Workbook.Worksheets
                     .SelectMany(ws => ws.Tables)
                     .Select(t => t.Name),
                 StringComparer.OrdinalIgnoreCase);
@@ -1754,7 +1754,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         public IXLPictures Pictures { get; private set; }
@@ -1826,11 +1826,11 @@ namespace ClosedXML.Excel
         internal void SetValue<T>(T value, int ro, int co) where T : class
         {
             if (value == null)
-                this.Cell(ro, co).SetValue(string.Empty, setTableHeader: true, checkMergedRanges: false);
+                Cell(ro, co).SetValue(string.Empty, setTableHeader: true, checkMergedRanges: false);
             else if (value is IConvertible)
-                this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)), setTableHeader: true, checkMergedRanges: false);
+                Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)), setTableHeader: true, checkMergedRanges: false);
             else
-                this.Cell(ro, co).SetValue(value, setTableHeader: true, checkMergedRanges: false);
+                Cell(ro, co).SetValue(value, setTableHeader: true, checkMergedRanges: false);
         }
 
         /// <summary>

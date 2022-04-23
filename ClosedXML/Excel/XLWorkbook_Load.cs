@@ -537,7 +537,7 @@ namespace ClosedXML.Excel
                                 else
                                 {
                                     sourceType = XLPivotTableSourceType.Range;
-                                    source = this.Range(wss.Name.Value);
+                                    source = Range(wss.Name.Value);
                                 }
                             }
                             else
@@ -548,7 +548,7 @@ namespace ClosedXML.Excel
                                 if (wss.Sheet == null)
                                     sourceSheet = ws;
                                 else if (WorksheetsInternal.TryGetWorksheet(wss.Sheet.Value, out sourceSheet))
-                                    source = this.Range(sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(includeSheet: true));
+                                    source = Range(sourceSheet.Range(wss.Reference.Value).RangeAddress.ToStringRelative(includeSheet: true));
                             }
 
                             if (source == null)
@@ -1618,7 +1618,7 @@ namespace ClosedXML.Excel
             var areas = validateDefinedNames(definedName.Text.Split(','));
             foreach (var item in areas)
             {
-                if (this.Range(item) != null)
+                if (Range(item) != null)
                     SetColumnsOrRowsToRepeat(item);
             }
         }

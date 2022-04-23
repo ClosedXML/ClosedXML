@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
         public void FitToPages(int pagesWide, int pagesTall)
         {
             _pagesWide = pagesWide;
-            this._pagesTall = pagesTall;
+            _pagesTall = pagesTall;
             _scale = 0;
         }
 

@@ -176,8 +176,8 @@ namespace ClosedXML.Excel
             double colMaxWidth = minWidth;
 
             List<int> autoFilterRows = new List<int>();
-            if (this.Worksheet.AutoFilter != null && this.Worksheet.AutoFilter.Range != null)
-                autoFilterRows.Add(this.Worksheet.AutoFilter.Range.FirstRow().RowNumber());
+            if (Worksheet.AutoFilter != null && Worksheet.AutoFilter.Range != null)
+                autoFilterRows.Add(Worksheet.AutoFilter.Range.FirstRow().RowNumber());
 
             autoFilterRows.AddRange(Worksheet.Tables.Where(t =>
                     t.AutoFilter != null

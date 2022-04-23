@@ -223,7 +223,7 @@ namespace ClosedXML.Excel
         // Adds child parts and generates content of the specified part.
         private void CreateParts(SpreadsheetDocument document, SaveOptions options)
         {
-            this.SuspendEvents();
+            SuspendEvents();
 
             var context = new SaveContext();
 
@@ -384,7 +384,7 @@ namespace ClosedXML.Excel
             // Clear list of deleted worksheets to prevent errors on multiple saves
             worksheets.Deleted.Clear();
 
-            this.ResumeEvents();
+            ResumeEvents();
         }
 
         private bool DeleteExistingComments(WorksheetPart worksheetPart, XLWorksheet worksheet, WorksheetCommentsPart commentsPart, VmlDrawingPart vmlDrawingPart)
@@ -640,7 +640,7 @@ namespace ClosedXML.Excel
             if (workbook.WorkbookProperties.CodeName == null)
                 workbook.WorkbookProperties.CodeName = "ThisWorkbook";
 
-            workbook.WorkbookProperties.Date1904 = OpenXmlHelper.GetBooleanValue(this.Use1904DateSystem, false);
+            workbook.WorkbookProperties.Date1904 = OpenXmlHelper.GetBooleanValue(Use1904DateSystem, false);
 
             if (options.FilterPrivacy.HasValue)
                 workbook.WorkbookProperties.FilterPrivacy = OpenXmlHelper.GetBooleanValue(options.FilterPrivacy.Value, false);
@@ -652,8 +652,8 @@ namespace ClosedXML.Excel
             if (workbook.FileSharing == null)
                 workbook.FileSharing = new FileSharing();
 
-            workbook.FileSharing.ReadOnlyRecommended = OpenXmlHelper.GetBooleanValue(this.FileSharing.ReadOnlyRecommended, false);
-            workbook.FileSharing.UserName = string.IsNullOrWhiteSpace(this.FileSharing.UserName) ? null : StringValue.FromString(this.FileSharing.UserName);
+            workbook.FileSharing.ReadOnlyRecommended = OpenXmlHelper.GetBooleanValue(FileSharing.ReadOnlyRecommended, false);
+            workbook.FileSharing.UserName = string.IsNullOrWhiteSpace(FileSharing.UserName) ? null : StringValue.FromString(FileSharing.UserName);
 
             if (!workbook.FileSharing.HasChildren && !workbook.FileSharing.HasAttributes)
                 workbook.FileSharing = null;
@@ -662,14 +662,14 @@ namespace ClosedXML.Excel
 
             #region WorkbookProtection
 
-            if (this.Protection.IsProtected)
+            if (Protection.IsProtected)
             {
                 if (workbook.WorkbookProtection == null)
                     workbook.WorkbookProtection = new WorkbookProtection();
 
                 var workbookProtection = workbook.WorkbookProtection;
 
-                var protection = this.Protection;
+                var protection = Protection;
 
                 workbookProtection.WorkbookPassword = null;
                 workbookProtection.WorkbookAlgorithmName = null;

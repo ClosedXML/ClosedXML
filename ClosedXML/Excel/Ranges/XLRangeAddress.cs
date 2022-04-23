@@ -413,16 +413,16 @@ namespace ClosedXML.Excel
                 new XLAddress
                 (
                     sheet,
-                    this.FirstAddress.RowNumber - sourceRangeAddress.FirstAddress.RowNumber + targetRangeAddress.FirstAddress.RowNumber,
-                    this.FirstAddress.ColumnNumber - sourceRangeAddress.FirstAddress.ColumnNumber + targetRangeAddress.FirstAddress.ColumnNumber,
+                    FirstAddress.RowNumber - sourceRangeAddress.FirstAddress.RowNumber + targetRangeAddress.FirstAddress.RowNumber,
+                    FirstAddress.ColumnNumber - sourceRangeAddress.FirstAddress.ColumnNumber + targetRangeAddress.FirstAddress.ColumnNumber,
                     fixedRow: false,
                     fixedColumn: false
                 ),
                 new XLAddress
                 (
                     sheet,
-                    this.LastAddress.RowNumber - sourceRangeAddress.FirstAddress.RowNumber + targetRangeAddress.FirstAddress.RowNumber,
-                    this.LastAddress.ColumnNumber - sourceRangeAddress.FirstAddress.ColumnNumber + targetRangeAddress.FirstAddress.ColumnNumber,
+                    LastAddress.RowNumber - sourceRangeAddress.FirstAddress.RowNumber + targetRangeAddress.FirstAddress.RowNumber,
+                    LastAddress.ColumnNumber - sourceRangeAddress.FirstAddress.ColumnNumber + targetRangeAddress.FirstAddress.ColumnNumber,
                     fixedRow: false,
                     fixedColumn: false
                 )
@@ -440,10 +440,10 @@ namespace ClosedXML.Excel
 
         internal XLRangeAddress Intersection(in XLRangeAddress otherRangeAddress)
         {
-            if (!this.Worksheet.Equals(otherRangeAddress.Worksheet))
+            if (!Worksheet.Equals(otherRangeAddress.Worksheet))
                 throw new ArgumentOutOfRangeException(nameof(otherRangeAddress), "The other range address is on a different worksheet");
 
-            var thisRangeAddressNormalized = this.Normalize();
+            var thisRangeAddressNormalized = Normalize();
             var otherRangeAddressNormalized = otherRangeAddress.Normalize();
 
             var firstRow = Math.Max(thisRangeAddressNormalized.FirstAddress.RowNumber, otherRangeAddressNormalized.FirstAddress.RowNumber);
@@ -456,20 +456,20 @@ namespace ClosedXML.Excel
 
             return new XLRangeAddress
             (
-                new XLAddress(this.Worksheet, firstRow, firstColumn, fixedRow: false, fixedColumn: false),
-                new XLAddress(this.Worksheet, lastRow, lastColumn, fixedRow: false, fixedColumn: false)
+                new XLAddress(Worksheet, firstRow, firstColumn, fixedRow: false, fixedColumn: false),
+                new XLAddress(Worksheet, lastRow, lastColumn, fixedRow: false, fixedColumn: false)
             );
         }
 
         public IXLRange AsRange()
         {
-            if (this.Worksheet == null)
+            if (Worksheet == null)
                 throw new InvalidOperationException("The worksheet of the current range address has not been set.");
 
-            if (!this.IsValid)
+            if (!IsValid)
                 return null;
 
-            return this.Worksheet.Range(this);
+            return Worksheet.Range(this);
         }
 
         #endregion Public methods

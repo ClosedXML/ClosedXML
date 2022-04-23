@@ -211,7 +211,7 @@ namespace ClosedXML.Excel.CalcEngine
         public int CompareTo(Expression other)
         {
             // get both values
-            var c1 = this.Evaluate() as IComparable;
+            var c1 = Evaluate() as IComparable;
             var c2 = other.Evaluate() as IComparable;
 
             // handle nulls
@@ -298,7 +298,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             Expression = Expression.Optimize();
             return Expression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? new Expression(Evaluate())
                 : this;
         }
 
@@ -393,7 +393,7 @@ namespace ClosedXML.Excel.CalcEngine
             LeftExpression = LeftExpression.Optimize();
             RightExpression = RightExpression.Optimize();
             return LeftExpression._token.Type == TKTYPE.LITERAL && RightExpression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? new Expression(Evaluate())
                 : this;
         }
 
@@ -443,7 +443,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
             return allLits
-                ? new Expression(this.Evaluate())
+                ? new Expression(Evaluate())
                 : this;
         }
 
@@ -566,7 +566,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override object Evaluate()
         {
-            return this._token.Value;
+            return _token.Value;
         }
 
         public void ThrowApplicableException()

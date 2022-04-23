@@ -8,7 +8,7 @@ namespace ClosedXML.Excel
     {
         public PivotValueFieldReference(string value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         public string Value { get; }

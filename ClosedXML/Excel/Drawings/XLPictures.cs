@@ -164,7 +164,7 @@ namespace ClosedXML.Excel.Drawings
 
         private string GetNextPictureName()
         {
-            var pictureNumber = this.Count;
+            var pictureNumber = Count;
             while (_pictures.Any(p => p.Name == $"Picture {pictureNumber}"))
             {
                 pictureNumber++;

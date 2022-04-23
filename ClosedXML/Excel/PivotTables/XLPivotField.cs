@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
         private readonly IXLPivotTable _pivotTable;
         public XLPivotField(IXLPivotTable pivotTable, string sourceName)
         {
-            this._pivotTable = pivotTable;
+            _pivotTable = pivotTable;
             SourceName = sourceName;
             Subtotals = new List<XLSubtotalFunction>();
             SelectedValues = new List<object>();
@@ -124,12 +124,12 @@ namespace ClosedXML.Excel
 
         public IXLPivotFieldStyleFormats StyleFormats { get; set; }
 
-        public bool IsOnRowAxis => _pivotTable.RowLabels.Contains(this.SourceName);
+        public bool IsOnRowAxis => _pivotTable.RowLabels.Contains(SourceName);
 
-        public bool IsOnColumnAxis => _pivotTable.ColumnLabels.Contains(this.SourceName);
+        public bool IsOnColumnAxis => _pivotTable.ColumnLabels.Contains(SourceName);
 
-        public bool IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
+        public bool IsInFilterList => _pivotTable.ReportFilters.Contains(SourceName);
 
-        public int Offset => _pivotTable.SourceRangeFieldsAvailable.ToList().IndexOf(this.SourceName);
+        public int Offset => _pivotTable.SourceRangeFieldsAvailable.ToList().IndexOf(SourceName);
     }
 }

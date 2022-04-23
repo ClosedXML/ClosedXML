@@ -167,7 +167,7 @@ namespace ClosedXML.Excel
         {
             if (value is IEnumerable ie && !(value is string))
             {
-                this.InsertData(ie);
+                InsertData(ie);
                 return this;
             }
             else
@@ -180,7 +180,7 @@ namespace ClosedXML.Excel
                 return this;
 
             if (value == null)
-                return this.Clear(XLClearOptions.Contents);
+                return Clear(XLClearOptions.Contents);
 
             _richText = null;
             _formulaA1 = string.Empty;
@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
                 if (value.Contains(XLConstants.NewLine) && !style.Alignment.WrapText)
                     Style.Alignment.WrapText = true;
 
-                this.Style.SetIncludeQuotePrefix();
+                Style.SetIncludeQuotePrefix();
             }
             else if (!string.Equals(value.Trim(), "NaN", StringComparison.OrdinalIgnoreCase) &&
                      double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out double _))
@@ -330,7 +330,7 @@ namespace ClosedXML.Excel
             if (TryGetValue(out T retVal))
                 return retVal;
 
-            throw new FormatException($"Cannot convert {this.Address.ToStringRelative(true)}'s value to " + typeof(T));
+            throw new FormatException($"Cannot convert {Address.ToStringRelative(true)}'s value to " + typeof(T));
         }
 
         public string GetString()
@@ -493,7 +493,7 @@ namespace ClosedXML.Excel
 
         internal void SetInternalCellValueString(string cellValue)
         {
-            SetInternalCellValueString(cellValue, validate: false, parseToCachedValue: this.HasFormula);
+            SetInternalCellValueString(cellValue, validate: false, parseToCachedValue: HasFormula);
         }
 
         private void SetInternalCellValueString(string cellValue, bool validate, bool parseToCachedValue)
@@ -503,7 +503,7 @@ namespace ClosedXML.Excel
                 if (cellValue.Length > 32767) throw new ArgumentOutOfRangeException(nameof(cellValue), "Cells can hold a maximum of 32,767 characters.");
             }
 
-            this._cellValue = cellValue;
+            _cellValue = cellValue;
 
             if (parseToCachedValue)
                 CachedValue = ParseCellValueFromString();
@@ -513,23 +513,23 @@ namespace ClosedXML.Excel
         {
             if (CachedValue is double d)
             {
-                if (this.DataType == XLDataType.DateTime && d.IsValidOADateNumber())
+                if (DataType == XLDataType.DateTime && d.IsValidOADateNumber())
                     CachedValue = DateTime.FromOADate(d);
-                else if (this.DataType == XLDataType.TimeSpan)
+                else if (DataType == XLDataType.TimeSpan)
                     CachedValue = XLHelper.GetTimeSpan(d);
             }
             else if (CachedValue is DateTime dt)
             {
-                if (this.DataType == XLDataType.Number)
+                if (DataType == XLDataType.Number)
                     CachedValue = dt.ToOADate();
-                else if (this.DataType == XLDataType.TimeSpan)
+                else if (DataType == XLDataType.TimeSpan)
                     CachedValue = XLHelper.GetTimeSpan(dt.ToOADate());
             }
             else if (CachedValue is TimeSpan ts)
             {
-                if (this.DataType == XLDataType.DateTime)
+                if (DataType == XLDataType.DateTime)
                     CachedValue = DateTime.FromOADate(ts.TotalDays);
-                else if (this.DataType == XLDataType.Number)
+                else if (DataType == XLDataType.Number)
                     CachedValue = ts.TotalDays;
             }
         }
@@ -544,7 +544,7 @@ namespace ClosedXML.Excel
 
         internal void SetDataTypeFast(XLDataType dataType)
         {
-            this._dataType = dataType;
+            _dataType = dataType;
         }
 
         private object ParseCellValueFromString()
@@ -628,8 +628,8 @@ namespace ClosedXML.Excel
         {
             return (format.ToUpper()) switch
             {
-                "A" => this.Address.ToString(),
-                "F" => HasFormula ? this.FormulaA1 : string.Empty,
+                "A" => Address.ToString(),
+                "F" => HasFormula ? FormulaA1 : string.Empty,
                 "NF" => Style.NumberFormat.Format,
                 "FG" => Style.Font.FontColor.ToString(),
                 "BG" => Style.Fill.BackgroundColor.ToString(),
@@ -710,8 +710,8 @@ namespace ClosedXML.Excel
         private IXLTable InsertTableInternal(IInsertDataReader reader, string tableName, bool createTable, bool addHeadings,
             bool transpose)
         {
-            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
-                throw new InvalidOperationException(string.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
+            if (createTable && Worksheet.Tables.Any(t => t.Contains(this)))
+                throw new InvalidOperationException(string.Format("This cell '{0}' is already part of a table.", Address.ToString()));
 
             var range = InsertDataInternal(reader, addHeadings, transpose);
 
@@ -746,8 +746,8 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(tableName) || XLHelper.IsValidRCAddress(tableName))
                 throw new InvalidOperationException($"Table name cannot be a valid Cell Address '{tableName}'.");
 
-            if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
-                throw new InvalidOperationException($"This cell '{this.Address}' is already part of a table.");
+            if (createTable && Worksheet.Tables.Any(t => t.Contains(this)))
+                throw new InvalidOperationException($"This cell '{Address}' is already part of a table.");
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
             return InsertTableInternal(reader, tableName, createTable, addHeadings: true, transpose: false);
@@ -862,11 +862,11 @@ namespace ClosedXML.Excel
 
         public XLTableCellType TableCellType()
         {
-            var table = this.Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
+            var table = Worksheet.Tables.FirstOrDefault(t => t.AsRange().Contains(this));
             if (table == null) return XLTableCellType.None;
 
-            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Header;
-            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(this._rowNumber)) return XLTableCellType.Total;
+            if (table.ShowHeaderRow && table.HeadersRow().RowNumber().Equals(_rowNumber)) return XLTableCellType.Header;
+            if (table.ShowTotalsRow && table.TotalsRow().RowNumber().Equals(_rowNumber)) return XLTableCellType.Total;
 
             return XLTableCellType.Data;
         }
@@ -1775,7 +1775,7 @@ namespace ClosedXML.Excel
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
             {
-                var cell = table.HeadersRow().CellsUsed(c => c.Address.Equals(this.Address)).FirstOrDefault();
+                var cell = table.HeadersRow().CellsUsed(c => c.Address.Equals(Address)).FirstOrDefault();
                 if (cell != null)
                 {
                     var oldName = cell.GetString();
@@ -1792,7 +1792,7 @@ namespace ClosedXML.Excel
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
             {
-                var cell = table.TotalsRow().Cells(c => c.Address.Equals(this.Address)).FirstOrDefault();
+                var cell = table.TotalsRow().Cells(c => c.Address.Equals(Address)).FirstOrDefault();
                 if (cell != null)
                 {
                     var field = table.Fields.First(f => f.Column.ColumnNumber() == cell.WorksheetColumn().ColumnNumber());
@@ -1801,7 +1801,7 @@ namespace ClosedXML.Excel
                     SetInternalCellValueString(value.ObjectToInvariantString(), validate: true, parseToCachedValue: false);
 
                     field.TotalsRowLabel = _cellValue;
-                    this.DataType = XLDataType.Text;
+                    DataType = XLDataType.Text;
                     return true;
                 }
             }
@@ -2116,7 +2116,7 @@ namespace ClosedXML.Excel
         {
             if (value == null)
             {
-                this.Clear(XLClearOptions.Contents);
+                Clear(XLClearOptions.Contents);
                 return;
             }
 
@@ -2928,7 +2928,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                return this.Worksheet.Range(FindCurrentRegion(this.AsRange()));
+                return Worksheet.Range(FindCurrentRegion(AsRange()));
             }
         }
 
@@ -2938,27 +2938,27 @@ namespace ClosedXML.Excel
 
             var filledCells = range
                 .SurroundingCells(c => !(c as XLCell).IsEmpty(XLCellsUsedOptions.AllContents))
-                .Concat(this.Worksheet.Range(rangeAddress).Cells());
+                .Concat(Worksheet.Range(rangeAddress).Cells());
 
             var grownRangeAddress = new XLRangeAddress(
-                new XLAddress(this.Worksheet, filledCells.Min(c => c.Address.RowNumber), filledCells.Min(c => c.Address.ColumnNumber), false, false),
-                new XLAddress(this.Worksheet, filledCells.Max(c => c.Address.RowNumber), filledCells.Max(c => c.Address.ColumnNumber), false, false)
+                new XLAddress(Worksheet, filledCells.Min(c => c.Address.RowNumber), filledCells.Min(c => c.Address.ColumnNumber), false, false),
+                new XLAddress(Worksheet, filledCells.Max(c => c.Address.RowNumber), filledCells.Max(c => c.Address.ColumnNumber), false, false)
             );
 
             if (rangeAddress.Equals(grownRangeAddress))
-                return this.Worksheet.Range(grownRangeAddress).RangeAddress;
+                return Worksheet.Range(grownRangeAddress).RangeAddress;
             else
-                return FindCurrentRegion(this.Worksheet.Range(grownRangeAddress));
+                return FindCurrentRegion(Worksheet.Range(grownRangeAddress));
         }
 
         internal bool IsInferiorMergedCell()
         {
-            return this.IsMerged() && !this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
+            return IsMerged() && !Address.Equals(MergedRange().RangeAddress.FirstAddress);
         }
 
         internal bool IsSuperiorMergedCell()
         {
-            return this.IsMerged() && this.Address.Equals(this.MergedRange().RangeAddress.FirstAddress);
+            return IsMerged() && Address.Equals(MergedRange().RangeAddress.FirstAddress);
         }
     }
 }
