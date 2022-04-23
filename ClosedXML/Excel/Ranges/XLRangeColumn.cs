@@ -86,7 +86,7 @@ namespace ClosedXML.Excel
 
         public IXLRangeColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true)
         {
-            base.Sort(1, sortOrder, matchCase, ignoreBlanks);
+            Sort(1, sortOrder, matchCase, ignoreBlanks);
             return this;
         }
 

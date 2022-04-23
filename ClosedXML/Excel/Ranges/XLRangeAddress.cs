@@ -452,7 +452,7 @@ namespace ClosedXML.Excel
             var lastColumn = Math.Min(thisRangeAddressNormalized.LastAddress.ColumnNumber, otherRangeAddressNormalized.LastAddress.ColumnNumber);
 
             if (lastRow < firstRow || lastColumn < firstColumn)
-                return XLRangeAddress.Invalid;
+                return Invalid;
 
             return new XLRangeAddress
             (

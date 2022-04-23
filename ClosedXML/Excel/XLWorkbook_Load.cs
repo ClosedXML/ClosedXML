@@ -232,8 +232,8 @@ namespace ClosedXML.Excel
                                 if (sheetFormatProperties.DefaultRowHeight != null)
                                     ws.RowHeight = sheetFormatProperties.DefaultRowHeight;
 
-                                ws.RowHeightChanged = (sheetFormatProperties.CustomHeight != null &&
-                                                       sheetFormatProperties.CustomHeight.Value);
+                                ws.RowHeightChanged = sheetFormatProperties.CustomHeight != null &&
+                                                       sheetFormatProperties.CustomHeight.Value;
 
                                 if (sheetFormatProperties.DefaultColumnWidth != null)
                                 {
@@ -645,7 +645,7 @@ namespace ClosedXML.Excel
                                                                                               && (pf.SubtotalTop == null || pf.SubtotalTop == true)))
                                 pt.SetSubtotals(XLPivotSubtotals.AtTop);
                             else if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => (pf.DefaultSubtotal == null || pf.DefaultSubtotal.Value)
-                                                                                                   && (pf.SubtotalTop != null && pf.SubtotalTop.Value == false)))
+                                                                                                   && pf.SubtotalTop != null && pf.SubtotalTop.Value == false))
                                 pt.SetSubtotals(XLPivotSubtotals.AtBottom);
                             else
                                 pt.SetSubtotals(XLPivotSubtotals.DoNotShow);
@@ -1844,7 +1844,7 @@ namespace ClosedXML.Excel
                     if (!string.IsNullOrWhiteSpace(cell.CellValue.Text))
                         xlCell.SetInternalCellValueString(double.Parse(cell.CellValue.Text, CultureInfo.InvariantCulture).ToInvariantString());
 
-                    var numberFormatId = ((CellFormat)(s.CellFormats).ElementAt(styleIndex)).NumberFormatId;
+                    var numberFormatId = ((CellFormat)s.CellFormats.ElementAt(styleIndex)).NumberFormatId;
 
                     if (numberFormatId?.HasValue ?? false)
                     {
@@ -1867,7 +1867,7 @@ namespace ClosedXML.Excel
                 if (cell.CellValue != null)
                     xlCell.SetInternalCellValueString(cell.CellValue.Text);
 
-                xlCell.NeedsRecalculation = (xlCell.CachedValue == null);
+                xlCell.NeedsRecalculation = xlCell.CachedValue == null;
             }
 
             if (Use1904DateSystem && xlCell.DataType == XLDataType.DateTime)
@@ -2046,8 +2046,8 @@ namespace ClosedXML.Excel
             var fontSize = fontSource.Elements<FontSize>().FirstOrDefault();
             if (fontSize != null)
             {
-                if ((fontSize).Val != null)
-                    fontBase.FontSize = (fontSize).Val;
+                if (fontSize.Val != null)
+                    fontBase.FontSize = fontSize.Val;
             }
 
             fontBase.Italic = GetBoolean(fontSource.Elements<Italic>().FirstOrDefault());
@@ -3169,20 +3169,20 @@ namespace ClosedXML.Excel
                     if (font.Color != null)
                         xlFont.FontColor = font.Color.ToClosedXMLColor(_colorList).Key;
 
-                    if (font.FontFamilyNumbering != null && (font.FontFamilyNumbering).Val != null)
+                    if (font.FontFamilyNumbering != null && font.FontFamilyNumbering.Val != null)
                     {
                         xlFont.FontFamilyNumbering =
-                            (XLFontFamilyNumberingValues)int.Parse((font.FontFamilyNumbering).Val.ToString());
+                            (XLFontFamilyNumberingValues)int.Parse(font.FontFamilyNumbering.Val.ToString());
                     }
                     if (font.FontName != null)
                     {
-                        if ((font.FontName).Val != null)
-                            xlFont.FontName = (font.FontName).Val;
+                        if (font.FontName.Val != null)
+                            xlFont.FontName = font.FontName.Val;
                     }
                     if (font.FontSize != null)
                     {
-                        if ((font.FontSize).Val != null)
-                            xlFont.FontSize = (font.FontSize).Val;
+                        if (font.FontSize.Val != null)
+                            xlFont.FontSize = font.FontSize.Val;
                     }
 
                     xlFont.Italic = GetBoolean(font.Italic);
@@ -3192,14 +3192,14 @@ namespace ClosedXML.Excel
                     if (font.Underline != null)
                     {
                         xlFont.Underline = font.Underline.Val != null
-                                            ? (font.Underline).Val.Value.ToClosedXml()
+                                            ? font.Underline.Val.Value.ToClosedXml()
                                             : XLFontUnderlineValues.Single;
                     }
 
                     if (font.VerticalTextAlignment != null)
                     {
                         xlFont.VerticalAlignment = font.VerticalTextAlignment.Val != null
-                                                    ? (font.VerticalTextAlignment).Val.Value.ToClosedXml()
+                                                    ? font.VerticalTextAlignment.Val.Value.ToClosedXml()
                                                     : XLFontVerticalTextAlignmentValues.Baseline;
                     }
 

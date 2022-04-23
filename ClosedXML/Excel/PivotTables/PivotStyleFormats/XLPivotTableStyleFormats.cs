@@ -10,13 +10,13 @@ namespace ClosedXML.Excel
 
         public IXLPivotStyleFormats ColumnGrandTotalFormats
         {
-            get { return columnGrandTotalFormats ?? (columnGrandTotalFormats = new XLPivotStyleFormats()); }
+            get { return columnGrandTotalFormats ??= new XLPivotStyleFormats(); }
             set { columnGrandTotalFormats = value; }
         }
 
         public IXLPivotStyleFormats RowGrandTotalFormats
         {
-            get { return rowGrandTotalFormats ?? (rowGrandTotalFormats = new XLPivotStyleFormats()); }
+            get { return rowGrandTotalFormats ??= new XLPivotStyleFormats(); }
             set { rowGrandTotalFormats = value; }
         }
 

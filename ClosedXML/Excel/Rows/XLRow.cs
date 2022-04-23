@@ -266,7 +266,7 @@ namespace ClosedXML.Excel
                             else
                                 rotation = textRotation % 90;
 
-                            thisHeight = (rotation / 90.0) * maxHeightCol * maxLongCol * 0.5;
+                            thisHeight = rotation / 90.0 * maxHeightCol * maxLongCol * 0.5;
                         }
                     }
                 }

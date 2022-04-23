@@ -53,7 +53,7 @@ namespace ClosedXML.Excel
                     && _colorsComparer.Equals(xx.Colors, yy.Colors)
                     && _contentsTypeComparer.Equals(xx.ContentTypes, yy.ContentTypes)
                     && _iconSetTypeComparer.Equals(xx.IconSetOperators, yy.IconSetOperators)
-                    && (!_compareRange || XLRanges.Equals(xx.Ranges, yy.Ranges));
+                    && (!_compareRange || Equals(xx.Ranges, yy.Ranges));
             }
 
             public int GetHashCode(IXLConditionalFormat obj)

@@ -37,6 +37,6 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLNumberFormatKey left, XLNumberFormatKey right) => left.Equals(right);
 
-        public static bool operator !=(XLNumberFormatKey left, XLNumberFormatKey right) => !(left.Equals(right));
+        public static bool operator !=(XLNumberFormatKey left, XLNumberFormatKey right) => !left.Equals(right);
     }
 }

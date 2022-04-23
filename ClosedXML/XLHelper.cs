@@ -63,9 +63,9 @@ namespace ClosedXML.Excel
 
         static XLHelper()
         {
-            allLetters = new string[XLHelper.MaxColumnNumber];
-            letterIndexes = new Dictionary<string, int>(XLHelper.MaxColumnNumber, StringComparer.Create(ParseCulture, true));
-            for (var i = 0; i < XLHelper.MaxColumnNumber; i++)
+            allLetters = new string[MaxColumnNumber];
+            letterIndexes = new Dictionary<string, int>(MaxColumnNumber, StringComparer.Create(ParseCulture, true));
+            for (var i = 0; i < MaxColumnNumber; i++)
             {
                 string letter;
                 if (i < 26)
@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
             //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
             {
-                return int.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
+                return int.Parse(columnLetter, NumberStyle, ParseCulture);
             }
 
             if (letterIndexes.TryGetValue(columnLetter, out var retVal))
@@ -118,12 +118,12 @@ namespace ClosedXML.Excel
 
         internal static int TrimColumnNumber(int columnNumber)
         {
-            return Math.Max(XLHelper.MinColumnNumber, Math.Min(XLHelper.MaxColumnNumber, columnNumber));
+            return Math.Max(MinColumnNumber, Math.Min(MaxColumnNumber, columnNumber));
         }
 
         internal static int TrimRowNumber(int rowNumber)
         {
-            return Math.Max(XLHelper.MinRowNumber, Math.Min(XLHelper.MaxRowNumber, rowNumber));
+            return Math.Max(MinRowNumber, Math.Min(MaxRowNumber, rowNumber));
         }
 
         public static bool IsValidColumn(string column)

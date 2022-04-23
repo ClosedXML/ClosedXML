@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
 
         internal XLStyle(IXLStylized container, XLStyleValue value)
         {
-            _container = container ?? new XLStylizedEmpty(XLStyle.Default);
+            _container = container ?? new XLStylizedEmpty(Default);
             Value = value;
         }
 

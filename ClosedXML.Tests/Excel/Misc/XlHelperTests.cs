@@ -166,7 +166,7 @@ namespace ClosedXML.Tests.Excel
             for (var i = 0; i < columnLetter.Length; i++)
             {
                 sum *= 26;
-                sum += (columnLetter[i] - 'A' + 1);
+                sum += columnLetter[i] - 'A' + 1;
             }
 
             return sum;
@@ -187,8 +187,8 @@ namespace ClosedXML.Tests.Excel
             {
                 return letters[columnNumber];
             }
-            var firstPart = (columnNumber) / 26;
-            var remainder = ((columnNumber) % 26) + 1;
+            var firstPart = columnNumber / 26;
+            var remainder = (columnNumber % 26) + 1;
             return NaiveGetColumnLetterFromNumber(firstPart) + NaiveGetColumnLetterFromNumber(remainder);
         }
 

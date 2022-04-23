@@ -97,7 +97,7 @@ namespace ClosedXML.Utils
                 // Main difference from spec, also hash with charcount
                 hash = ((hash >> 14) & 0x01) | ((hash << 1) & 0x7fff);
                 hash ^= passwordCharacters.Length;
-                hash ^= (0x8000 | ('N' << 8) | 'K');
+                hash ^= 0x8000 | ('N' << 8) | 'K';
             }
 
             return Convert.ToString(hash, 16).ToUpperInvariant();

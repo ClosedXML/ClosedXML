@@ -234,9 +234,9 @@ namespace ClosedXML.Excel.CalcEngine
                 try
                 {
                     if (c1 is DateTime)
-                        c2 = ((DateTime)other);
+                        c2 = (DateTime)other;
                     else if (c2 is DateTime)
-                        c1 = ((DateTime)this);
+                        c1 = (DateTime)this;
                     else
                         c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
                 }

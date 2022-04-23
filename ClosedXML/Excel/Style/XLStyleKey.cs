@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLStyleKey left, XLStyleKey right) => left.Equals(right);
 
-        public static bool operator !=(XLStyleKey left, XLStyleKey right) => !(left.Equals(right));
+        public static bool operator !=(XLStyleKey left, XLStyleKey right) => !left.Equals(right);
 
         public void Deconstruct(
             out XLAlignmentKey alignment,

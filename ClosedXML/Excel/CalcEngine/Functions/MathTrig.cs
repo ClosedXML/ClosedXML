@@ -36,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COTH", 1, Coth);
             ce.RegisterFunction("CSC", 1, Csc);
             ce.RegisterFunction("CSCH", 1, Csch);
-            ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
+            ce.RegisterFunction("DECIMAL", 2, Decimal);
             ce.RegisterFunction("DEGREES", 1, Degrees);
             ce.RegisterFunction("EVEN", 1, Even);
             ce.RegisterFunction("EXP", 1, Exp);
@@ -505,37 +505,37 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static double DegreesToRadians(double degrees)
         {
-            return (Math.PI / 180.0) * degrees;
+            return Math.PI / 180.0 * degrees;
         }
 
         public static double RadiansToDegrees(double radians)
         {
-            return (180.0 / Math.PI) * radians;
+            return 180.0 / Math.PI * radians;
         }
 
         public static double GradsToRadians(double grads)
         {
-            return (grads / 200.0) * Math.PI;
+            return grads / 200.0 * Math.PI;
         }
 
         public static double RadiansToGrads(double radians)
         {
-            return (radians / Math.PI) * 200.0;
+            return radians / Math.PI * 200.0;
         }
 
         public static double DegreesToGrads(double degrees)
         {
-            return (degrees / 9.0) * 10.0;
+            return degrees / 9.0 * 10.0;
         }
 
         public static double GradsToDegrees(double grads)
         {
-            return (grads / 10.0) * 9.0;
+            return grads / 10.0 * 9.0;
         }
 
         public static double ASinh(double x)
         {
-            return (Math.Log(x + Math.Sqrt(x * x + 1.0)));
+            return Math.Log(x + Math.Sqrt(x * x + 1.0));
         }
 
         private static object Acosh(List<Expression> p)

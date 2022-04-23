@@ -232,7 +232,7 @@ namespace ClosedXML.Excel
 
         public IXLPhonetics Phonetics
         {
-            get { return _phonetics ?? (_phonetics = new XLPhonetics(_defaultFont)); }
+            get { return _phonetics ??= new XLPhonetics(_defaultFont); }
         }
 
         public bool HasPhonetics

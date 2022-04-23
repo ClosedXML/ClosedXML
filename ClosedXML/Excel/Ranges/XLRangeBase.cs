@@ -1827,7 +1827,7 @@ namespace ClosedXML.Excel
 
         public IXLSortElements SortColumns
         {
-            get { return _sortColumns ?? (_sortColumns = new XLSortElements()); }
+            get { return _sortColumns ??= new XLSortElements(); }
         }
 
         private string DefaultSortString()
@@ -2014,19 +2014,19 @@ namespace ClosedXML.Excel
             var pivot = begPoint;
             var m = begPoint + 1;
             var n = endPoint;
-            while ((m < endPoint) && ColumnQuick(pivot).CompareTo((ColumnQuick(m)), SortRows) >= 0)
+            while ((m < endPoint) && ColumnQuick(pivot).CompareTo(ColumnQuick(m), SortRows) >= 0)
                 m++;
 
-            while ((n > begPoint) && ((ColumnQuick(pivot)).CompareTo((ColumnQuick(n)), SortRows) <= 0))
+            while ((n > begPoint) && (ColumnQuick(pivot).CompareTo(ColumnQuick(n), SortRows) <= 0))
                 n--;
             while (m < n)
             {
                 SwapColumns(m, n);
 
-                while ((m < endPoint) && (ColumnQuick(pivot)).CompareTo((ColumnQuick(m)), SortRows) >= 0)
+                while ((m < endPoint) && ColumnQuick(pivot).CompareTo(ColumnQuick(m), SortRows) >= 0)
                     m++;
 
-                while ((n > begPoint) && (ColumnQuick(pivot)).CompareTo((ColumnQuick(n)), SortRows) <= 0)
+                while ((n > begPoint) && ColumnQuick(pivot).CompareTo(ColumnQuick(n), SortRows) <= 0)
                     n--;
             }
             if (pivot != n)

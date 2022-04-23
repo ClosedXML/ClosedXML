@@ -933,7 +933,7 @@ namespace ClosedXML.Excel
 
         private XLCalcEngine CalcEngine
         {
-            get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
+            get { return _calcEngine ??= new XLCalcEngine(this); }
         }
 
         public object Evaluate(string expression)
@@ -960,7 +960,7 @@ namespace ClosedXML.Excel
 
         private static XLCalcEngine CalcEngineExpr
         {
-            get { return _calcEngineExpr ?? (_calcEngineExpr = new XLCalcEngine()); }
+            get { return _calcEngineExpr ??= new XLCalcEngine(); }
         }
 
         public static object EvaluateExpr(string expression)

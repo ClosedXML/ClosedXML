@@ -253,7 +253,7 @@ namespace ClosedXML.Excel
 
         public string GetTrimmedAddress()
         {
-            return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToInvariantString());
+            return _trimmedAddress ??= ColumnLetter + _rowNumber.ToInvariantString();
         }
 
         #endregion Methods

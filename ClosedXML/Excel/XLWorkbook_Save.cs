@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
             }
 
             // Remove the sheet reference from the workbook.
-            var worksheetPart = (WorksheetPart)(wbPart.GetPartById(sheetId));
+            var worksheetPart = (WorksheetPart)wbPart.GetPartById(sheetId);
             worksheet.Remove();
 
             // Delete the worksheet part.
@@ -757,7 +757,7 @@ namespace ClosedXML.Excel
             }
 
             var sheetElements = from sheet in workbook.Sheets.Elements<Sheet>()
-                                join worksheet in ((IEnumerable<XLWorksheet>)WorksheetsInternal) on sheet.Id.Value
+                                join worksheet in (IEnumerable<XLWorksheet>)WorksheetsInternal on sheet.Id.Value
                                     equals worksheet.RelId
                                 orderby worksheet.Position
                                 select sheet;
@@ -850,7 +850,7 @@ namespace ClosedXML.Excel
                     var definedNameText = worksheet.PageSetup.PrintAreas.Aggregate(string.Empty,
                         (current, printArea) =>
                             current +
-                            (worksheetName.EscapeSheetName() + "!" +
+                            worksheetName.EscapeSheetName() + "!" +
                              printArea.RangeAddress.
                                  FirstAddress.ToStringFixed(
                                      XLReferenceStyle.A1) +
@@ -858,7 +858,7 @@ namespace ClosedXML.Excel
                              printArea.RangeAddress.
                                  LastAddress.ToStringFixed(
                                      XLReferenceStyle.A1) +
-                             ","));
+                             ",");
                     definedName.Text = definedNameText.Substring(0, definedNameText.Length - 1);
                     definedNames.AppendChild(definedName);
                 }
@@ -1230,52 +1230,52 @@ namespace ClosedXML.Excel
             light1Color1.AppendChild(systemColor2);
 
             var dark2Color1 = new Dark2Color();
-            var rgbColorModelHex1 = new RgbColorModelHex { Val = (Theme.Text2.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex1 = new RgbColorModelHex { Val = Theme.Text2.Color.ToHex().Substring(2) };
 
             dark2Color1.AppendChild(rgbColorModelHex1);
 
             var light2Color1 = new Light2Color();
-            var rgbColorModelHex2 = new RgbColorModelHex { Val = (Theme.Background2.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex2 = new RgbColorModelHex { Val = Theme.Background2.Color.ToHex().Substring(2) };
 
             light2Color1.AppendChild(rgbColorModelHex2);
 
             var accent1Color1 = new Accent1Color();
-            var rgbColorModelHex3 = new RgbColorModelHex { Val = (Theme.Accent1.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex3 = new RgbColorModelHex { Val = Theme.Accent1.Color.ToHex().Substring(2) };
 
             accent1Color1.AppendChild(rgbColorModelHex3);
 
             var accent2Color1 = new Accent2Color();
-            var rgbColorModelHex4 = new RgbColorModelHex { Val = (Theme.Accent2.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex4 = new RgbColorModelHex { Val = Theme.Accent2.Color.ToHex().Substring(2) };
 
             accent2Color1.AppendChild(rgbColorModelHex4);
 
             var accent3Color1 = new Accent3Color();
-            var rgbColorModelHex5 = new RgbColorModelHex { Val = (Theme.Accent3.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex5 = new RgbColorModelHex { Val = Theme.Accent3.Color.ToHex().Substring(2) };
 
             accent3Color1.AppendChild(rgbColorModelHex5);
 
             var accent4Color1 = new Accent4Color();
-            var rgbColorModelHex6 = new RgbColorModelHex { Val = (Theme.Accent4.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex6 = new RgbColorModelHex { Val = Theme.Accent4.Color.ToHex().Substring(2) };
 
             accent4Color1.AppendChild(rgbColorModelHex6);
 
             var accent5Color1 = new Accent5Color();
-            var rgbColorModelHex7 = new RgbColorModelHex { Val = (Theme.Accent5.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex7 = new RgbColorModelHex { Val = Theme.Accent5.Color.ToHex().Substring(2) };
 
             accent5Color1.AppendChild(rgbColorModelHex7);
 
             var accent6Color1 = new Accent6Color();
-            var rgbColorModelHex8 = new RgbColorModelHex { Val = (Theme.Accent6.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex8 = new RgbColorModelHex { Val = Theme.Accent6.Color.ToHex().Substring(2) };
 
             accent6Color1.AppendChild(rgbColorModelHex8);
 
             var hyperlink1 = new DocumentFormat.OpenXml.Drawing.Hyperlink();
-            var rgbColorModelHex9 = new RgbColorModelHex { Val = (Theme.Hyperlink.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex9 = new RgbColorModelHex { Val = Theme.Hyperlink.Color.ToHex().Substring(2) };
 
             hyperlink1.AppendChild(rgbColorModelHex9);
 
             var followedHyperlinkColor1 = new FollowedHyperlinkColor();
-            var rgbColorModelHex10 = new RgbColorModelHex { Val = (Theme.FollowedHyperlink.Color.ToHex()).Substring(2) };
+            var rgbColorModelHex10 = new RgbColorModelHex { Val = Theme.FollowedHyperlink.Color.ToHex().Substring(2) };
 
             followedHyperlinkColor1.AppendChild(rgbColorModelHex10);
 
@@ -2414,7 +2414,7 @@ namespace ClosedXML.Excel
                 CacheId = cacheId,
                 MergeItem = OpenXmlHelper.GetBooleanValue(pt.MergeAndCenterWithLabels, false),
                 Indent = Convert.ToUInt32(pt.RowLabelIndent),
-                PageOverThenDown = (pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown),
+                PageOverThenDown = pt.FilterAreaOrder == XLFilterAreaOrder.OverThenDown,
                 PageWrap = Convert.ToUInt32(pt.FilterFieldsPageWrap),
                 ShowError = string.IsNullOrEmpty(pt.ErrorValueReplacement),
                 UseAutoFormatting = OpenXmlHelper.GetBooleanValue(pt.AutofitColumns, false),
@@ -3961,7 +3961,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    numberFormat.NumberFormatId = (uint)(style.NumberFormat.NumberFormatId);
+                    numberFormat.NumberFormatId = (uint)style.NumberFormat.NumberFormatId;
                     if (!string.IsNullOrEmpty(style.NumberFormat.Format))
                         numberFormat.FormatCode = style.NumberFormat.Format;
                     else if (XLPredefinedFormat.FormatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out var formatCode))
@@ -4055,11 +4055,11 @@ namespace ClosedXML.Excel
         private static bool ApplyBorder(StyleInfo styleInfo)
         {
             var opBorder = styleInfo.Style.Border;
-            return (opBorder.BottomBorder.ToOpenXml() != BorderStyleValues.None
+            return opBorder.BottomBorder.ToOpenXml() != BorderStyleValues.None
                     || opBorder.DiagonalBorder.ToOpenXml() != BorderStyleValues.None
                     || opBorder.RightBorder.ToOpenXml() != BorderStyleValues.None
                     || opBorder.LeftBorder.ToOpenXml() != BorderStyleValues.None
-                    || opBorder.TopBorder.ToOpenXml() != BorderStyleValues.None);
+                    || opBorder.TopBorder.ToOpenXml() != BorderStyleValues.None;
         }
 
         private static bool ApplyProtection(StyleInfo styleInfo)
@@ -4666,11 +4666,11 @@ namespace ClosedXML.Excel
                 worksheetPart.Worksheet.SheetProperties.OutlineProperties = new OutlineProperties();
 
             worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryBelow =
-                (xlWorksheet.Outline.SummaryVLocation ==
-                 XLOutlineSummaryVLocation.Bottom);
+                xlWorksheet.Outline.SummaryVLocation ==
+                 XLOutlineSummaryVLocation.Bottom;
             worksheetPart.Worksheet.SheetProperties.OutlineProperties.SummaryRight =
-                (xlWorksheet.Outline.SummaryHLocation ==
-                 XLOutlineSummaryHLocation.Right);
+                xlWorksheet.Outline.SummaryHLocation ==
+                 XLOutlineSummaryHLocation.Right;
 
             if (worksheetPart.Worksheet.SheetProperties.PageSetupProperties == null
                 && (xlWorksheet.PageSetup.PagesTall > 0 || xlWorksheet.PageSetup.PagesWide > 0))
@@ -5012,7 +5012,7 @@ namespace ClosedXML.Excel
                 var collection = maxInColumnsCollection;
                 foreach (
                     var col in
-                        columns.Elements<Column>().Where(c => c.Min > (uint)(collection)).OrderBy(
+                        columns.Elements<Column>().Where(c => c.Min > (uint)collection).OrderBy(
                             c => c.Min.Value))
                 {
                     col.Style = worksheetStyleId;
@@ -5155,7 +5155,7 @@ namespace ClosedXML.Excel
                         XLTableField field = null;
 
                         var styleId = context.SharedStyles[xlCell.StyleValue].StyleId;
-                        var cellReference = (xlCell.Address).GetTrimmedAddress();
+                        var cellReference = xlCell.Address.GetTrimmedAddress();
 
                         // For saving cells to file, ignore conditional formatting, data validation rules and merged
                         // ranges. They just bloat the file
@@ -5257,7 +5257,7 @@ namespace ClosedXML.Excel
 
                                 if (!string.IsNullOrWhiteSpace(field.TotalsRowLabel))
                                 {
-                                    cell.DataType = XLWorkbook.CvSharedString;
+                                    cell.DataType = CvSharedString;
                                 }
                                 else
                                 {
@@ -5407,7 +5407,7 @@ namespace ClosedXML.Excel
 
             #region MergeCells
 
-            if ((xlWorksheet).Internals.MergedRanges.Any())
+            if (xlWorksheet.Internals.MergedRanges.Any())
             {
                 if (!worksheetPart.Worksheet.Elements<MergeCells>().Any())
                 {
@@ -5419,7 +5419,7 @@ namespace ClosedXML.Excel
                 cm.SetElement(XLWorksheetContents.MergeCells, mergeCells);
                 mergeCells.RemoveAllChildren<MergeCell>();
 
-                foreach (var mergeCell in (xlWorksheet).Internals.MergedRanges.Select(
+                foreach (var mergeCell in xlWorksheet.Internals.MergedRanges.Select(
                     m => m.RangeAddress.FirstAddress.ToString() + ":" + m.RangeAddress.LastAddress.ToString()).Select(
                         merged => new MergeCell { Reference = merged }))
                     mergeCells.AppendChild(mergeCell);
@@ -5673,7 +5673,7 @@ namespace ClosedXML.Excel
 
                 foreach (var dv in xlWorksheet.DataValidations)
                 {
-                    var sequence = dv.Ranges.Aggregate(string.Empty, (current, r) => current + (r.RangeAddress + " "));
+                    var sequence = dv.Ranges.Aggregate(string.Empty, (current, r) => current + r.RangeAddress + " ");
 
                     if (sequence.Length > 0)
                         sequence = sequence.Substring(0, sequence.Length - 1);

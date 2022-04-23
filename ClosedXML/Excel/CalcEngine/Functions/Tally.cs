@@ -179,7 +179,7 @@ namespace ClosedXML.Excel.CalcEngine
                 //Perform the Sum of (value-avg)_2_2
                 var sum = values.Sum(d => Math.Pow(d - avg, 2));
                 //Put it all together
-                ret = Math.Sqrt((sum) / (count - 1));
+                ret = Math.Sqrt(sum / (count - 1));
             }
             else
             {
@@ -264,7 +264,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (!aggressiveConversion) return false;
 
-                d = (b ? 1 : 0);
+                d = b ? 1 : 0;
                 return true;
             }
             else if (value is DateTime dt)

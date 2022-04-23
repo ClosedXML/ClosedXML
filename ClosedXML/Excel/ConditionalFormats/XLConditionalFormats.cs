@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
                     var similarFormats = new List<IXLConditionalFormat>();
                     do
                     {
-                        stop = (i >= formats.Count);
+                        stop = i >= formats.Count;
 
                         if (!stop)
                         {

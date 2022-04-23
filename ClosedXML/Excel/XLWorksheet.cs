@@ -225,7 +225,7 @@ namespace ClosedXML.Excel
                 {
                     Workbook.WorksheetsInternal
                         .Where<XLWorksheet>(w => w.Position <= value && w.Position > _position)
-                        .ForEach(w => (w)._position -= 1);
+                        .ForEach(w => w._position -= 1);
                 }
 
                 _position = value;
@@ -1734,7 +1734,7 @@ namespace ClosedXML.Excel
 
         internal XLCalcEngine CalcEngine
         {
-            get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
+            get { return _calcEngine ??= new XLCalcEngine(this); }
         }
 
         public object Evaluate(string expression)

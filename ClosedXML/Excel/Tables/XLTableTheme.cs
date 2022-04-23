@@ -79,10 +79,10 @@ namespace ClosedXML.Excel
 
         public static IEnumerable<XLTableTheme> GetAllThemes()
         {
-            return (allThemes ?? (allThemes = typeof(XLTableTheme).GetFields(BindingFlags.Static | BindingFlags.Public)
+            return allThemes ??= typeof(XLTableTheme).GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(fi => fi.FieldType.Equals(typeof(XLTableTheme)))
                 .Select(fi => (XLTableTheme)fi.GetValue(null))
-                .ToArray()));
+                .ToArray();
         }
 
         public static XLTableTheme FromName(string name)

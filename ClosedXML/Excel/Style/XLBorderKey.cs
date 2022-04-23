@@ -92,6 +92,6 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLBorderKey left, XLBorderKey right) => left.Equals(right);
 
-        public static bool operator !=(XLBorderKey left, XLBorderKey right) => !(left.Equals(right));
+        public static bool operator !=(XLBorderKey left, XLBorderKey right) => !left.Equals(right);
     }
 }

@@ -170,7 +170,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            var retVal = RangeList.Aggregate(string.Empty, (agg, r) => agg + (r + ","));
+            var retVal = RangeList.Aggregate(string.Empty, (agg, r) => agg + r + ",");
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }

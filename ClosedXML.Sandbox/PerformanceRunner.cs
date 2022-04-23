@@ -84,7 +84,7 @@ namespace ClosedXML.Sandbox
             var tmpStringLength = rnd.Next(5, 50);
             for (var x = 0; x <= tmpStringLength; x++)
             {
-                tmpString.Append((char)(rnd.Next(48, 120)));
+                tmpString.Append((char)rnd.Next(48, 120));
             }
             foreach (var str in strings)
             {
@@ -92,7 +92,7 @@ namespace ClosedXML.Sandbox
             }
 
             // Format decimals
-            var tmpDec = (decimal)(rnd.Next(-10000, 100000) / (Math.Pow(10.0, rnd.Next(1, 4))));
+            var tmpDec = (decimal)(rnd.Next(-10000, 100000) / Math.Pow(10.0, rnd.Next(1, 4)));
 
             foreach (var dec in decimals)
             {
@@ -124,7 +124,7 @@ namespace ClosedXML.Sandbox
             }
 
             // Format booleans
-            var tmpBool = (rnd.Next(0, 2) > 0);
+            var tmpBool = rnd.Next(0, 2) > 0;
             foreach (var bl in booleans)
             {
                 bl.SetValue(row, tmpBool, null);

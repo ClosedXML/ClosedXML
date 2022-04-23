@@ -266,7 +266,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            var retVal = Ranges.Aggregate(string.Empty, (agg, r) => agg + (r.ToString() + ","));
+            var retVal = Ranges.Aggregate(string.Empty, (agg, r) => agg + r.ToString() + ",");
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }

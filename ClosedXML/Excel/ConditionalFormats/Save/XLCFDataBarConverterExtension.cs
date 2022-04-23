@@ -50,10 +50,10 @@ namespace ClosedXML.Excel
 
             var barAxisColor = new BarAxisColor { Rgb = XLColor.Black.Color.ToHex() };
 
-            var negativeFillColor = new NegativeFillColor { Rgb = (cf.Colors[1].Color.ToHex()) };
+            var negativeFillColor = new NegativeFillColor { Rgb = cf.Colors[1].Color.ToHex() };
             if (cf.Colors.Count == 2)
             {
-                negativeFillColor = new NegativeFillColor { Rgb = (cf.Colors[2].Color.ToHex()) };
+                negativeFillColor = new NegativeFillColor { Rgb = cf.Colors[2].Color.ToHex() };
             }
 
             dataBar.Append(cfMin);

@@ -147,7 +147,7 @@ namespace ClosedXML.Excel
 
         public IEnumerator<XLCell> GetEnumerator()
         {
-            var cells = (_usedCellsOnly) ? GetUsedCells() : GetAllCells();
+            var cells = _usedCellsOnly ? GetUsedCells() : GetAllCells();
             foreach (var cell in cells)
             {
                 yield return cell;

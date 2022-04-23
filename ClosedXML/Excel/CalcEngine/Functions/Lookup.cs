@@ -50,7 +50,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var row_index_num = (int)p[2];
             var range_lookup = p.Count < 4
                                || p[3] is EmptyValueExpression
-                               || (bool)(p[3]);
+                               || (bool)p[3];
 
             if (row_index_num < 1)
                 throw new CellReferenceException("Row index has to be positive");
@@ -221,7 +221,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var col_index_num = (int)p[2];
             var range_lookup = p.Count < 4
                                || p[3] is EmptyValueExpression
-                               || (bool)(p[3]);
+                               || (bool)p[3];
 
             if (col_index_num < 1)
                 throw new CellReferenceException("Column index has to be positive");

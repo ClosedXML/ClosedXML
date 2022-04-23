@@ -151,7 +151,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 // Add count of empty cells outside the used range if they match criteria
                 if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
-                    cnt += (totalCount - processedCount);
+                    cnt += totalCount - processedCount;
             }
 
             return cnt;
@@ -200,7 +200,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
                                                    string.Empty, criteriaPair.Item1, ce)))
             {
-                count += (totalCount - processedCount);
+                count += totalCount - processedCount;
             }
 
             // done

@@ -626,7 +626,7 @@ namespace ClosedXML.Excel
 
         public string ToString(string format)
         {
-            return (format.ToUpper()) switch
+            return format.ToUpper() switch
             {
                 "A" => Address.ToString(),
                 "F" => HasFormula ? FormulaA1 : string.Empty,
@@ -2555,19 +2555,19 @@ namespace ClosedXML.Excel
                                     if (row1String[0] == '$')
                                     {
                                         row1 = "$" +
-                                                (XLHelper.TrimRowNumber(int.Parse(row1String.Substring(1)) + rowsShifted)).ToInvariantString();
+                                                XLHelper.TrimRowNumber(int.Parse(row1String.Substring(1)) + rowsShifted).ToInvariantString();
                                     }
                                     else
-                                        row1 = (XLHelper.TrimRowNumber(int.Parse(row1String) + rowsShifted)).ToInvariantString();
+                                        row1 = XLHelper.TrimRowNumber(int.Parse(row1String) + rowsShifted).ToInvariantString();
 
                                     string row2;
                                     if (row2String[0] == '$')
                                     {
                                         row2 = "$" +
-                                                (XLHelper.TrimRowNumber(int.Parse(row2String.Substring(1)) + rowsShifted)).ToInvariantString();
+                                                XLHelper.TrimRowNumber(int.Parse(row2String.Substring(1)) + rowsShifted).ToInvariantString();
                                     }
                                     else
-                                        row2 = (XLHelper.TrimRowNumber(int.Parse(row2String) + rowsShifted)).ToInvariantString();
+                                        row2 = XLHelper.TrimRowNumber(int.Parse(row2String) + rowsShifted).ToInvariantString();
 
                                     sb.Append(row1);
                                     sb.Append(':');

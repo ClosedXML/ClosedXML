@@ -37,6 +37,6 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLProtectionKey left, XLProtectionKey right) => left.Equals(right);
 
-        public static bool operator !=(XLProtectionKey left, XLProtectionKey right) => !(left.Equals(right));
+        public static bool operator !=(XLProtectionKey left, XLProtectionKey right) => !left.Equals(right);
     }
 }

@@ -41,7 +41,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public bool IsSquare()
         {
-            return (rows == cols);
+            return rows == cols;
         }
 
         public XLMatrix GetCol(int k)

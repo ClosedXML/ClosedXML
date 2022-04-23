@@ -99,12 +99,12 @@ namespace ClosedXML.Excel
 
         public new IXLTableRows InsertRowsAbove(int numberOfRows)
         {
-            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsAbove, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);
+            return XLHelper.InsertRowsWithoutEvents(InsertRowsAbove, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);
         }
 
         public new IXLTableRows InsertRowsBelow(int numberOfRows)
         {
-            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsBelow, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);
+            return XLHelper.InsertRowsWithoutEvents(InsertRowsBelow, _tableRange, numberOfRows, !_tableRange.Table.ShowTotalsRow);
         }
 
         public new void Delete()

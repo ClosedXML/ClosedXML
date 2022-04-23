@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
         private static bool IsAllowedAnchor(OpenXmlElement anchor)
         {
             var allowedAnchorTypes = new Type[] { typeof(AbsoluteAnchor), typeof(OneCellAnchor), typeof(TwoCellAnchor) };
-            return (allowedAnchorTypes.Any(t => t == anchor.GetType()));
+            return allowedAnchorTypes.Any(t => t == anchor.GetType());
         }
     }
 }
