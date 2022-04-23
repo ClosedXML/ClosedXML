@@ -60,8 +60,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLFontValue;
-            return cached != null &&
+            return obj is XLFontValue cached &&
                    Key.Equals(cached.Key);
         }
 

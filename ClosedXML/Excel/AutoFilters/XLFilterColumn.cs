@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
     internal class XLFilterColumn : IXLFilterColumn
     {
         private readonly XLAutoFilter _autoFilter;
@@ -43,7 +42,7 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            Func<object, bool> condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
+            bool condition(object date2) => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
 
             _autoFilter.IsEnabled = true;
 
@@ -247,7 +246,7 @@ namespace ClosedXML.Excel
                 var foundOne = false;
                 foreach (var val in values)
                 {
-                    Func<object, bool> condition = v => (v as IComparable).CompareTo(val) == 0;
+                    bool condition(object v) => (v as IComparable).CompareTo(val) == 0;
                     if (addToList)
                     {
                         _autoFilter.Filters[_column].Add(new XLFilter
@@ -321,7 +320,7 @@ namespace ClosedXML.Excel
                 var foundOne = false;
                 foreach (var val in values)
                 {
-                    Func<object, bool> condition = v => (v as IComparable).CompareTo(val) == 0;
+                    bool condition(object v) => (v as IComparable).CompareTo(val) == 0;
                     if (addToList)
                     {
                         _autoFilter.Filters[_column].Add(new XLFilter

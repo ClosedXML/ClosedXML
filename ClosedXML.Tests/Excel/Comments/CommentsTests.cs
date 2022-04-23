@@ -82,11 +82,11 @@ namespace ClosedXML.Tests.Excel.Comments
 
             ws.Row(1).InsertRowsAbove(1);
 
-            Action<IXLCell> validate = c =>
+            static void validate(IXLCell c)
             {
                 Assert.IsTrue(c.GetComment().Style.Alignment.AutomaticSize);
                 Assert.AreEqual(XLColor.Red, c.GetComment().Style.ColorsAndLines.FillColor);
-            };
+            }
 
             validate(ws.Cell("B3"));
 

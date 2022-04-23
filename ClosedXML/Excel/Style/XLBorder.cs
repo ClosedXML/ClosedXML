@@ -148,8 +148,7 @@ namespace ClosedXML.Excel
             {
                 if (_container == null) return;
 
-                var wsContainer = _container as XLWorksheet;
-                if (wsContainer != null)
+                if (_container is XLWorksheet wsContainer)
                 {
                     Modify(k =>
                     {
@@ -190,8 +189,7 @@ namespace ClosedXML.Excel
             {
                 if (_container == null) return;
 
-                var wsContainer = _container as XLWorksheet;
-                if (wsContainer != null)
+                if (_container is XLWorksheet wsContainer)
                 {
                     Modify(k =>
                     {
@@ -508,8 +506,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLBorder other)
         {
-            var otherB = other as XLBorder;
-            if (otherB == null)
+            if (!(other is XLBorder otherB))
                 return false;
 
             return Key == otherB.Key;

@@ -138,7 +138,7 @@ namespace ClosedXML.Excel.CalcEngine
             var range = (rangeExpression?.Value as CellRangeReference)?.Range;
             if (range == null)
                 return 0;
-            return (long)(range.LastColumn().ColumnNumber() - range.FirstColumn().ColumnNumber() + 1) *
+            return (range.LastColumn().ColumnNumber() - range.FirstColumn().ColumnNumber() + 1) *
                    (long)(range.LastRow().RowNumber() - range.FirstRow().RowNumber() + 1);
         }
     }

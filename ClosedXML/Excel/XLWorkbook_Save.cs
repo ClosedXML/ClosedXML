@@ -989,7 +989,7 @@ namespace ClosedXML.Excel
             var newStrings = new Dictionary<string, int>();
             var newRichStrings = new Dictionary<IXLRichText, int>();
 
-            bool hasSharedString(IXLCell c)
+            static bool hasSharedString(IXLCell c)
             {
                 if (c.DataType == XLDataType.Text && c.ShareString)
                     return (c as XLCell).StyleValue.IncludeQuotePrefix || string.IsNullOrWhiteSpace(c.FormulaA1) && (c as XLCell).InnerText.Length > 0;
@@ -2406,7 +2406,7 @@ namespace ClosedXML.Excel
             PivotTablePart pivotTablePart, XLPivotTable pt,
             uint cacheId, SaveContext context)
         {
-            var pti = context.PivotTables[(pt as XLPivotTable).Guid];
+            var pti = context.PivotTables[pt.Guid];
 
             var pivotTableDefinition = new PivotTableDefinition
             {
@@ -3733,7 +3733,7 @@ namespace ClosedXML.Excel
             {
                 if (!context.SharedFonts.ContainsKey(fonts[i]))
                 {
-                    context.SharedFonts.Add(fonts[i], new FontInfo { FontId = (uint)fontCount++, Font = fonts[i] });
+                    context.SharedFonts.Add(fonts[i], new FontInfo { FontId = fontCount++, Font = fonts[i] });
                 }
             }
 
@@ -4816,7 +4816,7 @@ namespace ClosedXML.Excel
 
                 var firstSelection = xlWorksheet.SelectedRanges.FirstOrDefault();
 
-                Action<Selection> populateSelection = (Selection selection) =>
+                void populateSelection(Selection selection)
                 {
                     if (xlWorksheet.ActiveCell != null)
                         selection.ActiveCell = xlWorksheet.ActiveCell.Address.ToStringRelative(false);
@@ -4838,7 +4838,7 @@ namespace ClosedXML.Excel
 
                     sheetView.InsertAfter(selection, svcm.GetPreviousElementFor(XLSheetViewContents.Selection));
                     svcm.SetElement(XLSheetViewContents.Selection, selection);
-                };
+                }
 
                 // If a pane exists, we need to set the active pane too
                 // Yes, this might lead to 2 Selection elements!
@@ -5028,7 +5028,7 @@ namespace ClosedXML.Excel
                     var column = new Column
                     {
                         Min = (uint)(maxInColumnsCollection + 1),
-                        Max = (uint)(XLHelper.MaxColumnNumber),
+                        Max = XLHelper.MaxColumnNumber,
                         Style = worksheetStyleId,
                         Width = worksheetColumnWidth,
                         CustomWidth = true
@@ -6262,7 +6262,7 @@ namespace ClosedXML.Excel
 
                     case XLFilterType.TopBottom:
 
-                        var top101 = new Top10 { Val = (double)xlFilterColumn.TopBottomValue };
+                        var top101 = new Top10 { Val = xlFilterColumn.TopBottomValue };
                         if (xlFilterColumn.TopBottomType == XLTopBottomType.Percent)
                             top101.Percent = true;
                         if (xlFilterColumn.TopBottomPart == XLTopBottomPart.Bottom)
@@ -6318,8 +6318,7 @@ namespace ClosedXML.Excel
 
             if (xlAutoFilter.Sorted)
             {
-                string reference = null;
-
+                string reference;
                 if (filterRange.FirstCell().Address.RowNumber < filterRange.LastCell().Address.RowNumber)
                     reference = filterRange.Range(filterRange.FirstCell().CellBelow(), filterRange.LastCell()).RangeAddress.ToString();
                 else

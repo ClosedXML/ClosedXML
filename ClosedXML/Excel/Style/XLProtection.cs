@@ -126,8 +126,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLProtection other)
         {
-            var otherP = other as XLProtection;
-            if (otherP == null)
+            if (!(other is XLProtection otherP))
                 return false;
 
             return Key == otherP.Key;

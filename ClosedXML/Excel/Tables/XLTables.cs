@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLTables : IXLTables
     {
         private readonly Dictionary<string, IXLTable> _tables;

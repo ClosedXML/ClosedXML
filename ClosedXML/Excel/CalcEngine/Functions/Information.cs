@@ -154,13 +154,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object IsRef(List<Expression> p)
         {
-            var oe = p[0] as XObjectExpression;
-            if (oe == null)
+            if (!(p[0] is XObjectExpression oe))
                 return false;
 
-            var crr = oe.Value as CellRangeReference;
 
-            return crr != null;
+            return oe.Value is CellRangeReference crr;
         }
 
         static object IsText(List<Expression> p)

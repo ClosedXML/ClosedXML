@@ -191,7 +191,7 @@ namespace ClosedXML.Tests.Excel
             ws1.Range("B2:E6").AddToNamed("Named range", XLScope.Worksheet);
             var nr = ws1.NamedRange("Named range");
 
-            TestDelegate action = () => nr.CopyTo(ws1);
+            void action() => nr.CopyTo(ws1);
 
             Assert.Throws(typeof(InvalidOperationException), action);
         }

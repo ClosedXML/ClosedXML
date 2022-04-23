@@ -885,8 +885,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var other = obj as XLRange;
-            if (other == null)
+            if (!(obj is XLRange other))
                 return false;
             return RangeAddress.Equals(other.RangeAddress)
                    && Worksheet.Equals(other.Worksheet);

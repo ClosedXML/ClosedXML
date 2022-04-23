@@ -2124,9 +2124,8 @@ namespace ClosedXML.Excel
             _richText = null;
 
             var style = GetStyleForRead();
-            var parsed = false;
-            var parsedValue = string.Empty;
-
+            bool parsed;
+            string parsedValue;
             ////
             // Try easy parsing first. If that doesn't work, we'll have to ToString it and parse it slowly
 

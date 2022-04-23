@@ -188,9 +188,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLStyle other)
         {
-            var otherS = other as XLStyle;
-
-            if (otherS == null)
+            if (!(other is XLStyle otherS))
                 return false;
 
             return Key == otherS.Key &&

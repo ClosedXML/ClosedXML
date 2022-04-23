@@ -179,8 +179,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLFill other)
         {
-            var otherF = other as XLFill;
-            if (otherF == null)
+            if (!(other is XLFill otherF))
                 return false;
 
             return Key == otherF.Key;

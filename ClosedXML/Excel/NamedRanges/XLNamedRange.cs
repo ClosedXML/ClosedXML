@@ -1,4 +1,3 @@
-using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,7 +116,8 @@ namespace ClosedXML.Excel
 
         public bool Visible { get; set; }
 
-        public XLNamedRangeScope Scope { get { return _namedRanges.Scope; } }
+        public XLNamedRangeScope Scope
+        { get { return _namedRanges.Scope; } }
 
         public IXLRanges Add(XLWorkbook workbook, string rangeAddress)
         {

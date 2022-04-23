@@ -81,7 +81,7 @@ namespace ClosedXML.Excel
                 {
                     if (XLHelper.IsValidRangeAddress(rangeAddress))
                     {
-                        IXLRange range = null;
+                        IXLRange range;
                         if (Scope == XLNamedRangeScope.Worksheet)
                             range = Worksheet.Range(rangeAddress);
                         else if (Scope == XLNamedRangeScope.Workbook)

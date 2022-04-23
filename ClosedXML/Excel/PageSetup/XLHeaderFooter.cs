@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-
     internal class XLHeaderFooter: IXLHeaderFooter
     {
 
@@ -74,7 +73,7 @@ namespace ClosedXML.Excel
 
         private static IEnumerable<ParsedHeaderFooterElement> ParseFormattedHeaderFooterText(string text)
         {
-            Func<int, bool> IsAtPositionIndicator = i => i < text.Length - 1 && text[i] == '&' && (new char[] { 'L', 'C', 'R' }.Contains(text[i + 1]));
+            bool IsAtPositionIndicator(int i) => i < text.Length - 1 && text[i] == '&' && (new char[] { 'L', 'C', 'R' }.Contains(text[i + 1]));
 
             var parsedElements = new List<ParsedHeaderFooterElement>();
             var currentPosition = 'L'; // default is LEFT

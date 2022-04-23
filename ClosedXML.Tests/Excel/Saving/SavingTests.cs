@@ -228,12 +228,12 @@ namespace ClosedXML.Tests.Excel.Saving
                 File.SetAttributes(existing.Path, FileAttributes.ReadOnly);
 
                 // Act
-                TestDelegate saveAs = () =>
+                void saveAs()
                 {
                     using var wb = new XLWorkbook();
                     var sheet = wb.Worksheets.Add("TestSheet");
                     wb.SaveAs(existing.Path);
-                };
+                }
 
                 // Assert
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -364,7 +364,7 @@ namespace ClosedXML.Tests.Excel.Saving
             using var tf = new TemporaryFile("FileWithNoExtension");
             using var wb = new XLWorkbook();
             wb.Worksheets.Add("Sheet1");
-            TestDelegate action = () => wb.SaveAs(tf.Path);
+            void action() => wb.SaveAs(tf.Path);
 
             Assert.Throws<ArgumentException>(action);
         }
@@ -375,7 +375,7 @@ namespace ClosedXML.Tests.Excel.Saving
             using var tf = new TemporaryFile("FileWithBadExtension.bad");
             using var wb = new XLWorkbook();
             wb.Worksheets.Add("Sheet1");
-            TestDelegate action = () => wb.SaveAs(tf.Path);
+            void action() => wb.SaveAs(tf.Path);
 
             Assert.Throws<ArgumentException>(action);
         }

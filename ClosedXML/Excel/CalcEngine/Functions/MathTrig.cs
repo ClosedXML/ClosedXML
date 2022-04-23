@@ -401,9 +401,7 @@ namespace ClosedXML.Excel.CalcEngine
             var criteriaRanges = new Tuple<object, IList<object>>[numberOfCriteria];
             for (var criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
-                var criteriaRange = p[criteriaPair * 2 + 1] as IEnumerable;
-
-                if (criteriaRange == null)
+                if (!(p[criteriaPair * 2 + 1] is IEnumerable criteriaRange))
                     throw new CellReferenceException($"Expected parameter {criteriaPair * 2 + 2} to be a range");
 
                 var criterion = p[criteriaPair * 2 + 2].Evaluate();
@@ -502,7 +500,7 @@ namespace ClosedXML.Excel.CalcEngine
             var scaling = Math.Pow(10, num_digits);
 
             var truncated = (int)(number * scaling);
-            return (double)truncated / scaling;
+            return truncated / scaling;
         }
 
         public static double DegreesToRadians(double degrees)
@@ -918,9 +916,8 @@ namespace ClosedXML.Excel.CalcEngine
             var x = (double)p[0];
             var n = (double)p[1];
             var m = (double)p[2];
-            var obj = p[3] as XObjectExpression;
 
-            if (obj == null)
+            if (!(p[3] is XObjectExpression obj))
                 return p[3] * Math.Pow(x, n);
 
             double total = 0;
@@ -1057,8 +1054,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static double[,] GetArray(Expression expression)
         {
-            var oExp1 = expression as XObjectExpression;
-            if (oExp1 == null) return new[,] { { (double)expression } };
+            if (!(expression is XObjectExpression oExp1)) return new[,] { { (double)expression } };
 
             var range = (oExp1.Value as CellRangeReference).Range;
             var rowCount = range.RowCount();

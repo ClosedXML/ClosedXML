@@ -133,8 +133,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLNumberFormatBase other)
         {
-            var otherN = other as XLNumberFormat;
-            if (otherN == null)
+            if (!(other is XLNumberFormat otherN))
                 return false;
 
             return Key == otherN.Key;

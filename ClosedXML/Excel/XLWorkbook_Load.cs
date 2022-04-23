@@ -1,8 +1,12 @@
+using ClosedXML.Excel.Drawings;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.CustomProperties;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,17 +15,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Ap = DocumentFormat.OpenXml.ExtendedProperties;
-using Op = DocumentFormat.OpenXml.CustomProperties;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 
 namespace ClosedXML.Excel
 {
-    using Ap;
-    using Drawings;
-    using Op;
-    using SkiaSharp;
-
     public partial class XLWorkbook
     {
         private readonly Dictionary<string, Color> _colorList = new Dictionary<string, Color>();
@@ -175,10 +172,10 @@ namespace ClosedXML.Excel
                 s = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet;
             }
 
-            var numberingFormats = s == null ? null : s.NumberingFormats;
-            var fills = s == null ? null : s.Fills;
-            var borders = s == null ? null : s.Borders;
-            var fonts = s == null ? null : s.Fonts;
+            var numberingFormats = s?.NumberingFormats;
+            var fills = s?.Fills;
+            var borders = s?.Borders;
+            var fonts = s?.Fonts;
             var dfCount = 0;
             Dictionary<int, DifferentialFormat> differentialFormats;
             if (s != null && s.DifferentialFormats != null)
@@ -193,9 +190,7 @@ namespace ClosedXML.Excel
                 position++;
                 var sharedFormulasR1C1 = new Dictionary<uint, string>();
 
-                var worksheetPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
-
-                if (worksheetPart == null)
+                if (!(dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) is WorksheetPart worksheetPart))
                 {
                     UnsupportedSheets.Add(new UnsupportedSheet { SheetId = dSheet.SheetId.Value, Position = position });
                     continue;
@@ -485,9 +480,7 @@ namespace ClosedXML.Excel
             // Delay loading of pivot tables until all sheets have been loaded
             foreach (var dSheet in sheets.OfType<Sheet>())
             {
-                var worksheetPart = dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) as WorksheetPart;
-
-                if (worksheetPart != null)
+                if (dSpreadsheet.WorkbookPart.GetPartById(dSheet.Id) is WorksheetPart worksheetPart)
                 {
                     var ws = (XLWorksheet)WorksheetsInternal.Worksheet(dSheet.Name);
 
@@ -669,8 +662,7 @@ namespace ClosedXML.Excel
                                             pivotField = pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
                                         else
                                         {
-                                            var pf = pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) as PivotField;
-                                            if (pf == null)
+                                            if (!(pivotTableDefinition.PivotFields.ElementAt(rf.Index.Value) is PivotField pf))
                                                 continue;
 
                                             var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(rf.Index.Value) as CacheField;
@@ -706,8 +698,7 @@ namespace ClosedXML.Excel
                                         pivotField = pt.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
                                     else if (cf.Index < pivotTableDefinition.PivotFields.Count)
                                     {
-                                        var pf = pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) as PivotField;
-                                        if (pf == null)
+                                        if (!(pivotTableDefinition.PivotFields.ElementAt(cf.Index.Value) is PivotField pf))
                                             continue;
 
                                         var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(cf.Index.Value) as CacheField;
@@ -742,8 +733,7 @@ namespace ClosedXML.Excel
                                         pivotValue = pt.Values.Add(XLConstants.PivotTable.ValuesSentinalLabel);
                                     else if (df.Field.Value < pivotTableDefinition.PivotFields.Count)
                                     {
-                                        var pf = pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) as PivotField;
-                                        if (pf == null)
+                                        if (!(pivotTableDefinition.PivotFields.ElementAt((int)df.Field.Value) is PivotField pf))
                                             continue;
 
                                         var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt((int)df.Field.Value) as CacheField;
@@ -790,8 +780,7 @@ namespace ClosedXML.Excel
                             {
                                 foreach (var pageField in pivotTableDefinition.PageFields.Cast<PageField>())
                                 {
-                                    var pf = pivotTableDefinition.PivotFields.ElementAt(pageField.Field.Value) as PivotField;
-                                    if (pf == null)
+                                    if (!(pivotTableDefinition.PivotFields.ElementAt(pageField.Field.Value) is PivotField pf))
                                         continue;
 
                                     var cacheField = pivotTableCacheDefinitionPart.PivotCacheDefinition.CacheFields.ElementAt(pageField.Field.Value) as CacheField;
@@ -3225,13 +3214,10 @@ namespace ClosedXML.Excel
                 var formatCode = string.Empty;
                 if (numberingFormats != null)
                 {
-                    var numberingFormat =
-                        numberingFormats.FirstOrDefault(
+                    if (numberingFormats.FirstOrDefault(
                             nf =>
                             ((NumberingFormat)nf).NumberFormatId != null &&
-                            ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId) as NumberingFormat;
-
-                    if (numberingFormat != null && numberingFormat.FormatCode != null)
+                            ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId) is NumberingFormat numberingFormat && numberingFormat.FormatCode != null)
                         formatCode = numberingFormat.FormatCode.Value;
                 }
 

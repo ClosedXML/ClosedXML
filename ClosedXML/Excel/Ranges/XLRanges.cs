@@ -2,11 +2,10 @@ using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLRanges : XLStylizedBase, IXLRanges, IXLStylized
     {
         /// <summary>

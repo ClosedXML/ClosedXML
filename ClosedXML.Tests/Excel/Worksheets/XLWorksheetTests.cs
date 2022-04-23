@@ -298,11 +298,11 @@ namespace ClosedXML.Tests
         public void WorksheetNameCannotStartWithApostrophe()
         {
             var title = "'StartsWithApostrophe";
-            TestDelegate addWorksheet = () =>
+            void addWorksheet()
             {
                 using var wb = new XLWorkbook();
                 wb.Worksheets.Add(title);
-            };
+            }
 
             Assert.Throws(typeof(ArgumentException), addWorksheet);
         }
@@ -311,11 +311,11 @@ namespace ClosedXML.Tests
         public void WorksheetNameCannotEndWithApostrophe()
         {
             var title = "EndsWithApostrophe'";
-            TestDelegate addWorksheet = () =>
+            void addWorksheet()
             {
                 using var wb = new XLWorkbook();
                 wb.Worksheets.Add(title);
-            };
+            }
 
             Assert.Throws(typeof(ArgumentException), addWorksheet);
         }
@@ -338,7 +338,7 @@ namespace ClosedXML.Tests
         {
             var title = "With'Apostrophe";
             var savedTitle = "";
-            TestDelegate saveAndOpenWorkbook = () =>
+            void saveAndOpenWorkbook()
             {
                 using var ms = new MemoryStream();
                 using (var wb = new XLWorkbook())
@@ -352,7 +352,7 @@ namespace ClosedXML.Tests
                 {
                     savedTitle = wb.Worksheets.First().Name;
                 }
-            };
+            }
 
             Assert.DoesNotThrow(saveAndOpenWorkbook);
             Assert.AreEqual(title, savedTitle);

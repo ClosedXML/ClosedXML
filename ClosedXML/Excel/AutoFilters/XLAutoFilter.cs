@@ -1,11 +1,10 @@
 // Keep this file CodeMaid organised and cleaned
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
     internal class XLAutoFilter : IXLAutoFilter
     {
         private readonly Dictionary<int, XLFilterColumn> _columns = new Dictionary<int, XLFilterColumn>();

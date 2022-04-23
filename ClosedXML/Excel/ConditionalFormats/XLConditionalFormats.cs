@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
                     item.Ranges.ForEach(r => rangesToJoin.Add(r));
                     var firstRange = item.Ranges.First();
                     var skippedRanges = new XLRanges();
-                    Func<IXLConditionalFormat, bool> IsSameFormat = f =>
+                    bool IsSameFormat(IXLConditionalFormat f) =>
                         f != item && f.Ranges.First().Worksheet.Position == firstRange.Worksheet.Position &&
                         XLConditionalFormat.NoRangeComparer.Equals(f, item);
 

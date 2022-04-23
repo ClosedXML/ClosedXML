@@ -366,7 +366,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("NUMBERVALUE(\"-1.234567890E-310\")")] // Too tiny (negative)
         public void NumberValue_Invalid(string expression)
         {
-            TestDelegate action = () => XLWorkbook.EvaluateExpr(expression);
+            void action() => XLWorkbook.EvaluateExpr(expression);
             Assert.Throws<CellValueException>(action);
         }
 
@@ -637,10 +637,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Cell("C1").FormulaA1 = formula;
 
-            TestDelegate action = () =>
+            void action()
             {
                 var a = ws.Cell("C1").Value;
-            };
+            }
 
             Assert.Throws<CellValueException>(action, explain);
         }

@@ -867,7 +867,7 @@ namespace ClosedXML.Tests.Excel
 
             var table = ws1.Range("A1:C2").AsTable();
 
-            TestDelegate action = () => table.CopyTo(ws1);
+            void action() => table.CopyTo(ws1);
 
             Assert.Throws(typeof(InvalidOperationException), action);
         }

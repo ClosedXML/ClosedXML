@@ -301,7 +301,7 @@ namespace ClosedXML.Tests
             Assert.AreEqual(12, rangeAddress.NumberOfCells);
 
             range = ws.Range("E5:B3");
-            rangeAddress = range.RangeAddress as IXLRangeAddress;
+            rangeAddress = range.RangeAddress;
             Assert.AreEqual(4, rangeAddress.ColumnSpan);
             Assert.AreEqual(3, rangeAddress.RowSpan);
             Assert.AreEqual(12, rangeAddress.NumberOfCells);

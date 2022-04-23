@@ -32,8 +32,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLProtectionValue;
-            return cached != null &&
+            return obj is XLProtectionValue cached &&
                    Key.Equals(cached.Key);
         }
 

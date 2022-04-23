@@ -1,9 +1,8 @@
 using System;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-
     internal class XLTableRange : XLRange, IXLTableRange
     {
         private readonly XLTable _table;

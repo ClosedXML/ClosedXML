@@ -497,8 +497,7 @@ namespace ClosedXML.Excel.CalcEngine
         public override object Evaluate()
         {
             // use IValueObject if available
-            var iv = _value as IValueObject;
-            if (iv != null)
+            if (_value is IValueObject iv)
             {
                 return iv.GetValue();
             }

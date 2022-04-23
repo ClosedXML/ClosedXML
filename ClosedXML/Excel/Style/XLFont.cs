@@ -338,8 +338,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLFont other)
         {
-            var otherF = other as XLFont;
-            if (otherF == null)
+            if (!(other is XLFont otherF))
                 return false;
 
             return Key == otherF.Key;

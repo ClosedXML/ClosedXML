@@ -32,8 +32,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLNumberFormatValue;
-            return cached != null &&
+            return obj is XLNumberFormatValue cached &&
                    Key.Equals(cached.Key);
         }
 

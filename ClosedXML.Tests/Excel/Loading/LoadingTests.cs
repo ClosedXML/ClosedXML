@@ -278,13 +278,13 @@ namespace ClosedXML.Tests.Excel
         public void CanOpenWorksheetWithEscapedApostrophe()
         {
             var title = "";
-            TestDelegate openWorkbook = () =>
+            void openWorkbook()
             {
                 using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EscapedApostrophe.xlsx"));
                 using var wb = new XLWorkbook(stream);
                 var ws = wb.Worksheets.First();
                 title = ws.Name;
-            };
+            }
 
             Assert.DoesNotThrow(openWorkbook);
             Assert.AreEqual("L'E", title);

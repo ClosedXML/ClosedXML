@@ -688,7 +688,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CanChangeInlinedRichText()
         {
-            void testRichText(IXLRichText richText)
+            static void testRichText(IXLRichText richText)
             {
                 Assert.IsNotNull(richText);
                 Assert.IsTrue(richText.Any());

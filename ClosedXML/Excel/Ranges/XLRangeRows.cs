@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLRangeRows : XLStylizedBase, IXLRangeRows, IXLStylized
     {
         private readonly List<XLRangeRow> _ranges = new List<XLRangeRow>();

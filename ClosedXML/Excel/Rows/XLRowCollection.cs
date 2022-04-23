@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLRowsCollection : IDictionary<int, XLRow>
     {
         private readonly Dictionary<int, XLRow> _dictionary = new Dictionary<int, XLRow>();

@@ -308,8 +308,7 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLAlignment other)
         {
-            var otherA = other as XLAlignment;
-            if (otherA == null)
+            if (!(other is XLAlignment otherA))
                 return false;
 
             return Key == otherA.Key;

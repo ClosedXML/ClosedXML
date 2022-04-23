@@ -1,10 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLColumns : XLStylizedBase, IXLColumns, IXLStylized
     {
         private readonly List<XLColumn> _columnsCollection = new List<XLColumn>();

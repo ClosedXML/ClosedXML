@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            Func<object, bool> condition = date2 => IsMatch(date, (DateTime) date2, dateTimeGrouping);
+            bool condition(object date2) => IsMatch(date, (DateTime)date2, dateTimeGrouping);
 
             _autoFilter.Filters[_column].Add(new XLFilter
             {

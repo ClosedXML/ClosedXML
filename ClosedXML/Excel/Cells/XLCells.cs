@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-
     internal class XLCells : XLStylizedBase, IXLCells, IXLStylized, IEnumerable<XLCell>
     {
         #region Fields

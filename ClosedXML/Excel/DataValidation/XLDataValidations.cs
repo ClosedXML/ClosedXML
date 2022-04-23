@@ -2,12 +2,11 @@
 using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-    using System.Linq;
-
     internal class XLDataValidations : IXLDataValidations
     {
         private readonly XLRangeIndex<XLDataValidationIndexEntry> _dataValidationIndex;
@@ -166,7 +165,7 @@ namespace ClosedXML.Excel
 
         public void Consolidate()
         {
-            Func<IXLDataValidation, IXLDataValidation, bool> areEqual = (dv1, dv2) =>
+            bool areEqual(IXLDataValidation dv1, IXLDataValidation dv2)
             {
                 return
                     dv1.IgnoreBlanks == dv2.IgnoreBlanks &&
@@ -183,7 +182,7 @@ namespace ClosedXML.Excel
                     dv1.MinValue == dv2.MinValue &&
                     dv1.MaxValue == dv2.MaxValue &&
                     dv1.Value == dv2.Value;
-            };
+            }
 
             var rules = _dataValidations.ToList();
             rules.ForEach(Delete);

@@ -1,8 +1,8 @@
+using System;
+using System.Linq;
+
 namespace ClosedXML.Excel
 {
-    using System;
-    using System.Linq;
-
     internal class XLRangeRow : XLRangeBase, IXLRangeRow
     {
         #region Constructor
