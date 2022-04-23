@@ -39,9 +39,9 @@ namespace ClosedXML.Excel
             {
                 yield return Style;
 
-                int column = ColumnNumber();
+                var column = ColumnNumber();
 
-                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
                     yield return cell.Style;
             }
         }
@@ -50,8 +50,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                int column = ColumnNumber();
-                foreach (XLCell cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                var column = ColumnNumber();
+                foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
                     yield return cell;
             }
         }
@@ -64,7 +64,7 @@ namespace ClosedXML.Excel
 
         public void Delete()
         {
-            int columnNumber = ColumnNumber();
+            var columnNumber = ColumnNumber();
             Delete(XLShiftDeletedCells.ShiftCellsLeft);
             Worksheet.DeleteColumn(columnNumber);
         }
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.All);
             var rangePairs = cellsInColumn.Split(',');
-            foreach (string pair in rangePairs)
+            foreach (var pair in rangePairs)
                 retVal.Add(Range(pair.Trim()).RangeAddress);
             return retVal;
         }
@@ -109,7 +109,7 @@ namespace ClosedXML.Excel
 
         public new IXLColumns InsertColumnsAfter(int numberOfColumns)
         {
-            int columnNum = ColumnNumber();
+            var columnNum = ColumnNumber();
             Worksheet.Internals.ColumnsCollection.ShiftColumnsRight(columnNum + 1, numberOfColumns);
             Worksheet.Column(columnNum).InsertColumnsAfterVoid(true, numberOfColumns);
             var newColumns = Worksheet.Columns(columnNum + 1, columnNum + numberOfColumns);
@@ -119,7 +119,7 @@ namespace ClosedXML.Excel
 
         public new IXLColumns InsertColumnsBefore(int numberOfColumns)
         {
-            int columnNum = ColumnNumber();
+            var columnNum = ColumnNumber();
             if (columnNum > 1)
             {
                 return Worksheet.Column(columnNum - 1).InsertColumnsAfter(numberOfColumns);
@@ -173,9 +173,9 @@ namespace ClosedXML.Excel
         {
             var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
-            double colMaxWidth = minWidth;
+            var colMaxWidth = minWidth;
 
-            List<int> autoFilterRows = new List<int>();
+            var autoFilterRows = new List<int>();
             if (Worksheet.AutoFilter != null && Worksheet.AutoFilter.Range != null)
                 autoFilterRows.Add(Worksheet.AutoFilter.Range.FirstRow().RowNumber());
 
@@ -193,7 +193,7 @@ namespace ClosedXML.Excel
                     cellStyle = c.Style as XLStyle;
 
                 double thisWidthMax = 0;
-                int textRotation = cellStyle.Alignment.TextRotation;
+                var textRotation = cellStyle.Alignment.TextRotation;
                 if (c.HasRichText || textRotation != 0 || c.InnerText.Contains(XLConstants.NewLine))
                 {
                     var kpList = new List<KeyValuePair<IXLFontBase, string>>();
@@ -202,14 +202,14 @@ namespace ClosedXML.Excel
 
                     if (c.HasRichText)
                     {
-                        foreach (IXLRichString rt in c.GetRichText())
+                        foreach (var rt in c.GetRichText())
                         {
-                            string formattedString = rt.Text;
+                            var formattedString = rt.Text;
                             var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
-                            int arrCount = arr.Count();
-                            for (int i = 0; i < arrCount; i++)
+                            var arrCount = arr.Count();
+                            for (var i = 0; i < arrCount; i++)
                             {
-                                string s = arr[i];
+                                var s = arr[i];
                                 if (i < arrCount - 1)
                                     s += XLConstants.NewLine;
                                 kpList.Add(new KeyValuePair<IXLFontBase, string>(rt, s));
@@ -218,12 +218,12 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        string formattedString = c.GetFormattedString();
+                        var formattedString = c.GetFormattedString();
                         var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
-                        int arrCount = arr.Count();
-                        for (int i = 0; i < arrCount; i++)
+                        var arrCount = arr.Count();
+                        for (var i = 0; i < arrCount; i++)
                         {
-                            string s = arr[i];
+                            var s = arr[i];
                             if (i < arrCount - 1)
                                 s += XLConstants.NewLine;
                             kpList.Add(new KeyValuePair<IXLFontBase, string>(cellStyle.Font, s));
@@ -235,15 +235,15 @@ namespace ClosedXML.Excel
                     #region foreach (var kp in kpList)
 
                     double runningWidth = 0;
-                    bool rotated = false;
+                    var rotated = false;
                     double maxLineWidth = 0;
-                    int lineCount = 1;
-                    foreach (KeyValuePair<IXLFontBase, string> kp in kpList)
+                    var lineCount = 1;
+                    foreach (var kp in kpList)
                     {
                         var f = kp.Key;
-                        string formattedString = kp.Value;
+                        var formattedString = kp.Value;
 
-                        int newLinePosition = formattedString.IndexOf(XLConstants.NewLine);
+                        var newLinePosition = formattedString.IndexOf(XLConstants.NewLine);
                         if (textRotation == 0)
                         {
                             #region if (newLinePosition >= 0)
@@ -280,7 +280,7 @@ namespace ClosedXML.Excel
                             else
                             {
                                 rotated = true;
-                                double vWidth = f.GetWidth("X", fontCache);
+                                var vWidth = f.GetWidth("X", fontCache);
                                 if (vWidth > maxLineWidth)
                                     maxLineWidth = vWidth;
 
@@ -321,7 +321,7 @@ namespace ClosedXML.Excel
                         else
                             rotation = textRotation % 90;
 
-                        double r = DegreeToRadian(rotation);
+                        var r = DegreeToRadian(rotation);
 
                         thisWidthMax = (thisWidthMax * Math.Cos(r)) + (maxLineWidth * lineCount);
                     }
@@ -491,7 +491,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
-            foreach (string pair in columnPairs)
+            foreach (var pair in columnPairs)
                 AsRange().Columns(pair.Trim()).ForEach(retVal.Add);
             return retVal;
         }
@@ -566,8 +566,8 @@ namespace ClosedXML.Excel
                     rangeAddressStr = rangeAddressStr.Replace('-', ':');
 
                 var arrRange = rangeAddressStr.Split(':');
-                string firstPart = arrRange[0];
-                string secondPart = arrRange[1];
+                var firstPart = arrRange[0];
+                var secondPart = arrRange[1];
                 rangeAddressToUse = FixColumnAddress(firstPart) + ":" + FixColumnAddress(secondPart);
             }
             else

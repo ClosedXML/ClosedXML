@@ -102,13 +102,13 @@ namespace ClosedXML.Tests.Excel
                 var ws1 = wb.AddWorksheet("Sheet1");
                 var nr1 = wb.NamedRanges.Add("TEST", "=0.1");
 
-                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST", out IXLNamedRange _));
-                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST1", out IXLNamedRange _));
+                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST", out var _));
+                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST1", out var _));
 
                 nr1.Name = "TEST1";
 
-                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST", out IXLNamedRange _));
-                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST1", out IXLNamedRange _));
+                Assert.IsFalse(wb.NamedRanges.TryGetValue("TEST", out var _));
+                Assert.IsTrue(wb.NamedRanges.TryGetValue("TEST1", out var _));
 
                 var nr2 = wb.NamedRanges.Add("TEST2", "=TEST1*2");
 
@@ -228,8 +228,8 @@ namespace ClosedXML.Tests.Excel
         {
             using var wb = new XLWorkbook();
 
-            IXLWorksheet sheet1 = wb.Worksheets.Add("Sheet1");
-            IXLWorksheet sheet2 = wb.Worksheets.Add("Sheet2");
+            var sheet1 = wb.Worksheets.Add("Sheet1");
+            var sheet2 = wb.Worksheets.Add("Sheet2");
 
             wb.NamedRanges.Add("wbNamedRange",
                 "Sheet1!$B$2,Sheet1!$B$3:$C$3,Sheet2!$D$3:$D$4,Sheet1!$6:$7,Sheet1!$F:$G");
@@ -568,12 +568,12 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(wb.NamedRange("Sheet1!Name"));
             Assert.IsNull(wb.NamedRange("Sheet1!NameX"));
 
-            bool result1 = wb.NamedRanges.TryGetValue("Sheet1!Name", out IXLNamedRange range1);
+            var result1 = wb.NamedRanges.TryGetValue("Sheet1!Name", out var range1);
             Assert.IsTrue(result1);
             Assert.IsNotNull(range1);
             Assert.AreEqual(XLNamedRangeScope.Worksheet, range1.Scope);
 
-            bool result2 = wb.NamedRanges.TryGetValue("Sheet1!NameX", out IXLNamedRange range2);
+            var result2 = wb.NamedRanges.TryGetValue("Sheet1!NameX", out var range2);
             Assert.IsFalse(result2);
             Assert.IsNull(range2);
         }
@@ -591,11 +591,11 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(wb.NamedRange("Name"));
             Assert.IsNull(wb.NamedRange("NameX"));
 
-            bool result1 = wb.NamedRanges.TryGetValue("Name", out IXLNamedRange range1);
+            var result1 = wb.NamedRanges.TryGetValue("Name", out var range1);
             Assert.IsTrue(result1);
             Assert.IsNotNull(range1);
 
-            bool result2 = wb.NamedRanges.TryGetValue("NameX", out IXLNamedRange range2);
+            var result2 = wb.NamedRanges.TryGetValue("NameX", out var range2);
             Assert.IsFalse(result2);
             Assert.IsNull(range2);
         }
@@ -612,11 +612,11 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(ws.NamedRange("Name"));
             Assert.IsNull(ws.NamedRange("NameX"));
 
-            bool result1 = ws.NamedRanges.TryGetValue("Name", out IXLNamedRange range1);
+            var result1 = ws.NamedRanges.TryGetValue("Name", out var range1);
             Assert.IsTrue(result1);
             Assert.IsNotNull(range1);
 
-            bool result2 = ws.NamedRanges.TryGetValue("NameX", out IXLNamedRange range2);
+            var result2 = ws.NamedRanges.TryGetValue("NameX", out var range2);
             Assert.IsFalse(result2);
             Assert.IsNull(range2);
         }

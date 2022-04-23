@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
 
         public bool TryGetWorksheet(string sheetName, out IXLWorksheet worksheet)
         {
-            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName(), out XLWorksheet w))
+            if (_worksheets.TryGetValue(sheetName.UnescapeSheetName(), out var w))
             {
                 worksheet = w;
                 return true;
@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
         {
             sheetName = sheetName.UnescapeSheetName();
 
-            if (_worksheets.TryGetValue(sheetName, out XLWorksheet w))
+            if (_worksheets.TryGetValue(sheetName, out var w))
                 return w;
 
             throw new ArgumentException("There isn't a worksheet named '" + sheetName + "'.");
@@ -68,7 +68,7 @@ namespace ClosedXML.Excel
 
         public IXLWorksheet Worksheet(int position)
         {
-            int wsCount = _worksheets.Values.Count(w => w.Position == position);
+            var wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
                 throw new ArgumentException("There isn't a worksheet associated with that position.");
 
@@ -124,7 +124,7 @@ namespace ClosedXML.Excel
 
         public void Delete(int position)
         {
-            int wsCount = _worksheets.Values.Count(w => w.Position == position);
+            var wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
                 throw new ArgumentException("There isn't a worksheet associated with that index.");
 
@@ -176,7 +176,7 @@ namespace ClosedXML.Excel
 
         public void Rename(string oldSheetName, string newSheetName)
         {
-            if (string.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.TryGetValue(oldSheetName, out XLWorksheet ws)) return;
+            if (string.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.TryGetValue(oldSheetName, out var ws)) return;
 
             if (!oldSheetName.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)
                 && _worksheets.ContainsKey(newSheetName))

@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
             get { return Key.Horizontal; }
             set
             {
-                bool updateIndent = !(
+                var updateIndent = !(
                                                value == XLAlignmentHorizontalValues.Left
                                             || value == XLAlignmentHorizontalValues.Right
                                             || value == XLAlignmentHorizontalValues.Distributed
@@ -156,7 +156,7 @@ namespace ClosedXML.Excel
             get { return Key.TextRotation; }
             set
             {
-                int rotation = value;
+                var rotation = value;
 
                 if (rotation != 255 && (rotation < -90 || rotation > 180))
                     throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");

@@ -13,7 +13,7 @@ namespace ClosedXML.Tests.Excel
         public void CopyFormula()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").FormulaA1 = "B1";
             ws.Cell("A1").CopyTo("A2");
             Assert.AreEqual("B2", ws.Cell("A2").FormulaA1);
@@ -24,7 +24,7 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+                var ws = wb.Worksheets.Add("Sheet1");
 
                 ws.Cell("A1").FormulaA1 = "A2-1";
                 ws.Cell("A1").CopyTo("B1");
@@ -45,7 +45,7 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.Worksheets.Add("S10 Data");
+                var ws = wb.Worksheets.Add("S10 Data");
                 ws.Cell("A1").Value = "Some value";
                 ws.Cell("A2").Value = 123;
 

@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
             {
                 if (locationRange.ColumnCount() != sourceDataRange.ColumnCount())
                     throw new ArgumentException("locationRange and sourceDataRange must have the same width");
-                for (int i = 1; i <= locationRange.ColumnCount(); i++)
+                for (var i = 1; i <= locationRange.ColumnCount(); i++)
                 {
                     newSparklines.Add(Add(locationRange.Cell(1, i), sourceDataRange.Column(i).AsRange()));
                 }
@@ -120,7 +120,7 @@ namespace ClosedXML.Excel
                 if (locationRange.RowCount() != sourceDataRange.RowCount())
                     throw new ArgumentException("locationRange and sourceDataRange must have the same height");
 
-                for (int i = 1; i <= locationRange.RowCount(); i++)
+                for (var i = 1; i <= locationRange.RowCount(); i++)
                 {
                     newSparklines.Add(Add(locationRange.Cell(i, 1), sourceDataRange.Row(i).AsRange()));
                 }
@@ -212,7 +212,7 @@ namespace ClosedXML.Excel
 
         public IXLSparkline GetSparkline(IXLCell cell)
         {
-            return _sparklines.TryGetValue(cell, out IXLSparkline sparkline) ? sparkline : null;
+            return _sparklines.TryGetValue(cell, out var sparkline) ? sparkline : null;
         }
 
         public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)

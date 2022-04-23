@@ -91,7 +91,7 @@ namespace ClosedXML.Examples.Tables
         // Private
         private DataTable GetTable()
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.Columns.Add("Dosage", typeof(int));
             table.Columns.Add("Drug", typeof(string));
             table.Columns.Add("Patient", typeof(string));

@@ -11,8 +11,8 @@ namespace ClosedXML.Tests
         public void ToStringTest()
         {
             using var xLWorkbook = new XLWorkbook();
-            IXLWorksheet ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
+            var address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
             Assert.AreEqual("Sheet1!R1C1:R1C1", address.ToString(XLReferenceStyle.R1C1, true));
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests
         public void ToStringTestWithSpace()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
-            IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
+            var address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
             Assert.AreEqual("'Sheet 1'!R1C1:R1C1", address.ToString(XLReferenceStyle.R1C1, true));
@@ -64,7 +64,7 @@ namespace ClosedXML.Tests
         public void RangeAddressNormalizeTest(string inputAddress, string expectedAddress)
         {
             using var xLWorkbook = new XLWorkbook();
-            XLWorksheet ws = xLWorkbook.Worksheets.Add("Sheet 1") as XLWorksheet;
+            var ws = xLWorkbook.Worksheets.Add("Sheet 1") as XLWorksheet;
             var rangeAddress = new XLRangeAddress(ws, inputAddress);
 
             var normalizedAddress = rangeAddress.Normalize();

@@ -22,7 +22,7 @@ namespace ClosedXML.Tests.Excel.Globalization
 
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook book1 = new XLWorkbook())
+                using (var book1 = new XLWorkbook())
                 {
                     var sheet = book1.AddWorksheet("sheet1");
                     sheet.Cell("A1").Value = 123;
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests.Excel.Globalization
                 }
                 ms.Position = 0;
 
-                using (XLWorkbook book2 = new XLWorkbook(ms))
+                using (var book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
                     var cellA2 = (XLCell)ws.Cell("A2");

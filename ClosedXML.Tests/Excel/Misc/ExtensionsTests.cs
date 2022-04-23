@@ -20,14 +20,14 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void DoubleSaveRound()
         {
-            double value = 1234.1234567;
+            var value = 1234.1234567;
             Assert.AreEqual(value.SaveRound(), Math.Round(value, 6));
         }
 
         [Test]
         public void DoubleValueSaveRound()
         {
-            double value = 1234.1234567;
+            var value = 1234.1234567;
             Assert.AreEqual(new DoubleValue(value).SaveRound().Value, Math.Round(value, 6));
         }
 

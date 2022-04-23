@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
                 if (Value is bool)
                     return XLCustomPropertyType.Boolean;
                 
-                if (double.TryParse(Value.ToString(), out double dTest))
+                if (double.TryParse(Value.ToString(), out var dTest))
                     return XLCustomPropertyType.Number;
                 
                 return XLCustomPropertyType.Text;

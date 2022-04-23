@@ -138,7 +138,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
+            var _ci = Thread.CurrentThread.CurrentCulture;
             return (double)Convert.ChangeType(v, typeof(double), _ci);
         }
 
@@ -198,7 +198,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
+            var _ci = Thread.CurrentThread.CurrentCulture;
             return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
         }
 
@@ -429,10 +429,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override Expression Optimize()
         {
-            bool allLits = true;
+            var allLits = true;
             if (Parameters != null)
             {
-                for (int i = 0; i < Parameters.Count; i++)
+                for (var i = 0; i < Parameters.Count; i++)
                 {
                     var p = Parameters[i].Optimize();
                     Parameters[i] = p;

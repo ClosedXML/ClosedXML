@@ -54,7 +54,7 @@ namespace ClosedXML.Examples.Misc
         // Private
         private DataTable GetTable(string tableName)
         {
-            DataTable table = new DataTable();
+            var table = new DataTable();
             table.TableName = tableName;
             table.Columns.Add("Dosage", typeof(int));
             table.Columns.Add("Drug", typeof(string));

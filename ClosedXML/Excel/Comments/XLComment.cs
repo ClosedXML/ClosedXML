@@ -149,14 +149,14 @@ namespace ClosedXML.Excel
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();
-            int previousRowNumber = cell.Address.RowNumber;
+            var previousRowNumber = cell.Address.RowNumber;
             double previousRowOffset = 0;
 
             if (previousRowNumber > 1)
             {
                 previousRowNumber--;
 
-                if (cell.Worksheet.Internals.RowsCollection.TryGetValue(previousRowNumber, out XLRow previousRow))
+                if (cell.Worksheet.Internals.RowsCollection.TryGetValue(previousRowNumber, out var previousRow))
                     previousRowOffset = Math.Max(0, previousRow.Height - 7);
                 else
                     previousRowOffset = Math.Max(0, cell.Worksheet.RowHeight - 7);

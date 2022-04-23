@@ -51,12 +51,12 @@ namespace ClosedXML.Excel
             {
                 return "empty";
             }
-            int length = Math.Min(MaxWorksheetNameCharsCount, nameProposal.Length);
+            var length = Math.Min(MaxWorksheetNameCharsCount, nameProposal.Length);
             var shortenedName = nameProposal.Substring(0, length);
             var result = new System.Text.StringBuilder(shortenedName);
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                char ch = result[i];
+                var ch = result[i];
                 if (illegalWorksheetCharacters.Contains(result[i]))
                     result[i] = replaceChar;
 
@@ -93,13 +93,13 @@ namespace ClosedXML.Excel
                 throw new ArgumentException("sheetName must not be null or whitespace");
             }
 
-            int len = sheetName.Length;
+            var len = sheetName.Length;
             if (len < 1 || len > MaxWorksheetNameCharsCount)
             {
                 throw new ArgumentException($"sheetName '{sheetName}' is invalid - character count MUST be greater than or equal to 1 and less than or equal to {MaxWorksheetNameCharsCount}");
             }
 
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 if (illegalWorksheetCharacters.Contains(sheetName[i]))
                     throw new ArgumentException($"Invalid char ({sheetName[i]}) found at index ({i}) in sheet name '{sheetName}'");

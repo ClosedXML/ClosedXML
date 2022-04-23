@@ -219,16 +219,16 @@ namespace ClosedXML.Excel.CalcEngine
             var asciiValues = Encoding.ASCII.GetBytes(source.ToUpperInvariant());
 
             double result = 0;
-            int i = 0;
+            var i = 0;
 
-            foreach (byte digit in asciiValues)
+            foreach (var digit in asciiValues)
             {
                 if (digit > 90)
                 {
                     throw new NumberException();
                 }
 
-                int digitNumber = digit >= 48 && digit < 58
+                var digitNumber = digit >= 48 && digit < 58
                     ? digit - 48
                     : digit - 55;
 
@@ -395,11 +395,11 @@ namespace ClosedXML.Excel.CalcEngine
             var ce = new CalcEngine();
             var tally = new Tally();
 
-            int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
+            var numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
 
             // prepare criteria-parameters:
             var criteriaRanges = new Tuple<object, IList<object>>[numberOfCriteria];
-            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            for (var criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
                 var criteriaRange = p[criteriaPair * 2 + 1] as IEnumerable;
 
@@ -416,7 +416,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             for (var i = 0; i < sumRangeValues.Count; i++)
             {
-                bool shouldUseValue = true;
+                var shouldUseValue = true;
 
                 foreach (var criteriaPair in criteriaRanges)
                 {
@@ -446,7 +446,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             var counts = p.Cast<IEnumerable>().Select(param =>
             {
-                int i = 0;
+                var i = 0;
                 foreach (var item in param)
                     i++;
                 return i;
@@ -551,7 +551,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Acot(List<Expression> p)
         {
-            double x = Math.Atan(1.0 / p[0]);
+            var x = Math.Atan(1.0 / p[0]);
 
             // Acot in Excel calculates the modulus of the function above.
             // as the % operator is not the modulus, but the remainder, we have to calculate the modulus by hand:
@@ -572,7 +572,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Arabic(List<Expression> p)
         {
-            string input = ((string)p[0]).Trim();
+            var input = ((string)p[0]).Trim();
 
             try
             {
@@ -613,7 +613,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             long number;
             int radix;
-            int minLength = 0;
+            var minLength = 0;
 
             var rawNumber = p[0].Evaluate();
             if (rawNumber is long || rawNumber is int || rawNumber is byte || rawNumber is double || rawNumber is float)
@@ -670,16 +670,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object CombinA(List<Expression> p)
         {
-            int number = (int)p[0]; // casting truncates towards 0 as specified
-            int chosen = (int)p[1];
+            var number = (int)p[0]; // casting truncates towards 0 as specified
+            var chosen = (int)p[1];
 
             if (number < 0 || number < chosen)
                 throw new NumberException();
             if (chosen < 0)
                 throw new NumberException();
 
-            int n = number + chosen - 1;
-            int k = number - 1;
+            var n = number + chosen - 1;
+            var k = number - 1;
 
             return n == k || k == 0
                 ? 1
@@ -699,13 +699,13 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new CellValueException();
 
             var num = Math.Floor((double)input);
-            double fact = 1.0;
+            var fact = 1.0;
 
             if (num < 0)
                 throw new NumberException();
 
             if (num > 1)
-                for (int i = 2; i <= num; i++)
+                for (var i = 2; i <= num; i++)
                     fact *= i;
             return fact;
         }
@@ -718,7 +718,7 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new CellValueException();
 
             var num = Math.Floor(p[0]);
-            double fact = 1.0;
+            var fact = 1.0;
 
             if (num < -1)
                 throw new NumberException();
@@ -726,7 +726,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (num > 1)
             {
                 var start = Math.Abs(num % 2) < XLHelper.Epsilon ? 2 : 1;
-                for (int i = start; i <= num; i = i + 2)
+                for (var i = start; i <= num; i = i + 2)
                     fact *= i;
             }
             return fact;
@@ -783,18 +783,18 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var number in numbers)
                 numbersSum += number;
 
-            double maxNumber = numbers.Max();
+            var maxNumber = numbers.Max();
             var denomFactorPowers = new double[(uint)numbers.Max() + 1];
             foreach (var number in numbers)
-                for (int i = 2; i <= number; i++)
+                for (var i = 2; i <= number; i++)
                     denomFactorPowers[i]++;
-            for (int i = 2; i < denomFactorPowers.Length; i++)
+            for (var i = 2; i < denomFactorPowers.Length; i++)
                 denomFactorPowers[i]--; // reduce with nominator;
 
-            int currentFactor = 2;
+            var currentFactor = 2;
             double currentPower = 1;
             double result = 1;
-            for (double i = maxNumber + 1; i <= numbersSum; i++)
+            for (var i = maxNumber + 1; i <= numbersSum; i++)
             {
                 double tempDenom = 1;
                 while (tempDenom < result && currentFactor < denomFactorPowers.Length)
@@ -854,8 +854,8 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Roman(List<Expression> p)
         {
             if (p.Count == 1
-                || (bool.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
-                || (int.TryParse(p[1]._token.Value.ToString(), out int intTemp) && intTemp == 1))
+                || (bool.TryParse(p[1]._token.Value.ToString(), out var boolTemp) && boolTemp)
+                || (int.TryParse(p[1]._token.Value.ToString(), out var intTemp) && intTemp == 1))
                 return XLMath.ToRoman((int)p[0]);
 
             throw new ArgumentException("Can only support classic roman types.");
@@ -872,7 +872,7 @@ namespace ClosedXML.Excel.CalcEngine
             else
             {
                 digits = Math.Abs(digits);
-                double temp = value / Math.Pow(10, digits);
+                var temp = value / Math.Pow(10, digits);
                 temp = Math.Round(temp, 0, MidpointRounding.AwayFromZero);
                 return temp * Math.Pow(10, digits);
             }
@@ -902,7 +902,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Sec(List<Expression> p)
         {
-            if (double.TryParse(p[0], out double number))
+            if (double.TryParse(p[0], out var number))
                 return 1.0 / Math.Cos(number);
             else
                 throw new CellValueException();
@@ -924,7 +924,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return p[3] * Math.Pow(x, n);
 
             double total = 0;
-            int i = 0;
+            var i = 0;
             foreach (var e in obj)
             {
                 total += (double)e * Math.Pow(x, n + i * m);
@@ -1034,18 +1034,18 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MMult(List<Expression> p)
         {
-            double[,] A = GetArray(p[0]);
-            double[,] B = GetArray(p[1]);
+            var A = GetArray(p[0]);
+            var B = GetArray(p[1]);
 
             if (A.GetLength(0) != B.GetLength(0) || A.GetLength(1) != B.GetLength(1))
                 throw new ArgumentException("Ranges must have the same number of rows and columns.");
 
             var C = new double[A.GetLength(0), A.GetLength(1)];
-            for (int i = 0; i < A.GetLength(0); i++)
+            for (var i = 0; i < A.GetLength(0); i++)
             {
-                for (int j = 0; j < B.GetLength(1); j++)
+                for (var j = 0; j < B.GetLength(1); j++)
                 {
-                    for (int k = 0; k < A.GetLength(1); k++)
+                    for (var k = 0; k < A.GetLength(1); k++)
                     {
                         C[i, j] += A[i, k] * B[k, j];
                     }
@@ -1065,9 +1065,9 @@ namespace ClosedXML.Excel.CalcEngine
             var columnCount = range.ColumnCount();
             var arr = new double[rowCount, columnCount];
 
-            for (int row = 0; row < rowCount; row++)
+            for (var row = 0; row < rowCount; row++)
             {
-                for (int column = 0; column < columnCount; column++)
+                for (var column = 0; column < columnCount; column++)
                 {
                     arr[row, column] = range.Cell(row + 1, column + 1).GetDouble();
                 }

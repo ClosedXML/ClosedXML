@@ -21,7 +21,7 @@ namespace ClosedXML.Excel.InsertData
                 if (!_data.Any())
                     yield break;
 
-                List<object> itemsOfSameType = new List<object>();
+                var itemsOfSameType = new List<object>();
                 Type previousType = null;
 
                 foreach (var item in _data)

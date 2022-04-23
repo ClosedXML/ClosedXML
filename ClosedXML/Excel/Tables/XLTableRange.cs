@@ -24,9 +24,9 @@ namespace ClosedXML.Excel
             if (predicate == null)
                 return new XLTableRow(this, (_range.FirstRow()));
 
-            int rowCount = _range.RowCount();
+            var rowCount = _range.RowCount();
 
-            for (int ro = 1; ro <= rowCount; ro++)
+            for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = new XLTableRow(this, (_range.Row(ro)));
                 if (predicate(row)) return row;
@@ -63,9 +63,9 @@ namespace ClosedXML.Excel
             if (predicate == null)
                 return new XLTableRow(this, (_range.FirstRowUsed(options)));
 
-            int rowCount = _range.RowCount();
+            var rowCount = _range.RowCount();
 
-            for (int ro = 1; ro <= rowCount; ro++)
+            for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = new XLTableRow(this, (_range.Row(ro)));
 
@@ -86,9 +86,9 @@ namespace ClosedXML.Excel
             if (predicate == null)
                 return new XLTableRow(this, (_range.LastRow()));
 
-            int rowCount = _range.RowCount();
+            var rowCount = _range.RowCount();
 
-            for (int ro = rowCount; ro >= 1; ro--)
+            for (var ro = rowCount; ro >= 1; ro--)
             {
                 var row = new XLTableRow(this, (_range.Row(ro)));
                 if (predicate(row)) return row;
@@ -125,9 +125,9 @@ namespace ClosedXML.Excel
             if (predicate == null)
                 return new XLTableRow(this, (_range.LastRowUsed(options)));
 
-            int rowCount = _range.RowCount();
+            var rowCount = _range.RowCount();
 
-            for (int ro = rowCount; ro >= 1; ro--)
+            for (var ro = rowCount; ro >= 1; ro--)
             {
                 var row = new XLTableRow(this, (_range.Row(ro)));
 
@@ -158,9 +158,9 @@ namespace ClosedXML.Excel
         public IXLTableRows Rows(Func<IXLTableRow, bool> predicate = null)
         {
             var retVal = new XLTableRows(Worksheet.Style);
-            int rowCount = _range.RowCount();
+            var rowCount = _range.RowCount();
 
-            for (int r = 1; r <= rowCount; r++)
+            for (var r = 1; r <= rowCount; r++)
             {
                 var row = Row(r);
                 if (predicate == null || predicate(row))
@@ -173,7 +173,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLTableRows(Worksheet.Style);
 
-            for (int rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
+            for (var rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
                 retVal.Add(Row(rowNumber));
 
             return retVal;
@@ -183,7 +183,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLTableRows(Worksheet.Style);
             var rowPairs = rows.Split(',');
-            foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
+            foreach (var tPair in rowPairs.Select(pair => pair.Trim()))
             {
                 string firstRow;
                 string lastRow;
@@ -199,7 +199,7 @@ namespace ClosedXML.Excel
                     firstRow = tPair;
                     lastRow = tPair;
                 }
-                foreach (IXLTableRow row in Rows(int.Parse(firstRow), int.Parse(lastRow)))
+                foreach (var row in Rows(int.Parse(firstRow), int.Parse(lastRow)))
                     retVal.Add(row);
             }
             return retVal;
@@ -222,9 +222,9 @@ namespace ClosedXML.Excel
         internal XLTableRows RowsUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate = null)
         {
             var rows = new XLTableRows(Worksheet.Style);
-            int rowCount = RowCount();
+            var rowCount = RowCount();
 
-            for (int ro = 1; ro <= rowCount; ro++)
+            for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
 
@@ -260,7 +260,7 @@ namespace ClosedXML.Excel
         {
             if (XLHelper.IsValidColumn(column))
             {
-                int coNum = XLHelper.GetColumnNumberFromLetter(column);
+                var coNum = XLHelper.GetColumnNumberFromLetter(column);
                 return coNum > ColumnCount() ? Column(_table.GetFieldIndex(column) + 1) : Column(coNum);
             }
 

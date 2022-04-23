@@ -23,7 +23,7 @@ namespace ClosedXML.Sandbox
         {
             var rows = new List<OneRow>();
 
-            for (int i = 0; i < rowCount; i++)
+            for (var i = 0; i < rowCount; i++)
             {
                 var row = GenerateRow<OneRow>();
                 rows.Add(row);
@@ -60,7 +60,7 @@ namespace ClosedXML.Sandbox
 
         private static void EmulateSave(XLWorkbook workbook)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
                 workbook.SaveAs(memoryStream);
                 memoryStream.Seek(0, SeekOrigin.Begin);
@@ -86,7 +86,7 @@ namespace ClosedXML.Sandbox
             // Format strings
             var tmpString = new StringBuilder();
             var tmpStringLength = rnd.Next(5, 50);
-            for (int x = 0; x <= tmpStringLength; x++)
+            for (var x = 0; x <= tmpStringLength; x++)
             {
                 tmpString.Append((char)(rnd.Next(48, 120)));
             }
@@ -139,15 +139,15 @@ namespace ClosedXML.Sandbox
 
         public static void PerformHeavyCalculation()
         {
-            int rows = 200;
-            int columns = 200;
+            var rows = 200;
+            var columns = 200;
             using (var wb = new XLWorkbook())
             {
                 var sheet = wb.Worksheets.Add("TestSheet");
                 var lastColumnLetter = sheet.Column(columns).ColumnLetter();
-                for (int i = 1; i <= rows; i++)
+                for (var i = 1; i <= rows; i++)
                 {
-                    for (int j = 1; j <= columns; j++)
+                    for (var j = 1; j <= columns; j++)
                     {
                         if (i == 1)
                         {

@@ -452,7 +452,7 @@ namespace ClosedXML.Excel.CalcEngine
                     if (PeekToken().ID == TKID.OPEN)
                     {
                         // look for functions
-                        var foundFunction = _fnTbl.TryGetValue(id, out FunctionDefinition functionDefinition);
+                        var foundFunction = _fnTbl.TryGetValue(id, out var functionDefinition);
                         if (!foundFunction && id.StartsWith($"{defaultFunctionNameSpace}."))
                             foundFunction = _fnTbl.TryGetValue(id.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
 
@@ -562,13 +562,13 @@ namespace ClosedXML.Excel.CalcEngine
             var isLetter = char.IsLetter(c);
             var isDigit = char.IsDigit(c);
 
-            var isEnclosed = matchingClosingSymbols.TryGetValue(c, out char matchingClosingSymbol);
+            var isEnclosed = matchingClosingSymbols.TryGetValue(c, out var matchingClosingSymbol);
 
             if (!isLetter && !isDigit && !isEnclosed)
             {
                 // if this is a number starting with a decimal, don't parse as operator
                 var nxt = _ptr + 1 < _len ? _expr[_ptr + 1] : '0';
-                bool isNumber = c == _decimal && char.IsDigit(nxt);
+                var isNumber = c == _decimal && char.IsDigit(nxt);
                 if (!isNumber)
                 {
                     // look up localized list separator
@@ -579,7 +579,7 @@ namespace ClosedXML.Excel.CalcEngine
                     }
 
                     // look up single-char tokens on table
-                    if (_tkTbl.TryGetValue(c, out Token t))
+                    if (_tkTbl.TryGetValue(c, out var t))
                     {
                         // save token we found
                         var token = t;
@@ -674,7 +674,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     c = _expr[_ptr + i];
                     if (c != '\"') continue;
-                    char cNext = i + _ptr < _len - 1 ? _expr[_ptr + i + 1] : ' ';
+                    var cNext = i + _ptr < _len - 1 ? _expr[_ptr + i + 1] : ' ';
                     if (cNext != '\"') break;
                     i++;
                 }

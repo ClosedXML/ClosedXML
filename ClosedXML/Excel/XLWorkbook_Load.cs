@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
             {
                 foreach (var m in dSpreadsheet.CustomFilePropertiesPart.Properties.Elements<CustomDocumentProperty>())
                 {
-                    string name = m.Name?.Value;
+                    var name = m.Name?.Value;
 
                     if (string.IsNullOrWhiteSpace(name))
                         continue;
@@ -175,11 +175,11 @@ namespace ClosedXML.Excel
                 s = dSpreadsheet.WorkbookPart.WorkbookStylesPart.Stylesheet;
             }
 
-            NumberingFormats numberingFormats = s == null ? null : s.NumberingFormats;
-            Fills fills = s == null ? null : s.Fills;
-            Borders borders = s == null ? null : s.Borders;
-            Fonts fonts = s == null ? null : s.Fonts;
-            int dfCount = 0;
+            var numberingFormats = s == null ? null : s.NumberingFormats;
+            var fills = s == null ? null : s.Fills;
+            var borders = s == null ? null : s.Borders;
+            var fonts = s == null ? null : s.Fonts;
+            var dfCount = 0;
             Dictionary<int, DifferentialFormat> differentialFormats;
             if (s != null && s.DifferentialFormats != null)
                 differentialFormats = s.DifferentialFormats.Elements<DifferentialFormat>().ToDictionary(k => dfCount++);
@@ -187,7 +187,7 @@ namespace ClosedXML.Excel
                 differentialFormats = new Dictionary<int, DifferentialFormat>();
 
             var sheets = dSpreadsheet.WorkbookPart.Workbook.Sheets;
-            int position = 0;
+            var position = 0;
             foreach (var dSheet in sheets.OfType<Sheet>())
             {
                 position++;
@@ -219,7 +219,7 @@ namespace ClosedXML.Excel
 
                 using (var reader = OpenXmlReader.Create(worksheetPart))
                 {
-                    Type[] ignoredElements = new Type[]
+                    var ignoredElements = new Type[]
                     {
                         typeof(CustomSheetViews) // Custom sheet views contain its own auto filter data, and more, which should be ignored for now
                     };
@@ -253,7 +253,7 @@ namespace ClosedXML.Excel
                             var mergedCells = (MergeCells)reader.LoadCurrentElement();
                             if (mergedCells != null)
                             {
-                                foreach (MergeCell mergeCell in mergedCells.Elements<MergeCell>())
+                                foreach (var mergeCell in mergedCells.Elements<MergeCell>())
                                     ws.Range(mergeCell.Reference).Merge(false);
                             }
                         }
@@ -306,7 +306,7 @@ namespace ClosedXML.Excel
                     var relId = worksheetPart.GetIdOfPart(tableDefinitionPart);
                     var dTable = tableDefinitionPart.Table;
 
-                    string reference = dTable.Reference.Value;
+                    var reference = dTable.Reference.Value;
                     string tableName = dTable.Name ?? dTable.DisplayName ?? string.Empty;
                     if (string.IsNullOrWhiteSpace(tableName))
                         throw new InvalidDataException("The table name is missing.");
@@ -413,7 +413,7 @@ namespace ClosedXML.Excel
                         if (shapeIdString?.StartsWith("_x0000_s") ?? false)
                             shapeIdString = shapeIdString.Substring(8);
 
-                        int? shapeId = int.TryParse(shapeIdString, out int sid) ? (int?)sid : null;
+                        var shapeId = int.TryParse(shapeIdString, out var sid) ? (int?)sid : null;
                         var xlComment = cell.CreateComment(shapeId);
 
                         xlComment.Author = authors[(int)c.AuthorId.Value].InnerText;
@@ -423,7 +423,7 @@ namespace ClosedXML.Excel
                         foreach (var run in runs)
                         {
                             var runProperties = run.RunProperties;
-                            string text = run.Text.InnerText.FixNewLines();
+                            var text = run.Text.InnerText.FixNewLines();
                             var rt = xlComment.AddText(text);
                             LoadFont(runProperties, rt);
                         }
@@ -468,7 +468,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    UnsupportedSheet unsupportedSheet =
+                    var unsupportedSheet =
                         UnsupportedSheets.FirstOrDefault(us => us.Position == (int)(workbookView.ActiveTab.Value + 1));
                     if (unsupportedSheet != null)
                         unsupportedSheet.IsActive = true;
@@ -504,7 +504,7 @@ namespace ClosedXML.Excel
                         }
 
                         IXLRange source = null;
-                        XLPivotTableSourceType sourceType = XLPivotTableSourceType.Range;
+                        var sourceType = XLPivotTableSourceType.Range;
                         if (pivotTableCacheDefinitionPart?.PivotCacheDefinition?.CacheSource?.WorksheetSource != null)
                         {
                             // TODO: Implement other sources besides worksheetSource
@@ -918,7 +918,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     int fieldIndex;
-                    bool defaultSubtotal = false;
+                    var defaultSubtotal = false;
 
                     if (pivotArea.Field != null)
                         fieldIndex = (int)pivotArea.Field;
@@ -1134,7 +1134,7 @@ namespace ClosedXML.Excel
                         var picture = (ws as XLWorksheet).AddPicture(ms, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
                         picture.RelId = imgId;
 
-                        Xdr.ShapeProperties spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
+                        var spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
                         picture.Placement = XLPicturePlacement.FreeFloating;
 
                         if (spPr?.Transform2D?.Extents?.Cx.HasValue ?? false)
@@ -1254,8 +1254,8 @@ namespace ClosedXML.Excel
         {
             if (color.IndexOf("[") >= 0)
             {
-                int start = color.IndexOf("[") + 1;
-                int end = color.IndexOf("]", start);
+                var start = color.IndexOf("[") + 1;
+                var end = color.IndexOf("]", start);
                 return XLColor.FromIndex(int.Parse(color.Substring(start, end - start)));
             }
             else
@@ -1282,7 +1282,7 @@ namespace ClosedXML.Excel
                 var opacity = fill.Attribute("opacity");
                 if (opacity != null)
                 {
-                    string opacityVal = opacity.Value;
+                    var opacityVal = opacity.Value;
                     if (opacityVal.EndsWith("f"))
                         drawing.Style.ColorsAndLines.FillTransparency =
                             double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
@@ -1297,7 +1297,7 @@ namespace ClosedXML.Excel
                 var opacity = stroke.Attribute("opacity");
                 if (opacity != null)
                 {
-                    string opacityVal = opacity.Value;
+                    var opacityVal = opacity.Value;
                     if (opacityVal.EndsWith("f"))
                         drawing.Style.ColorsAndLines.LineTransparency =
                             double.Parse(opacityVal.Substring(0, opacityVal.Length - 1), CultureInfo.InvariantCulture) / 65536.0;
@@ -1308,7 +1308,7 @@ namespace ClosedXML.Excel
                 var dashStyle = stroke.Attribute("dashstyle");
                 if (dashStyle != null)
                 {
-                    string dashStyleVal = dashStyle.Value.ToLower();
+                    var dashStyleVal = dashStyle.Value.ToLower();
                     if (dashStyleVal == "1 1" || dashStyleVal == "shortdot")
                     {
                         var endCap = stroke.Attribute("endcap");
@@ -1333,7 +1333,7 @@ namespace ClosedXML.Excel
                 var lineStyle = stroke.Attribute("linestyle");
                 if (lineStyle != null)
                 {
-                    string lineStyleVal = lineStyle.Value.ToLower();
+                    var lineStyleVal = lineStyle.Value.ToLower();
                     switch (lineStyleVal)
                     {
                         case "single": drawing.Style.ColorsAndLines.LineStyle = XLLineStyle.Single; break;
@@ -1366,7 +1366,7 @@ namespace ClosedXML.Excel
 
         private double GetInsetValue(string value)
         {
-            string v = value.Trim();
+            var v = value.Trim();
             if (v.EndsWith("pt"))
                 return double.Parse(v.Substring(0, v.Length - 2), CultureInfo.InvariantCulture) / 72.0;
             else
@@ -1377,14 +1377,14 @@ namespace ClosedXML.Excel
         {
             var style = attStyle.Value;
             var attributes = style.Split(';');
-            foreach (string pair in attributes)
+            foreach (var pair in attributes)
             {
                 var split = pair.Split(':');
                 if (split.Length != 2) continue;
 
                 var attribute = split[0].Trim().ToLower();
                 var value = split[1].Trim();
-                bool isVertical = false;
+                var isVertical = false;
                 switch (attribute)
                 {
                     case "mso-fit-shape-to-text": xlDrawing.Style.Size.SetAutomaticSize(value.Equals("t")); break;
@@ -1437,8 +1437,8 @@ namespace ClosedXML.Excel
         {
             var lockedElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Locked");
             var lockTextElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "LockText");
-            bool locked = lockedElement != null && lockedElement.Value.ToLower() == "true";
-            bool lockText = lockTextElement != null && lockTextElement.Value.ToLower() == "true";
+            var locked = lockedElement != null && lockedElement.Value.ToLower() == "true";
+            var lockText = lockTextElement != null && lockTextElement.Value.ToLower() == "true";
             drawing.Style.Protection.Locked = locked;
             drawing.Style.Protection.LockText = lockText;
         }
@@ -1447,8 +1447,8 @@ namespace ClosedXML.Excel
         {
             var moveWithCellsElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "MoveWithCells");
             var sizeWithCellsElement = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "SizeWithCells");
-            bool moveWithCells = !(moveWithCellsElement != null && moveWithCellsElement.Value.ToLower() == "true");
-            bool sizeWithCells = !(sizeWithCellsElement != null && sizeWithCellsElement.Value.ToLower() == "true");
+            var moveWithCells = !(moveWithCellsElement != null && moveWithCellsElement.Value.ToLower() == "true");
+            var sizeWithCells = !(sizeWithCellsElement != null && sizeWithCellsElement.Value.ToLower() == "true");
             if (moveWithCells && !sizeWithCells)
                 drawing.Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
             else if (moveWithCells && sizeWithCells)
@@ -1548,7 +1548,7 @@ namespace ClosedXML.Excel
                 if (name == "_xlnm.Print_Area")
                 {
                     var fixedNames = validateDefinedNames(definedName.Text.Split(','));
-                    foreach (string area in fixedNames)
+                    foreach (var area in fixedNames)
                     {
                         if (area.Contains("["))
                         {
@@ -1560,7 +1560,7 @@ namespace ClosedXML.Excel
                         }
                         else
                         {
-                            ParseReference(area, out string sheetName, out string sheetArea);
+                            ParseReference(area, out var sheetName, out var sheetArea);
                             if (!(sheetArea.Equals("#REF") || sheetArea.EndsWith("#REF!") || sheetArea.Length == 0 || sheetName.Length == 0))
                                 WorksheetsInternal.Worksheet(sheetName).PageSetup.PrintAreas.Add(sheetArea);
                         }
@@ -1572,7 +1572,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    string text = definedName.Text;
+                    var text = definedName.Text;
 
                     var comment = definedName.Comment;
                     if (localSheetId == -1)
@@ -1594,14 +1594,14 @@ namespace ClosedXML.Excel
         private IEnumerable<string> validateDefinedNames(IEnumerable<string> definedNames)
         {
             var sb = new StringBuilder();
-            foreach (string testName in definedNames)
+            foreach (var testName in definedNames)
             {
                 if (sb.Length > 0)
                     sb.Append(',');
 
                 sb.Append(testName);
 
-                Match matchedValidPattern = definedNameRegex.Match(sb.ToString());
+                var matchedValidPattern = definedNameRegex.Match(sb.ToString());
                 if (matchedValidPattern.Success)
                 {
                     yield return sb.ToString();
@@ -1625,7 +1625,7 @@ namespace ClosedXML.Excel
 
         private void SetColumnsOrRowsToRepeat(string area)
         {
-            ParseReference(area, out string sheetName, out string sheetArea);
+            ParseReference(area, out var sheetName, out var sheetArea);
             sheetArea = sheetArea.Replace("$", "");
 
             if (sheetArea.Equals("#REF")) return;
@@ -1667,7 +1667,7 @@ namespace ClosedXML.Excel
                                Fills fills, Borders borders, Fonts fonts, Dictionary<uint, string> sharedFormulasR1C1,
                                XLWorksheet ws, Dictionary<int, IXLStyle> styleList, Cell cell, int rowIndex)
         {
-            int styleIndex = cell.StyleIndex != null ? int.Parse(cell.StyleIndex.InnerText) : 0;
+            var styleIndex = cell.StyleIndex != null ? int.Parse(cell.StyleIndex.InnerText) : 0;
 
             XLAddress cellAddress;
             if (cell.CellReference == null)
@@ -1682,7 +1682,7 @@ namespace ClosedXML.Excel
 
             var xlCell = ws.Cell(in cellAddress);
 
-            if (styleList.TryGetValue(styleIndex, out IXLStyle style))
+            if (styleList.TryGetValue(styleIndex, out var style))
             {
                 xlCell.InnerStyle = style;
             }
@@ -1803,7 +1803,7 @@ namespace ClosedXML.Excel
                     xlCell.SetDataTypeFast(XLDataType.Text);
 
                     if (cell.CellValue != null
-                        && int.TryParse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out int sharedStringId)
+                        && int.TryParse(cell.CellValue.Text, XLHelper.NumberStyle, XLHelper.ParseCulture, out var sharedStringId)
                         && sharedStringId >= 0 && sharedStringId < sharedStrings.Length)
                     {
                         xlCell.SharedStringId = sharedStringId;
@@ -1907,11 +1907,11 @@ namespace ClosedXML.Excel
             var runs = element.Elements<Run>();
             var phoneticRuns = element.Elements<PhoneticRun>();
             var phoneticProperties = element.Elements<PhoneticProperties>();
-            bool hasRuns = false;
-            foreach (Run run in runs)
+            var hasRuns = false;
+            foreach (var run in runs)
             {
                 var runProperties = run.RunProperties;
-                string text = run.Text.InnerText.FixNewLines();
+                var text = run.Text.InnerText.FixNewLines();
 
                 if (runProperties == null)
                     xlCell.GetRichText().AddText(text, xlCell.Style.Font);
@@ -1944,7 +1944,7 @@ namespace ClosedXML.Excel
 
             #region Load Phonetic Runs
 
-            foreach (PhoneticRun pr in phoneticRuns)
+            foreach (var pr in phoneticRuns)
             {
                 xlCell.GetRichText().Phonetics.Add(pr.Text.InnerText.FixNewLines(), (int)pr.BaseTextStartIndex.Value,
                                               (int)pr.EndingBaseIndex.Value);
@@ -2089,7 +2089,7 @@ namespace ClosedXML.Excel
                               Dictionary<uint, string> sharedFormulasR1C1, Dictionary<int, IXLStyle> styleList,
                               Row row)
         {
-            int rowIndex = row.RowIndex == null ? ++lastRow : (int)row.RowIndex.Value;
+            var rowIndex = row.RowIndex == null ? ++lastRow : (int)row.RowIndex.Value;
             var xlRow = ws.Row(rowIndex, false);
 
             if (row.Height != null)
@@ -2112,7 +2112,7 @@ namespace ClosedXML.Excel
 
             if (row.CustomFormat != null)
             {
-                int styleIndex = row.StyleIndex != null ? int.Parse(row.StyleIndex.InnerText) : -1;
+                var styleIndex = row.StyleIndex != null ? int.Parse(row.StyleIndex.InnerText) : -1;
                 if (styleIndex >= 0)
                 {
                     ApplyStyle(xlRow, styleIndex, s, fills, borders, fonts, numberingFormats);
@@ -2124,7 +2124,7 @@ namespace ClosedXML.Excel
             }
 
             lastColumnNumber = 0;
-            foreach (Cell cell in row.Elements<Cell>())
+            foreach (var cell in row.Elements<Cell>())
                 LoadCells(sharedStrings, s, numberingFormats, fills, borders, fonts, sharedFormulasR1C1, ws, styleList,
                           cell, rowIndex);
         }
@@ -2140,13 +2140,13 @@ namespace ClosedXML.Excel
             if (wsDefaultColumn != null && wsDefaultColumn.Width != null)
                 ws.ColumnWidth = wsDefaultColumn.Width - ColumnWidthOffset;
 
-            int styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null
+            var styleIndexDefault = wsDefaultColumn != null && wsDefaultColumn.Style != null
                                           ? int.Parse(wsDefaultColumn.Style.InnerText)
                                           : -1;
             if (styleIndexDefault >= 0)
                 ApplyStyle(ws, styleIndexDefault, s, fills, borders, fonts, numberingFormats);
 
-            foreach (Column col in columns.Elements<Column>())
+            foreach (var col in columns.Elements<Column>())
             {
                 //IXLStylized toApply;
                 if (col.Max == XLHelper.MaxColumnNumber) continue;
@@ -2154,7 +2154,7 @@ namespace ClosedXML.Excel
                 var xlColumns = (XLColumns)ws.Columns(col.Min, col.Max);
                 if (col.Width != null)
                 {
-                    double width = col.Width - ColumnWidthOffset;
+                    var width = col.Width - ColumnWidthOffset;
                     xlColumns.Width = width;
                 }
                 else
@@ -2172,7 +2172,7 @@ namespace ClosedXML.Excel
                     xlColumns.ForEach(c => c.OutlineLevel = outlineLevel);
                 }
 
-                int styleIndex = col.Style != null ? int.Parse(col.Style.InnerText) : -1;
+                var styleIndex = col.Style != null ? int.Parse(col.Style.InnerText) : -1;
                 if (styleIndex >= 0)
                 {
                     ApplyStyle(xlColumns, styleIndex, s, fills, borders, fonts, numberingFormats);
@@ -2208,11 +2208,11 @@ namespace ClosedXML.Excel
 
         private static XLDataType? GetDataTypeFromFormat(string format)
         {
-            int length = format.Length;
-            string f = format.ToLower();
-            for (int i = 0; i < length; i++)
+            var length = format.Length;
+            var f = format.ToLower();
+            for (var i = 0; i < length; i++)
             {
-                char c = f[i];
+                var c = f[i];
                 if (c == '"')
                     i = f.IndexOf('"', i + 1);
                 else if (c == '0' || c == '#' || c == '?')
@@ -2238,19 +2238,19 @@ namespace ClosedXML.Excel
         {
             foreach (var filterColumn in af.Elements<FilterColumn>())
             {
-                int column = (int)filterColumn.ColumnId.Value + 1;
+                var column = (int)filterColumn.ColumnId.Value + 1;
                 if (filterColumn.CustomFilters != null)
                 {
                     var filterList = new List<XLFilter>();
                     autoFilter.Column(column).FilterType = XLFilterType.Custom;
                     autoFilter.Filters.Add(column, filterList);
-                    XLConnector connector = filterColumn.CustomFilters.And != null && filterColumn.CustomFilters.And.Value ? XLConnector.And : XLConnector.Or;
+                    var connector = filterColumn.CustomFilters.And != null && filterColumn.CustomFilters.And.Value ? XLConnector.And : XLConnector.Or;
 
-                    bool isText = false;
+                    var isText = false;
                     foreach (var filter in filterColumn.CustomFilters.OfType<CustomFilter>())
                     {
-                        string val = filter.Val.Value;
-                        if (!double.TryParse(val, out double dTest))
+                        var val = filter.Val.Value;
+                        if (!double.TryParse(val, out var dTest))
                         {
                             isText = true;
                             break;
@@ -2336,11 +2336,11 @@ namespace ClosedXML.Excel
 
                     autoFilter.Filters.Add((int)filterColumn.ColumnId.Value + 1, filterList);
 
-                    bool isText = false;
+                    var isText = false;
                     foreach (var filter in filterColumn.Filters.OfType<Filter>())
                     {
-                        string val = filter.Val.Value;
-                        if (!double.TryParse(val, NumberStyles.Any, null, out double dTest))
+                        var val = filter.Val.Value;
+                        if (!double.TryParse(val, NumberStyles.Any, null, out var dTest))
                         {
                             isText = true;
                             break;
@@ -2369,7 +2369,7 @@ namespace ClosedXML.Excel
 
                     foreach (var dateGroupItem in filterColumn.Filters.OfType<DateGroupItem>())
                     {
-                        bool valid = true;
+                        var valid = true;
 
                         if (!(dateGroupItem.DateTimeGrouping?.HasValue ?? false))
                             continue;
@@ -2381,12 +2381,12 @@ namespace ClosedXML.Excel
                             DateTimeGrouping = dateGroupItem.DateTimeGrouping?.Value.ToClosedXml() ?? XLDateTimeGrouping.Year
                         };
 
-                        int year = 1900;
-                        int month = 1;
-                        int day = 1;
-                        int hour = 0;
-                        int minute = 0;
-                        int second = 0;
+                        var year = 1900;
+                        var month = 1;
+                        var day = 1;
+                        var hour = 0;
+                        var minute = 0;
+                        var second = 0;
 
                         if (xlDateGroupFilter.DateTimeGrouping >= XLDateTimeGrouping.Year)
                         {
@@ -2485,7 +2485,7 @@ namespace ClosedXML.Excel
                 var condition = sort.Elements<SortCondition>().FirstOrDefault();
                 if (condition != null)
                 {
-                    int column = ws.Range(condition.Reference.Value).FirstCell().Address.ColumnNumber - autoFilter.Range.FirstCell().Address.ColumnNumber + 1;
+                    var column = ws.Range(condition.Reference.Value).FirstCell().Address.ColumnNumber - autoFilter.Range.FirstCell().Address.ColumnNumber + 1;
                     autoFilter.SortColumn = column;
                     autoFilter.Sorted = true;
                     autoFilter.SortOrder = condition.Descending != null && condition.Descending.Value ? XLSortOrder.Descending : XLSortOrder.Ascending;
@@ -2535,9 +2535,9 @@ namespace ClosedXML.Excel
         {
             if (dataValidations == null) return;
 
-            foreach (DataValidation dvs in dataValidations.Elements<DataValidation>())
+            foreach (var dvs in dataValidations.Elements<DataValidation>())
             {
-                string txt = dvs.SequenceOfReferences.InnerText;
+                var txt = dvs.SequenceOfReferences.InnerText;
                 if (string.IsNullOrWhiteSpace(txt)) continue;
                 foreach (var rangeAddress in txt.Split(' '))
                 {
@@ -2796,10 +2796,10 @@ namespace ClosedXML.Excel
 
             if (hyperlinks == null) return;
 
-            foreach (Hyperlink hl in hyperlinks.Elements<Hyperlink>())
+            foreach (var hl in hyperlinks.Elements<Hyperlink>())
             {
                 if (hl.Reference.Value.Equals("#REF")) continue;
-                string tooltip = hl.Tooltip != null ? hl.Tooltip.Value : string.Empty;
+                var tooltip = hl.Tooltip != null ? hl.Tooltip.Value : string.Empty;
                 var xlRange = ws.Range(hl.Reference.Value);
                 foreach (XLCell xlCell in xlRange.Cells())
                 {
@@ -2821,7 +2821,7 @@ namespace ClosedXML.Excel
         {
             if (columnBreaks == null) return;
 
-            foreach (Break columnBreak in columnBreaks.Elements<Break>().Where(columnBreak => columnBreak.Id != null))
+            foreach (var columnBreak in columnBreaks.Elements<Break>().Where(columnBreak => columnBreak.Id != null))
             {
                 ws.PageSetup.ColumnBreaks.Add(int.Parse(columnBreak.Id.InnerText));
             }
@@ -2831,7 +2831,7 @@ namespace ClosedXML.Excel
         {
             if (rowBreaks == null) return;
 
-            foreach (Break rowBreak in rowBreaks.Elements<Break>())
+            foreach (var rowBreak in rowBreaks.Elements<Break>())
                 ws.PageSetup.RowBreaks.Add(int.Parse(rowBreak.Id.InnerText));
         }
 
@@ -3113,7 +3113,7 @@ namespace ClosedXML.Excel
 
             if (UInt32HasValue(cellFormat.BorderId))
             {
-                uint borderId = cellFormat.BorderId.Value;
+                var borderId = cellFormat.BorderId.Value;
                 var border = (Border)borders.ElementAt((int)borderId);
                 var xlBorder = xlStyle.Border;
                 if (border != null)
@@ -3223,7 +3223,7 @@ namespace ClosedXML.Excel
             {
                 var numberFormatId = cellFormat.NumberFormatId;
 
-                string formatCode = string.Empty;
+                var formatCode = string.Empty;
                 if (numberingFormats != null)
                 {
                     var numberingFormat =

@@ -24,9 +24,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var roCount = arr.GetLength(0);
             var coCount = arr.GetLength(1);
-            for (int ro = 0; ro < roCount; ro++)
+            for (var ro = 0; ro < roCount; ro++)
             {
-                for (int co = 0; co < coCount; co++)
+                for (var co = 0; co < coCount; co++)
                 {
                     mat[ro, co] = arr[ro, co];
                 }

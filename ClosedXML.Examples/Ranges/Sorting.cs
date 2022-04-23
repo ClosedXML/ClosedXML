@@ -16,8 +16,8 @@ namespace ClosedXML.Examples.Misc
                 AddTestTable(wsTable);
 
                 wsTable.Row(1).InsertRowsAbove(1);
-                int lastCo = wsTable.LastColumnUsed().ColumnNumber();
-                for (int co = 1; co <= lastCo; co++)
+                var lastCo = wsTable.LastColumnUsed().ColumnNumber();
+                for (var co = 1; co <= lastCo; co++)
                     wsTable.Cell(1, co).Value = "Column" + co.ToString();
 
                 var table = wsTable.RangeUsed().AsTable();
@@ -29,7 +29,7 @@ namespace ClosedXML.Examples.Misc
 
                 wsTable.Row(1).InsertRowsAbove(1);
                 lastCo = wsTable.LastColumnUsed().ColumnNumber();
-                for (int co = 1; co <= lastCo; co++)
+                for (var co = 1; co <= lastCo; co++)
                     wsTable.Cell(1, co).Value = "Column" + co.ToString();
 
                 table = wsTable.RangeUsed().AsTable();

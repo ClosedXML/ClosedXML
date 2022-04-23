@@ -13,8 +13,8 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_1()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Data Validation Issue");
-            IXLCell cell = ws.Cell("E1");
+            var ws = wb.Worksheets.Add("Data Validation Issue");
+            var cell = ws.Cell("E1");
             cell.SetValue("Value 1");
             cell = cell.CellBelow();
             cell.SetValue("Value 2");
@@ -61,11 +61,11 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_2()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("Sheet1!A1");
 
-            IXLWorksheet ws2 = wb.AddWorksheet("Sheet2");
+            var ws2 = wb.AddWorksheet("Sheet2");
             ws2.Cell("A1").SetValue("B");
             ws.Cell("B1").CopyTo(ws2.Cell("B1"));
 
@@ -76,7 +76,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_3()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.FirstRow().InsertRowsAbove(1);
@@ -88,7 +88,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_4()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("B2"));
@@ -99,7 +99,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_5()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.FirstColumn().InsertColumnsBefore(1);
@@ -111,7 +111,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_6()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("C1"));
@@ -122,15 +122,15 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_persists_on_Cell_DataValidation()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("People");
+            var ws = wb.Worksheets.Add("People");
 
             ws.FirstCell().SetValue("Categories")
                 .CellBelow().SetValue("A")
                 .CellBelow().SetValue("B");
 
-            IXLTable table = ws.RangeUsed().CreateTable();
+            var table = ws.RangeUsed().CreateTable();
 
-            IXLDataValidation dv = table.DataRange.CreateDataValidation();
+            var dv = table.DataRange.CreateDataValidation();
             dv.ErrorTitle = "Error";
 
             Assert.AreEqual("Error", table.DataRange.FirstCell().GetDataValidation().ErrorTitle);
@@ -140,14 +140,14 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_persists_on_Worksheet_DataValidations()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("People");
+            var ws = wb.Worksheets.Add("People");
 
             ws.FirstCell().SetValue("Categories")
                 .CellBelow().SetValue("A");
 
-            IXLTable table = ws.RangeUsed().CreateTable();
+            var table = ws.RangeUsed().CreateTable();
 
-            IXLDataValidation dv = table.DataRange.CreateDataValidation();
+            var dv = table.DataRange.CreateDataValidation();
             dv.ErrorTitle = "Error";
 
             Assert.AreEqual("Error", ws.DataValidations.Single().ErrorTitle);

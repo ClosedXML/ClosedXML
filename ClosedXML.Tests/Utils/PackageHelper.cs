@@ -18,8 +18,8 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(uri);
             }
-            PackagePart part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
-            using (Stream stream = part.GetStream())
+            var part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
+            using (var stream = part.GetStream())
             {
                 serializer.Serialize(stream, content);
             }
@@ -31,8 +31,8 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
+            var part = package.GetPart(uri);
+            using (var stream = part.GetStream())
             {
                 return serializer.Deserialize(stream);
             }
@@ -44,8 +44,8 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(uri);
             }
-            PackagePart part = package.CreatePart(uri, MediaTypeNames.Application.Octet, CompressionOption.Fast);
-            using (Stream stream = part.GetStream())
+            var part = package.CreatePart(uri, MediaTypeNames.Application.Octet, CompressionOption.Fast);
+            using (var stream = part.GetStream())
             {
                 StreamHelper.StreamToStreamAppend(content, stream);
             }
@@ -63,7 +63,7 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException("Package part doesn't exists!");
             }
-            PackagePart part = package.GetPart(uri);
+            var part = package.GetPart(uri);
             return part.GetStream();
         }
 
@@ -100,12 +100,12 @@ namespace ClosedXML.Tests
                 dest.DeletePart(uri);
             }
 
-            PackagePart sourcePart = source.GetPart(uri);
-            PackagePart destPart = dest.CreatePart(uri, sourcePart.ContentType, sourcePart.CompressionOption);
+            var sourcePart = source.GetPart(uri);
+            var destPart = dest.CreatePart(uri, sourcePart.ContentType, sourcePart.CompressionOption);
 
-            using (Stream sourceStream = sourcePart.GetStream())
+            using (var sourceStream = sourcePart.GetStream())
             {
-                using (Stream destStream = destPart.GetStream())
+                using (var destStream = destPart.GetStream())
                 {
                     StreamHelper.StreamToStreamAppend(sourceStream, destStream);
                 }
@@ -136,8 +136,8 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(descriptor.Uri);
             }
-            PackagePart part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (Stream stream = part.GetStream())
+            var part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
+            using (var stream = part.GetStream())
             {
                 serializeAction(stream, content);
             }
@@ -166,8 +166,8 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(descriptor.Uri);
             }
-            PackagePart part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (Stream stream = part.GetStream())
+            var part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
+            using (var stream = part.GetStream())
             {
                 serializeAction(stream);
             }
@@ -196,8 +196,8 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
+            var part = package.GetPart(uri);
+            using (var stream = part.GetStream())
             {
                 return deserializeFunc(stream);
             }
@@ -226,8 +226,8 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
+            var part = package.GetPart(uri);
+            using (var stream = part.GetStream())
             {
                 deserializeAction(stream);
             }
@@ -256,8 +256,8 @@ namespace ClosedXML.Tests
             {
                 return false;
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
+            var part = package.GetPart(uri);
+            using (var stream = part.GetStream())
             {
                 deserializeAction(stream);
             }
@@ -304,11 +304,11 @@ namespace ClosedXML.Tests
             #endregion Check
 
             excludeMethod = excludeMethod ?? (uri => false);
-            PackagePartCollection leftParts = left.GetParts();
-            PackagePartCollection rightParts = right.GetParts();
+            var leftParts = left.GetParts();
+            var rightParts = right.GetParts();
 
             var pairs = new Dictionary<Uri, PartPair>();
-            foreach (PackagePart part in leftParts)
+            foreach (var part in leftParts)
             {
                 if (excludeMethod(part.Uri))
                 {
@@ -316,13 +316,13 @@ namespace ClosedXML.Tests
                 }
                 pairs.Add(part.Uri, new PartPair(part.Uri, CompareStatus.OnlyOnLeft));
             }
-            foreach (PackagePart part in rightParts)
+            foreach (var part in rightParts)
             {
                 if (excludeMethod(part.Uri))
                 {
                     continue;
                 }
-                if (pairs.TryGetValue(part.Uri, out PartPair pair))
+                if (pairs.TryGetValue(part.Uri, out var pair))
                 {
                     pair.Status = CompareStatus.Equal;
                 }
@@ -337,7 +337,7 @@ namespace ClosedXML.Tests
                 return AgregateCompareResult(out message, pairs);
             }
 
-            foreach (PartPair pair in pairs.Values)
+            foreach (var pair in pairs.Values)
             {
                 if (pair.Status != CompareStatus.Equal)
                 {
@@ -345,8 +345,8 @@ namespace ClosedXML.Tests
                 }
                 var leftPart = left.GetPart(pair.Uri);
                 var rightPart = right.GetPart(pair.Uri);
-                using (Stream leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (Stream rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
+                using (var leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
+                using (var rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
                 using (var leftMemoryStream = new MemoryStream())
                 using (var rightMemoryStream = new MemoryStream())
                 {
@@ -356,7 +356,7 @@ namespace ClosedXML.Tests
                     leftMemoryStream.Seek(0, SeekOrigin.Begin);
                     rightMemoryStream.Seek(0, SeekOrigin.Begin);
 
-                    bool stripColumnWidthsFromSheet = ignoreColumnFormat &&
+                    var stripColumnWidthsFromSheet = ignoreColumnFormat &&
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
                         rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
 
@@ -374,10 +374,10 @@ namespace ClosedXML.Tests
                 }
             }
 
-            List<PartPair> sortedPairs = pairs.Values.ToList();
+            var sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();
-            foreach (PartPair pair in sortedPairs)
+            foreach (var pair in sortedPairs)
             {
                 if (pair.Status == CompareStatus.Equal)
                 {
@@ -392,10 +392,10 @@ namespace ClosedXML.Tests
 
         private static bool AgregateCompareResult(out string message, Dictionary<Uri, PartPair> pairs)
         {
-            List<PartPair> sortedPairs = pairs.Values.ToList();
+            var sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();
-            foreach (PartPair pair in sortedPairs)
+            foreach (var pair in sortedPairs)
             {
                 if (pair.Status == CompareStatus.Equal)
                 {

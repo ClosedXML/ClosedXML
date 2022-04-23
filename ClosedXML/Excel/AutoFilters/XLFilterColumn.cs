@@ -47,7 +47,7 @@ namespace ClosedXML.Excel
 
             _autoFilter.IsEnabled = true;
 
-            if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
+            if (_autoFilter.Filters.TryGetValue(_column, out var filterList))
                 filterList.Add(
                     new XLFilter
                     {
@@ -83,7 +83,7 @@ namespace ClosedXML.Excel
 
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
                     row.WorksheetRow().Unhide();
@@ -238,14 +238,14 @@ namespace ClosedXML.Excel
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
-            bool addToList = true;
+            var addToList = true;
             var ws = _autoFilter.Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
-                bool foundOne = false;
-                foreach (double val in values)
+                var foundOne = false;
+                foreach (var val in values)
                 {
                     Func<object, bool> condition = v => (v as IComparable).CompareTo(val) == 0;
                     if (addToList)
@@ -285,7 +285,7 @@ namespace ClosedXML.Excel
                 }
 
                 var numerics1 = cellsUsed.Select(c => c.GetDouble());
-                int valsToTake1 = numerics1.Count() * value / 100;
+                var valsToTake1 = numerics1.Count() * value / 100;
                 return numerics1.OrderByDescending(d => d).Take(valsToTake1).Distinct();
             }
 
@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
             }
 
             var numerics = cellsUsed.Select(c => c.GetDouble());
-            int valsToTake = numerics.Count() * value / 100;
+            var valsToTake = numerics.Count() * value / 100;
             return numerics.OrderBy(d => d).Take(valsToTake).Distinct();
         }
 
@@ -311,15 +311,15 @@ namespace ClosedXML.Excel
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
-            bool addToList = true;
+            var addToList = true;
             var ws = _autoFilter.Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
-                bool foundOne = false;
-                foreach (double val in values)
+                var foundOne = false;
+                foreach (var val in values)
                 {
                     Func<object, bool> condition = v => (v as IComparable).CompareTo(val) == 0;
                     if (addToList)
@@ -352,7 +352,7 @@ namespace ClosedXML.Excel
         {
             var column = _autoFilter.Range.Column(_column);
             var subColumn = column.Column(2, column.CellCount());
-            double average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
+            var average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
                 .Average();
 
             if (aboveAverage)
@@ -389,7 +389,7 @@ namespace ClosedXML.Excel
             }
             else
             {
-                if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
+                if (_autoFilter.Filters.TryGetValue(_column, out var filterList))
                     filterList.Add(new XLFilter
                     {
                         Value = value,

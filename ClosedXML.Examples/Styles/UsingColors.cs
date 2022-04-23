@@ -11,7 +11,7 @@ namespace ClosedXML.Examples.Styles
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Using Colors");
 
-            int ro = 0;
+            var ro = 0;
 
             // From Known color
             ws.Cell(++ro, 1).Style.Fill.BackgroundColor = XLColor.Red;

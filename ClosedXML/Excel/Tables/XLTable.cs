@@ -63,11 +63,11 @@ namespace ClosedXML.Excel
                 var oldFieldNames = _fieldNames ?? new Dictionary<string, IXLTableField>();
                 _fieldNames = new Dictionary<string, IXLTableField>();
                 var headersRow = HeadersRow(false);
-                int cellPos = 0;
+                var cellPos = 0;
                 foreach (var cell in headersRow.Cells())
                 {
                     var name = cell.GetString();
-                    if (oldFieldNames.TryGetValue(name, out IXLTableField tableField))// && tableField.Column.ColumnNumber() == cell.Address.ColumnNumber)
+                    if (oldFieldNames.TryGetValue(name, out var tableField))// && tableField.Column.ColumnNumber() == cell.Address.ColumnNumber)
                     {
                         (tableField as XLTableField).Index = cellPos;
                         _fieldNames.Add(name, tableField);
@@ -90,8 +90,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                int colCount = ColumnCount();
-                for (int i = 1; i <= colCount; i++)
+                var colCount = ColumnCount();
+                for (var i = 1; i <= colCount; i++)
                 {
                     if (_fieldNames.Values.All(f => f.Index != i - 1))
                     {
@@ -107,7 +107,7 @@ namespace ClosedXML.Excel
         {
             _fieldNames = new Dictionary<string, IXLTableField>();
 
-            int cellPos = 0;
+            var cellPos = 0;
             foreach (var name in fieldNames)
             {
                 _fieldNames.Add(name, new XLTableField(this, name) { Index = cellPos++ });
@@ -116,7 +116,7 @@ namespace ClosedXML.Excel
 
         internal void RenameField(string oldName, string newName)
         {
-            if (!_fieldNames.TryGetValue(oldName, out IXLTableField field))
+            if (!_fieldNames.TryGetValue(oldName, out var field))
                 throw new ArgumentException("The field does not exist in this table", "oldName");
 
             _fieldNames.Remove(oldName);
@@ -200,7 +200,7 @@ namespace ClosedXML.Excel
                 // Validation rules for table names
                 var oldname = _name ?? string.Empty;
 
-                if (!XLHelper.ValidateName("table", value, oldname, Worksheet.Tables.Select(t => t.Name), out string message))
+                if (!XLHelper.ValidateName("table", value, oldname, Worksheet.Tables.Select(t => t.Name), out var message))
                     throw new ArgumentException(message, nameof(value));
 
                 _name = value;
@@ -280,8 +280,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                int columnCount = ColumnCount();
-                for (int co = 0; co < columnCount; co++)
+                var columnCount = ColumnCount();
+                for (var co = 0; co < columnCount; co++)
                     yield return Field(co);
             }
         }
@@ -485,7 +485,7 @@ namespace ClosedXML.Excel
                                  bool matchCase = false, bool ignoreBlanks = true)
         {
             var toSortBy = new StringBuilder();
-            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
+            foreach (var coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
             {
                 string coString;
                 string order;
@@ -501,7 +501,7 @@ namespace ClosedXML.Excel
                     order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
                 }
 
-                if (!int.TryParse(coString, out int co))
+                if (!int.TryParse(coString, out var co))
                     co = Field(coString).Index + 1;
 
                 if (toSortBy.Length > 0)
@@ -549,8 +549,8 @@ namespace ClosedXML.Excel
         internal void OnAddedToTables()
         {
             _uniqueNames = new HashSet<string>();
-            int co = 1;
-            foreach (IXLCell c in Row(1).Cells())
+            var co = 1;
+            foreach (var c in Row(1).Cells())
             {
                 // Be careful here. Fields names may actually be whitespace, but not empty
                 if (string.IsNullOrEmpty(((XLCell)c).InnerText))
@@ -562,10 +562,10 @@ namespace ClosedXML.Excel
 
         private string GetUniqueName(string originalName, int initialOffset, bool enforceOffset)
         {
-            string name = string.Concat(originalName, enforceOffset ? initialOffset.ToInvariantString() : string.Empty);
+            var name = string.Concat(originalName, enforceOffset ? initialOffset.ToInvariantString() : string.Empty);
             if (_uniqueNames?.Contains(name) ?? false)
             {
-                int i = initialOffset;
+                var i = initialOffset;
                 name = originalName + i.ToInvariantString();
                 while (_uniqueNames.Contains(name))
                 {
@@ -583,7 +583,7 @@ namespace ClosedXML.Excel
             // The entry in the table definition will contain \r\n
             // but the shared string value of the actual cell will contain only \n
             name = name.Replace("\r\n", "\n");
-            if (FieldNames.TryGetValue(name, out IXLTableField tableField))
+            if (FieldNames.TryGetValue(name, out var tableField))
                 return tableField.Index;
 
             throw new ArgumentOutOfRangeException("The header row doesn't contain field name '" + name + "'.");
@@ -602,8 +602,8 @@ namespace ClosedXML.Excel
                 {
                     var headersRow = HeadersRow();
                     _uniqueNames = new HashSet<string>();
-                    int co = 1;
-                    foreach (IXLCell c in headersRow.Cells())
+                    var co = 1;
+                    foreach (var c in headersRow.Cells())
                     {
                         if (string.IsNullOrWhiteSpace(((XLCell)c).InnerText))
                             c.Value = GetUniqueName("Column", co, true);
@@ -651,7 +651,7 @@ namespace ClosedXML.Excel
                             RangeAddress.LastAddress);
                     }
 
-                    int co = 1;
+                    var co = 1;
                     foreach (var name in FieldNames.Values.Select(f => f.Name))
                     {
                         rangeRow.Cell(co).SetValue(name);
@@ -779,7 +779,7 @@ namespace ClosedXML.Excel
 
             foreach (var f in Fields.Cast<XLTableField>())
             {
-                Type type = typeof(object);
+                var type = typeof(object);
                 if (f.IsConsistentDataType())
                 {
                     var c = f.Column.Cells().Skip(ShowHeaderRow ? 1 : 0).First();
@@ -841,7 +841,7 @@ namespace ClosedXML.Excel
             else
                 HeadersRow().CopyTo(targetRange.FirstRow());
 
-            string tableName = Name;
+            var tableName = Name;
             var newTable = (XLTable)targetSheet.Table(targetRange, tableName, true);
 
             newTable.RelId = null;
@@ -853,8 +853,8 @@ namespace ClosedXML.Excel
             newTable.Theme = Theme;
             newTable._showTotalsRow = ShowTotalsRow;
 
-            int fieldCount = ColumnCount();
-            for (int f = 0; f < fieldCount; f++)
+            var fieldCount = ColumnCount();
+            for (var f = 0; f < fieldCount; f++)
             {
                 var tableField = newTable.Field(f) as XLTableField;
                 var tField = Field(f) as XLTableField;

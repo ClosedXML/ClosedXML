@@ -10,10 +10,10 @@ namespace ClosedXML.Excel
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 
             var colorScale = new ColorScale();
-            for (int i = 1; i <= cf.ContentTypes.Count; i++)
+            for (var i = 1; i <= cf.ContentTypes.Count; i++)
             {
                 var type = cf.ContentTypes[i].ToOpenXml();
-                var val = cf.Values.TryGetValue(i, out XLFormula formula) ? formula?.Value : null;
+                var val = cf.Values.TryGetValue(i, out var formula) ? formula?.Value : null;
 
                 var conditionalFormatValueObject = new ConditionalFormatValueObject { Type = type };
                 if (val != null)
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
                 colorScale.Append(conditionalFormatValueObject);
             }
 
-            for (int i = 1; i <= cf.Colors.Count; i++)
+            for (var i = 1; i <= cf.Colors.Count; i++)
             {
                 var xlColor = cf.Colors[i];
                 var color = new Color();

@@ -97,9 +97,9 @@ namespace ClosedXML.Excel.Patterns
         /// <returns>True, if range was successfully added, false if it has been added before.</returns>
         public bool Add(IXLAddressable range)
         {
-            bool res = false;
+            var res = false;
             var children = Children ?? CreateChildren().ToList();
-            bool addToChild = false;
+            var addToChild = false;
             foreach (var childQuadrant in children)
             {
                 var rangeAddress = range.RangeAddress;
@@ -204,9 +204,9 @@ namespace ClosedXML.Excel.Patterns
         /// <returns>True if the range was removed, false if it does not exist in the QuadTree.</returns>
         public bool Remove(IXLRangeAddress rangeAddress)
         {
-            bool res = false;
+            var res = false;
 
-            bool coveredByChild = false;
+            var coveredByChild = false;
             if (Children != null)
             {
                 foreach (var childQuadrant in Children)
@@ -333,11 +333,11 @@ namespace ClosedXML.Excel.Patterns
         /// </summary>
         private IEnumerable<Quadrant> CreateChildren()
         {
-            byte childLevel = (byte)(Level + 1);
+            var childLevel = (byte)(Level + 1);
             if (childLevel > MAX_LEVEL)
                 yield break;
             byte xCount = 2; // Always divide on halves
-            byte yCount = (byte)((Level == 0) ? (XLHelper.MaxRowNumber / XLHelper.MaxColumnNumber) : 2); // Level 0 divide onto 64 parts, the rest - on halves
+            var yCount = (byte)((Level == 0) ? (XLHelper.MaxRowNumber / XLHelper.MaxColumnNumber) : 2); // Level 0 divide onto 64 parts, the rest - on halves
 
             for (byte dy = 0; dy < yCount; dy++)
             {

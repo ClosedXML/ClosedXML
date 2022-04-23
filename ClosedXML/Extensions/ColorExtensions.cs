@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
 
         public static string ToHex(this SKColor color)
         {
-            byte[] bytes = new byte[4];
+            var bytes = new byte[4];
 
             bytes[0] = color.Alpha;
 
@@ -21,9 +21,9 @@ namespace ClosedXML.Excel
 
             bytes[3] = color.Blue;
 
-            char[] chars = new char[bytes.Length * 2];
+            var chars = new char[bytes.Length * 2];
 
-            for (int i = 0; i < bytes.Length; i++)
+            for (var i = 0; i < bytes.Length; i++)
             {
                 int b = bytes[i];
 
@@ -37,7 +37,7 @@ namespace ClosedXML.Excel
 
         internal static Color ConvertToOpenXmlColor(this SKColor sKColor)
         {
-            Color color = new Color();
+            var color = new Color();
             color.Rgb = new DocumentFormat.OpenXml.HexBinaryValue(sKColor.ToHex());
             return color;
         }

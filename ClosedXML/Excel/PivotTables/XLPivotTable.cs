@@ -91,7 +91,7 @@ namespace ClosedXML.Excel
 
             var pivotTableName = Name;
 
-            int i = 0;
+            var i = 0;
             var pivotTableNames = targetSheet.PivotTables.Select(pvt => pvt.Name).ToList();
             while (!XLHelper.ValidateName("pivot table", pivotTableName, "", pivotTableNames, out var _))
             {
@@ -209,7 +209,7 @@ namespace ClosedXML.Excel
 
                 var oldname = _name ?? string.Empty;
 
-                if (!XLHelper.ValidateName("pivot table", value, oldname, Worksheet.PivotTables.Select(pvt => pvt.Name), out string message))
+                if (!XLHelper.ValidateName("pivot table", value, oldname, Worksheet.PivotTables.Select(pvt => pvt.Name), out var message))
                     throw new ArgumentException(message, nameof(value));
 
                 _name = value;

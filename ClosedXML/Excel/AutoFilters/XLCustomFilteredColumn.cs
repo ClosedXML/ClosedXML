@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
                 Condition = condition
             });
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 if (_connector == XLConnector.And)
                 {

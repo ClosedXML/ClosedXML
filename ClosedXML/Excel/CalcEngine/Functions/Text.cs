@@ -165,11 +165,11 @@ namespace ClosedXML.Excel.CalcEngine
             var s = (string)p[0];
             if (s.Length == 0) return "";
 
-            MatchEvaluator evaluator = new MatchEvaluator(MatchHandler);
-            StringBuilder sb = new StringBuilder();
+            var evaluator = new MatchEvaluator(MatchHandler);
+            var sb = new StringBuilder();
 
-            string pattern = "\\b(\\w)(\\w+)?\\b";
-            Regex regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.IgnoreCase);
+            var pattern = "\\b(\\w)(\\w+)?\\b";
+            var regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.IgnoreCase);
             return regex.Replace(s.ToLower(), evaluator);
         }
 
@@ -197,7 +197,7 @@ namespace ClosedXML.Excel.CalcEngine
             var s = (string)p[0];
             var repeats = (int)p[1];
             if (repeats < 0) throw new IndexOutOfRangeException("repeats");
-            for (int i = 0; i < repeats; i++)
+            for (var i = 0; i < repeats; i++)
             {
                 sb.Append(s);
             }
@@ -239,7 +239,7 @@ namespace ClosedXML.Excel.CalcEngine
                 start = (int)p[2] - 1;
             }
 
-            Regex r = new Regex(search, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var r = new Regex(search, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var match = r.Match(text.Substring(start));
             if (!match.Success)
                 throw new ArgumentException("Search failed.");
@@ -269,12 +269,12 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // replace specific instance
-            int index = (int)p[3];
+            var index = (int)p[3];
             if (index < 1)
             {
                 throw new ArgumentException("Invalid index in Substitute.");
             }
-            int pos = text.IndexOf(oldText);
+            var pos = text.IndexOf(oldText);
             while (pos > -1 && index > 1)
             {
                 pos = text.IndexOf(oldText, pos + 1);
@@ -447,7 +447,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Dollar(List<Expression> p)
         {
             double value = p[0];
-            int dec = p.Count == 2 ? (int)p[1] : 2;
+            var dec = p.Count == 2 ? (int)p[1] : 2;
 
             return value.ToString("C" + dec);
         }
@@ -466,8 +466,8 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new ApplicationException("Input type can't be string");
 
             double value = p[0];
-            int decimal_places = p.Count >= 2 ? (int)p[1] : 2;
-            bool no_commas = p.Count == 3 && p[2];
+            var decimal_places = p.Count >= 2 ? (int)p[1] : 2;
+            var no_commas = p.Count == 3 && p[2];
 
             var retVal = value.ToString("N" + decimal_places);
             if (no_commas)

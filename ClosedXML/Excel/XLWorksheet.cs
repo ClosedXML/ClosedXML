@@ -116,7 +116,7 @@ namespace ClosedXML.Excel
             get
             {
                 yield return GetStyle();
-                foreach (XLCell c in Internals.CellsCollection.GetCells())
+                foreach (var c in Internals.CellsCollection.GetCells())
                     yield return c.Style;
             }
         }
@@ -343,7 +343,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLColumns(null, StyleValue);
             var columnPairs = columns.Split(',');
-            foreach (string tPair in columnPairs.Select(pair => pair.Trim()))
+            foreach (var tPair in columnPairs.Select(pair => pair.Trim()))
             {
                 string firstColumn;
                 string lastColumn;
@@ -359,14 +359,14 @@ namespace ClosedXML.Excel
                     lastColumn = tPair;
                 }
 
-                if (int.TryParse(firstColumn, out int tmp))
+                if (int.TryParse(firstColumn, out var tmp))
                 {
-                    foreach (IXLColumn col in Columns(int.Parse(firstColumn), int.Parse(lastColumn)))
+                    foreach (var col in Columns(int.Parse(firstColumn), int.Parse(lastColumn)))
                         retVal.Add((XLColumn)col);
                 }
                 else
                 {
-                    foreach (IXLColumn col in Columns(firstColumn, lastColumn))
+                    foreach (var col in Columns(firstColumn, lastColumn))
                         retVal.Add((XLColumn)col);
                 }
             }
@@ -383,7 +383,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLColumns(null, StyleValue);
 
-            for (int co = firstColumn; co <= lastColumn; co++)
+            for (var co = firstColumn; co <= lastColumn; co++)
                 retVal.Add(Column(co));
             return retVal;
         }
@@ -403,7 +403,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRows(null, StyleValue);
             var rowPairs = rows.Split(',');
-            foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
+            foreach (var tPair in rowPairs.Select(pair => pair.Trim()))
             {
                 string firstRow;
                 string lastRow;
@@ -429,7 +429,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRows(null, StyleValue);
 
-            for (int ro = firstRow; ro <= lastRow; ro++)
+            for (var ro = firstRow; ro <= lastRow; ro++)
                 retVal.Add(Row(ro));
             return retVal;
         }
@@ -872,7 +872,7 @@ namespace ClosedXML.Excel
             {
                 if (value && !_tabActive)
                 {
-                    foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
+                    foreach (var ws in Worksheet.Workbook.WorksheetsInternal)
                         ws._tabActive = false;
                 }
                 _tabActive = value;
@@ -927,7 +927,7 @@ namespace ClosedXML.Excel
         public override IXLRanges Ranges(string ranges)
         {
             var retVal = new XLRanges();
-            foreach (string rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
+            foreach (var rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
             {
                 if (rangeAddressStr.StartsWith("#REF!"))
                 {
@@ -937,11 +937,11 @@ namespace ClosedXML.Excel
                 {
                     retVal.Add(Range(new XLRangeAddress(Worksheet, rangeAddressStr)));
                 }
-                else if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange worksheetNamedRange))
+                else if (NamedRanges.TryGetValue(rangeAddressStr, out var worksheetNamedRange))
                 {
                     worksheetNamedRange.Ranges.ForEach(retVal.Add);
                 }
-                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange workbookNamedRange)
+                else if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out var workbookNamedRange)
                     && workbookNamedRange.Ranges.First().Worksheet == this)
                 {
                     workbookNamedRange.Ranges.ForEach(retVal.Add);
@@ -1033,7 +1033,7 @@ namespace ClosedXML.Excel
         public void IncrementColumnOutline(int level)
         {
             if (level <= 0) return;
-            if (_columnOutlineCount.TryGetValue(level, out int value))
+            if (_columnOutlineCount.TryGetValue(level, out var value))
                 _columnOutlineCount[level] = value + 1;
             else
                 _columnOutlineCount.Add(level, 1);
@@ -1042,7 +1042,7 @@ namespace ClosedXML.Excel
         public void DecrementColumnOutline(int level)
         {
             if (level <= 0) return;
-            if (_columnOutlineCount.TryGetValue(level, out int value))
+            if (_columnOutlineCount.TryGetValue(level, out var value))
             {
                 if (value > 0)
                     _columnOutlineCount[level] = value - 1;
@@ -1060,7 +1060,7 @@ namespace ClosedXML.Excel
         public void IncrementRowOutline(int level)
         {
             if (level <= 0) return;
-            if (_rowOutlineCount.TryGetValue(level, out int value))
+            if (_rowOutlineCount.TryGetValue(level, out var value))
                 _rowOutlineCount[level] = value + 1;
             else
                 _rowOutlineCount.Add(level, 0);
@@ -1069,7 +1069,7 @@ namespace ClosedXML.Excel
         public void DecrementRowOutline(int level)
         {
             if (level <= 0) return;
-            if (_rowOutlineCount.TryGetValue(level, out int value))
+            if (_rowOutlineCount.TryGetValue(level, out var value))
             {
                 if (value > 0)
                     _rowOutlineCount[level] = level - 1;
@@ -1159,7 +1159,7 @@ namespace ClosedXML.Excel
             if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
                 throw new ArgumentOutOfRangeException(nameof(columnNumber), $"Column number must be between 1 and {XLHelper.MaxColumnNumber}");
 
-            if (Internals.ColumnsCollection.TryGetValue(columnNumber, out XLColumn column))
+            if (Internals.ColumnsCollection.TryGetValue(columnNumber, out var column))
                 return column;
             else
             {
@@ -1214,7 +1214,7 @@ namespace ClosedXML.Excel
         {
             for (var i = 0; i < PageSetup.ColumnBreaks.Count; i++)
             {
-                int br = PageSetup.ColumnBreaks[i];
+                var br = PageSetup.ColumnBreaks[i];
                 if (range.RangeAddress.FirstAddress.ColumnNumber <= br)
                 {
                     PageSetup.ColumnBreaks[i] = br + columnsShifted;
@@ -1225,10 +1225,10 @@ namespace ClosedXML.Excel
         private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
         {
             if (!ConditionalFormats.Any()) return;
-            int firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
+            var firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
             if (firstCol == 1) return;
 
-            int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
+            var colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
             var model = Column(colNum).AsRange();
 
             foreach (var cf in ConditionalFormats.ToList())
@@ -1271,10 +1271,10 @@ namespace ClosedXML.Excel
         private void ShiftDataValidationColumns(XLRange range, int columnsShifted)
         {
             if (!DataValidations.Any()) return;
-            int firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
+            var firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
             if (firstCol == 1) return;
 
-            int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
+            var colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
             var model = Column(colNum).AsRange();
 
             foreach (var dv in DataValidations.ToList())
@@ -1344,7 +1344,7 @@ namespace ClosedXML.Excel
         {
             for (var i = 0; i < PageSetup.RowBreaks.Count; i++)
             {
-                int br = PageSetup.RowBreaks[i];
+                var br = PageSetup.RowBreaks[i];
                 if (range.RangeAddress.FirstAddress.RowNumber <= br)
                 {
                     PageSetup.RowBreaks[i] = br + rowsShifted;
@@ -1355,10 +1355,10 @@ namespace ClosedXML.Excel
         private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
         {
             if (!ConditionalFormats.Any()) return;
-            int firstRow = range.RangeAddress.FirstAddress.RowNumber;
+            var firstRow = range.RangeAddress.FirstAddress.RowNumber;
             if (firstRow == 1) return;
 
-            int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
+            var rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
 
             foreach (var cf in ConditionalFormats.ToList())
@@ -1400,10 +1400,10 @@ namespace ClosedXML.Excel
         private void ShiftDataValidationRows(XLRange range, int rowsShifted)
         {
             if (!DataValidations.Any()) return;
-            int firstRow = range.RangeAddress.FirstAddress.RowNumber;
+            var firstRow = range.RangeAddress.FirstAddress.RowNumber;
             if (firstRow == 1) return;
 
-            int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
+            var rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
 
             foreach (var dv in DataValidations.ToList())
@@ -1543,7 +1543,7 @@ namespace ClosedXML.Excel
             if (rowNumber <= 0 || rowNumber > XLHelper.MaxRowNumber)
                 throw new ArgumentOutOfRangeException(nameof(rowNumber), $"Row number must be between 1 and {XLHelper.MaxRowNumber}");
 
-            if (Internals.RowsCollection.TryGetValue(rowNumber, out XLRow row))
+            if (Internals.RowsCollection.TryGetValue(rowNumber, out var row))
                 return row;
             else
             {
@@ -1660,7 +1660,7 @@ namespace ClosedXML.Excel
             var cell = base.Cell(cellAddressInRange);
             if (cell != null) return cell;
 
-            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange workbookNamedRange))
+            if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out var workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
                     return null;
@@ -1679,10 +1679,10 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains("["))
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
 
-            if (NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange worksheetNamedRange))
+            if (NamedRanges.TryGetValue(rangeAddressStr, out var worksheetNamedRange))
                 return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
 
-            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out IXLNamedRange workbookNamedRange))
+            if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out var workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
                     return null;
@@ -1929,7 +1929,7 @@ namespace ClosedXML.Excel
             Internals.ColumnsCollection.Remove(columnNumber);
 
             var columnsToMove = new List<int>(Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key).OrderBy(c => c));
-            foreach (int column in columnsToMove)
+            foreach (var column in columnsToMove)
             {
                 Internals.ColumnsCollection.Add(column - 1, Internals.ColumnsCollection[column]);
                 Internals.ColumnsCollection.Remove(column);
@@ -1943,7 +1943,7 @@ namespace ClosedXML.Excel
             Internals.RowsCollection.Remove(rowNumber);
 
             var rowsToMove = new List<int>(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key).OrderBy(r => r));
-            foreach (int row in rowsToMove)
+            foreach (var row in rowsToMove)
             {
                 Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);
                 Internals.RowsCollection.Remove(row);

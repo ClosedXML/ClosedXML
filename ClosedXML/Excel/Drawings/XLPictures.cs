@@ -135,7 +135,7 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Picture(string pictureName)
         {
-            if (TryGetPicture(pictureName, out IXLPicture p))
+            if (TryGetPicture(pictureName, out var p))
                 return p;
 
             throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");

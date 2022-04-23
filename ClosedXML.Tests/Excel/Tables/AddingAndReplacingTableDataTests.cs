@@ -439,7 +439,7 @@ namespace ClosedXML.Tests.Excel.Tables
                     table.Fields.Last().TotalsRowFunction = XLTotalsRowFunction.Average;
 
                     // Will cause table to overflow
-                    IEnumerable<Person> personEnumerable = NewData.Union(NewData).Union(NewData);
+                    var personEnumerable = NewData.Union(NewData).Union(NewData);
                     var replacedRange = table.ReplaceData(personEnumerable);
 
                     Assert.AreEqual("B3:G8", replacedRange.RangeAddress.ToString());
@@ -474,7 +474,7 @@ namespace ClosedXML.Tests.Excel.Tables
                     table.Fields.Last().TotalsRowFunction = XLTotalsRowFunction.Average;
 
                     // Will cause table to shrink
-                    IEnumerable<Person> personEnumerable = NewData.Take(1);
+                    var personEnumerable = NewData.Take(1);
                     var replacedRange = table.ReplaceData(personEnumerable);
 
                     Assert.AreEqual("B3:G3", replacedRange.RangeAddress.ToString());

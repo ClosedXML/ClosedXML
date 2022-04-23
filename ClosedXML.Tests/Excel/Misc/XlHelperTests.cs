@@ -96,7 +96,7 @@ namespace ClosedXML.Tests.Excel
         public void TestColumnLetterLookup()
         {
             var columnLetters = new List<string>();
-            for (int c = 1; c <= XLHelper.MaxColumnNumber; c++)
+            for (var c = 1; c <= XLHelper.MaxColumnNumber; c++)
             {
                 var columnLetter = NaiveGetColumnLetterFromNumber(c);
                 columnLetters.Add(columnLetter);
@@ -161,9 +161,9 @@ namespace ClosedXML.Tests.Excel
                 return retVal;
             }
 
-            int sum = 0;
+            var sum = 0;
 
-            for (int i = 0; i < columnLetter.Length; i++)
+            for (var i = 0; i < columnLetter.Length; i++)
             {
                 sum *= 26;
                 sum += (columnLetter[i] - 'A' + 1);

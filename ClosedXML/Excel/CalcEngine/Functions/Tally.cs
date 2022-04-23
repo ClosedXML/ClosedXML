@@ -175,9 +175,9 @@ namespace ClosedXML.Excel.CalcEngine
             if (count != 0)
             {
                 //Compute the Average
-                double avg = values.Average();
+                var avg = values.Average();
                 //Perform the Sum of (value-avg)_2_2
-                double sum = values.Sum(d => Math.Pow(d - avg, 2));
+                var sum = values.Sum(d => Math.Pow(d - avg, 2));
                 //Put it all together
                 ret = Math.Sqrt((sum) / (count - 1));
             }
@@ -234,14 +234,14 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (value is string || !(value is IEnumerable vEnumerable))
                 {
-                    if (TryParseToDouble(value, aggressiveConversion: false, out double tmp))
+                    if (TryParseToDouble(value, aggressiveConversion: false, out var tmp))
                         yield return tmp;
                 }
                 else
                 {
                     foreach (var v in vEnumerable)
                     {
-                        if (TryParseToDouble(v, aggressiveConversion: false, out double tmp))
+                        if (TryParseToDouble(v, aggressiveConversion: false, out var tmp))
                             yield return tmp;
                     }
                 }

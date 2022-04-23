@@ -168,7 +168,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                foreach (IXLCell cell in Cells())
+                foreach (var cell in Cells())
                     yield return cell.Style;
             }
         }
@@ -301,9 +301,9 @@ namespace ClosedXML.Excel
         /// </summary>
         public IEnumerable CellValues()
         {
-            for (int ro = RangeAddress.FirstAddress.RowNumber; ro <= RangeAddress.LastAddress.RowNumber; ro++)
+            for (var ro = RangeAddress.FirstAddress.RowNumber; ro <= RangeAddress.LastAddress.RowNumber; ro++)
             {
-                for (int co = RangeAddress.FirstAddress.ColumnNumber; co <= RangeAddress.LastAddress.ColumnNumber; co++)
+                for (var co = RangeAddress.FirstAddress.ColumnNumber; co <= RangeAddress.LastAddress.ColumnNumber; co++)
                 {
                     yield return Worksheet.GetCellValue(ro, co);
                 }
@@ -381,7 +381,7 @@ namespace ClosedXML.Excel
 
         public IXLRange Unmerge()
         {
-            string tAddress = RangeAddress.ToString();
+            var tAddress = RangeAddress.ToString();
             var asRange = AsRange();
             if (Worksheet.Internals.MergedRanges.Select(m => m.RangeAddress.ToString()).Any(mAddress => mAddress == tAddress))
                 Worksheet.Internals.MergedRanges.Remove(asRange);
@@ -515,7 +515,7 @@ namespace ClosedXML.Excel
 
         public bool Contains(string rangeAddress)
         {
-            string addressToUse = rangeAddress.Contains("!")
+            var addressToUse = rangeAddress.Contains("!")
                                       ? rangeAddress.Substring(rangeAddress.IndexOf("!") + 1)
                                       : rangeAddress;
 
@@ -580,7 +580,7 @@ namespace ClosedXML.Excel
                                   ? Worksheet.Workbook.NamedRanges
                                   : Worksheet.NamedRanges;
 
-            if (namedRanges.TryGetValue(rangeName, out IXLNamedRange namedRange))
+            if (namedRanges.TryGetValue(rangeName, out var namedRange))
                 namedRange.Add(Worksheet.Workbook, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
             else
                 namedRanges.Add(rangeName, RangeAddress.ToStringFixed(XLReferenceStyle.A1, true), comment);
@@ -763,7 +763,7 @@ namespace ClosedXML.Excel
             if (XLHelper.IsValidA1Address(cellAddressInRange))
                 return Cell(XLAddress.Create(Worksheet, cellAddressInRange));
 
-            if (Worksheet.NamedRanges.TryGetValue(cellAddressInRange, out IXLNamedRange namedRange))
+            if (Worksheet.NamedRanges.TryGetValue(cellAddressInRange, out var namedRange))
                 return namedRange.Ranges.First().FirstCell().CastTo<XLCell>();
 
             return null;
@@ -781,8 +781,8 @@ namespace ClosedXML.Excel
 
         public XLCell Cell(in XLAddress cellAddressInRange)
         {
-            int absRow = cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1;
-            int absColumn = cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1;
+            var absRow = cellAddressInRange.RowNumber + RangeAddress.FirstAddress.RowNumber - 1;
+            var absColumn = cellAddressInRange.ColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1;
 
             if (absRow <= 0 || absRow > XLHelper.MaxRowNumber)
             {
@@ -810,10 +810,10 @@ namespace ClosedXML.Excel
 
             if (styleValue == Worksheet.StyleValue)
             {
-                if (Worksheet.Internals.RowsCollection.TryGetValue(absRow, out XLRow row)
+                if (Worksheet.Internals.RowsCollection.TryGetValue(absRow, out var row)
                     && row.StyleValue != Worksheet.StyleValue)
                     styleValue = row.StyleValue;
-                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absColumn, out XLColumn column)
+                else if (Worksheet.Internals.ColumnsCollection.TryGetValue(absColumn, out var column)
                     && column.StyleValue != Worksheet.StyleValue)
                     styleValue = column.StyleValue;
             }
@@ -825,7 +825,7 @@ namespace ClosedXML.Excel
 
             // If the default style for this range base is empty, but the worksheet
             // has a default style, use the worksheet's default style
-            XLCell newCell = new XLCell(Worksheet, absoluteAddress, styleValue);
+            var newCell = new XLCell(Worksheet, absoluteAddress, styleValue);
 
             Worksheet.Internals.CellsCollection.Add(absRow, absColumn, newCell);
             return newCell;
@@ -1000,7 +1000,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRanges();
             var rangePairs = ranges.Split(',');
-            foreach (string pair in rangePairs)
+            foreach (var pair in rangePairs)
                 retVal.Add(Range(pair.Trim()));
             return retVal;
         }
@@ -1008,21 +1008,21 @@ namespace ClosedXML.Excel
         public IXLRanges Ranges(params string[] ranges)
         {
             var retVal = new XLRanges();
-            foreach (string pair in ranges)
+            foreach (var pair in ranges)
                 retVal.Add(Range(pair));
             return retVal;
         }
 
         protected string FixColumnAddress(string address)
         {
-            if (int.TryParse(address, out int rowNumber))
+            if (int.TryParse(address, out var rowNumber))
                 return RangeAddress.FirstAddress.ColumnLetter + (rowNumber + RangeAddress.FirstAddress.RowNumber - 1).ToInvariantString();
             return address;
         }
 
         protected string FixRowAddress(string address)
         {
-            if (int.TryParse(address, out int columnNumber))
+            if (int.TryParse(address, out var columnNumber))
                 return XLHelper.GetColumnLetterFromNumber(columnNumber + RangeAddress.FirstAddress.ColumnNumber - 1) + RangeAddress.FirstAddress.RowNumber.ToInvariantString();
             return address;
         }
@@ -1100,16 +1100,16 @@ namespace ClosedXML.Excel
 
         private IXLRangeColumns InsertColumnsAfterInternal(bool onlyUsedCells, int numberOfColumns, bool formatFromLeft = true, bool nullReturn = false)
         {
-            int columnCount = ColumnCount();
-            int firstColumn = RangeAddress.FirstAddress.ColumnNumber + columnCount;
+            var columnCount = ColumnCount();
+            var firstColumn = RangeAddress.FirstAddress.ColumnNumber + columnCount;
             if (firstColumn > XLHelper.MaxColumnNumber)
                 firstColumn = XLHelper.MaxColumnNumber;
-            int lastColumn = firstColumn + ColumnCount() - 1;
+            var lastColumn = firstColumn + ColumnCount() - 1;
             if (lastColumn > XLHelper.MaxColumnNumber)
                 lastColumn = XLHelper.MaxColumnNumber;
 
-            int firstRow = RangeAddress.FirstAddress.RowNumber;
-            int lastRow = firstRow + RowCount() - 1;
+            var firstRow = RangeAddress.FirstAddress.RowNumber;
+            var lastRow = firstRow + RowCount() - 1;
             if (lastRow > XLHelper.MaxRowNumber)
                 lastRow = XLHelper.MaxRowNumber;
 
@@ -1159,27 +1159,27 @@ namespace ClosedXML.Excel
                 throw new ArgumentOutOfRangeException(nameof(numberOfColumns),
                     $"Number of columns to insert must be a positive number no more than {XLHelper.MaxColumnNumber}");
 
-            foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
+            foreach (var ws in Worksheet.Workbook.WorksheetsInternal)
             {
-                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !string.IsNullOrWhiteSpace(c.FormulaA1)))
+                foreach (var cell in ws.Internals.CellsCollection.GetCells(c => !string.IsNullOrWhiteSpace(c.FormulaA1)))
                     cell.ShiftFormulaColumns(AsRange(), numberOfColumns);
             }
 
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
-            int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int firstRow = RangeAddress.FirstAddress.RowNumber;
-            int lastRow = RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
+            var firstColumn = RangeAddress.FirstAddress.ColumnNumber;
+            var firstRow = RangeAddress.FirstAddress.RowNumber;
+            var lastRow = RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
 
             if (!onlyUsedCells)
             {
-                int lastColumn = Worksheet.Internals.CellsCollection.MaxColumnUsed;
+                var lastColumn = Worksheet.Internals.CellsCollection.MaxColumnUsed;
                 if (lastColumn > 0)
                 {
-                    for (int co = lastColumn; co >= firstColumn; co--)
+                    for (var co = lastColumn; co >= firstColumn; co--)
                     {
-                        int newColumn = co + numberOfColumns;
-                        for (int ro = lastRow; ro >= firstRow; ro--)
+                        var newColumn = co + numberOfColumns;
+                        for (var ro = lastRow; ro >= firstRow; ro--)
                         {
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
                             if (oldCell == null)
@@ -1204,11 +1204,11 @@ namespace ClosedXML.Excel
             else
             {
                 foreach (
-                    XLCell c in
+                    var c in
                         Worksheet.Internals.CellsCollection.GetCells(firstRow, firstColumn, lastRow,
                                                                      Worksheet.Internals.CellsCollection.MaxColumnUsed))
                 {
-                    int newColumn = c.Address.ColumnNumber + numberOfColumns;
+                    var newColumn = c.Address.ColumnNumber + numberOfColumns;
                     var newKey = new XLAddress(Worksheet, c.Address.RowNumber, newColumn, false, false);
 
                     cellsToDelete.Add(c.Address);
@@ -1222,10 +1222,10 @@ namespace ClosedXML.Excel
             cellsToInsert.ForEach(
                 c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
 
-            int firstRowReturn = RangeAddress.FirstAddress.RowNumber;
-            int lastRowReturn = RangeAddress.LastAddress.RowNumber;
-            int firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumnReturn = RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1;
+            var firstRowReturn = RangeAddress.FirstAddress.RowNumber;
+            var lastRowReturn = RangeAddress.LastAddress.RowNumber;
+            var firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
+            var lastColumnReturn = RangeAddress.FirstAddress.ColumnNumber + numberOfColumns - 1;
 
             Worksheet.NotifyRangeShiftedColumns(AsRange(), numberOfColumns);
 
@@ -1244,11 +1244,11 @@ namespace ClosedXML.Excel
                 var modelLastRow = (model as IXLRangeBase).LastCellUsed(contentFlags);
                 if (modelLastRow != null)
                 {
-                    int firstRoReturned = modelFirstRow.Address.RowNumber
+                    var firstRoReturned = modelFirstRow.Address.RowNumber
                                             - model.RangeAddress.FirstAddress.RowNumber + 1;
-                    int lastRoReturned = modelLastRow.Address.RowNumber
+                    var lastRoReturned = modelLastRow.Address.RowNumber
                                            - model.RangeAddress.FirstAddress.RowNumber + 1;
-                    for (int ro = firstRoReturned; ro <= lastRoReturned; ro++)
+                    for (var ro = firstRoReturned; ro <= lastRoReturned; ro++)
                     {
                         rangeToReturn.Row(ro).Style = model.Cell(ro).Style;
                     }
@@ -1259,11 +1259,11 @@ namespace ClosedXML.Excel
                 var lastRoUsed = rangeToReturn.LastRowUsed(contentFlags);
                 if (lastRoUsed != null)
                 {
-                    int lastRoReturned = lastRoUsed.RowNumber();
-                    for (int ro = 1; ro <= lastRoReturned; ro++)
+                    var lastRoReturned = lastRoUsed.RowNumber();
+                    for (var ro = 1; ro <= lastRoReturned; ro++)
                     {
                         var styleToUse =
-                            Worksheet.Internals.RowsCollection.TryGetValue(ro, out XLRow row)
+                            Worksheet.Internals.RowsCollection.TryGetValue(ro, out var row)
                                 ? row.Style
                                 : Worksheet.Style;
 
@@ -1316,16 +1316,16 @@ namespace ClosedXML.Excel
 
         private IXLRangeRows InsertRowsBelowInternal(bool onlyUsedCells, int numberOfRows, bool formatFromAbove, bool nullReturn)
         {
-            int rowCount = RowCount();
-            int firstRow = RangeAddress.FirstAddress.RowNumber + rowCount;
+            var rowCount = RowCount();
+            var firstRow = RangeAddress.FirstAddress.RowNumber + rowCount;
             if (firstRow > XLHelper.MaxRowNumber)
                 firstRow = XLHelper.MaxRowNumber;
-            int lastRow = firstRow + RowCount() - 1;
+            var lastRow = firstRow + RowCount() - 1;
             if (lastRow > XLHelper.MaxRowNumber)
                 lastRow = XLHelper.MaxRowNumber;
 
-            int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumn = firstColumn + ColumnCount() - 1;
+            var firstColumn = RangeAddress.FirstAddress.ColumnNumber;
+            var lastColumn = firstColumn + ColumnCount() - 1;
             if (lastColumn > XLHelper.MaxColumnNumber)
                 lastColumn = XLHelper.MaxColumnNumber;
 
@@ -1376,30 +1376,30 @@ namespace ClosedXML.Excel
                     $"Number of rows to insert must be a positive number no more than {XLHelper.MaxRowNumber}");
 
             var asRange = AsRange();
-            foreach (XLWorksheet ws in Worksheet.Workbook.WorksheetsInternal)
+            foreach (var ws in Worksheet.Workbook.WorksheetsInternal)
             {
-                foreach (XLCell cell in ws.Internals.CellsCollection.GetCells(c => !string.IsNullOrWhiteSpace(c.FormulaA1)))
+                foreach (var cell in ws.Internals.CellsCollection.GetCells(c => !string.IsNullOrWhiteSpace(c.FormulaA1)))
                     cell.ShiftFormulaRows(asRange, numberOfRows);
             }
 
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
-            int firstRow = RangeAddress.FirstAddress.RowNumber;
-            int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumn = Math.Min(
+            var firstRow = RangeAddress.FirstAddress.RowNumber;
+            var firstColumn = RangeAddress.FirstAddress.ColumnNumber;
+            var lastColumn = Math.Min(
                 RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1,
                 Worksheet.Internals.CellsCollection.MaxColumnUsed);
 
             if (!onlyUsedCells)
             {
-                int lastRow = Worksheet.Internals.CellsCollection.MaxRowUsed;
+                var lastRow = Worksheet.Internals.CellsCollection.MaxRowUsed;
                 if (lastRow > 0)
                 {
-                    for (int ro = lastRow; ro >= firstRow; ro--)
+                    for (var ro = lastRow; ro >= firstRow; ro--)
                     {
-                        int newRow = ro + numberOfRows;
+                        var newRow = ro + numberOfRows;
 
-                        for (int co = lastColumn; co >= firstColumn; co--)
+                        for (var co = lastColumn; co >= firstColumn; co--)
                         {
                             var oldCell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
                             if (oldCell == null)
@@ -1423,12 +1423,12 @@ namespace ClosedXML.Excel
             else
             {
                 foreach (
-                    XLCell c in
+                    var c in
                         Worksheet.Internals.CellsCollection.GetCells(firstRow, firstColumn,
                                                                      Worksheet.Internals.CellsCollection.MaxRowUsed,
                                                                      lastColumn))
                 {
-                    int newRow = c.Address.RowNumber + numberOfRows;
+                    var newRow = c.Address.RowNumber + numberOfRows;
                     var newKey = new XLAddress(Worksheet, newRow, c.Address.ColumnNumber, false, false);
                     cellsToDelete.Add(c.Address);
                     c.Address = newKey;
@@ -1440,10 +1440,10 @@ namespace ClosedXML.Excel
             cellsToDelete.ForEach(c => Worksheet.Internals.CellsCollection.Remove(c.RowNumber, c.ColumnNumber));
             cellsToInsert.ForEach(c => Worksheet.Internals.CellsCollection.Add(c.Key.RowNumber, c.Key.ColumnNumber, c.Value));
 
-            int firstRowReturn = RangeAddress.FirstAddress.RowNumber;
-            int lastRowReturn = RangeAddress.FirstAddress.RowNumber + numberOfRows - 1;
-            int firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumnReturn = RangeAddress.LastAddress.ColumnNumber;
+            var firstRowReturn = RangeAddress.FirstAddress.RowNumber;
+            var lastRowReturn = RangeAddress.FirstAddress.RowNumber + numberOfRows - 1;
+            var firstColumnReturn = RangeAddress.FirstAddress.ColumnNumber;
+            var lastColumnReturn = RangeAddress.LastAddress.ColumnNumber;
 
             Worksheet.NotifyRangeShiftedRows(AsRange(), numberOfRows);
 
@@ -1462,11 +1462,11 @@ namespace ClosedXML.Excel
                 var modelLastColumn = (model as IXLRangeBase).LastCellUsed(contentFlags);
                 if (modelFirstColumn != null && modelLastColumn != null)
                 {
-                    int firstCoReturned = modelFirstColumn.Address.ColumnNumber
+                    var firstCoReturned = modelFirstColumn.Address.ColumnNumber
                                             - model.RangeAddress.FirstAddress.ColumnNumber + 1;
-                    int lastCoReturned = modelLastColumn.Address.ColumnNumber
+                    var lastCoReturned = modelLastColumn.Address.ColumnNumber
                                             - model.RangeAddress.FirstAddress.ColumnNumber + 1;
-                    for (int co = firstCoReturned; co <= lastCoReturned; co++)
+                    for (var co = firstCoReturned; co <= lastCoReturned; co++)
                     {
                         rangeToReturn.Column(co).Style = model.Cell(co).Style;
                     }
@@ -1477,11 +1477,11 @@ namespace ClosedXML.Excel
                 var lastCoUsed = rangeToReturn.LastColumnUsed(contentFlags);
                 if (lastCoUsed != null)
                 {
-                    int lastCoReturned = lastCoUsed.ColumnNumber();
-                    for (int co = 1; co <= lastCoReturned; co++)
+                    var lastCoReturned = lastCoUsed.ColumnNumber();
+                    for (var co = 1; co <= lastCoReturned; co++)
                     {
                         var styleToUse =
-                            Worksheet.Internals.ColumnsCollection.TryGetValue(co, out XLColumn column)
+                            Worksheet.Internals.ColumnsCollection.TryGetValue(co, out var column)
                                 ? column.Style
                                 : Worksheet.Style;
 
@@ -1520,8 +1520,8 @@ namespace ClosedXML.Excel
 
         public void Delete(XLShiftDeletedCells shiftDeleteCells)
         {
-            int numberOfRows = RowCount();
-            int numberOfColumns = ColumnCount();
+            var numberOfRows = RowCount();
+            var numberOfColumns = ColumnCount();
 
             if (!RangeAddress.IsValid) return;
 
@@ -1553,8 +1553,8 @@ namespace ClosedXML.Excel
             var cellsToInsert = new Dictionary<IXLAddress, XLCell>();
             var cellsToDelete = new List<IXLAddress>();
 
-            int columnModifier = 0;
-            int rowModifier = 0;
+            var columnModifier = 0;
+            var rowModifier = 0;
             IEnumerable<XLCell> cellsQuery;
             switch (shiftDeleteCells)
             {
@@ -1598,7 +1598,7 @@ namespace ClosedXML.Excel
 
                 if (newCellAddress.IsValid)
                 {
-                    bool canInsert = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft
+                    var canInsert = shiftDeleteCells == XLShiftDeletedCells.ShiftCellsLeft
                                          ? c.Address.ColumnNumber > RangeAddress.LastAddress.ColumnNumber
                                          : c.Address.RowNumber > RangeAddress.LastAddress.RowNumber;
 
@@ -1642,18 +1642,18 @@ namespace ClosedXML.Excel
         {
             if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return thisRangeAddress;
 
-            bool allRowsAreCovered = thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber &&
+            var allRowsAreCovered = thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber &&
                                      thisRangeAddress.LastAddress.RowNumber <= shiftedRange.RangeAddress.LastAddress.RowNumber;
 
             if (!allRowsAreCovered)
                 return thisRangeAddress;
 
-            bool shiftLeftBoundary = (columnsShifted > 0 && thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber) ||
+            var shiftLeftBoundary = (columnsShifted > 0 && thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber) ||
                                      (columnsShifted < 0 && thisRangeAddress.FirstAddress.ColumnNumber > shiftedRange.RangeAddress.FirstAddress.ColumnNumber);
 
-            bool shiftRightBoundary = thisRangeAddress.LastAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber;
+            var shiftRightBoundary = thisRangeAddress.LastAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber;
 
-            int newLeftBoundary = thisRangeAddress.FirstAddress.ColumnNumber;
+            var newLeftBoundary = thisRangeAddress.FirstAddress.ColumnNumber;
             if (shiftLeftBoundary)
             {
                 if (newLeftBoundary + columnsShifted > shiftedRange.RangeAddress.FirstAddress.ColumnNumber)
@@ -1662,11 +1662,11 @@ namespace ClosedXML.Excel
                     newLeftBoundary = shiftedRange.RangeAddress.FirstAddress.ColumnNumber;
             }
 
-            int newRightBoundary = thisRangeAddress.LastAddress.ColumnNumber;
+            var newRightBoundary = thisRangeAddress.LastAddress.ColumnNumber;
             if (shiftRightBoundary)
                 newRightBoundary += columnsShifted;
 
-            bool destroyedByShift = newRightBoundary < newLeftBoundary;
+            var destroyedByShift = newRightBoundary < newLeftBoundary;
 
             var firstAddress = (XLAddress)thisRangeAddress.FirstAddress;
             var lastAddress = (XLAddress)thisRangeAddress.LastAddress;
@@ -1699,18 +1699,18 @@ namespace ClosedXML.Excel
         {
             if (!thisRangeAddress.IsValid || !shiftedRange.RangeAddress.IsValid) return thisRangeAddress;
 
-            bool allColumnsAreCovered = thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber &&
+            var allColumnsAreCovered = thisRangeAddress.FirstAddress.ColumnNumber >= shiftedRange.RangeAddress.FirstAddress.ColumnNumber &&
                                         thisRangeAddress.LastAddress.ColumnNumber <= shiftedRange.RangeAddress.LastAddress.ColumnNumber;
 
             if (!allColumnsAreCovered)
                 return thisRangeAddress;
 
-            bool shiftTopBoundary = (rowsShifted > 0 && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber) ||
+            var shiftTopBoundary = (rowsShifted > 0 && thisRangeAddress.FirstAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber) ||
                                     (rowsShifted < 0 && thisRangeAddress.FirstAddress.RowNumber > shiftedRange.RangeAddress.FirstAddress.RowNumber);
 
-            bool shiftBottomBoundary = thisRangeAddress.LastAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber;
+            var shiftBottomBoundary = thisRangeAddress.LastAddress.RowNumber >= shiftedRange.RangeAddress.FirstAddress.RowNumber;
 
-            int newTopBoundary = thisRangeAddress.FirstAddress.RowNumber;
+            var newTopBoundary = thisRangeAddress.FirstAddress.RowNumber;
             if (shiftTopBoundary)
             {
                 if (newTopBoundary + rowsShifted > shiftedRange.RangeAddress.FirstAddress.RowNumber)
@@ -1719,11 +1719,11 @@ namespace ClosedXML.Excel
                     newTopBoundary = shiftedRange.RangeAddress.FirstAddress.RowNumber;
             }
 
-            int newBottomBoundary = thisRangeAddress.LastAddress.RowNumber;
+            var newBottomBoundary = thisRangeAddress.LastAddress.RowNumber;
             if (shiftBottomBoundary)
                 newBottomBoundary += rowsShifted;
 
-            bool destroyedByShift = newBottomBoundary < newTopBoundary;
+            var destroyedByShift = newBottomBoundary < newTopBoundary;
 
             var firstAddress = (XLAddress)thisRangeAddress.FirstAddress;
             var lastAddress = (XLAddress)thisRangeAddress.LastAddress;
@@ -1833,10 +1833,10 @@ namespace ClosedXML.Excel
         private string DefaultSortString()
         {
             var sb = new StringBuilder();
-            int maxColumn = ColumnCount();
+            var maxColumn = ColumnCount();
             if (maxColumn == XLHelper.MaxColumnNumber)
                 maxColumn = (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
-            for (int i = 1; i <= maxColumn; i++)
+            for (var i = 1; i <= maxColumn; i++)
             {
                 if (sb.Length > 0)
                     sb.Append(',');
@@ -1866,7 +1866,7 @@ namespace ClosedXML.Excel
                 columnsToSortBy = DefaultSortString();
             }
 
-            foreach (string coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
+            foreach (var coPairTrimmed in columnsToSortBy.Split(',').Select(coPair => coPair.Trim()))
             {
                 string coString;
                 string order;
@@ -1882,7 +1882,7 @@ namespace ClosedXML.Excel
                     order = sortOrder == XLSortOrder.Ascending ? "ASC" : "DESC";
                 }
 
-                if (!int.TryParse(coString, out int co))
+                if (!int.TryParse(coString, out var co))
                     co = XLHelper.GetColumnNumberFromLetter(coString);
 
                 SortColumns.Add(co, string.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, ignoreBlanks, matchCase);
@@ -1900,11 +1900,11 @@ namespace ClosedXML.Excel
         public IXLRangeBase SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true)
         {
             SortRows.Clear();
-            int maxColumn = ColumnCount();
+            var maxColumn = ColumnCount();
             if (maxColumn == XLHelper.MaxColumnNumber)
                 maxColumn = (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
 
-            for (int i = 1; i <= maxColumn; i++)
+            for (var i = 1; i <= maxColumn; i++)
             {
                 SortRows.Add(i, sortOrder, ignoreBlanks, matchCase);
             }
@@ -1917,7 +1917,7 @@ namespace ClosedXML.Excel
 
         private void SortRangeRows()
         {
-            int maxRow = RowCount();
+            var maxRow = RowCount();
             if (maxRow == XLHelper.MaxRowNumber)
                 maxRow = (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All).Address.RowNumber;
 
@@ -1926,11 +1926,11 @@ namespace ClosedXML.Excel
 
         private void SwapRows(int row1, int row2)
         {
-            int row1InWs = RangeAddress.FirstAddress.RowNumber + row1 - 1;
-            int row2InWs = RangeAddress.FirstAddress.RowNumber + row2 - 1;
+            var row1InWs = RangeAddress.FirstAddress.RowNumber + row1 - 1;
+            var row2InWs = RangeAddress.FirstAddress.RowNumber + row2 - 1;
 
-            int firstColumn = RangeAddress.FirstAddress.ColumnNumber;
-            int lastColumn = RangeAddress.LastAddress.ColumnNumber;
+            var firstColumn = RangeAddress.FirstAddress.ColumnNumber;
+            var lastColumn = RangeAddress.LastAddress.ColumnNumber;
 
             var range1Sp1 = new XLSheetPoint(row1InWs, firstColumn);
             var range1Sp2 = new XLSheetPoint(row1InWs, lastColumn);
@@ -1943,9 +1943,9 @@ namespace ClosedXML.Excel
 
         private int SortRangeRows(int begPoint, int endPoint)
         {
-            int pivot = begPoint;
-            int m = begPoint + 1;
-            int n = endPoint;
+            var pivot = begPoint;
+            var m = begPoint + 1;
+            var n = endPoint;
             while ((m < endPoint) && RowQuick(pivot).CompareTo(RowQuick(m), SortColumns) >= 0)
                 m++;
 
@@ -1973,7 +1973,7 @@ namespace ClosedXML.Excel
         {
             if (beg == end)
                 return;
-            int pivot = SortRangeRows(beg, end);
+            var pivot = SortRangeRows(beg, end);
             if (pivot > beg)
                 SortingRangeRows(beg, pivot - 1);
             if (pivot < end)
@@ -1986,7 +1986,7 @@ namespace ClosedXML.Excel
 
         private void SortRangeColumns()
         {
-            int maxColumn = ColumnCount();
+            var maxColumn = ColumnCount();
             if (maxColumn == XLHelper.MaxColumnNumber)
                 maxColumn = (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
             SortingRangeColumns(1, maxColumn);
@@ -1994,11 +1994,11 @@ namespace ClosedXML.Excel
 
         private void SwapColumns(int column1, int column2)
         {
-            int col1InWs = RangeAddress.FirstAddress.ColumnNumber + column1 - 1;
-            int col2InWs = RangeAddress.FirstAddress.ColumnNumber + column2 - 1;
+            var col1InWs = RangeAddress.FirstAddress.ColumnNumber + column1 - 1;
+            var col2InWs = RangeAddress.FirstAddress.ColumnNumber + column2 - 1;
 
-            int firstRow = RangeAddress.FirstAddress.RowNumber;
-            int lastRow = RangeAddress.LastAddress.RowNumber;
+            var firstRow = RangeAddress.FirstAddress.RowNumber;
+            var lastRow = RangeAddress.LastAddress.RowNumber;
 
             var range1Sp1 = new XLSheetPoint(firstRow, col1InWs);
             var range1Sp2 = new XLSheetPoint(lastRow, col1InWs);
@@ -2011,9 +2011,9 @@ namespace ClosedXML.Excel
 
         private int SortRangeColumns(int begPoint, int endPoint)
         {
-            int pivot = begPoint;
-            int m = begPoint + 1;
-            int n = endPoint;
+            var pivot = begPoint;
+            var m = begPoint + 1;
+            var n = endPoint;
             while ((m < endPoint) && ColumnQuick(pivot).CompareTo((ColumnQuick(m)), SortRows) >= 0)
                 m++;
 
@@ -2038,7 +2038,7 @@ namespace ClosedXML.Excel
         {
             if (end == beg)
                 return;
-            int pivot = SortRangeColumns(beg, end);
+            var pivot = SortRangeColumns(beg, end);
             if (pivot > beg)
                 SortingRangeColumns(beg, pivot - 1);
             if (pivot < end)
@@ -2087,7 +2087,7 @@ namespace ClosedXML.Excel
             if (existingValidation != null && existingValidation.Ranges.Any(r => r == this))
                 return existingValidation;
 
-            IXLDataValidation dataValidationToCopy = Worksheet.DataValidations.GetAllInRange(RangeAddress)
+            var dataValidationToCopy = Worksheet.DataValidations.GetAllInRange(RangeAddress)
                 .FirstOrDefault();
 
             var newRange = AsRange();

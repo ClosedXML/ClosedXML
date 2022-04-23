@@ -481,7 +481,7 @@ namespace ClosedXML.Excel
 
         public IXLStyle WhenIsTrue(string formula)
         {
-            string f = formula.TrimStart()[0] == '=' ? formula : "=" + formula;
+            var f = formula.TrimStart()[0] == '=' ? formula : "=" + formula;
             Values.Initialize(new XLFormula { Value = f });
             ConditionalFormatType = XLConditionalFormatType.Expression;
             return Style;

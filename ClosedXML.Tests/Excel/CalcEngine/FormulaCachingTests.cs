@@ -371,7 +371,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
                 Assert.IsNull(cell.CachedValue);
 
-                double value = (double)cell.Value;
+                var value = (double)cell.Value;
                 Assert.AreEqual(value, cell.CachedValue);
 
                 cell.DataType = XLDataType.DateTime;

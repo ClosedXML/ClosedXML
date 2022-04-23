@@ -13,7 +13,7 @@ namespace ClosedXML.Tests.Excel
         {
             using var xLWorkbook = new XLWorkbook();
             var wb = xLWorkbook;
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
 
             ws.PageSetup.Header.Center.AddText("Initial page header", XLHFOccurrence.EvenPages);
 

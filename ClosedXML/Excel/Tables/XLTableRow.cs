@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
 
         public IXLCell Field(string name)
         {
-            int fieldIndex = _tableRange.Table.GetFieldIndex(name);
+            var fieldIndex = _tableRange.Table.GetFieldIndex(name);
             return Cell(fieldIndex + 1);
         }
 

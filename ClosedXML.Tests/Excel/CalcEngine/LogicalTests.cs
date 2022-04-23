@@ -10,28 +10,28 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void If_2_Params_true()
         {
-            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"")");
+            var actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"")");
             Assert.AreEqual("T", actual);
         }
 
         [Test]
         public void If_2_Params_false()
         {
-            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"")");
+            var actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"")");
             Assert.AreEqual(false, actual);
         }
 
         [Test]
         public void If_3_Params_true()
         {
-            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"", ""F"")");
+            var actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"", ""F"")");
             Assert.AreEqual("T", actual);
         }
 
         [Test]
         public void If_3_Params_false()
         {
-            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"", ""F"")");
+            var actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"", ""F"")");
             Assert.AreEqual("F", actual);
         }
 

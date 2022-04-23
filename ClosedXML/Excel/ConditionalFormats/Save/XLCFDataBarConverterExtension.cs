@@ -14,13 +14,13 @@ namespace ClosedXML.Excel
 
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, XLWorkbook.SaveContext context)
         {
-            ConditionalFormattingRule conditionalFormattingRule = new ConditionalFormattingRule()
+            var conditionalFormattingRule = new ConditionalFormattingRule()
             {
                 Type = DocumentFormat.OpenXml.Spreadsheet.ConditionalFormatValues.DataBar,
                 Id = (cf as XLConditionalFormat).Id.WrapInBraces()
             };
 
-            DataBar dataBar = new DataBar()
+            var dataBar = new DataBar()
             {
                 MinLength = 0,
                 MaxLength = 100,

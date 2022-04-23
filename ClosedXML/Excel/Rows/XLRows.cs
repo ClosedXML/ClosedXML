@@ -64,9 +64,9 @@ namespace ClosedXML.Excel
             else
             {
                 var toDelete = new Dictionary<IXLWorksheet, List<int>>();
-                foreach (XLRow r in Rows)
+                foreach (var r in Rows)
                 {
-                    if (!toDelete.TryGetValue(r.Worksheet, out List<int> list))
+                    if (!toDelete.TryGetValue(r.Worksheet, out var list))
                     {
                         list = new List<int>();
                         toDelete.Add(r.Worksheet, list);
@@ -75,9 +75,9 @@ namespace ClosedXML.Excel
                     list.Add(r.RowNumber());
                 }
 
-                foreach (KeyValuePair<IXLWorksheet, List<int>> kp in toDelete)
+                foreach (var kp in toDelete)
                 {
-                    foreach (int r in kp.Value.OrderByDescending(r => r))
+                    foreach (var r in kp.Value.OrderByDescending(r => r))
                         kp.Key.Row(r).Delete();
                 }
             }
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
         public IXLCells Cells()
         {
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
-            foreach (XLRow container in Rows)
+            foreach (var container in Rows)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -180,7 +180,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
-            foreach (XLRow container in Rows)
+            foreach (var container in Rows)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -196,14 +196,14 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
             var cells = new XLCells(true, options);
-            foreach (XLRow container in Rows)
+            foreach (var container in Rows)
                 cells.Add(container.RangeAddress);
             return cells;
         }
 
         public IXLRows AddHorizontalPageBreaks()
         {
-            foreach (XLRow row in Rows)
+            foreach (var row in Rows)
                 row.Worksheet.PageSetup.AddHorizontalPageBreak(row.RowNumber());
             return this;
         }
@@ -225,7 +225,7 @@ namespace ClosedXML.Excel
                     yield return _worksheet;
                 else
                 {
-                    foreach (XLRow row in Rows)
+                    foreach (var row in Rows)
                         yield return row;
                 }
             }
@@ -240,7 +240,7 @@ namespace ClosedXML.Excel
                     yield return _worksheet.Style;
                 else
                 {
-                    foreach (IXLStyle s in Rows.SelectMany(row => row.Styles))
+                    foreach (var s in Rows.SelectMany(row => row.Styles))
                     {
                         yield return s;
                     }

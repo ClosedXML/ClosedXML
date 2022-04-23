@@ -29,15 +29,15 @@ namespace ClosedXML.Tests.Excel.Misc
         public void InsideBorderTest()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-            IXLRange range = ws.Range("B2:D4");
+            var ws = wb.AddWorksheet("Sheet1");
+            var range = ws.Range("B2:D4");
 
             SetupBorders(range);
 
             range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
             range.Style.Border.InsideBorderColor = XLColor.Red;
 
-            IXLCell center = range.Cell(2, 2);
+            var center = range.Cell(2, 2);
 
             Assert.AreEqual(XLColor.Red, center.Style.Border.TopBorderColor);
             Assert.AreEqual(XLColor.Red, center.Style.Border.BottomBorderColor);

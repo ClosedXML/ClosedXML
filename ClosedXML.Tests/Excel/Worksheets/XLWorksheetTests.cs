@@ -18,10 +18,10 @@ namespace ClosedXML.Tests
         public void ColumnCountTime()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            DateTime start = DateTime.Now;
+            var ws = wb.Worksheets.Add("Sheet1");
+            var start = DateTime.Now;
             ws.ColumnCount();
-            DateTime end = DateTime.Now;
+            var end = DateTime.Now;
             Assert.IsTrue((end - start).TotalMilliseconds < 500);
         }
 
@@ -29,10 +29,10 @@ namespace ClosedXML.Tests
         public void CopyConditionalFormatsCount()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
             ws.Range("A1:C3").AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
             ws.Range("A1:C3").Value = 1;
-            IXLWorksheet ws2 = ws.CopyTo("Sheet2");
+            var ws2 = ws.CopyTo("Sheet2");
             Assert.AreEqual(1, ws2.ConditionalFormats.Count());
         }
 
@@ -169,10 +169,10 @@ namespace ClosedXML.Tests
         public void RowCountTime()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            DateTime start = DateTime.Now;
+            var ws = wb.Worksheets.Add("Sheet1");
+            var start = DateTime.Now;
             ws.RowCount();
-            DateTime end = DateTime.Now;
+            var end = DateTime.Now;
             Assert.IsTrue((end - start).TotalMilliseconds < 500);
         }
 
@@ -431,7 +431,7 @@ namespace ClosedXML.Tests
                     var ws2 = ws1.CopyTo(wb2, "Copy");
 
                     Assert.AreEqual(ws1.RowHeight, ws2.RowHeight);
-                    for (int i = 1; i <= 3; i++)
+                    for (var i = 1; i <= 3; i++)
                     {
                         Assert.AreEqual(ws1.Row(i).Height, ws2.Row(i).Height);
                     }
@@ -454,7 +454,7 @@ namespace ClosedXML.Tests
                     var ws2 = ws1.CopyTo(wb2, "Copy");
 
                     Assert.AreEqual(ws1.ColumnWidth, ws2.ColumnWidth);
-                    for (int i = 1; i <= 3; i++)
+                    for (var i = 1; i <= 3; i++)
                     {
                         Assert.AreEqual(ws1.Column(i).Width, ws2.Column(i).Width);
                     }
@@ -476,7 +476,7 @@ namespace ClosedXML.Tests
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.MergedRanges.Count, ws2.MergedRanges.Count);
-                for (int i = 0; i < ws1.MergedRanges.Count; i++)
+                for (var i = 0; i < ws1.MergedRanges.Count; i++)
                 {
                     Assert.AreEqual(ws1.MergedRanges.ElementAt(i).RangeAddress.ToString(),
                                     ws2.MergedRanges.ElementAt(i).RangeAddress.ToString());
@@ -498,7 +498,7 @@ namespace ClosedXML.Tests
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.NamedRanges.Count(), ws2.NamedRanges.Count());
-                for (int i = 0; i < ws1.NamedRanges.Count(); i++)
+                for (var i = 0; i < ws1.NamedRanges.Count(); i++)
                 {
                     var nr1 = ws1.NamedRanges.ElementAt(i);
                     var nr2 = ws2.NamedRanges.ElementAt(i);
@@ -524,7 +524,7 @@ namespace ClosedXML.Tests
                 var ws2 = ws1.CopyTo("Copy");
 
                 Assert.AreEqual(ws1.NamedRanges.Count(), ws2.NamedRanges.Count());
-                for (int i = 0; i < ws1.NamedRanges.Count(); i++)
+                for (var i = 0; i < ws1.NamedRanges.Count(); i++)
                 {
                     var nr1 = ws1.NamedRanges.ElementAt(i);
                     var nr2 = ws2.NamedRanges.ElementAt(i);
@@ -598,12 +598,12 @@ namespace ClosedXML.Tests
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.ConditionalFormats.Count(), ws2.ConditionalFormats.Count());
-                for (int i = 0; i < ws1.ConditionalFormats.Count(); i++)
+                for (var i = 0; i < ws1.ConditionalFormats.Count(); i++)
                 {
                     var original = ws1.ConditionalFormats.ElementAt(i);
                     var copy = ws2.ConditionalFormats.ElementAt(i);
                     Assert.AreEqual(original.Ranges.Count, copy.Ranges.Count);
-                    for (int j = 0; j < original.Ranges.Count; j++)
+                    for (var j = 0; j < original.Ranges.Count; j++)
                     {
                         Assert.AreEqual(original.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false),
                             copy.Ranges.ElementAt(j).RangeAddress.ToString(XLReferenceStyle.A1, false));
@@ -642,13 +642,13 @@ namespace ClosedXML.Tests
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.Tables.Count(), ws2.Tables.Count());
-                for (int i = 0; i < ws1.Tables.Count(); i++)
+                for (var i = 0; i < ws1.Tables.Count(); i++)
                 {
                     var original = ws1.Tables.ElementAt(i);
                     var copy = ws2.Tables.ElementAt(i);
                     Assert.AreEqual(original.RangeAddress.ToString(XLReferenceStyle.A1, false), copy.RangeAddress.ToString(XLReferenceStyle.A1, false));
                     Assert.AreEqual(original.Fields.Count(), copy.Fields.Count());
-                    for (int j = 0; j < original.Fields.Count(); j++)
+                    for (var j = 0; j < original.Fields.Count(); j++)
                     {
                         var originalField = original.Fields.ElementAt(j);
                         var copyField = copy.Fields.ElementAt(j);
@@ -698,7 +698,7 @@ namespace ClosedXML.Tests
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.DataValidations.Count(), ws2.DataValidations.Count());
-                for (int i = 0; i < ws1.DataValidations.Count(); i++)
+                for (var i = 0; i < ws1.DataValidations.Count(); i++)
                 {
                     var original = ws1.DataValidations.ElementAt(i);
                     var copy = ws2.DataValidations.ElementAt(i);
@@ -750,7 +750,7 @@ namespace ClosedXML.Tests
             {
                 Assert.AreEqual(ws1.Pictures.Count(), ws2.Pictures.Count());
 
-                for (int i = 0; i < ws1.Pictures.Count(); i++)
+                for (var i = 0; i < ws1.Pictures.Count(); i++)
                 {
                     var original = ws1.Pictures.ElementAt(i);
                     var copy = ws2.Pictures.ElementAt(i);
@@ -804,7 +804,7 @@ namespace ClosedXML.Tests
 
                 var comparer = new PivotTableComparer();
 
-                for (int i = 0; i < ws1.PivotTables.Count(); i++)
+                for (var i = 0; i < ws1.PivotTables.Count(); i++)
                 {
                     var original = ws1.PivotTables.ElementAt(i).CastTo<XLPivotTable>();
                     var copy = ws2.PivotTables.ElementAt(i).CastTo<XLPivotTable>();
@@ -833,7 +833,7 @@ namespace ClosedXML.Tests
                 var ws2 = ws1.CopyTo(wb2, "Copy");
 
                 Assert.AreEqual(ws1.SelectedRanges.Count, ws2.SelectedRanges.Count);
-                for (int i = 0; i < ws1.SelectedRanges.Count; i++)
+                for (var i = 0; i < ws1.SelectedRanges.Count; i++)
                 {
                     Assert.AreEqual(ws1.SelectedRanges.ElementAt(i).RangeAddress.ToString(),
                                     ws2.SelectedRanges.ElementAt(i).RangeAddress.ToString());
@@ -941,7 +941,7 @@ namespace ClosedXML.Tests
                 var copy = ws2.SparklineGroups.Single();
 
                 Assert.AreEqual(original.Count(), copy.Count());
-                for (int i = 0; i < original.Count(); i++)
+                for (var i = 0; i < original.Count(); i++)
                 {
                     Assert.AreSame(ws2, copy.ElementAt(i).Location.Worksheet);
                     Assert.AreSame(ws2, copy.ElementAt(i).SourceData.Worksheet);

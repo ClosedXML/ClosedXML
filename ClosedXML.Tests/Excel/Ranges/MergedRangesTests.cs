@@ -11,11 +11,11 @@ namespace ClosedXML.Tests
         public void LastCellFromMerge()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+            var ws = wb.Worksheets.Add("Sheet");
             ws.Range("B2:D4").Merge();
 
-            string first = ws.FirstCellUsed(XLCellsUsedOptions.All).Address.ToStringRelative();
-            string last = ws.LastCellUsed(XLCellsUsedOptions.All).Address.ToStringRelative();
+            var first = ws.FirstCellUsed(XLCellsUsedOptions.All).Address.ToStringRelative();
+            var last = ws.LastCellUsed(XLCellsUsedOptions.All).Address.ToStringRelative();
 
             Assert.AreEqual("B2", first);
             Assert.AreEqual("D4", last);
@@ -220,7 +220,7 @@ namespace ClosedXML.Tests
         [Test]
         public void MergedCellsAcquireFirstCellStyle()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
@@ -237,7 +237,7 @@ namespace ClosedXML.Tests
         [Test]
         public void MergedCellsLooseData()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Range("A1:A3").SetValue(100);
@@ -252,7 +252,7 @@ namespace ClosedXML.Tests
         [Test]
         public void MergedCellsLooseConditionalFormats()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("A1").AddConditionalFormat().WhenContains("1").Fill.BackgroundColor = XLColor.Red;
@@ -268,7 +268,7 @@ namespace ClosedXML.Tests
         [Test]
         public void MergedCellsLooseDataValidation()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("A1").CreateDataValidation().WholeNumber.Between(1, 2);
@@ -286,7 +286,7 @@ namespace ClosedXML.Tests
         [Test]
         public void UnmergedCellsPreserveStyle()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 var range = ws.Range("B2:D4");

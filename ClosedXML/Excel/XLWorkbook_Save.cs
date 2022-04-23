@@ -152,7 +152,7 @@ namespace ClosedXML.Excel
         private void DeleteSheetAndDependencies(WorkbookPart wbPart, string sheetId)
         {
             //Get the SheetToDelete from workbook.xml
-            Sheet worksheet = wbPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Id == sheetId);
+            var worksheet = wbPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Id == sheetId);
             if (worksheet == null)
                 return;
 
@@ -160,9 +160,9 @@ namespace ClosedXML.Excel
             // Get the pivot Table Parts
             var pvtTableCacheParts = wbPart.PivotTableCacheDefinitionParts;
             var pvtTableCacheDefinitionPart = new Dictionary<PivotTableCacheDefinitionPart, string>();
-            foreach (PivotTableCacheDefinitionPart Item in pvtTableCacheParts)
+            foreach (var Item in pvtTableCacheParts)
             {
-                PivotCacheDefinition pvtCacheDef = Item.PivotCacheDefinition;
+                var pvtCacheDef = Item.PivotCacheDefinition;
                 //Check if this CacheSource is linked to SheetToDelete
                 if (pvtCacheDef.Descendants<CacheSource>().Any(cacheSource => cacheSource.WorksheetSource?.Sheet == sheetName))
                 {
@@ -175,7 +175,7 @@ namespace ClosedXML.Excel
             }
 
             // Remove the sheet reference from the workbook.
-            WorksheetPart worksheetPart = (WorksheetPart)(wbPart.GetPartById(sheetId));
+            var worksheetPart = (WorksheetPart)(wbPart.GetPartById(sheetId));
             worksheet.Remove();
 
             // Delete the worksheet part.
@@ -185,7 +185,7 @@ namespace ClosedXML.Excel
             var definedNames = wbPart.Workbook.Descendants<DefinedNames>().FirstOrDefault();
             if (definedNames != null)
             {
-                List<DefinedName> defNamesToDelete = new List<DefinedName>();
+                var defNamesToDelete = new List<DefinedName>();
 
                 foreach (var Item in definedNames.OfType<DefinedName>())
                 {
@@ -194,7 +194,7 @@ namespace ClosedXML.Excel
                         defNamesToDelete.Add(Item);
                 }
 
-                foreach (DefinedName Item in defNamesToDelete)
+                foreach (var Item in defNamesToDelete)
                 {
                     Item.Remove();
                 }
@@ -208,11 +208,11 @@ namespace ClosedXML.Excel
             if (calChainPart != null)
             {
                 var calChainEntries = calChainPart.CalculationChain.Descendants<CalculationCell>().Where(c => c.SheetId == sheetId);
-                List<CalculationCell> calcsToDelete = new List<CalculationCell>();
-                foreach (CalculationCell Item in calChainEntries)
+                var calcsToDelete = new List<CalculationCell>();
+                foreach (var Item in calChainEntries)
                     calcsToDelete.Add(Item);
 
-                foreach (CalculationCell Item in calcsToDelete)
+                foreach (var Item in calcsToDelete)
                     Item.Remove();
 
                 if (!calChainPart.CalculationChain.Any())
@@ -1004,7 +1004,7 @@ namespace ClosedXML.Excel
                 c.DataType = XLDataType.Text;
                 if (c.HasRichText)
                 {
-                    if (newRichStrings.TryGetValue(c.GetRichText(), out int id))
+                    if (newRichStrings.TryGetValue(c.GetRichText(), out var id))
                         c.SharedStringId = id;
                     else
                     {
@@ -1024,7 +1024,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     var value = c.Value.ObjectToInvariantString();
-                    if (newStrings.TryGetValue(value, out int id))
+                    if (newStrings.TryGetValue(value, out var id))
                         c.SharedStringId = id;
                     else
                     {
@@ -1076,7 +1076,7 @@ namespace ClosedXML.Excel
                 var fontKey = XLFont.GenerateKey(richText.Phonetics);
                 var f = XLFontValue.FromKey(ref fontKey);
 
-                if (!context.SharedFonts.TryGetValue(f, out FontInfo fi))
+                if (!context.SharedFonts.TryGetValue(f, out var fi))
                 {
                     fi = new FontInfo { Font = f };
                     context.SharedFonts.Add(f, fi);
@@ -1954,7 +1954,7 @@ namespace ClosedXML.Excel
                         .First()
                         .Style as XLStyle).Value;
 
-                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.TryGetValue(style, out int id))
+                    if (!DefaultStyleValue.Equals(style) && context.DifferentialFormats.TryGetValue(style, out var id))
                         tableColumn.DataFormatId = UInt32Value.FromUInt32(Convert.ToUInt32(id));
                 }
                 else
@@ -1962,7 +1962,7 @@ namespace ClosedXML.Excel
 
                 if (xlField.IsConsistentFormula())
                 {
-                    string formula = xlField.Column.Cells()
+                    var formula = xlField.Column.Cells()
                         .Skip(xlTable.ShowHeaderRow ? 1 : 0)
                         .First()
                         .FormulaA1;
@@ -2104,7 +2104,7 @@ namespace ClosedXML.Excel
 
             #region CreatedVersion
 
-            byte createdVersion = XLConstants.PivotTable.CreatedVersion;
+            var createdVersion = XLConstants.PivotTable.CreatedVersion;
 
             if (pivotCacheDefinition.CreatedVersion?.HasValue ?? false)
                 pivotCacheDefinition.CreatedVersion = Math.Max(createdVersion, pivotCacheDefinition.CreatedVersion.Value);
@@ -2115,7 +2115,7 @@ namespace ClosedXML.Excel
 
             #region RefreshedVersion
 
-            byte refreshedVersion = XLConstants.PivotTable.RefreshedVersion;
+            var refreshedVersion = XLConstants.PivotTable.RefreshedVersion;
             if (pivotCacheDefinition.RefreshedVersion?.HasValue ?? false)
                 pivotCacheDefinition.RefreshedVersion = Math.Max(refreshedVersion, pivotCacheDefinition.RefreshedVersion.Value);
             else
@@ -2329,7 +2329,7 @@ namespace ClosedXML.Excel
                         sharedItems.ContainsString = false;
                         sharedItems.ContainsNumber = true;
 
-                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out int val));
+                        var allInteger = ptfi.DistinctValues.All(v => int.TryParse(v.ToString(), out var val));
                         if (allInteger) sharedItems.ContainsInteger = true;
 
                         // Output items only for row / column / filter fields
@@ -2868,7 +2868,7 @@ namespace ClosedXML.Excel
 
             if (pt.ColumnLabels.All(cl => cl.CustomName == XLConstants.PivotTable.ValuesSentinalLabel))
             {
-                for (int i = 0; i < pt.Values.Count(); i++)
+                for (var i = 0; i < pt.Values.Count(); i++)
                 {
                     var rowItem = new RowItem();
                     rowItem.Index = Convert.ToUInt32(i);
@@ -3186,7 +3186,7 @@ namespace ClosedXML.Excel
                 var comment = new Comment { Reference = c.Address.ToStringRelative() };
                 var authorName = c.GetComment().Author;
 
-                if (!authorsDict.TryGetValue(authorName, out int authorId))
+                if (!authorsDict.TryGetValue(authorName, out var authorId))
                 {
                     authorId = authorsDict.Count;
                     authorsDict.Add(authorName, authorId);
@@ -3726,7 +3726,7 @@ namespace ClosedXML.Excel
             var numberFormats = xlStyles.Select(s => s.NumberFormat).Distinct().ToList();
             var protections = xlStyles.Select(s => s.Protection).Distinct().ToList();
 
-            for (int i = 0; i < fonts.Count; i++)
+            for (var i = 0; i < fonts.Count; i++)
             {
                 if (!context.SharedFonts.ContainsKey(fonts[i]))
                 {
@@ -3961,7 +3961,7 @@ namespace ClosedXML.Excel
                     numberFormat.NumberFormatId = (uint)(style.NumberFormat.NumberFormatId);
                     if (!string.IsNullOrEmpty(style.NumberFormat.Format))
                         numberFormat.FormatCode = style.NumberFormat.Format;
-                    else if (XLPredefinedFormat.FormatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out string formatCode))
+                    else if (XLPredefinedFormat.FormatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out var formatCode))
                         numberFormat.FormatCode = formatCode;
                 }
 
@@ -4778,8 +4778,8 @@ namespace ClosedXML.Excel
             svcm.SetElement(XLSheetViewContents.Pane, pane);
 
             pane.State = PaneStateValues.FrozenSplit;
-            int hSplit = xlWorksheet.SheetView.SplitColumn;
-            int ySplit = xlWorksheet.SheetView.SplitRow;
+            var hSplit = xlWorksheet.SheetView.SplitColumn;
+            var ySplit = xlWorksheet.SheetView.SplitRow;
 
             pane.HorizontalSplit = hSplit;
             pane.VerticalSplit = ySplit;
@@ -4972,7 +4972,7 @@ namespace ClosedXML.Excel
                     var isHidden = false;
                     var collapsed = false;
                     var outlineLevel = 0;
-                    if (xlWorksheet.Internals.ColumnsCollection.TryGetValue(co, out XLColumn col))
+                    if (xlWorksheet.Internals.ColumnsCollection.TryGetValue(co, out var col))
                     {
                         styleId = context.SharedStyles[col.StyleValue].StyleId;
                         columnWidth = GetColumnWidth(col.Width).SaveRound();
@@ -5091,7 +5091,7 @@ namespace ClosedXML.Excel
                 row.StyleIndex = null;
                 row.CustomFormat = null;
                 row.Collapsed = null;
-                if (xlWorksheet.Internals.RowsCollection.TryGetValue(distinctRow, out XLRow thisRow))
+                if (xlWorksheet.Internals.RowsCollection.TryGetValue(distinctRow, out var thisRow))
                 {
                     if (thisRow.HeightChanged)
                     {
@@ -5122,13 +5122,13 @@ namespace ClosedXML.Excel
                         c => c
                     );
 
-                if (xlWorksheet.Internals.CellsCollection.Deleted.TryGetValue(distinctRow, out HashSet<int> deletedColumns))
+                if (xlWorksheet.Internals.CellsCollection.Deleted.TryGetValue(distinctRow, out var deletedColumns))
                 {
                     foreach (var deletedColumn in deletedColumns.ToList())
                     {
                         var key = XLHelper.GetColumnLetterFromNumber(deletedColumn) + distinctRow.ToInvariantString();
 
-                        if (!currentOpenXmlRowCells.TryGetValue(key, out Cell cell))
+                        if (!currentOpenXmlRowCells.TryGetValue(key, out var cell))
                             continue;
 
                         row.RemoveChild(cell);
@@ -5138,7 +5138,7 @@ namespace ClosedXML.Excel
                         xlWorksheet.Internals.CellsCollection.Deleted.Remove(distinctRow);
                 }
 
-                if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(distinctRow, out Dictionary<int, XLCell> cells))
+                if (xlWorksheet.Internals.CellsCollection.RowsCollection.TryGetValue(distinctRow, out var cells))
                 {
                     var isNewRow = !row.Elements<Cell>().Any();
                     lastCell = 0;
@@ -5160,7 +5160,7 @@ namespace ClosedXML.Excel
                                                      & ~XLCellsUsedOptions.DataValidation
                                                      & ~XLCellsUsedOptions.MergedRanges);
 
-                        if (currentOpenXmlRowCells.TryGetValue(cellReference, out Cell cell))
+                        if (currentOpenXmlRowCells.TryGetValue(cellReference, out var cell))
                         {
                             if (isEmpty)
                             {
@@ -5306,7 +5306,7 @@ namespace ClosedXML.Excel
 
             foreach (var r in xlWorksheet.Internals.CellsCollection.Deleted.Keys)
             {
-                if (existingSheetDataRows.TryGetValue(r, out Row row))
+                if (existingSheetDataRows.TryGetValue(r, out var row))
                 {
                     sheetData.RemoveChild(row);
                     existingSheetDataRows.Remove(r);
@@ -5473,13 +5473,13 @@ namespace ClosedXML.Excel
                     worksheetPart.Worksheet.InsertAfter<WorksheetExtensionList>(new WorksheetExtensionList(), previousElement);
                 }
 
-                WorksheetExtensionList worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().First();
+                var worksheetExtensionList = worksheetPart.Worksheet.Elements<WorksheetExtensionList>().First();
                 cm.SetElement(XLWorksheetContents.WorksheetExtensionList, worksheetExtensionList);
 
                 var conditionalFormattings = worksheetExtensionList.Descendants<DocumentFormat.OpenXml.Office2010.Excel.ConditionalFormattings>().SingleOrDefault();
                 if (conditionalFormattings == null || !conditionalFormattings.Any())
                 {
-                    WorksheetExtension worksheetExtension1 = new WorksheetExtension { Uri = "{78C0D931-6437-407d-A8EE-F0AAD7539E65}" };
+                    var worksheetExtension1 = new WorksheetExtension { Uri = "{78C0D931-6437-407d-A8EE-F0AAD7539E65}" };
                     worksheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
                     worksheetExtensionList.Append(worksheetExtension1);
 
@@ -6364,7 +6364,7 @@ namespace ClosedXML.Excel
 
         private static void UpdateColumn(Column column, Columns columns, Dictionary<uint, Column> sheetColumnsByMin)
         {
-            if (!sheetColumnsByMin.TryGetValue(column.Min.Value, out Column newColumn))
+            if (!sheetColumnsByMin.TryGetValue(column.Min.Value, out var newColumn))
             {
                 newColumn = (Column)column.CloneNode(true);
                 columns.AppendChild(newColumn);

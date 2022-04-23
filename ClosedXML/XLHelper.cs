@@ -65,7 +65,7 @@ namespace ClosedXML.Excel
         {
             allLetters = new string[XLHelper.MaxColumnNumber];
             letterIndexes = new Dictionary<string, int>(XLHelper.MaxColumnNumber, StringComparer.Create(ParseCulture, true));
-            for (int i = 0; i < XLHelper.MaxColumnNumber; i++)
+            for (var i = 0; i < XLHelper.MaxColumnNumber; i++)
             {
                 string letter;
                 if (i < 26)
@@ -159,7 +159,7 @@ namespace ClosedXML.Excel
 
         public static bool IsValidRow(string rowString)
         {
-            if (int.TryParse(rowString, out int row))
+            if (int.TryParse(rowString, out var row))
                 return row > 0 && row <= MaxRowNumber;
             return false;
         }
@@ -286,8 +286,8 @@ namespace ClosedXML.Excel
         private static string ReplaceGroup(string value, string item)
         {
             var split = value.Split(':');
-            string ret1 = split[0].StartsWith("$") ? split[0] : item;
-            string ret2 = split[1].StartsWith("$") ? split[1] : item;
+            var ret1 = split[0].StartsWith("$") ? split[0] : item;
+            var ret2 = split[1].StartsWith("$") ? split[1] : item;
             return ret1 + ":" + ret2;
         }
 

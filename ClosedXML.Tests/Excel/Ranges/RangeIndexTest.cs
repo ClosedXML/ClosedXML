@@ -20,9 +20,9 @@ namespace ClosedXML.Tests.Excel.Ranges
                 var ws = wb.Worksheets.Add("Sheet1") as XLWorksheet;
                 var index = FillIndexWithTestData(ws);
 
-                for (int i = 1; i <= TEST_COUNT; i++)
+                for (var i = 1; i <= TEST_COUNT; i++)
                 {
-                    for (int j = 2; j <= 4; j++)
+                    for (var j = 2; j <= 4; j++)
                     {
                         var address = new XLAddress(ws, i * 2, j, false, false);
                         Assert.True(index.Contains(in address));
@@ -39,7 +39,7 @@ namespace ClosedXML.Tests.Excel.Ranges
                 var ws = wb.Worksheets.Add("Sheet1") as XLWorksheet;
                 var index = FillIndexWithTestData(ws);
 
-                for (int i = 1; i <= TEST_COUNT; i++)
+                for (var i = 1; i <= TEST_COUNT; i++)
                 {
                     var address = new XLAddress(ws, i * 2 + 1, 3, false, false);
                     Assert.False(index.Contains(in address));
@@ -55,7 +55,7 @@ namespace ClosedXML.Tests.Excel.Ranges
                 var ws = wb.Worksheets.Add("Sheet1") as XLWorksheet;
                 var index = FillIndexWithTestData(ws);
 
-                for (int i = 1; i <= TEST_COUNT; i++)
+                for (var i = 1; i <= TEST_COUNT; i++)
                 {
                     var rangeAddress = new XLRangeAddress(
                         new XLAddress(ws, i * 2, 1 + i % 4, false, false),
@@ -64,7 +64,7 @@ namespace ClosedXML.Tests.Excel.Ranges
                     Assert.True(index.Intersects(in rangeAddress));
                 }
 
-                for (int i = 2; i < 4; i++)
+                for (var i = 2; i < 4; i++)
                 {
                     var columnAddress = XLRangeAddress.EntireColumn(ws, i);
                     Assert.True(index.Intersects(in columnAddress));
@@ -80,7 +80,7 @@ namespace ClosedXML.Tests.Excel.Ranges
                 var ws = wb.Worksheets.Add("Sheet1") as XLWorksheet;
                 var index = FillIndexWithTestData(ws);
 
-                for (int i = 1; i <= TEST_COUNT; i++)
+                for (var i = 1; i <= TEST_COUNT; i++)
                 {
                     var rangeAddress = new XLRangeAddress(
                         new XLAddress(ws, i * 2 + 1, 1 + i % 4, false, false),
@@ -241,14 +241,14 @@ namespace ClosedXML.Tests.Excel.Ranges
                 Assert.AreEqual(ranges.Count, ranges.Count());
 
                 // Add many entries to activate QuadTree
-                for (int i = 1; i <= TEST_COUNT; i++)
+                for (var i = 1; i <= TEST_COUNT; i++)
                 {
                     ranges.Add(ws.Range(i * 2, 2, i * 2, 4));
                 }
 
                 Assert.AreEqual(2 + TEST_COUNT, ranges.Count);
 
-                for (int i = 1; i <= TEST_COUNT; i++)
+                for (var i = 1; i <= TEST_COUNT; i++)
                 {
                     ranges.Remove(ws.Range(i * 2, 2, i * 2, 4));
                 }
@@ -272,7 +272,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         private IXLRangeIndex FillIndexWithTestData(IXLWorksheet worksheet)
         {
             var ranges = new List<IXLRange>();
-            for (int i = 1; i <= TEST_COUNT; i++)
+            for (var i = 1; i <= TEST_COUNT; i++)
             {
                 ranges.Add(worksheet.Range(i * 2, 2, i * 2, 4));
             }

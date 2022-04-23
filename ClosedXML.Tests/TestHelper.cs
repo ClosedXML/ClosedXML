@@ -44,8 +44,8 @@ namespace ClosedXML.Tests
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             var example = new T();
-            string[] pathParts = filePartName.Split(new char[] { '\\' });
-            string filePath1 = Path.Combine(new List<string>() { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
+            var pathParts = filePartName.Split(new char[] { '\\' });
+            var filePath1 = Path.Combine(new List<string>() { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
@@ -75,11 +75,11 @@ namespace ClosedXML.Tests
 
             if (CompareWithResources)
             {
-                string resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
+                var resourcePath = "Examples." + filePartName.Replace('\\', '.').TrimStart('.');
                 using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message, ignoreColumnFormats);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out var message, ignoreColumnFormats);
                     var formattedMessage = $"Actual file is different than the expected file '{resourcePath}'. The difference is: '{message}'.";
 
                     if (success)
@@ -108,7 +108,7 @@ namespace ClosedXML.Tests
                 Directory.CreateDirectory(testResultDirectory);
             }
             streamExpected.Position = 0;
-            string path = Path.Combine(testResultDirectory, filename);
+            var path = Path.Combine(testResultDirectory, filename);
 
             if (File.Exists(path))
             {
@@ -123,8 +123,8 @@ namespace ClosedXML.Tests
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
-            string[] pathParts = referenceResource.Split(new char[] { '\\' });
-            string filePath1 = Path.Combine(new List<string>() { TestsOutputDirectory }.Concat(pathParts).ToArray());
+            var pathParts = referenceResource.Split(new char[] { '\\' });
+            var filePath1 = Path.Combine(new List<string>() { TestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
@@ -140,11 +140,11 @@ namespace ClosedXML.Tests
 
             if (CompareWithResources)
             {
-                string resourcePath = referenceResource.Replace('\\', '.').TrimStart('.');
+                var resourcePath = referenceResource.Replace('\\', '.').TrimStart('.');
                 using (var streamExpected = _extractor.ReadFileFromResourceToStream(resourcePath))
                 using (var streamActual = File.OpenRead(filePath2))
                 {
-                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out string message, ignoreColumnFormats);
+                    var success = ExcelDocsComparer.Compare(streamActual, streamExpected, out var message, ignoreColumnFormats);
                     var formattedMessage =
                         string.Format(
                             "Actual file '{0}' is different than the expected file '{1}'. The difference is: '{2}'",

@@ -51,7 +51,7 @@ namespace ClosedXML.Excel
 
             public void AddValues(IEnumerable<string> values, RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<string> list))
+                if (!_relIds.TryGetValue(relType, out var list))
                 {
                     list = new List<string>();
                     _relIds.Add(relType, list);
@@ -66,16 +66,16 @@ namespace ClosedXML.Excel
 
             public string GetNext(RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<string> list))
+                if (!_relIds.TryGetValue(relType, out var list))
                 {
                     list = new List<string>();
                     _relIds.Add(relType, list);
                 }
 
-                int id = list.Count + 1;
+                var id = list.Count + 1;
                 while (true)
                 {
-                    string relId = string.Concat("rId", id);
+                    var relId = string.Concat("rId", id);
                     if (!list.Contains(relId))
                     {
                         list.Add(relId);

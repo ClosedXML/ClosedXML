@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -64,9 +63,9 @@ namespace ClosedXML.Excel
             else
             {
                 var toDelete = new Dictionary<IXLWorksheet, List<int>>();
-                foreach (XLColumn c in Columns)
+                foreach (var c in Columns)
                 {
-                    if (!toDelete.TryGetValue(c.Worksheet, out List<int> list))
+                    if (!toDelete.TryGetValue(c.Worksheet, out var list))
                     {
                         list = new List<int>();
                         toDelete.Add(c.Worksheet, list);
@@ -75,9 +74,9 @@ namespace ClosedXML.Excel
                     list.Add(c.ColumnNumber());
                 }
 
-                foreach (KeyValuePair<IXLWorksheet, List<int>> kp in toDelete)
+                foreach (var kp in toDelete)
                 {
-                    foreach (int c in kp.Value.OrderByDescending(c => c))
+                    foreach (var c in kp.Value.OrderByDescending(c => c))
                         kp.Key.Column(c).Delete();
                 }
             }
@@ -172,7 +171,7 @@ namespace ClosedXML.Excel
         public IXLCells Cells()
         {
             var cells = new XLCells(false, XLCellsUsedOptions.All);
-            foreach (XLColumn container in Columns)
+            foreach (var container in Columns)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -180,7 +179,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, XLCellsUsedOptions.All);
-            foreach (XLColumn container in Columns)
+            foreach (var container in Columns)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -195,7 +194,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
             var cells = new XLCells(true, options);
-            foreach (XLColumn container in Columns)
+            foreach (var container in Columns)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -205,7 +204,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public IXLColumns AddVerticalPageBreaks()
         {
-            foreach (XLColumn col in Columns)
+            foreach (var col in Columns)
                 col.Worksheet.PageSetup.AddVerticalPageBreak(col.ColumnNumber());
             return this;
         }
@@ -229,7 +228,7 @@ namespace ClosedXML.Excel
                     yield return _worksheet.Style;
                 else
                 {
-                    foreach (IXLStyle s in Columns.SelectMany(col => col.Styles))
+                    foreach (var s in Columns.SelectMany(col => col.Styles))
                     {
                         yield return s;
                     }
@@ -245,7 +244,7 @@ namespace ClosedXML.Excel
                     yield return _worksheet;
                 else
                 {
-                    foreach (XLColumn column in Columns)
+                    foreach (var column in Columns)
                         yield return column;
                 }
             }

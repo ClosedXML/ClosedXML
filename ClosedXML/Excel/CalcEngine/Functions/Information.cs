@@ -130,7 +130,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 try
                 {
                     var stringValue = (string) v;
-                    return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out double dv);
+                    return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out var dv);
                 }
                 catch (Exception)
                 {

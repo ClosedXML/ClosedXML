@@ -161,8 +161,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (radix > 36)
                 throw new ArgumentOutOfRangeException("radix must be smaller than or equal to 36");
 
-            StringBuilder sb = new StringBuilder();
-            long remaining = number;
+            var sb = new StringBuilder();
+            var remaining = number;
 
             if (remaining == 0)
             {

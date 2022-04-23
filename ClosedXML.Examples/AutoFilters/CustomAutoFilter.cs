@@ -13,7 +13,7 @@ namespace ClosedXML.Examples
 
             #region Single Column Numbers
 
-            string singleColumnNumbers = "Single Column Numbers";
+            var singleColumnNumbers = "Single Column Numbers";
             ws = wb.Worksheets.Add(singleColumnNumbers);
 
             // Add a bunch of numbers to filter
@@ -35,7 +35,7 @@ namespace ClosedXML.Examples
 
             #region Single Column Strings
 
-            string singleColumnStrings = "Single Column Strings";
+            var singleColumnStrings = "Single Column Strings";
             ws = wb.Worksheets.Add(singleColumnStrings);
 
             // Add a bunch of strings to filter
@@ -57,7 +57,7 @@ namespace ClosedXML.Examples
 
             #region Single Column Mixed
 
-            string singleColumnMixed = "Single Column Mixed";
+            var singleColumnMixed = "Single Column Mixed";
             ws = wb.Worksheets.Add(singleColumnMixed);
 
             // Add a bunch of items to filter
@@ -79,7 +79,7 @@ namespace ClosedXML.Examples
 
             #region Multi Column
 
-            string multiColumn = "Multi Column";
+            var multiColumn = "Multi Column";
             ws = wb.Worksheets.Add(multiColumn);
 
             ws.Cell("A1").SetValue("First")

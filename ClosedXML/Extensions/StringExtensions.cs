@@ -17,8 +17,8 @@ namespace ClosedXML.Excel
 
         public static string RemoveSpecialCharacters(this string str)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in str)
+            var sb = new StringBuilder();
+            foreach (var c in str)
             {
                 if (char.IsLetterOrDigit(c) || c == '.' || c == '_')
                 {

@@ -280,7 +280,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(6, 7, 0.86217005466723)]
         public void Atan2_ReturnsCorrectResults_EqualOnAllMultiplesOfFraction(double x, double y, double expectedResult)
         {
-            for (int i = 1; i < 5; i++)
+            for (var i = 1; i < 5; i++)
             {
                 var actual = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
@@ -488,7 +488,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 0, 10, 0)]
         public void CeilingMath(double input, double? step, int? mode, double expectedResult)
         {
-            string parameters = input.ToString(CultureInfo.InvariantCulture);
+            var parameters = input.ToString(CultureInfo.InvariantCulture);
             if (step != null)
             {
                 parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
@@ -987,7 +987,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 0, 0, 0)]
         public void FloorMath(double input, double? step, int? mode, double expectedResult)
         {
-            string parameters = input.ToString(CultureInfo.InvariantCulture);
+            var parameters = input.ToString(CultureInfo.InvariantCulture);
             if (step != null)
             {
                 parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
@@ -1117,14 +1117,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(30, 6.48292)]
         public void Sec_ReturnsCorrectNumber(double input, double expectedOutput)
         {
-            double result = (double)XLWorkbook.EvaluateExpr(
+            var result = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SEC({0})",
                     input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedOutput, result, 0.00001);
 
             // as the secant is symmetric for positive and negative numbers, let's assert twice:
-            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
+            var resultForNegative = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SEC({0})",
                     (-input).ToString(CultureInfo.InvariantCulture)));
@@ -1149,14 +1149,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(0, 1)]
         public void Sech_ReturnsCorrectNumber(double input, double expectedOutput)
         {
-            double result = (double)XLWorkbook.EvaluateExpr(
+            var result = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SECH({0})",
                     input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedOutput, result, 0.00001);
 
             // as the secant is symmetric for positive and negative numbers, let's assert twice:
-            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
+            var resultForNegative = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SECH({0})",
                     (-input).ToString(CultureInfo.InvariantCulture)));

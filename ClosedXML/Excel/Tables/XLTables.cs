@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
 
         public void Remove(string name)
         {
-            if (!_tables.TryGetValue(name, out IXLTable table))
+            if (!_tables.TryGetValue(name, out var table))
                 throw new ArgumentOutOfRangeException(nameof(name), $"Unable to delete table because the table name {name} could not be found.");
 
             _tables.Remove(name);
@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
 
         public IXLTable Table(string name)
         {
-            if (TryGetTable(name, out IXLTable table))
+            if (TryGetTable(name, out var table))
                 return table;
 
             throw new ArgumentOutOfRangeException(nameof(name), $"Table {name} was not found.");

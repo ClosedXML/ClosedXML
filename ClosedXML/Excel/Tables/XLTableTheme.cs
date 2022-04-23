@@ -98,7 +98,7 @@ namespace ClosedXML.Excel
             {
                 return false;
             }
-            XLTableTheme theme = obj as XLTableTheme;
+            var theme = obj as XLTableTheme;
             if (theme == null)
             {
                 return false;

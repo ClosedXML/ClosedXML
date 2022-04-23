@@ -65,7 +65,7 @@ namespace ClosedXML.Examples
 
                 #region Pivots
 
-                for (int i = 1; i <= 3; i++)
+                for (var i = 1; i <= 3; i++)
                 {
                     // Add a new sheet for our pivot table
                     ptSheet = wb.Worksheets.Add("pvt" + i);

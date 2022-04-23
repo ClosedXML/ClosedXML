@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
     {
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
-            foreach (T item in source)
+            foreach (var item in source)
                 action(item);
         }
 
@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
 
         public static bool HasDuplicates<T>(this IEnumerable<T> source)
         {
-            HashSet<T> distinctItems = new HashSet<T>();
+            var distinctItems = new HashSet<T>();
             foreach (var item in source)
             {
                 if (!distinctItems.Add(item))

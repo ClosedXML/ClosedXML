@@ -46,7 +46,7 @@ namespace ClosedXML.Examples.Misc
             var wsTable = wb.Worksheets.Add("Table");
             AddTestTable(wsTable);
             var header = wsTable.Row(1).InsertRowsAbove(1).First();
-            for (int co = 1; co <= wsTable.LastColumnUsed().ColumnNumber(); co++)
+            for (var co = 1; co <= wsTable.LastColumnUsed().ColumnNumber(); co++)
             {
                 header.Cell(co).Value = "Column" + co.ToString();
             }

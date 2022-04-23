@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
             });
 
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
                     row.WorksheetRow().Unhide();
@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
 
         internal static bool IsMatch(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)
         {
-            bool isMatch = true;
+            var isMatch = true;
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Year) isMatch &= date1.Year.Equals(date2.Year);
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Month) isMatch &= date1.Month.Equals(date2.Month);
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Day) isMatch &= date1.Day.Equals(date2.Day);

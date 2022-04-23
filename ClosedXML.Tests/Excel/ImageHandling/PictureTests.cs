@@ -241,7 +241,7 @@ namespace ClosedXML.Tests
         public void XLMarkerTests()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            XLMarker firstMarker = new XLMarker(ws.Cell(1, 10), new SKPoint(100, 0));
+            var firstMarker = new XLMarker(ws.Cell(1, 10), new SKPoint(100, 0));
 
             Assert.AreEqual(10, firstMarker.ColumnNumber);
             Assert.AreEqual(1, firstMarker.RowNumber);

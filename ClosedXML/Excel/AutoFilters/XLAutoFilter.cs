@@ -48,7 +48,7 @@ namespace ClosedXML.Excel
             if (column < 1 || column > XLHelper.MaxColumnNumber)
                 throw new ArgumentOutOfRangeException(nameof(column), "Column " + column + " is outside the allowed column range.");
 
-            if (!_columns.TryGetValue(column, out XLFilterColumn filterColumn))
+            if (!_columns.TryGetValue(column, out var filterColumn))
             {
                 filterColumn = new XLFilterColumn(this, column);
                 _columns.Add(column, filterColumn);
@@ -68,7 +68,7 @@ namespace ClosedXML.Excel
                 row.WorksheetRow().Unhide()
             );
 
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 var rowMatch = true;
 
@@ -139,7 +139,7 @@ namespace ClosedXML.Excel
 
             IsEnabled = false;
             Filters.Clear();
-            foreach (IXLRangeRow row in Range.Rows().Where(r => r.RowNumber() > 1))
+            foreach (var row in Range.Rows().Where(r => r.RowNumber() > 1))
                 row.WorksheetRow().Unhide();
             return this;
         }

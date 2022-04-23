@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
                 startPos = 0;
             }
 
-            int rowPos = startPos;
+            var rowPos = startPos;
             while (cellAddressString[rowPos] > '9')
             {
                 rowPos++;
@@ -207,7 +207,7 @@ namespace ClosedXML.Excel
             if (!IsValid)
                 return "#REF!";
 
-            string retVal = ColumnLetter;
+            var retVal = ColumnLetter;
             if (_fixedColumn)
             {
                 retVal = "$" + retVal;

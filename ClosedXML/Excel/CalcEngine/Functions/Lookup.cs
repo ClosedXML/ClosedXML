@@ -88,7 +88,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static object Hyperlink(List<Expression> p)
         {
             string address = p[0];
-            string toolTip = p.Count == 2 ? p[1] : string.Empty;
+            var toolTip = p.Count == 2 ? p[1] : string.Empty;
             return new XLHyperlink(address, toolTip);
         }
 
@@ -120,8 +120,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
             else
             {
-                int column_num = 1;
-                int row_num = 1;
+                var column_num = 1;
+                var row_num = 1;
 
                 if (!(p[1] is EmptyValueExpression))
                     row_num = (int)p[1];
@@ -150,7 +150,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var lookup_value = p[0];
             var range = ExtractRange(p[1]);
-            int match_type = 1;
+            var match_type = 1;
             if (p.Count > 2)
                 match_type = Math.Sign((int)p[2]);
 

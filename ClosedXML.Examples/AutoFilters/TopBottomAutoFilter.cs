@@ -13,7 +13,7 @@ namespace ClosedXML.Examples
 
             #region Single Column Numbers
 
-            string singleColumnNumbers = "Single Column Numbers";
+            var singleColumnNumbers = "Single Column Numbers";
             ws = wb.Worksheets.Add(singleColumnNumbers);
 
             // Add a bunch of numbers to filter
@@ -35,7 +35,7 @@ namespace ClosedXML.Examples
 
             #region Multi Column
 
-            string multiColumn = "Multi Column";
+            var multiColumn = "Multi Column";
             ws = wb.Worksheets.Add(multiColumn);
 
             ws.Cell("A1").SetValue("First")

@@ -20,10 +20,10 @@ namespace ClosedXML.Excel
             get
             {
                 yield return Style;
-                foreach (XLTableRow rng in _ranges)
+                foreach (var rng in _ranges)
                 {
                     yield return rng.Style;
-                    foreach (XLCell r in rng.Worksheet.Internals.CellsCollection.GetCells(
+                    foreach (var r in rng.Worksheet.Internals.CellsCollection.GetCells(
                         rng.RangeAddress.FirstAddress.RowNumber,
                         rng.RangeAddress.FirstAddress.ColumnNumber,
                         rng.RangeAddress.LastAddress.RowNumber,
@@ -90,7 +90,7 @@ namespace ClosedXML.Excel
         public IXLCells Cells()
         {
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
-            foreach (XLTableRow container in _ranges)
+            foreach (var container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -98,7 +98,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
-            foreach (XLTableRow container in _ranges)
+            foreach (var container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
         }
@@ -113,7 +113,7 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
             var cells = new XLCells(false, options);
-            foreach (XLTableRow container in _ranges)
+            foreach (var container in _ranges)
                 cells.Add(container.RangeAddress);
             return cells;
         }

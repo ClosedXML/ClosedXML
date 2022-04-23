@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void CountUsedCellsInRow()
         {
-            int i = 0;
+            var i = 0;
             var row = workbook.Worksheets.First().FirstRow();
             foreach (var cell in row.Cells()) // Cells() returns UnUsed cells by default
             {
@@ -76,7 +76,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void CountAllCellsInRow()
         {
-            int i = 0;
+            var i = 0;
             var row = workbook.Worksheets.First().FirstRow();
             foreach (var cell in row.Cells(false)) // All cells in range between first and last cells used
             {
@@ -96,7 +96,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void CountUsedCellsInColumn()
         {
-            int i = 0;
+            var i = 0;
             var column = workbook.Worksheets.First().FirstColumn();
             foreach (var cell in column.Cells()) // Cells() returns UnUsed cells by default
             {
@@ -132,7 +132,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void CountAllCellsInColumn()
         {
-            int i = 0;
+            var i = 0;
             var column = workbook.Worksheets.First().FirstColumn();
             foreach (var cell in column.Cells(false)) // All cells in range between first and last cells used
             {
@@ -153,7 +153,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         public void CountCellsInWorksheet()
         {
             var ws = workbook.Worksheets.First();
-            int i = 0;
+            var i = 0;
 
             foreach (var cell in ws.Cells()) // All cells with content or formats
             {
@@ -166,7 +166,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         public void CountUsedCellsInWorksheet()
         {
             var ws = workbook.Worksheets.First();
-            int i = 0;
+            var i = 0;
 
             foreach (var cell in ws.CellsUsed()) // Only used cells in worksheet
             {
@@ -179,7 +179,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         public void CountAllCellsInWorksheet()
         {
             var ws = workbook.Worksheets.First();
-            int i = 0;
+            var i = 0;
 
             foreach (var cell in ws.Cells(false)) // All cells in range between first and last cells used (cartesian product of range)
             {
@@ -191,7 +191,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void GetCellsUsedNonRectangular()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var sheet = wb.AddWorksheet("page1");
 
@@ -217,7 +217,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         public void RangeUsedIncludesMergedCells(bool includeFormatting, string expectedRange,
             params string[] cellsWithValues)
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 foreach (var cellAddress in cellsWithValues)
@@ -238,7 +238,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void LastCellUsedPredicateConsidersMergedRanges()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;
@@ -258,7 +258,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void FirstCellUsedPredicateConsidersMergedRanges()
         {
-            using (XLWorkbook wb = new XLWorkbook())
+            using (var wb = new XLWorkbook())
             {
                 var ws = wb.AddWorksheet("Sheet1");
                 ws.Cell("A1").Style.Fill.BackgroundColor = XLColor.Red;

@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
 
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 if ((isText && condition(row.Cell(_column).GetString())) ||
                     (!isText && row.Cell(_column).DataType == XLDataType.Number &&

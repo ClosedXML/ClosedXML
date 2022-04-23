@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
                 return 1;
             }
 
-            int id = 1;
+            var id = 1;
             while (true)
             {
                 if (!_hash.Contains(id))

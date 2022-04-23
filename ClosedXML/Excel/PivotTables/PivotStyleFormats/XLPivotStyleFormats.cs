@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
             if (element == XLPivotStyleFormatElement.None)
                 throw new ArgumentException("Choose an enum value that represents an element", nameof(element));
 
-            if (!_styleFormats.TryGetValue(element, out IXLPivotStyleFormat pivotStyleFormat))
+            if (!_styleFormats.TryGetValue(element, out var pivotStyleFormat))
             {
                 pivotStyleFormat = new XLPivotStyleFormat(_pivotField) { AppliesTo = element };
                 _styleFormats.Add(element, pivotStyleFormat);

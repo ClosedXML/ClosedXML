@@ -68,7 +68,7 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Title");
                 ws.Range("A1").CreateTable();
 
@@ -82,7 +82,7 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Title")
                     .CellBelow().SetValue("X");
                 ws.Range("A1").CreateTable();
@@ -97,13 +97,13 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Categories")
                     .CellBelow().SetValue("A")
                     .CellBelow().SetValue("B")
                     .CellBelow().SetValue("C");
 
-                IXLTable table = ws.RangeUsed().CreateTable();
+                var table = ws.RangeUsed().CreateTable();
                 table.InsertColumnsAfter(1);
                 Assert.AreEqual("Column2", table.HeadersRow().LastCell().GetString());
             }
@@ -114,13 +114,13 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Categories")
                     .CellBelow().SetValue("A")
                     .CellBelow().SetValue("B")
                     .CellBelow().SetValue("C");
 
-                IXLTable table = ws.RangeUsed().CreateTable();
+                var table = ws.RangeUsed().CreateTable();
 
                 ws.Rows("2:4").Delete();
 
@@ -133,8 +133,8 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-                string columnName = "Line1" + XLConstants.NewLine + "Line2";
+                var ws = wb.AddWorksheet("Sheet1");
+                var columnName = "Line1" + XLConstants.NewLine + "Line2";
                 ws.FirstCell().SetValue(columnName)
                     .CellBelow().SetValue("A");
                 ws.RangeUsed().CreateTable();
@@ -142,9 +142,9 @@ namespace ClosedXML.Tests.Excel
                 {
                     wb.SaveAs(ms, true);
                     using var wb2 = new XLWorkbook(ms);
-                    IXLWorksheet ws2 = wb2.Worksheet(1);
-                    IXLTable table2 = ws2.Table(0);
-                    string fieldName = table2.Field(0).Name;
+                    var ws2 = wb2.Worksheet(1);
+                    var table2 = ws2.Table(0);
+                    var fieldName = table2.Field(0).Name;
                     Assert.AreEqual("Line1\nLine2", fieldName);
                 }
             }
@@ -155,28 +155,28 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.Worksheets.Add("Test");
+                var ws = wb.Worksheets.Add("Test");
 
                 using var dt = new DataTable();
-                string columnName = "Line1" + XLConstants.NewLine + "Line2";
+                var columnName = "Line1" + XLConstants.NewLine + "Line2";
                 dt.Columns.Add(columnName);
 
-                DataRow dr = dt.NewRow();
+                var dr = dt.NewRow();
                 dr[columnName] = "some text";
                 dt.Rows.Add(dr);
                 ws.Cell(1, 1).InsertTable(dt);
 
-                IXLTable table1 = ws.Table(0);
-                string fieldName1 = table1.Field(0).Name;
+                var table1 = ws.Table(0);
+                var fieldName1 = table1.Field(0).Name;
                 Assert.AreEqual(columnName, fieldName1);
 
                 using (var ms = new MemoryStream())
                 {
                     wb.SaveAs(ms, true);
                     using var wb2 = new XLWorkbook(ms);
-                    IXLWorksheet ws2 = wb2.Worksheet(1);
-                    IXLTable table2 = ws2.Table(0);
-                    string fieldName2 = table2.Field(0).Name;
+                    var ws2 = wb2.Worksheet(1);
+                    var table2 = ws2.Table(0);
+                    var fieldName2 = table2.Field(0).Name;
                     Assert.AreEqual("Line1\nLine2", fieldName2);
                 }
             }
@@ -191,7 +191,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(dt);
                 Assert.AreEqual(2, ws.Tables.First().ColumnCount());
             }
@@ -204,7 +204,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(l);
                 Assert.AreEqual(1, ws.Tables.First().ColumnCount());
             }
@@ -217,7 +217,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(l);
                 Assert.AreEqual(2, ws.Tables.First().ColumnCount());
             }
@@ -234,7 +234,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(l);
                 Assert.AreEqual(4, ws.Tables.First().ColumnCount());
                 Assert.AreEqual("FirstColumn", ws.FirstCell().Value);
@@ -251,7 +251,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(l);
                 Assert.AreEqual(4, ws.Tables.First().ColumnCount());
                 Assert.AreEqual("FirstColumn", ws.FirstCell().Value);
@@ -266,14 +266,14 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Value");
 
-                IXLTable table = ws.Range("A1:A2").CreateTable();
+                var table = ws.Range("A1:A2").CreateTable();
                 table.SetShowTotalsRow()
                     .Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
 
-                IXLTableRow row = table.DataRange.FirstRow();
+                var row = table.DataRange.FirstRow();
                 row.Field("Value").Value = 3;
                 row = table.DataRange.InsertRowsAbove(1).First();
                 row.Field("Value").Value = 2;
@@ -291,14 +291,14 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Value");
 
-                IXLTable table = ws.Range("A1:A2").CreateTable();
+                var table = ws.Range("A1:A2").CreateTable();
                 table.SetShowTotalsRow()
                     .Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
 
-                IXLTableRow row = table.DataRange.FirstRow();
+                var row = table.DataRange.FirstRow();
                 row.Field("Value").Value = 3;
                 row = row.InsertRowsAbove(1).First();
                 row.Field("Value").Value = 2;
@@ -316,14 +316,14 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Value");
 
-                IXLTable table = ws.Range("A1:A2").CreateTable();
+                var table = ws.Range("A1:A2").CreateTable();
                 table.SetShowTotalsRow()
                     .Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
 
-                IXLTableRow row = table.DataRange.FirstRow();
+                var row = table.DataRange.FirstRow();
                 row.Field("Value").Value = 1;
                 row = table.DataRange.InsertRowsBelow(1).First();
                 row.Field("Value").Value = 2;
@@ -341,14 +341,14 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Value");
 
-                IXLTable table = ws.Range("A1:A2").CreateTable();
+                var table = ws.Range("A1:A2").CreateTable();
                 table.SetShowTotalsRow()
                     .Field(0).TotalsRowFunction = XLTotalsRowFunction.Sum;
 
-                IXLTableRow row = table.DataRange.FirstRow();
+                var row = table.DataRange.FirstRow();
                 row.Field("Value").Value = 1;
                 row = row.InsertRowsBelow(1).First();
                 row.Field("Value").Value = 2;
@@ -366,13 +366,13 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().SetValue("Categories")
                     .CellBelow().SetValue("A")
                     .CellBelow().SetValue("B")
                     .CellBelow().SetValue("C");
 
-                IXLTable table = ws.RangeUsed().CreateTable();
+                var table = ws.RangeUsed().CreateTable();
 
                 Assert.AreEqual("Categories", table.Fields.First().Name);
 
@@ -388,7 +388,7 @@ namespace ClosedXML.Tests.Excel
                 Assert.AreEqual("C", table.DataRange.LastCell().GetString());
 
                 table.SetShowHeaderRow();
-                IXLRangeRow headerRow = table.HeadersRow();
+                var headerRow = table.HeadersRow();
                 Assert.AreNotEqual(null, headerRow);
                 Assert.AreEqual("Categories", headerRow.Cell(1).GetString());
 
@@ -556,7 +556,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "May2019"));
                 Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "A1"));
                 Assert.Throws<InvalidOperationException>(() => ws.Cell(1, 1).InsertTable(dt, "R1C2"));
@@ -634,7 +634,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(dt, true);
                 Assert.Throws<InvalidOperationException>(() => ws.FirstCell().CellRight().InsertTable(dt, true));
             }
@@ -692,7 +692,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 var table1 = ws.FirstCell().InsertTable(l);
                 var table2 = ws.Cell("A10").InsertTable(l);
 
@@ -776,7 +776,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 var table = ws.FirstCell().InsertTable(l);
 
                 foreach (var d in table.AsDynamicEnumerable())
@@ -804,7 +804,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 var table = ws.FirstCell().InsertTable(l).AsNativeDataTable();
 
                 Assert.AreEqual(4, table.Columns.Count);
@@ -907,7 +907,7 @@ namespace ClosedXML.Tests.Excel
 
             using (var wb = new XLWorkbook())
             {
-                IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+                var ws = wb.AddWorksheet("Sheet1");
                 ws.FirstCell().InsertTable(l);
                 Assert.Throws<InvalidOperationException>(() => ws.RangeUsed().CreateTable());
             }
@@ -1165,7 +1165,7 @@ namespace ClosedXML.Tests.Excel
         {
             Assert.AreEqual(table1.RangeAddress.ToString(XLReferenceStyle.A1, false), table2.RangeAddress.ToString(XLReferenceStyle.A1, false));
             Assert.AreEqual(table1.Fields.Count(), table2.Fields.Count());
-            for (int j = 0; j < table1.Fields.Count(); j++)
+            for (var j = 0; j < table1.Fields.Count(); j++)
             {
                 var originalField = table1.Fields.ElementAt(j);
                 var copyField = table2.Fields.ElementAt(j);

@@ -298,19 +298,19 @@ namespace ClosedXML.Excel
                 Style.SetIncludeQuotePrefix();
             }
             else if (!string.Equals(value.Trim(), "NaN", StringComparison.OrdinalIgnoreCase) &&
-                     double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out double _))
+                     double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out var _))
                 _dataType = XLDataType.Number;
-            else if (TimeSpan.TryParse(value, out TimeSpan ts))
+            else if (TimeSpan.TryParse(value, out var ts))
             {
                 value = ts.ToInvariantString();
                 SetTimeSpanFormat(style);
             }
-            else if (DateTime.TryParse(value, out DateTime dt) && dt >= BaseDate)
+            else if (DateTime.TryParse(value, out var dt) && dt >= BaseDate)
             {
                 value = dt.ToOADate().ToInvariantString();
                 SetDateTimeFormat(style, dt.Date == dt);
             }
-            else if (bool.TryParse(value, out bool b))
+            else if (bool.TryParse(value, out var b))
             {
                 value = b ? "1" : "0";
                 _dataType = XLDataType.Boolean;
@@ -536,7 +536,7 @@ namespace ClosedXML.Excel
 
         internal void SetDateValue(string text)
         {
-            if (double.TryParse(text, XLHelper.NumberStyle, XLHelper.ParseCulture, out double doubleValue))
+            if (double.TryParse(text, XLHelper.NumberStyle, XLHelper.ParseCulture, out var doubleValue))
                 SetInternalCellValueString(doubleValue.ToInvariantString());
             else
                 SetInternalCellValueString(DateTime.Parse(text).ToOADate().ToInvariantString());
@@ -549,7 +549,7 @@ namespace ClosedXML.Excel
 
         private object ParseCellValueFromString()
         {
-            return ParseCellValueFromString(_cellValue, _dataType, out string error);
+            return ParseCellValueFromString(_cellValue, _dataType, out var error);
         }
 
         private object ParseCellValueFromString(string cellValue, XLDataType dataType, out string error)
@@ -560,7 +560,7 @@ namespace ClosedXML.Excel
 
             if (dataType == XLDataType.Boolean)
             {
-                if (bool.TryParse(cellValue, out bool b))
+                if (bool.TryParse(cellValue, out var b))
                     return b;
                 else if (cellValue == "0")
                     return false;
@@ -572,14 +572,14 @@ namespace ClosedXML.Excel
 
             if (dataType == XLDataType.DateTime)
             {
-                if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out double d))
+                if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out var d))
                 {
                     if (d.IsValidOADateNumber())
                         return DateTime.FromOADate(d);
                     else
                         return d;
                 }
-                else if (DateTime.TryParse(cellValue, out DateTime dt))
+                else if (DateTime.TryParse(cellValue, out var dt))
                     return dt;
                 else
                 {
@@ -590,14 +590,14 @@ namespace ClosedXML.Excel
             if (dataType == XLDataType.Number)
             {
                 var v = cellValue;
-                double factor = 1.0;
+                var factor = 1.0;
                 if (v.EndsWith("%"))
                 {
                     v = v.Substring(0, v.Length - 1);
                     factor = 1 / 100.0;
                 }
 
-                if (double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out double d))
+                if (double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out var d))
                     return d * factor;
                 else
                 {
@@ -608,9 +608,9 @@ namespace ClosedXML.Excel
 
             if (dataType == XLDataType.TimeSpan)
             {
-                if (TimeSpan.TryParse(cellValue, out TimeSpan ts))
+                if (TimeSpan.TryParse(cellValue, out var ts))
                     return ts;
-                else if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out double d))
+                else if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out var d))
                     return XLHelper.GetTimeSpan(d);
                 else
                 {
@@ -828,7 +828,7 @@ namespace ClosedXML.Excel
 
             if (addHeadings)
             {
-                for (int i = 0; i < reader.GetPropertiesCount(); i++)
+                for (var i = 0; i < reader.GetPropertiesCount(); i++)
                 {
                     var propertyName = reader.GetPropertyName(i);
                     Worksheet.SetValue(propertyName, currentRowNumber, currentColumnNumber);
@@ -943,7 +943,7 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        var v = ParseCellValueFromString(_cellValue, value, out string error);
+                        var v = ParseCellValueFromString(_cellValue, value, out var error);
 
                         if (!string.IsNullOrWhiteSpace(error))
                             throw new ArgumentException(error, nameof(value));
@@ -1195,7 +1195,7 @@ namespace ClosedXML.Excel
                 if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
                     return _recalculationNeededLastValue;
 
-                bool res = EvaluatedAtVersion < ModifiedAtVersion ||                                       // the cell itself was modified
+                var res = EvaluatedAtVersion < ModifiedAtVersion ||                                       // the cell itself was modified
                            GetAffectingCells().Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
                                                            cell.EvaluatedAtVersion > EvaluatedAtVersion || // the affecting cell was evaluated after this one (normally this should not happen)
                                                            cell.NeedsRecalculation);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
@@ -1335,10 +1335,10 @@ namespace ClosedXML.Excel
 
                 if (StyleValue.Equals(Worksheet.StyleValue))
                 {
-                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out XLRow row) && !row.StyleValue.Equals(Worksheet.StyleValue))
+                    if (Worksheet.Internals.RowsCollection.TryGetValue(_rowNumber, out var row) && !row.StyleValue.Equals(Worksheet.StyleValue))
                         return false;
 
-                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out XLColumn column) && !column.StyleValue.Equals(Worksheet.StyleValue))
+                    if (Worksheet.Internals.ColumnsCollection.TryGetValue(_columnNumber, out var column) && !column.StyleValue.Equals(Worksheet.StyleValue))
                         return false;
                 }
             }
@@ -1599,7 +1599,7 @@ namespace ClosedXML.Excel
                 }
             }
 
-            if (DateTime.TryParse(currentValue.ToString(), out DateTime ts))
+            if (DateTime.TryParse(currentValue.ToString(), out var ts))
             {
                 value = (T)Convert.ChangeType(ts, typeof(T));
                 return true;
@@ -1628,7 +1628,7 @@ namespace ClosedXML.Excel
 
             if (currentValue is T v) { value = v; return true; }
 
-            if (!TimeSpan.TryParse(currentValue.ToString(), out TimeSpan ts))
+            if (!TimeSpan.TryParse(currentValue.ToString(), out var ts))
             {
                 value = default;
                 return false;
@@ -1696,7 +1696,7 @@ namespace ClosedXML.Excel
 
             if (currentValue is T v) { value = v; return true; }
 
-            if (!bool.TryParse(currentValue.ToString(), out bool b))
+            if (!bool.TryParse(currentValue.ToString(), out var b))
             {
                 value = default;
                 return false;
@@ -1726,7 +1726,7 @@ namespace ClosedXML.Excel
 
         private static bool TryGetBasicValue<T, U>(string currentValue, ParseFunction<U> parseFunction, out T value)
         {
-            if (parseFunction.Invoke(currentValue, NumberStyles.Any, null, out U result))
+            if (parseFunction.Invoke(currentValue, NumberStyles.Any, null, out var result))
             {
                 value = (T)Convert.ChangeType(result, typeof(T).GetUnderlyingType());
                 return true;
@@ -1925,7 +1925,7 @@ namespace ClosedXML.Excel
             if (string.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = XLPredefinedFormat.FormatCodes;
-                if (formatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out string format))
+                if (formatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out var format))
                     return format;
                 else
                     return string.Empty;
@@ -2055,8 +2055,8 @@ namespace ClosedXML.Excel
         private void CopyConditionalFormatsFrom(XLRangeBase fromRange)
         {
             var srcSheet = fromRange.Worksheet;
-            int minRo = fromRange.RangeAddress.FirstAddress.RowNumber;
-            int minCo = fromRange.RangeAddress.FirstAddress.ColumnNumber;
+            var minRo = fromRange.RangeAddress.FirstAddress.RowNumber;
+            var minCo = fromRange.RangeAddress.FirstAddress.ColumnNumber;
             if (srcSheet.ConditionalFormats.Any(r => r.Ranges.GetIntersectedRanges(fromRange.RangeAddress).Any()))
             {
                 var fs = srcSheet.ConditionalFormats.SelectMany(cf => cf.Ranges.GetIntersectedRanges(fromRange.RangeAddress)).ToArray();
@@ -2066,8 +2066,8 @@ namespace ClosedXML.Excel
                     minCo = fs.Max(r => r.RangeAddress.LastAddress.ColumnNumber);
                 }
             }
-            int rCnt = minRo - fromRange.RangeAddress.FirstAddress.RowNumber + 1;
-            int cCnt = minCo - fromRange.RangeAddress.FirstAddress.ColumnNumber + 1;
+            var rCnt = minRo - fromRange.RangeAddress.FirstAddress.RowNumber + 1;
+            var cCnt = minCo - fromRange.RangeAddress.FirstAddress.ColumnNumber + 1;
             rCnt = Math.Min(rCnt, fromRange.RowCount());
             cCnt = Math.Min(cCnt, fromRange.ColumnCount());
             var toRange = Worksheet.Range(this, Worksheet.Cell(_rowNumber + rCnt - 1, _columnNumber + cCnt - 1));
@@ -2107,7 +2107,7 @@ namespace ClosedXML.Excel
 
         private void ClearMerged()
         {
-            List<IXLRange> mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToList();
+            var mergeToDelete = Worksheet.Internals.MergedRanges.GetIntersectedRanges(Address).ToList();
 
             mergeToDelete.ForEach(m => Worksheet.Internals.MergedRanges.Remove(m));
         }
@@ -2124,8 +2124,8 @@ namespace ClosedXML.Excel
             _richText = null;
 
             var style = GetStyleForRead();
-            bool parsed = false;
-            string parsedValue = string.Empty;
+            var parsed = false;
+            var parsedValue = string.Empty;
 
             ////
             // Try easy parsing first. If that doesn't work, we'll have to ToString it and parse it slowly
@@ -2331,7 +2331,7 @@ namespace ClosedXML.Excel
                 var parts = a1Address.Split(':');
                 var p1 = parts[0];
                 var p2 = parts[1];
-                if (int.TryParse(p1.Replace("$", string.Empty), out int row1))
+                if (int.TryParse(p1.Replace("$", string.Empty), out var row1))
                 {
                     var row2 = int.Parse(p2.Replace("$", string.Empty));
                     var leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);

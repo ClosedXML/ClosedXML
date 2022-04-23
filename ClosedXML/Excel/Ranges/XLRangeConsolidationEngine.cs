@@ -84,14 +84,14 @@ namespace ClosedXML.Excel
             public IEnumerable<IXLRange> GetConsolidatedRanges()
             {
                 var rowNumbers = _bitMatrix.Keys.OrderBy(k => k).ToArray();
-                for (int i = 0; i < rowNumbers.Length; i++)
+                for (var i = 0; i < rowNumbers.Length; i++)
                 {
                     var startRow = rowNumbers[i];
                     var startings = GetRangesBoundariesStartingByRow(_bitMatrix[startRow]);
 
                     foreach (var starting in startings)
                     {
-                        int j = i + 1;
+                        var j = i + 1;
                         while (j < rowNumbers.Length && RowIncludesRange(_bitMatrix[rowNumbers[j]], starting)) j++;
 
                         var endRow = rowNumbers[j - 1];
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel
 
                 foreach (var rowNum in rows)
                 {
-                    for (int i = minIndex; i <= maxIndex; i++)
+                    for (var i = minIndex; i <= maxIndex; i++)
                     {
                         _bitMatrix[rowNum][i] = true;
                     }
@@ -142,7 +142,7 @@ namespace ClosedXML.Excel
 
             private void ClearRangeInRow(BitArray rowArray, Tuple<int, int> rangeBoundaries)
             {
-                for (int i = rangeBoundaries.Item1; i <= rangeBoundaries.Item2; i++)
+                for (var i = rangeBoundaries.Item1; i <= rangeBoundaries.Item2; i++)
                 {
                     rowArray[i] = false;
                 }
@@ -161,8 +161,8 @@ namespace ClosedXML.Excel
 
             private IEnumerable<Tuple<int, int>> GetRangesBoundariesStartingByRow(BitArray rowArray)
             {
-                int startIdx = 0;
-                for (int i = 1; i < rowArray.Length - 1; i++)
+                var startIdx = 0;
+                for (var i = 1; i < rowArray.Length - 1; i++)
                 {
                     if (!rowArray[i - 1] && rowArray[i])
                         startIdx = i;
@@ -200,7 +200,7 @@ namespace ClosedXML.Excel
             }
             private bool RowIncludesRange(BitArray rowArray, Tuple<int, int> rangeBoundaries)
             {
-                for (int i = rangeBoundaries.Item1; i <= rangeBoundaries.Item2; i++)
+                for (var i = rangeBoundaries.Item1; i <= rangeBoundaries.Item2; i++)
                 {
                     if (!rowArray[i])
                         return false;

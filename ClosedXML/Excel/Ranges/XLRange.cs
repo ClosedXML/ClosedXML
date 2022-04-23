@@ -40,8 +40,8 @@ namespace ClosedXML.Excel
         public virtual IXLRangeColumns Columns(Func<IXLRangeColumn, bool> predicate = null)
         {
             var retVal = new XLRangeColumns();
-            int columnCount = ColumnCount();
-            for (int c = 1; c <= columnCount; c++)
+            var columnCount = ColumnCount();
+            for (var c = 1; c <= columnCount; c++)
             {
                 var column = Column(c);
                 if (predicate == null || predicate(column))
@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeColumns();
 
-            for (int co = firstColumn; co <= lastColumn; co++)
+            for (var co = firstColumn; co <= lastColumn; co++)
                 retVal.Add(Column(co));
             return retVal;
         }
@@ -69,13 +69,13 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
-            foreach (string tPair in columnPairs.Select(pair => pair.Trim()))
+            foreach (var tPair in columnPairs.Select(pair => pair.Trim()))
             {
                 string firstColumn;
                 string lastColumn;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] columnRange = XLHelper.SplitRange(tPair);
+                    var columnRange = XLHelper.SplitRange(tPair);
 
                     firstColumn = columnRange[0];
                     lastColumn = columnRange[1];
@@ -86,14 +86,14 @@ namespace ClosedXML.Excel
                     lastColumn = tPair;
                 }
 
-                if (int.TryParse(firstColumn, out int tmp))
+                if (int.TryParse(firstColumn, out var tmp))
                 {
-                    foreach (IXLRangeColumn col in Columns(int.Parse(firstColumn), int.Parse(lastColumn)))
+                    foreach (var col in Columns(int.Parse(firstColumn), int.Parse(lastColumn)))
                         retVal.Add(col);
                 }
                 else
                 {
-                    foreach (IXLRangeColumn col in Columns(firstColumn, lastColumn))
+                    foreach (var col in Columns(firstColumn, lastColumn))
                         retVal.Add(col);
                 }
             }
@@ -153,8 +153,8 @@ namespace ClosedXML.Excel
         public IXLRangeRows Rows(Func<IXLRangeRow, bool> predicate = null)
         {
             var retVal = new XLRangeRows();
-            int rowCount = RowCount();
-            for (int r = 1; r <= rowCount; r++)
+            var rowCount = RowCount();
+            for (var r = 1; r <= rowCount; r++)
             {
                 var row = Row(r);
                 if (predicate == null || predicate(row))
@@ -167,7 +167,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeRows();
 
-            for (int ro = firstRow; ro <= lastRow; ro++)
+            for (var ro = firstRow; ro <= lastRow; ro++)
                 retVal.Add(Row(ro));
             return retVal;
         }
@@ -176,13 +176,13 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeRows();
             var rowPairs = rows.Split(',');
-            foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
+            foreach (var tPair in rowPairs.Select(pair => pair.Trim()))
             {
                 string firstRow;
                 string lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
-                    string[] rowRange = XLHelper.SplitRange(tPair);
+                    var rowRange = XLHelper.SplitRange(tPair);
 
                     firstRow = rowRange[0];
                     lastRow = rowRange[1];
@@ -192,7 +192,7 @@ namespace ClosedXML.Excel
                     firstRow = tPair;
                     lastRow = tPair;
                 }
-                foreach (IXLRangeRow row in Rows(int.Parse(firstRow), int.Parse(lastRow)))
+                foreach (var row in Rows(int.Parse(firstRow), int.Parse(lastRow)))
                     retVal.Add(row);
             }
             return retVal;
@@ -200,9 +200,9 @@ namespace ClosedXML.Excel
 
         public void Transpose(XLTransposeOptions transposeOption)
         {
-            int rowCount = RowCount();
-            int columnCount = ColumnCount();
-            int squareSide = rowCount > columnCount ? rowCount : columnCount;
+            var rowCount = RowCount();
+            var columnCount = ColumnCount();
+            var squareSide = rowCount > columnCount ? rowCount : columnCount;
 
             var firstCell = FirstCell();
 
@@ -236,7 +236,7 @@ namespace ClosedXML.Excel
                 rng.Delete(XLShiftDeletedCells.ShiftCellsLeft);
             }
 
-            foreach (IXLCell c in Range(1, 1, columnCount, rowCount).Cells())
+            foreach (var c in Range(1, 1, columnCount, rowCount).Cells())
             {
                 var border = (c.Style as XLStyle).Value.Border;
                 c.Style.Border.TopBorder = border.LeftBorder;
@@ -289,10 +289,10 @@ namespace ClosedXML.Excel
         {
             base.CopyTo(target);
 
-            int lastRowNumber = target.Address.RowNumber + RowCount() - 1;
+            var lastRowNumber = target.Address.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
                 lastRowNumber = XLHelper.MaxRowNumber;
-            int lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
+            var lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
                 lastColumnNumber = XLHelper.MaxColumnNumber;
 
@@ -306,10 +306,10 @@ namespace ClosedXML.Excel
         {
             base.CopyTo(target);
 
-            int lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
+            var lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
                 lastRowNumber = XLHelper.MaxRowNumber;
-            int lastColumnNumber = target.RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
+            var lastColumnNumber = target.RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
                 lastColumnNumber = XLHelper.MaxColumnNumber;
 
@@ -367,8 +367,8 @@ namespace ClosedXML.Excel
             if (predicate == null)
                 return Column(1);
 
-            int columnCount = ColumnCount();
-            for (int c = 1; c <= columnCount; c++)
+            var columnCount = ColumnCount();
+            for (var c = 1; c <= columnCount; c++)
             {
                 var column = Column(c);
                 if (predicate(column)) return column;
@@ -384,11 +384,11 @@ namespace ClosedXML.Excel
 
         internal XLRangeColumn LastColumn(Func<IXLRangeColumn, bool> predicate = null)
         {
-            int columnCount = ColumnCount();
+            var columnCount = ColumnCount();
             if (predicate == null)
                 return Column(columnCount);
 
-            for (int c = columnCount; c >= 1; c--)
+            for (var c = columnCount; c >= 1; c--)
             {
                 var column = Column(c);
                 if (predicate(column)) return column;
@@ -425,7 +425,7 @@ namespace ClosedXML.Excel
         {
             if (predicate == null)
             {
-                int firstColumnUsed = Worksheet.Internals.CellsCollection.FirstColumnUsed(
+                var firstColumnUsed = Worksheet.Internals.CellsCollection.FirstColumnUsed(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.LastAddress.RowNumber,
@@ -435,8 +435,8 @@ namespace ClosedXML.Excel
                 return firstColumnUsed == 0 ? null : Column(firstColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
             }
 
-            int columnCount = ColumnCount();
-            for (int co = 1; co <= columnCount; co++)
+            var columnCount = ColumnCount();
+            for (var co = 1; co <= columnCount; co++)
             {
                 var column = Column(co);
 
@@ -474,7 +474,7 @@ namespace ClosedXML.Excel
         {
             if (predicate == null)
             {
-                int lastColumnUsed = Worksheet.Internals.CellsCollection.LastColumnUsed(
+                var lastColumnUsed = Worksheet.Internals.CellsCollection.LastColumnUsed(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.LastAddress.RowNumber,
@@ -484,8 +484,8 @@ namespace ClosedXML.Excel
                 return lastColumnUsed == 0 ? null : Column(lastColumnUsed - RangeAddress.FirstAddress.ColumnNumber + 1);
             }
 
-            int columnCount = ColumnCount();
-            for (int co = columnCount; co >= 1; co--)
+            var columnCount = ColumnCount();
+            for (var co = columnCount; co >= 1; co--)
             {
                 var column = Column(co);
 
@@ -505,8 +505,8 @@ namespace ClosedXML.Excel
             if (predicate == null)
                 return Row(1);
 
-            int rowCount = RowCount();
-            for (int ro = 1; ro <= rowCount; ro++)
+            var rowCount = RowCount();
+            for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
                 if (predicate(row)) return row;
@@ -522,11 +522,11 @@ namespace ClosedXML.Excel
 
         public XLRangeRow LastRow(Func<IXLRangeRow, bool> predicate = null)
         {
-            int rowCount = RowCount();
+            var rowCount = RowCount();
             if (predicate == null)
                 return Row(rowCount);
 
-            for (int ro = rowCount; ro >= 1; ro--)
+            for (var ro = rowCount; ro >= 1; ro--)
             {
                 var row = Row(ro);
                 if (predicate(row)) return row;
@@ -562,7 +562,7 @@ namespace ClosedXML.Excel
         {
             if (predicate == null)
             {
-                int rowFromCells = Worksheet.Internals.CellsCollection.FirstRowUsed(
+                var rowFromCells = Worksheet.Internals.CellsCollection.FirstRowUsed(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.LastAddress.RowNumber,
@@ -574,8 +574,8 @@ namespace ClosedXML.Excel
                 return rowFromCells == 0 ? null : Row(rowFromCells - RangeAddress.FirstAddress.RowNumber + 1);
             }
 
-            int rowCount = RowCount();
-            for (int ro = 1; ro <= rowCount; ro++)
+            var rowCount = RowCount();
+            for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
 
@@ -612,7 +612,7 @@ namespace ClosedXML.Excel
         {
             if (predicate == null)
             {
-                int lastRowUsed = Worksheet.Internals.CellsCollection.LastRowUsed(
+                var lastRowUsed = Worksheet.Internals.CellsCollection.LastRowUsed(
                     RangeAddress.FirstAddress.RowNumber,
                     RangeAddress.FirstAddress.ColumnNumber,
                     RangeAddress.LastAddress.RowNumber,
@@ -622,8 +622,8 @@ namespace ClosedXML.Excel
                 return lastRowUsed == 0 ? null : Row(lastRowUsed - RangeAddress.FirstAddress.RowNumber + 1);
             }
 
-            int rowCount = RowCount();
-            for (int ro = rowCount; ro >= 1; ro--)
+            var rowCount = RowCount();
+            for (var ro = rowCount; ro >= 1; ro--)
             {
                 var row = Row(ro);
 
@@ -648,10 +648,10 @@ namespace ClosedXML.Excel
 
         internal XLRangeRows RowsUsed(XLCellsUsedOptions options, Func<IXLRangeRow, bool> predicate = null)
         {
-            XLRangeRows rows = new XLRangeRows();
-            int rowCount = RowCount(options);
+            var rows = new XLRangeRows();
+            var rowCount = RowCount(options);
 
-            for (int ro = 1; ro <= rowCount; ro++)
+            for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
 
@@ -685,10 +685,10 @@ namespace ClosedXML.Excel
 
         internal virtual XLRangeColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, bool> predicate = null)
         {
-            XLRangeColumns columns = new XLRangeColumns();
-            int columnCount = ColumnCount(options);
+            var columns = new XLRangeColumns();
+            var columnCount = ColumnCount(options);
 
-            for (int co = 1; co <= columnCount; co++)
+            for (var co = 1; co <= columnCount; co++)
             {
                 var column = Column(co);
 
@@ -813,11 +813,11 @@ namespace ClosedXML.Excel
                 RangeAddress.FirstAddress.RowNumber + squareSide - 1,
                 RangeAddress.FirstAddress.ColumnNumber + squareSide - 1);
 
-            int roCount = rngToTranspose.RowCount();
-            int coCount = rngToTranspose.ColumnCount();
-            for (int ro = 1; ro <= roCount; ro++)
+            var roCount = rngToTranspose.RowCount();
+            var coCount = rngToTranspose.ColumnCount();
+            for (var ro = 1; ro <= roCount; ro++)
             {
-                for (int co = 1; co <= coCount; co++)
+                for (var co = 1; co <= coCount; co++)
                 {
                     var oldCell = rngToTranspose.Cell(ro, co);
                     var newKey = rngToTranspose.Cell(co, ro).Address;
@@ -862,7 +862,7 @@ namespace ClosedXML.Excel
             {
                 if (rowCount > columnCount)
                 {
-                    int toMove = rowCount - columnCount;
+                    var toMove = rowCount - columnCount;
                     var rngToClear = Worksheet.Range(
                         RangeAddress.FirstAddress.RowNumber,
                         RangeAddress.LastAddress.ColumnNumber + 1,
@@ -872,7 +872,7 @@ namespace ClosedXML.Excel
                 }
                 else if (columnCount > rowCount)
                 {
-                    int toMove = columnCount - rowCount;
+                    var toMove = columnCount - rowCount;
                     var rngToClear = Worksheet.Range(
                         RangeAddress.LastAddress.RowNumber + 1,
                         RangeAddress.FirstAddress.ColumnNumber,
@@ -906,8 +906,8 @@ namespace ClosedXML.Excel
 
         public IXLRangeColumn FindColumn(Func<IXLRangeColumn, bool> predicate)
         {
-            int columnCount = ColumnCount();
-            for (int c = 1; c <= columnCount; c++)
+            var columnCount = ColumnCount();
+            for (var c = 1; c <= columnCount; c++)
             {
                 var column = Column(c);
                 if (predicate == null || predicate(column))
@@ -918,8 +918,8 @@ namespace ClosedXML.Excel
 
         public IXLRangeRow FindRow(Func<IXLRangeRow, bool> predicate)
         {
-            int rowCount = RowCount();
-            for (int r = 1; r <= rowCount; r++)
+            var rowCount = RowCount();
+            for (var r = 1; r <= rowCount; r++)
             {
                 var row = Row(r);
                 if (predicate(row))

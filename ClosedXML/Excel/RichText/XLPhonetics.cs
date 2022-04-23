@@ -113,8 +113,8 @@ namespace ClosedXML.Excel
             if (other == null)
                 return false;
 
-            int phoneticsCount = _phonetics.Count;
-            for (int i = 0; i < phoneticsCount; i++)
+            var phoneticsCount = _phonetics.Count;
+            for (var i = 0; i < phoneticsCount; i++)
             {
                 if (!_phonetics[i].Equals(other.ElementAt(i)))
                     return false;

@@ -69,7 +69,7 @@ namespace ClosedXML.Excel.InsertData
 
         private IEnumerable<object> GetItemData(object item)
         {
-            for (int i = 0; i < _members.Length; i++)
+            for (var i = 0; i < _members.Length; i++)
             {
                 if (item == null)
                 {

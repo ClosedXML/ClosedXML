@@ -117,11 +117,11 @@ namespace ClosedXML.Excel
 
         public void ShiftRowsDown(int startingRow, int rowsToShift)
         {
-            foreach (int ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
+            foreach (var ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = _dictionary[ro];
                 _dictionary.Remove(ro);
-                int newRowNum = ro + rowsToShift;
+                var newRowNum = ro + rowsToShift;
                 if (newRowNum <= XLHelper.MaxRowNumber)
                 {
                     rowToMove.SetRowNumber(newRowNum);

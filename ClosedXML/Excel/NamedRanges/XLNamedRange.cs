@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
 
                 existingNames = existingNames.Distinct().ToList();
 
-                if (!XLHelper.ValidateName("named range", value, oldname, existingNames, out string message))
+                if (!XLHelper.ValidateName("named range", value, oldname, existingNames, out var message))
                     throw new ArgumentException(message, nameof(value));
 
                 _name = value;
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            string retVal = RangeList.Aggregate(string.Empty, (agg, r) => agg + (r + ","));
+            var retVal = RangeList.Aggregate(string.Empty, (agg, r) => agg + (r + ","));
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }

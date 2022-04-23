@@ -12,11 +12,11 @@ namespace ClosedXML.Tests
         public void InsertingColumnsPreservesFormatting()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
-            IXLColumn column1 = ws.Column(1);
+            var ws = wb.Worksheets.Add("Sheet");
+            var column1 = ws.Column(1);
             column1.Style.Fill.SetBackgroundColor(XLColor.FrenchLilac);
             column1.Cell(2).Style.Fill.SetBackgroundColor(XLColor.Fulvous);
-            IXLColumn column2 = ws.Column(2);
+            var column2 = ws.Column(2);
             column2.Style.Fill.SetBackgroundColor(XLColor.Xanadu);
             column2.Cell(2).Style.Fill.SetBackgroundColor(XLColor.MacaroniAndCheese);
 
@@ -41,12 +41,12 @@ namespace ClosedXML.Tests
         public void InsertingRowsAbove()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
+            var ws = wb.Worksheets.Add("Sheet");
 
             ws.Cell("B3").SetValue("X")
                 .CellBelow().SetValue("B");
 
-            IXLRangeRow r = ws.Range("B4").InsertRowsAbove(1).First();
+            var r = ws.Range("B4").InsertRowsAbove(1).First();
             r.Cell(1).SetValue("A");
 
             Assert.AreEqual("X", ws.Cell("B3").GetString());
@@ -58,11 +58,11 @@ namespace ClosedXML.Tests
         public void InsertingRowsPreservesFormatting()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet");
-            IXLRow row1 = ws.Row(1);
+            var ws = wb.Worksheets.Add("Sheet");
+            var row1 = ws.Row(1);
             row1.Style.Fill.SetBackgroundColor(XLColor.FrenchLilac);
             row1.Cell(2).Style.Fill.SetBackgroundColor(XLColor.Fulvous);
-            IXLRow row2 = ws.Row(2);
+            var row2 = ws.Row(2);
             row2.Style.Fill.SetBackgroundColor(XLColor.Xanadu);
             row2.Cell(2).Style.Fill.SetBackgroundColor(XLColor.MacaroniAndCheese);
 

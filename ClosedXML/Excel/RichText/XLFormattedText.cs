@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
 
         public IXLFormattedText<T> ClearFont()
         {
-            string text = Text;
+            var text = Text;
             ClearText();
             AddText(text);
             return this;
@@ -94,10 +94,10 @@ namespace ClosedXML.Excel
             if (index + 1 > Length || (Length - index + 1) < length || length <= 0)
                 throw new IndexOutOfRangeException("Index and length must refer to a location within the string.");
 
-            List<IXLRichString> newRichTexts = new List<IXLRichString>();
+            var newRichTexts = new List<IXLRichString>();
             var retVal = new XLFormattedText<T>(_defaultFont);
 
-            int lastPosition = 0;
+            var lastPosition = 0;
             foreach (var rt in _richTexts)
             {
                 if (lastPosition >= index + 1 + length) // We already have what we need
@@ -106,18 +106,18 @@ namespace ClosedXML.Excel
                 }
                 else if (lastPosition + rt.Text.Length >= index + 1) // Eureka!
                 {
-                    int startIndex = index - lastPosition;
+                    var startIndex = index - lastPosition;
 
                     if (startIndex > 0)
                         newRichTexts.Add(new XLRichString(rt.Text.Substring(0, startIndex), rt, this));
                     else if (startIndex < 0)
                         startIndex = 0;
 
-                    int leftToTake = length - retVal.Length;
+                    var leftToTake = length - retVal.Length;
                     if (leftToTake > rt.Text.Length - startIndex)
                         leftToTake = rt.Text.Length - startIndex;
 
-                    XLRichString newRt = new XLRichString(rt.Text.Substring(startIndex, leftToTake), rt, this);
+                    var newRt = new XLRichString(rt.Text.Substring(startIndex, leftToTake), rt, this);
                     newRichTexts.Add(newRt);
                     retVal.AddText(newRt);
 
@@ -212,11 +212,11 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLFormattedText<T> other)
         {
-            int count = Count;
+            var count = Count;
             if (count != other.Count)
                 return false;
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 if (_richTexts.ElementAt(i) != other.ElementAt(i))
                     return false;

@@ -309,7 +309,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CanOpenWorksheetWithEscapedApostrophe()
         {
-            string title = "";
+            var title = "";
             TestDelegate openWorkbook = () =>
             {
                 using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"TryToLoad\EscapedApostrophe.xlsx")))
@@ -361,7 +361,7 @@ namespace ClosedXML.Tests.Excel
         {
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook book1 = new XLWorkbook())
+                using (var book1 = new XLWorkbook())
                 {
                     var sheet = book1.AddWorksheet("sheet1");
                     sheet.Cell("A1").Value = 123;
@@ -372,7 +372,7 @@ namespace ClosedXML.Tests.Excel
                 }
                 ms.Position = 0;
 
-                using (XLWorkbook book2 = new XLWorkbook(ms))
+                using (var book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
                     Assert.IsFalse(ws.Cell("A2").NeedsRecalculation);

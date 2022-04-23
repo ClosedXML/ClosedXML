@@ -51,9 +51,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (firstDay > lastDay)
                 return -BusinessDaysUntil(lastDay, firstDay, bankHolidays);
 
-            TimeSpan span = lastDay - firstDay;
-            int businessDays = span.Days + 1;
-            int fullWeekCount = businessDays / 7;
+            var span = lastDay - firstDay;
+            var businessDays = span.Days + 1;
+            var fullWeekCount = businessDays / 7;
             // find out if there are weekends during the time exceedng the full weeks
             if (businessDays > fullWeekCount * 7)
             {
@@ -100,7 +100,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 month -= (int)Math.Floor((double)(month - 1d) / 12.0) * 12;
             }
 
-            int daysAdjustment = 0;
+            var daysAdjustment = 0;
             if (day > DateTime.DaysInMonth(year, month))
             {
                 daysAdjustment = day - DateTime.DaysInMonth(year, month);
@@ -230,7 +230,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static double GetYearAverage(DateTime date1, DateTime date2)
         {
             var daysInYears = new List<int>();
-            for (int year = date1.Year; year <= date2.Year; year++)
+            for (var year = date1.Year; year <= date2.Year; year++)
                 daysInYears.Add(DateTime.IsLeapYear(year) ? 366 : 365);
             return daysInYears.Average();
         }
@@ -250,7 +250,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll
             // be the same week# as whatever Thursday, Friday or Saturday are,
             // and we always get those right
-            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
+            var day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
             if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
             {
                 date = date.AddDays(3);
@@ -338,7 +338,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var date = (DateTime)p[0];
             var retType = p.Count == 2 ? (int)p[1] : 1;
 
-            DayOfWeek dayOfWeek = retType == 1 ? DayOfWeek.Sunday : DayOfWeek.Monday;
+            var dayOfWeek = retType == 1 ? DayOfWeek.Sunday : DayOfWeek.Monday;
             var cal = new GregorianCalendar(GregorianCalendarTypes.Localized);
             var val = cal.GetWeekOfYear(date, CalendarWeekRule.FirstDay, dayOfWeek);
 
@@ -375,7 +375,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (businessDays == daysRequired)
                 return testDate;
 
-            int days = businessDays > daysRequired ? -1 : 1;
+            var days = businessDays > daysRequired ? -1 : 1;
 
             return Workday(startDate, testDate.AddDays(days), daysRequired, bankHolidays);
         }

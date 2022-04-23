@@ -13,7 +13,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook wb = new XLWorkbook())
+                using (var wb = new XLWorkbook())
                 {
                     var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
                     var sheet2 = wb.AddWorksheet("Sheet2");
@@ -37,7 +37,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook wb = new XLWorkbook())
+                using (var wb = new XLWorkbook())
                 {
                     var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
                     sheet1.NamedRanges.Add("NAMED_RANGE", sheet1.Range("A2:B3"));
@@ -56,7 +56,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook wb = new XLWorkbook())
+                using (var wb = new XLWorkbook())
                 {
                     var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
                     var sheet2 = wb.AddWorksheet("Sheet2");

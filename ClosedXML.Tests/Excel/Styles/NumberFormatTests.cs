@@ -19,7 +19,7 @@ namespace ClosedXML.Tests.Excel
                 using var table = new DataTable();
                 table.Columns.Add("Date", typeof(DateTime));
 
-                for (int i = 0; i < 10; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     table.Rows.Add(new DateTime(2017, 1, 1).AddMonths(i));
                 }

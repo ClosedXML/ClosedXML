@@ -119,7 +119,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
-            int value = ws.Evaluate(formula).CastTo<int>();
+            var value = ws.Evaluate(formula).CastTo<int>();
             Assert.AreEqual(expectedResult, value);
         }
 
@@ -230,7 +230,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
-            int value = ws.Evaluate(formula).CastTo<int>();
+            var value = ws.Evaluate(formula).CastTo<int>();
             Assert.AreEqual(expectedResult, value);
         }
 
@@ -357,7 +357,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             //Act
-            double value = ws.Evaluate("MEDIAN(I3:I10)").CastTo<double>();
+            var value = ws.Evaluate("MEDIAN(I3:I10)").CastTo<double>();
 
             //Assert
             Assert.AreEqual(244.225, value, tolerance);
@@ -369,7 +369,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = SetupWorkbook();
 
             //Act
-            double value = wb.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)").CastTo<double>();
+            var value = wb.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56)").CastTo<double>();
 
             //Assert
             Assert.AreEqual(18.505, value, tolerance);
@@ -382,7 +382,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = SetupWorkbook(); var ws = wb.Worksheets.First();
 
             //Act
-            double value = ws.Evaluate("MEDIAN(I3:I11)").CastTo<double>();
+            var value = ws.Evaluate("MEDIAN(I3:I11)").CastTo<double>();
 
             //Assert
             Assert.AreEqual(189.05, value, tolerance);
@@ -394,7 +394,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = SetupWorkbook();
 
             //Act
-            double value = wb.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)").CastTo<double>();
+            var value = wb.Evaluate("MEDIAN(-27.5,93.93,64.51,-70.56,101.65)").CastTo<double>();
 
             //Assert
             Assert.AreEqual(64.51, value, tolerance);
@@ -488,10 +488,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 //Let's pre-initialize cells we need so they didn't affect the result
                 ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
                 ws.Cell("ZZ1000").Value = 1;
-                int initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+                var initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
 
                 var actualResult = (double)ws.Evaluate(formulaA1);
-                int cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+                var cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
 
                 Assert.AreEqual(expectedResult, actualResult, tolerance);
                 Assert.AreEqual(initialCount, cellsCount);

@@ -21,9 +21,9 @@ namespace ClosedXML.Tests
         /// <returns>Byte array</returns>
         public static byte[] StreamToArray(Stream pStream)
         {
-            long iLength = pStream.Length;
+            var iLength = pStream.Length;
             var bytes = new byte[iLength];
-            for (int i = 0; i < iLength; i++)
+            for (var i = 0; i < iLength; i++)
             {
                 bytes[i] = (byte)pStream.ReadByte();
             }
@@ -52,7 +52,7 @@ namespace ClosedXML.Tests
                 throw new ArgumentException("Can't write to stream", "pStream");
             }
 
-            foreach (byte b in pBynaryArray)
+            foreach (var b in pBynaryArray)
             {
                 pStream.WriteByte(b);
             }
@@ -93,10 +93,10 @@ namespace ClosedXML.Tests
             {
                 length = dataLength;
             }
-            long rest = length;
+            var rest = length;
             while (rest > 0)
             {
-                int len1 = streamIn.Read(buf, 0, rest >= 512 ? 512 : (int)rest);
+                var len1 = streamIn.Read(buf, 0, rest >= 512 ? 512 : (int)rest);
                 streamToWrite.Write(buf, 0, len1);
                 rest -= len1;
             }

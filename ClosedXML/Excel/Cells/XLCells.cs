@@ -161,7 +161,7 @@ namespace ClosedXML.Excel
 
         IEnumerator<IXLCell> IEnumerable<IXLCell>.GetEnumerator()
         {
-            foreach (XLCell cell in this)
+            foreach (var cell in this)
                 yield return cell;
         }
 
@@ -221,7 +221,7 @@ namespace ClosedXML.Excel
             get
             {
                 yield return Style;
-                foreach (XLCell c in this)
+                foreach (var c in this)
                     yield return c.Style;
             }
         }
@@ -230,7 +230,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                foreach (XLCell c in this)
+                foreach (var c in this)
                     yield return c;
             }
         }

@@ -56,7 +56,7 @@ namespace ClosedXML.Tests.Excel.Comments
             {
                 var ws = wb.AddWorksheet("Sheet1");
 
-                string strExcelComment = "1) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
+                var strExcelComment = "1) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
                 strExcelComment = strExcelComment + "1) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
                 strExcelComment = strExcelComment + "2) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;
                 strExcelComment = strExcelComment + "3) ABCDEFGHIJKLMNOPQRSTUVWXYZ ABC ABC ABC ABC ABC" + XLConstants.NewLine;

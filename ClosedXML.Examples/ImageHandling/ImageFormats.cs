@@ -16,7 +16,7 @@ namespace ClosedXML.Examples
             wb = new XLWorkbook();
             IXLWorksheet ws;
 
-            using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.jpg"))
+            using (var fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.jpg"))
             {
                 #region Jpeg
 
@@ -27,7 +27,7 @@ namespace ClosedXML.Examples
                 #endregion Jpeg
             }
 
-            using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.png"))
+            using (var fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.png"))
             {
                 #region Png
 

@@ -122,7 +122,7 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
 
             var e = p[0] as XObjectExpression;
-            long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
+            var totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
             long nonBlankCount = 0;
             foreach (var value in e)
             {
@@ -135,12 +135,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object CountIf(List<Expression> p)
         {
-            CalcEngine ce = new CalcEngine();
+            var ce = new CalcEngine();
             var cnt = 0.0;
             long processedCount = 0;
             if (p[0] is XObjectExpression ienum)
             {
-                long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
+                var totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
                 var criteria = p[1].Evaluate();
                 foreach (var value in ienum)
                 {
@@ -163,12 +163,12 @@ namespace ClosedXML.Excel.CalcEngine
             var ce = new CalcEngine();
             long count = 0;
 
-            int numberOfCriteria = p.Count / 2;
+            var numberOfCriteria = p.Count / 2;
 
             long totalCount = 0;
             // prepare criteria-parameters:
             var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
-            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            for (var criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
                 var criteriaRange = p[criteriaPair * 2] as XObjectExpression;
                 var criterion = p[(criteriaPair * 2) + 1].Evaluate();

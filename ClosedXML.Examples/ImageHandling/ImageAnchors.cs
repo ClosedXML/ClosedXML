@@ -13,7 +13,7 @@ namespace ClosedXML.Examples
             {
                 IXLWorksheet ws;
 
-                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.png"))
+                using (var fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.png"))
                 {
                     ws = wb.Worksheets.Add("Images1");
 
@@ -43,7 +43,7 @@ namespace ClosedXML.Examples
                     #endregion TwoCellAnchor
                 }
 
-                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
+                using (var fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
                 {
                     // Moving images around and scaling them
                     ws = wb.Worksheets.Add("Images3");
@@ -62,7 +62,7 @@ namespace ClosedXML.Examples
                         .MoveTo(ws.Cell(10, 1));
                 }
 
-                using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
+                using (var fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.SampleImage.jpg"))
                 {
                     // Changing of placement
                     ws = wb.Worksheets.Add("Images4");

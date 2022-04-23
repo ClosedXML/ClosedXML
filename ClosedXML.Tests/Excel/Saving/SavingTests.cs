@@ -56,7 +56,7 @@ namespace ClosedXML.Tests.Excel.Saving
 
                 wb.SaveAs(memoryStream, validate: true);
 
-                for (int i = 1; i <= 3; i++)
+                for (var i = 1; i <= 3; i++)
                 {
                     sheet.Cell(i, 1).Value = "test" + i;
                     wb.SaveAs(memoryStream, validate: true);
@@ -93,7 +93,7 @@ namespace ClosedXML.Tests.Excel.Saving
 
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook book1 = new XLWorkbook())
+                using (var book1 = new XLWorkbook())
                 {
                     book1.AddWorksheet("sheet1");
                     book1.AddWorksheet("sheet2");
@@ -102,7 +102,7 @@ namespace ClosedXML.Tests.Excel.Saving
                 }
                 ms.Position = 0;
 
-                using (XLWorkbook book2 = new XLWorkbook(ms))
+                using (var book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
                     Assert.AreEqual("sheet1", ws.Name);
@@ -116,7 +116,7 @@ namespace ClosedXML.Tests.Excel.Saving
         [Test]
         public void CanSaveAndValidateFileInAnotherCulture()
         {
-            string[] cultures = new string[] { "it", "de-AT" };
+            var cultures = new string[] { "it", "de-AT" };
 
             foreach (var culture in cultures)
             {
@@ -137,7 +137,7 @@ namespace ClosedXML.Tests.Excel.Saving
         {
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook book1 = new XLWorkbook())
+                using (var book1 = new XLWorkbook())
                 {
                     var sheet = book1.AddWorksheet("sheet1");
                     sheet.Cell("A1").Value = 123;
@@ -149,7 +149,7 @@ namespace ClosedXML.Tests.Excel.Saving
                 }
                 ms.Position = 0;
 
-                using (XLWorkbook book2 = new XLWorkbook(ms))
+                using (var book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
 
@@ -163,7 +163,7 @@ namespace ClosedXML.Tests.Excel.Saving
         {
             using (var ms = new MemoryStream())
             {
-                using (XLWorkbook book1 = new XLWorkbook())
+                using (var book1 = new XLWorkbook())
                 {
                     var sheet = book1.AddWorksheet("sheet1");
                     sheet.Cell("A1").Value = 123;
@@ -175,7 +175,7 @@ namespace ClosedXML.Tests.Excel.Saving
                 }
                 ms.Position = 0;
 
-                using (XLWorkbook book2 = new XLWorkbook(ms))
+                using (var book2 = new XLWorkbook(ms))
                 {
                     var ws = book2.Worksheet(1);
 
@@ -591,8 +591,8 @@ namespace ClosedXML.Tests.Excel.Saving
                     var wb = new XLWorkbook(stream);
                     var ws = wb.Worksheet(1);
 
-                    var numericCells = ws.CellsUsed(c => double.TryParse(c.GetString(), out double _));
-                    var textCells = ws.CellsUsed(c => !double.TryParse(c.GetString(), out double _));
+                    var numericCells = ws.CellsUsed(c => double.TryParse(c.GetString(), out var _));
+                    var textCells = ws.CellsUsed(c => !double.TryParse(c.GetString(), out var _));
 
                     foreach (var cell in numericCells)
                     {

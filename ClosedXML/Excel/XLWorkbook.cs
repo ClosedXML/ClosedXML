@@ -305,7 +305,7 @@ namespace ClosedXML.Excel
                 var first = split[0];
                 var wsName = first.StartsWith("'") ? first.Substring(1, first.Length - 2) : first;
                 var name = split[1];
-                if (TryGetWorksheet(wsName, out IXLWorksheet ws))
+                if (TryGetWorksheet(wsName, out var ws))
                 {
                     var range = ws.NamedRange(name);
                     return range ?? NamedRange(name);
@@ -636,7 +636,7 @@ namespace ClosedXML.Excel
             ThrowIfDisposed();
 
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
-            foreach (XLWorksheet ws in WorksheetsInternal)
+            foreach (var ws in WorksheetsInternal)
             {
                 foreach (XLCell cell in ws.CellsUsed(XLCellsUsedOptions.All))
                 {
@@ -652,9 +652,9 @@ namespace ClosedXML.Excel
             ThrowIfDisposed();
 
             var rows = new XLRows(worksheet: null);
-            foreach (XLWorksheet ws in WorksheetsInternal)
+            foreach (var ws in WorksheetsInternal)
             {
-                foreach (IXLRow row in ws.Rows().Where(predicate))
+                foreach (var row in ws.Rows().Where(predicate))
                     rows.Add(row as XLRow);
             }
             return rows;
@@ -665,9 +665,9 @@ namespace ClosedXML.Excel
             ThrowIfDisposed();
 
             var columns = new XLColumns(worksheet: null);
-            foreach (XLWorksheet ws in WorksheetsInternal)
+            foreach (var ws in WorksheetsInternal)
             {
-                foreach (IXLColumn column in ws.Columns().Where(predicate))
+                foreach (var column in ws.Columns().Where(predicate))
                     columns.Add(column as XLColumn);
             }
             return columns;

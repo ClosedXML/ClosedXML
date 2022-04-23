@@ -70,9 +70,9 @@ namespace ClosedXML.Excel
                         false, false);
                     var baseCell = firstRange.Worksheet.Cell(baseAddress) as XLCell;
 
-                    int i = 1;
-                    bool stop = false;
-                    List<IXLConditionalFormat> similarFormats = new List<IXLConditionalFormat>();
+                    var i = 1;
+                    var stop = false;
+                    var similarFormats = new List<IXLConditionalFormat>();
                     do
                     {
                         stop = (i >= formats.Count);

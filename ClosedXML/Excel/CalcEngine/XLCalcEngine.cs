@@ -89,7 +89,7 @@ namespace ClosedXML.Excel.CalcEngine
                     throw new ArgumentOutOfRangeException(referencedSheetNames.Last(), "Cross worksheet references may references no more than 1 other worksheet");
                 else
                 {
-                    if (!_wb.TryGetWorksheet(referencedSheetNames.Single(), out IXLWorksheet worksheet))
+                    if (!_wb.TryGetWorksheet(referencedSheetNames.Single(), out var worksheet))
                         throw new ArgumentOutOfRangeException(referencedSheetNames.Single(), "The required worksheet cannot be found");
 
                     identifier = identifier.ToLower().Replace(string.Format("{0}!", worksheet.Name.ToLower()), "");
@@ -99,7 +99,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
             else if (_ws != null)
             {
-                if (TryGetNamedRange(identifier, _ws, out IXLNamedRange namedRange))
+                if (TryGetNamedRange(identifier, _ws, out var namedRange))
                 {
                     var references = (namedRange as XLNamedRange).RangeList.Select(r =>
                         XLHelper.IsValidRangeAddress(r)

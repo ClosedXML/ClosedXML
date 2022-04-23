@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
 
         public IXLNamedRange NamedRange(string rangeName)
         {
-            if (_namedRanges.TryGetValue(rangeName, out IXLNamedRange range))
+            if (_namedRanges.TryGetValue(rangeName, out var range))
                 return range;
 
             return null;

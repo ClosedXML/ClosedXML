@@ -26,9 +26,9 @@ namespace ClosedXML.Tests
         {
             get
             {
-                Assembly _assembly = Assembly.GetCallingAssembly();
-                string _key = _assembly.GetName().FullName;
-                if (!extractors.TryGetValue(_key, out ResourceFileExtractor extractor)
+                var _assembly = Assembly.GetCallingAssembly();
+                var _key = _assembly.GetName().FullName;
+                if (!extractors.TryGetValue(_key, out var extractor)
                     && !extractors.TryGetValue(_key, out extractor))
                 {
                     extractor = new ResourceFileExtractor(_assembly, true, null);
@@ -164,8 +164,8 @@ namespace ClosedXML.Tests
         {
             predicate = predicate ?? (s => true);
 
-            string _path = AssemblyName + ResourceFilePath;
-            foreach (string _resourceName in Assembly.GetManifestResourceNames())
+            var _path = AssemblyName + ResourceFilePath;
+            foreach (var _resourceName in Assembly.GetManifestResourceNames())
             {
                 if (_resourceName.StartsWith(_path) && predicate(_resourceName))
                 {
@@ -180,9 +180,9 @@ namespace ClosedXML.Tests
 
         public string ReadFileFromResource(string fileName)
         {
-            Stream _stream = ReadFileFromResourceToStream(fileName);
+            var _stream = ReadFileFromResourceToStream(fileName);
             string _result;
-            StreamReader sr = new StreamReader(_stream);
+            var sr = new StreamReader(_stream);
             try
             {
                 _result = sr.ReadToEnd();
@@ -207,7 +207,7 @@ namespace ClosedXML.Tests
         /// <returns></returns>
         public string ReadSpecificFileFromResource(string specificPath, string fileName)
         {
-            ResourceFileExtractor _ext = new ResourceFileExtractor(Assembly, specificPath);
+            var _ext = new ResourceFileExtractor(Assembly, specificPath);
             return _ext.ReadFileFromResource(fileName);
         }
 
@@ -219,8 +219,8 @@ namespace ClosedXML.Tests
         /// <exception cref="ApplicationException"><c>ApplicationException</c>.</exception>
         public Stream ReadFileFromResourceToStream(string fileName)
         {
-            string _nameResFile = AssemblyName + ResourceFilePath + fileName;
-            Stream _stream = Assembly.GetManifestResourceStream(_nameResFile);
+            var _nameResFile = AssemblyName + ResourceFilePath + fileName;
+            var _stream = Assembly.GetManifestResourceStream(_nameResFile);
 
             #region Not found
 

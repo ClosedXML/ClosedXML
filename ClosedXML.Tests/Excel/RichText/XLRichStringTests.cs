@@ -17,13 +17,13 @@ namespace ClosedXML.Tests
         public void AccessRichTextTest1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
+            var cell = ws.Cell(1, 1);
             cell.CreateRichText().AddText("12");
             cell.DataType = XLDataType.Number;
 
             Assert.AreEqual(12.0, cell.GetDouble());
 
-            IXLRichText richText = cell.GetRichText();
+            var richText = cell.GetRichText();
 
             Assert.AreEqual("12", richText.ToString());
 
@@ -43,10 +43,10 @@ namespace ClosedXML.Tests
         public void AddTextTest1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
-            IXLRichText richString = cell.CreateRichText();
+            var cell = ws.Cell(1, 1);
+            var richString = cell.CreateRichText();
 
-            string text = "Hello";
+            var text = "Hello";
             richString.AddText(text).SetBold().SetFontColor(XLColor.Red);
 
             Assert.AreEqual(cell.GetString(), text);
@@ -63,14 +63,14 @@ namespace ClosedXML.Tests
         public void AddTextTest2()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
-            int number = 123;
+            var cell = ws.Cell(1, 1);
+            var number = 123;
 
             cell.SetValue(number).Style
                 .Font.SetBold()
                 .Font.SetFontColor(XLColor.Red);
 
-            string text = number.ToString();
+            var text = number.ToString();
 
             Assert.AreEqual(cell.GetRichText().ToString(), text);
             Assert.AreEqual(cell.GetRichText().First().Bold, true);
@@ -86,14 +86,14 @@ namespace ClosedXML.Tests
         public void AddTextTest3()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
-            int number = 123;
+            var cell = ws.Cell(1, 1);
+            var number = 123;
             cell.Value = number;
             cell.Style
                 .Font.SetBold()
                 .Font.SetFontColor(XLColor.Red);
 
-            string text = number.ToString();
+            var text = number.ToString();
 
             Assert.AreEqual(cell.GetRichText().ToString(), text);
             Assert.AreEqual(cell.GetRichText().First().Bold, true);
@@ -112,15 +112,15 @@ namespace ClosedXML.Tests
         public void ClearTest()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText(" ");
             richString.AddText("World!");
 
             richString.ClearText();
-            string expected = string.Empty;
-            string actual = richString.ToString();
+            var expected = string.Empty;
+            var actual = richString.ToString();
             Assert.AreEqual(expected, actual);
 
             Assert.AreEqual(0, richString.Count);
@@ -130,7 +130,7 @@ namespace ClosedXML.Tests
         public void CountTest()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText(" ");
@@ -143,7 +143,7 @@ namespace ClosedXML.Tests
         public void HasRichTextTest1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
+            var cell = ws.Cell(1, 1);
             cell.GetRichText().AddText("123");
 
             Assert.AreEqual(true, cell.HasRichText);
@@ -180,11 +180,11 @@ namespace ClosedXML.Tests
         public void Substring_All_From_OneString()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(0);
+            var actual = richString.Substring(0);
 
             Assert.AreEqual(richString.First(), actual.First());
 
@@ -199,13 +199,13 @@ namespace ClosedXML.Tests
         public void Substring_All_From_ThreeStrings()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
             richString.AddText("neighbors!");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(0);
+            var actual = richString.Substring(0);
 
             Assert.AreEqual(richString.ElementAt(0), actual.ElementAt(0));
             Assert.AreEqual(richString.ElementAt(1), actual.ElementAt(1));
@@ -225,11 +225,11 @@ namespace ClosedXML.Tests
         public void Substring_From_OneString_End()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(2);
+            var actual = richString.Substring(2);
 
             Assert.AreEqual(1, actual.Count); // substring was in one piece
 
@@ -264,11 +264,11 @@ namespace ClosedXML.Tests
         public void Substring_From_OneString_Middle()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(2, 2);
+            var actual = richString.Substring(2, 2);
 
             Assert.AreEqual(1, actual.Count); // substring was in one piece
 
@@ -307,11 +307,11 @@ namespace ClosedXML.Tests
         public void Substring_From_OneString_Start()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(0, 2);
+            var actual = richString.Substring(0, 2);
 
             Assert.AreEqual(1, actual.Count); // substring was in one piece
 
@@ -346,13 +346,13 @@ namespace ClosedXML.Tests
         public void Substring_From_ThreeStrings_End1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
             richString.AddText("neighbors!");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(21);
+            var actual = richString.Substring(21);
 
             Assert.AreEqual(1, actual.Count); // substring was in one piece
 
@@ -395,13 +395,13 @@ namespace ClosedXML.Tests
         public void Substring_From_ThreeStrings_End2()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
             richString.AddText("neighbors!");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(13);
+            var actual = richString.Substring(13);
 
             Assert.AreEqual(2, actual.Count);
 
@@ -447,13 +447,13 @@ namespace ClosedXML.Tests
         public void Substring_From_ThreeStrings_Mid1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
             richString.AddText("neighbors!");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(5, 10);
+            var actual = richString.Substring(5, 10);
 
             Assert.AreEqual(2, actual.Count);
 
@@ -473,13 +473,13 @@ namespace ClosedXML.Tests
         public void Substring_From_ThreeStrings_Mid2()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
             richString.AddText("neighbors!");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(5, 15);
+            var actual = richString.Substring(5, 15);
 
             Assert.AreEqual(3, actual.Count);
 
@@ -500,13 +500,13 @@ namespace ClosedXML.Tests
         public void Substring_From_ThreeStrings_Start1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
             richString.AddText("neighbors!");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(0, 4);
+            var actual = richString.Substring(0, 4);
 
             Assert.AreEqual(1, actual.Count); // substring was in one piece
 
@@ -549,13 +549,13 @@ namespace ClosedXML.Tests
         public void Substring_From_ThreeStrings_Start2()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
             richString.AddText(" my ");
             richString.AddText("neighbors!");
 
-            IXLFormattedText<IXLRichText> actual = richString.Substring(0, 15);
+            var actual = richString.Substring(0, 15);
 
             Assert.AreEqual(2, actual.Count);
 
@@ -601,7 +601,7 @@ namespace ClosedXML.Tests
         public void Substring_IndexOutsideRange1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -612,7 +612,7 @@ namespace ClosedXML.Tests
         public void Substring_IndexOutsideRange2()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText("World");
@@ -624,7 +624,7 @@ namespace ClosedXML.Tests
         public void Substring_IndexOutsideRange3()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
 
@@ -635,7 +635,7 @@ namespace ClosedXML.Tests
         public void Substring_IndexOutsideRange4()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText("World");
@@ -650,13 +650,13 @@ namespace ClosedXML.Tests
         public void ToStringTest()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRichText richString = ws.Cell(1, 1).GetRichText();
+            var richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
             richString.AddText(" ");
             richString.AddText("World");
-            string expected = "Hello World";
-            string actual = richString.ToString();
+            var expected = "Hello World";
+            var actual = richString.ToString();
             Assert.AreEqual(expected, actual);
 
             richString.AddText("!");

@@ -10,8 +10,8 @@ namespace ClosedXML.Excel
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 
             var iconSet = new IconSet {ShowValue = !cf.ShowIconOnly, Reverse = cf.ReverseIconOrder, IconSetValue = cf.IconSetStyle.ToOpenXml()};
-            int count = cf.Values.Count;
-            for(int i =1;i<= count; i++ )
+            var count = cf.Values.Count;
+            for(var i =1;i<= count; i++ )
             {
                 var conditionalFormatValueObject = new ConditionalFormatValueObject { Type = cf.ContentTypes[i].ToOpenXml(), Val = cf.Values[i].Value, GreaterThanOrEqual = cf.IconSetOperators[i] == XLCFIconSetOperator.EqualOrGreaterThan};    
                 iconSet.Append(conditionalFormatValueObject);

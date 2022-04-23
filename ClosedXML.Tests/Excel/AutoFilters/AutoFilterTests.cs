@@ -23,7 +23,7 @@ namespace ClosedXML.Tests
                     .CellBelow().SetValue("1")
                     .CellBelow().SetValue("2");
 
-                IXLTable table = ws.RangeUsed().CreateTable();
+                var table = ws.RangeUsed().CreateTable();
 
                 var listOfArr = new List<int>();
                 listOfArr.Add(3);

@@ -80,7 +80,7 @@ namespace ClosedXML.Excel
             var currentPosition = 'L'; // default is LEFT
             var hfElement = "";
 
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 if (IsAtPositionIndicator(i))
                 {

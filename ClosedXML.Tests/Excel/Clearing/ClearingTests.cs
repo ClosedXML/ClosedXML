@@ -14,7 +14,7 @@ namespace ClosedXML.Tests
 
         private IXLWorkbook SetupWorkbook(XLWorkbook wb)
         {
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
 
             var c = ws.FirstCell()
                 .SetValue("Hello world!");

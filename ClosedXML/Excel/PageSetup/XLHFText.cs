@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
             if (!isRichText)
                 return RichText.Text;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             if (RichText.FontName != null && RichText.FontName != wsFont.FontName)
                 sb.Append("&\"" + RichText.FontName);

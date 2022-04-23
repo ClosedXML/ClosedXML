@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.Drawings
 
         static XLPicture()
         {
-            List<SKEncodedImageFormat> SKEncodedImageFormatValues = Enum.GetValues(typeof(SKEncodedImageFormat)).OfType<SKEncodedImageFormat>().ToList();
+            var SKEncodedImageFormatValues = Enum.GetValues(typeof(SKEncodedImageFormat)).OfType<SKEncodedImageFormat>().ToList();
 
             FormatMap = new Dictionary<XLPictureFormat, SKEncodedImageFormat>();
 

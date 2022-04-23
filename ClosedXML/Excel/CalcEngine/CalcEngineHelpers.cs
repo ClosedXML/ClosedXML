@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
                     var pattern = @"([\w\s]+)(\W+)(\w+)";
                     var m = Regex.Match(expression, pattern);
                     if (m.Groups.Count == 4
-                        && (!double.TryParse(m.Groups[1].Value, out double d) ||
+                        && (!double.TryParse(m.Groups[1].Value, out var d) ||
                             !double.TryParse(m.Groups[3].Value, out d)))
                     {
                         expression = string.Format("\"{0}\"{1}\"{2}\"",

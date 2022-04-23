@@ -28,11 +28,11 @@ namespace ClosedXML.Examples.Misc
                 cellDateTime.Style.DateFormat.Format = "yyyy-MMM-dd";
 
                 // Extract the date in different ways
-                DateTime dateTime1 = (DateTime)cellDateTime.Value;
-                DateTime dateTime2 = cellDateTime.GetDateTime();
-                DateTime dateTime3 = cellDateTime.GetValue<DateTime>();
-                string dateTimeString = cellDateTime.GetString();
-                string dateTimeFormattedString = cellDateTime.GetFormattedString();
+                var dateTime1 = (DateTime)cellDateTime.Value;
+                var dateTime2 = cellDateTime.GetDateTime();
+                var dateTime3 = cellDateTime.GetValue<DateTime>();
+                var dateTimeString = cellDateTime.GetString();
+                var dateTimeFormattedString = cellDateTime.GetFormattedString();
 
                 // Set the values back to cells
                 // The apostrophe is to force ClosedXML to treat the date as a string
@@ -50,11 +50,11 @@ namespace ClosedXML.Examples.Misc
                 cellBoolean.Value = true;
 
                 // Extract the boolean in different ways
-                bool boolean1 = (bool)cellBoolean.Value;
-                bool boolean2 = cellBoolean.GetBoolean();
-                bool boolean3 = cellBoolean.GetValue<bool>();
-                string booleanString = cellBoolean.GetString();
-                string booleanFormattedString = cellBoolean.GetFormattedString();
+                var boolean1 = (bool)cellBoolean.Value;
+                var boolean2 = cellBoolean.GetBoolean();
+                var boolean3 = cellBoolean.GetValue<bool>();
+                var booleanString = cellBoolean.GetString();
+                var booleanFormattedString = cellBoolean.GetFormattedString();
 
                 // Set the values back to cells
                 // The apostrophe is to force ClosedXML to treat the boolean as a string
@@ -73,11 +73,11 @@ namespace ClosedXML.Examples.Misc
                 cellDouble.Style.NumberFormat.Format = "#,##0.00";
 
                 // Extract the double in different ways
-                double double1 = (double)cellDouble.Value;
-                double double2 = cellDouble.GetDouble();
-                double double3 = cellDouble.GetValue<double>();
-                string doubleString = cellDouble.GetString();
-                string doubleFormattedString = cellDouble.GetFormattedString();
+                var double1 = (double)cellDouble.Value;
+                var double2 = cellDouble.GetDouble();
+                var double3 = cellDouble.GetValue<double>();
+                var doubleString = cellDouble.GetString();
+                var doubleFormattedString = cellDouble.GetFormattedString();
 
                 // Set the values back to cells
                 // The apostrophe is to force ClosedXML to treat the double as a string
@@ -95,11 +95,11 @@ namespace ClosedXML.Examples.Misc
                 cellString.Value = "Test Case";
 
                 // Extract the string in different ways
-                string string1 = (string)cellString.Value;
-                string string2 = cellString.GetString();
-                string string3 = cellString.GetValue<string>();
-                string stringString = cellString.GetString();
-                string stringFormattedString = cellString.GetFormattedString();
+                var string1 = (string)cellString.Value;
+                var string2 = cellString.GetString();
+                var string3 = cellString.GetValue<string>();
+                var stringString = cellString.GetString();
+                var stringFormattedString = cellString.GetFormattedString();
 
                 // Set the values back to cells
                 ws.Cell(6, 3).Value = string1;
@@ -116,11 +116,11 @@ namespace ClosedXML.Examples.Misc
                 cellTimeSpan.Value = new TimeSpan(1, 2, 31, 45);
 
                 // Extract the timeSpan in different ways
-                TimeSpan timeSpan1 = (TimeSpan)cellTimeSpan.Value;
-                TimeSpan timeSpan2 = cellTimeSpan.GetTimeSpan();
-                TimeSpan timeSpan3 = cellTimeSpan.GetValue<TimeSpan>();
-                string timeSpanString = "'" + cellTimeSpan.GetString();
-                string timeSpanFormattedString = "'" + cellTimeSpan.GetFormattedString();
+                var timeSpan1 = (TimeSpan)cellTimeSpan.Value;
+                var timeSpan2 = cellTimeSpan.GetTimeSpan();
+                var timeSpan3 = cellTimeSpan.GetValue<TimeSpan>();
+                var timeSpanString = "'" + cellTimeSpan.GetString();
+                var timeSpanFormattedString = "'" + cellTimeSpan.GetFormattedString();
 
                 // Set the values back to cells
                 ws.Cell(7, 3).Value = timeSpan1;

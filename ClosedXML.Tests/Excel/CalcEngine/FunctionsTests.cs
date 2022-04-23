@@ -35,24 +35,24 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Combin()
         {
-            object actual1 = XLWorkbook.EvaluateExpr("Combin(200, 2)");
+            var actual1 = XLWorkbook.EvaluateExpr("Combin(200, 2)");
             Assert.AreEqual(19900.0, actual1);
 
-            object actual2 = XLWorkbook.EvaluateExpr("Combin(20.1, 2.9)");
+            var actual2 = XLWorkbook.EvaluateExpr("Combin(20.1, 2.9)");
             Assert.AreEqual(190.0, actual2);
         }
 
         [Test]
         public void Degrees()
         {
-            object actual1 = XLWorkbook.EvaluateExpr("Degrees(180)");
+            var actual1 = XLWorkbook.EvaluateExpr("Degrees(180)");
             Assert.IsTrue(Math.PI - (double)actual1 < XLHelper.Epsilon);
         }
 
         [Test]
         public void Dollar()
         {
-            object actual = XLWorkbook.EvaluateExpr("Dollar(12345.123)");
+            var actual = XLWorkbook.EvaluateExpr("Dollar(12345.123)");
             Assert.AreEqual(TestHelper.CurrencySymbol + "12,345.12", actual);
 
             actual = XLWorkbook.EvaluateExpr("Dollar(12345.123, 1)");
@@ -62,7 +62,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Even()
         {
-            object actual = XLWorkbook.EvaluateExpr("Even(3)");
+            var actual = XLWorkbook.EvaluateExpr("Even(3)");
             Assert.AreEqual(4, actual);
 
             actual = XLWorkbook.EvaluateExpr("Even(2)");
@@ -99,16 +99,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Fact()
         {
-            object actual = XLWorkbook.EvaluateExpr("Fact(5.9)");
+            var actual = XLWorkbook.EvaluateExpr("Fact(5.9)");
             Assert.AreEqual(120.0, actual);
         }
 
         [Test]
         public void FactDouble()
         {
-            object actual1 = XLWorkbook.EvaluateExpr("FactDouble(6)");
+            var actual1 = XLWorkbook.EvaluateExpr("FactDouble(6)");
             Assert.AreEqual(48.0, actual1);
-            object actual2 = XLWorkbook.EvaluateExpr("FactDouble(7)");
+            var actual2 = XLWorkbook.EvaluateExpr("FactDouble(7)");
             Assert.AreEqual(105.0, actual2);
         }
 
@@ -131,43 +131,43 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Formula_from_another_sheet()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws1 = wb.AddWorksheet("ws1");
+            var ws1 = wb.AddWorksheet("ws1");
             ws1.FirstCell().SetValue(1).CellRight().SetFormulaA1("A1 + 1");
-            IXLWorksheet ws2 = wb.AddWorksheet("ws2");
+            var ws2 = wb.AddWorksheet("ws2");
             ws2.FirstCell().SetFormulaA1("ws1!B1 + 1");
-            object v = ws2.FirstCell().Value;
+            var v = ws2.FirstCell().Value;
             Assert.AreEqual(3.0, v);
         }
 
         [Test]
         public void Gcd()
         {
-            object actual = XLWorkbook.EvaluateExpr("Gcd(24, 36)");
+            var actual = XLWorkbook.EvaluateExpr("Gcd(24, 36)");
             Assert.AreEqual(12, actual);
 
-            object actual1 = XLWorkbook.EvaluateExpr("Gcd(5, 0)");
+            var actual1 = XLWorkbook.EvaluateExpr("Gcd(5, 0)");
             Assert.AreEqual(5, actual1);
 
-            object actual2 = XLWorkbook.EvaluateExpr("Gcd(0, 5)");
+            var actual2 = XLWorkbook.EvaluateExpr("Gcd(0, 5)");
             Assert.AreEqual(5, actual2);
 
-            object actual3 = XLWorkbook.EvaluateExpr("Gcd(240, 360, 30)");
+            var actual3 = XLWorkbook.EvaluateExpr("Gcd(240, 360, 30)");
             Assert.AreEqual(30, actual3);
         }
 
         [Test]
         public void Lcm()
         {
-            object actual = XLWorkbook.EvaluateExpr("Lcm(24, 36)");
+            var actual = XLWorkbook.EvaluateExpr("Lcm(24, 36)");
             Assert.AreEqual(72, actual);
 
-            object actual1 = XLWorkbook.EvaluateExpr("Lcm(5, 0)");
+            var actual1 = XLWorkbook.EvaluateExpr("Lcm(5, 0)");
             Assert.AreEqual(0, actual1);
 
-            object actual2 = XLWorkbook.EvaluateExpr("Lcm(0, 5)");
+            var actual2 = XLWorkbook.EvaluateExpr("Lcm(0, 5)");
             Assert.AreEqual(0, actual2);
 
-            object actual3 = XLWorkbook.EvaluateExpr("Lcm(240, 360, 30)");
+            var actual3 = XLWorkbook.EvaluateExpr("Lcm(240, 360, 30)");
             Assert.AreEqual(720, actual3);
         }
 
@@ -175,7 +175,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void MDetem()
         {
             using var xLWorkbook = new XLWorkbook();
-            IXLWorksheet ws = xLWorkbook.AddWorksheet("Sheet1");
+            var ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
 
@@ -201,7 +201,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void MInverse()
         {
             using var xLWorkbook = new XLWorkbook();
-            IXLWorksheet ws = xLWorkbook.AddWorksheet("Sheet1");
+            var ws = xLWorkbook.AddWorksheet("Sheet1");
             ws.Cell("A1").SetValue(1).CellRight().SetValue(2).CellRight().SetValue(1);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
             ws.Cell("A3").SetValue(0).CellRight().SetValue(2).CellRight().SetValue(0);
@@ -254,42 +254,42 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Mod()
         {
-            object actual = XLWorkbook.EvaluateExpr("Mod(3, 2)");
+            var actual = XLWorkbook.EvaluateExpr("Mod(3, 2)");
             Assert.AreEqual(1, actual);
 
-            object actual1 = XLWorkbook.EvaluateExpr("Mod(-3, 2)");
+            var actual1 = XLWorkbook.EvaluateExpr("Mod(-3, 2)");
             Assert.AreEqual(1, actual1);
 
-            object actual2 = XLWorkbook.EvaluateExpr("Mod(3, -2)");
+            var actual2 = XLWorkbook.EvaluateExpr("Mod(3, -2)");
             Assert.AreEqual(-1, actual2);
 
-            object actual3 = XLWorkbook.EvaluateExpr("Mod(-3, -2)");
+            var actual3 = XLWorkbook.EvaluateExpr("Mod(-3, -2)");
             Assert.AreEqual(-1, actual3);
         }
 
         [Test]
         public void Multinomial()
         {
-            object actual = XLWorkbook.EvaluateExpr("Multinomial(2,3,4)");
+            var actual = XLWorkbook.EvaluateExpr("Multinomial(2,3,4)");
             Assert.AreEqual(1260.0, actual);
         }
 
         [Test]
         public void Odd()
         {
-            object actual = XLWorkbook.EvaluateExpr("Odd(1.5)");
+            var actual = XLWorkbook.EvaluateExpr("Odd(1.5)");
             Assert.AreEqual(3, actual);
 
-            object actual1 = XLWorkbook.EvaluateExpr("Odd(3)");
+            var actual1 = XLWorkbook.EvaluateExpr("Odd(3)");
             Assert.AreEqual(3, actual1);
 
-            object actual2 = XLWorkbook.EvaluateExpr("Odd(2)");
+            var actual2 = XLWorkbook.EvaluateExpr("Odd(2)");
             Assert.AreEqual(3, actual2);
 
-            object actual3 = XLWorkbook.EvaluateExpr("Odd(-1)");
+            var actual3 = XLWorkbook.EvaluateExpr("Odd(-1)");
             Assert.AreEqual(-1, actual3);
 
-            object actual4 = XLWorkbook.EvaluateExpr("Odd(-2)");
+            var actual4 = XLWorkbook.EvaluateExpr("Odd(-2)");
             Assert.AreEqual(-3, actual4);
 
             actual = XLWorkbook.EvaluateExpr("Odd(0)");
@@ -299,14 +299,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Product()
         {
-            object actual = XLWorkbook.EvaluateExpr("Product(2,3,4)");
+            var actual = XLWorkbook.EvaluateExpr("Product(2,3,4)");
             Assert.AreEqual(24.0, actual);
         }
 
         [Test]
         public void Quotient()
         {
-            object actual = XLWorkbook.EvaluateExpr("Quotient(5,2)");
+            var actual = XLWorkbook.EvaluateExpr("Quotient(5,2)");
             Assert.AreEqual(2, actual);
 
             actual = XLWorkbook.EvaluateExpr("Quotient(4.5,3.1)");
@@ -319,14 +319,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Radians()
         {
-            object actual = XLWorkbook.EvaluateExpr("Radians(270)");
+            var actual = XLWorkbook.EvaluateExpr("Radians(270)");
             Assert.IsTrue(Math.Abs(4.71238898038469 - (double)actual) < XLHelper.Epsilon);
         }
 
         [Test]
         public void Roman()
         {
-            object actual = XLWorkbook.EvaluateExpr("Roman(3046, 1)");
+            var actual = XLWorkbook.EvaluateExpr("Roman(3046, 1)");
             Assert.AreEqual("MMMXLVI", actual);
 
             actual = XLWorkbook.EvaluateExpr("Roman(270)");
@@ -339,7 +339,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Round()
         {
-            object actual = XLWorkbook.EvaluateExpr("Round(2.15, 1)");
+            var actual = XLWorkbook.EvaluateExpr("Round(2.15, 1)");
             Assert.AreEqual(2.2, actual);
 
             actual = XLWorkbook.EvaluateExpr("Round(2.149, 1)");
@@ -370,7 +370,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void RoundDown()
         {
-            object actual = XLWorkbook.EvaluateExpr("RoundDown(3.2, 0)");
+            var actual = XLWorkbook.EvaluateExpr("RoundDown(3.2, 0)");
             Assert.AreEqual(3.0, actual);
 
             actual = XLWorkbook.EvaluateExpr("RoundDown(76.9, 0)");
@@ -392,7 +392,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void RoundUp()
         {
-            object actual = XLWorkbook.EvaluateExpr("RoundUp(3.2, 0)");
+            var actual = XLWorkbook.EvaluateExpr("RoundUp(3.2, 0)");
             Assert.AreEqual(4.0, actual);
 
             actual = XLWorkbook.EvaluateExpr("RoundUp(76.9, 0)");
@@ -414,11 +414,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SeriesSum()
         {
-            object actual = XLWorkbook.EvaluateExpr("SERIESSUM(2,3,4,5)");
+            var actual = XLWorkbook.EvaluateExpr("SERIESSUM(2,3,4,5)");
             Assert.AreEqual(40.0, actual);
 
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A2").FormulaA1 = "PI()/4";
             ws.Cell("A3").Value = 1;
             ws.Cell("A4").FormulaA1 = "-1/FACT(2)";
@@ -432,7 +432,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SqrtPi()
         {
-            object actual = XLWorkbook.EvaluateExpr("SqrtPi(1)");
+            var actual = XLWorkbook.EvaluateExpr("SqrtPi(1)");
             Assert.IsTrue(Math.Abs(1.7724538509055159 - (double)actual) < XLHelper.Epsilon);
 
             actual = XLWorkbook.EvaluateExpr("SqrtPi(2)");
@@ -442,7 +442,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalAverage()
         {
-            object actual = XLWorkbook.EvaluateExpr("Subtotal(1,2,3)");
+            var actual = XLWorkbook.EvaluateExpr("Subtotal(1,2,3)");
             Assert.AreEqual(2.5, actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(1,""A"",3, 2)");
@@ -452,7 +452,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalCount()
         {
-            object actual = XLWorkbook.EvaluateExpr("Subtotal(2,2,3)");
+            var actual = XLWorkbook.EvaluateExpr("Subtotal(2,2,3)");
             Assert.AreEqual(2, actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(2,""A"",3)");
@@ -615,8 +615,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Sum()
         {
             using var xLWorkbook = new XLWorkbook();
-            IXLCell cell = xLWorkbook.AddWorksheet("Sheet1").FirstCell();
-            IXLCell fCell = cell.SetValue(1).CellBelow().SetValue(2).CellBelow();
+            var cell = xLWorkbook.AddWorksheet("Sheet1").FirstCell();
+            var fCell = cell.SetValue(1).CellBelow().SetValue(2).CellBelow();
             fCell.FormulaA1 = "sum(A1:A2)";
 
             Assert.AreEqual(3.0, fCell.Value);
@@ -651,7 +651,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void TextConcat()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = 1;
             ws.Cell("A2").Value = 1;
             ws.Cell("B1").Value = 1;
@@ -659,7 +659,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             ws.Cell("C1").FormulaA1 = "\"The total value is: \" & SUM(A1:B2)";
 
-            object r = ws.Cell("C1").Value;
+            var r = ws.Cell("C1").Value;
             Assert.AreEqual("The total value is: 4", r.ToString());
         }
 
@@ -677,7 +677,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void TestEmptyTallyOperations()
         {
             //In these test no values have been set
-            using XLWorkbook wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             wb.Worksheets.Add("TallyTests");
             var cell = wb.Worksheet(1).Cell(1, 1).SetFormulaA1("=MAX(D1,D2)");
             Assert.AreEqual(0, cell.Value);

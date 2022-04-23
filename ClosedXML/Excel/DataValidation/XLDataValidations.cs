@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
 
         public bool ContainsSingle(IXLRange range)
         {
-            int count = 0;
+            var count = 0;
             foreach (var xlDataValidation in _dataValidations.Where(dv => dv.Ranges.Contains(range)))
             {
                 count++;
