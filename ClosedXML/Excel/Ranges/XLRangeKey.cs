@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
         /// <param name="obj">Another object to compare to. </param>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             return obj is XLRangeKey && Equals((XLRangeKey)obj);
         }
 

@@ -70,15 +70,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(source, null))
+            if (source is null)
             {
                 throw new ArgumentNullException("source");
             }
-            if (ReferenceEquals(dest, null))
+            if (dest is null)
             {
                 throw new ArgumentNullException("dest");
             }
@@ -107,15 +107,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(descriptor, null))
+            if (descriptor is null)
             {
                 throw new ArgumentNullException("descriptor");
             }
-            if (ReferenceEquals(serializeAction, null))
+            if (serializeAction is null)
             {
                 throw new ArgumentNullException("serializeAction");
             }
@@ -135,15 +135,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(descriptor, null))
+            if (descriptor is null)
             {
                 throw new ArgumentNullException("descriptor");
             }
-            if (ReferenceEquals(serializeAction, null))
+            if (serializeAction is null)
             {
                 throw new ArgumentNullException("serializeAction");
             }
@@ -163,15 +163,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(deserializeFunc, null))
+            if (deserializeFunc is null)
             {
                 throw new ArgumentNullException("deserializeFunc");
             }
@@ -191,15 +191,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(deserializeAction, null))
+            if (deserializeAction is null)
             {
                 throw new ArgumentNullException("deserializeAction");
             }
@@ -219,15 +219,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(deserializeAction, null))
+            if (deserializeAction is null)
             {
                 throw new ArgumentNullException("deserializeAction");
             }
@@ -407,7 +407,7 @@ namespace ClosedXML.Tests
             /// <param name="compressOption"></param>
             public PackagePartDescriptor(Uri uri, string contentType, CompressionOption compressOption)
             {
-                if (ReferenceEquals(uri, null))
+                if (uri is null)
                 {
                     throw new ArgumentNullException("uri");
                 }

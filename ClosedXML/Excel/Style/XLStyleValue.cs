@@ -77,9 +77,9 @@ namespace ClosedXML.Excel
         {
             if (ReferenceEquals(left, right))
                 return true;
-            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+            if (left is null && right is null)
                 return true;
-            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            if (left is null || right is null)
                 return false;
             if (left._hashCode.HasValue && right._hashCode.HasValue &&
                 left._hashCode != right._hashCode)

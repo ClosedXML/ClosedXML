@@ -24,8 +24,8 @@ namespace ClosedXML.Excel
                 var xx = (XLConditionalFormat)x;
                 var yy = (XLConditionalFormat)y;
                 if (ReferenceEquals(xx, yy)) return true;
-                if (ReferenceEquals(xx, null)) return false;
-                if (ReferenceEquals(yy, null)) return false;
+                if (xx is null) return false;
+                if (yy is null) return false;
                 if (xx.GetType() != yy.GetType()) return false;
 
                 var xxValues = xx.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);

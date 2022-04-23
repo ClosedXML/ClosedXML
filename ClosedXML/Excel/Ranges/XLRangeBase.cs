@@ -1822,7 +1822,7 @@ namespace ClosedXML.Excel
 
         public IXLSortElements SortRows
         {
-            get { return _sortRows ?? (_sortRows = new XLSortElements()); }
+            get { return _sortRows ??= new XLSortElements(); }
         }
 
         public IXLSortElements SortColumns

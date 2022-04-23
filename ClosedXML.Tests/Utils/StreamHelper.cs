@@ -39,11 +39,11 @@ namespace ClosedXML.Tests
         /// <returns></returns>
         public static Stream ArrayToStreamAppend(byte[] pBynaryArray, Stream pStream)
         {
-            if (ReferenceEquals(pBynaryArray, null))
+            if (pBynaryArray is null)
             {
                 throw new ArgumentNullException("pBynaryArray");
             }
-            if (ReferenceEquals(pStream, null))
+            if (pStream is null)
             {
                 throw new ArgumentNullException("pStream");
             }
@@ -66,11 +66,11 @@ namespace ClosedXML.Tests
 
         public static void StreamToStreamAppend(Stream streamIn, Stream streamToWrite, long dataLength)
         {
-            if (ReferenceEquals(streamIn, null))
+            if (streamIn is null)
             {
                 throw new ArgumentNullException("streamIn");
             }
-            if (ReferenceEquals(streamToWrite, null))
+            if (streamToWrite is null)
             {
                 throw new ArgumentNullException("streamToWrite");
             }

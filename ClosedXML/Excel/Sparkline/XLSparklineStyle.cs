@@ -105,7 +105,7 @@ namespace ClosedXML.Excel
         /// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
         public bool Equals(XLSparklineStyle other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return FirstMarkerColor.Equals(other.FirstMarkerColor)
                    && HighMarkerColor.Equals(other.HighMarkerColor)
@@ -121,7 +121,7 @@ namespace ClosedXML.Excel
         /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != typeof(XLSparklineStyle)) return false;
             return Equals((XLSparklineStyle)obj);
