@@ -1349,10 +1349,10 @@ namespace ClosedXML.Excel
         private void LoadTextBox<T>(IXLDrawing<T> xlDrawing, XElement textBox)
         {
             var attStyle = textBox.Attribute("style");
-            if (attStyle != null) LoadTextBoxStyle<T>(xlDrawing, attStyle);
+            if (attStyle != null) LoadTextBoxStyle(xlDrawing, attStyle);
 
             var attInset = textBox.Attribute("inset");
-            if (attInset != null) LoadTextBoxInset<T>(xlDrawing, attInset);
+            if (attInset != null) LoadTextBoxInset(xlDrawing, attInset);
         }
 
         private void LoadTextBoxInset<T>(IXLDrawing<T> xlDrawing, XAttribute attInset)
@@ -1405,18 +1405,18 @@ namespace ClosedXML.Excel
         private void LoadClientData<T>(IXLDrawing<T> drawing, XElement clientData)
         {
             var anchor = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Anchor");
-            if (anchor != null) LoadClientDataAnchor<T>(drawing, anchor);
+            if (anchor != null) LoadClientDataAnchor(drawing, anchor);
 
-            LoadDrawingPositioning<T>(drawing, clientData);
-            LoadDrawingProtection<T>(drawing, clientData);
+            LoadDrawingPositioning(drawing, clientData);
+            LoadDrawingProtection(drawing, clientData);
 
             var visible = clientData.Elements().FirstOrDefault(e => e.Name.LocalName == "Visible");
             drawing.Visible = visible != null &&
                               (string.IsNullOrEmpty(visible.Value) ||
                                visible.Value.StartsWith("t", StringComparison.OrdinalIgnoreCase));
 
-            LoadDrawingHAlignment<T>(drawing, clientData);
-            LoadDrawingVAlignment<T>(drawing, clientData);
+            LoadDrawingHAlignment(drawing, clientData);
+            LoadDrawingVAlignment(drawing, clientData);
         }
 
         private void LoadDrawingHAlignment<T>(IXLDrawing<T> drawing, XElement clientData)
@@ -2043,12 +2043,12 @@ namespace ClosedXML.Excel
             if (fontSource == null) return;
 
             fontBase.Bold = GetBoolean(fontSource.Elements<Bold>().FirstOrDefault());
-            var fontColor = fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>().FirstOrDefault();
+            var fontColor = fontSource.Elements<Color>().FirstOrDefault();
             if (fontColor != null)
                 fontBase.FontColor = fontColor.ToClosedXMLColor(_colorList);
 
             var fontFamilyNumbering =
-                fontSource.Elements<DocumentFormat.OpenXml.Spreadsheet.FontFamily>().FirstOrDefault();
+                fontSource.Elements<FontFamily>().FirstOrDefault();
             if (fontFamilyNumbering != null && fontFamilyNumbering.Val != null)
                 fontBase.FontFamilyNumbering =
                     (XLFontFamilyNumberingValues)int.Parse(fontFamilyNumbering.Val.ToString());
@@ -2782,7 +2782,7 @@ namespace ClosedXML.Excel
                 else
                     conditionalFormat.IconSetOperators.Add(XLCFIconSetOperator.EqualOrGreaterThan);
             }
-            foreach (var c in element.Elements<DocumentFormat.OpenXml.Spreadsheet.Color>())
+            foreach (var c in element.Elements<Color>())
             {
                 conditionalFormat.Colors.Add(c.ToClosedXMLColor(_colorList));
             }
@@ -3171,7 +3171,7 @@ namespace ClosedXML.Excel
             if (UInt32HasValue(cellFormat.FontId))
             {
                 var fontId = cellFormat.FontId;
-                var font = (DocumentFormat.OpenXml.Spreadsheet.Font)fonts.ElementAt((int)fontId.Value);
+                var font = (Font)fonts.ElementAt((int)fontId.Value);
 
                 var xlFont = xlStyle.Font;
                 if (font != null)

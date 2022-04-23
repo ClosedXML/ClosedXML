@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         {
             var drawingsPart = worksheetPart.DrawingsPart;
             var matchingAnchor = drawingsPart.WorksheetDrawing
-                .Where(wsdr => wsdr.Descendants<Xdr.BlipFill>()
+                .Where(wsdr => wsdr.Descendants<BlipFill>()
                     .Any(x => x?.Blip?.Embed?.Value.Equals(relId) ?? false)
                 );
 
@@ -28,7 +28,7 @@ namespace ClosedXML.Excel
         {
             var drawingsPart = worksheetPart.DrawingsPart;
             var matchingAnchor = drawingsPart.WorksheetDrawing
-                .Where(wsdr => wsdr.Descendants<Xdr.NonVisualDrawingProperties>()
+                .Where(wsdr => wsdr.Descendants<NonVisualDrawingProperties>()
                     .Any(x => x.Id.Value.Equals(Convert.ToUInt32(index + 1)))
                 );
 
@@ -44,13 +44,13 @@ namespace ClosedXML.Excel
                 return null;
 
             // Maybe we should not restrict here, and just search for all NonVisualDrawingProperties in an anchor?
-            var shape = anchor.Descendants<Xdr.Picture>().Cast<OpenXmlCompositeElement>().FirstOrDefault()
-                        ?? anchor.Descendants<Xdr.ConnectionShape>().Cast<OpenXmlCompositeElement>().FirstOrDefault();
+            var shape = anchor.Descendants<Picture>().Cast<OpenXmlCompositeElement>().FirstOrDefault()
+                        ?? anchor.Descendants<ConnectionShape>().Cast<OpenXmlCompositeElement>().FirstOrDefault();
 
             if (shape == null) return null;
 
             return shape
-                .Descendants<Xdr.NonVisualDrawingProperties>()
+                .Descendants<NonVisualDrawingProperties>()
                 .FirstOrDefault();
         }
 
@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
             if (!IsAllowedAnchor(anchor))
                 return null;
 
-            var blipFill = anchor.Descendants<Xdr.BlipFill>().FirstOrDefault();
+            var blipFill = anchor.Descendants<BlipFill>().FirstOrDefault();
             return blipFill?.Blip?.Embed?.Value;
         }
 

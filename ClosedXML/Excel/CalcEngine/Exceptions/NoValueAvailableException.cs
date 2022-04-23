@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// don’t yet have a necessary value.
     /// Corresponds to the #N/A error in Excel.
     /// </summary>
-    /// <seealso cref="System.ApplicationException" />
+    /// <seealso cref="ApplicationException" />
     public class NoValueAvailableException : CalcEngineException
     {
         internal NoValueAvailableException()
