@@ -115,41 +115,39 @@ namespace ClosedXML.Examples
 
             #endregion Multi Column
 
-            using (var ms = new MemoryStream())
-            {
-                wb.SaveAs(ms);
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms);
 
-                using var workbook = new XLWorkbook(ms);
+            using var workbook = new XLWorkbook(ms);
 
-                #region Single Column Numbers
+            #region Single Column Numbers
 
-                workbook.Worksheet(singleColumnNumbers).AutoFilter.Sort(1, XLSortOrder.Descending);
+            workbook.Worksheet(singleColumnNumbers).AutoFilter.Sort(1, XLSortOrder.Descending);
 
-                #endregion Single Column Numbers
+            #endregion Single Column Numbers
 
-                #region Single Column Strings
+            #region Single Column Strings
 
-                workbook.Worksheet(singleColumnStrings).AutoFilter.Sort(1, XLSortOrder.Descending);
+            workbook.Worksheet(singleColumnStrings).AutoFilter.Sort(1, XLSortOrder.Descending);
 
-                #endregion Single Column Strings
+            #endregion Single Column Strings
 
-                #region Single Column Mixed
+            #region Single Column Mixed
 
-                workbook.Worksheet(singleColumnMixed).AutoFilter.Column(1).EqualOrGreaterThan("D");
-                workbook.Worksheet(singleColumnMixed).AutoFilter.Sort(1, XLSortOrder.Descending);
+            workbook.Worksheet(singleColumnMixed).AutoFilter.Column(1).EqualOrGreaterThan("D");
+            workbook.Worksheet(singleColumnMixed).AutoFilter.Sort(1, XLSortOrder.Descending);
 
-                #endregion Single Column Mixed
+            #endregion Single Column Mixed
 
-                #region Multi Column
+            #region Multi Column
 
-                workbook.Worksheet(multiColumn).AutoFilter.Column(3).EqualTo("E");
-                workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
+            workbook.Worksheet(multiColumn).AutoFilter.Column(3).EqualTo("E");
+            workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
 
-                #endregion Multi Column
+            #endregion Multi Column
 
-                workbook.SaveAs(filePath);
-                ms.Close();
-            }
+            workbook.SaveAs(filePath);
+            ms.Close();
         }
     }
 }

@@ -42,13 +42,11 @@ namespace ClosedXML.Sandbox
 
         public static void OpenTestFile()
         {
-            using (var wb = new XLWorkbook("test.xlsx"))
-            {
-                wb.RecalculateAllFormulas();
-                var ws = wb.Worksheets.First();
-                var cell = ws.FirstCellUsed();
-                Console.WriteLine(cell.Value);
-            }
+            using var wb = new XLWorkbook("test.xlsx");
+            wb.RecalculateAllFormulas();
+            var ws = wb.Worksheets.First();
+            var cell = ws.FirstCellUsed();
+            Console.WriteLine(cell.Value);
         }
 
         private static void CreateMergedCell(IXLWorksheet worksheet)
@@ -60,12 +58,10 @@ namespace ClosedXML.Sandbox
 
         private static void EmulateSave(XLWorkbook workbook)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                workbook.SaveAs(memoryStream);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                Console.WriteLine("Total bytes = " + memoryStream.ToArray().Length);
-            }
+            using var memoryStream = new MemoryStream();
+            workbook.SaveAs(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            Console.WriteLine("Total bytes = " + memoryStream.ToArray().Length);
         }
 
         private static Random rnd = new Random();
@@ -141,30 +137,28 @@ namespace ClosedXML.Sandbox
         {
             var rows = 200;
             var columns = 200;
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var sheet = wb.Worksheets.Add("TestSheet");
+            var lastColumnLetter = sheet.Column(columns).ColumnLetter();
+            for (var i = 1; i <= rows; i++)
             {
-                var sheet = wb.Worksheets.Add("TestSheet");
-                var lastColumnLetter = sheet.Column(columns).ColumnLetter();
-                for (var i = 1; i <= rows; i++)
+                for (var j = 1; j <= columns; j++)
                 {
-                    for (var j = 1; j <= columns; j++)
+                    if (i == 1)
                     {
-                        if (i == 1)
-                        {
-                            sheet.Cell(i, j).FormulaA1 = string.Format("=ROUND({0}*SIN({0}),2)", j);
-                        }
-                        else
-                        {
-                            sheet.Cell(i, j).FormulaA1 = string.Format("=SUM({0}$1:{0}{1})/SUM($A{1}:${2}{1})",
-                                sheet.Column(j).ColumnLetter(), i - 1, lastColumnLetter); // i.e. for K8 there will be =SUM(K$1:K7)/SUM($A7:$GR7)
-                        }
+                        sheet.Cell(i, j).FormulaA1 = string.Format("=ROUND({0}*SIN({0}),2)", j);
+                    }
+                    else
+                    {
+                        sheet.Cell(i, j).FormulaA1 = string.Format("=SUM({0}$1:{0}{1})/SUM($A{1}:${2}{1})",
+                            sheet.Column(j).ColumnLetter(), i - 1, lastColumnLetter); // i.e. for K8 there will be =SUM(K$1:K7)/SUM($A7:$GR7)
                     }
                 }
-
-                var cells = sheet.CellsUsed();
-                var sum1 = cells.Sum(cell => (double)cell.Value);
-                Console.WriteLine("Total sum: {0:N2}", sum1);
             }
+
+            var cells = sheet.CellsUsed();
+            var sum1 = cells.Sum(cell => (double)cell.Value);
+            Console.WriteLine("Total sum: {0:N2}", sum1);
         }
     }
 }

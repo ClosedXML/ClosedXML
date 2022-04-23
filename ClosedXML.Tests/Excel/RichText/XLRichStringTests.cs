@@ -673,20 +673,16 @@ namespace ClosedXML.Tests
         [Test(Description = "See #1361")]
         public void CanClearInlinedRichText()
         {
-            using (var outputStream = new MemoryStream())
+            using var outputStream = new MemoryStream();
+            using (var inputStream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\InlinedRichText\ChangeRichText\inputfile.xlsx")))
+            using (var workbook = new XLWorkbook(inputStream))
             {
-                using (var inputStream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\InlinedRichText\ChangeRichText\inputfile.xlsx")))
-                using (var workbook = new XLWorkbook(inputStream))
-                {
-                    workbook.Worksheets.First().Cell("A1").Value = "";
-                    workbook.SaveAs(outputStream);
-                }
-
-                using (var wb = new XLWorkbook(outputStream))
-                {
-                    Assert.AreEqual("", wb.Worksheets.First().Cell("A1").Value);
-                }
+                workbook.Worksheets.First().Cell("A1").Value = "";
+                workbook.SaveAs(outputStream);
             }
+
+            using var wb = new XLWorkbook(outputStream);
+            Assert.AreEqual("", wb.Worksheets.First().Cell("A1").Value);
         }
 
         [Test]
@@ -700,63 +696,57 @@ namespace ClosedXML.Tests
                 Assert.AreEqual(XLColor.Red, richText.ElementAt(2).FontColor);
             }
 
-            using (var outputStream = new MemoryStream())
+            using var outputStream = new MemoryStream();
+            using (var inputStream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\InlinedRichText\ChangeRichText\inputfile.xlsx")))
+            using (var workbook = new XLWorkbook(inputStream))
             {
-                using (var inputStream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\InlinedRichText\ChangeRichText\inputfile.xlsx")))
-                using (var workbook = new XLWorkbook(inputStream))
-                {
-                    var richText = workbook.Worksheets.First().Cell("A1").GetRichText();
-                    testRichText(richText);
-                    richText.AddText(" - changed");
-                    workbook.SaveAs(outputStream);
-                }
-
-                using (var wb = new XLWorkbook(outputStream))
-                {
-                    var cell = wb.Worksheets.First().Cell("A1");
-                    Assert.IsFalse(cell.ShareString);
-                    Assert.IsTrue(cell.HasRichText);
-                    var rt = cell.GetRichText();
-                    Assert.AreEqual("Year (range: 3 yrs) - changed", rt.ToString());
-                    testRichText(rt);
-                }
+                var richText = workbook.Worksheets.First().Cell("A1").GetRichText();
+                testRichText(richText);
+                richText.AddText(" - changed");
+                workbook.SaveAs(outputStream);
             }
+
+            using var wb = new XLWorkbook(outputStream);
+            var cell = wb.Worksheets.First().Cell("A1");
+            Assert.IsFalse(cell.ShareString);
+            Assert.IsTrue(cell.HasRichText);
+            var rt = cell.GetRichText();
+            Assert.AreEqual("Year (range: 3 yrs) - changed", rt.ToString());
+            testRichText(rt);
         }
 
         [Test]
         public void ClearInlineRichTextWhenRelevant()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
+                using (var wb = new XLWorkbook())
                 {
-                    using (var wb = new XLWorkbook())
-                    {
-                        var ws = wb.AddWorksheet();
-                        var cell = ws.FirstCell();
+                    var ws = wb.AddWorksheet();
+                    var cell = ws.FirstCell();
 
-                        cell.GetRichText().AddText("Bold").SetBold().AddText(" and red").SetBold().SetFontColor(XLColor.Red);
-                        cell.ShareString = false;
+                    cell.GetRichText().AddText("Bold").SetBold().AddText(" and red").SetBold().SetFontColor(XLColor.Red);
+                    cell.ShareString = false;
 
-                        //wb.SaveAs(ms);
-                        wb.SaveAs(ms);
-                    }
-                    ms.Seek(0, SeekOrigin.Begin);
+                    //wb.SaveAs(ms);
+                    wb.SaveAs(ms);
+                }
+                ms.Seek(0, SeekOrigin.Begin);
 
-                    var wb2 = new XLWorkbook(ms);
-                    {
-                        var ws = wb2.Worksheets.First();
-                        var cell = ws.FirstCell();
+                var wb2 = new XLWorkbook(ms);
+                {
+                    var ws = wb2.Worksheets.First();
+                    var cell = ws.FirstCell();
 
-                        cell.FormulaA1 = "=1 + 2";
-                        wb2.SaveAs(ms);
-                    }
+                    cell.FormulaA1 = "=1 + 2";
+                    wb2.SaveAs(ms);
+                }
 
-                    ms.Seek(0, SeekOrigin.Begin);
+                ms.Seek(0, SeekOrigin.Begin);
 
-                    return wb2;
-                }, @"Other\InlinedRichText\ChangeRichTextToFormula\output.xlsx");
-            }
+                return wb2;
+            }, @"Other\InlinedRichText\ChangeRichTextToFormula\output.xlsx");
         }
     }
 }

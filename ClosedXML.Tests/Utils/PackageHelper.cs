@@ -19,10 +19,8 @@ namespace ClosedXML.Tests
                 package.DeletePart(uri);
             }
             var part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
-            using (var stream = part.GetStream())
-            {
-                serializer.Serialize(stream, content);
-            }
+            using var stream = part.GetStream();
+            serializer.Serialize(stream, content);
         }
 
         public static object ReadXmlPart(Package package, Uri uri, XmlSerializer serializer)
@@ -32,10 +30,8 @@ namespace ClosedXML.Tests
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
             var part = package.GetPart(uri);
-            using (var stream = part.GetStream())
-            {
-                return serializer.Deserialize(stream);
-            }
+            using var stream = part.GetStream();
+            return serializer.Deserialize(stream);
         }
 
         public static void WriteBinaryPart(Package package, Uri uri, Stream content)
@@ -45,10 +41,8 @@ namespace ClosedXML.Tests
                 package.DeletePart(uri);
             }
             var part = package.CreatePart(uri, MediaTypeNames.Application.Octet, CompressionOption.Fast);
-            using (var stream = part.GetStream())
-            {
-                StreamHelper.StreamToStreamAppend(content, stream);
-            }
+            using var stream = part.GetStream();
+            StreamHelper.StreamToStreamAppend(content, stream);
         }
 
         /// <summary>
@@ -103,13 +97,9 @@ namespace ClosedXML.Tests
             var sourcePart = source.GetPart(uri);
             var destPart = dest.CreatePart(uri, sourcePart.ContentType, sourcePart.CompressionOption);
 
-            using (var sourceStream = sourcePart.GetStream())
-            {
-                using (var destStream = destPart.GetStream())
-                {
-                    StreamHelper.StreamToStreamAppend(sourceStream, destStream);
-                }
-            }
+            using var sourceStream = sourcePart.GetStream();
+            using var destStream = destPart.GetStream();
+            StreamHelper.StreamToStreamAppend(sourceStream, destStream);
         }
 
         public static void WritePart<T>(Package package, PackagePartDescriptor descriptor, T content,
@@ -137,10 +127,8 @@ namespace ClosedXML.Tests
                 package.DeletePart(descriptor.Uri);
             }
             var part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (var stream = part.GetStream())
-            {
-                serializeAction(stream, content);
-            }
+            using var stream = part.GetStream();
+            serializeAction(stream, content);
         }
 
         public static void WritePart(Package package, PackagePartDescriptor descriptor, Action<Stream> serializeAction)
@@ -167,10 +155,8 @@ namespace ClosedXML.Tests
                 package.DeletePart(descriptor.Uri);
             }
             var part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (var stream = part.GetStream())
-            {
-                serializeAction(stream);
-            }
+            using var stream = part.GetStream();
+            serializeAction(stream);
         }
 
         public static T ReadPart<T>(Package package, Uri uri, Func<Stream, T> deserializeFunc)
@@ -197,10 +183,8 @@ namespace ClosedXML.Tests
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
             var part = package.GetPart(uri);
-            using (var stream = part.GetStream())
-            {
-                return deserializeFunc(stream);
-            }
+            using var stream = part.GetStream();
+            return deserializeFunc(stream);
         }
 
         public static void ReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
@@ -227,10 +211,8 @@ namespace ClosedXML.Tests
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
             var part = package.GetPart(uri);
-            using (var stream = part.GetStream())
-            {
-                deserializeAction(stream);
-            }
+            using var stream = part.GetStream();
+            deserializeAction(stream);
         }
 
         public static bool TryReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
@@ -345,31 +327,29 @@ namespace ClosedXML.Tests
                 }
                 var leftPart = left.GetPart(pair.Uri);
                 var rightPart = right.GetPart(pair.Uri);
-                using (var leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (var rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (var leftMemoryStream = new MemoryStream())
-                using (var rightMemoryStream = new MemoryStream())
+                using var leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read);
+                using var rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read);
+                using var leftMemoryStream = new MemoryStream();
+                using var rightMemoryStream = new MemoryStream();
+                leftPackagePartStream.CopyTo(leftMemoryStream);
+                rightPackagePartStream.CopyTo(rightMemoryStream);
+
+                leftMemoryStream.Seek(0, SeekOrigin.Begin);
+                rightMemoryStream.Seek(0, SeekOrigin.Begin);
+
+                var stripColumnWidthsFromSheet = ignoreColumnFormat &&
+                    leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
+                    rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
+
+                var tuple1 = new Tuple<Uri, Stream>(pair.Uri, leftMemoryStream);
+                var tuple2 = new Tuple<Uri, Stream>(pair.Uri, rightMemoryStream);
+
+                if (!StreamHelper.Compare(tuple1, tuple2, stripColumnWidthsFromSheet))
                 {
-                    leftPackagePartStream.CopyTo(leftMemoryStream);
-                    rightPackagePartStream.CopyTo(rightMemoryStream);
-
-                    leftMemoryStream.Seek(0, SeekOrigin.Begin);
-                    rightMemoryStream.Seek(0, SeekOrigin.Begin);
-
-                    var stripColumnWidthsFromSheet = ignoreColumnFormat &&
-                        leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
-                        rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
-
-                    var tuple1 = new Tuple<Uri, Stream>(pair.Uri, leftMemoryStream);
-                    var tuple2 = new Tuple<Uri, Stream>(pair.Uri, rightMemoryStream);
-
-                    if (!StreamHelper.Compare(tuple1, tuple2, stripColumnWidthsFromSheet))
+                    pair.Status = CompareStatus.NonEqual;
+                    if (compareToFirstDifference)
                     {
-                        pair.Status = CompareStatus.NonEqual;
-                        if (compareToFirstDifference)
-                        {
-                            return AgregateCompareResult(out message, pairs);
-                        }
+                        return AgregateCompareResult(out message, pairs);
                     }
                 }
             }

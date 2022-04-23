@@ -737,11 +737,9 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanLoadSparklines()
         {
-            using (var ms = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
-            using (var wb = new XLWorkbook(ms))
-            {
-                Assert.IsTrue(wb.Worksheets.All(ws => ws.SparklineGroups.Count() == 6));
-            }
+            using var ms = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx"));
+            using var wb = new XLWorkbook(ms);
+            Assert.IsTrue(wb.Worksheets.All(ws => ws.SparklineGroups.Count() == 6));
         }
 
         [TestCase("Accent!B1", nameof(XLSparklineTheme.Accent1))]
@@ -802,80 +800,74 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void DeletedSparklinesRemovedFromFile()
         {
-            using (var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
-            using (var output = new MemoryStream())
+            using var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx"));
+            using var output = new MemoryStream();
+            using (var wb = new XLWorkbook(input))
             {
-                using (var wb = new XLWorkbook(input))
-                {
-                    wb.Worksheet(1).SparklineGroups.RemoveAll();
-                    wb.Worksheet(2).SparklineGroups.Remove(wb.Worksheet(2).Cell("B1"));
-                    wb.Worksheet(3).SparklineGroups.Remove(wb.Worksheet(3).Range("B2:B6"));
-                    wb.Worksheet(4).SparklineGroups.Remove(wb.Worksheet(4).SparklineGroups.First());
+                wb.Worksheet(1).SparklineGroups.RemoveAll();
+                wb.Worksheet(2).SparklineGroups.Remove(wb.Worksheet(2).Cell("B1"));
+                wb.Worksheet(3).SparklineGroups.Remove(wb.Worksheet(3).Range("B2:B6"));
+                wb.Worksheet(4).SparklineGroups.Remove(wb.Worksheet(4).SparklineGroups.First());
 
-                    wb.SaveAs(output);
-                }
+                wb.SaveAs(output);
+            }
 
-                using (var wb = new XLWorkbook(output))
-                {
-                    Assert.AreEqual(0, wb.Worksheet(1).SparklineGroups.Count());
-                    Assert.AreEqual(5, wb.Worksheet(2).SparklineGroups.Count());
-                    Assert.AreEqual(1, wb.Worksheet(3).SparklineGroups.Count());
-                    Assert.AreEqual(5, wb.Worksheet(4).SparklineGroups.Count());
-                    Assert.AreEqual(6, wb.Worksheet(5).SparklineGroups.Count());
-                    Assert.AreEqual(6, wb.Worksheet(6).SparklineGroups.Count());
-                }
+            using (var wb = new XLWorkbook(output))
+            {
+                Assert.AreEqual(0, wb.Worksheet(1).SparklineGroups.Count());
+                Assert.AreEqual(5, wb.Worksheet(2).SparklineGroups.Count());
+                Assert.AreEqual(1, wb.Worksheet(3).SparklineGroups.Count());
+                Assert.AreEqual(5, wb.Worksheet(4).SparklineGroups.Count());
+                Assert.AreEqual(6, wb.Worksheet(5).SparklineGroups.Count());
+                Assert.AreEqual(6, wb.Worksheet(6).SparklineGroups.Count());
             }
         }
 
         [Test]
         public void EmptySparklineGroupsSkippedOnSaving()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.AddWorksheet("Sheet 1");
-                    var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+                var ws = wb.AddWorksheet("Sheet 1");
+                var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
 
-                    group.RemoveAll();
+                group.RemoveAll();
 
-                    wb.SaveAs(ms);
-                }
+                wb.SaveAs(ms);
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    Assert.AreEqual(0, wb.Worksheets.First().SparklineGroups.Count());
-                }
+            using (var wb = new XLWorkbook(ms))
+            {
+                Assert.AreEqual(0, wb.Worksheets.First().SparklineGroups.Count());
             }
         }
 
         [Test]
         public void CanSaveAndLoadSparklineWithInvalidRange()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws1 = wb.AddWorksheet("Sheet 1");
-                    var ws2 = wb.AddWorksheet("Sheet 2");
+                var ws1 = wb.AddWorksheet("Sheet 1");
+                var ws2 = wb.AddWorksheet("Sheet 2");
 
-                    ws1.SparklineGroups.Add("A1:A3", "'Sheet 2'!B1:F3");
-                    ws1.SparklineGroups.Add("A4:A6", "B4:F6")
-                        .SetDateRange(ws2.Range("A1:E1"));
+                ws1.SparklineGroups.Add("A1:A3", "'Sheet 2'!B1:F3");
+                ws1.SparklineGroups.Add("A4:A6", "B4:F6")
+                    .SetDateRange(ws2.Range("A1:E1"));
 
-                    ws2.Delete();
-                    wb.SaveAs(ms);
-                }
+                ws2.Delete();
+                wb.SaveAs(ms);
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.Single();
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.Single();
 
-                    Assert.AreEqual(2, ws.SparklineGroups.Count());
-                    Assert.IsFalse(ws.Cell("A2").Sparkline.IsValid);
-                    Assert.AreEqual("B5:F5", ws.Cell("A5").Sparkline.SourceData.RangeAddress.ToString());
-                    Assert.IsNull(ws.Cell("A5").Sparkline.SparklineGroup.DateRange);
-                }
+                Assert.AreEqual(2, ws.SparklineGroups.Count());
+                Assert.IsFalse(ws.Cell("A2").Sparkline.IsValid);
+                Assert.AreEqual("B5:F5", ws.Cell("A5").Sparkline.SourceData.RangeAddress.ToString());
+                Assert.IsNull(ws.Cell("A5").Sparkline.SparklineGroup.DateRange);
             }
         }
 

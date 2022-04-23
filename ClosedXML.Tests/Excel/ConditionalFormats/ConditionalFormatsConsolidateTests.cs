@@ -172,22 +172,20 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void ColorScaleComparing()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet");
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet");
 
-                var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
-                var cf1 = new XLConditionalFormat(ranges);
-                cf1.ColorScale()
-                    .LowestValue(XLColor.Red)
-                    .HighestValue(XLColor.Green);
+            var ranges = ws.Ranges("B3:B8,C3:C4,A3:A4,C5:C8,A5:A8").Cast<XLRange>();
+            var cf1 = new XLConditionalFormat(ranges);
+            cf1.ColorScale()
+                .LowestValue(XLColor.Red)
+                .HighestValue(XLColor.Green);
 
-                var cf2 = new XLConditionalFormat(ranges);
-                cf2.ColorScale()
-                    .LowestValue(XLColor.Red)
-                    .HighestValue(XLColor.Green);
-                Assert.True(XLConditionalFormat.NoRangeComparer.Equals(cf1, cf2));
-            }
+            var cf2 = new XLConditionalFormat(ranges);
+            cf2.ColorScale()
+                .LowestValue(XLColor.Red)
+                .HighestValue(XLColor.Green);
+            Assert.True(XLConditionalFormat.NoRangeComparer.Equals(cf1, cf2));
         }
 
         private static void SetFormat1(IXLConditionalFormat format)

@@ -728,21 +728,19 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Hyperlink()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws1 = wb.Worksheets.Add("Sheet1");
-                var ws2 = wb.Worksheets.Add("Sheet2");
+            using var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            var ws2 = wb.Worksheets.Add("Sheet2");
 
-                var targetCell = ws2.Cell("A1");
+            var targetCell = ws2.Cell("A1");
 
-                var linkCell1 = ws1.Cell("A1");
-                linkCell1.Value = "Link to IXLCell";
-                linkCell1.SetHyperlink(new XLHyperlink(targetCell));
+            var linkCell1 = ws1.Cell("A1");
+            linkCell1.Value = "Link to IXLCell";
+            linkCell1.SetHyperlink(new XLHyperlink(targetCell));
 
-                var success = linkCell1.TryGetValue(out XLHyperlink hyperlink);
-                Assert.IsTrue(success);
-                Assert.AreEqual("Sheet2!A1", hyperlink.InternalAddress);
-            }
+            var success = linkCell1.TryGetValue(out XLHyperlink hyperlink);
+            Assert.IsTrue(success);
+            Assert.AreEqual("Sheet2!A1", hyperlink.InternalAddress);
         }
 
         [Test]
@@ -895,71 +893,65 @@ namespace ClosedXML.Tests
         [Test]
         public void SetStringCellValues()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var cell = ws.FirstCell();
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var cell = ws.FirstCell();
 
-                object expected;
+            object expected;
 
-                var date = new DateTime(2018, 4, 18);
-                expected = date.ToString();
-                cell.Value = expected;
-                Assert.AreEqual(XLDataType.DateTime, cell.DataType);
-                Assert.AreEqual(date, cell.Value);
+            var date = new DateTime(2018, 4, 18);
+            expected = date.ToString();
+            cell.Value = expected;
+            Assert.AreEqual(XLDataType.DateTime, cell.DataType);
+            Assert.AreEqual(date, cell.Value);
 
-                var b = true;
-                expected = b.ToString();
-                cell.Value = expected;
-                Assert.AreEqual(XLDataType.Boolean, cell.DataType);
-                Assert.AreEqual(b, cell.Value);
+            var b = true;
+            expected = b.ToString();
+            cell.Value = expected;
+            Assert.AreEqual(XLDataType.Boolean, cell.DataType);
+            Assert.AreEqual(b, cell.Value);
 
-                var ts = new TimeSpan(8, 12, 4);
-                expected = ts.ToString();
-                cell.Value = expected;
-                Assert.AreEqual(XLDataType.TimeSpan, cell.DataType);
-                Assert.AreEqual(ts, cell.Value);
-            }
+            var ts = new TimeSpan(8, 12, 4);
+            expected = ts.ToString();
+            cell.Value = expected;
+            Assert.AreEqual(XLDataType.TimeSpan, cell.DataType);
+            Assert.AreEqual(ts, cell.Value);
         }
 
         [Test]
         public void SetStringValueTooLong()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.FirstCell().Value = new DateTime(2018, 5, 15);
+            ws.FirstCell().Value = new DateTime(2018, 5, 15);
 
-                ws.FirstCell().SetValue(new string('A', 32767));
+            ws.FirstCell().SetValue(new string('A', 32767));
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().Value = new string('A', 32768));
-                Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().SetValue(new string('A', 32768)));
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().Value = new string('A', 32768));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ws.FirstCell().SetValue(new string('A', 32768)));
         }
 
         [Test]
         [Culture("en-GB")]
         public void SetDateTime_in_Regular_and_Strict_Mode()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                var cell = ws.FirstCell() as XLCell;
+            var cell = ws.FirstCell() as XLCell;
 
-                //Test non-strict mode
-                cell.SetDateValue("1/1/2000");
+            //Test non-strict mode
+            cell.SetDateValue("1/1/2000");
 
-                Assert.AreEqual("36526", cell.Value);
-                Assert.AreEqual(DateTime.Parse("1/1/2000"), DateTime.FromOADate(double.Parse(cell.Value as string)));
+            Assert.AreEqual("36526", cell.Value);
+            Assert.AreEqual(DateTime.Parse("1/1/2000"), DateTime.FromOADate(double.Parse(cell.Value as string)));
 
-                //Test strict mode
-                cell.SetDateValue("30000");
+            //Test strict mode
+            cell.SetDateValue("30000");
 
-                Assert.AreEqual("30000", cell.Value);
-                Assert.AreEqual(DateTime.Parse("2/18/1982"), DateTime.FromOADate(double.Parse(cell.Value as string)));
-            }
+            Assert.AreEqual("30000", cell.Value);
+            Assert.AreEqual(DateTime.Parse("2/18/1982"), DateTime.FromOADate(double.Parse(cell.Value as string)));
         }
 
         [Test]
@@ -967,61 +959,55 @@ namespace ClosedXML.Tests
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-ZA");
 
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.FirstCell().Value = 5;
+            ws.FirstCell().Value = 5;
 
-                var date = XLCell.BaseDate.AddDays(-1);
-                ws.FirstCell().Value = date;
+            var date = XLCell.BaseDate.AddDays(-1);
+            ws.FirstCell().Value = date;
 
-                // Should default to string representation using current culture's date format
-                Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
-                Assert.AreEqual(date.ToString(), ws.FirstCell().Value);
+            // Should default to string representation using current culture's date format
+            Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
+            Assert.AreEqual(date.ToString(), ws.FirstCell().Value);
 
-                Assert.Throws<ArgumentException>(() => ws.FirstCell().SetValue(XLCell.BaseDate.AddDays(-1)));
-            }
+            Assert.Throws<ArgumentException>(() => ws.FirstCell().SetValue(XLCell.BaseDate.AddDays(-1)));
         }
 
         [Test]
         public void SetCellValueWipesFormulas()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.FirstCell().FormulaA1 = "=TODAY()";
-                ws.FirstCell().Value = "hello world";
-                Assert.IsFalse(ws.FirstCell().HasFormula);
+            ws.FirstCell().FormulaA1 = "=TODAY()";
+            ws.FirstCell().Value = "hello world";
+            Assert.IsFalse(ws.FirstCell().HasFormula);
 
-                ws.FirstCell().FormulaA1 = "=TODAY()";
-                ws.FirstCell().SetValue("hello world");
-                Assert.IsFalse(ws.FirstCell().HasFormula);
-            }
+            ws.FirstCell().FormulaA1 = "=TODAY()";
+            ws.FirstCell().SetValue("hello world");
+            Assert.IsFalse(ws.FirstCell().HasFormula);
         }
 
         [Test]
         public void CellValueLineWrapping()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.FirstCell().Value = "hello world";
-                Assert.IsFalse(ws.FirstCell().Style.Alignment.WrapText);
+            ws.FirstCell().Value = "hello world";
+            Assert.IsFalse(ws.FirstCell().Style.Alignment.WrapText);
 
-                ws.FirstCell().Value = "hello\r\nworld";
-                Assert.IsTrue(ws.FirstCell().Style.Alignment.WrapText);
+            ws.FirstCell().Value = "hello\r\nworld";
+            Assert.IsTrue(ws.FirstCell().Style.Alignment.WrapText);
 
-                ws.FirstCell().Style.Alignment.WrapText = false;
+            ws.FirstCell().Style.Alignment.WrapText = false;
 
-                ws.FirstCell().SetValue("hello world");
-                Assert.IsFalse(ws.FirstCell().Style.Alignment.WrapText);
+            ws.FirstCell().SetValue("hello world");
+            Assert.IsFalse(ws.FirstCell().Style.Alignment.WrapText);
 
-                ws.FirstCell().SetValue("hello\r\nworld");
-                Assert.IsTrue(ws.FirstCell().Style.Alignment.WrapText);
-            }
+            ws.FirstCell().SetValue("hello\r\nworld");
+            Assert.IsTrue(ws.FirstCell().Style.Alignment.WrapText);
         }
 
         [Test]
@@ -1047,59 +1033,55 @@ namespace ClosedXML.Tests
         [Test]
         public void CanClearCellValueBySettingNullValue()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var cell = ws.FirstCell();
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var cell = ws.FirstCell();
 
-                cell.Value = "Test";
-                Assert.AreEqual("Test", cell.Value);
-                Assert.AreEqual(XLDataType.Text, cell.DataType);
+            cell.Value = "Test";
+            Assert.AreEqual("Test", cell.Value);
+            Assert.AreEqual(XLDataType.Text, cell.DataType);
 
-                string s = null;
-                cell.SetValue(s);
-                Assert.AreEqual(string.Empty, cell.Value);
+            string s = null;
+            cell.SetValue(s);
+            Assert.AreEqual(string.Empty, cell.Value);
 
-                cell.Value = "Test";
-                cell.Value = null;
-                Assert.AreEqual(string.Empty, cell.Value);
-            }
+            cell.Value = "Test";
+            cell.Value = null;
+            Assert.AreEqual(string.Empty, cell.Value);
         }
 
         [Test]
         public void CanClearDateTimeCellValue()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.AddWorksheet("Sheet1");
-                    var c = ws.FirstCell();
-                    c.SetValue(new DateTime(2017, 10, 08));
-                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
-                    Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
+                var ws = wb.AddWorksheet("Sheet1");
+                var c = ws.FirstCell();
+                c.SetValue(new DateTime(2017, 10, 08));
+                Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
 
-                    wb.SaveAs(ms);
-                }
+                wb.SaveAs(ms);
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.First();
-                    var c = ws.FirstCell();
-                    Assert.AreEqual(XLDataType.DateTime, c.DataType);
-                    Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
+                var c = ws.FirstCell();
+                Assert.AreEqual(XLDataType.DateTime, c.DataType);
+                Assert.AreEqual(new DateTime(2017, 10, 08), c.Value);
 
-                    c.Clear();
-                    wb.Save();
-                }
+                c.Clear();
+                wb.Save();
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.First();
-                    var c = ws.FirstCell();
-                    Assert.AreEqual(XLDataType.Text, c.DataType);
-                    Assert.True(c.IsEmpty());
-                }
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
+                var c = ws.FirstCell();
+                Assert.AreEqual(XLDataType.Text, c.DataType);
+                Assert.True(c.IsEmpty());
             }
         }
 
@@ -1122,204 +1104,192 @@ namespace ClosedXML.Tests
         public void CurrentRegion()
         {
             // Partially based on sample in https://github.com/ClosedXML/ClosedXML/issues/120
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+
+            ws.Cell("B1").SetValue("x")
+                .CellBelow().SetValue("x")
+                .CellBelow().SetValue("x");
+
+            ws.Cell("C1").SetValue("x")
+                .CellBelow().SetValue("x")
+                .CellBelow().SetValue("x");
+
+            //Deliberately D2
+            ws.Cell("D2").SetValue("x")
+                .CellBelow().SetValue("x");
+
+            ws.Cell("G1").SetValue("x")
+                .CellBelow() // skip a cell
+                .CellBelow().SetValue("x")
+                .CellBelow().SetValue("x");
+
+            // Deliberately H2
+            ws.Cell("H2").SetValue("x")
+                .CellBelow().SetValue("x")
+                .CellBelow().SetValue("x");
+
+            // A diagonal
+            ws.Cell("E8").SetValue("x")
+                .CellBelow().CellRight().SetValue("x")
+                .CellBelow().CellRight().SetValue("x")
+                .CellBelow().CellRight().SetValue("x")
+                .CellBelow().CellRight().SetValue("x");
+
+            Assert.AreEqual("A10:A10", ws.Cell("A10").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("B5:B5", ws.Cell("B5").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("P1:P1", ws.Cell("P1").CurrentRegion.RangeAddress.ToString());
+
+            Assert.AreEqual("B1:D3", ws.Cell("D3").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("B1:D4", ws.Cell("D4").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
+
+            foreach (var c in ws.Range("B1:D3").Cells())
             {
-                var ws = wb.AddWorksheet("Sheet1");
-
-                ws.Cell("B1").SetValue("x")
-                    .CellBelow().SetValue("x")
-                    .CellBelow().SetValue("x");
-
-                ws.Cell("C1").SetValue("x")
-                    .CellBelow().SetValue("x")
-                    .CellBelow().SetValue("x");
-
-                //Deliberately D2
-                ws.Cell("D2").SetValue("x")
-                    .CellBelow().SetValue("x");
-
-                ws.Cell("G1").SetValue("x")
-                    .CellBelow() // skip a cell
-                    .CellBelow().SetValue("x")
-                    .CellBelow().SetValue("x");
-
-                // Deliberately H2
-                ws.Cell("H2").SetValue("x")
-                    .CellBelow().SetValue("x")
-                    .CellBelow().SetValue("x");
-
-                // A diagonal
-                ws.Cell("E8").SetValue("x")
-                    .CellBelow().CellRight().SetValue("x")
-                    .CellBelow().CellRight().SetValue("x")
-                    .CellBelow().CellRight().SetValue("x")
-                    .CellBelow().CellRight().SetValue("x");
-
-                Assert.AreEqual("A10:A10", ws.Cell("A10").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("B5:B5", ws.Cell("B5").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("P1:P1", ws.Cell("P1").CurrentRegion.RangeAddress.ToString());
-
-                Assert.AreEqual("B1:D3", ws.Cell("D3").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("B1:D4", ws.Cell("D4").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
-
-                foreach (var c in ws.Range("B1:D3").Cells())
-                {
-                    Assert.AreEqual("B1:D3", c.CurrentRegion.RangeAddress.ToString());
-                }
-
-                foreach (var c in ws.Range("A1:A3").Cells())
-                {
-                    Assert.AreEqual("A1:D3", c.CurrentRegion.RangeAddress.ToString());
-                }
-
-                Assert.AreEqual("A1:D4", ws.Cell("A4").CurrentRegion.RangeAddress.ToString());
-
-                foreach (var c in ws.Range("E1:E3").Cells())
-                {
-                    Assert.AreEqual("B1:E3", c.CurrentRegion.RangeAddress.ToString());
-                }
-
-                Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
-
-                //// SECOND REGION
-                foreach (var c in ws.Range("F1:F4").Cells())
-                {
-                    Assert.AreEqual("F1:H4", c.CurrentRegion.RangeAddress.ToString());
-                }
-
-                Assert.AreEqual("F1:H5", ws.Cell("F5").CurrentRegion.RangeAddress.ToString());
-
-                //// DIAGONAL
-                Assert.AreEqual("E8:I12", ws.Cell("E8").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("E8:I12", ws.Cell("F9").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("E8:I12", ws.Cell("G10").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("E8:I12", ws.Cell("H11").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("E8:I12", ws.Cell("I12").CurrentRegion.RangeAddress.ToString());
-
-                Assert.AreEqual("E8:I12", ws.Cell("G9").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("E8:I12", ws.Cell("F10").CurrentRegion.RangeAddress.ToString());
-
-                Assert.AreEqual("D7:I12", ws.Cell("D7").CurrentRegion.RangeAddress.ToString());
-                Assert.AreEqual("E8:J13", ws.Cell("J13").CurrentRegion.RangeAddress.ToString());
+                Assert.AreEqual("B1:D3", c.CurrentRegion.RangeAddress.ToString());
             }
+
+            foreach (var c in ws.Range("A1:A3").Cells())
+            {
+                Assert.AreEqual("A1:D3", c.CurrentRegion.RangeAddress.ToString());
+            }
+
+            Assert.AreEqual("A1:D4", ws.Cell("A4").CurrentRegion.RangeAddress.ToString());
+
+            foreach (var c in ws.Range("E1:E3").Cells())
+            {
+                Assert.AreEqual("B1:E3", c.CurrentRegion.RangeAddress.ToString());
+            }
+
+            Assert.AreEqual("B1:E4", ws.Cell("E4").CurrentRegion.RangeAddress.ToString());
+
+            //// SECOND REGION
+            foreach (var c in ws.Range("F1:F4").Cells())
+            {
+                Assert.AreEqual("F1:H4", c.CurrentRegion.RangeAddress.ToString());
+            }
+
+            Assert.AreEqual("F1:H5", ws.Cell("F5").CurrentRegion.RangeAddress.ToString());
+
+            //// DIAGONAL
+            Assert.AreEqual("E8:I12", ws.Cell("E8").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("E8:I12", ws.Cell("F9").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("E8:I12", ws.Cell("G10").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("E8:I12", ws.Cell("H11").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("E8:I12", ws.Cell("I12").CurrentRegion.RangeAddress.ToString());
+
+            Assert.AreEqual("E8:I12", ws.Cell("G9").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("E8:I12", ws.Cell("F10").CurrentRegion.RangeAddress.ToString());
+
+            Assert.AreEqual("D7:I12", ws.Cell("D7").CurrentRegion.RangeAddress.ToString());
+            Assert.AreEqual("E8:J13", ws.Cell("J13").CurrentRegion.RangeAddress.ToString());
         }
 
         // https://github.com/ClosedXML/ClosedXML/issues/630
         [Test]
         public void ConsiderEmptyValueAsNumericInSumFormula()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.Cell("A1").SetValue("Empty");
-                ws.Cell("A2").SetValue("Numeric");
-                ws.Cell("A3").SetValue("Copy of numeric");
+            ws.Cell("A1").SetValue("Empty");
+            ws.Cell("A2").SetValue("Numeric");
+            ws.Cell("A3").SetValue("Copy of numeric");
 
-                ws.Cell("B2").SetFormulaA1("=B1");
-                ws.Cell("B3").SetFormulaA1("=B2");
+            ws.Cell("B2").SetFormulaA1("=B1");
+            ws.Cell("B3").SetFormulaA1("=B2");
 
-                ws.Cell("C2").SetFormulaA1("=SUM(C1)");
-                ws.Cell("C3").SetFormulaA1("=C2");
+            ws.Cell("C2").SetFormulaA1("=SUM(C1)");
+            ws.Cell("C3").SetFormulaA1("=C2");
 
-                var b1 = ws.Cell("B1").Value;
-                var b2 = ws.Cell("B2").Value;
-                var b3 = ws.Cell("B3").Value;
+            var b1 = ws.Cell("B1").Value;
+            var b2 = ws.Cell("B2").Value;
+            var b3 = ws.Cell("B3").Value;
 
-                Assert.AreEqual("", b1);
-                Assert.AreEqual(0, b2);
-                Assert.AreEqual(0, b3);
+            Assert.AreEqual("", b1);
+            Assert.AreEqual(0, b2);
+            Assert.AreEqual(0, b3);
 
-                var c1 = ws.Cell("C1").Value;
-                var c2 = ws.Cell("C2").Value;
-                var c3 = ws.Cell("C3").Value;
+            var c1 = ws.Cell("C1").Value;
+            var c2 = ws.Cell("C2").Value;
+            var c3 = ws.Cell("C3").Value;
 
-                Assert.AreEqual("", c1);
-                Assert.AreEqual(0, c2);
-                Assert.AreEqual(0, c3);
-            }
+            Assert.AreEqual("", c1);
+            Assert.AreEqual(0, c2);
+            Assert.AreEqual(0, c3);
         }
 
         [Test]
         public void SetFormulaA1AffectsR1C1()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var cell = ws.Cell(1, 1);
-                cell.FormulaR1C1 = "R[1]C";
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var cell = ws.Cell(1, 1);
+            cell.FormulaR1C1 = "R[1]C";
 
-                cell.FormulaA1 = "B2";
+            cell.FormulaA1 = "B2";
 
-                Assert.AreEqual("R[1]C[1]", cell.FormulaR1C1);
-            }
+            Assert.AreEqual("R[1]C[1]", cell.FormulaR1C1);
         }
 
         [Test]
         public void SetFormulaR1C1AffectsA1()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var cell = ws.Cell(1, 1);
-                cell.FormulaA1 = "A2";
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var cell = ws.Cell(1, 1);
+            cell.FormulaA1 = "A2";
 
-                cell.FormulaR1C1 = "R[1]C[1]";
+            cell.FormulaR1C1 = "R[1]C[1]";
 
-                Assert.AreEqual("B2", cell.FormulaA1);
-            }
+            Assert.AreEqual("B2", cell.FormulaA1);
         }
 
         [Test]
         public void FormulaWithCircularReferenceFails()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var A1 = ws.Cell("A1");
-                var A2 = ws.Cell("A2");
-                A1.FormulaA1 = "A2 + 1";
-                A2.FormulaA1 = "A1 + 1";
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var A1 = ws.Cell("A1");
+            var A2 = ws.Cell("A2");
+            A1.FormulaA1 = "A2 + 1";
+            A2.FormulaA1 = "A1 + 1";
 
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    var _ = A1.Value;
-                });
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    var _ = A2.Value;
-                });
-            }
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var _ = A1.Value;
+            });
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var _ = A2.Value;
+            });
         }
 
         [Test]
         public void InvalidFormulaShiftProducesREF()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.Worksheets.Add("Sheet1");
-                    ws.Cell("A1").Value = 1;
-                    ws.Cell("B1").Value = 2;
-                    ws.Cell("B2").FormulaA1 = "=A1+B1";
+                var ws = wb.Worksheets.Add("Sheet1");
+                ws.Cell("A1").Value = 1;
+                ws.Cell("B1").Value = 2;
+                ws.Cell("B2").FormulaA1 = "=A1+B1";
 
-                    Assert.AreEqual(3, ws.Cell("B2").Value);
+                Assert.AreEqual(3, ws.Cell("B2").Value);
 
-                    ws.Range("A2").Value = ws.Range("B2");
-                    var fA2 = ws.Cell("A2").FormulaA1;
+                ws.Range("A2").Value = ws.Range("B2");
+                var fA2 = ws.Cell("A2").FormulaA1;
 
-                    wb.SaveAs(ms);
+                wb.SaveAs(ms);
 
-                    Assert.AreEqual("#REF!+A1", fA2);
-                }
+                Assert.AreEqual("#REF!+A1", fA2);
+            }
 
-                using (var wb2 = new XLWorkbook(ms))
-                {
-                    var fA2 = wb2.Worksheets.First().Cell("A2").FormulaA1;
-                    Assert.AreEqual("#REF!+A1", fA2);
-                }
+            using (var wb2 = new XLWorkbook(ms))
+            {
+                var fA2 = wb2.Worksheets.First().Cell("A2").FormulaA1;
+                Assert.AreEqual("#REF!+A1", fA2);
             }
         }
 
@@ -1338,19 +1308,17 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValueFormulaEvaluation()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                var A1 = ws.Cell("A1");
-                var A2 = ws.Cell("A2");
-                var A3 = ws.Cell("A3");
-                A1.FormulaA1 = "A2 + 1";
-                A2.FormulaA1 = "A1 + 1";
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            var A1 = ws.Cell("A1");
+            var A2 = ws.Cell("A2");
+            var A3 = ws.Cell("A3");
+            A1.FormulaA1 = "A2 + 1";
+            A2.FormulaA1 = "A1 + 1";
 
-                Assert.IsFalse(A1.TryGetValue(out string _));
-                Assert.IsFalse(A2.TryGetValue(out string _));
-                Assert.IsTrue(A3.TryGetValue(out string _));
-            }
+            Assert.IsFalse(A1.TryGetValue(out string _));
+            Assert.IsFalse(A2.TryGetValue(out string _));
+            Assert.IsTrue(A3.TryGetValue(out string _));
         }
 
         [Test]

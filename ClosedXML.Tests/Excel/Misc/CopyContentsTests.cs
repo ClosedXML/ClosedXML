@@ -116,16 +116,14 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void UpdateCellsWorksheetTest()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws1 = wb.Worksheets.Add("Sheet1");
-                ws1.Cell(1, 1).Value = "hello, world.";
+            using var wb = new XLWorkbook();
+            var ws1 = wb.Worksheets.Add("Sheet1");
+            ws1.Cell(1, 1).Value = "hello, world.";
 
-                var ws2 = ws1.CopyTo("Sheet2");
+            var ws2 = ws1.CopyTo("Sheet2");
 
-                Assert.AreEqual("Sheet1", ws1.FirstCell().Address.Worksheet.Name);
-                Assert.AreEqual("Sheet2", ws2.FirstCell().Address.Worksheet.Name);
-            }
+            Assert.AreEqual("Sheet1", ws1.FirstCell().Address.Worksheet.Name);
+            Assert.AreEqual("Sheet2", ws2.FirstCell().Address.Worksheet.Name);
         }
     }
 }

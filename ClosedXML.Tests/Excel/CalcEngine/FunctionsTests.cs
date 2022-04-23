@@ -625,17 +625,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SumDateTimeAndNumber()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell("A1").Value = 1;
-                ws.Cell("A2").Value = new DateTime(2018, 1, 1);
-                Assert.AreEqual(43102, ws.Evaluate("SUM(A1:A2)"));
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Value = 1;
+            ws.Cell("A2").Value = new DateTime(2018, 1, 1);
+            Assert.AreEqual(43102, ws.Evaluate("SUM(A1:A2)"));
 
-                ws.Cell("A1").Value = 2;
-                ws.Cell("A2").FormulaA1 = "DATE(2018,1,1)";
-                Assert.AreEqual(43103, ws.Evaluate("SUM(A1:A2)"));
-            }
+            ws.Cell("A1").Value = 2;
+            ws.Cell("A2").FormulaA1 = "DATE(2018,1,1)";
+            Assert.AreEqual(43103, ws.Evaluate("SUM(A1:A2)"));
         }
 
         [Test]
@@ -691,21 +689,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void TestOmittedParameters()
         {
-            using (var wb = new XLWorkbook())
-            {
-                object value;
-                value = wb.Evaluate("=IF(TRUE,1)");
-                Assert.AreEqual(1, value);
+            using var wb = new XLWorkbook();
+            object value;
+            value = wb.Evaluate("=IF(TRUE,1)");
+            Assert.AreEqual(1, value);
 
-                value = wb.Evaluate("=IF(TRUE,1,)");
-                Assert.AreEqual(1, value);
+            value = wb.Evaluate("=IF(TRUE,1,)");
+            Assert.AreEqual(1, value);
 
-                value = wb.Evaluate("=IF(FALSE,1,)");
-                Assert.AreEqual(false, value);
+            value = wb.Evaluate("=IF(FALSE,1,)");
+            Assert.AreEqual(false, value);
 
-                value = wb.Evaluate("=IF(FALSE,,2)");
-                Assert.AreEqual(2, value);
-            }
+            value = wb.Evaluate("=IF(FALSE,,2)");
+            Assert.AreEqual(2, value);
         }
 
         [Test]

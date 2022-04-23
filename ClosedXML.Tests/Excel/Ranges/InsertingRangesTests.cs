@@ -131,33 +131,29 @@ namespace ClosedXML.Tests
         [TestCase("B1:B8", "A1:C4", -1, "B1:B8")]  // More rows, shift left
         public void ShiftColumnsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedColumns, string expectedRange)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+            thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
 
-                Assert.IsTrue(thisRange.RangeAddress.IsValid);
-                Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
-            }
+            Assert.IsTrue(thisRange.RangeAddress.IsValid);
+            Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
         }
 
         [Test]
         [TestCase("B1:B4", "A1:C4", -2)] // Shift left too much
         public void ShiftColumnsInvalid(string thisRangeAddress, string shiftedRangeAddress, int shiftedColumns)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
+            thisRange.WorksheetRangeShiftedColumns(shiftedRange, shiftedColumns);
 
-                Assert.IsFalse(thisRange.RangeAddress.IsValid);
-            }
+            Assert.IsFalse(thisRange.RangeAddress.IsValid);
         }
 
         [Test]
@@ -181,33 +177,29 @@ namespace ClosedXML.Tests
         [TestCase("A2:D2", "A1:C4", -1, "A2:D2")]   // More columns, shift up
         public void ShiftRowsValid(string thisRangeAddress, string shiftedRangeAddress, int shiftedRows, string expectedRange)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+            thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
 
-                Assert.IsTrue(thisRange.RangeAddress.IsValid);
-                Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
-            }
+            Assert.IsTrue(thisRange.RangeAddress.IsValid);
+            Assert.AreEqual(expectedRange, thisRange.RangeAddress.ToString());
         }
 
         [Test]
         [TestCase("A2:C2", "A1:C4", -2)] // Shift up too much
         public void ShiftRowsInvalid(string thisRangeAddress, string shiftedRangeAddress, int shiftedRows)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                var thisRange = ws.Range(thisRangeAddress) as XLRange;
-                var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            var thisRange = ws.Range(thisRangeAddress) as XLRange;
+            var shiftedRange = ws.Range(shiftedRangeAddress) as XLRange;
 
-                thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
+            thisRange.WorksheetRangeShiftedRows(shiftedRange, shiftedRows);
 
-                Assert.IsFalse(thisRange.RangeAddress.IsValid);
-            }
+            Assert.IsFalse(thisRange.RangeAddress.IsValid);
         }
 
         [Test]
@@ -268,30 +260,28 @@ namespace ClosedXML.Tests
         public void MergedRangesConsistencyWhenInsertingRows()
         {
             // https://github.com/ClosedXML/ClosedXML/issues/1013
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+
+            //create merged row
+            ws.Cell("A1").Value = "Merged Row(1) of Range (A1:F1)";
+            ws.Range("A1:F1").Row(1).Merge();
+
+            var row = ws.FirstRow();
+
+            // Add some lines and copy format & merging
+            for (var r = 1; r <= 10; r++)
             {
-                var ws = wb.AddWorksheet("Sheet1");
+                row.InsertRowsBelow(1);         // insert a row below row 1, as a row 2
+                row.CopyTo(row.RowBelow());     // copy format and merging from row 1 to row 2
 
-                //create merged row
-                ws.Cell("A1").Value = "Merged Row(1) of Range (A1:F1)";
-                ws.Range("A1:F1").Row(1).Merge();
+                var duplicates = ws.MergedRanges
+                    .GroupBy(s => s.ToString())
+                    .Where(g => g.Count() > 1)
+                    .Select(y => new { Element = y.Key, Counter = y.Count() })
+                    .ToList();
 
-                var row = ws.FirstRow();
-
-                // Add some lines and copy format & merging
-                for (var r = 1; r <= 10; r++)
-                {
-                    row.InsertRowsBelow(1);         // insert a row below row 1, as a row 2
-                    row.CopyTo(row.RowBelow());     // copy format and merging from row 1 to row 2
-
-                    var duplicates = ws.MergedRanges
-                        .GroupBy(s => s.ToString())
-                        .Where(g => g.Count() > 1)
-                        .Select(y => new { Element = y.Key, Counter = y.Count() })
-                        .ToList();
-
-                    Assert.AreEqual(0, duplicates.Count);
-                }
+                Assert.AreEqual(0, duplicates.Count);
             }
         }
     }

@@ -187,25 +187,23 @@ namespace ClosedXML.Tests
         [Test]
         public void FullSpanAddressCannotChange()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                var wsRange = ws.AsRange();
-                var row = ws.FirstRow().RowBelow(4).AsRange();
-                var column = ws.FirstColumn().ColumnRight(4).AsRange();
+            var wsRange = ws.AsRange();
+            var row = ws.FirstRow().RowBelow(4).AsRange();
+            var column = ws.FirstColumn().ColumnRight(4).AsRange();
 
-                Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
-                Assert.AreEqual("5:5", row.RangeAddress.ToString());
-                Assert.AreEqual("E:E", column.RangeAddress.ToString());
+            Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
+            Assert.AreEqual("5:5", row.RangeAddress.ToString());
+            Assert.AreEqual("E:E", column.RangeAddress.ToString());
 
-                ws.Columns("Y:Z").Delete();
-                ws.Rows("9:10").Delete();
+            ws.Columns("Y:Z").Delete();
+            ws.Rows("9:10").Delete();
 
-                Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
-                Assert.AreEqual("5:5", row.RangeAddress.ToString());
-                Assert.AreEqual("E:E", column.RangeAddress.ToString());
-            }
+            Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
+            Assert.AreEqual("5:5", row.RangeAddress.ToString());
+            Assert.AreEqual("E:E", column.RangeAddress.ToString());
         }
 
         [Test]

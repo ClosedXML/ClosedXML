@@ -20,29 +20,25 @@ namespace ClosedXML.Tests.Excel.Globalization
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
 
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var book1 = new XLWorkbook())
             {
-                using (var book1 = new XLWorkbook())
-                {
-                    var sheet = book1.AddWorksheet("sheet1");
-                    sheet.Cell("A1").Value = 123;
-                    sheet.Cell("A2").FormulaA1 = formula;
-                    var options = new SaveOptions { EvaluateFormulasBeforeSaving = true };
+                var sheet = book1.AddWorksheet("sheet1");
+                sheet.Cell("A1").Value = 123;
+                sheet.Cell("A2").FormulaA1 = formula;
+                var options = new SaveOptions { EvaluateFormulasBeforeSaving = true };
 
-                    book1.SaveAs(ms, options);
-                }
-                ms.Position = 0;
-
-                using (var book2 = new XLWorkbook(ms))
-                {
-                    var ws = book2.Worksheet(1);
-                    var cellA2 = (XLCell)ws.Cell("A2");
-
-                    Assert.That(cellA2.InnerText, Is.EqualTo(expectedInnerText));
-                    Assert.That(cellA2.CachedValue, Is.EqualTo(expectedValue));
-                    Assert.That(cellA2.NeedsRecalculation, Is.False);
-                }
+                book1.SaveAs(ms, options);
             }
+            ms.Position = 0;
+
+            using var book2 = new XLWorkbook(ms);
+            var ws = book2.Worksheet(1);
+            var cellA2 = (XLCell)ws.Cell("A2");
+
+            Assert.That(cellA2.InnerText, Is.EqualTo(expectedInnerText));
+            Assert.That(cellA2.CachedValue, Is.EqualTo(expectedValue));
+            Assert.That(cellA2.NeedsRecalculation, Is.False);
         }
     }
 }

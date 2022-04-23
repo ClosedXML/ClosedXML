@@ -458,11 +458,9 @@ namespace ClosedXML.Excel
             {
                 _originalStream.Position = 0;
 
-                using (var fileStream = File.Create(file))
-                {
-                    CopyStream(_originalStream, fileStream);
-                    CreatePackage(fileStream, false, _spreadsheetDocumentType, options);
-                }
+                using var fileStream = File.Create(file);
+                CopyStream(_originalStream, fileStream);
+                CreatePackage(fileStream, false, _spreadsheetDocumentType, options);
             }
 
             _loadSource = XLLoadSource.File;
@@ -550,15 +548,13 @@ namespace ClosedXML.Excel
                 else
                 {
                     // the harder way
-                    using (var ms = new MemoryStream())
-                    {
-                        CreatePackage(ms, true, _spreadsheetDocumentType, options);
-                        // not really nessesary, because I changed CopyStream too.
-                        // but for better understanding and if somebody in the future
-                        // provide an changed version of CopyStream
-                        ms.Position = 0;
-                        CopyStream(ms, stream);
-                    }
+                    using var ms = new MemoryStream();
+                    CreatePackage(ms, true, _spreadsheetDocumentType, options);
+                    // not really nessesary, because I changed CopyStream too.
+                    // but for better understanding and if somebody in the future
+                    // provide an changed version of CopyStream
+                    ms.Position = 0;
+                    CopyStream(ms, stream);
                 }
             }
             else if (_loadSource == XLLoadSource.File)

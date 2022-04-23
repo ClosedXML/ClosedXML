@@ -74,13 +74,11 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Add(string imageFile)
         {
-            using (var fs = File.OpenRead(imageFile))
-            {
-                var picture = new XLPicture(_worksheet, fs);
-                _pictures.Add(picture);
-                picture.Name = GetNextPictureName();
-                return picture;
-            }
+            using var fs = File.OpenRead(imageFile);
+            var picture = new XLPicture(_worksheet, fs);
+            _pictures.Add(picture);
+            picture.Name = GetNextPictureName();
+            return picture;
         }
 
         public IXLPicture Add(string imageFile, string name)

@@ -50,13 +50,11 @@ namespace ClosedXML.Excel.Drawings
 
                 if (codec != null)
                 {
-                    using (var bitmap = SKBitmap.Decode(codec))
-                    {
-                        if (FormatMap.Values.Contains(codec.EncodedFormat))
-                            Format = FormatMap.Single(f => f.Value.Equals(codec.EncodedFormat)).Key;
+                    using var bitmap = SKBitmap.Decode(codec);
+                    if (FormatMap.Values.Contains(codec.EncodedFormat))
+                        Format = FormatMap.Single(f => f.Value.Equals(codec.EncodedFormat)).Key;
 
-                        DeduceDimensionsFromBitmap(bitmap);
-                    }
+                    DeduceDimensionsFromBitmap(bitmap);
                 }
 
                 stream.Position = 0;
@@ -80,13 +78,11 @@ namespace ClosedXML.Excel.Drawings
 
                 if (codec != null)
                 {
-                    using (var bitmap = SKBitmap.Decode(codec))
-                    {
-                        if (FormatMap.TryGetValue(Format, out var imageFormat) && imageFormat != codec.EncodedFormat)
-                            throw new ArgumentException("The picture format in the stream and the parameter don't match");
+                    using var bitmap = SKBitmap.Decode(codec);
+                    if (FormatMap.TryGetValue(Format, out var imageFormat) && imageFormat != codec.EncodedFormat)
+                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
 
-                        DeduceDimensionsFromBitmap(bitmap);
-                    }
+                    DeduceDimensionsFromBitmap(bitmap);
                 }
 
                 ImageStream.Seek(0, SeekOrigin.Begin);
@@ -100,12 +96,10 @@ namespace ClosedXML.Excel.Drawings
 
             using (var bitmap = SKBitmap.Decode(codec))
             {
-                using (var data = bitmap.Encode(codec.EncodedFormat, ImageQuality))
-                {
-                    data.SaveTo(ImageStream);
-                    ImageStream.Seek(0, SeekOrigin.Begin);
-                    DeduceDimensionsFromBitmap(bitmap);
-                }
+                using var data = bitmap.Encode(codec.EncodedFormat, ImageQuality);
+                data.SaveTo(ImageStream);
+                ImageStream.Seek(0, SeekOrigin.Begin);
+                DeduceDimensionsFromBitmap(bitmap);
             }
 
             var formats = FormatMap.Where(f => f.Value.Equals(codec.EncodedFormat));

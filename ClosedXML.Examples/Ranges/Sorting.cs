@@ -7,161 +7,159 @@ namespace ClosedXML.Examples.Misc
     {
         public void Create(string filePath)
         {
-            using (var wb = new XLWorkbook())
-            {
+            using var wb = new XLWorkbook();
 
-                #region Sort Table
+            #region Sort Table
 
-                var wsTable = wb.Worksheets.Add("Table");
-                AddTestTable(wsTable);
+            var wsTable = wb.Worksheets.Add("Table");
+            AddTestTable(wsTable);
 
-                wsTable.Row(1).InsertRowsAbove(1);
-                var lastCo = wsTable.LastColumnUsed().ColumnNumber();
-                for (var co = 1; co <= lastCo; co++)
-                    wsTable.Cell(1, co).Value = "Column" + co.ToString();
+            wsTable.Row(1).InsertRowsAbove(1);
+            var lastCo = wsTable.LastColumnUsed().ColumnNumber();
+            for (var co = 1; co <= lastCo; co++)
+                wsTable.Cell(1, co).Value = "Column" + co.ToString();
 
-                var table = wsTable.RangeUsed().AsTable();
-                table.Sort("Column2 Desc, 1, 3 Asc");
+            var table = wsTable.RangeUsed().AsTable();
+            table.Sort("Column2 Desc, 1, 3 Asc");
 
-                // Sort table another way
-                wsTable = wb.Worksheets.Add("Table2");
-                AddTestTable(wsTable);
+            // Sort table another way
+            wsTable = wb.Worksheets.Add("Table2");
+            AddTestTable(wsTable);
 
-                wsTable.Row(1).InsertRowsAbove(1);
-                lastCo = wsTable.LastColumnUsed().ColumnNumber();
-                for (var co = 1; co <= lastCo; co++)
-                    wsTable.Cell(1, co).Value = "Column" + co.ToString();
+            wsTable.Row(1).InsertRowsAbove(1);
+            lastCo = wsTable.LastColumnUsed().ColumnNumber();
+            for (var co = 1; co <= lastCo; co++)
+                wsTable.Cell(1, co).Value = "Column" + co.ToString();
 
-                table = wsTable.RangeUsed().AsTable();
-                table.Sort("Column2", XLSortOrder.Descending, false, true);
+            table = wsTable.RangeUsed().AsTable();
+            table.Sort("Column2", XLSortOrder.Descending, false, true);
 
 
-                #endregion Sort Table
+            #endregion Sort Table
 
-                #region Sort Rows
+            #region Sort Rows
 
-                var wsRows = wb.Worksheets.Add("Rows");
-                AddTestTable(wsRows);
-                wsRows.Row(1).Sort();
-                wsRows.RangeUsed().Row(2).Sort();
-                wsRows.Rows(3, wsRows.LastRowUsed().RowNumber()).Delete();
+            var wsRows = wb.Worksheets.Add("Rows");
+            AddTestTable(wsRows);
+            wsRows.Row(1).Sort();
+            wsRows.RangeUsed().Row(2).Sort();
+            wsRows.Rows(3, wsRows.LastRowUsed().RowNumber()).Delete();
 
-                #endregion Sort Rows
+            #endregion Sort Rows
 
-                #region Sort Columns
+            #region Sort Columns
 
-                var wsColumns = wb.Worksheets.Add("Columns");
-                AddTestTable(wsColumns);
-                wsColumns.LastColumnUsed().Delete();
-                wsColumns.Column(1).Sort();
-                wsColumns.RangeUsed().Column(2).Sort();
+            var wsColumns = wb.Worksheets.Add("Columns");
+            AddTestTable(wsColumns);
+            wsColumns.LastColumnUsed().Delete();
+            wsColumns.Column(1).Sort();
+            wsColumns.RangeUsed().Column(2).Sort();
 
-                #endregion Sort Columns
+            #endregion Sort Columns
 
-                #region Sort Mixed
+            #region Sort Mixed
 
-                var wsMixed = wb.Worksheets.Add("Mixed");
-                AddTestColumnMixed(wsMixed);
-                wsMixed.Sort();
+            var wsMixed = wb.Worksheets.Add("Mixed");
+            AddTestColumnMixed(wsMixed);
+            wsMixed.Sort();
 
-                #endregion Sort Mixed
+            #endregion Sort Mixed
 
-                #region Sort Numbers
+            #region Sort Numbers
 
-                var wsNumbers = wb.Worksheets.Add("Numbers");
-                AddTestColumnNumbers(wsNumbers);
-                wsNumbers.Sort();
+            var wsNumbers = wb.Worksheets.Add("Numbers");
+            AddTestColumnNumbers(wsNumbers);
+            wsNumbers.Sort();
 
-                #endregion Sort Numbers
+            #endregion Sort Numbers
 
-                #region Sort TimeSpans
+            #region Sort TimeSpans
 
-                var wsTimeSpans = wb.Worksheets.Add("TimeSpans");
-                AddTestColumnTimeSpans(wsTimeSpans);
-                wsTimeSpans.Sort();
+            var wsTimeSpans = wb.Worksheets.Add("TimeSpans");
+            AddTestColumnTimeSpans(wsTimeSpans);
+            wsTimeSpans.Sort();
 
-                #endregion Sort TimeSpans
+            #endregion Sort TimeSpans
 
-                #region Sort Dates
+            #region Sort Dates
 
-                var wsDates = wb.Worksheets.Add("Dates");
-                AddTestColumnDates(wsDates);
-                wsDates.Sort();
+            var wsDates = wb.Worksheets.Add("Dates");
+            AddTestColumnDates(wsDates);
+            wsDates.Sort();
 
-                #endregion Sort Dates
+            #endregion Sort Dates
 
-                #region Do Not Ignore Blanks
+            #region Do Not Ignore Blanks
 
-                var wsIncludeBlanks = wb.Worksheets.Add("Include Blanks");
-                AddTestTable(wsIncludeBlanks);
-                var rangeIncludeBlanks = wsIncludeBlanks;
-                rangeIncludeBlanks.SortColumns.Add(1, XLSortOrder.Ascending, false, true);
-                rangeIncludeBlanks.SortColumns.Add(2, XLSortOrder.Descending, false, true);
-                rangeIncludeBlanks.Sort();
+            var wsIncludeBlanks = wb.Worksheets.Add("Include Blanks");
+            AddTestTable(wsIncludeBlanks);
+            var rangeIncludeBlanks = wsIncludeBlanks;
+            rangeIncludeBlanks.SortColumns.Add(1, XLSortOrder.Ascending, false, true);
+            rangeIncludeBlanks.SortColumns.Add(2, XLSortOrder.Descending, false, true);
+            rangeIncludeBlanks.Sort();
 
-                var wsIncludeBlanksColumn = wb.Worksheets.Add("Include Blanks Column");
-                AddTestColumn(wsIncludeBlanksColumn);
-                var rangeIncludeBlanksColumn = wsIncludeBlanksColumn;
-                rangeIncludeBlanksColumn.SortColumns.Add(1, XLSortOrder.Ascending, false, true);
-                rangeIncludeBlanksColumn.Sort();
+            var wsIncludeBlanksColumn = wb.Worksheets.Add("Include Blanks Column");
+            AddTestColumn(wsIncludeBlanksColumn);
+            var rangeIncludeBlanksColumn = wsIncludeBlanksColumn;
+            rangeIncludeBlanksColumn.SortColumns.Add(1, XLSortOrder.Ascending, false, true);
+            rangeIncludeBlanksColumn.Sort();
 
-                var wsIncludeBlanksColumnDesc = wb.Worksheets.Add("Include Blanks Column Desc");
-                AddTestColumn(wsIncludeBlanksColumnDesc);
-                var rangeIncludeBlanksColumnDesc = wsIncludeBlanksColumnDesc;
-                rangeIncludeBlanksColumnDesc.SortColumns.Add(1, XLSortOrder.Descending, false, true);
-                rangeIncludeBlanksColumnDesc.Sort();
+            var wsIncludeBlanksColumnDesc = wb.Worksheets.Add("Include Blanks Column Desc");
+            AddTestColumn(wsIncludeBlanksColumnDesc);
+            var rangeIncludeBlanksColumnDesc = wsIncludeBlanksColumnDesc;
+            rangeIncludeBlanksColumnDesc.SortColumns.Add(1, XLSortOrder.Descending, false, true);
+            rangeIncludeBlanksColumnDesc.Sort();
 
-                #endregion Do Not Ignore Blanks
+            #endregion Do Not Ignore Blanks
 
-                #region Case Sensitive
+            #region Case Sensitive
 
-                var wsCaseSensitive = wb.Worksheets.Add("Case Sensitive");
-                AddTestTable(wsCaseSensitive);
-                var rangeCaseSensitive = wsCaseSensitive;
-                rangeCaseSensitive.SortColumns.Add(1, XLSortOrder.Ascending, true, true);
-                rangeCaseSensitive.SortColumns.Add(2, XLSortOrder.Descending, true, true);
-                rangeCaseSensitive.Sort();
+            var wsCaseSensitive = wb.Worksheets.Add("Case Sensitive");
+            AddTestTable(wsCaseSensitive);
+            var rangeCaseSensitive = wsCaseSensitive;
+            rangeCaseSensitive.SortColumns.Add(1, XLSortOrder.Ascending, true, true);
+            rangeCaseSensitive.SortColumns.Add(2, XLSortOrder.Descending, true, true);
+            rangeCaseSensitive.Sort();
 
-                var wsCaseSensitiveColumn = wb.Worksheets.Add("Case Sensitive Column");
-                AddTestColumn(wsCaseSensitiveColumn);
-                var rangeCaseSensitiveColumn = wsCaseSensitiveColumn;
-                rangeCaseSensitiveColumn.SortColumns.Add(1, XLSortOrder.Ascending, true, true);
-                rangeCaseSensitiveColumn.Sort();
+            var wsCaseSensitiveColumn = wb.Worksheets.Add("Case Sensitive Column");
+            AddTestColumn(wsCaseSensitiveColumn);
+            var rangeCaseSensitiveColumn = wsCaseSensitiveColumn;
+            rangeCaseSensitiveColumn.SortColumns.Add(1, XLSortOrder.Ascending, true, true);
+            rangeCaseSensitiveColumn.Sort();
 
-                var wsCaseSensitiveColumnDesc = wb.Worksheets.Add("Case Sensitive Column Desc");
-                AddTestColumn(wsCaseSensitiveColumnDesc);
-                var rangeCaseSensitiveColumnDesc = wsCaseSensitiveColumnDesc;
-                rangeCaseSensitiveColumnDesc.SortColumns.Add(1, XLSortOrder.Descending, true, true);
-                rangeCaseSensitiveColumnDesc.Sort();
+            var wsCaseSensitiveColumnDesc = wb.Worksheets.Add("Case Sensitive Column Desc");
+            AddTestColumn(wsCaseSensitiveColumnDesc);
+            var rangeCaseSensitiveColumnDesc = wsCaseSensitiveColumnDesc;
+            rangeCaseSensitiveColumnDesc.SortColumns.Add(1, XLSortOrder.Descending, true, true);
+            rangeCaseSensitiveColumnDesc.Sort();
 
-                #endregion Case Sensitive
+            #endregion Case Sensitive
 
-                #region Simple Sorts
+            #region Simple Sorts
 
-                var wsSimple = wb.Worksheets.Add("Simple");
-                AddTestTable(wsSimple);
-                wsSimple.Sort();
+            var wsSimple = wb.Worksheets.Add("Simple");
+            AddTestTable(wsSimple);
+            wsSimple.Sort();
 
-                var wsSimpleDesc = wb.Worksheets.Add("Simple Desc");
-                AddTestTable(wsSimpleDesc);
-                wsSimpleDesc.Sort("", XLSortOrder.Descending);
+            var wsSimpleDesc = wb.Worksheets.Add("Simple Desc");
+            AddTestTable(wsSimpleDesc);
+            wsSimpleDesc.Sort("", XLSortOrder.Descending);
 
-                var wsSimpleColumns = wb.Worksheets.Add("Simple Columns");
-                AddTestTable(wsSimpleColumns);
-                wsSimpleColumns.Sort("2, A DESC, 3");
+            var wsSimpleColumns = wb.Worksheets.Add("Simple Columns");
+            AddTestTable(wsSimpleColumns);
+            wsSimpleColumns.Sort("2, A DESC, 3");
 
-                var wsSimpleColumn = wb.Worksheets.Add("Simple Column");
-                AddTestColumn(wsSimpleColumn);
-                wsSimpleColumn.Sort();
+            var wsSimpleColumn = wb.Worksheets.Add("Simple Column");
+            AddTestColumn(wsSimpleColumn);
+            wsSimpleColumn.Sort();
 
-                var wsSimpleColumnDesc = wb.Worksheets.Add("Simple Column Desc");
-                AddTestColumn(wsSimpleColumnDesc);
-                wsSimpleColumnDesc.Sort(1, XLSortOrder.Descending);
+            var wsSimpleColumnDesc = wb.Worksheets.Add("Simple Column Desc");
+            AddTestColumn(wsSimpleColumnDesc);
+            wsSimpleColumnDesc.Sort(1, XLSortOrder.Descending);
 
-                #endregion Simple Sorts
+            #endregion Simple Sorts
 
-                wb.SaveAs(filePath);
-            }
+            wb.SaveAs(filePath);
         }
 
         private void AddTestColumnMixed(IXLWorksheet ws)

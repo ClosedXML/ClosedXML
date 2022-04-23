@@ -54,12 +54,10 @@ namespace ClosedXML.Utils
 
         public static string GetSalt(int length = 32)
         {
-            using (var random = new RNGCryptoServiceProvider())
-            {
-                var salt = new byte[length];
-                random.GetNonZeroBytes(salt);
-                return Convert.ToBase64String(salt);
-            }
+            using var random = new RNGCryptoServiceProvider();
+            var salt = new byte[length];
+            random.GetNonZeroBytes(salt);
+            return Convert.ToBase64String(salt);
         }
 
         public static bool RequiresSalt(Algorithm algorithm)

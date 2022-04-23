@@ -13,16 +13,14 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [Test]
         public void MaintainConditionalFormattingOrder()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\ConditionalFormattingOrder\inputfile.xlsx")))
-            using (var ms = new MemoryStream())
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\ConditionalFormattingOrder\inputfile.xlsx"));
+            using var ms = new MemoryStream();
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
-                    wb.SaveAs(ms);
-                    return wb;
-                }, @"Other\StyleReferenceFiles\ConditionalFormattingOrder\ConditionalFormattingOrder.xlsx");
-            }
+                var wb = new XLWorkbook(stream);
+                wb.SaveAs(ms);
+                return wb;
+            }, @"Other\StyleReferenceFiles\ConditionalFormattingOrder\ConditionalFormattingOrder.xlsx");
         }
 
         [TestCase(true, 7)]
@@ -45,12 +43,10 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Range("H2:H7").AddConditionalFormat().WhenIsUnique().Fill.SetBackgroundColor(XLColor.Blue);
             ws.Range("I2:I6").AddConditionalFormat().WhenContains("test");
             ws.Range("J2:J6").AddConditionalFormat().WhenContains("test");
-            using (var ms = new MemoryStream())
-            {
-                wb.SaveAs(ms, options);
-                using var wb_saved = new XLWorkbook(ms);
-                Assert.AreEqual(expectedCount, wb_saved.Worksheet("Sheet").ConditionalFormats.Count());
-            }
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms, options);
+            using var wb_saved = new XLWorkbook(ms);
+            Assert.AreEqual(expectedCount, wb_saved.Worksheet("Sheet").ConditionalFormats.Count());
         }
 
         [TestCase(true, 1)]
@@ -67,12 +63,10 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
             ws.Range("C2:C5").CreateDataValidation().Decimal.Between(1, 5);
             ws.Range("D2:D5").CreateDataValidation().Decimal.Between(1, 5);
 
-            using (var ms = new MemoryStream())
-            {
-                wb.SaveAs(ms, options);
-                using var wb_saved = new XLWorkbook(ms);
-                Assert.AreEqual(expectedCount, wb_saved.Worksheet("Sheet").DataValidations.Count());
-            }
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms, options);
+            using var wb_saved = new XLWorkbook(ms);
+            Assert.AreEqual(expectedCount, wb_saved.Worksheet("Sheet").DataValidations.Count());
         }
 
         [TestCase("en-US")]
@@ -80,38 +74,36 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
         [TestCase("ru-RU")]
         public void SaveConditionalFormat_CultureIndependent(string culture)
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            var expectedValue = 1.5;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+            using (var wb = new XLWorkbook())
             {
-                var expectedValue = 1.5;
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.AddWorksheet();
-                    var i = 1;
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenEquals(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenNotEquals(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenGreaterThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenLessThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrGreaterThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrLessThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                    ws.Cell(i++, 1).AddConditionalFormat().WhenNotBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                var ws = wb.AddWorksheet();
+                var i = 1;
+                ws.Cell(i++, 1).AddConditionalFormat().WhenEquals(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i++, 1).AddConditionalFormat().WhenNotEquals(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i++, 1).AddConditionalFormat().WhenGreaterThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i++, 1).AddConditionalFormat().WhenLessThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrGreaterThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrLessThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i++, 1).AddConditionalFormat().WhenBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i++, 1).AddConditionalFormat().WhenNotBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
 
-                    wb.SaveAs(ms);
-                }
+                wb.SaveAs(ms);
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.First();
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
 
-                    var conditionalFormatValues = ws.ConditionalFormats
-                        .SelectMany(cf => cf.Values.Values)
-                        .Select(v => v.Value)
-                        .Distinct();
+                var conditionalFormatValues = ws.ConditionalFormats
+                    .SelectMany(cf => cf.Values.Values)
+                    .Select(v => v.Value)
+                    .Distinct();
 
-                    Assert.AreEqual(1, conditionalFormatValues.Count());
-                    Assert.AreEqual("1.5", conditionalFormatValues.Single());
-                }
+                Assert.AreEqual(1, conditionalFormatValues.Count());
+                Assert.AreEqual("1.5", conditionalFormatValues.Single());
             }
         }
     }

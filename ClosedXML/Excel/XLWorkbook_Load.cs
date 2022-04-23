@@ -38,14 +38,14 @@ namespace ClosedXML.Excel
 
         private void LoadSheets(string fileName)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(fileName, false))
-                LoadSpreadsheetDocument(dSpreadsheet);
+            using var dSpreadsheet = SpreadsheetDocument.Open(fileName, false);
+            LoadSpreadsheetDocument(dSpreadsheet);
         }
 
         private void LoadSheets(Stream stream)
         {
-            using (var dSpreadsheet = SpreadsheetDocument.Open(stream, false))
-                LoadSpreadsheetDocument(dSpreadsheet);
+            using var dSpreadsheet = SpreadsheetDocument.Open(stream, false);
+            LoadSpreadsheetDocument(dSpreadsheet);
         }
 
         private void LoadSheetsFromTemplate(string fileName)
@@ -1125,63 +1125,61 @@ namespace ClosedXML.Excel
                     if (imgId == null) continue;
 
                     var imagePart = drawingsPart.GetPartById(imgId);
-                    using (var stream = imagePart.GetStream())
-                    using (var ms = new MemoryStream())
+                    using var stream = imagePart.GetStream();
+                    using var ms = new MemoryStream();
+                    stream.CopyTo(ms);
+                    var vsdp = GetPropertiesFromAnchor(anchor);
+
+                    var picture = (ws as XLWorksheet).AddPicture(ms, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
+                    picture.RelId = imgId;
+
+                    var spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
+                    picture.Placement = XLPicturePlacement.FreeFloating;
+
+                    if (spPr?.Transform2D?.Extents?.Cx.HasValue ?? false)
+                        picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, 72);
+
+                    if (spPr?.Transform2D?.Extents?.Cy.HasValue ?? false)
+                        picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, 72);
+
+                    if (anchor is Xdr.AbsoluteAnchor)
                     {
-                        stream.CopyTo(ms);
-                        var vsdp = GetPropertiesFromAnchor(anchor);
+                        var absoluteAnchor = anchor as Xdr.AbsoluteAnchor;
+                        picture.MoveTo(
+                            ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, 72),
+                            ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, 72)
+                        );
+                    }
+                    else if (anchor is Xdr.OneCellAnchor)
+                    {
+                        var oneCellAnchor = anchor as Xdr.OneCellAnchor;
+                        var from = LoadMarker(ws, oneCellAnchor.FromMarker);
+                        picture.MoveTo(from.Cell, from.Offset);
+                    }
+                    else if (anchor is Xdr.TwoCellAnchor)
+                    {
+                        var twoCellAnchor = anchor as Xdr.TwoCellAnchor;
+                        var from = LoadMarker(ws, twoCellAnchor.FromMarker);
+                        var to = LoadMarker(ws, twoCellAnchor.ToMarker);
 
-                        var picture = (ws as XLWorksheet).AddPicture(ms, vsdp.Name, Convert.ToInt32(vsdp.Id.Value)) as XLPicture;
-                        picture.RelId = imgId;
-
-                        var spPr = anchor.Descendants<Xdr.ShapeProperties>().First();
-                        picture.Placement = XLPicturePlacement.FreeFloating;
-
-                        if (spPr?.Transform2D?.Extents?.Cx.HasValue ?? false)
-                            picture.Width = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cx, 72);
-
-                        if (spPr?.Transform2D?.Extents?.Cy.HasValue ?? false)
-                            picture.Height = ConvertFromEnglishMetricUnits(spPr.Transform2D.Extents.Cy, 72);
-
-                        if (anchor is Xdr.AbsoluteAnchor)
+                        if (twoCellAnchor.EditAs == null || !twoCellAnchor.EditAs.HasValue || twoCellAnchor.EditAs.Value == Xdr.EditAsValues.TwoCell)
                         {
-                            var absoluteAnchor = anchor as Xdr.AbsoluteAnchor;
-                            picture.MoveTo(
-                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.X.Value, 72),
-                                ConvertFromEnglishMetricUnits(absoluteAnchor.Position.Y.Value, 72)
-                            );
+                            picture.MoveTo(from.Cell, from.Offset, to.Cell, to.Offset);
                         }
-                        else if (anchor is Xdr.OneCellAnchor)
+                        else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.Absolute)
                         {
-                            var oneCellAnchor = anchor as Xdr.OneCellAnchor;
-                            var from = LoadMarker(ws, oneCellAnchor.FromMarker);
+                            var shapeProperties = twoCellAnchor.Descendants<Xdr.ShapeProperties>().FirstOrDefault();
+                            if (shapeProperties != null)
+                            {
+                                picture.MoveTo(
+                                    ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.X, 72),
+                                    ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.Y, 72)
+                                );
+                            }
+                        }
+                        else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.OneCell)
+                        {
                             picture.MoveTo(from.Cell, from.Offset);
-                        }
-                        else if (anchor is Xdr.TwoCellAnchor)
-                        {
-                            var twoCellAnchor = anchor as Xdr.TwoCellAnchor;
-                            var from = LoadMarker(ws, twoCellAnchor.FromMarker);
-                            var to = LoadMarker(ws, twoCellAnchor.ToMarker);
-
-                            if (twoCellAnchor.EditAs == null || !twoCellAnchor.EditAs.HasValue || twoCellAnchor.EditAs.Value == Xdr.EditAsValues.TwoCell)
-                            {
-                                picture.MoveTo(from.Cell, from.Offset, to.Cell, to.Offset);
-                            }
-                            else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.Absolute)
-                            {
-                                var shapeProperties = twoCellAnchor.Descendants<Xdr.ShapeProperties>().FirstOrDefault();
-                                if (shapeProperties != null)
-                                {
-                                    picture.MoveTo(
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.X, 72),
-                                        ConvertFromEnglishMetricUnits(spPr.Transform2D.Offset.Y, 72)
-                                    );
-                                }
-                            }
-                            else if (twoCellAnchor.EditAs.Value == Xdr.EditAsValues.OneCell)
-                            {
-                                picture.MoveTo(from.Cell, from.Offset);
-                            }
                         }
                     }
                 }
@@ -1213,29 +1211,27 @@ namespace ClosedXML.Excel
             // Cannot get this to return Vml.Shape elements
             foreach (var vmlPart in worksheetPart.VmlDrawingParts)
             {
-                using (var stream = vmlPart.GetStream(FileMode.Open))
-                {
-                    var xdoc = XDocumentExtensions.Load(stream);
-                    if (xdoc == null)
-                        continue;
+                using var stream = vmlPart.GetStream(FileMode.Open);
+                var xdoc = XDocumentExtensions.Load(stream);
+                if (xdoc == null)
+                    continue;
 
-                    var root = xdoc.Root.Element("xml") ?? xdoc.Root;
+                var root = xdoc.Root.Element("xml") ?? xdoc.Root;
 
-                    if (root == null)
-                        continue;
+                if (root == null)
+                    continue;
 
-                    var shapes = root
-                        .Elements(XName.Get("shape", "urn:schemas-microsoft-com:vml"))
-                        .Where(e => new[]
-                        {
+                var shapes = root
+                    .Elements(XName.Get("shape", "urn:schemas-microsoft-com:vml"))
+                    .Where(e => new[]
+                    {
                             "#" + XLConstants.Comment.ShapeTypeId ,
                             "#" + XLConstants.Comment.AlternateShapeTypeId
-                        }.Contains(e.Attribute("type")?.Value))
-                        .ToList();
+                    }.Contains(e.Attribute("type")?.Value))
+                    .ToList();
 
-                    if (shapes != null)
-                        return shapes;
-                }
+                if (shapes != null)
+                    return shapes;
             }
 
             throw new ArgumentException("Could not load comments file");

@@ -9,16 +9,14 @@ namespace ClosedXML.Excel
     {
         public static XDocument Load(Stream stream)
         {
-            using (var reader = XmlReader.Create(stream))
+            using var reader = XmlReader.Create(stream);
+            try
             {
-                try
-                {
-                    return XDocument.Load(reader);
-                }
-                catch (XmlException)
-                {
-                    return null;
-                }
+                return XDocument.Load(reader);
+            }
+            catch (XmlException)
+            {
+                return null;
             }
         }
     }

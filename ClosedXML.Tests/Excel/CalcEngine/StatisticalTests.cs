@@ -156,14 +156,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("~xyz", @"=COUNTIF(A1:A1, ""~~*"")", 1)]
         public void CountIf_MoreWildcards(string cellContent, string formula, int expectedResult)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.Cell(1, 1).Value = cellContent;
+            ws.Cell(1, 1).Value = cellContent;
 
-                Assert.AreEqual(expectedResult, (double)ws.Evaluate(formula));
-            }
+            Assert.AreEqual(expectedResult, (double)ws.Evaluate(formula));
         }
 
         [TestCase("=COUNTIFS(B1:D1, \"=Yes\")", 1)]
@@ -173,34 +171,32 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             string formula,
             int expectedOutcome)
         {
-            using (var wb = new XLWorkbook())
-            {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
+            using var wb = new XLWorkbook();
+            wb.ReferenceStyle = XLReferenceStyle.A1;
 
-                var ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.Cell(1, 1).Value = "Davidoski";
-                ws.Cell(1, 2).Value = "Yes";
-                ws.Cell(1, 3).Value = "No";
-                ws.Cell(1, 4).Value = "No";
+            ws.Cell(1, 1).Value = "Davidoski";
+            ws.Cell(1, 2).Value = "Yes";
+            ws.Cell(1, 3).Value = "No";
+            ws.Cell(1, 4).Value = "No";
 
-                ws.Cell(2, 1).Value = "Burke";
-                ws.Cell(2, 2).Value = "Yes";
-                ws.Cell(2, 3).Value = "Yes";
-                ws.Cell(2, 4).Value = "No";
+            ws.Cell(2, 1).Value = "Burke";
+            ws.Cell(2, 2).Value = "Yes";
+            ws.Cell(2, 3).Value = "Yes";
+            ws.Cell(2, 4).Value = "No";
 
-                ws.Cell(3, 1).Value = "Sundaram";
-                ws.Cell(3, 2).Value = "Yes";
-                ws.Cell(3, 3).Value = "Yes";
-                ws.Cell(3, 4).Value = "Yes";
+            ws.Cell(3, 1).Value = "Sundaram";
+            ws.Cell(3, 2).Value = "Yes";
+            ws.Cell(3, 3).Value = "Yes";
+            ws.Cell(3, 4).Value = "Yes";
 
-                ws.Cell(4, 1).Value = "Levitan";
-                ws.Cell(4, 2).Value = "No";
-                ws.Cell(4, 3).Value = "Yes";
-                ws.Cell(4, 4).Value = "Yes";
+            ws.Cell(4, 1).Value = "Levitan";
+            ws.Cell(4, 2).Value = "No";
+            ws.Cell(4, 3).Value = "Yes";
+            ws.Cell(4, 4).Value = "Yes";
 
-                Assert.AreEqual(expectedOutcome, ws.Evaluate(formula));
-            }
+            Assert.AreEqual(expectedOutcome, ws.Evaluate(formula));
         }
 
         [Test]
@@ -482,20 +478,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("SUMIFS(H:H,G:G,50,I:I,\">900\")", 19.99d, Description = "SUMIFS columns")]
         public void TallySkipsEmptyCells(string formulaA1, double expectedResult)
         {
-            using (var wb = SetupWorkbook())
-            {
-                var ws = wb.Worksheets.First();
-                //Let's pre-initialize cells we need so they didn't affect the result
-                ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
-                ws.Cell("ZZ1000").Value = 1;
-                var initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+            using var wb = SetupWorkbook();
+            var ws = wb.Worksheets.First();
+            //Let's pre-initialize cells we need so they didn't affect the result
+            ws.Range("A1:J45").Style.Fill.BackgroundColor = XLColor.Amber;
+            ws.Cell("ZZ1000").Value = 1;
+            var initialCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
 
-                var actualResult = (double)ws.Evaluate(formulaA1);
-                var cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
+            var actualResult = (double)ws.Evaluate(formulaA1);
+            var cellsCount = (ws as XLWorksheet).Internals.CellsCollection.Count;
 
-                Assert.AreEqual(expectedResult, actualResult, tolerance);
-                Assert.AreEqual(initialCount, cellsCount);
-            }
+            Assert.AreEqual(expectedResult, actualResult, tolerance);
+            Assert.AreEqual(initialCount, cellsCount);
         }
 
         [Test]

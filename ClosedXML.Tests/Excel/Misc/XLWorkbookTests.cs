@@ -343,104 +343,92 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void WbProtect1()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                wb.Protect();
-                Assert.IsTrue(wb.LockStructure);
-                Assert.IsFalse(wb.LockWindows);
-                Assert.IsFalse(wb.IsPasswordProtected);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Protect();
+            Assert.IsTrue(wb.LockStructure);
+            Assert.IsFalse(wb.LockWindows);
+            Assert.IsFalse(wb.IsPasswordProtected);
         }
 
         [Test]
         public void WbProtect2()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
 #pragma warning disable CS0618 // Type or member is obsolete, but still should be tested
-                wb.Protect(true, false);
+            wb.Protect(true, false);
 #pragma warning restore CS0618 // Type or member is obsolete, but still should be tested
-                Assert.IsTrue(wb.LockStructure);
-                Assert.IsFalse(wb.LockWindows);
-                Assert.IsFalse(wb.IsPasswordProtected);
-            }
+            Assert.IsTrue(wb.LockStructure);
+            Assert.IsFalse(wb.LockWindows);
+            Assert.IsFalse(wb.IsPasswordProtected);
         }
 
         [Test]
         public void WbProtect3()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                wb.Protect("Abc@123");
-                Assert.IsTrue(wb.LockStructure);
-                Assert.IsFalse(wb.LockWindows);
-                Assert.IsTrue(wb.IsPasswordProtected);
-                Assert.Throws<InvalidOperationException>(() => wb.Protect());
-                Assert.Throws<InvalidOperationException>(() => wb.Unprotect());
-                Assert.Throws<ArgumentException>(() => wb.Unprotect("Cde@345"));
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Protect("Abc@123");
+            Assert.IsTrue(wb.LockStructure);
+            Assert.IsFalse(wb.LockWindows);
+            Assert.IsTrue(wb.IsPasswordProtected);
+            Assert.Throws<InvalidOperationException>(() => wb.Protect());
+            Assert.Throws<InvalidOperationException>(() => wb.Unprotect());
+            Assert.Throws<ArgumentException>(() => wb.Unprotect("Cde@345"));
         }
 
         [Test]
         public void WbProtect4()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
-                wb.Protect();
-                Assert.IsTrue(wb.LockStructure);
-                Assert.IsFalse(wb.LockWindows);
-                Assert.IsFalse(wb.IsPasswordProtected);
-                wb.Unprotect();
-                wb.Protect("Abc@123");
-                Assert.IsTrue(wb.LockStructure);
-                Assert.IsFalse(wb.LockWindows);
-                Assert.IsTrue(wb.IsPasswordProtected);
-            }
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Protect();
+            Assert.IsTrue(wb.LockStructure);
+            Assert.IsFalse(wb.LockWindows);
+            Assert.IsFalse(wb.IsPasswordProtected);
+            wb.Unprotect();
+            wb.Protect("Abc@123");
+            Assert.IsTrue(wb.LockStructure);
+            Assert.IsFalse(wb.LockWindows);
+            Assert.IsTrue(wb.IsPasswordProtected);
         }
 
         [Test]
         public void WbProtect5()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
 #pragma warning disable CS0618 // Type or member is obsolete, but still should be tested
-                wb.Protect(true, false, "Abc@123");
+            wb.Protect(true, false, "Abc@123");
 #pragma warning restore CS0618 // Type or member is obsolete, but still should be tested
-                Assert.IsTrue(wb.LockStructure);
-                Assert.IsFalse(wb.LockWindows);
-                Assert.IsTrue(wb.IsPasswordProtected);
-                wb.Unprotect("Abc@123");
-                Assert.IsFalse(wb.LockStructure);
-                Assert.IsFalse(wb.LockWindows);
-                Assert.IsFalse(wb.IsPasswordProtected);
-            }
+            Assert.IsTrue(wb.LockStructure);
+            Assert.IsFalse(wb.LockWindows);
+            Assert.IsTrue(wb.IsPasswordProtected);
+            wb.Unprotect("Abc@123");
+            Assert.IsFalse(wb.LockStructure);
+            Assert.IsFalse(wb.LockWindows);
+            Assert.IsFalse(wb.IsPasswordProtected);
         }
 
         [Test]
         public void FileSharingProperties()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    wb.AddWorksheet("Sheet1").Cell("A1").Value = "Hello world!";
-                    wb.FileSharing.ReadOnlyRecommended = true;
-                    wb.FileSharing.UserName = Environment.UserName;
-                    wb.SaveAs(ms);
-                }
+                wb.AddWorksheet("Sheet1").Cell("A1").Value = "Hello world!";
+                wb.FileSharing.ReadOnlyRecommended = true;
+                wb.FileSharing.UserName = Environment.UserName;
+                wb.SaveAs(ms);
+            }
 
-                ms.Seek(0, SeekOrigin.Begin);
+            ms.Seek(0, SeekOrigin.Begin);
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    Assert.IsTrue(wb.FileSharing.ReadOnlyRecommended);
-                    Assert.AreEqual(Environment.UserName, wb.FileSharing.UserName);
-                }
+            using (var wb = new XLWorkbook(ms))
+            {
+                Assert.IsTrue(wb.FileSharing.ReadOnlyRecommended);
+                Assert.AreEqual(Environment.UserName, wb.FileSharing.UserName);
             }
         }
 

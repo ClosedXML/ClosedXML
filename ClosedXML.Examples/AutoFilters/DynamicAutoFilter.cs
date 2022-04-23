@@ -70,27 +70,25 @@ namespace ClosedXML.Examples
 
             #endregion Multi Column
 
-            using (var ms = new MemoryStream())
-            {
-                wb.SaveAs(ms);
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms);
 
-                using var workbook = new XLWorkbook(ms);
+            using var workbook = new XLWorkbook(ms);
 
-                #region Single Column Numbers
+            #region Single Column Numbers
 
-                //workbook.Worksheet(singleColumnNumbers).AutoFilter.Sort(1, XLSortOrder.Descending);
+            //workbook.Worksheet(singleColumnNumbers).AutoFilter.Sort(1, XLSortOrder.Descending);
 
-                #endregion Single Column Numbers
+            #endregion Single Column Numbers
 
-                #region Multi Column
+            #region Multi Column
 
-                //workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
+            //workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
 
-                #endregion Multi Column
+            #endregion Multi Column
 
-                workbook.SaveAs(filePath);
-                ms.Close();
-            }
+            workbook.SaveAs(filePath);
+            ms.Close();
         }
     }
 }
