@@ -356,7 +356,7 @@ namespace ClosedXML.Tests
             }
         }
 
-        private void AssertPivotTablesAreEqual(XLPivotTable original, XLPivotTable copy, Boolean compareName)
+        private void AssertPivotTablesAreEqual(XLPivotTable original, XLPivotTable copy, bool compareName)
         {
             Assert.AreNotEqual(original.Guid, copy.Guid);
             Assert.AreEqual(compareName, original.Name.Equals(copy.Name));

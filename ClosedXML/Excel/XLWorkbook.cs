@@ -61,8 +61,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static Double DefaultRowHeight { get; private set; }
-        public static Double DefaultColumnWidth { get; private set; }
+        public static double DefaultRowHeight { get; private set; }
+        public static double DefaultColumnWidth { get; private set; }
 
         public static IXLPageSetup DefaultPageOptions
         {
@@ -108,7 +108,7 @@ namespace ClosedXML.Excel
         /// </summary>
         public static XLCellSetValueBehavior CellSetValueBehavior { get; set; }
 
-        public static XLWorkbook OpenFromTemplate(String path)
+        public static XLWorkbook OpenFromTemplate(string path)
         {
             return new XLWorkbook(path, asTemplate: true);
         }
@@ -183,13 +183,13 @@ namespace ClosedXML.Excel
         ///   Gets or sets the default row height for the workbook.
         ///   <para>All new worksheets will use this row height.</para>
         /// </summary>
-        public Double RowHeight { get; set; }
+        public double RowHeight { get; set; }
 
         /// <summary>
         ///   Gets or sets the default column width for the workbook.
         ///   <para>All new worksheets will use this column width.</para>
         /// </summary>
-        public Double ColumnWidth { get; set; }
+        public double ColumnWidth { get; set; }
 
         /// <summary>
         ///   Gets or sets the default page options for the workbook.
@@ -213,10 +213,10 @@ namespace ClosedXML.Excel
         /// </summary>
         public XLCalculateMode CalculateMode { get; set; }
 
-        public Boolean CalculationOnSave { get; set; }
-        public Boolean ForceFullCalculation { get; set; }
-        public Boolean FullCalculationOnLoad { get; set; }
-        public Boolean FullPrecision { get; set; }
+        public bool CalculationOnSave { get; set; }
+        public bool ForceFullCalculation { get; set; }
+        public bool FullCalculationOnLoad { get; set; }
+        public bool FullPrecision { get; set; }
 
         /// <summary>
         ///   Gets or sets the workbook's reference style.
@@ -225,53 +225,53 @@ namespace ClosedXML.Excel
 
         public IXLCustomProperties CustomProperties { get; private set; }
 
-        public Boolean ShowFormulas { get; set; }
-        public Boolean ShowGridLines { get; set; }
-        public Boolean ShowOutlineSymbols { get; set; }
-        public Boolean ShowRowColHeaders { get; set; }
-        public Boolean ShowRuler { get; set; }
-        public Boolean ShowWhiteSpace { get; set; }
-        public Boolean ShowZeros { get; set; }
-        public Boolean RightToLeft { get; set; }
+        public bool ShowFormulas { get; set; }
+        public bool ShowGridLines { get; set; }
+        public bool ShowOutlineSymbols { get; set; }
+        public bool ShowRowColHeaders { get; set; }
+        public bool ShowRuler { get; set; }
+        public bool ShowWhiteSpace { get; set; }
+        public bool ShowZeros { get; set; }
+        public bool RightToLeft { get; set; }
 
-        public Boolean DefaultShowFormulas
+        public bool DefaultShowFormulas
         {
             get { return false; }
         }
 
-        public Boolean DefaultShowGridLines
+        public bool DefaultShowGridLines
         {
             get { return true; }
         }
 
-        public Boolean DefaultShowOutlineSymbols
+        public bool DefaultShowOutlineSymbols
         {
             get { return true; }
         }
 
-        public Boolean DefaultShowRowColHeaders
+        public bool DefaultShowRowColHeaders
         {
             get { return true; }
         }
 
-        public Boolean DefaultShowRuler
+        public bool DefaultShowRuler
         {
             get { return true; }
         }
 
-        public Boolean DefaultShowWhiteSpace
+        public bool DefaultShowWhiteSpace
         {
             get { return true; }
         }
 
-        public Boolean DefaultShowZeros
+        public bool DefaultShowZeros
         {
             get { return true; }
         }
 
         public IXLFileSharing FileSharing { get; } = new XLFileSharing();
 
-        public Boolean DefaultRightToLeft
+        public bool DefaultRightToLeft
         {
             get { return false; }
         }
@@ -295,7 +295,7 @@ namespace ClosedXML.Excel
             };
         }
 
-        public IXLNamedRange NamedRange(String rangeName)
+        public IXLNamedRange NamedRange(string rangeName)
         {
             ThrowIfDisposed();
 
@@ -315,14 +315,14 @@ namespace ClosedXML.Excel
             return NamedRanges.NamedRange(rangeName);
         }
 
-        public Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet)
+        public bool TryGetWorksheet(string name, out IXLWorksheet worksheet)
         {
             ThrowIfDisposed();
 
             return Worksheets.TryGetWorksheet(name, out worksheet);
         }
 
-        public IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws)
+        public IXLRange RangeFromFullAddress(string rangeAddress, out IXLWorksheet ws)
         {
             ThrowIfDisposed();
 
@@ -338,7 +338,7 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        public IXLCell CellFromFullAddress(String cellAddress, out IXLWorksheet ws)
+        public IXLCell CellFromFullAddress(string cellAddress, out IXLWorksheet ws)
         {
             ThrowIfDisposed();
 
@@ -371,7 +371,7 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Saves the current workbook and optionally performs validation
         /// </summary>
-        public void Save(Boolean validate, Boolean evaluateFormulae = false)
+        public void Save(bool validate, bool evaluateFormulae = false)
         {
             ThrowIfDisposed();
 
@@ -402,7 +402,7 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Saves the current workbook to a file.
         /// </summary>
-        public void SaveAs(String file)
+        public void SaveAs(string file)
         {
             ThrowIfDisposed();
 
@@ -416,7 +416,7 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Saves the current workbook to a file and optionally validates it.
         /// </summary>
-        public void SaveAs(String file, Boolean validate, Boolean evaluateFormulae = false)
+        public void SaveAs(string file, bool validate, bool evaluateFormulae = false)
         {
             ThrowIfDisposed();
 
@@ -428,7 +428,7 @@ namespace ClosedXML.Excel
             });
         }
 
-        public void SaveAs(String file, SaveOptions options)
+        public void SaveAs(string file, SaveOptions options)
         {
             ThrowIfDisposed();
 
@@ -446,7 +446,7 @@ namespace ClosedXML.Excel
             }
             else if (_loadSource == XLLoadSource.File)
             {
-                if (String.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
+                if (string.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
                 {
                     File.Copy(_originalFile, file, true);
                     File.SetAttributes(file, FileAttributes.Normal);
@@ -492,7 +492,7 @@ namespace ClosedXML.Excel
                     return SpreadsheetDocumentType.Template;
 
                 default:
-                    throw new ArgumentException(String.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xlsm', '.xltx' and '.xltm'.", extension));
+                    throw new ArgumentException(string.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xlsm', '.xltx' and '.xltm'.", extension));
             }
         }
 
@@ -519,7 +519,7 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Saves the current workbook to a stream and optionally validates it.
         /// </summary>
-        public void SaveAs(Stream stream, Boolean validate, Boolean evaluateFormulae = false)
+        public void SaveAs(Stream stream, bool validate, bool evaluateFormulae = false)
         {
             ThrowIfDisposed();
 
@@ -610,28 +610,28 @@ namespace ClosedXML.Excel
             return table;
         }
 
-        public IXLWorksheet Worksheet(String name)
+        public IXLWorksheet Worksheet(string name)
         {
             ThrowIfDisposed();
 
             return WorksheetsInternal.Worksheet(name);
         }
 
-        public IXLWorksheet Worksheet(Int32 position)
+        public IXLWorksheet Worksheet(int position)
         {
             ThrowIfDisposed();
 
             return WorksheetsInternal.Worksheet(position);
         }
 
-        public IXLCustomProperty CustomProperty(String name)
+        public IXLCustomProperty CustomProperty(string name)
         {
             ThrowIfDisposed();
 
             return CustomProperties.CustomProperty(name);
         }
 
-        public IXLCells FindCells(Func<IXLCell, Boolean> predicate)
+        public IXLCells FindCells(Func<IXLCell, bool> predicate)
         {
             ThrowIfDisposed();
 
@@ -647,7 +647,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLRows FindRows(Func<IXLRow, Boolean> predicate)
+        public IXLRows FindRows(Func<IXLRow, bool> predicate)
         {
             ThrowIfDisposed();
 
@@ -660,7 +660,7 @@ namespace ClosedXML.Excel
             return rows;
         }
 
-        public IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate)
+        public IXLColumns FindColumns(Func<IXLColumn, bool> predicate)
         {
             ThrowIfDisposed();
 
@@ -680,7 +680,7 @@ namespace ClosedXML.Excel
         /// <param name="compareOptions">The compare options.</param>
         /// <param name="searchFormulae">if set to <c>true</c> search formulae instead of cell values.</param>
         /// <returns></returns>
-        public IEnumerable<IXLCell> Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false)
+        public IEnumerable<IXLCell> Search(string searchText, CompareOptions compareOptions = CompareOptions.Ordinal, bool searchFormulae = false)
         {
             ThrowIfDisposed();
 
@@ -694,7 +694,7 @@ namespace ClosedXML.Excel
         #region Fields
 
         private XLLoadSource _loadSource = XLLoadSource.New;
-        private String _originalFile;
+        private string _originalFile;
         private Stream _originalStream;
         private XLWorkbookProtection _workbookProtection;
 
@@ -710,7 +710,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        internal XLWorkbook(String file, Boolean asTemplate)
+        internal XLWorkbook(string file, bool asTemplate)
             : this(XLEventTracking.Enabled)
         {
             LoadSheetsFromTemplate(file);
@@ -755,12 +755,12 @@ namespace ClosedXML.Excel
         ///   Opens an existing workbook from a file.
         /// </summary>
         /// <param name = "file">The file to open.</param>
-        public XLWorkbook(String file)
+        public XLWorkbook(string file)
             : this(file, XLEventTracking.Enabled)
         {
         }
 
-        public XLWorkbook(String file, XLEventTracking eventTracking)
+        public XLWorkbook(string file, XLEventTracking eventTracking)
             : this(eventTracking)
         {
             _loadSource = XLLoadSource.File;
@@ -769,7 +769,7 @@ namespace ClosedXML.Excel
             Load(file);
         }
 
-        public XLWorkbook(String file, LoadOptions loadOptions)
+        public XLWorkbook(string file, LoadOptions loadOptions)
             : this(file, loadOptions.EventTracking)
         {
             if (loadOptions.RecalculateAllFormulas)
@@ -806,14 +806,14 @@ namespace ClosedXML.Excel
 
         internal sealed class UnsupportedSheet
         {
-            public Boolean IsActive;
-            public UInt32 SheetId;
-            public Int32 Position;
+            public bool IsActive;
+            public uint SheetId;
+            public int Position;
         }
 
         #endregion Nested type: UnsupportedSheet
 
-        public IXLCell Cell(String namedCell)
+        public IXLCell Cell(string namedCell)
         {
             ThrowIfDisposed();
 
@@ -826,14 +826,14 @@ namespace ClosedXML.Excel
                 return CellFromFullAddress(namedCell, out _);
         }
 
-        public IXLCells Cells(String namedCells)
+        public IXLCells Cells(string namedCells)
         {
             ThrowIfDisposed();
 
             return Ranges(namedCells).Cells();
         }
 
-        public IXLRange Range(String range)
+        public IXLRange Range(string range)
         {
             ThrowIfDisposed();
 
@@ -844,7 +844,7 @@ namespace ClosedXML.Excel
                 return RangeFromFullAddress(range, out _);
         }
 
-        public IXLRanges Ranges(String ranges)
+        public IXLRanges Ranges(string ranges)
         {
             ThrowIfDisposed();
 
@@ -859,7 +859,7 @@ namespace ClosedXML.Excel
 
         internal XLIdManager ShapeIdManager { get; private set; }
 
-        public Boolean Use1904DateSystem { get; set; }
+        public bool Use1904DateSystem { get; set; }
 
         public XLWorkbook SetUse1904DateSystem()
         {
@@ -868,7 +868,7 @@ namespace ClosedXML.Excel
             return SetUse1904DateSystem(true);
         }
 
-        public XLWorkbook SetUse1904DateSystem(Boolean value)
+        public XLWorkbook SetUse1904DateSystem(bool value)
         {
             ThrowIfDisposed();
 
@@ -883,21 +883,21 @@ namespace ClosedXML.Excel
             return Worksheets.Add();
         }
 
-        public IXLWorksheet AddWorksheet(Int32 position)
+        public IXLWorksheet AddWorksheet(int position)
         {
             ThrowIfDisposed();
 
             return Worksheets.Add(position);
         }
 
-        public IXLWorksheet AddWorksheet(String sheetName)
+        public IXLWorksheet AddWorksheet(string sheetName)
         {
             ThrowIfDisposed();
 
             return Worksheets.Add(sheetName);
         }
 
-        public IXLWorksheet AddWorksheet(String sheetName, Int32 position)
+        public IXLWorksheet AddWorksheet(string sheetName, int position)
         {
             ThrowIfDisposed();
 
@@ -926,7 +926,7 @@ namespace ClosedXML.Excel
             worksheet.CopyTo(this, worksheet.Name);
         }
 
-        public IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName)
+        public IXLWorksheet AddWorksheet(DataTable dataTable, string sheetName)
         {
             ThrowIfDisposed();
 
@@ -940,7 +940,7 @@ namespace ClosedXML.Excel
             get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
         }
 
-        public Object Evaluate(String expression)
+        public object Evaluate(string expression)
         {
             ThrowIfDisposed();
 
@@ -967,14 +967,14 @@ namespace ClosedXML.Excel
             get { return _calcEngineExpr ?? (_calcEngineExpr = new XLCalcEngine()); }
         }
 
-        public static Object EvaluateExpr(String expression)
+        public static object EvaluateExpr(string expression)
         {
             return CalcEngineExpr.Evaluate(expression);
         }
 
-        public String Author { get; set; }
+        public string Author { get; set; }
 
-        public Boolean LockStructure
+        public bool LockStructure
         {
             get => Protection.IsProtected && !Protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Structure);
             set
@@ -988,14 +988,14 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLWorkbook SetLockStructure(Boolean value)
+        public XLWorkbook SetLockStructure(bool value)
         {
             ThrowIfDisposed();
 
             LockStructure = value; return this;
         }
 
-        public Boolean LockWindows
+        public bool LockWindows
         {
             get => Protection.IsProtected && !Protection.AllowedElements.HasFlag(XLWorkbookProtectionElements.Windows);
             set
@@ -1009,15 +1009,15 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLWorkbook SetLockWindows(Boolean value)
+        public XLWorkbook SetLockWindows(bool value)
         {
             ThrowIfDisposed();
 
             LockWindows = value; return this;
         }
 
-        public Boolean IsPasswordProtected => Protection.IsPasswordProtected;
-        public Boolean IsProtected => Protection.IsProtected;
+        public bool IsPasswordProtected => Protection.IsPasswordProtected;
+        public bool IsProtected => Protection.IsProtected;
 
         IXLWorkbookProtection IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>.Protection
         {
@@ -1037,7 +1037,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password)
+        public IXLWorkbookProtection Protect(bool lockStructure, bool lockWindows, string password)
         {
             ThrowIfDisposed();
 
@@ -1062,7 +1062,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        public IXLWorkbookProtection Protect(Boolean lockStructure)
+        public IXLWorkbookProtection Protect(bool lockStructure)
         {
             ThrowIfDisposed();
 
@@ -1070,21 +1070,21 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows)
+        public IXLWorkbookProtection Protect(bool lockStructure, bool lockWindows)
         {
             ThrowIfDisposed();
 
             return Protect(lockStructure, lockWindows, null);
         }
 
-        public IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
+        public IXLWorkbookProtection Protect(string password, Algorithm algorithm = DefaultProtectionAlgorithm)
         {
             ThrowIfDisposed();
 
             return Protect(password, algorithm, XLWorkbookProtectionElements.Windows);
         }
 
-        public IXLWorkbookProtection Protect(String password, Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
+        public IXLWorkbookProtection Protect(string password, Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
         {
             ThrowIfDisposed();
 
@@ -1112,7 +1112,7 @@ namespace ClosedXML.Excel
             return Protection.Unprotect();
         }
 
-        public IXLWorkbookProtection Unprotect(String password)
+        public IXLWorkbookProtection Unprotect(string password)
         {
             ThrowIfDisposed();
 
@@ -1126,7 +1126,7 @@ namespace ClosedXML.Excel
             return Unprotect();
         }
 
-        IXLElementProtection IXLProtectable.Unprotect(String password)
+        IXLElementProtection IXLProtectable.Unprotect(string password)
         {
             ThrowIfDisposed();
 
@@ -1141,10 +1141,10 @@ namespace ClosedXML.Excel
                     return "XLWorkbook(new)";
 
                 case XLLoadSource.File:
-                    return String.Format("XLWorkbook({0})", _originalFile);
+                    return string.Format("XLWorkbook({0})", _originalFile);
 
                 case XLLoadSource.Stream:
-                    return String.Format("XLWorkbook({0})", _originalStream.ToString());
+                    return string.Format("XLWorkbook({0})", _originalStream.ToString());
 
                 default:
                     throw new NotImplementedException();

@@ -8,9 +8,9 @@ namespace ClosedXML.Excel
     internal class XLFilterConnector : IXLFilterConnector
     {
         private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
+        private readonly int _column;
 
-        public XLFilterConnector(XLAutoFilter autoFilter, Int32 column)
+        public XLFilterConnector(XLAutoFilter autoFilter, int column)
         {
             _autoFilter = autoFilter;
             _column = column;

@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
 
         public XLFontValue Font { get; private set; }
 
-        public Boolean IncludeQuotePrefix { get; private set; }
+        public bool IncludeQuotePrefix { get; private set; }
 
         public XLNumberFormatValue NumberFormat { get; private set; }
 

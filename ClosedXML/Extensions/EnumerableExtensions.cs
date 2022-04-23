@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static Boolean HasDuplicates<T>(this IEnumerable<T> source)
+        public static bool HasDuplicates<T>(this IEnumerable<T> source)
         {
             HashSet<T> distinctItems = new HashSet<T>();
             foreach (var item in source)

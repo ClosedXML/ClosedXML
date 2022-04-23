@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
 
         private readonly List<XLRangeAddress> _rangeAddresses = new List<XLRangeAddress>();
         private readonly bool _usedCellsOnly;
-        private readonly Func<IXLCell, Boolean> _predicate;
+        private readonly Func<IXLCell, bool> _predicate;
         private readonly XLCellsUsedOptions _options;
         private bool _styleInitialized = false;
 
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        public XLCells(bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate = null)
+        public XLCells(bool usedCellsOnly, XLCellsUsedOptions options, Func<IXLCell, bool> predicate = null)
             : base(XLStyle.Default.Value)
         {
             _usedCellsOnly = usedCellsOnly;
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Object Value
+        public object Value
         {
             set { this.ForEach<XLCell>(c => c.Value = value); }
         }
@@ -202,12 +202,12 @@ namespace ClosedXML.Excel
             this.ForEach<XLCell>(c => c.DeleteSparkline());
         }
 
-        public String FormulaA1
+        public string FormulaA1
         {
             set { this.ForEach<XLCell>(c => c.FormulaA1 = value); }
         }
 
-        public String FormulaR1C1
+        public string FormulaR1C1
         {
             set { this.ForEach<XLCell>(c => c.FormulaR1C1 = value); }
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLDictionary<T>: Dictionary<Int32, T>
+    public class XLDictionary<T>: Dictionary<int, T>
     {
         public XLDictionary()
         {

@@ -102,7 +102,7 @@ namespace ClosedXML.Tests
             rangeColumn.Cell(3).Value = "Hank";
             rangeColumn.Cell(4).Value = "Dagny";
             IXLTable table = rangeColumn.CreateTable();
-            wb.NamedRanges.Add("FNameColumn", String.Format("{0}[{1}]", table.Name, "FName"));
+            wb.NamedRanges.Add("FNameColumn", string.Format("{0}[{1}]", table.Name, "FName"));
 
             IXLRange namedRange = wb.Range("FNameColumn");
             Assert.AreEqual(3, namedRange.Cells().Count());

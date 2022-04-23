@@ -26,7 +26,7 @@ namespace ClosedXML.Examples
             public DateTime? BakeDate { get; set; }
         }
 
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             var pastries = new List<Pastry>
             {

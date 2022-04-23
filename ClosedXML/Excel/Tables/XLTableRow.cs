@@ -14,14 +14,14 @@ namespace ClosedXML.Excel
 
         #region IXLTableRow Members
 
-        public IXLCell Field(Int32 index)
+        public IXLCell Field(int index)
         {
             return Cell(index + 1);
         }
 
-        public IXLCell Field(String name)
+        public IXLCell Field(string name)
         {
-            Int32 fieldIndex = _tableRange.Table.GetFieldIndex(name);
+            int fieldIndex = _tableRange.Table.GetFieldIndex(name);
             return Cell(fieldIndex + 1);
         }
 
@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
             return SortLeftToRight();
         }
 
-        public new IXLTableRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public new IXLTableRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true)
         {
             base.SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
             return this;
@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLTableRow Members
 
-        private XLTableRow RowShift(Int32 rowsToShift)
+        private XLTableRow RowShift(int rowsToShift)
         {
             return _tableRange.Row(RowNumber() - _tableRange.FirstRow().RowNumber() + 1 + rowsToShift);
         }
@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
             return RowAbove();
         }
 
-        IXLTableRow IXLTableRow.RowAbove(Int32 step)
+        IXLTableRow IXLTableRow.RowAbove(int step)
         {
             return RowAbove(step);
         }
@@ -60,7 +60,7 @@ namespace ClosedXML.Excel
             return RowAbove(1);
         }
 
-        public new XLTableRow RowAbove(Int32 step)
+        public new XLTableRow RowAbove(int step)
         {
             return RowShift(step * -1);
         }
@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
             return RowBelow();
         }
 
-        IXLTableRow IXLTableRow.RowBelow(Int32 step)
+        IXLTableRow IXLTableRow.RowBelow(int step)
         {
             return RowBelow(step);
         }
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
             return RowBelow(1);
         }
 
-        public new XLTableRow RowBelow(Int32 step)
+        public new XLTableRow RowBelow(int step)
         {
             return RowShift(step);
         }

@@ -14,10 +14,10 @@ namespace ClosedXML.Excel
             Operator = op;
         }
 
-        public Func<Object, Boolean> Condition { get; set; }
+        public Func<object, bool> Condition { get; set; }
         public XLConnector Connector { get; set; }
         public XLDateTimeGrouping DateTimeGrouping { get; set; }
         public XLFilterOperator Operator { get; set; }
-        public Object Value { get; set; }
+        public object Value { get; set; }
     }
 }

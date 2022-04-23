@@ -5,7 +5,7 @@ namespace ClosedXML.Examples.Ranges
 {
     public class SelectingRanges : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var wb = new XLWorkbook();
             var wsActiveCell = wb.AddWorksheet("Set Active Cell");

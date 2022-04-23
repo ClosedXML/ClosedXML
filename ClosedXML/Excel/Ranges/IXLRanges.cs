@@ -28,9 +28,9 @@ namespace ClosedXML.Excel
         /// row/column shifting events. Until ranges are unsubscribed they cannot be collected by GC.</param>
         void RemoveAll(Predicate<IXLRange> match = null, bool releaseEventHandlers = true);
 
-        Int32 Count { get; }
+        int Count { get; }
 
-        Boolean Contains(IXLRange range);
+        bool Contains(IXLRange range);
 
         /// <summary>
         /// Filter ranges from a collection that intersect the specified address. Is much more efficient
@@ -67,7 +67,7 @@ namespace ClosedXML.Excel
         /// <para>The default scope for the named range is Workbook.</para>
         /// </summary>
         /// <param name="rangeName">Name of the range.</param>
-        IXLRanges AddToNamed(String rangeName);
+        IXLRanges AddToNamed(string rangeName);
 
         /// <summary>
         /// Creates a named range out of these ranges.
@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
         /// </summary>
-        IXLRanges AddToNamed(String rangeName, XLScope scope);
+        IXLRanges AddToNamed(string rangeName, XLScope scope);
 
         /// <summary>
         /// Creates a named range out of these ranges.
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
         /// <param name="scope">The scope for the named range.</param>
         /// <param name="comment">The comments for the named range.</param>
         /// </summary>
-        IXLRanges AddToNamed(String rangeName, XLScope scope, String comment);
+        IXLRanges AddToNamed(string rangeName, XLScope scope, string comment);
 
         /// <summary>
         /// Sets the cells' value.
@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The object containing the value(s) to set.
         /// </value>
-        Object Value { set; }
+        object Value { set; }
 
         IXLRanges SetValue<T>(T value);
 
@@ -115,7 +115,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCells CellsUsed(Boolean includeFormats);
+        IXLCells CellsUsed(bool includeFormats);
 
         IXLCells CellsUsed(XLCellsUsedOptions options);
 

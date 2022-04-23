@@ -41,7 +41,7 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Double Width
+        public double Width
         {
             set
             {
@@ -63,12 +63,12 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
+                var toDelete = new Dictionary<IXLWorksheet, List<int>>();
                 foreach (XLColumn c in Columns)
                 {
-                    if (!toDelete.TryGetValue(c.Worksheet, out List<Int32> list))
+                    if (!toDelete.TryGetValue(c.Worksheet, out List<int> list))
                     {
-                        list = new List<Int32>();
+                        list = new List<int>();
                         toDelete.Add(c.Worksheet, list);
                     }
 
@@ -89,31 +89,31 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLColumns AdjustToContents(Int32 startRow)
+        public IXLColumns AdjustToContents(int startRow)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow));
             return this;
         }
 
-        public IXLColumns AdjustToContents(Int32 startRow, Int32 endRow)
+        public IXLColumns AdjustToContents(int startRow, int endRow)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow, endRow));
             return this;
         }
 
-        public IXLColumns AdjustToContents(Double minWidth, Double maxWidth)
+        public IXLColumns AdjustToContents(double minWidth, double maxWidth)
         {
             Columns.ForEach(c => c.AdjustToContents(minWidth, maxWidth));
             return this;
         }
 
-        public IXLColumns AdjustToContents(Int32 startRow, Double minWidth, Double maxWidth)
+        public IXLColumns AdjustToContents(int startRow, double minWidth, double maxWidth)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow, minWidth, maxWidth));
             return this;
         }
 
-        public IXLColumns AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
+        public IXLColumns AdjustToContents(int startRow, int endRow, double minWidth, double maxWidth)
         {
             Columns.ForEach(c => c.AdjustToContents(startRow, endRow, minWidth, maxWidth));
             return this;
@@ -134,7 +134,7 @@ namespace ClosedXML.Excel
             Group(false);
         }
 
-        public void Group(Int32 outlineLevel)
+        public void Group(int outlineLevel)
         {
             Group(outlineLevel, false);
         }
@@ -144,17 +144,17 @@ namespace ClosedXML.Excel
             Ungroup(false);
         }
 
-        public void Group(Boolean collapse)
+        public void Group(bool collapse)
         {
             Columns.ForEach(c => c.Group(collapse));
         }
 
-        public void Group(Int32 outlineLevel, Boolean collapse)
+        public void Group(int outlineLevel, bool collapse)
         {
             Columns.ForEach(c => c.Group(outlineLevel, collapse));
         }
 
-        public void Ungroup(Boolean ungroupFromAll)
+        public void Ungroup(bool ungroupFromAll)
         {
             Columns.ForEach(c => c.Ungroup(ungroupFromAll));
         }
@@ -185,7 +185,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLCells CellsUsed(Boolean includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             return CellsUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -193,7 +193,7 @@ namespace ClosedXML.Excel
         }
 
         public IXLCells CellsUsed(XLCellsUsedOptions options)
-        { 
+        {
             var cells = new XLCells(true, options);
             foreach (XLColumn container in Columns)
                 cells.Add(container.RangeAddress);

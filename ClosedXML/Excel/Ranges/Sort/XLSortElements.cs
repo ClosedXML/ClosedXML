@@ -6,19 +6,19 @@ namespace ClosedXML.Excel
     internal class XLSortElements: IXLSortElements
     {
         List<IXLSortElement> elements = new List<IXLSortElement>();
-        public void Add(Int32 elementNumber)
+        public void Add(int elementNumber)
         {
             Add(elementNumber, XLSortOrder.Ascending);
         }
-        public void Add(Int32 elementNumber, XLSortOrder sortOrder)
+        public void Add(int elementNumber, XLSortOrder sortOrder)
         {
             Add(elementNumber, sortOrder, true);
         }
-        public void Add(Int32 elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks)
+        public void Add(int elementNumber, XLSortOrder sortOrder, bool ignoreBlanks)
         {
             Add(elementNumber, sortOrder, ignoreBlanks, false);
         }
-        public void Add(Int32 elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks, Boolean matchCase)
+        public void Add(int elementNumber, XLSortOrder sortOrder, bool ignoreBlanks, bool matchCase)
         {
             elements.Add(new XLSortElement()
             {
@@ -29,19 +29,19 @@ namespace ClosedXML.Excel
             });
         }
 
-        public void Add(String elementNumber)
+        public void Add(string elementNumber)
         {
             Add(elementNumber, XLSortOrder.Ascending);
         }
-        public void Add(String elementNumber, XLSortOrder sortOrder)
+        public void Add(string elementNumber, XLSortOrder sortOrder)
         {
             Add(elementNumber, sortOrder, true);
         }
-        public void Add(String elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks)
+        public void Add(string elementNumber, XLSortOrder sortOrder, bool ignoreBlanks)
         {
             Add(elementNumber, sortOrder, ignoreBlanks, false);
         }
-        public void Add(String elementNumber, XLSortOrder sortOrder, Boolean ignoreBlanks, Boolean matchCase)
+        public void Add(string elementNumber, XLSortOrder sortOrder, bool ignoreBlanks, bool matchCase)
         {
             elements.Add(new XLSortElement()
             {
@@ -67,7 +67,7 @@ namespace ClosedXML.Excel
             elements.Clear();
         }
 
-        public void Remove(Int32 elementNumber)
+        public void Remove(int elementNumber)
         {
             elements.RemoveAt(elementNumber - 1);
         }

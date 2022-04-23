@@ -12,14 +12,14 @@ namespace ClosedXML.Examples.Tables
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Inserting Tables");
 
                 // From a list of strings
-                var listOfStrings = new List<String>();
+                var listOfStrings = new List<string>();
                 listOfStrings.Add("House");
                 listOfStrings.Add("Car");
                 ws.Cell(1, 1).Value = "From Strings";
@@ -27,10 +27,10 @@ namespace ClosedXML.Examples.Tables
                 ws.Cell(2, 1).InsertTable(listOfStrings);
 
                 // From a list of arrays
-                var listOfArr = new List<Int32[]>();
-                listOfArr.Add(new Int32[] { 1, 2, 3 });
-                listOfArr.Add(new Int32[] { 1 });
-                listOfArr.Add(new Int32[] { 1, 2, 3, 4, 5, 6 });
+                var listOfArr = new List<int[]>();
+                listOfArr.Add(new int[] { 1, 2, 3 });
+                listOfArr.Add(new int[] { 1 });
+                listOfArr.Add(new int[] { 1, 2, 3, 4, 5, 6 });
                 ws.Cell(1, 3).Value = "From Arrays";
                 ws.Range(1, 3, 1, 8).Merge().AddToNamed("Titles");
                 ws.Cell(2, 3).InsertTable(listOfArr);
@@ -78,13 +78,13 @@ namespace ClosedXML.Examples.Tables
         private class Person
         {
             [XLColumn(Header = "House Street")]
-            public String House { get; set; }
+            public string House { get; set; }
 
-            public String Name { get; set; }
-            public Int32 Age { get; set; }
+            public string Name { get; set; }
+            public int Age { get; set; }
 
             [XLColumn(Header = "Class Type")]
-            public static String ClassType
+            public static string ClassType
             { get { return nameof(Person); } }
         }
 

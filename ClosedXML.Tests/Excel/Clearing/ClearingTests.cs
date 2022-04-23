@@ -94,7 +94,7 @@ namespace ClosedXML.Tests
                     Assert.AreEqual(ws.Style.Font.FontColor, c.Style.Font.FontColor);
                     Assert.IsFalse(ws.ConditionalFormats.Any());
                     Assert.IsFalse(c.HasComment);
-                    Assert.AreEqual(String.Empty, c.GetDataValidation().Value);
+                    Assert.AreEqual(string.Empty, c.GetDataValidation().Value);
                 }
             }
         }

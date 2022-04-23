@@ -174,7 +174,7 @@ namespace ClosedXML.Tests
             }
         }
 
-        public static IEnumerable<String> ListResourceFiles(Func<String, Boolean> predicate = null)
+        public static IEnumerable<string> ListResourceFiles(Func<string, bool> predicate = null)
         {
             return _extractor.GetFileNames(predicate);
         }

@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             mat = new double[rows, cols];
         }
 
-        public XLMatrix(Double[,] arr) : this(arr.GetLength(0), arr.GetLength(1))
+        public XLMatrix(double[,] arr) : this(arr.GetLength(0), arr.GetLength(1))
         {
             var roCount = arr.GetLength(0);
             var coCount = arr.GetLength(1);
@@ -39,7 +39,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             set { mat[iRow, iCol] = value; }
         }
 
-        public Boolean IsSquare()
+        public bool IsSquare()
         {
             return (rows == cols);
         }
@@ -251,7 +251,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var s = "";
             for (var i = 0; i < rows; i++)
             {
-                for (var j = 0; j < cols; j++) s += String.Format("{0,5:0.00}", mat[i, j]) + " ";
+                for (var j = 0; j < cols; j++) s += string.Format("{0,5:0.00}", mat[i, j]) + " ";
                 s += "\r\n";
             }
             return s;

@@ -9,14 +9,14 @@ namespace ClosedXML.Excel
     internal class XLTableField : IXLTableField
     {
         internal XLTotalsRowFunction totalsRowFunction;
-        internal String totalsRowLabel;
+        internal string totalsRowLabel;
         private readonly XLTable table;
 
         private IXLRangeColumn _column;
-        private Int32 index;
-        private String name;
+        private int index;
+        private string name;
 
-        public XLTableField(XLTable table, String name)
+        public XLTableField(XLTable table, string name)
         {
             this.table = table;
             this.name = name;
@@ -64,7 +64,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Int32 Index
+        public int Index
         {
             get { return index; }
             internal set
@@ -75,7 +75,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String Name
+        public string Name
         {
             get
             {
@@ -106,7 +106,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String TotalsRowFormulaA1
+        public string TotalsRowFormulaA1
         {
             get { return table.TotalsRow().Cell(Index + 1).FormulaA1; }
             set
@@ -116,7 +116,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String TotalsRowFormulaR1C1
+        public string TotalsRowFormulaR1C1
         {
             get { return table.TotalsRow().Cell(Index + 1).FormulaR1C1; }
             set
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String TotalsRowLabel
+        public string TotalsRowLabel
         {
             get { return totalsRowLabel; }
             set
@@ -152,7 +152,7 @@ namespace ClosedXML.Excel
             Delete(true);
         }
 
-        internal void Delete(Boolean deleteUnderlyingRangeColumn)
+        internal void Delete(bool deleteUnderlyingRangeColumn)
         {
             var fields = table.Fields.Cast<XLTableField>().ToArray();
 
@@ -182,7 +182,7 @@ namespace ClosedXML.Excel
             return distinctDataTypes.Count() == 1;
         }
 
-        public Boolean IsConsistentFormula()
+        public bool IsConsistentFormula()
         {
             var formulas = this.Column
                 .Cells()
@@ -216,14 +216,14 @@ namespace ClosedXML.Excel
             return distinctStyles.Count() == 1;
         }
 
-        private static IEnumerable<String> QuotedTableFieldCharacters = new[] { "'", "#" };
+        private static IEnumerable<string> QuotedTableFieldCharacters = new[] { "'", "#" };
 
         internal void UpdateTableFieldTotalsRowFormula()
         {
             if (TotalsRowFunction != XLTotalsRowFunction.None && TotalsRowFunction != XLTotalsRowFunction.Custom)
             {
                 var cell = table.TotalsRow().Cell(Index + 1);
-                var formulaCode = String.Empty;
+                var formulaCode = string.Empty;
                 switch (TotalsRowFunction)
                 {
                     case XLTotalsRowFunction.Sum: formulaCode = "109"; break;

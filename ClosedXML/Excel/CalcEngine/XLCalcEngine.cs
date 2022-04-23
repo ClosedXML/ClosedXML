@@ -51,7 +51,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public IEnumerable<IXLCell> GetPrecedentCells(string expression)
         {
-            if (!String.IsNullOrWhiteSpace(expression))
+            if (!string.IsNullOrWhiteSpace(expression))
             {
                 var ranges = GetPrecedentRanges(expression);
                 var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));

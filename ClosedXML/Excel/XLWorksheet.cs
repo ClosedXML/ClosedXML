@@ -15,19 +15,19 @@ namespace ClosedXML.Excel
     {
         #region Fields
 
-        private readonly Dictionary<Int32, Int32> _columnOutlineCount = new Dictionary<Int32, Int32>();
-        private readonly Dictionary<Int32, Int32> _rowOutlineCount = new Dictionary<Int32, Int32>();
+        private readonly Dictionary<int, int> _columnOutlineCount = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> _rowOutlineCount = new Dictionary<int, int>();
         private readonly XLRangeFactory _rangeFactory;
         private readonly XLRangeRepository _rangeRepository;
         private readonly List<IXLRangeIndex> _rangeIndices;
-        internal Int32 ZOrder = 1;
-        private String _name;
-        internal Int32 _position;
+        internal int ZOrder = 1;
+        private string _name;
+        internal int _position;
 
-        private Double _rowHeight;
-        private Boolean _tabActive;
+        private double _rowHeight;
+        private bool _tabActive;
         private XLSheetProtection _protection;
-        internal Boolean EventTrackingEnabled;
+        internal bool EventTrackingEnabled;
 
         /// <summary>
         /// Fake address to be used everywhere the invalid address is needed.
@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        public XLWorksheet(String sheetName, XLWorkbook workbook)
+        public XLWorksheet(string sheetName, XLWorkbook workbook)
             : base(
                 new XLRangeAddress(
                     new XLAddress(null, XLHelper.MinRowNumber, XLHelper.MinColumnNumber, false, false),
@@ -101,8 +101,8 @@ namespace ClosedXML.Excel
         }
 
         public string LegacyDrawingId;
-        public Boolean LegacyDrawingIsNew;
-        private Double _columnWidth;
+        public bool LegacyDrawingIsNew;
+        private double _columnWidth;
 
         public XLWorksheetInternals Internals { get; private set; }
 
@@ -143,13 +143,13 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal Boolean RowHeightChanged { get; set; }
+        internal bool RowHeightChanged { get; set; }
 
-        internal Boolean ColumnWidthChanged { get; set; }
+        internal bool ColumnWidthChanged { get; set; }
 
-        public Int32 SheetId { get; set; }
+        public int SheetId { get; set; }
 
-        internal String RelId { get; set; }
+        internal string RelId { get; set; }
 
         public XLDataValidations DataValidations { get; private set; }
 
@@ -172,7 +172,7 @@ namespace ClosedXML.Excel
 
         public XLWorkbook Workbook { get; private set; }
 
-        public Double ColumnWidth
+        public double ColumnWidth
         {
             get { return _columnWidth; }
             set
@@ -182,7 +182,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Double RowHeight
+        public double RowHeight
         {
             get { return _rowHeight; }
             set
@@ -192,7 +192,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String Name
+        public string Name
         {
             get { return _name; }
             set
@@ -206,7 +206,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Int32 Position
+        public int Position
         {
             get { return _position; }
             set
@@ -242,7 +242,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRow IXLWorksheet.FirstRowUsed(Boolean includeFormats)
+        IXLRow IXLWorksheet.FirstRowUsed(bool includeFormats)
         {
             return FirstRowUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -260,7 +260,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRow IXLWorksheet.LastRowUsed(Boolean includeFormats)
+        IXLRow IXLWorksheet.LastRowUsed(bool includeFormats)
         {
             return LastRowUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -298,7 +298,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLColumn IXLWorksheet.FirstColumnUsed(Boolean includeFormats)
+        IXLColumn IXLWorksheet.FirstColumnUsed(bool includeFormats)
         {
             return FirstColumnUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -316,7 +316,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLColumn IXLWorksheet.LastColumnUsed(Boolean includeFormats)
+        IXLColumn IXLWorksheet.LastColumnUsed(bool includeFormats)
         {
             return LastColumnUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -330,7 +330,7 @@ namespace ClosedXML.Excel
 
         public IXLColumns Columns()
         {
-            var columnMap = new HashSet<Int32>();
+            var columnMap = new HashSet<int>();
 
             columnMap.UnionWith(Internals.CellsCollection.ColumnsUsed.Keys);
             columnMap.UnionWith(Internals.ColumnsCollection.Keys);
@@ -339,14 +339,14 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLColumns Columns(String columns)
+        public IXLColumns Columns(string columns)
         {
             var retVal = new XLColumns(null, StyleValue);
             var columnPairs = columns.Split(',');
             foreach (string tPair in columnPairs.Select(pair => pair.Trim()))
             {
-                String firstColumn;
-                String lastColumn;
+                string firstColumn;
+                string lastColumn;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
                     var columnRange = XLHelper.SplitRange(tPair);
@@ -359,9 +359,9 @@ namespace ClosedXML.Excel
                     lastColumn = tPair;
                 }
 
-                if (Int32.TryParse(firstColumn, out int tmp))
+                if (int.TryParse(firstColumn, out int tmp))
                 {
-                    foreach (IXLColumn col in Columns(Int32.Parse(firstColumn), Int32.Parse(lastColumn)))
+                    foreach (IXLColumn col in Columns(int.Parse(firstColumn), int.Parse(lastColumn)))
                         retVal.Add((XLColumn)col);
                 }
                 else
@@ -373,13 +373,13 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLColumns Columns(String firstColumn, String lastColumn)
+        public IXLColumns Columns(string firstColumn, string lastColumn)
         {
             return Columns(XLHelper.GetColumnNumberFromLetter(firstColumn),
                            XLHelper.GetColumnNumberFromLetter(lastColumn));
         }
 
-        public IXLColumns Columns(Int32 firstColumn, Int32 lastColumn)
+        public IXLColumns Columns(int firstColumn, int lastColumn)
         {
             var retVal = new XLColumns(null, StyleValue);
 
@@ -390,7 +390,7 @@ namespace ClosedXML.Excel
 
         public IXLRows Rows()
         {
-            var rowMap = new HashSet<Int32>();
+            var rowMap = new HashSet<int>();
 
             rowMap.UnionWith(Internals.CellsCollection.RowsUsed.Keys);
             rowMap.UnionWith(Internals.RowsCollection.Keys);
@@ -399,14 +399,14 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        public IXLRows Rows(String rows)
+        public IXLRows Rows(string rows)
         {
             var retVal = new XLRows(null, StyleValue);
             var rowPairs = rows.Split(',');
             foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
             {
-                String firstRow;
-                String lastRow;
+                string firstRow;
+                string lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
                     var rowRange = XLHelper.SplitRange(tPair);
@@ -419,13 +419,13 @@ namespace ClosedXML.Excel
                     lastRow = tPair;
                 }
 
-                Rows(Int32.Parse(firstRow), Int32.Parse(lastRow))
+                Rows(int.Parse(firstRow), int.Parse(lastRow))
                     .ForEach(row => retVal.Add((XLRow)row));
             }
             return retVal;
         }
 
-        public IXLRows Rows(Int32 firstRow, Int32 lastRow)
+        public IXLRows Rows(int firstRow, int lastRow)
         {
             var retVal = new XLRows(null, StyleValue);
 
@@ -434,17 +434,17 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        IXLRow IXLWorksheet.Row(Int32 row)
+        IXLRow IXLWorksheet.Row(int row)
         {
             return Row(row);
         }
 
-        IXLColumn IXLWorksheet.Column(Int32 column)
+        IXLColumn IXLWorksheet.Column(int column)
         {
             return Column(column);
         }
 
-        IXLColumn IXLWorksheet.Column(String column)
+        IXLColumn IXLWorksheet.Column(string column)
         {
             return Column(column);
         }
@@ -523,7 +523,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet CollapseRows(Int32 outlineLevel)
+        public IXLWorksheet CollapseRows(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
@@ -532,7 +532,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet CollapseColumns(Int32 outlineLevel)
+        public IXLWorksheet CollapseColumns(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
@@ -541,7 +541,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet ExpandRows(Int32 outlineLevel)
+        public IXLWorksheet ExpandRows(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
@@ -550,7 +550,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet ExpandColumns(Int32 outlineLevel)
+        public IXLWorksheet ExpandColumns(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
@@ -568,7 +568,7 @@ namespace ClosedXML.Excel
 
         public IXLNamedRanges NamedRanges { get; private set; }
 
-        public IXLNamedRange NamedRange(String rangeName)
+        public IXLNamedRange NamedRange(string rangeName)
         {
             return NamedRanges.NamedRange(rangeName);
         }
@@ -579,22 +579,22 @@ namespace ClosedXML.Excel
 
         public IXLTables Tables { get; private set; }
 
-        public IXLTable Table(Int32 index)
+        public IXLTable Table(int index)
         {
             return Tables.Table(index);
         }
 
-        public IXLTable Table(String name)
+        public IXLTable Table(string name)
         {
             return Tables.Table(name);
         }
 
-        public IXLWorksheet CopyTo(String newSheetName)
+        public IXLWorksheet CopyTo(string newSheetName)
         {
             return CopyTo(Workbook, newSheetName, Workbook.WorksheetsInternal.Count + 1);
         }
 
-        public IXLWorksheet CopyTo(String newSheetName, Int32 position)
+        public IXLWorksheet CopyTo(string newSheetName, int position)
         {
             return CopyTo(Workbook, newSheetName, position);
         }
@@ -604,12 +604,12 @@ namespace ClosedXML.Excel
             return CopyTo(workbook, Name, workbook.WorksheetsInternal.Count + 1);
         }
 
-        public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName)
+        public IXLWorksheet CopyTo(XLWorkbook workbook, string newSheetName)
         {
             return CopyTo(workbook, newSheetName, workbook.WorksheetsInternal.Count + 1);
         }
 
-        public IXLWorksheet CopyTo(XLWorkbook workbook, String newSheetName, Int32 position)
+        public IXLWorksheet CopyTo(XLWorkbook workbook, string newSheetName, int position)
         {
             if (this.IsDeleted)
                 throw new InvalidOperationException($"`{this.Name}` has been deleted and cannot be copied.");
@@ -694,12 +694,12 @@ namespace ClosedXML.Excel
             return Protection.Protect();
         }
 
-        public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
+        public IXLSheetProtection Protect(string password, Algorithm algorithm = DefaultProtectionAlgorithm)
         {
             return Protection.Protect(password, algorithm, XLSheetProtectionElements.SelectEverything);
         }
 
-        public IXLSheetProtection Protect(String password, Algorithm algorithm, XLSheetProtectionElements allowedElements)
+        public IXLSheetProtection Protect(string password, Algorithm algorithm, XLSheetProtectionElements allowedElements)
         {
             return Protection.Protect(password, algorithm, allowedElements);
         }
@@ -709,7 +709,7 @@ namespace ClosedXML.Excel
             return Protect();
         }
 
-        IXLElementProtection IXLProtectable.Protect(String password, Algorithm algorithm)
+        IXLElementProtection IXLProtectable.Protect(string password, Algorithm algorithm)
         {
             return Protect(password, algorithm);
         }
@@ -719,7 +719,7 @@ namespace ClosedXML.Excel
             return Protection.Unprotect();
         }
 
-        public IXLSheetProtection Unprotect(String password)
+        public IXLSheetProtection Unprotect(string password)
         {
             return Protection.Unprotect(password);
         }
@@ -729,7 +729,7 @@ namespace ClosedXML.Excel
             return Unprotect();
         }
 
-        IXLElementProtection IXLProtectable.Unprotect(String password)
+        IXLElementProtection IXLProtectable.Unprotect(string password)
         {
             return Unprotect(password);
         }
@@ -739,37 +739,37 @@ namespace ClosedXML.Excel
             return GetRangeForSort().Sort();
         }
 
-        public new IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending,
-                                 Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public new IXLRange Sort(string columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending,
+                                 bool matchCase = false, bool ignoreBlanks = true)
         {
             return GetRangeForSort().Sort(columnsToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
 
-        public new IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending,
-                                 Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public new IXLRange Sort(int columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending,
+                                 bool matchCase = false, bool ignoreBlanks = true)
         {
             return GetRangeForSort().Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
 
-        public new IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false,
-                                            Boolean ignoreBlanks = true)
+        public new IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false,
+                                            bool ignoreBlanks = true)
         {
             return GetRangeForSort().SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
         }
 
-        public Boolean ShowFormulas { get; set; }
+        public bool ShowFormulas { get; set; }
 
-        public Boolean ShowGridLines { get; set; }
+        public bool ShowGridLines { get; set; }
 
-        public Boolean ShowOutlineSymbols { get; set; }
+        public bool ShowOutlineSymbols { get; set; }
 
-        public Boolean ShowRowColHeaders { get; set; }
+        public bool ShowRowColHeaders { get; set; }
 
-        public Boolean ShowRuler { get; set; }
+        public bool ShowRuler { get; set; }
 
-        public Boolean ShowWhiteSpace { get; set; }
+        public bool ShowWhiteSpace { get; set; }
 
-        public Boolean ShowZeros { get; set; }
+        public bool ShowZeros { get; set; }
 
         public IXLWorksheet SetShowFormulas()
         {
@@ -777,7 +777,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetShowFormulas(Boolean value)
+        public IXLWorksheet SetShowFormulas(bool value)
         {
             ShowFormulas = value;
             return this;
@@ -789,7 +789,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetShowGridLines(Boolean value)
+        public IXLWorksheet SetShowGridLines(bool value)
         {
             ShowGridLines = value;
             return this;
@@ -801,7 +801,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetShowOutlineSymbols(Boolean value)
+        public IXLWorksheet SetShowOutlineSymbols(bool value)
         {
             ShowOutlineSymbols = value;
             return this;
@@ -813,7 +813,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetShowRowColHeaders(Boolean value)
+        public IXLWorksheet SetShowRowColHeaders(bool value)
         {
             ShowRowColHeaders = value;
             return this;
@@ -825,7 +825,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetShowRuler(Boolean value)
+        public IXLWorksheet SetShowRuler(bool value)
         {
             ShowRuler = value;
             return this;
@@ -837,7 +837,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetShowWhiteSpace(Boolean value)
+        public IXLWorksheet SetShowWhiteSpace(bool value)
         {
             ShowWhiteSpace = value;
             return this;
@@ -849,7 +849,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetShowZeros(Boolean value)
+        public IXLWorksheet SetShowZeros(bool value)
         {
             ShowZeros = value;
             return this;
@@ -863,9 +863,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean TabSelected { get; set; }
+        public bool TabSelected { get; set; }
 
-        public Boolean TabActive
+        public bool TabActive
         {
             get { return _tabActive; }
             set
@@ -885,7 +885,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetTabSelected(Boolean value)
+        public IXLWorksheet SetTabSelected(bool value)
         {
             TabSelected = value;
             return this;
@@ -897,20 +897,20 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetTabActive(Boolean value)
+        public IXLWorksheet SetTabActive(bool value)
         {
             TabActive = value;
             return this;
         }
 
-        IXLPivotTable IXLWorksheet.PivotTable(String name)
+        IXLPivotTable IXLWorksheet.PivotTable(string name)
         {
             return PivotTable(name);
         }
 
         public IXLPivotTables PivotTables { get; private set; }
 
-        public Boolean RightToLeft { get; set; }
+        public bool RightToLeft { get; set; }
 
         public IXLWorksheet SetRightToLeft()
         {
@@ -918,13 +918,13 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLWorksheet SetRightToLeft(Boolean value)
+        public IXLWorksheet SetRightToLeft(bool value)
         {
             RightToLeft = value;
             return this;
         }
 
-        public override IXLRanges Ranges(String ranges)
+        public override IXLRanges Ranges(string ranges)
         {
             var retVal = new XLRanges();
             foreach (string rangeAddressStr in ranges.Split(',').Select(s => s.Trim()))
@@ -956,7 +956,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLRows RowsUsed(Boolean includeFormats, Func<IXLRow, Boolean> predicate = null)
+        public IXLRows RowsUsed(bool includeFormats, Func<IXLRow, bool> predicate = null)
         {
             return RowsUsed(includeFormats
                     ? XLCellsUsedOptions.All
@@ -964,10 +964,10 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean> predicate = null)
+        public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, bool> predicate = null)
         {
             var rows = new XLRows(Worksheet, StyleValue);
-            var rowsUsed = new HashSet<Int32>();
+            var rowsUsed = new HashSet<int>();
             Internals.RowsCollection.Keys.ForEach(r => rowsUsed.Add(r));
             Internals.CellsCollection.RowsUsed.Keys.ForEach(r => rowsUsed.Add(r));
             foreach (var rowNum in rowsUsed)
@@ -979,13 +979,13 @@ namespace ClosedXML.Excel
             return rows;
         }
 
-        public IXLRows RowsUsed(Func<IXLRow, Boolean> predicate = null)
+        public IXLRows RowsUsed(Func<IXLRow, bool> predicate = null)
         {
             return RowsUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLColumns ColumnsUsed(Boolean includeFormats, Func<IXLColumn, Boolean> predicate = null)
+        public IXLColumns ColumnsUsed(bool includeFormats, Func<IXLColumn, bool> predicate = null)
         {
             return ColumnsUsed(includeFormats
                     ? XLCellsUsedOptions.All
@@ -993,10 +993,10 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean> predicate = null)
+        public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, bool> predicate = null)
         {
             var columns = new XLColumns(Worksheet, StyleValue);
-            var columnsUsed = new HashSet<Int32>();
+            var columnsUsed = new HashSet<int>();
             Internals.ColumnsCollection.Keys.ForEach(r => columnsUsed.Add(r));
             Internals.CellsCollection.ColumnsUsed.Keys.ForEach(r => columnsUsed.Add(r));
             foreach (var columnNum in columnsUsed)
@@ -1008,7 +1008,7 @@ namespace ClosedXML.Excel
             return columns;
         }
 
-        public IXLColumns ColumnsUsed(Func<IXLColumn, Boolean> predicate = null)
+        public IXLColumns ColumnsUsed(Func<IXLColumn, bool> predicate = null)
         {
             return ColumnsUsed(XLCellsUsedOptions.AllContents, predicate);
         }
@@ -1030,19 +1030,19 @@ namespace ClosedXML.Excel
 
         #region Outlines
 
-        public void IncrementColumnOutline(Int32 level)
+        public void IncrementColumnOutline(int level)
         {
             if (level <= 0) return;
-            if (_columnOutlineCount.TryGetValue(level, out Int32 value))
+            if (_columnOutlineCount.TryGetValue(level, out int value))
                 _columnOutlineCount[level] = value + 1;
             else
                 _columnOutlineCount.Add(level, 1);
         }
 
-        public void DecrementColumnOutline(Int32 level)
+        public void DecrementColumnOutline(int level)
         {
             if (level <= 0) return;
-            if (_columnOutlineCount.TryGetValue(level, out Int32 value))
+            if (_columnOutlineCount.TryGetValue(level, out int value))
             {
                 if (value > 0)
                     _columnOutlineCount[level] = value - 1;
@@ -1051,25 +1051,25 @@ namespace ClosedXML.Excel
                 _columnOutlineCount.Add(level, 0);
         }
 
-        public Int32 GetMaxColumnOutline()
+        public int GetMaxColumnOutline()
         {
             var list = _columnOutlineCount.Where(kp => kp.Value > 0).ToList();
             return list.Count == 0 ? 0 : list.Max(kp => kp.Key);
         }
 
-        public void IncrementRowOutline(Int32 level)
+        public void IncrementRowOutline(int level)
         {
             if (level <= 0) return;
-            if (_rowOutlineCount.TryGetValue(level, out Int32 value))
+            if (_rowOutlineCount.TryGetValue(level, out int value))
                 _rowOutlineCount[level] = value + 1;
             else
                 _rowOutlineCount.Add(level, 0);
         }
 
-        public void DecrementRowOutline(Int32 level)
+        public void DecrementRowOutline(int level)
         {
             if (level <= 0) return;
-            if (_rowOutlineCount.TryGetValue(level, out Int32 value))
+            if (_rowOutlineCount.TryGetValue(level, out int value))
             {
                 if (value > 0)
                     _rowOutlineCount[level] = level - 1;
@@ -1078,7 +1078,7 @@ namespace ClosedXML.Excel
                 _rowOutlineCount.Add(level, 0);
         }
 
-        public Int32 GetMaxRowOutline()
+        public int GetMaxRowOutline()
         {
             return _rowOutlineCount.Count == 0 ? 0 : _rowOutlineCount.Where(kp => kp.Value > 0).Max(kp => kp.Key);
         }
@@ -1149,12 +1149,12 @@ namespace ClosedXML.Excel
             return rngColumn != null ? Column(rngColumn.RangeAddress.LastAddress.ColumnNumber) : null;
         }
 
-        public XLRow Row(Int32 row)
+        public XLRow Row(int row)
         {
             return Row(row, true);
         }
 
-        public XLColumn Column(Int32 columnNumber)
+        public XLColumn Column(int columnNumber)
         {
             if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
                 throw new ArgumentOutOfRangeException(nameof(columnNumber), $"Column number must be between 1 and {XLHelper.MaxColumnNumber}");
@@ -1174,7 +1174,7 @@ namespace ClosedXML.Excel
             return column;
         }
 
-        public IXLColumn Column(String column)
+        public IXLColumn Column(string column)
         {
             return Column(XLHelper.GetColumnNumberFromLetter(column));
         }
@@ -1225,7 +1225,7 @@ namespace ClosedXML.Excel
         private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
         {
             if (!ConditionalFormats.Any()) return;
-            Int32 firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
+            int firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
             if (firstCol == 1) return;
 
             int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
@@ -1271,7 +1271,7 @@ namespace ClosedXML.Excel
         private void ShiftDataValidationColumns(XLRange range, int columnsShifted)
         {
             if (!DataValidations.Any()) return;
-            Int32 firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
+            int firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
             if (firstCol == 1) return;
 
             int colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
@@ -1355,7 +1355,7 @@ namespace ClosedXML.Excel
         private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
         {
             if (!ConditionalFormats.Any()) return;
-            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
+            int firstRow = range.RangeAddress.FirstAddress.RowNumber;
             if (firstRow == 1) return;
 
             int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
@@ -1400,7 +1400,7 @@ namespace ClosedXML.Excel
         private void ShiftDataValidationRows(XLRange range, int rowsShifted)
         {
             if (!DataValidations.Any()) return;
-            Int32 firstRow = range.RangeAddress.FirstAddress.RowNumber;
+            int firstRow = range.RangeAddress.FirstAddress.RowNumber;
             if (firstRow == 1) return;
 
             int rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
@@ -1476,7 +1476,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void NotifyRangeShiftedRows(XLRange range, Int32 rowsShifted)
+        public void NotifyRangeShiftedRows(XLRange range, int rowsShifted)
         {
             try
             {
@@ -1507,7 +1507,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void NotifyRangeShiftedColumns(XLRange range, Int32 columnsShifted)
+        public void NotifyRangeShiftedColumns(XLRange range, int columnsShifted)
         {
             try
             {
@@ -1538,7 +1538,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLRow Row(Int32 rowNumber, Boolean pingCells)
+        public XLRow Row(int rowNumber, bool pingCells)
         {
             if (rowNumber <= 0 || rowNumber > XLHelper.MaxRowNumber)
                 throw new ArgumentOutOfRangeException(nameof(rowNumber), $"Row number must be between 1 and {XLHelper.MaxRowNumber}");
@@ -1562,12 +1562,12 @@ namespace ClosedXML.Excel
             return row;
         }
 
-        public IXLTable Table(XLRange range, Boolean addToTables, Boolean setAutofilter = true)
+        public IXLTable Table(XLRange range, bool addToTables, bool setAutofilter = true)
         {
             return Table(range, GetNewTableName("Table"), addToTables, setAutofilter);
         }
 
-        public IXLTable Table(XLRange range, String name, Boolean addToTables, Boolean setAutofilter = true)
+        public IXLTable Table(XLRange range, string name, bool addToTables, bool setAutofilter = true)
         {
             CheckRangeNotOverlappingOtherEntities(range);
             XLRangeAddress rangeAddress;
@@ -1610,7 +1610,7 @@ namespace ClosedXML.Excel
 
         private string GetNewTableName(string baseName)
         {
-            var existingTableNames = new HashSet<String>(
+            var existingTableNames = new HashSet<string>(
                 this.Workbook.Worksheets
                     .SelectMany(ws => ws.Tables)
                     .Select(t => t.Name),
@@ -1635,7 +1635,7 @@ namespace ClosedXML.Excel
             return range;
         }
 
-        public XLPivotTable PivotTable(String name)
+        public XLPivotTable PivotTable(string name)
         {
             return (XLPivotTable)PivotTables.PivotTable(name);
         }
@@ -1645,7 +1645,7 @@ namespace ClosedXML.Excel
             return Cells(true, XLCellsUsedOptions.All);
         }
 
-        public override IXLCells Cells(Boolean usedCellsOnly)
+        public override IXLCells Cells(bool usedCellsOnly)
         {
             if (usedCellsOnly)
                 return Cells(true, XLCellsUsedOptions.AllContents);
@@ -1655,7 +1655,7 @@ namespace ClosedXML.Excel
                     .Cells(false, XLCellsUsedOptions.All);
         }
 
-        public override XLCell Cell(String cellAddressInRange)
+        public override XLCell Cell(string cellAddressInRange)
         {
             var cell = base.Cell(cellAddressInRange);
             if (cell != null) return cell;
@@ -1671,7 +1671,7 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        public override XLRange Range(String rangeAddressStr)
+        public override XLRange Range(string rangeAddressStr)
         {
             if (XLHelper.IsValidRangeAddress(rangeAddressStr))
                 return Range(new XLRangeAddress(Worksheet, rangeAddressStr));
@@ -1700,7 +1700,7 @@ namespace ClosedXML.Excel
 
         public IXLSparklineGroups SparklineGroups { get; private set; }
 
-        private Boolean _eventTracking;
+        private bool _eventTracking;
 
         public void SuspendEvents()
         {
@@ -1737,7 +1737,7 @@ namespace ClosedXML.Excel
             get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
         }
 
-        public Object Evaluate(String expression)
+        public object Evaluate(string expression)
         {
             return CalcEngine.Evaluate(expression);
         }
@@ -1750,7 +1750,7 @@ namespace ClosedXML.Excel
             CellsUsed().Cast<XLCell>().ForEach(cell => cell.Evaluate(true));
         }
 
-        public String Author { get; set; }
+        public string Author { get; set; }
 
         public override string ToString()
         {
@@ -1759,7 +1759,7 @@ namespace ClosedXML.Excel
 
         public IXLPictures Pictures { get; private set; }
 
-        public Boolean IsPasswordProtected => Protection.IsPasswordProtected;
+        public bool IsPasswordProtected => Protection.IsPasswordProtected;
 
         public bool IsProtected => Protection.IsProtected;
 
@@ -1813,12 +1813,12 @@ namespace ClosedXML.Excel
             return Pictures.Add(imageFile, name);
         }
 
-        public override Boolean IsEntireRow()
+        public override bool IsEntireRow()
         {
             return true;
         }
 
-        public override Boolean IsEntireColumn()
+        public override bool IsEntireColumn()
         {
             return true;
         }
@@ -1826,7 +1826,7 @@ namespace ClosedXML.Excel
         internal void SetValue<T>(T value, int ro, int co) where T : class
         {
             if (value == null)
-                this.Cell(ro, co).SetValue(String.Empty, setTableHeader: true, checkMergedRanges: false);
+                this.Cell(ro, co).SetValue(string.Empty, setTableHeader: true, checkMergedRanges: false);
             else if (value is IConvertible)
                 this.Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)), setTableHeader: true, checkMergedRanges: false);
             else
@@ -1928,7 +1928,7 @@ namespace ClosedXML.Excel
         {
             Internals.ColumnsCollection.Remove(columnNumber);
 
-            var columnsToMove = new List<Int32>(Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key).OrderBy(c => c));
+            var columnsToMove = new List<int>(Internals.ColumnsCollection.Where(c => c.Key > columnNumber).Select(c => c.Key).OrderBy(c => c));
             foreach (int column in columnsToMove)
             {
                 Internals.ColumnsCollection.Add(column - 1, Internals.ColumnsCollection[column]);
@@ -1942,7 +1942,7 @@ namespace ClosedXML.Excel
         {
             Internals.RowsCollection.Remove(rowNumber);
 
-            var rowsToMove = new List<Int32>(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key).OrderBy(r => r));
+            var rowsToMove = new List<int>(Internals.RowsCollection.Where(c => c.Key > rowNumber).Select(c => c.Key).OrderBy(r => r));
             foreach (int row in rowsToMove)
             {
                 Internals.RowsCollection.Add(row - 1, Worksheet.Internals.RowsCollection[row]);

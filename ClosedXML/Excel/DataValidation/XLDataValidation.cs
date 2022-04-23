@@ -75,14 +75,14 @@ namespace ClosedXML.Excel
             MaxValue = dataValidation.MaxValue;
         }
 
-        public Boolean IsDirty()
+        public bool IsDirty()
         {
             return
                 AllowedValues != XLAllowedValues.AnyValue
                 || (ShowInputMessage &&
-                   (!String.IsNullOrWhiteSpace(InputTitle) || !String.IsNullOrWhiteSpace(InputMessage)))
+                   (!string.IsNullOrWhiteSpace(InputTitle) || !string.IsNullOrWhiteSpace(InputMessage)))
                 || (ShowErrorMessage &&
-                   (!String.IsNullOrWhiteSpace(ErrorTitle) || !String.IsNullOrWhiteSpace(ErrorMessage)));
+                   (!string.IsNullOrWhiteSpace(ErrorTitle) || !string.IsNullOrWhiteSpace(ErrorMessage)));
         }
 
         internal void SplitBy(IXLRangeAddress rangeAddress)
@@ -104,21 +104,21 @@ namespace ClosedXML.Excel
             ShowErrorMessage = true;
             ShowInputMessage = true;
             InCellDropdown = true;
-            InputTitle = String.Empty;
-            InputMessage = String.Empty;
-            ErrorTitle = String.Empty;
-            ErrorMessage = String.Empty;
+            InputTitle = string.Empty;
+            InputMessage = string.Empty;
+            ErrorTitle = string.Empty;
+            ErrorMessage = string.Empty;
             ErrorStyle = XLErrorStyle.Stop;
             Operator = XLOperator.Between;
-            Value = String.Empty;
-            MinValue = String.Empty;
-            MaxValue = String.Empty;
+            Value = string.Empty;
+            MinValue = string.Empty;
+            MaxValue = string.Empty;
         }
 
         #region IXLDataValidation Members
 
-        private String maxValue;
-        private String minValue;
+        private string maxValue;
+        private string minValue;
         public XLAllowedValues AllowedValues { get; set; }
 
         public XLDateCriteria Date
@@ -139,21 +139,21 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; }
         public XLErrorStyle ErrorStyle { get; set; }
-        public String ErrorTitle { get; set; }
-        public Boolean IgnoreBlanks { get; set; }
-        public Boolean InCellDropdown { get; set; }
-        public String InputMessage { get; set; }
-        public String InputTitle { get; set; }
-        public String MaxValue { get => maxValue; set { Validate(value); maxValue = value; } }
-        public String MinValue { get => minValue; set { Validate(value); minValue = value; } }
+        public string ErrorTitle { get; set; }
+        public bool IgnoreBlanks { get; set; }
+        public bool InCellDropdown { get; set; }
+        public string InputMessage { get; set; }
+        public string InputTitle { get; set; }
+        public string MaxValue { get => maxValue; set { Validate(value); maxValue = value; } }
+        public string MinValue { get => minValue; set { Validate(value); minValue = value; } }
         public XLOperator Operator { get; set; }
         public IEnumerable<IXLRange> Ranges => _ranges.AsEnumerable();
 
-        public Boolean ShowErrorMessage { get; set; }
+        public bool ShowErrorMessage { get; set; }
 
-        public Boolean ShowInputMessage { get; set; }
+        public bool ShowInputMessage { get; set; }
 
         public XLTextLengthCriteria TextLength
         {
@@ -173,7 +173,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String Value
+        public string Value
         {
             get { return MinValue; }
             set { MinValue = value; }
@@ -236,18 +236,18 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void Custom(String customValidation)
+        public void Custom(string customValidation)
         {
             AllowedValues = XLAllowedValues.Custom;
             Value = customValidation;
         }
 
-        public void List(String list)
+        public void List(string list)
         {
             List(list, true);
         }
 
-        public void List(String list, Boolean inCellDropdown)
+        public void List(string list, bool inCellDropdown)
         {
             AllowedValues = XLAllowedValues.List;
             InCellDropdown = inCellDropdown;
@@ -259,7 +259,7 @@ namespace ClosedXML.Excel
             List(range, true);
         }
 
-        public void List(IXLRange range, Boolean inCellDropdown)
+        public void List(IXLRange range, bool inCellDropdown)
         {
             List(range.RangeAddress.ToStringFixed(XLReferenceStyle.A1, true));
         }
@@ -285,7 +285,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLDataValidation Members
 
-        private void Validate(String value)
+        private void Validate(string value)
         {
             if (value.Length > 255)
                 throw new ArgumentOutOfRangeException(nameof(value), "The maximum allowed length of the value is 255 characters.");

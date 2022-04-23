@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
     {
         private readonly XLWorkbook _workbook;
 
-        private String name;
+        private string name;
 
         public XLCustomProperty(XLWorkbook workbook)
         {
@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
         #region IXLCustomProperty Members
 
-        public String Name
+        public string Name
         {
             get { return name; }
             set
@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
 
                 if (_workbook.CustomProperties.Any(t => t.Name == value))
                     throw new ArgumentException(
-                        String.Format("This workbook already contains a custom property named '{0}'", value));
+                        string.Format("This workbook already contains a custom property named '{0}'", value));
 
                 name = value;
             }
@@ -38,17 +38,17 @@ namespace ClosedXML.Excel
                 if (Value is DateTime)
                     return XLCustomPropertyType.Date;
                 
-                if (Value is Boolean)
+                if (Value is bool)
                     return XLCustomPropertyType.Boolean;
                 
-                if (Double.TryParse(Value.ToString(), out Double dTest))
+                if (double.TryParse(Value.ToString(), out double dTest))
                     return XLCustomPropertyType.Number;
                 
                 return XLCustomPropertyType.Text;
             }
         }
 
-        public Object Value { get; set; }
+        public object Value { get; set; }
 
         public T GetValue<T>()
         {

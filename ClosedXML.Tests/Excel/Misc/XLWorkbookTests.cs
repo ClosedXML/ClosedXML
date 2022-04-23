@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Excel
             ws.FirstCell().SetValue(1).AddToNamed("Result", XLScope.Worksheet);
             IXLCell cell = wb.Cell("Sheet1!Result");
             Assert.IsNotNull(cell);
-            Assert.AreEqual(1, cell.GetValue<Int32>());
+            Assert.AreEqual(1, cell.GetValue<int>());
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace ClosedXML.Tests.Excel
             ws.FirstCell().SetValue(1).AddToNamed("Result");
             IXLCell cell = wb.Cell("Sheet1!Result");
             Assert.IsNotNull(cell);
-            Assert.AreEqual(1, cell.GetValue<Int32>());
+            Assert.AreEqual(1, cell.GetValue<int>());
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace ClosedXML.Tests.Excel
             IXLCells cells = wb.Cells("Sheet1!Result, ABC");
             Assert.IsNotNull(cells);
             Assert.AreEqual(1, cells.Count());
-            Assert.AreEqual(1, cells.First().GetValue<Int32>());
+            Assert.AreEqual(1, cells.First().GetValue<int>());
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace ClosedXML.Tests.Excel
             IXLCells cells = wb.Cells("Sheet1!Result, ABC");
             Assert.IsNotNull(cells);
             Assert.AreEqual(1, cells.Count());
-            Assert.AreEqual(1, cells.First().GetValue<Int32>());
+            Assert.AreEqual(1, cells.First().GetValue<int>());
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Ranges.Count);
             Assert.AreEqual(1, range.Ranges.Cells().Count());
-            Assert.AreEqual(1, range.Ranges.First().FirstCell().GetValue<Int32>());
+            Assert.AreEqual(1, range.Ranges.First().FirstCell().GetValue<int>());
         }
 
         [Test]
@@ -198,7 +198,7 @@ namespace ClosedXML.Tests.Excel
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Ranges.Count);
             Assert.AreEqual(1, range.Ranges.Cells().Count());
-            Assert.AreEqual(1, range.Ranges.First().FirstCell().GetValue<Int32>());
+            Assert.AreEqual(1, range.Ranges.First().FirstCell().GetValue<int>());
         }
 
         [Test]
@@ -218,7 +218,7 @@ namespace ClosedXML.Tests.Excel
             IXLRange range = wb.Range("Sheet1!Result");
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Cells().Count());
-            Assert.AreEqual(1, range.FirstCell().GetValue<Int32>());
+            Assert.AreEqual(1, range.FirstCell().GetValue<int>());
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace ClosedXML.Tests.Excel
             IXLRange range = wb.Range("Sheet1!Result");
             Assert.IsNotNull(range);
             Assert.AreEqual(1, range.Cells().Count());
-            Assert.AreEqual(1, range.FirstCell().GetValue<Int32>());
+            Assert.AreEqual(1, range.FirstCell().GetValue<int>());
         }
 
         [Test]
@@ -251,7 +251,7 @@ namespace ClosedXML.Tests.Excel
             IXLRanges ranges = wb.Ranges("Sheet1!Result, ABC");
             Assert.IsNotNull(ranges);
             Assert.AreEqual(1, ranges.Cells().Count());
-            Assert.AreEqual(1, ranges.First().FirstCell().GetValue<Int32>());
+            Assert.AreEqual(1, ranges.First().FirstCell().GetValue<int>());
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace ClosedXML.Tests.Excel
             IXLRanges ranges = wb.Ranges("Sheet1!Result, ABC");
             Assert.IsNotNull(ranges);
             Assert.AreEqual(1, ranges.Cells().Count());
-            Assert.AreEqual(1, ranges.First().FirstCell().GetValue<Int32>());
+            Assert.AreEqual(1, ranges.First().FirstCell().GetValue<int>());
         }
 
         [Test]

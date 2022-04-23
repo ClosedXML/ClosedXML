@@ -5,12 +5,12 @@ namespace ClosedXML.Excel
 {
     internal class XLCFColorScaleConverter : IXLCFConverter
     {
-        public ConditionalFormattingRule Convert(IXLConditionalFormat cf, Int32 priority, XLWorkbook.SaveContext context)
+        public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
 
             var colorScale = new ColorScale();
-            for (Int32 i = 1; i <= cf.ContentTypes.Count; i++)
+            for (int i = 1; i <= cf.ContentTypes.Count; i++)
             {
                 var type = cf.ContentTypes[i].ToOpenXml();
                 var val = cf.Values.TryGetValue(i, out XLFormula formula) ? formula?.Value : null;
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
                 colorScale.Append(conditionalFormatValueObject);
             }
 
-            for (Int32 i = 1; i <= cf.Colors.Count; i++)
+            for (int i = 1; i <= cf.Colors.Count; i++)
             {
                 var xlColor = cf.Colors[i];
                 var color = new Color();

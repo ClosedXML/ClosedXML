@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
             Delete(true);
         }
 
-        internal void Delete(Boolean deleteTableField)
+        internal void Delete(bool deleteTableField)
         {
             if (deleteTableField && IsTableColumn())
             {
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
             return RangeAddress.LastAddress.RowNumber - RangeAddress.FirstAddress.RowNumber + 1;
         }
 
-        public IXLRangeColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public IXLRangeColumn Sort(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true)
         {
             base.Sort(1, sortOrder, matchCase, ignoreBlanks);
             return this;
@@ -252,15 +252,15 @@ namespace ClosedXML.Excel
                         {
                             comparison = e.MatchCase
                                              ? thisCell.InnerText.CompareTo(otherCell.InnerText)
-                                             : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
+                                             : string.Compare(thisCell.InnerText, otherCell.InnerText, true);
                         }
                         else if (thisCell.DataType == XLDataType.TimeSpan)
                             comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());
                         else
-                            comparison = Double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).CompareTo(Double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture));
+                            comparison = double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).CompareTo(double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture));
                     }
                     else if (e.MatchCase)
-                        comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), true);
+                        comparison = string.Compare(thisCell.GetString(), otherCell.GetString(), true);
                     else
                         comparison = thisCell.GetString().CompareTo(otherCell.GetString());
                 }
@@ -272,9 +272,9 @@ namespace ClosedXML.Excel
             return 0;
         }
 
-        private XLRangeColumn ColumnShift(Int32 columnsToShift)
+        private XLRangeColumn ColumnShift(int columnsToShift)
         {
-            Int32 columnNumber = ColumnNumber() + columnsToShift;
+            int columnNumber = ColumnNumber() + columnsToShift;
             return Worksheet.Range(
                 RangeAddress.FirstAddress.RowNumber,
                 columnNumber,
@@ -289,7 +289,7 @@ namespace ClosedXML.Excel
             return ColumnLeft();
         }
 
-        IXLRangeColumn IXLRangeColumn.ColumnLeft(Int32 step)
+        IXLRangeColumn IXLRangeColumn.ColumnLeft(int step)
         {
             return ColumnLeft(step);
         }
@@ -299,7 +299,7 @@ namespace ClosedXML.Excel
             return ColumnLeft(1);
         }
 
-        public XLRangeColumn ColumnLeft(Int32 step)
+        public XLRangeColumn ColumnLeft(int step)
         {
             return ColumnShift(step * -1);
         }
@@ -313,7 +313,7 @@ namespace ClosedXML.Excel
             return ColumnRight();
         }
 
-        IXLRangeColumn IXLRangeColumn.ColumnRight(Int32 step)
+        IXLRangeColumn IXLRangeColumn.ColumnRight(int step)
         {
             return ColumnRight(step);
         }
@@ -323,7 +323,7 @@ namespace ClosedXML.Excel
             return ColumnRight(1);
         }
 
-        public XLRangeColumn ColumnRight(Int32 step)
+        public XLRangeColumn ColumnRight(int step)
         {
             return ColumnShift(step);
         }
@@ -369,7 +369,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLRangeColumn ColumnUsed(Boolean includeFormats)
+        public IXLRangeColumn ColumnUsed(bool includeFormats)
         {
             return ColumnUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -384,7 +384,7 @@ namespace ClosedXML.Excel
 
         internal IXLTable Table { get; set; }
 
-        public Boolean IsTableColumn()
+        public bool IsTableColumn()
         {
             return Table != null;
         }

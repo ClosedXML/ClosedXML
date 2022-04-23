@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
                 return matchingAnchor.First();
         }
 
-        public static OpenXmlElement GetAnchorFromImageIndex(WorksheetPart worksheetPart, Int32 index)
+        public static OpenXmlElement GetAnchorFromImageIndex(WorksheetPart worksheetPart, int index)
         {
             var drawingsPart = worksheetPart.DrawingsPart;
             var matchingAnchor = drawingsPart.WorksheetDrawing
@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
                 .FirstOrDefault();
         }
 
-        public static String GetImageRelIdFromAnchor(OpenXmlElement anchor)
+        public static string GetImageRelIdFromAnchor(OpenXmlElement anchor)
         {
             if (!IsAllowedAnchor(anchor))
                 return null;

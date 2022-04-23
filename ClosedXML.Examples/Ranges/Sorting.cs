@@ -5,7 +5,7 @@ namespace ClosedXML.Examples.Misc
 {
     public class Sorting : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using (var wb = new XLWorkbook())
             {
@@ -16,8 +16,8 @@ namespace ClosedXML.Examples.Misc
                 AddTestTable(wsTable);
 
                 wsTable.Row(1).InsertRowsAbove(1);
-                Int32 lastCo = wsTable.LastColumnUsed().ColumnNumber();
-                for (Int32 co = 1; co <= lastCo; co++)
+                int lastCo = wsTable.LastColumnUsed().ColumnNumber();
+                for (int co = 1; co <= lastCo; co++)
                     wsTable.Cell(1, co).Value = "Column" + co.ToString();
 
                 var table = wsTable.RangeUsed().AsTable();
@@ -29,7 +29,7 @@ namespace ClosedXML.Examples.Misc
 
                 wsTable.Row(1).InsertRowsAbove(1);
                 lastCo = wsTable.LastColumnUsed().ColumnNumber();
-                for (Int32 co = 1; co <= lastCo; co++)
+                for (int co = 1; co <= lastCo; co++)
                     wsTable.Cell(1, co).Value = "Column" + co.ToString();
 
                 table = wsTable.RangeUsed().AsTable();

@@ -63,12 +63,12 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
+                var toDelete = new Dictionary<IXLWorksheet, List<int>>();
                 foreach (XLRow r in Rows)
                 {
-                    if (!toDelete.TryGetValue(r.Worksheet, out List<Int32> list))
+                    if (!toDelete.TryGetValue(r.Worksheet, out List<int> list))
                     {
-                        list = new List<Int32>();
+                        list = new List<int>();
                         toDelete.Add(r.Worksheet, list);
                     }
 
@@ -89,31 +89,31 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn)
+        public IXLRows AdjustToContents(int startColumn)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn));
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn)
+        public IXLRows AdjustToContents(int startColumn, int endColumn)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn, endColumn));
             return this;
         }
 
-        public IXLRows AdjustToContents(Double minHeight, Double maxHeight)
+        public IXLRows AdjustToContents(double minHeight, double maxHeight)
         {
             Rows.ForEach(r => r.AdjustToContents(minHeight, maxHeight));
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
+        public IXLRows AdjustToContents(int startColumn, double minHeight, double maxHeight)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn, minHeight, maxHeight));
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
+        public IXLRows AdjustToContents(int startColumn, int endColumn, double minHeight, double maxHeight)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn, endColumn, minHeight, maxHeight));
             return this;
@@ -134,7 +134,7 @@ namespace ClosedXML.Excel
             Group(false);
         }
 
-        public void Group(Int32 outlineLevel)
+        public void Group(int outlineLevel)
         {
             Group(outlineLevel, false);
         }
@@ -144,17 +144,17 @@ namespace ClosedXML.Excel
             Ungroup(false);
         }
 
-        public void Group(Boolean collapse)
+        public void Group(bool collapse)
         {
             Rows.ForEach(r => r.Group(collapse));
         }
 
-        public void Group(Int32 outlineLevel, Boolean collapse)
+        public void Group(int outlineLevel, bool collapse)
         {
             Rows.ForEach(r => r.Group(outlineLevel, collapse));
         }
 
-        public void Ungroup(Boolean ungroupFromAll)
+        public void Ungroup(bool ungroupFromAll)
         {
             Rows.ForEach(r => r.Ungroup(ungroupFromAll));
         }
@@ -186,7 +186,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLCells CellsUsed(Boolean includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             return CellsUsed(includeFormats
                 ? XLCellsUsedOptions.All

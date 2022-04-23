@@ -135,7 +135,7 @@ namespace ClosedXML.Tests
             return stringOne == stringOther;
         }
 
-        private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnFormat, Boolean ignoreGuids)
+        private static string RemoveIgnoredParts(this string s, Uri uri, bool ignoreColumnFormat, bool ignoreGuids)
         {
             foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
                 s = pair.Value.Replace(s, "");
@@ -203,14 +203,14 @@ namespace ClosedXML.Tests
         private static readonly Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
         private static readonly Regex columnRegex = new Regex("(<x:col .*?/>)", RegexOptions.Compiled);
 
-        private static String RemoveColumnFormatSection(String s)
+        private static string RemoveColumnFormatSection(string s)
         {
-            var replacements = new Dictionary<String, String>();
+            var replacements = new Dictionary<string, string>();
 
             foreach (var m in columnRegex.Matches(s).OfType<Match>())
             {
                 var original = m.Groups[0].Value;
-                replacements.Add(original, String.Empty);
+                replacements.Add(original, string.Empty);
             }
 
             foreach (var r in replacements)
@@ -222,7 +222,7 @@ namespace ClosedXML.Tests
 
         private static readonly Regex guidRegex = new Regex(@"{[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}}", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        private static String RemoveGuids(String s)
+        private static string RemoveGuids(string s)
         {
             return guidRegex.Replace(s, delegate (Match m)
             {

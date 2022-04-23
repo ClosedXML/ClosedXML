@@ -10,9 +10,9 @@ namespace ClosedXML.Excel
     internal class XLDateTimeGroupFilteredColumn : IXLDateTimeGroupFilteredColumn
     {
         private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
+        private readonly int _column;
 
-        public XLDateTimeGroupFilteredColumn(XLAutoFilter autoFilter, Int32 column)
+        public XLDateTimeGroupFilteredColumn(XLAutoFilter autoFilter, int column)
         {
             _autoFilter = autoFilter;
             _column = column;
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            Func<Object, Boolean> condition = date2 => IsMatch(date, (DateTime) date2, dateTimeGrouping);
+            Func<object, bool> condition = date2 => IsMatch(date, (DateTime) date2, dateTimeGrouping);
 
             _autoFilter.Filters[_column].Add(new XLFilter
             {
@@ -41,9 +41,9 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        internal static Boolean IsMatch(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)
+        internal static bool IsMatch(DateTime date1, DateTime date2, XLDateTimeGrouping dateTimeGrouping)
         {
-            Boolean isMatch = true;
+            bool isMatch = true;
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Year) isMatch &= date1.Year.Equals(date2.Year);
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Month) isMatch &= date1.Month.Equals(date2.Month);
             if (isMatch && dateTimeGrouping >= XLDateTimeGrouping.Day) isMatch &= date1.Day.Equals(date2.Day);

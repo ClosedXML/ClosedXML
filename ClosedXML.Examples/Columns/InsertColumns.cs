@@ -6,7 +6,7 @@ namespace ClosedXML.Examples.Columns
 {
     public class InsertColumns : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Inserting Columns");

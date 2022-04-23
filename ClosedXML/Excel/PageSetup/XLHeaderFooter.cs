@@ -33,24 +33,24 @@ namespace ClosedXML.Excel
         public IXLHFItem Center { get; private set; }
         public IXLHFItem Right { get; private set; }
 
-        public String GetText(XLHFOccurrence occurrence)
+        public string GetText(XLHFOccurrence occurrence)
         {
             //if (innerTexts.ContainsKey(occurrence)) return innerTexts[occurrence];
 
-            var retVal = String.Empty;
+            var retVal = string.Empty;
             var leftText = Left.GetText(occurrence);
             var centerText = Center.GetText(occurrence);
             var rightText = Right.GetText(occurrence);
-            retVal += leftText.Length > 0 ? "&L" + leftText : String.Empty;
-            retVal += centerText.Length > 0 ? "&C" + centerText : String.Empty;
-            retVal += rightText.Length > 0 ? "&R" + rightText : String.Empty;
+            retVal += leftText.Length > 0 ? "&L" + leftText : string.Empty;
+            retVal += centerText.Length > 0 ? "&C" + centerText : string.Empty;
+            retVal += rightText.Length > 0 ? "&R" + rightText : string.Empty;
             if (retVal.Length > 255)
                 throw new ArgumentOutOfRangeException("Headers and Footers cannot be longer than 255 characters (including style markups)");
             return retVal;
         }
 
-        private Dictionary<XLHFOccurrence, String> innerTexts = new Dictionary<XLHFOccurrence, String>();
-        internal void SetInnerText(XLHFOccurrence occurrence, String text)
+        private Dictionary<XLHFOccurrence, string> innerTexts = new Dictionary<XLHFOccurrence, string>();
+        internal void SetInnerText(XLHFOccurrence occurrence, string text)
         {
             var parsedElements = ParseFormattedHeaderFooterText(text);
 
@@ -113,10 +113,10 @@ namespace ClosedXML.Excel
             return parsedElements;
         }
 
-        private Dictionary<XLHFOccurrence, String> _initialTexts;
+        private Dictionary<XLHFOccurrence, string> _initialTexts;
 
-        private Boolean _changed;
-        internal Boolean Changed
+        private bool _changed;
+        internal bool Changed
         {
             get
             {

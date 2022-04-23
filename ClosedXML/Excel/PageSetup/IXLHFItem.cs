@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         /// Gets the text of the specified header/footer occurrence.
         /// </summary>
         /// <param name="occurrence">The occurrence.</param>
-        String GetText(XLHFOccurrence occurrence);
+        string GetText(XLHFOccurrence occurrence);
 
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="text">The text to add to this header/footer item.</param>
         /// <param name="occurrence">The occurrence for the text.</param>
-        IXLRichString AddText(String text, XLHFOccurrence occurrence);
+        IXLRichString AddText(string text, XLHFOccurrence occurrence);
 
         /// <summary>
         /// Adds the given predefined text to this header/footer item.
@@ -43,6 +43,6 @@ namespace ClosedXML.Excel
         /// <param name="occurrence">The occurrence to clear.</param>
         void Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages);
 
-        IXLRichString AddImage(String imagePath, XLHFOccurrence occurrence = XLHFOccurrence.AllPages);
+        IXLRichString AddImage(string imagePath, XLHFOccurrence occurrence = XLHFOccurrence.AllPages);
     }
 }

@@ -4,15 +4,15 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLColumnsCollection : IDictionary<Int32, XLColumn>
+    internal class XLColumnsCollection : IDictionary<int, XLColumn>
     {
-        public void ShiftColumnsRight(Int32 startingColumn, Int32 columnsToShift)
+        public void ShiftColumnsRight(int startingColumn, int columnsToShift)
         {
             foreach (var co in _dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
             {
                 var columnToMove = _dictionary[co];
                 _dictionary.Remove(co);
-                Int32 newColumnNum = co + columnsToShift;
+                int newColumnNum = co + columnsToShift;
                 if (newColumnNum <= XLHelper.MaxColumnNumber)
                 {
                     columnToMove.SetColumnNumber(newColumnNum);
@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private readonly Dictionary<Int32, XLColumn> _dictionary = new Dictionary<Int32, XLColumn>();
+        private readonly Dictionary<int, XLColumn> _dictionary = new Dictionary<int, XLColumn>();
 
         public void Add(int key, XLColumn value)
         {
@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
             return _dictionary.GetEnumerator();
         }
 
-        public void RemoveAll(Func<XLColumn, Boolean> predicate)
+        public void RemoveAll(Func<XLColumn, bool> predicate)
         {
             _dictionary.RemoveAll(predicate);
         }

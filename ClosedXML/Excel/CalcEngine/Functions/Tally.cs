@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal class Tally : IEnumerable<Object>
+    internal class Tally : IEnumerable<object>
     {
         private readonly List<object> _list = new List<object>();
         private readonly bool NumbersOnly;
@@ -64,7 +64,7 @@ namespace ClosedXML.Excel.CalcEngine
             _numericValues = null;
         }
 
-        public void AddValue(Object v)
+        public void AddValue(object v)
         {
             _list.Add(v);
             _numericValues = null;
@@ -260,7 +260,7 @@ namespace ClosedXML.Excel.CalcEngine
                 d = Convert.ToDouble(value);
                 return true;
             }
-            else if (value is Boolean b)
+            else if (value is bool b)
             {
                 if (!aggressiveConversion) return false;
 

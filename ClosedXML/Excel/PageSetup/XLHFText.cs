@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
 
         public XLRichString RichText { get; private set; }
 
-        public String GetHFText(String prevText)
+        public string GetHFText(string prevText)
         {
             var wsFont = _hfItem.HeaderFooter.Worksheet.Style.Font;
 

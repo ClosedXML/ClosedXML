@@ -15,7 +15,7 @@ namespace ClosedXML.Tests.Utils
             : this(path, false)
         { }
 
-        internal TemporaryFile(String path, bool preserve)
+        internal TemporaryFile(string path, bool preserve)
         {
             this.Path = path;
             this.Preserve = preserve;

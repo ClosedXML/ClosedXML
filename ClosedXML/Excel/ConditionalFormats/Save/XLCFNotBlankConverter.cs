@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
             var cfStyle = (cf.Style as XLStyle).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle];
+                conditionalFormattingRule.FormatId = (uint)context.DifferentialFormats[cfStyle];
 
             var formula = new Formula { Text = "LEN(TRIM(" + cf.Range.RangeAddress.FirstAddress.ToStringRelative(false) + "))>0" };
 

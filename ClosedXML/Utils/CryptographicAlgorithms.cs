@@ -21,15 +21,15 @@ namespace ClosedXML.Utils
             return Convert.ToBase64String(plainTextBytes);
         }
 
-        public static String GenerateNewSalt(Algorithm algorithm)
+        public static string GenerateNewSalt(Algorithm algorithm)
         {
             if (RequiresSalt(algorithm))
                 return GetSalt();
             else
-                return String.Empty;
+                return string.Empty;
         }
 
-        public static String GetPasswordHash(Algorithm algorithm, String password, String salt = "", UInt32 spinCount = 0)
+        public static string GetPasswordHash(Algorithm algorithm, string password, string salt = "", uint spinCount = 0)
         {
             if (password == null)
                 throw new ArgumentNullException(nameof(password));
@@ -62,7 +62,7 @@ namespace ClosedXML.Utils
             }
         }
 
-        public static Boolean RequiresSalt(Algorithm algorithm)
+        public static bool RequiresSalt(Algorithm algorithm)
         {
             switch (algorithm)
             {
@@ -77,7 +77,7 @@ namespace ClosedXML.Utils
             }
         }
 
-        private static String GetDefaultPasswordHash(String password)
+        private static string GetDefaultPasswordHash(string password)
         {
             if (password == null)
                 throw new ArgumentNullException(nameof(password));
@@ -105,7 +105,7 @@ namespace ClosedXML.Utils
             return Convert.ToString(hash, 16).ToUpperInvariant();
         }
 
-        private static String GetSha512PasswordHash(String password, String salt, UInt32 spinCount)
+        private static string GetSha512PasswordHash(string password, string salt, uint spinCount)
         {
             if (password == null)
                 throw new ArgumentNullException(nameof(password));

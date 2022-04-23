@@ -56,7 +56,7 @@ namespace ClosedXML.Excel.InsertData
 
             var memberInfo = _members[propertyIndex];
             var fieldName = XLColumnAttribute.GetHeader(memberInfo);
-            if (String.IsNullOrWhiteSpace(fieldName))
+            if (string.IsNullOrWhiteSpace(fieldName))
                 fieldName = memberInfo.Name;
 
             return fieldName;

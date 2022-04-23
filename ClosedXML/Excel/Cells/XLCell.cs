@@ -64,7 +64,7 @@ namespace ClosedXML.Excel
 
         #region Fields
 
-        private string _cellValue = String.Empty;
+        private string _cellValue = string.Empty;
 
         private XLComment _comment;
         private XLDataType _dataType;
@@ -183,7 +183,7 @@ namespace ClosedXML.Excel
                 return this.Clear(XLClearOptions.Contents);
 
             _richText = null;
-            _formulaA1 = String.Empty;
+            _formulaA1 = string.Empty;
             _formulaR1C1 = null;
             cachedValue = null;
 
@@ -213,11 +213,11 @@ namespace ClosedXML.Excel
         }
 
         // TODO: Replace with (string, bool) ValueTuple later
-        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style, Boolean acceptString)
+        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style, bool acceptString)
         {
             string parsedValue;
             bool parsed;
-            if (value is String && acceptString || value is char || value is Guid || value is Enum)
+            if (value is string && acceptString || value is char || value is Guid || value is Enum)
             {
                 parsedValue = value.ObjectToInvariantString();
                 _dataType = XLDataType.Text;
@@ -244,7 +244,7 @@ namespace ClosedXML.Excel
                 parsed = true;
                 SetTimeSpanFormat(style);
             }
-            else if (value is Boolean b)
+            else if (value is bool b)
             {
                 parsedValue = b ? "1" : "0";
                 _dataType = XLDataType.Boolean;
@@ -279,7 +279,7 @@ namespace ClosedXML.Excel
 
         private string DeduceCellValueByParsing(string value, XLStyleValue style)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 _dataType = XLDataType.Text;
             }
@@ -298,7 +298,7 @@ namespace ClosedXML.Excel
                 this.Style.SetIncludeQuotePrefix();
             }
             else if (!string.Equals(value.Trim(), "NaN", StringComparison.OrdinalIgnoreCase) &&
-                     Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
+                     double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out double _))
                 _dataType = XLDataType.Number;
             else if (TimeSpan.TryParse(value, out TimeSpan ts))
             {
@@ -310,7 +310,7 @@ namespace ClosedXML.Excel
                 value = dt.ToOADate().ToInvariantString();
                 SetDateTimeFormat(style, dt.Date == dt);
             }
-            else if (Boolean.TryParse(value, out Boolean b))
+            else if (bool.TryParse(value, out bool b))
             {
                 value = b ? "1" : "0";
                 _dataType = XLDataType.Boolean;
@@ -453,7 +453,7 @@ namespace ClosedXML.Excel
                 IsEvaluating = false;
             }
 
-            if (retVal is IEnumerable retValEnumerable && !(retVal is String))
+            if (retVal is IEnumerable retValEnumerable && !(retVal is string))
                 return retValEnumerable.Cast<object>().First();
 
             return retVal;
@@ -473,7 +473,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
-        public Object Evaluate(Boolean force = false)
+        public object Evaluate(bool force = false)
         {
             if (force || NeedsRecalculation)
             {
@@ -491,12 +491,12 @@ namespace ClosedXML.Excel
             return CachedValue;
         }
 
-        internal void SetInternalCellValueString(String cellValue)
+        internal void SetInternalCellValueString(string cellValue)
         {
             SetInternalCellValueString(cellValue, validate: false, parseToCachedValue: this.HasFormula);
         }
 
-        private void SetInternalCellValueString(String cellValue, Boolean validate, Boolean parseToCachedValue)
+        private void SetInternalCellValueString(string cellValue, bool validate, bool parseToCachedValue)
         {
             if (validate)
             {
@@ -536,7 +536,7 @@ namespace ClosedXML.Excel
 
         internal void SetDateValue(string text)
         {
-            if (Double.TryParse(text, XLHelper.NumberStyle, XLHelper.ParseCulture, out double doubleValue))
+            if (double.TryParse(text, XLHelper.NumberStyle, XLHelper.ParseCulture, out double doubleValue))
                 SetInternalCellValueString(doubleValue.ToInvariantString());
             else
                 SetInternalCellValueString(DateTime.Parse(text).ToOADate().ToInvariantString());
@@ -547,12 +547,12 @@ namespace ClosedXML.Excel
             this._dataType = dataType;
         }
 
-        private Object ParseCellValueFromString()
+        private object ParseCellValueFromString()
         {
-            return ParseCellValueFromString(_cellValue, _dataType, out String error);
+            return ParseCellValueFromString(_cellValue, _dataType, out string error);
         }
 
-        private Object ParseCellValueFromString(String cellValue, XLDataType dataType, out String error)
+        private object ParseCellValueFromString(string cellValue, XLDataType dataType, out string error)
         {
             error = "";
             if (string.IsNullOrEmpty(cellValue))
@@ -560,7 +560,7 @@ namespace ClosedXML.Excel
 
             if (dataType == XLDataType.Boolean)
             {
-                if (bool.TryParse(cellValue, out Boolean b))
+                if (bool.TryParse(cellValue, out bool b))
                     return b;
                 else if (cellValue == "0")
                     return false;
@@ -572,7 +572,7 @@ namespace ClosedXML.Excel
 
             if (dataType == XLDataType.DateTime)
             {
-                if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d))
+                if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out double d))
                 {
                     if (d.IsValidOADateNumber())
                         return DateTime.FromOADate(d);
@@ -590,14 +590,14 @@ namespace ClosedXML.Excel
             if (dataType == XLDataType.Number)
             {
                 var v = cellValue;
-                Double factor = 1.0;
+                double factor = 1.0;
                 if (v.EndsWith("%"))
                 {
                     v = v.Substring(0, v.Length - 1);
                     factor = 1 / 100.0;
                 }
 
-                if (Double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out Double d))
+                if (double.TryParse(v, XLHelper.NumberStyle, CultureInfo.InvariantCulture, out double d))
                     return d * factor;
                 else
                 {
@@ -610,7 +610,7 @@ namespace ClosedXML.Excel
             {
                 if (TimeSpan.TryParse(cellValue, out TimeSpan ts))
                     return ts;
-                else if (Double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double d))
+                else if (double.TryParse(cellValue, XLHelper.NumberStyle, XLHelper.ParseCulture, out double d))
                     return XLHelper.GetTimeSpan(d);
                 else
                 {
@@ -642,8 +642,8 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_formulaA1) ||
-                    !String.IsNullOrEmpty(_formulaR1C1))
+                if (!string.IsNullOrWhiteSpace(_formulaA1) ||
+                    !string.IsNullOrEmpty(_formulaR1C1))
                 {
                     return Evaluate();
                 }
@@ -656,7 +656,7 @@ namespace ClosedXML.Excel
                 if (IsInferiorMergedCell())
                     return;
 
-                FormulaA1 = String.Empty;
+                FormulaA1 = string.Empty;
 
                 if (value is XLCells) throw new ArgumentException("Cannot assign IXLCells object to the cell value.");
 
@@ -696,22 +696,22 @@ namespace ClosedXML.Excel
             return InsertTable(data, tableName, true);
         }
 
-        public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable)
+        public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable)
         {
             return InsertTable(data, tableName, createTable, addHeadings: true, transpose: false);
         }
 
-        public IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable, Boolean addHeadings, Boolean transpose)
+        public IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable, bool addHeadings, bool transpose)
         {
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
             return InsertTableInternal(reader, tableName, createTable, addHeadings, transpose);
         }
 
-        private IXLTable InsertTableInternal(IInsertDataReader reader, String tableName, Boolean createTable, Boolean addHeadings,
-            Boolean transpose)
+        private IXLTable InsertTableInternal(IInsertDataReader reader, string tableName, bool createTable, bool addHeadings,
+            bool transpose)
         {
             if (createTable && this.Worksheet.Tables.Any(t => t.Contains(this)))
-                throw new InvalidOperationException(String.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
+                throw new InvalidOperationException(string.Format("This cell '{0}' is already part of a table.", this.Address.ToString()));
 
             var range = InsertDataInternal(reader, addHeadings, transpose);
 
@@ -728,17 +728,17 @@ namespace ClosedXML.Excel
             return InsertTable(data, null, true);
         }
 
-        public IXLTable InsertTable(DataTable data, Boolean createTable)
+        public IXLTable InsertTable(DataTable data, bool createTable)
         {
             return InsertTable(data, null, createTable);
         }
 
-        public IXLTable InsertTable(DataTable data, String tableName)
+        public IXLTable InsertTable(DataTable data, string tableName)
         {
             return InsertTable(data, tableName, true);
         }
 
-        public IXLTable InsertTable(DataTable data, String tableName, Boolean createTable)
+        public IXLTable InsertTable(DataTable data, string tableName, bool createTable)
         {
             if (data == null || data.Columns.Count == 0)
                 return null;
@@ -753,7 +753,7 @@ namespace ClosedXML.Excel
             return InsertTableInternal(reader, tableName, createTable, addHeadings: true, transpose: false);
         }
 
-        internal XLRange InsertDataInternal(IInsertDataReader reader, Boolean addHeadings, Boolean transpose)
+        internal XLRange InsertDataInternal(IInsertDataReader reader, bool addHeadings, bool transpose)
         {
             if (reader == null)
                 return null;
@@ -873,15 +873,15 @@ namespace ClosedXML.Excel
 
         public IXLRange InsertData(IEnumerable data)
         {
-            if (data == null || data is String)
+            if (data == null || data is string)
                 return null;
 
             return InsertData(data, transpose: false);
         }
 
-        public IXLRange InsertData(IEnumerable data, Boolean transpose)
+        public IXLRange InsertData(IEnumerable data, bool transpose)
         {
-            if (data == null || data is String)
+            if (data == null || data is string)
                 return null;
 
             var reader = InsertDataReaderFactory.Instance.CreateReader(data);
@@ -932,7 +932,7 @@ namespace ClosedXML.Excel
                                 _cellValue = ts.TotalDays.ToInvariantString();
                                 break;
 
-                            case Boolean b:
+                            case bool b:
                                 _cellValue = b ? "true" : "false";
                                 break;
 
@@ -943,9 +943,9 @@ namespace ClosedXML.Excel
                     }
                     else
                     {
-                        var v = ParseCellValueFromString(_cellValue, value, out String error);
+                        var v = ParseCellValueFromString(_cellValue, value, out string error);
 
-                        if (!String.IsNullOrWhiteSpace(error))
+                        if (!string.IsNullOrWhiteSpace(error))
                             throw new ArgumentException(error, nameof(value));
 
                         _cellValue = v?.ObjectToInvariantString() ?? "";
@@ -967,7 +967,7 @@ namespace ClosedXML.Excel
 
                                 break;
 
-                            case Boolean b:
+                            case bool b:
                                 _cellValue = b ? "1" : "0";
                                 break;
                         }
@@ -1004,8 +1004,8 @@ namespace ClosedXML.Excel
                 {
                     SetHyperlink(null);
                     _richText = null;
-                    _cellValue = String.Empty;
-                    FormulaA1 = String.Empty;
+                    _cellValue = string.Empty;
+                    FormulaA1 = string.Empty;
                 }
 
                 if (clearOptions.HasFlag(XLClearOptions.DataType))
@@ -1051,15 +1051,15 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1))
+                if (string.IsNullOrWhiteSpace(_formulaA1))
                 {
-                    if (!String.IsNullOrWhiteSpace(_formulaR1C1))
+                    if (!string.IsNullOrWhiteSpace(_formulaR1C1))
                     {
                         _formulaA1 = GetFormulaA1(_formulaR1C1);
                         return FormulaA1;
                     }
 
-                    return String.Empty;
+                    return string.Empty;
                 }
 
                 if (_formulaA1.Trim()[0] == '=')
@@ -1078,7 +1078,7 @@ namespace ClosedXML.Excel
 
                 InvalidateFormula();
 
-                _formulaA1 = String.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaA1 = string.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaR1C1 = null;
             }
@@ -1088,7 +1088,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaR1C1))
+                if (string.IsNullOrWhiteSpace(_formulaR1C1))
                     _formulaR1C1 = GetFormulaR1C1(FormulaA1);
 
                 return _formulaR1C1;
@@ -1101,7 +1101,7 @@ namespace ClosedXML.Excel
 
                 InvalidateFormula();
 
-                _formulaR1C1 = String.IsNullOrWhiteSpace(value) ? null : value;
+                _formulaR1C1 = string.IsNullOrWhiteSpace(value) ? null : value;
 
                 _formulaA1 = null;
             }
@@ -1189,7 +1189,7 @@ namespace ClosedXML.Excel
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_formulaA1) && String.IsNullOrEmpty(_formulaR1C1))
+                if (string.IsNullOrWhiteSpace(_formulaA1) && string.IsNullOrEmpty(_formulaR1C1))
                     return false;
 
                 if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
@@ -1235,9 +1235,9 @@ namespace ClosedXML.Excel
         /// </summary>
         private long NeedsRecalculationEvaluatedAtVersion { get; set; }
 
-        private Object cachedValue;
+        private object cachedValue;
 
-        public Object CachedValue
+        public object CachedValue
         {
             get
             {
@@ -1290,7 +1290,7 @@ namespace ClosedXML.Excel
             return CreateComment(shapeId: null);
         }
 
-        public Boolean IsMerged()
+        public bool IsMerged()
         {
             return Worksheet.Internals.MergedRanges.Contains(this);
         }
@@ -1304,20 +1304,20 @@ namespace ClosedXML.Excel
                 .FirstOrDefault();
         }
 
-        public Boolean IsEmpty()
+        public bool IsEmpty()
         {
             return IsEmpty(XLCellsUsedOptions.AllContents);
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public Boolean IsEmpty(Boolean includeFormats)
+        public bool IsEmpty(bool includeFormats)
         {
             return IsEmpty(includeFormats
                 ? XLCellsUsedOptions.All
                 : XLCellsUsedOptions.AllContents);
         }
 
-        public Boolean IsEmpty(XLCellsUsedOptions options)
+        public bool IsEmpty(XLCellsUsedOptions options)
         {
             if (options.HasFlag(XLCellsUsedOptions.Contents))
             {
@@ -1381,7 +1381,7 @@ namespace ClosedXML.Excel
             return target;
         }
 
-        public IXLCell CopyTo(String target)
+        public IXLCell CopyTo(string target)
         {
             return CopyTo(GetTargetCell(target, Worksheet));
         }
@@ -1391,24 +1391,24 @@ namespace ClosedXML.Excel
             return CopyFrom(otherCell as XLCell, XLCellCopyOptions.All);
         }
 
-        public IXLCell CopyFrom(String otherCell)
+        public IXLCell CopyFrom(string otherCell)
         {
             return CopyFrom(GetTargetCell(otherCell, Worksheet));
         }
 
-        public IXLCell SetFormulaA1(String formula)
+        public IXLCell SetFormulaA1(string formula)
         {
             FormulaA1 = formula;
             return this;
         }
 
-        public IXLCell SetFormulaR1C1(String formula)
+        public IXLCell SetFormulaR1C1(string formula)
         {
             FormulaR1C1 = formula;
             return this;
         }
 
-        public Boolean HasSparkline => Sparkline != null;
+        public bool HasSparkline => Sparkline != null;
 
         /// <summary> The sparkline assigned to the cell </summary>
         public IXLSparkline Sparkline => Worksheet.SparklineGroups.GetSparkline(this);
@@ -1418,7 +1418,7 @@ namespace ClosedXML.Excel
             return FindDataValidation() ?? CreateDataValidation();
         }
 
-        public Boolean HasDataValidation
+        public bool HasDataValidation
         {
             get { return FindDataValidation() != null; }
         }
@@ -1462,7 +1462,7 @@ namespace ClosedXML.Excel
             return AsRange().AddConditionalFormat();
         }
 
-        public Boolean Active
+        public bool Active
         {
             get { return Worksheet.ActiveCell == this; }
             set
@@ -1474,24 +1474,24 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCell SetActive(Boolean value = true)
+        public IXLCell SetActive(bool value = true)
         {
             Active = value;
             return this;
         }
 
-        public Boolean HasHyperlink
+        public bool HasHyperlink
         {
             get { return _hyperlink != null; }
         }
 
-        public Boolean TryGetValue<T>(out T value)
+        public bool TryGetValue<T>(out T value)
         {
             var targetType = typeof(T);
             var underlyingType = targetType.GetUnderlyingType();
             var isNullable = targetType.IsNullableType();
 
-            Object currentValue;
+            object currentValue;
             try
             {
                 currentValue = Value;
@@ -1503,13 +1503,13 @@ namespace ClosedXML.Excel
                 return false;
             }
 
-            if (isNullable && (currentValue == null || currentValue is string s && String.IsNullOrEmpty(s)))
+            if (isNullable && (currentValue == null || currentValue is string s && string.IsNullOrEmpty(s)))
             {
                 value = default;
                 return true;
             }
 
-            if (targetType != typeof(String) // Strings are handled later and have some specifics to UTF handling
+            if (targetType != typeof(string) // Strings are handled later and have some specifics to UTF handling
                 && currentValue is T t)
             {
                 value = t;
@@ -1651,7 +1651,7 @@ namespace ClosedXML.Excel
 
         private static bool TryGetStringValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) == typeof(String))
+            if (typeof(T) == typeof(string))
             {
                 var s = currentValue.ToString();
                 var matches = utfPattern.Matches(s);
@@ -1686,9 +1686,9 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        private static Boolean TryGetBooleanValue<T>(out T value, object currentValue)
+        private static bool TryGetBooleanValue<T>(out T value, object currentValue)
         {
-            if (typeof(T) != typeof(Boolean) && typeof(T) != typeof(Boolean?))
+            if (typeof(T) != typeof(bool) && typeof(T) != typeof(bool?))
             {
                 value = default;
                 return false;
@@ -1696,7 +1696,7 @@ namespace ClosedXML.Excel
 
             if (currentValue is T v) { value = v; return true; }
 
-            if (!Boolean.TryParse(currentValue.ToString(), out Boolean b))
+            if (!bool.TryParse(currentValue.ToString(), out bool b))
             {
                 value = default;
                 return false;
@@ -1706,7 +1706,7 @@ namespace ClosedXML.Excel
             return true;
         }
 
-        private Boolean TryGetHyperlink<T>(out T value)
+        private bool TryGetHyperlink<T>(out T value)
         {
             if (typeof(T) == typeof(XLHyperlink))
             {
@@ -1722,9 +1722,9 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        private delegate Boolean ParseFunction<T>(String s, NumberStyles style, IFormatProvider provider, out T result);
+        private delegate bool ParseFunction<T>(string s, NumberStyles style, IFormatProvider provider, out T result);
 
-        private static Boolean TryGetBasicValue<T, U>(String currentValue, ParseFunction<U> parseFunction, out T value)
+        private static bool TryGetBasicValue<T, U>(string currentValue, ParseFunction<U> parseFunction, out T value)
         {
             if (parseFunction.Invoke(currentValue, NumberStyles.Any, null, out U result))
             {
@@ -1771,7 +1771,7 @@ namespace ClosedXML.Excel
 
         #endregion IXLStylized Members
 
-        private Boolean SetTableHeaderValue(object value)
+        private bool SetTableHeaderValue(object value)
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowHeaderRow))
             {
@@ -1788,7 +1788,7 @@ namespace ClosedXML.Excel
             return false;
         }
 
-        private Boolean SetTableTotalsRowLabel(object value)
+        private bool SetTableTotalsRowLabel(object value)
         {
             foreach (var table in Worksheet.Tables.Where(t => t.ShowTotalsRow))
             {
@@ -1891,7 +1891,7 @@ namespace ClosedXML.Excel
             Style = styleToUse;
         }
 
-        public Boolean IsDefaultWorksheetStyle()
+        public bool IsDefaultWorksheetStyle()
         {
             return StyleValue == Worksheet.StyleValue;
         }
@@ -1912,7 +1912,7 @@ namespace ClosedXML.Excel
         {
             var style = GetStyleForRead();
             return _dataType == XLDataType.Number
-                   && String.IsNullOrWhiteSpace(style.NumberFormat.Format)
+                   && string.IsNullOrWhiteSpace(style.NumberFormat.Format)
                    && ((style.NumberFormat.NumberFormatId >= 14
                         && style.NumberFormat.NumberFormatId <= 22)
                        || (style.NumberFormat.NumberFormatId >= 45
@@ -1922,7 +1922,7 @@ namespace ClosedXML.Excel
         private string GetFormat()
         {
             var style = GetStyleForRead();
-            if (String.IsNullOrWhiteSpace(style.NumberFormat.Format))
+            if (string.IsNullOrWhiteSpace(style.NumberFormat.Format))
             {
                 var formatCodes = XLPredefinedFormat.FormatCodes;
                 if (formatCodes.TryGetValue(style.NumberFormat.NumberFormatId, out string format))
@@ -1946,7 +1946,7 @@ namespace ClosedXML.Excel
                 return false;
         }
 
-        private Boolean SetRange(Object rangeObject)
+        private bool SetRange(object rangeObject)
         {
             var asRange = (rangeObject as XLRangeBase)
                        ?? (rangeObject as XLCell)?.AsRange();
@@ -2120,11 +2120,11 @@ namespace ClosedXML.Excel
                 return;
             }
 
-            FormulaA1 = String.Empty;
+            FormulaA1 = string.Empty;
             _richText = null;
 
             var style = GetStyleForRead();
-            Boolean parsed = false;
+            bool parsed = false;
             string parsedValue = string.Empty;
 
             ////
@@ -2164,7 +2164,7 @@ namespace ClosedXML.Excel
             CachedValue = null;
         }
 
-        private void SetDateTimeFormat(XLStyleValue style, Boolean onlyDatePart)
+        private void SetDateTimeFormat(XLStyleValue style, bool onlyDatePart)
         {
             _dataType = XLDataType.DateTime;
 
@@ -2193,8 +2193,8 @@ namespace ClosedXML.Excel
         private string GetFormula(string strValue, FormulaConversionType conversionType, int rowsToShift,
                                   int columnsToShift)
         {
-            if (String.IsNullOrWhiteSpace(strValue))
-                return String.Empty;
+            if (string.IsNullOrWhiteSpace(strValue))
+                return string.Empty;
 
             var value = ">" + strValue + "<";
 
@@ -2283,19 +2283,19 @@ namespace ClosedXML.Excel
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
                         _columnNumber +
-                        Int32.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
+                        int.Parse(columnPart.Substring(bIndex + 1, columnPart.Length - bIndex - 2)) + columnsToShift
                         );
                 }
                 else if (mIndex >= 0)
                 {
                     columnToReturn = XLHelper.GetColumnLetterFromNumber(
-                        _columnNumber + Int32.Parse(columnPart.Substring(mIndex)) + columnsToShift
+                        _columnNumber + int.Parse(columnPart.Substring(mIndex)) + columnsToShift
                         );
                 }
                 else
                 {
                     columnToReturn = "$" +
-                                     XLHelper.GetColumnLetterFromNumber(Int32.Parse(columnPart.Substring(1)) +
+                                     XLHelper.GetColumnLetterFromNumber(int.Parse(columnPart.Substring(1)) +
                                                                         columnsToShift);
                 }
             }
@@ -2314,11 +2314,11 @@ namespace ClosedXML.Excel
                 if (bIndex >= 0)
                 {
                     rowToReturn =
-                        (_rowNumber + Int32.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
+                        (_rowNumber + int.Parse(rowPart.Substring(bIndex + 1, rowPart.Length - bIndex - 2)) +
                          rowsToShift).ToString();
                 }
                 else
-                    rowToReturn = "$" + (Int32.Parse(rowPart.Substring(1)) + rowsToShift);
+                    rowToReturn = "$" + (int.Parse(rowPart.Substring(1)) + rowsToShift);
             }
 
             return rowToReturn;
@@ -2331,9 +2331,9 @@ namespace ClosedXML.Excel
                 var parts = a1Address.Split(':');
                 var p1 = parts[0];
                 var p2 = parts[1];
-                if (Int32.TryParse(p1.Replace("$", string.Empty), out Int32 row1))
+                if (int.TryParse(p1.Replace("$", string.Empty), out int row1))
                 {
-                    var row2 = Int32.Parse(p2.Replace("$", string.Empty));
+                    var row2 = int.Parse(p2.Replace("$", string.Empty));
                     var leftPart = GetR1C1Row(row1, p1.Contains('$'), rowsToShift);
                     var rightPart = GetR1C1Row(row2, p2.Contains('$'), rowsToShift);
                     return leftPart + ":" + rightPart;
@@ -2397,7 +2397,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private IXLCell GetTargetCell(String target, XLWorksheet defaultWorksheet)
+        private IXLCell GetTargetCell(string target, XLWorksheet defaultWorksheet)
         {
             var pair = target.Split('!');
             if (pair.Length == 1)
@@ -2498,10 +2498,10 @@ namespace ClosedXML.Excel
             FormulaA1 = ShiftFormulaRows(FormulaA1, Worksheet, shiftedRange, rowsShifted);
         }
 
-        internal static String ShiftFormulaRows(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
+        internal static string ShiftFormulaRows(string formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                 int rowsShifted)
         {
-            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (string.IsNullOrWhiteSpace(formulaA1)) return string.Empty;
 
             var value = formulaA1;
 
@@ -2531,7 +2531,7 @@ namespace ClosedXML.Excel
                     else
                         sheetName = worksheetInAction.Name;
 
-                    if (String.Compare(sheetName, shiftedWsName, true) == 0)
+                    if (string.Compare(sheetName, shiftedWsName, true) == 0)
                     {
                         var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1ColumnRegex.IsMatch(rangeAddress))
@@ -2556,19 +2556,19 @@ namespace ClosedXML.Excel
                                     if (row1String[0] == '$')
                                     {
                                         row1 = "$" +
-                                                (XLHelper.TrimRowNumber(Int32.Parse(row1String.Substring(1)) + rowsShifted)).ToInvariantString();
+                                                (XLHelper.TrimRowNumber(int.Parse(row1String.Substring(1)) + rowsShifted)).ToInvariantString();
                                     }
                                     else
-                                        row1 = (XLHelper.TrimRowNumber(Int32.Parse(row1String) + rowsShifted)).ToInvariantString();
+                                        row1 = (XLHelper.TrimRowNumber(int.Parse(row1String) + rowsShifted)).ToInvariantString();
 
                                     string row2;
                                     if (row2String[0] == '$')
                                     {
                                         row2 = "$" +
-                                                (XLHelper.TrimRowNumber(Int32.Parse(row2String.Substring(1)) + rowsShifted)).ToInvariantString();
+                                                (XLHelper.TrimRowNumber(int.Parse(row2String.Substring(1)) + rowsShifted)).ToInvariantString();
                                     }
                                     else
-                                        row2 = (XLHelper.TrimRowNumber(Int32.Parse(row2String) + rowsShifted)).ToInvariantString();
+                                        row2 = (XLHelper.TrimRowNumber(int.Parse(row2String) + rowsShifted)).ToInvariantString();
 
                                     sb.Append(row1);
                                     sb.Append(':');
@@ -2645,10 +2645,10 @@ namespace ClosedXML.Excel
             FormulaA1 = ShiftFormulaColumns(FormulaA1, Worksheet, shiftedRange, columnsShifted);
         }
 
-        internal static String ShiftFormulaColumns(String formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
+        internal static string ShiftFormulaColumns(string formulaA1, XLWorksheet worksheetInAction, XLRange shiftedRange,
                                                    int columnsShifted)
         {
-            if (String.IsNullOrWhiteSpace(formulaA1)) return String.Empty;
+            if (string.IsNullOrWhiteSpace(formulaA1)) return string.Empty;
 
             var value = formulaA1;
 
@@ -2677,7 +2677,7 @@ namespace ClosedXML.Excel
                     else
                         sheetName = worksheetInAction.Name;
 
-                    if (String.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
+                    if (string.Compare(sheetName, shiftedRange.Worksheet.Name, true) == 0)
                     {
                         var rangeAddress = matchString.Substring(matchString.IndexOf('!') + 1);
                         if (!A1RowRegex.IsMatch(rangeAddress))
@@ -2805,7 +2805,7 @@ namespace ClosedXML.Excel
             return sb.ToString();
         }
 
-        private XLCell CellShift(Int32 rowsToShift, Int32 columnsToShift)
+        private XLCell CellShift(int rowsToShift, int columnsToShift)
         {
             return Worksheet.Cell(_rowNumber + rowsToShift, _columnNumber + columnsToShift);
         }
@@ -2827,7 +2827,7 @@ namespace ClosedXML.Excel
             return CellAbove();
         }
 
-        IXLCell IXLCell.CellAbove(Int32 step)
+        IXLCell IXLCell.CellAbove(int step)
         {
             return CellAbove(step);
         }
@@ -2837,7 +2837,7 @@ namespace ClosedXML.Excel
             return CellAbove(1);
         }
 
-        public XLCell CellAbove(Int32 step)
+        public XLCell CellAbove(int step)
         {
             return CellShift(step * -1, 0);
         }
@@ -2851,7 +2851,7 @@ namespace ClosedXML.Excel
             return CellBelow();
         }
 
-        IXLCell IXLCell.CellBelow(Int32 step)
+        IXLCell IXLCell.CellBelow(int step)
         {
             return CellBelow(step);
         }
@@ -2861,7 +2861,7 @@ namespace ClosedXML.Excel
             return CellBelow(1);
         }
 
-        public XLCell CellBelow(Int32 step)
+        public XLCell CellBelow(int step)
         {
             return CellShift(step, 0);
         }
@@ -2875,7 +2875,7 @@ namespace ClosedXML.Excel
             return CellLeft();
         }
 
-        IXLCell IXLCell.CellLeft(Int32 step)
+        IXLCell IXLCell.CellLeft(int step)
         {
             return CellLeft(step);
         }
@@ -2885,7 +2885,7 @@ namespace ClosedXML.Excel
             return CellLeft(1);
         }
 
-        public XLCell CellLeft(Int32 step)
+        public XLCell CellLeft(int step)
         {
             return CellShift(0, step * -1);
         }
@@ -2899,7 +2899,7 @@ namespace ClosedXML.Excel
             return CellRight();
         }
 
-        IXLCell IXLCell.CellRight(Int32 step)
+        IXLCell IXLCell.CellRight(int step)
         {
             return CellRight(step);
         }
@@ -2909,17 +2909,17 @@ namespace ClosedXML.Excel
             return CellRight(1);
         }
 
-        public XLCell CellRight(Int32 step)
+        public XLCell CellRight(int step)
         {
             return CellShift(0, step);
         }
 
         #endregion XLCell Right
 
-        public Boolean HasFormula
-        { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public bool HasFormula
+        { get { return !string.IsNullOrWhiteSpace(FormulaA1); } }
 
-        public Boolean HasArrayFormula
+        public bool HasArrayFormula
         { get { return FormulaA1.StartsWith("{"); } }
 
         public IXLRangeAddress FormulaReference { get; set; }

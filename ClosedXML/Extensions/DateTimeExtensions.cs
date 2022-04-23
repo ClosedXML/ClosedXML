@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     internal static class DateTimeExtensions
     {
-        public static Double MaxOADate
+        public static double MaxOADate
         {
             get
             {

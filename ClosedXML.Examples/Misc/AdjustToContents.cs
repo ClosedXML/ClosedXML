@@ -6,7 +6,7 @@ namespace ClosedXML.Examples.Misc
     public class AdjustToContents : IXLExample
     {
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using (var wb = new XLWorkbook())
             {
@@ -48,7 +48,7 @@ namespace ClosedXML.Examples.Misc
 
                 var ws2 = wb.Worksheets.Add("Adjust Widths");
                 ws2.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
-                for (Int32 co = 0; co < 90; co += 5)
+                for (int co = 0; co < 90; co += 5)
                 {
                     ws2.Cell(1, (co / 5) + 2).SetValue("Text to adjust - " + co).Style.Alignment.TextRotation = co;
                 }
@@ -57,7 +57,7 @@ namespace ClosedXML.Examples.Misc
 
                 var ws4 = wb.Worksheets.Add("Adjust Widths 2");
                 ws4.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
-                for (Int32 co = 0; co < 90; co += 5)
+                for (int co = 0; co < 90; co += 5)
                 {
                     var c = ws4.Cell(1, (co / 5) + 2);
 
@@ -74,7 +74,7 @@ namespace ClosedXML.Examples.Misc
 
                 var ws3 = wb.Worksheets.Add("Adjust Heights");
                 ws3.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
-                for (Int32 ro = 0; ro < 90; ro += 5)
+                for (int ro = 0; ro < 90; ro += 5)
                 {
                     ws3.Cell((ro / 5) + 2, 1).SetValue("Text to adjust - " + ro).Style.Alignment.TextRotation = ro;
                 }
@@ -83,7 +83,7 @@ namespace ClosedXML.Examples.Misc
 
                 var ws5 = wb.Worksheets.Add("Adjust Heights 2");
                 ws5.Cell(1, 1).SetValue("Text to adjust - 255").Style.Alignment.TextRotation = 255;
-                for (Int32 ro = 0; ro < 90; ro += 5)
+                for (int ro = 0; ro < 90; ro += 5)
                 {
                     var c = ws5.Cell((ro / 5) + 2, 1);
                     c.GetRichText().AddText("Text to adjust - " + ro).SetBold();

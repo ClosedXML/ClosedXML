@@ -8,16 +8,16 @@ namespace ClosedXML.Excel
     {
         private IXLWithRichString _withRichString;
 
-        public XLRichString(String text, IXLFontBase font, IXLWithRichString withRichString)
+        public XLRichString(string text, IXLFontBase font, IXLWithRichString withRichString)
         {
             Text = text;
             this.CopyFont(font);
             _withRichString = withRichString;
         }
 
-        public String Text { get; set; }
+        public string Text { get; set; }
 
-        public IXLRichString AddText(String text)
+        public IXLRichString AddText(string text)
         {
             return _withRichString.AddText(text);
         }
@@ -27,15 +27,15 @@ namespace ClosedXML.Excel
             return AddText(XLConstants.NewLine);
         }
 
-        public Boolean Bold { get; set; }
-        public Boolean Italic { get; set; }
+        public bool Bold { get; set; }
+        public bool Italic { get; set; }
         public XLFontUnderlineValues Underline { get; set; }
-        public Boolean Strikethrough { get; set; }
+        public bool Strikethrough { get; set; }
         public XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
-        public Boolean Shadow { get; set; }
-        public Double FontSize { get; set; }
+        public bool Shadow { get; set; }
+        public double FontSize { get; set; }
         public XLColor FontColor { get; set; }
-        public String FontName { get; set; }
+        public string FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
         public XLFontCharSet FontCharSet { get; set; }
 
@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
             Bold = true; return this;
         }
 
-        public IXLRichString SetBold(Boolean value)
+        public IXLRichString SetBold(bool value)
         {
             Bold = value; return this;
         }
@@ -54,7 +54,7 @@ namespace ClosedXML.Excel
             Italic = true; return this;
         }
 
-        public IXLRichString SetItalic(Boolean value)
+        public IXLRichString SetItalic(bool value)
         {
             Italic = value; return this;
         }
@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
             Strikethrough = true; return this;
         }
 
-        public IXLRichString SetStrikethrough(Boolean value)
+        public IXLRichString SetStrikethrough(bool value)
         {
             Strikethrough = value; return this;
         }
@@ -89,12 +89,12 @@ namespace ClosedXML.Excel
             Shadow = true; return this;
         }
 
-        public IXLRichString SetShadow(Boolean value)
+        public IXLRichString SetShadow(bool value)
         {
             Shadow = value; return this;
         }
 
-        public IXLRichString SetFontSize(Double value)
+        public IXLRichString SetFontSize(double value)
         {
             FontSize = value; return this;
         }
@@ -104,7 +104,7 @@ namespace ClosedXML.Excel
             FontColor = value; return this;
         }
 
-        public IXLRichString SetFontName(String value)
+        public IXLRichString SetFontName(string value)
         {
             FontName = value; return this;
         }
@@ -119,7 +119,7 @@ namespace ClosedXML.Excel
             FontCharSet = value; return this;
         }
 
-        public Boolean Equals(IXLRichString other)
+        public bool Equals(IXLRichString other)
         {
             return
                     Text == other.Text
@@ -146,14 +146,14 @@ namespace ClosedXML.Excel
             return Text.GetHashCode()
                 ^ Bold.GetHashCode()
                 ^ Italic.GetHashCode()
-                ^ (Int32)Underline
+                ^ (int)Underline
                 ^ Strikethrough.GetHashCode()
-                ^ (Int32)VerticalAlignment
+                ^ (int)VerticalAlignment
                 ^ Shadow.GetHashCode()
                 ^ FontSize.GetHashCode()
                 ^ FontColor.GetHashCode()
                 ^ FontName.GetHashCode()
-                ^ (Int32)FontFamilyNumbering;
+                ^ (int)FontFamilyNumbering;
         }
     }
 }

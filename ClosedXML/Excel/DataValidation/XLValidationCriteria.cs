@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
 
         #region IXLValidationCriteria Members
 
-        public void Between(String minValue, String maxValue)
+        public void Between(string minValue, string maxValue)
         {
             dataValidation.MinValue = minValue;
             dataValidation.MaxValue = maxValue;
@@ -36,7 +36,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.Between;
         }
 
-        public void EqualOrGreaterThan(String value)
+        public void EqualOrGreaterThan(string value)
         {
             dataValidation.Value = value;
             dataValidation.Operator = XLOperator.EqualOrGreaterThan;
@@ -55,7 +55,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.EqualOrGreaterThan;
         }
 
-        public void EqualOrLessThan(String value)
+        public void EqualOrLessThan(string value)
         {
             dataValidation.Value = value;
             dataValidation.Operator = XLOperator.EqualOrLessThan;
@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.EqualOrLessThan;
         }
 
-        public void EqualTo(String value)
+        public void EqualTo(string value)
         {
             dataValidation.Value = value;
             dataValidation.Operator = XLOperator.EqualTo;
@@ -93,7 +93,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.EqualTo;
         }
 
-        public void GreaterThan(String value)
+        public void GreaterThan(string value)
         {
             dataValidation.Value = value;
             dataValidation.Operator = XLOperator.GreaterThan;
@@ -112,7 +112,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.GreaterThan;
         }
 
-        public void LessThan(String value)
+        public void LessThan(string value)
         {
             dataValidation.Value = value;
             dataValidation.Operator = XLOperator.LessThan;
@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.LessThan;
         }
 
-        public void NotBetween(String minValue, String maxValue)
+        public void NotBetween(string minValue, string maxValue)
         {
             dataValidation.MinValue = minValue;
             dataValidation.MaxValue = maxValue;
@@ -153,7 +153,7 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.NotBetween;
         }
 
-        public void NotEqualTo(String value)
+        public void NotEqualTo(string value)
         {
             dataValidation.Value = value;
             dataValidation.Operator = XLOperator.NotEqualTo;

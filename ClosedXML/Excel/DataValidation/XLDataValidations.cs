@@ -38,9 +38,9 @@ namespace ClosedXML.Excel
             return Add(dataValidation, skipIntersectionsCheck: false);
         }
 
-        public Boolean ContainsSingle(IXLRange range)
+        public bool ContainsSingle(IXLRange range)
         {
-            Int32 count = 0;
+            int count = 0;
             foreach (var xlDataValidation in _dataValidations.Where(dv => dv.Ranges.Contains(range)))
             {
                 count++;

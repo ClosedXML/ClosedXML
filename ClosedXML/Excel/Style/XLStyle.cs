@@ -53,7 +53,7 @@ namespace ClosedXML.Excel
 
         #region constructors
 
-        public XLStyle(IXLStylized container, IXLStyle initialStyle = null, Boolean useDefaultModify = true) : this(container, GenerateKey(initialStyle))
+        public XLStyle(IXLStylized container, IXLStyle initialStyle = null, bool useDefaultModify = true) : this(container, GenerateKey(initialStyle))
         {
         }
 
@@ -126,7 +126,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean IncludeQuotePrefix
+        public bool IncludeQuotePrefix
         {
             get { return Value.IncludeQuotePrefix; }
             set
@@ -135,7 +135,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLStyle SetIncludeQuotePrefix(Boolean includeQuotePrefix = true)
+        public IXLStyle SetIncludeQuotePrefix(bool includeQuotePrefix = true)
         {
             IncludeQuotePrefix = includeQuotePrefix;
             return this;

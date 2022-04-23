@@ -107,7 +107,7 @@ namespace ClosedXML.Utils
                     retVal = XLColor.FromColor(thisColor);
                 }
                 else if (openXMLColor.Indexed != null && openXMLColor.Indexed <= 64)
-                    retVal = XLColor.FromIndex((Int32)openXMLColor.Indexed.Value);
+                    retVal = XLColor.FromIndex((int)openXMLColor.Indexed.Value);
                 else if (openXMLColor.Theme != null)
                 {
                     retVal = openXMLColor.Tint != null
@@ -144,11 +144,11 @@ namespace ClosedXML.Utils
                 case XLColorType.Indexed:
                     // 64 is 'transparent' and should be ignored for differential formats
                     if (!isDifferential || xlColor.Indexed != 64)
-                        openXMLColor.Indexed = (UInt32)xlColor.Indexed;
+                        openXMLColor.Indexed = (uint)xlColor.Indexed;
                     break;
 
                 case XLColorType.Theme:
-                    openXMLColor.Theme = (UInt32)xlColor.ThemeColor;
+                    openXMLColor.Theme = (uint)xlColor.ThemeColor;
 
                     if (xlColor.ThemeTint != 0)
                         openXMLColor.Tint = xlColor.ThemeTint;

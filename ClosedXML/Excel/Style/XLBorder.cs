@@ -336,13 +336,13 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean DiagonalUp
+        public bool DiagonalUp
         {
             get { return Key.DiagonalUp; }
             set { Modify(k => { k.DiagonalUp = value; return k; }); }
         }
 
-        public Boolean DiagonalDown
+        public bool DiagonalDown
         {
             get { return Key.DiagonalDown; }
             set { Modify(k => { k.DiagonalDown = value; return k; }); }
@@ -426,7 +426,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetDiagonalUp(Boolean value)
+        public IXLStyle SetDiagonalUp(bool value)
         {
             DiagonalUp = value;
             return _container.Style;
@@ -438,7 +438,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetDiagonalDown(Boolean value)
+        public IXLStyle SetDiagonalDown(bool value)
         {
             DiagonalDown = value;
             return _container.Style;

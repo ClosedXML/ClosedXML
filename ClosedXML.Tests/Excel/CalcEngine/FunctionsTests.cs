@@ -17,7 +17,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Asc()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Asc(""Text"")");
             Assert.AreEqual("Text", actual);
@@ -26,9 +26,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Clean()
         {
-            Object actual;
+            object actual;
 
-            actual = XLWorkbook.EvaluateExpr(String.Format(@"Clean(""A{0}B"")", XLConstants.NewLine));
+            actual = XLWorkbook.EvaluateExpr(string.Format(@"Clean(""A{0}B"")", XLConstants.NewLine));
             Assert.AreEqual("AB", actual);
         }
 
@@ -87,7 +87,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Exact()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr("Exact(\"A\", \"A\")");
             Assert.AreEqual(true, actual);
@@ -115,7 +115,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Fixed()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr("Fixed(12345.123)");
             Assert.AreEqual("12,345.12", actual);
@@ -179,7 +179,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A2").SetValue(3).CellRight().SetValue(5);
 
-            Object actual;
+            object actual;
 
             ws.Cell("A5").FormulaA1 = "MDeterm(A1:B2)";
             actual = ws.Cell("A5").Value;
@@ -206,7 +206,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A2").SetValue(3).CellRight().SetValue(4).CellRight().SetValue(-1);
             ws.Cell("A3").SetValue(0).CellRight().SetValue(2).CellRight().SetValue(0);
 
-            Object actual;
+            object actual;
 
             ws.Cell("A5").FormulaA1 = "MInverse(A1:C3)";
             actual = ws.Cell("A5").Value;
@@ -233,7 +233,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A3").SetValue(2).CellRight().SetValue(4);
             ws.Cell("A4").SetValue(3).CellRight().SetValue(5);
 
-            Object actual;
+            object actual;
 
             ws.Cell("A5").FormulaA1 = "MMult(A1:B2, A3:B4)";
             actual = ws.Cell("A5").Value;
@@ -462,7 +462,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalCountA()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr("Subtotal(3,2,3)");
             Assert.AreEqual(2.0, actual);
@@ -474,7 +474,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalMax()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(4,2,3,""A"")");
             Assert.AreEqual(3.0, actual);
@@ -483,7 +483,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalMin()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(5,2,3,""A"")");
             Assert.AreEqual(2.0, actual);
@@ -492,7 +492,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalProduct()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(6,2,3,""A"")");
             Assert.AreEqual(6.0, actual);
@@ -501,7 +501,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalStDev()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(7,2,3,""A"")");
             Assert.IsTrue(Math.Abs(0.70710678118654757 - (double)actual) < XLHelper.Epsilon);
@@ -510,7 +510,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalStDevP()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(8,2,3,""A"")");
             Assert.AreEqual(0.5, actual);
@@ -519,7 +519,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalSum()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(9,2,3,""A"")");
             Assert.AreEqual(5.0, actual);
@@ -528,7 +528,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalVar()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(10,2,3,""A"")");
             Assert.IsTrue(Math.Abs(0.5 - (double)actual) < XLHelper.Epsilon);
@@ -537,7 +537,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SubtotalVarP()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"Subtotal(11,2,3,""A"")");
             Assert.AreEqual(0.25, actual);
@@ -641,7 +641,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void SumSq()
         {
-            Object actual;
+            object actual;
 
             actual = XLWorkbook.EvaluateExpr(@"SumSq(3,4)");
             Assert.AreEqual(25.0, actual);

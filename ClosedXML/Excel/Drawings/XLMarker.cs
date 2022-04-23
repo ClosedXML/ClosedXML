@@ -30,8 +30,8 @@ namespace ClosedXML.Excel.Drawings
         }
 
         public IXLCell Cell { get => rangeCell.FirstCell(); }
-        public Int32 ColumnNumber { get => rangeCell.RangeAddress.FirstAddress.ColumnNumber; }
+        public int ColumnNumber { get => rangeCell.RangeAddress.FirstAddress.ColumnNumber; }
         public SKPoint Offset { get; set; }
-        public Int32 RowNumber { get => rangeCell.RangeAddress.FirstAddress.RowNumber; }
+        public int RowNumber { get => rangeCell.RangeAddress.FirstAddress.RowNumber; }
     }
 }

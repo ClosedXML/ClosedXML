@@ -186,7 +186,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Days360(date1, date2, isEuropean);
         }
 
-        private static Int32 Days360(DateTime date1, DateTime date2, Boolean isEuropean)
+        private static int Days360(DateTime date1, DateTime date2, bool isEuropean)
         {
             var d1 = date1.Day;
             var m1 = date1.Month;
@@ -227,9 +227,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new DateTime(retDate.Year, retDate.Month, DateTime.DaysInMonth(retDate.Year, retDate.Month));
         }
 
-        private static Double GetYearAverage(DateTime date1, DateTime date2)
+        private static double GetYearAverage(DateTime date1, DateTime date2)
         {
-            var daysInYears = new List<Int32>();
+            var daysInYears = new List<int>();
             for (int year = date1.Year; year <= date2.Year; year++)
                 daysInYears.Add(DateTime.IsLeapYear(year) ? 366 : 365);
             return daysInYears.Average();

@@ -16,7 +16,7 @@ namespace ClosedXML.Excel.Drawings
         public XLPictures(XLWorksheet worksheet)
         {
             _worksheet = worksheet;
-            Deleted = new HashSet<String>();
+            Deleted = new HashSet<string>();
         }
 
         public int Count
@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.Drawings
             get { return _pictures.Count; }
         }
 
-        internal ICollection<String> Deleted { get; private set; }
+        internal ICollection<string> Deleted { get; private set; }
 
         public IXLPicture Add(Stream stream)
         {
@@ -162,7 +162,7 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
-        private String GetNextPictureName()
+        private string GetNextPictureName()
         {
             var pictureNumber = this.Count;
             while (_pictures.Any(p => p.Name == $"Picture {pictureNumber}"))

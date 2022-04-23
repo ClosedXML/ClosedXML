@@ -11,22 +11,22 @@ namespace ClosedXML.Excel
             this.workbook = workbook;
         }
 
-        private Dictionary<String, IXLCustomProperty> customProperties = new Dictionary<String, IXLCustomProperty>();
+        private Dictionary<string, IXLCustomProperty> customProperties = new Dictionary<string, IXLCustomProperty>();
         public void Add(IXLCustomProperty customProperty)
         {
             customProperties.Add(customProperty.Name, customProperty);
         }
-        public void Add<T>(String name, T value)
+        public void Add<T>(string name, T value)
         {
             var cp = new XLCustomProperty(workbook) { Name = name, Value = value };
             Add(cp);
         }
 
-        public void Delete(String name)
+        public void Delete(string name)
         {
             customProperties.Remove(name);
         }
-        public IXLCustomProperty CustomProperty(String name)
+        public IXLCustomProperty CustomProperty(string name)
         {
             return customProperties[name];
         }

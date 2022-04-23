@@ -202,7 +202,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Csch(List<Expression> p)
         {
-            if (Math.Abs((double)p[0].Evaluate()) < Double.Epsilon)
+            if (Math.Abs((double)p[0].Evaluate()) < double.Epsilon)
                 throw new DivisionByZeroException();
 
             return 1 / Math.Sinh(p[0]);
@@ -407,7 +407,7 @@ namespace ClosedXML.Excel.CalcEngine
                     throw new CellReferenceException($"Expected parameter {criteriaPair * 2 + 2} to be a range");
 
                 var criterion = p[criteriaPair * 2 + 2].Evaluate();
-                var criteriaRangeValues = criteriaRange.Cast<Object>().ToList();
+                var criteriaRangeValues = criteriaRange.Cast<object>().ToList();
 
                 criteriaRanges[criteriaPair] = new Tuple<object, IList<object>>(
                     criterion,
@@ -644,8 +644,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Combin(List<Expression> p)
         {
-            Int32 n;
-            Int32 k;
+            int n;
+            int k;
 
             var rawN = p[0].Evaluate();
             var rawK = p[1].Evaluate();
@@ -670,8 +670,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object CombinA(List<Expression> p)
         {
-            Int32 number = (int)p[0]; // casting truncates towards 0 as specified
-            Int32 chosen = (int)p[1];
+            int number = (int)p[0]; // casting truncates towards 0 as specified
+            int chosen = (int)p[1];
 
             if (number < 0 || number < chosen)
                 throw new NumberException();
@@ -763,8 +763,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MRound(List<Expression> p)
         {
-            var number = (Double)p[0];
-            var multiple = (Double)p[1];
+            var number = (double)p[0];
+            var multiple = (double)p[1];
 
             if (Math.Sign(number) != Math.Sign(multiple))
                 throw new NumberException($"The Number and Multiple arguments must have the same sign.");
@@ -833,15 +833,15 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Product(List<Expression> p)
         {
             if (p.Count == 0) return 0;
-            Double total = 1;
+            double total = 1;
             p.ForEach(v => total *= v);
             return total;
         }
 
         private static object Quotient(List<Expression> p)
         {
-            Double n = p[0];
-            Double k = p[1];
+            double n = p[0];
+            double k = p[1];
 
             return (int)(n / k);
         }
@@ -854,8 +854,8 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Roman(List<Expression> p)
         {
             if (p.Count == 1
-                || (Boolean.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
-                || (Int32.TryParse(p[1]._token.Value.ToString(), out int intTemp) && intTemp == 1))
+                || (bool.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
+                || (int.TryParse(p[1]._token.Value.ToString(), out int intTemp) && intTemp == 1))
                 return XLMath.ToRoman((int)p[0]);
 
             throw new ArgumentException("Can only support classic roman types.");
@@ -863,8 +863,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Round(List<Expression> p)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
+            var value = (double)p[0];
+            var digits = (int)(double)p[1];
             if (digits >= 0)
             {
                 return Math.Round(value, digits, MidpointRounding.AwayFromZero);
@@ -880,8 +880,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object RoundDown(List<Expression> p)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
+            var value = (double)p[0];
+            var digits = (int)(double)p[1];
 
             if (value >= 0)
                 return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
@@ -891,8 +891,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object RoundUp(List<Expression> p)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
+            var value = (double)p[0];
+            var digits = (int)(double)p[1];
 
             if (value >= 0)
                 return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
@@ -915,16 +915,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object SeriesSum(List<Expression> p)
         {
-            var x = (Double)p[0];
-            var n = (Double)p[1];
-            var m = (Double)p[2];
+            var x = (double)p[0];
+            var n = (double)p[1];
+            var m = (double)p[2];
             var obj = p[3] as XObjectExpression;
 
             if (obj == null)
                 return p[3] * Math.Pow(x, n);
 
-            Double total = 0;
-            Int32 i = 0;
+            double total = 0;
+            int i = 0;
             foreach (var e in obj)
             {
                 total += (double)e * Math.Pow(x, n + i * m);
@@ -936,7 +936,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object SqrtPi(List<Expression> p)
         {
-            var num = (Double)p[0];
+            var num = (double)p[0];
             return Math.Sqrt(Math.PI * num);
         }
 
@@ -983,7 +983,7 @@ namespace ClosedXML.Excel.CalcEngine
                         : new[] { e })
                 .ToArray();
 
-            var fId = (int)(Double)p[0];
+            var fId = (int)(double)p[0];
             var tally = new Tally(expressions);
 
             switch (fId)
@@ -1034,8 +1034,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MMult(List<Expression> p)
         {
-            Double[,] A = GetArray(p[0]);
-            Double[,] B = GetArray(p[1]);
+            double[,] A = GetArray(p[0]);
+            double[,] B = GetArray(p[1]);
 
             if (A.GetLength(0) != B.GetLength(0) || A.GetLength(1) != B.GetLength(1))
                 throw new ArgumentException("Ranges must have the same number of rows and columns.");
@@ -1058,7 +1058,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static double[,] GetArray(Expression expression)
         {
             var oExp1 = expression as XObjectExpression;
-            if (oExp1 == null) return new[,] { { (Double)expression } };
+            if (oExp1 == null) return new[,] { { (double)expression } };
 
             var range = (oExp1.Value as CellRangeReference).Range;
             var rowCount = range.RowCount();

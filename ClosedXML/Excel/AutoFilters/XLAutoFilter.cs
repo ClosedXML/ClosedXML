@@ -8,24 +8,24 @@ namespace ClosedXML.Excel
 
     internal class XLAutoFilter : IXLAutoFilter
     {
-        private readonly Dictionary<Int32, XLFilterColumn> _columns = new Dictionary<int, XLFilterColumn>();
+        private readonly Dictionary<int, XLFilterColumn> _columns = new Dictionary<int, XLFilterColumn>();
 
         public XLAutoFilter()
         {
             Filters = new Dictionary<int, List<XLFilter>>();
         }
 
-        public Dictionary<Int32, List<XLFilter>> Filters { get; private set; }
+        public Dictionary<int, List<XLFilter>> Filters { get; private set; }
 
         #region IXLAutoFilter Members
 
         [Obsolete("Use IsEnabled")]
-        public Boolean Enabled { get => IsEnabled; set => IsEnabled = value; }
+        public bool Enabled { get => IsEnabled; set => IsEnabled = value; }
         public IEnumerable<IXLRangeRow> HiddenRows { get => Range.Rows(r => r.WorksheetRow().IsHidden); }
-        public Boolean IsEnabled { get; set; }
+        public bool IsEnabled { get; set; }
         public IXLRange Range { get; set; }
-        public Int32 SortColumn { get; set; }
-        public Boolean Sorted { get; set; }
+        public int SortColumn { get; set; }
+        public bool Sorted { get; set; }
         public XLSortOrder SortOrder { get; set; }
         public IEnumerable<IXLRangeRow> VisibleRows { get => Range.Rows(r => !r.WorksheetRow().IsHidden); }
 
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
             return Clear();
         }
 
-        public IXLFilterColumn Column(String column)
+        public IXLFilterColumn Column(string column)
         {
             var columnNumber = XLHelper.GetColumnNumberFromLetter(column);
             if (columnNumber < 1 || columnNumber > XLHelper.MaxColumnNumber)
@@ -43,7 +43,7 @@ namespace ClosedXML.Excel
             return Column(columnNumber);
         }
 
-        public IXLFilterColumn Column(Int32 column)
+        public IXLFilterColumn Column(int column)
         {
             if (column < 1 || column > XLHelper.MaxColumnNumber)
                 throw new ArgumentOutOfRangeException(nameof(column), "Column " + column + " is outside the allowed column range.");
@@ -87,10 +87,10 @@ namespace ClosedXML.Excel
                     foreach (var filter in columnFilters)
                     {
                         var condition = filter.Condition;
-                        var isText = filter.Value is String;
+                        var isText = filter.Value is string;
                         var isDateTime = filter.Value is DateTime;
 
-                        Boolean filterMatch;
+                        bool filterMatch;
 
                         if (isText)
                             filterMatch = condition(row.Cell(columnIndex).GetFormattedString());
@@ -125,8 +125,8 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        IXLAutoFilter IXLAutoFilter.Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase,
-                                                                                                         Boolean ignoreBlanks)
+        IXLAutoFilter IXLAutoFilter.Sort(int columnToSortBy, XLSortOrder sortOrder, bool matchCase,
+                                                                                                         bool ignoreBlanks)
         {
             return Sort(columnToSortBy, sortOrder, matchCase, ignoreBlanks);
         }
@@ -155,7 +155,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public XLAutoFilter Sort(Int32 columnToSortBy, XLSortOrder sortOrder, Boolean matchCase, Boolean ignoreBlanks)
+        public XLAutoFilter Sort(int columnToSortBy, XLSortOrder sortOrder, bool matchCase, bool ignoreBlanks)
         {
             if (!IsEnabled)
                 throw new InvalidOperationException("Filter has not been enabled.");

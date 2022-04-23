@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.InsertData
 
             var itemType = data.GetItemType();
 
-            if (itemType == null || itemType == typeof(Object))
+            if (itemType == null || itemType == typeof(object))
                 return new UntypedObjectReader(data);
             else if (itemType.IsNullableType() && itemType.GetUnderlyingType().IsSimpleType())
                 return new SimpleNullableTypeReader(data);
@@ -47,7 +47,7 @@ namespace ClosedXML.Excel.InsertData
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 
-            if (data?.GetType().GetElementType() == typeof(String))
+            if (data?.GetType().GetElementType() == typeof(string))
                 return new SimpleTypeReader(data);
 
             return new ArrayReader(data);

@@ -34,9 +34,9 @@ namespace ClosedXML.Excel
         /// Some people claim it's the index for tooltip color.
         /// We'll return normal black when index 81 is found.
         /// </summary>
-        private const Int32 TOOLTIPCOLORINDEX = 81;
+        private const int TOOLTIPCOLORINDEX = 81;
 
-        public Boolean HasValue { get; private set; }
+        public bool HasValue { get; private set; }
 
         public XLColorType ColorType
         {
@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Int32 Indexed
+        public int Indexed
         {
             get
             {
@@ -91,7 +91,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Double ThemeTint
+        public double ThemeTint
         {
             get
             {
@@ -133,23 +133,23 @@ namespace ClosedXML.Excel
                 return Color.ToHex();
 
             if (ColorType == XLColorType.Theme)
-                return String.Format("Color Theme: {0}, Tint: {1}", ThemeColor.ToString(), ThemeTint.ToString());
+                return string.Format("Color Theme: {0}, Tint: {1}", ThemeColor.ToString(), ThemeTint.ToString());
 
             return "Color Index: " + Indexed;
         }
 
-        public static Boolean operator ==(XLColor left, XLColor right)
+        public static bool operator ==(XLColor left, XLColor right)
         {
             // If both are null, or both are same instance, return true.
             if (ReferenceEquals(left, right)) return true;
 
             // If one is null, but not both, return false.
-            if ((left as object) == null || (right as Object) == null) return false;
+            if ((left as object) == null || (right as object) == null) return false;
 
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(XLColor left, XLColor right)
+        public static bool operator !=(XLColor left, XLColor right)
         {
             return !(left == right);
         }

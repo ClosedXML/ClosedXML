@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
         private static readonly XLColorRepository Repository = new XLColorRepository(key => new XLColor(key));
 
         private static readonly Dictionary<SKColors, XLColor> ByColor = new Dictionary<SKColors, XLColor>();
-        private static readonly Object ByColorLock = new Object();
+        private static readonly object ByColorLock = new object();
 
         internal static XLColor FromKey(ref XLColorKey key)
         {
@@ -39,32 +39,32 @@ namespace ClosedXML.Excel
             return FromKey(ref key);
         }
 
-        public static XLColor FromArgb(Int32 argb)
+        public static XLColor FromArgb(int argb)
         {
             return FromColor(ColorStringParser.FromArgb(argb));
         }
 
-        public static XLColor FromArgb(Int32 r, Int32 g, Int32 b)
+        public static XLColor FromArgb(int r, int g, int b)
         {
             return FromColor(ColorStringParser.FromArgb(r, g, b));
         }
 
-        public static XLColor FromArgb(Int32 a, Int32 r, Int32 g, Int32 b)
+        public static XLColor FromArgb(int a, int r, int g, int b)
         {
             return FromColor(ColorStringParser.FromArgb(a, r, g, b));
         }
 
-        public static XLColor FromName(String name)
+        public static XLColor FromName(string name)
         {
             return FromColor(ColorStringParser.FromName(name));
         }
 
-        public static XLColor FromHtml(String htmlColor)
+        public static XLColor FromHtml(string htmlColor)
         {
             return FromColor(ColorStringParser.ParseFromHtml(htmlColor));
         }
 
-        public static XLColor FromIndex(Int32 index)
+        public static XLColor FromIndex(int index)
         {
             var key = new XLColorKey
             {
@@ -84,7 +84,7 @@ namespace ClosedXML.Excel
             return FromKey(ref key);
         }
 
-        public static XLColor FromTheme(XLThemeColor themeColor, Double themeTint)
+        public static XLColor FromTheme(XLThemeColor themeColor, double themeTint)
         {
             var key = new XLColorKey
             {
@@ -95,15 +95,15 @@ namespace ClosedXML.Excel
             return FromKey(ref key);
         }
 
-        private static Dictionary<Int32, XLColor> _indexedColors;
+        private static Dictionary<int, XLColor> _indexedColors;
 
-        public static Dictionary<Int32, XLColor> IndexedColors
+        public static Dictionary<int, XLColor> IndexedColors
         {
             get
             {
                 if (_indexedColors == null)
                 {
-                    var retVal = new Dictionary<Int32, XLColor>
+                    var retVal = new Dictionary<int, XLColor>
                         {
                             {0, FromHtml("#FF000000")},
                             {1, FromHtml("#FFFFFFFF")},

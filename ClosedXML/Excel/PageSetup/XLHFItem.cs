@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         }
         private readonly Dictionary<XLHFOccurrence, List<XLHFText>> texts = new Dictionary<XLHFOccurrence, List<XLHFText>>();
 
-        public String GetText(XLHFOccurrence occurrence)
+        public string GetText(XLHFOccurrence occurrence)
         {
             var sb = new StringBuilder();
             if (texts.TryGetValue(occurrence, out List<XLHFText> hfTexts))
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
             return sb.ToString();
         }
 
-        public IXLRichString AddText(String text)
+        public IXLRichString AddText(string text)
         {
             return AddText(text, XLHFOccurrence.AllPages);
         }
@@ -42,7 +42,7 @@ namespace ClosedXML.Excel
             return AddText(predefinedText, XLHFOccurrence.AllPages);
         }
 
-        public IXLRichString AddText(String text, XLHFOccurrence occurrence)
+        public IXLRichString AddText(string text, XLHFOccurrence occurrence)
         {
             XLRichString richText = new XLRichString(text, this.HeaderFooter.Worksheet.Style.Font, this);
 
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             return AddText(XLConstants.NewLine);
         }
 
-        public IXLRichString AddImage(String imagePath, XLHFOccurrence occurrence = XLHFOccurrence.AllPages)
+        public IXLRichString AddImage(string imagePath, XLHFOccurrence occurrence = XLHFOccurrence.AllPages)
         {
             throw new NotImplementedException();
         }
@@ -83,7 +83,7 @@ namespace ClosedXML.Excel
 
         public IXLRichString AddText(XLHFPredefinedText predefinedText, XLHFOccurrence occurrence)
         {
-            String hfText;
+            string hfText;
             switch (predefinedText)
             {
                 case XLHFPredefinedText.PageNumber: hfText = "&P"; break;

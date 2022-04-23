@@ -10,7 +10,7 @@ namespace ClosedXML.Examples.Ranges
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try

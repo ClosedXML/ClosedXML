@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
 
         public XLFontKey Font { get; set; }
 
-        public Boolean IncludeQuotePrefix { get; set; }
+        public bool IncludeQuotePrefix { get; set; }
 
         public XLNumberFormatKey NumberFormat { get; set; }
 
@@ -72,7 +72,7 @@ namespace ClosedXML.Excel
             out XLBorderKey border,
             out XLFillKey fill,
             out XLFontKey font,
-            out Boolean includeQuotePrefix,
+            out bool includeQuotePrefix,
             out XLNumberFormatKey numberFormat,
             out XLProtectionKey protection)
         {

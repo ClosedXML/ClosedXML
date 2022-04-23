@@ -109,12 +109,12 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Boolean Contains(IXLCell cell)
+        public bool Contains(IXLCell cell)
         {
             return GetIntersectedRanges((XLAddress)cell.Address).Any();
         }
 
-        public Boolean Contains(IXLRange range)
+        public bool Contains(IXLRange range)
         {
             return GetIntersectedRanges((XLRangeAddress)range.RangeAddress)
                 .Any(r => r.Contains(range));
@@ -162,23 +162,23 @@ namespace ClosedXML.Excel
             get { return Ranges.Select(range => range.GetDataValidation()).Where(dv => dv != null); }
         }
 
-        public IXLRanges AddToNamed(String rangeName)
+        public IXLRanges AddToNamed(string rangeName)
         {
             return AddToNamed(rangeName, XLScope.Workbook);
         }
 
-        public IXLRanges AddToNamed(String rangeName, XLScope scope)
+        public IXLRanges AddToNamed(string rangeName, XLScope scope)
         {
             return AddToNamed(rangeName, XLScope.Workbook, null);
         }
 
-        public IXLRanges AddToNamed(String rangeName, XLScope scope, String comment)
+        public IXLRanges AddToNamed(string rangeName, XLScope scope, string comment)
         {
             Ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
             return this;
         }
 
-        public Object Value
+        public object Value
         {
             set { Ranges.ForEach(r => r.Value = value); }
         }
@@ -206,7 +206,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLCells CellsUsed(Boolean includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             return CellsUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -267,7 +267,7 @@ namespace ClosedXML.Excel
 
         public override string ToString()
         {
-            String retVal = Ranges.Aggregate(String.Empty, (agg, r) => agg + (r.ToString() + ","));
+            string retVal = Ranges.Aggregate(string.Empty, (agg, r) => agg + (r.ToString() + ","));
             if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
             return retVal;
         }

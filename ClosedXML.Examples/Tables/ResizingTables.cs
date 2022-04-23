@@ -21,7 +21,7 @@ namespace ClosedXML.Examples.Tables
                     {
                         Index = i,
                         Character = Convert.ToChar(64 + i),
-                        String = new String('a', i),
+                        String = new string('a', i),
                         Integer = 64 + i
                     });
 

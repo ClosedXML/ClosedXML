@@ -101,7 +101,7 @@ namespace ClosedXML.Excel
 
         #region IXLFont Members
 
-        public Boolean Bold
+        public bool Bold
         {
             get { return Key.Bold; }
             set
@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean Italic
+        public bool Italic
         {
             get { return Key.Italic; }
             set
@@ -128,7 +128,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean Strikethrough
+        public bool Strikethrough
         {
             get { return Key.Strikethrough; }
             set
@@ -146,7 +146,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean Shadow
+        public bool Shadow
         {
             get { return Key.Shadow; }
             set
@@ -155,7 +155,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Double FontSize
+        public double FontSize
         {
             get { return Key.FontSize; }
             set
@@ -179,7 +179,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String FontName
+        public string FontName
         {
             get { return Key.FontName; }
             set
@@ -212,7 +212,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetBold(Boolean value)
+        public IXLStyle SetBold(bool value)
         {
             Bold = value;
             return _style;
@@ -224,7 +224,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetItalic(Boolean value)
+        public IXLStyle SetItalic(bool value)
         {
             Italic = value;
             return _style;
@@ -248,7 +248,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetStrikethrough(Boolean value)
+        public IXLStyle SetStrikethrough(bool value)
         {
             Strikethrough = value;
             return _style;
@@ -266,13 +266,13 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetShadow(Boolean value)
+        public IXLStyle SetShadow(bool value)
         {
             Shadow = value;
             return _style;
         }
 
-        public IXLStyle SetFontSize(Double value)
+        public IXLStyle SetFontSize(double value)
         {
             FontSize = value;
             return _style;
@@ -284,7 +284,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetFontName(String value)
+        public IXLStyle SetFontName(string value)
         {
             FontName = value;
             return _style;
@@ -336,7 +336,7 @@ namespace ClosedXML.Excel
             return Equals(obj as XLFont);
         }
 
-        public Boolean Equals(IXLFont other)
+        public bool Equals(IXLFont other)
         {
             var otherF = other as XLFont;
             if (otherF == null)

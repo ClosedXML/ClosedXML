@@ -6,21 +6,21 @@ namespace ClosedXML.Excel
 {
     internal class PivotValueFieldReference : AbstractPivotFieldReference
     {
-        public PivotValueFieldReference(String value)
+        public PivotValueFieldReference(string value)
         {
             this.Value = value;
         }
 
-        public String Value { get; }
+        public string Value { get; }
 
         internal override UInt32Value GetFieldOffset()
         {
             return UInt32Value.FromUInt32(unchecked((uint)-2));
         }
 
-        internal override IEnumerable<Int32> Match(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)
+        internal override IEnumerable<int> Match(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)
         {
-            return new Int32[]
+            return new int[]
             {
                 pt.Values.IndexOf(Value.ToString())
             };

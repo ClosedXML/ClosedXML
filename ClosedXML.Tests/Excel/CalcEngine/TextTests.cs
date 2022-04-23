@@ -33,21 +33,21 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Char_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Char(97)");
+            object actual = XLWorkbook.EvaluateExpr(@"Char(97)");
             Assert.AreEqual("a", actual);
         }
 
         [Test]
         public void Clean_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Clean("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Clean("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Clean_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Clean(CHAR(9)&""Monthly report""&CHAR(10))");
+            object actual = XLWorkbook.EvaluateExpr(@"Clean(CHAR(9)&""Monthly report""&CHAR(10))");
             Assert.AreEqual("Monthly report", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Clean(""   "")");
@@ -64,7 +64,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Code_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Code(""A"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Code(""A"")");
             Assert.AreEqual(65, actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Code(""BCD"")");
@@ -74,7 +74,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Concat_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Concat(""ABC"", ""123"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Concat(""ABC"", ""123"")");
             Assert.AreEqual("ABC123", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Concat("""", ""123"")");
@@ -101,7 +101,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Concatenate_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Concatenate(""ABC"", ""123"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Concatenate(""ABC"", ""123"")");
             Assert.AreEqual("ABC123", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Concatenate("""", ""123"")");
@@ -160,7 +160,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Dollar_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Dollar(123.54)");
+            object actual = XLWorkbook.EvaluateExpr(@"Dollar(123.54)");
             Assert.AreEqual("$123.54", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Dollar(123.54, 3)");
@@ -170,14 +170,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Exact_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Exact("""", """")");
+            object actual = XLWorkbook.EvaluateExpr(@"Exact("""", """")");
             Assert.AreEqual(true, actual);
         }
 
         [Test]
         public void Exact_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Exact(""asdf"", ""asdf"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Exact(""asdf"", ""asdf"")");
             Assert.AreEqual(true, actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Exact(""asdf"", ""ASDF"")");
@@ -218,7 +218,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Find_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Find(""Tuesday"", ""Today is Tuesday"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Find(""Tuesday"", ""Today is Tuesday"")");
             Assert.AreEqual(10, actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Find("""", """")");
@@ -237,7 +237,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Fixed_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Fixed(17300.67, 4)");
+            object actual = XLWorkbook.EvaluateExpr(@"Fixed(17300.67, 4)");
             Assert.AreEqual("17,300.6700", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Fixed(17300.67, 2, TRUE)");
@@ -250,84 +250,84 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Left_Bigger_Than_Length()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"", 5)");
+            object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"", 5)");
             Assert.AreEqual("ABC", actual);
         }
 
         [Test]
         public void Left_Default()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"")");
             Assert.AreEqual("A", actual);
         }
 
         [Test]
         public void Left_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Left("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Left_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"", 2)");
+            object actual = XLWorkbook.EvaluateExpr(@"Left(""ABC"", 2)");
             Assert.AreEqual("AB", actual);
         }
 
         [Test]
         public void Len_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Len("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Len("""")");
             Assert.AreEqual(0, actual);
         }
 
         [Test]
         public void Len_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Len(""word"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Len(""word"")");
             Assert.AreEqual(4, actual);
         }
 
         [Test]
         public void Lower_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Lower("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Lower("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Lower_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Lower(""AbCdEfG"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Lower(""AbCdEfG"")");
             Assert.AreEqual("abcdefg", actual);
         }
 
         [Test]
         public void Mid_Bigger_Than_Length()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 1, 5)");
+            object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 1, 5)");
             Assert.AreEqual("ABC", actual);
         }
 
         [Test]
         public void Mid_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid("""", 1, 1)");
+            object actual = XLWorkbook.EvaluateExpr(@"Mid("""", 1, 1)");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Mid_Start_After()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 5, 5)");
+            object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 5, 5)");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Mid_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 2, 2)");
+            object actual = XLWorkbook.EvaluateExpr(@"Mid(""ABC"", 2, 2)");
             Assert.AreEqual("BC", actual);
         }
 
@@ -373,35 +373,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Proper_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Proper("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Proper("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Proper_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Proper(""my name is francois botha"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Proper(""my name is francois botha"")");
             Assert.AreEqual("My Name Is Francois Botha", actual);
         }
 
         [Test]
         public void Replace_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Replace("""", 1, 1, ""newtext"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Replace("""", 1, 1, ""newtext"")");
             Assert.AreEqual("newtext", actual);
         }
 
         [Test]
         public void Replace_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Replace(""Here is some obsolete text to replace."", 14, 13, ""new text"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Replace(""Here is some obsolete text to replace."", 14, 13, ""new text"")");
             Assert.AreEqual("Here is some new text to replace.", actual);
         }
 
         [Test]
         public void Rept_Empty_Input_Strings()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Rept("""", 3)");
+            object actual = XLWorkbook.EvaluateExpr(@"Rept("""", 3)");
             Assert.AreEqual("", actual);
         }
 
@@ -414,7 +414,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Rept_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Rept(""Francois Botha,"", 3)");
+            object actual = XLWorkbook.EvaluateExpr(@"Rept(""Francois Botha,"", 3)");
             Assert.AreEqual("Francois Botha,Francois Botha,Francois Botha,", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Rept(""123"", 5/2)");
@@ -427,28 +427,28 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Right_Bigger_Than_Length()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"", 5)");
+            object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"", 5)");
             Assert.AreEqual("ABC", actual);
         }
 
         [Test]
         public void Right_Default()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"")");
             Assert.AreEqual("C", actual);
         }
 
         [Test]
         public void Right_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Right("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Right_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"", 2)");
+            object actual = XLWorkbook.EvaluateExpr(@"Right(""ABC"", 2)");
             Assert.AreEqual("BC", actual);
         }
 
@@ -461,7 +461,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Search_Empty_Search_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Search("""", ""asdf"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Search("""", ""asdf"")");
             Assert.AreEqual(1, actual);
         }
 
@@ -499,7 +499,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Search_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Search(""Tuesday"", ""Today is Tuesday"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Search(""Tuesday"", ""Today is Tuesday"")");
             Assert.AreEqual(10, actual);
 
             // Find is case-INsensitive
@@ -519,7 +519,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Substitute_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday."", ""Tuesday"", ""Monday"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday."", ""Tuesday"", ""Monday"")");
             Assert.AreEqual("This is a Monday.", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Substitute(""This is a Tuesday. Next week also has a Tuesday."", ""Tuesday"", ""Monday"", 1)");
@@ -541,14 +541,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void T_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"T("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"T("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void T_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"T(""asdf"")");
+            object actual = XLWorkbook.EvaluateExpr(@"T(""asdf"")");
             Assert.AreEqual("asdf", actual);
 
             actual = XLWorkbook.EvaluateExpr(@"T(Today())");
@@ -561,14 +561,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Text_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Text(1913415.93, """")");
+            object actual = XLWorkbook.EvaluateExpr(@"Text(1913415.93, """")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Text_Value()
         {
-            Object actual;
+            object actual;
             actual = XLWorkbook.EvaluateExpr(@"Text(Date(2010, 1, 1), ""yyyy-MM-dd"")");
             Assert.AreEqual("2010-01-01", actual);
 
@@ -594,7 +594,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Text_String_Input()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"TEXT(""211x"", ""#00"")");
+            object actual = XLWorkbook.EvaluateExpr(@"TEXT(""211x"", ""#00"")");
             Assert.AreEqual("211x", actual);
         }
 
@@ -660,28 +660,28 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Trim_EmptyInput_Striong()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Trim("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Trim("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Trim_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Trim("" some text with padding   "")");
+            object actual = XLWorkbook.EvaluateExpr(@"Trim("" some text with padding   "")");
             Assert.AreEqual("some text with padding", actual);
         }
 
         [Test]
         public void Upper_Empty_Input_String()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Upper("""")");
+            object actual = XLWorkbook.EvaluateExpr(@"Upper("""")");
             Assert.AreEqual("", actual);
         }
 
         [Test]
         public void Upper_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Upper(""AbCdEfG"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Upper(""AbCdEfG"")");
             Assert.AreEqual("ABCDEFG", actual);
         }
 
@@ -694,7 +694,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Value_Value()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"Value(""123.54"")");
+            object actual = XLWorkbook.EvaluateExpr(@"Value(""123.54"")");
             Assert.AreEqual(123.54, actual);
 
             actual = XLWorkbook.EvaluateExpr(@"Value(654.32)");

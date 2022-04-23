@@ -15,14 +15,14 @@ namespace ClosedXML.Excel
         public Algorithm Algorithm { get; internal set; }
         public XLSheetProtectionElements AllowedElements { get; set; }
 
-        public Boolean IsPasswordProtected => this.IsProtected && !String.IsNullOrEmpty(PasswordHash);
-        public Boolean IsProtected { get; internal set; }
+        public bool IsPasswordProtected => this.IsProtected && !string.IsNullOrEmpty(PasswordHash);
+        public bool IsProtected { get; internal set; }
 
-        internal String Base64EncodedSalt { get; set; }
-        internal String PasswordHash { get; set; }
-        internal UInt32 SpinCount { get; set; } = 100000;
+        internal string Base64EncodedSalt { get; set; }
+        internal string PasswordHash { get; set; }
+        internal uint SpinCount { get; set; } = 100000;
 
-        public IXLSheetProtection AllowElement(XLSheetProtectionElements element, Boolean allowed = true)
+        public IXLSheetProtection AllowElement(XLSheetProtectionElements element, bool allowed = true)
         {
             if (!allowed)
                 return DisallowElement(element);
@@ -76,10 +76,10 @@ namespace ClosedXML.Excel
 
         public IXLSheetProtection Protect()
         {
-            return Protect(String.Empty);
+            return Protect(string.Empty);
         }
 
-        public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm, XLSheetProtectionElements allowedElements = XLSheetProtectionElements.SelectEverything)
+        public IXLSheetProtection Protect(string password, Algorithm algorithm = DefaultProtectionAlgorithm, XLSheetProtectionElements allowedElements = XLSheetProtectionElements.SelectEverything)
         {
             if (IsProtected)
             {
@@ -103,10 +103,10 @@ namespace ClosedXML.Excel
 
         public IXLSheetProtection Unprotect()
         {
-            return Unprotect(String.Empty);
+            return Unprotect(string.Empty);
         }
 
-        public IXLSheetProtection Unprotect(String password)
+        public IXLSheetProtection Unprotect(string password)
         {
             if (IsProtected)
             {
@@ -121,8 +121,8 @@ namespace ClosedXML.Excel
                 else
                 {
                     IsProtected = false;
-                    PasswordHash = String.Empty;
-                    this.Base64EncodedSalt = String.Empty;
+                    PasswordHash = string.Empty;
+                    this.Base64EncodedSalt = string.Empty;
                 }
             }
 
@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
 
         #region IXLProtectable interface
 
-        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.AllowElement(XLSheetProtectionElements element, Boolean allowed) => AllowElement(element, allowed);
+        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.AllowElement(XLSheetProtectionElements element, bool allowed) => AllowElement(element, allowed);
 
         IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.AllowEverything() => AllowEverything();
 
@@ -143,11 +143,11 @@ namespace ClosedXML.Excel
 
         IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Protect() => Protect();
 
-        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Protect(String password, Algorithm algorithm) => Protect(password, algorithm);
+        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Protect(string password, Algorithm algorithm) => Protect(password, algorithm);
 
         IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Unprotect() => Unprotect();
 
-        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Unprotect(String password) => Unprotect(password);
+        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Unprotect(string password) => Unprotect(password);
 
         #endregion IXLProtectable interface
     }

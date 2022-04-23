@@ -149,7 +149,7 @@ namespace ClosedXML.Excel.CalcEngine
             var start = (int)p[1] - 1;
             var length = (int)p[2];
             if (start > str.Length - 1)
-                return String.Empty;
+                return string.Empty;
             if (start + length > str.Length - 1)
                 return str.Substring(start);
             return str.Substring(start, length);
@@ -446,7 +446,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Dollar(List<Expression> p)
         {
-            Double value = p[0];
+            double value = p[0];
             int dec = p.Count == 2 ? (int)p[1] : 2;
 
             return value.ToString("C" + dec);
@@ -465,13 +465,13 @@ namespace ClosedXML.Excel.CalcEngine
             if (p[0]._token.Value.GetType() == typeof(string))
                 throw new ApplicationException("Input type can't be string");
 
-            Double value = p[0];
+            double value = p[0];
             int decimal_places = p.Count >= 2 ? (int)p[1] : 2;
-            Boolean no_commas = p.Count == 3 && p[2];
+            bool no_commas = p.Count == 3 && p[2];
 
             var retVal = value.ToString("N" + decimal_places);
             if (no_commas)
-                return retVal.Replace(",", String.Empty);
+                return retVal.Replace(",", string.Empty);
             else
                 return retVal;
         }

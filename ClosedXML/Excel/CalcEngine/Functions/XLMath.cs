@@ -83,17 +83,17 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return (Math.Cosh(x) / Math.Sinh(x));
         }
 
-        public static double Combin(Int32 n, Int32 k)
+        public static double Combin(int n, int k)
         {
             if (k == 0) return 1;
             return n * Combin(n - 1, k - 1) / k;
         }
 
-        public static Boolean IsEven(Int32 value)
+        public static bool IsEven(int value)
         {
             return Math.Abs(value % 2) == 0;
         }
-        public static Boolean IsOdd(Int32 value)
+        public static bool IsOdd(int value)
         {
             return Math.Abs(value % 2) != 0;
         }

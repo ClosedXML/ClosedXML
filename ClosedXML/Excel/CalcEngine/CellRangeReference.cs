@@ -40,7 +40,7 @@ namespace ClosedXML.Excel.CalcEngine
                 yield return c;
         }
 
-        private Boolean _evaluating;
+        private bool _evaluating;
 
         // ** implementation
         private object GetValue(IXLCell cell)
@@ -53,7 +53,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 _evaluating = true;
                 var f = cell.FormulaA1;
-                if (String.IsNullOrWhiteSpace(f))
+                if (string.IsNullOrWhiteSpace(f))
                     return cell.Value;
                 else
                 {

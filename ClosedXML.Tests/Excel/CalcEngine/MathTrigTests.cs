@@ -1418,7 +1418,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 ws.Cell(row, 2).Value = "Carrots";
                 ws.Cell(row, 3).Value = "Sarah";
 
-                var actualResult = ws.Evaluate(formula).CastTo<Double>();
+                var actualResult = ws.Evaluate(formula).CastTo<double>();
 
                 Assert.AreEqual(expectedResult, actualResult, tolerance);
             }

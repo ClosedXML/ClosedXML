@@ -23,16 +23,16 @@ namespace ClosedXML.Excel
             font.FontCharSet = sourceFont.FontCharSet;
         }
 
-        public static Double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
+        public static double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
         {
             var font = GetCachedFont(fontBase, fontCache);
             var textHeight = GraphicsUtils.MeasureString("X", font.Typeface).Height;
             return (double)textHeight * 0.85;
         }
 
-        public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, SKFont> fontCache)
+        public static double GetWidth(this IXLFontBase fontBase, string text, Dictionary<IXLFontBase, SKFont> fontCache)
         {
-            if (String.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(text))
                 return 0;
 
             var font = GetCachedFont(fontBase, fontCache);

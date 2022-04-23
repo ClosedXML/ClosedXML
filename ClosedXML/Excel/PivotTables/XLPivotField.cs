@@ -14,31 +14,31 @@ namespace ClosedXML.Excel
             this._pivotTable = pivotTable;
             SourceName = sourceName;
             Subtotals = new List<XLSubtotalFunction>();
-            SelectedValues = new List<Object>();
+            SelectedValues = new List<object>();
             SortType = XLPivotSortType.Default;
             SetExcelDefaults();
 
             StyleFormats = new XLPivotFieldStyleFormats(this);
         }
 
-        public String SourceName { get; private set; }
-        public String CustomName { get; set; }
+        public string SourceName { get; private set; }
+        public string CustomName { get; set; }
 
-        public IXLPivotField SetCustomName(String value) { CustomName = value; return this; }
+        public IXLPivotField SetCustomName(string value) { CustomName = value; return this; }
 
-        public String SubtotalCaption { get; set; }
+        public string SubtotalCaption { get; set; }
 
-        public IXLPivotField SetSubtotalCaption(String value) { SubtotalCaption = value; return this; }
+        public IXLPivotField SetSubtotalCaption(string value) { SubtotalCaption = value; return this; }
 
         public List<XLSubtotalFunction> Subtotals { get; private set; }
 
         public IXLPivotField AddSubtotal(XLSubtotalFunction value) { Subtotals.Add(value); return this; }
 
-        public Boolean IncludeNewItemsInFilter { get; set; }
+        public bool IncludeNewItemsInFilter { get; set; }
 
         public IXLPivotField SetIncludeNewItemsInFilter() { IncludeNewItemsInFilter = true; return this; }
 
-        public IXLPivotField SetIncludeNewItemsInFilter(Boolean value) { IncludeNewItemsInFilter = value; return this; }
+        public IXLPivotField SetIncludeNewItemsInFilter(bool value) { IncludeNewItemsInFilter = value; return this; }
 
         public bool Outline { get; set; }
         public bool Compact { get; set; }
@@ -55,57 +55,57 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean? SubtotalsAtTop { get; set; }
+        public bool? SubtotalsAtTop { get; set; }
 
         public IXLPivotField SetSubtotalsAtTop() { SubtotalsAtTop = true; return this; }
 
-        public IXLPivotField SetSubtotalsAtTop(Boolean value) { SubtotalsAtTop = value; return this; }
+        public IXLPivotField SetSubtotalsAtTop(bool value) { SubtotalsAtTop = value; return this; }
 
-        public Boolean RepeatItemLabels { get; set; }
+        public bool RepeatItemLabels { get; set; }
 
         public IXLPivotField SetRepeatItemLabels() { RepeatItemLabels = true; return this; }
 
-        public IXLPivotField SetRepeatItemLabels(Boolean value) { RepeatItemLabels = value; return this; }
+        public IXLPivotField SetRepeatItemLabels(bool value) { RepeatItemLabels = value; return this; }
 
-        public Boolean InsertBlankLines { get; set; }
+        public bool InsertBlankLines { get; set; }
 
         public IXLPivotField SetInsertBlankLines() { InsertBlankLines = true; return this; }
 
-        public IXLPivotField SetInsertBlankLines(Boolean value) { InsertBlankLines = value; return this; }
+        public IXLPivotField SetInsertBlankLines(bool value) { InsertBlankLines = value; return this; }
 
-        public Boolean ShowBlankItems { get; set; }
+        public bool ShowBlankItems { get; set; }
 
         public IXLPivotField SetShowBlankItems() { ShowBlankItems = true; return this; }
 
-        public IXLPivotField SetShowBlankItems(Boolean value) { ShowBlankItems = value; return this; }
+        public IXLPivotField SetShowBlankItems(bool value) { ShowBlankItems = value; return this; }
 
-        public Boolean InsertPageBreaks { get; set; }
+        public bool InsertPageBreaks { get; set; }
 
         public IXLPivotField SetInsertPageBreaks() { InsertPageBreaks = true; return this; }
 
-        public IXLPivotField SetInsertPageBreaks(Boolean value) { InsertPageBreaks = value; return this; }
+        public IXLPivotField SetInsertPageBreaks(bool value) { InsertPageBreaks = value; return this; }
 
-        public Boolean Collapsed { get; set; }
+        public bool Collapsed { get; set; }
 
         public IXLPivotField SetCollapsed() { Collapsed = true; return this; }
 
-        public IXLPivotField SetCollapsed(Boolean value) { Collapsed = value; return this; }
+        public IXLPivotField SetCollapsed(bool value) { Collapsed = value; return this; }
 
         public XLPivotSortType SortType { get; set; }
 
         public IXLPivotField SetSort(XLPivotSortType value) { SortType = value; return this; }
 
-        public IList<Object> SelectedValues { get; private set; }
+        public IList<object> SelectedValues { get; private set; }
 
-        public IXLPivotField AddSelectedValue(Object value)
+        public IXLPivotField AddSelectedValue(object value)
         {
             SelectedValues.Add(value);
             return this;
         }
 
-        public IXLPivotField AddSelectedValues(IEnumerable<Object> values)
+        public IXLPivotField AddSelectedValues(IEnumerable<object> values)
         {
-            ((List<Object>)SelectedValues).AddRange(values);
+            ((List<object>)SelectedValues).AddRange(values);
             return this;
         }
 
@@ -124,12 +124,12 @@ namespace ClosedXML.Excel
 
         public IXLPivotFieldStyleFormats StyleFormats { get; set; }
 
-        public Boolean IsOnRowAxis => _pivotTable.RowLabels.Contains(this.SourceName);
+        public bool IsOnRowAxis => _pivotTable.RowLabels.Contains(this.SourceName);
 
-        public Boolean IsOnColumnAxis => _pivotTable.ColumnLabels.Contains(this.SourceName);
+        public bool IsOnColumnAxis => _pivotTable.ColumnLabels.Contains(this.SourceName);
 
-        public Boolean IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
+        public bool IsInFilterList => _pivotTable.ReportFilters.Contains(this.SourceName);
 
-        public Int32 Offset => _pivotTable.SourceRangeFieldsAvailable.ToList().IndexOf(this.SourceName);
+        public int Offset => _pivotTable.SourceRangeFieldsAvailable.ToList().IndexOf(this.SourceName);
     }
 }

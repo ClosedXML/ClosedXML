@@ -103,7 +103,7 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        public IXLCells CellsUsed(Boolean includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             return CellsUsed(includeFormats
                 ? XLCellsUsedOptions.All

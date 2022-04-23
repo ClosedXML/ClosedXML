@@ -7,13 +7,13 @@ namespace ClosedXML.Excel
     {
         #region Public Properties
 
-        public Double? ManualMax
+        public double? ManualMax
         {
             get => _manualMax;
             set => SetManualMax(value);
         }
 
-        public Double? ManualMin
+        public double? ManualMin
         {
             get => _manualMin;
             set => SetManualMin(value);
@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
 
         #region Public Methods
 
-        public IXLSparklineVerticalAxis SetManualMax(Double? manualMax)
+        public IXLSparklineVerticalAxis SetManualMax(double? manualMax)
         {
             if (manualMax != null)
                 MaxAxisType = XLSparklineAxisMinMax.Custom;
@@ -44,7 +44,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineVerticalAxis SetManualMin(Double? manualMin)
+        public IXLSparklineVerticalAxis SetManualMin(double? manualMin)
         {
             if (manualMin != null)
                 MinAxisType = XLSparklineAxisMinMax.Custom;
@@ -75,8 +75,8 @@ namespace ClosedXML.Excel
 
         #region Private Fields
 
-        private Double? _manualMax;
-        private Double? _manualMin;
+        private double? _manualMax;
+        private double? _manualMin;
         private XLSparklineAxisMinMax _maxAxisType;
         private XLSparklineAxisMinMax _minAxisType;
 

@@ -6,7 +6,7 @@ namespace ClosedXML.Examples.Misc
 {
     public class AddingDataSet : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var wb = new XLWorkbook();
 
@@ -30,7 +30,7 @@ namespace ClosedXML.Examples.Misc
             return ds;
         }
 
-        private DataTable GetTable(String tableName)
+        private DataTable GetTable(string tableName)
         {
             DataTable table = new DataTable();
             table.TableName = tableName;

@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
             Container = this;
         }
 
-        public XLRichText(String text, IXLFontBase defaultFont)
+        public XLRichText(string text, IXLFontBase defaultFont)
             :base(text, defaultFont)
         {
             Container = this;

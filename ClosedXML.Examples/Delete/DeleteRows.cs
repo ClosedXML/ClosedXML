@@ -37,7 +37,7 @@ namespace ClosedXML.Examples.Delete
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             #region Create case
 

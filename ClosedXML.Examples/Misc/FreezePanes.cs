@@ -5,7 +5,7 @@ namespace ClosedXML.Examples.Misc
 {
     public class FreezePanes : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using (var wb = new XLWorkbook())
             {

@@ -5,7 +5,7 @@ namespace ClosedXML.Examples
 {
     public class CFColorScaleLowMidHigh : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -26,7 +26,7 @@ namespace ClosedXML.Examples
 
     public class CFColorScaleLowHigh : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -46,7 +46,7 @@ namespace ClosedXML.Examples
 
     public class CFColorScaleMinimumMaximum : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -66,7 +66,7 @@ namespace ClosedXML.Examples
 
     public class CFStartsWith : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -88,7 +88,7 @@ namespace ClosedXML.Examples
 
     public class CFEndsWith : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -107,7 +107,7 @@ namespace ClosedXML.Examples
 
     public class CFIsBlank : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -126,7 +126,7 @@ namespace ClosedXML.Examples
 
     public class CFNotBlank : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -145,7 +145,7 @@ namespace ClosedXML.Examples
 
     public class CFIsError : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -164,7 +164,7 @@ namespace ClosedXML.Examples
 
     public class CFNotError : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -183,7 +183,7 @@ namespace ClosedXML.Examples
 
     public class CFContains : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -202,7 +202,7 @@ namespace ClosedXML.Examples
 
     public class CFNotContains : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -221,7 +221,7 @@ namespace ClosedXML.Examples
 
     public class CFEqualsString : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -240,7 +240,7 @@ namespace ClosedXML.Examples
 
     public class CFEqualsNumber : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -259,7 +259,7 @@ namespace ClosedXML.Examples
 
     public class CFNotEqualsString : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -278,7 +278,7 @@ namespace ClosedXML.Examples
 
     public class CFNotEqualsNumber : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -297,7 +297,7 @@ namespace ClosedXML.Examples
 
     public class CFGreaterThan : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -316,7 +316,7 @@ namespace ClosedXML.Examples
 
     public class CFEqualOrGreaterThan : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -335,7 +335,7 @@ namespace ClosedXML.Examples
 
     public class CFLessThan : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -354,7 +354,7 @@ namespace ClosedXML.Examples
 
     public class CFEqualOrLessThan : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -373,7 +373,7 @@ namespace ClosedXML.Examples
 
     public class CFBetween : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -392,7 +392,7 @@ namespace ClosedXML.Examples
 
     public class CFNotBetween : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -411,7 +411,7 @@ namespace ClosedXML.Examples
 
     public class CFUnique : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -430,7 +430,7 @@ namespace ClosedXML.Examples
 
     public class CFDuplicate : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -449,7 +449,7 @@ namespace ClosedXML.Examples
 
     public class CFIsTrue : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -468,7 +468,7 @@ namespace ClosedXML.Examples
 
     public class CFTop : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -487,7 +487,7 @@ namespace ClosedXML.Examples
 
     public class CFBottom : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -506,7 +506,7 @@ namespace ClosedXML.Examples
 
     public class CFDataBar : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -526,7 +526,7 @@ namespace ClosedXML.Examples
 
     public class CFDataBarNegative : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -559,7 +559,7 @@ namespace ClosedXML.Examples
 
     public class CFIconSet : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -580,7 +580,7 @@ namespace ClosedXML.Examples
 
     public class CFTwoConditions : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -604,7 +604,7 @@ namespace ClosedXML.Examples
 
     public class CFInsertRows : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -624,7 +624,7 @@ namespace ClosedXML.Examples
 
     public class CFTest : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -645,7 +645,7 @@ namespace ClosedXML.Examples
 
     public class CFMultipleConditions : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -664,7 +664,7 @@ namespace ClosedXML.Examples
 
     public class CFStopIfTrue : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
@@ -687,7 +687,7 @@ namespace ClosedXML.Examples
 
     public class CFDatesOccurring : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using (var workbook = new XLWorkbook())
             {

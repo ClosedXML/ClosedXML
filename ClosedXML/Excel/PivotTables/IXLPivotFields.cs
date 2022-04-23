@@ -6,23 +6,23 @@ namespace ClosedXML.Excel
 {
     public interface IXLPivotFields : IEnumerable<IXLPivotField>
     {
-        IXLPivotField Add(String sourceName);
+        IXLPivotField Add(string sourceName);
 
-        IXLPivotField Add(String sourceName, String customName);
+        IXLPivotField Add(string sourceName, string customName);
 
         void Clear();
 
-        Boolean Contains(String sourceName);
+        bool Contains(string sourceName);
 
-        Boolean Contains(IXLPivotField pivotField);
+        bool Contains(IXLPivotField pivotField);
 
-        IXLPivotField Get(String sourceName);
+        IXLPivotField Get(string sourceName);
 
-        IXLPivotField Get(Int32 index);
+        IXLPivotField Get(int index);
 
-        Int32 IndexOf(String sourceName);
-        Int32 IndexOf(IXLPivotField pf);
+        int IndexOf(string sourceName);
+        int IndexOf(IXLPivotField pf);
 
-        void Remove(String sourceName);
+        void Remove(string sourceName);
     }
 }

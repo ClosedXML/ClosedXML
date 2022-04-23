@@ -1023,3 +1023,12 @@ dotnet_diagnostic.CA5404.severity = warning
 
 # CA5405: Do not always skip token validation in delegates
 dotnet_diagnostic.CA5405.severity = warning
+
+# IDE0048: Add parentheses for clarity
+dotnet_diagnostic.IDE0048.severity = suggestion
+
+# IDE0011: Add braces
+dotnet_diagnostic.IDE0011.severity = suggestion
+
+# IDE0058: Expression value is never used
+dotnet_diagnostic.IDE0058.severity = silent

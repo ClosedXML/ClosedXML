@@ -95,7 +95,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void TestColumnLetterLookup()
         {
-            var columnLetters = new List<String>();
+            var columnLetters = new List<string>();
             for (int c = 1; c <= XLHelper.MaxColumnNumber; c++)
             {
                 var columnLetter = NaiveGetColumnLetterFromNumber(c);
@@ -157,7 +157,7 @@ namespace ClosedXML.Tests.Excel
             //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
             {
-                retVal = Int32.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
+                retVal = int.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
                 return retVal;
             }
 

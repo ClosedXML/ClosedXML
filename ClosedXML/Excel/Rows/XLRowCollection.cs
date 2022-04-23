@@ -6,13 +6,13 @@ namespace ClosedXML.Excel
 {
     using System.Collections;
 
-    internal class XLRowsCollection : IDictionary<Int32, XLRow>
+    internal class XLRowsCollection : IDictionary<int, XLRow>
     {
-        private readonly Dictionary<Int32, XLRow> _dictionary = new Dictionary<Int32, XLRow>();
+        private readonly Dictionary<int, XLRow> _dictionary = new Dictionary<int, XLRow>();
 
-        public Dictionary<Int32, XLRow> Deleted { get; } = new Dictionary<Int32, XLRow>();
+        public Dictionary<int, XLRow> Deleted { get; } = new Dictionary<int, XLRow>();
 
-        public Int32 MaxRowUsed;
+        public int MaxRowUsed;
 
         #region IDictionary<int,XLRow> Members
 
@@ -115,13 +115,13 @@ namespace ClosedXML.Excel
 
         #endregion IDictionary<int,XLRow> Members
 
-        public void ShiftRowsDown(Int32 startingRow, Int32 rowsToShift)
+        public void ShiftRowsDown(int startingRow, int rowsToShift)
         {
             foreach (int ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = _dictionary[ro];
                 _dictionary.Remove(ro);
-                Int32 newRowNum = ro + rowsToShift;
+                int newRowNum = ro + rowsToShift;
                 if (newRowNum <= XLHelper.MaxRowNumber)
                 {
                     rowToMove.SetRowNumber(newRowNum);
@@ -130,7 +130,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void RemoveAll(Func<XLRow, Boolean> predicate)
+        public void RemoveAll(Func<XLRow, bool> predicate)
         {
             foreach (var row in _dictionary.Values.Where(predicate).Where(row1 => !Deleted.ContainsKey(row1.RowNumber())))
             {

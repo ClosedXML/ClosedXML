@@ -18,11 +18,11 @@ namespace ClosedXML.Excel
 
         public XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
 
-        public Boolean DisplayHidden { get; set; }
+        public bool DisplayHidden { get; set; }
 
         public IXLSparklineHorizontalAxis HorizontalAxis { get; }
 
-        public Double LineWeight { get; set; }
+        public double LineWeight { get; set; }
 
         public XLSparklineMarkers ShowMarkers { get; set; }
 
@@ -268,13 +268,13 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetDisplayHidden(Boolean displayHidden)
+        public IXLSparklineGroup SetDisplayHidden(bool displayHidden)
         {
             DisplayHidden = displayHidden;
             return this;
         }
 
-        public IXLSparklineGroup SetLineWeight(Double lineWeight)
+        public IXLSparklineGroup SetLineWeight(double lineWeight)
         {
             LineWeight = lineWeight;
             return this;

@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
             Initialize(cell, style);
         }
 
-        public XLComment(XLCell cell, String text, IXLFontBase defaultFont)
+        public XLComment(XLCell cell, string text, IXLFontBase defaultFont)
             : base(text, defaultFont)
         {
             Initialize(cell);
@@ -26,9 +26,9 @@ namespace ClosedXML.Excel
 
         #region IXLComment Members
 
-        public String Author { get; set; }
+        public string Author { get; set; }
 
-        public IXLComment SetAuthor(String value)
+        public IXLComment SetAuthor(string value)
         {
             Author = value;
             return this;
@@ -49,16 +49,16 @@ namespace ClosedXML.Excel
 
         #region IXLDrawing
 
-        public String Name { get; set; }
-        public String Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public XLDrawingAnchor Anchor { get; set; }
-        public Boolean HorizontalFlip { get; set; }
-        public Boolean VerticalFlip { get; set; }
-        public Int32 Rotation { get; set; }
-        public Int32 ExtentLength { get; set; }
-        public Int32 ExtentWidth { get; set; }
-        public Int32 ShapeId { get; internal set; }
-        public Boolean Visible { get; set; }
+        public bool HorizontalFlip { get; set; }
+        public bool VerticalFlip { get; set; }
+        public int Rotation { get; set; }
+        public int ExtentLength { get; set; }
+        public int ExtentWidth { get; set; }
+        public int ShapeId { get; internal set; }
+        public bool Visible { get; set; }
 
         public IXLComment SetVisible()
         {
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
             return Container;
         }
 
-        public IXLComment SetVisible(Boolean hidden)
+        public IXLComment SetVisible(bool hidden)
         {
             Visible = hidden;
             return Container;
@@ -74,9 +74,9 @@ namespace ClosedXML.Excel
 
         public IXLDrawingPosition Position { get; private set; }
 
-        public Int32 ZOrder { get; set; }
+        public int ZOrder { get; set; }
 
-        public IXLComment SetZOrder(Int32 zOrder)
+        public IXLComment SetZOrder(int zOrder)
         {
             ZOrder = zOrder;
             return Container;
@@ -84,13 +84,13 @@ namespace ClosedXML.Excel
 
         public IXLDrawingStyle Style { get; private set; }
 
-        public IXLComment SetName(String name)
+        public IXLComment SetName(string name)
         {
             Name = name;
             return Container;
         }
 
-        public IXLComment SetDescription(String description)
+        public IXLComment SetDescription(string description)
         {
             Description = description;
             return Container;
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
             return Container;
         }
 
-        public IXLComment SetHorizontalFlip(Boolean horizontalFlip)
+        public IXLComment SetHorizontalFlip(bool horizontalFlip)
         {
             HorizontalFlip = horizontalFlip;
             return Container;
@@ -114,25 +114,25 @@ namespace ClosedXML.Excel
             return Container;
         }
 
-        public IXLComment SetVerticalFlip(Boolean verticalFlip)
+        public IXLComment SetVerticalFlip(bool verticalFlip)
         {
             VerticalFlip = verticalFlip;
             return Container;
         }
 
-        public IXLComment SetRotation(Int32 rotation)
+        public IXLComment SetRotation(int rotation)
         {
             Rotation = rotation;
             return Container;
         }
 
-        public IXLComment SetExtentLength(Int32 extentLength)
+        public IXLComment SetExtentLength(int extentLength)
         {
             ExtentLength = extentLength;
             return Container;
         }
 
-        public IXLComment SetExtentWidth(Int32 extentWidth)
+        public IXLComment SetExtentWidth(int extentWidth)
         {
             ExtentWidth = extentWidth;
             return Container;
@@ -149,8 +149,8 @@ namespace ClosedXML.Excel
             Container = this;
             Anchor = XLDrawingAnchor.MoveAndSizeWithCells;
             Style = new XLDrawingStyle();
-            Int32 previousRowNumber = cell.Address.RowNumber;
-            Double previousRowOffset = 0;
+            int previousRowNumber = cell.Address.RowNumber;
+            double previousRowOffset = 0;
 
             if (previousRowNumber > 1)
             {

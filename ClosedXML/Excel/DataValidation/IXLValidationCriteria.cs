@@ -5,56 +5,56 @@ namespace ClosedXML.Excel
 {
     public interface IXLValidationCriteria
     {
-        void Between(String minValue, String maxValue);
+        void Between(string minValue, string maxValue);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void Between(IXLRange minValue, IXLRange maxValue);
 
         void Between(IXLCell minValue, IXLCell maxValue);
 
-        void EqualOrGreaterThan(String value);
+        void EqualOrGreaterThan(string value);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void EqualOrGreaterThan(IXLRange range);
 
         void EqualOrGreaterThan(IXLCell cell);
 
-        void EqualOrLessThan(String value);
+        void EqualOrLessThan(string value);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void EqualOrLessThan(IXLRange range);
 
         void EqualOrLessThan(IXLCell cell);
 
-        void EqualTo(String value);
+        void EqualTo(string value);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void EqualTo(IXLRange range);
 
         void EqualTo(IXLCell cell);
 
-        void GreaterThan(String value);
+        void GreaterThan(string value);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void GreaterThan(IXLRange range);
 
         void GreaterThan(IXLCell cell);
 
-        void LessThan(String value);
+        void LessThan(string value);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void LessThan(IXLRange range);
 
         void LessThan(IXLCell cell);
 
-        void NotBetween(String minValue, String maxValue);
+        void NotBetween(string minValue, string maxValue);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void NotBetween(IXLRange minValue, IXLRange maxValue);
 
         void NotBetween(IXLCell minValue, IXLCell maxValue);
 
-        void NotEqualTo(String value);
+        void NotEqualTo(string value);
 
         [Obsolete("Use the overload accepting IXLCell")]
         void NotEqualTo(IXLRange range);

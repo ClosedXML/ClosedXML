@@ -130,7 +130,7 @@ namespace ClosedXML.Excel
             IconSetOperators = new XLDictionary<XLCFIconSetOperator>();
         }
 
-        public XLConditionalFormat(XLRange range, Boolean copyDefaultModify = false)
+        public XLConditionalFormat(XLRange range, bool copyDefaultModify = false)
             : this(XLStyle.Default.Value)
         {
             if (range != null)
@@ -138,7 +138,7 @@ namespace ClosedXML.Excel
             CopyDefaultModify = copyDefaultModify;
         }
 
-        public XLConditionalFormat(IEnumerable<XLRange> ranges, Boolean copyDefaultModify = false)
+        public XLConditionalFormat(IEnumerable<XLRange> ranges, bool copyDefaultModify = false)
             : this(XLStyle.Default.Value)
         {
             ranges?.ForEach(range => Ranges.Add(range));
@@ -161,9 +161,9 @@ namespace ClosedXML.Excel
 
         public Guid Id { get; internal set; }
 
-        internal Int32 OriginalPriority { get; set; }
+        internal int OriginalPriority { get; set; }
 
-        public Boolean CopyDefaultModify { get; set; }
+        public bool CopyDefaultModify { get; set; }
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -211,17 +211,17 @@ namespace ClosedXML.Excel
 
         public XLCFOperator Operator { get; set; }
 
-        public Boolean Bottom { get; set; }
+        public bool Bottom { get; set; }
 
-        public Boolean Percent { get; set; }
+        public bool Percent { get; set; }
 
-        public Boolean ReverseIconOrder { get; set; }
+        public bool ReverseIconOrder { get; set; }
 
-        public Boolean ShowIconOnly { get; set; }
+        public bool ShowIconOnly { get; set; }
 
-        public Boolean ShowBarOnly { get; set; }
+        public bool ShowBarOnly { get; set; }
 
-        public Boolean StopIfTrue { get; set; }
+        public bool StopIfTrue { get; set; }
 
         public IXLConditionalFormat SetStopIfTrue()
         {
@@ -303,7 +303,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenContains(String value)
+        public IXLStyle WhenContains(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.ContainsText;
@@ -311,7 +311,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenNotContains(String value)
+        public IXLStyle WhenNotContains(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.NotContainsText;
@@ -319,7 +319,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenStartsWith(String value)
+        public IXLStyle WhenStartsWith(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.StartsWith;
@@ -327,7 +327,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenEndsWith(String value)
+        public IXLStyle WhenEndsWith(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             ConditionalFormatType = XLConditionalFormatType.EndsWith;
@@ -335,7 +335,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenEquals(String value)
+        public IXLStyle WhenEquals(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.Equal;
@@ -343,7 +343,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenNotEquals(String value)
+        public IXLStyle WhenNotEquals(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.NotEqual;
@@ -351,7 +351,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenGreaterThan(String value)
+        public IXLStyle WhenGreaterThan(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.GreaterThan;
@@ -359,7 +359,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenLessThan(String value)
+        public IXLStyle WhenLessThan(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.LessThan;
@@ -367,7 +367,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenEqualOrGreaterThan(String value)
+        public IXLStyle WhenEqualOrGreaterThan(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.EqualOrGreaterThan;
@@ -375,7 +375,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenEqualOrLessThan(String value)
+        public IXLStyle WhenEqualOrLessThan(string value)
         {
             Values.Initialize(new XLFormula { Value = value });
             Operator = XLCFOperator.EqualOrLessThan;
@@ -383,7 +383,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenBetween(String minValue, String maxValue)
+        public IXLStyle WhenBetween(string minValue, string maxValue)
         {
             Values.Initialize(new XLFormula { Value = minValue });
             Values.Add(new XLFormula { Value = maxValue });
@@ -392,7 +392,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenNotBetween(String minValue, String maxValue)
+        public IXLStyle WhenNotBetween(string minValue, string maxValue)
         {
             Values.Initialize(new XLFormula { Value = minValue });
             Values.Add(new XLFormula { Value = maxValue });
@@ -401,7 +401,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenEquals(Double value)
+        public IXLStyle WhenEquals(double value)
         {
             Values.Initialize(new XLFormula(value));
             Operator = XLCFOperator.Equal;
@@ -409,7 +409,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenNotEquals(Double value)
+        public IXLStyle WhenNotEquals(double value)
         {
             Values.Initialize(new XLFormula(value));
             Operator = XLCFOperator.NotEqual;
@@ -417,7 +417,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenGreaterThan(Double value)
+        public IXLStyle WhenGreaterThan(double value)
         {
             Values.Initialize(new XLFormula(value));
             Operator = XLCFOperator.GreaterThan;
@@ -425,7 +425,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenLessThan(Double value)
+        public IXLStyle WhenLessThan(double value)
         {
             Values.Initialize(new XLFormula(value));
             Operator = XLCFOperator.LessThan;
@@ -433,7 +433,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenEqualOrGreaterThan(Double value)
+        public IXLStyle WhenEqualOrGreaterThan(double value)
         {
             Values.Initialize(new XLFormula(value));
             Operator = XLCFOperator.EqualOrGreaterThan;
@@ -441,7 +441,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenEqualOrLessThan(Double value)
+        public IXLStyle WhenEqualOrLessThan(double value)
         {
             Values.Initialize(new XLFormula(value));
             Operator = XLCFOperator.EqualOrLessThan;
@@ -449,7 +449,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenBetween(Double minValue, Double maxValue)
+        public IXLStyle WhenBetween(double minValue, double maxValue)
         {
             Values.Initialize(new XLFormula(minValue));
             Values.Add(new XLFormula(maxValue));
@@ -458,7 +458,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenNotBetween(Double minValue, Double maxValue)
+        public IXLStyle WhenNotBetween(double minValue, double maxValue)
         {
             Values.Initialize(new XLFormula(minValue));
             Values.Add(new XLFormula(maxValue));
@@ -479,15 +479,15 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenIsTrue(String formula)
+        public IXLStyle WhenIsTrue(string formula)
         {
-            String f = formula.TrimStart()[0] == '=' ? formula : "=" + formula;
+            string f = formula.TrimStart()[0] == '=' ? formula : "=" + formula;
             Values.Initialize(new XLFormula { Value = f });
             ConditionalFormatType = XLConditionalFormatType.Expression;
             return Style;
         }
 
-        public IXLStyle WhenIsTop(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items)
+        public IXLStyle WhenIsTop(int value, XLTopBottomType topBottomType = XLTopBottomType.Items)
         {
             Values.Initialize(new XLFormula(value));
             Percent = topBottomType == XLTopBottomType.Percent;
@@ -496,7 +496,7 @@ namespace ClosedXML.Excel
             return Style;
         }
 
-        public IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items)
+        public IXLStyle WhenIsBottom(int value, XLTopBottomType topBottomType = XLTopBottomType.Items)
         {
             Values.Initialize(new XLFormula(value));
             Percent = topBottomType == XLTopBottomType.Percent;
@@ -511,7 +511,7 @@ namespace ClosedXML.Excel
             return new XLCFColorScaleMin(this);
         }
 
-        public IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false)
+        public IXLCFDataBarMin DataBar(XLColor color, bool showBarOnly = false)
         {
             Colors.Initialize(color);
             ShowBarOnly = showBarOnly;
@@ -519,7 +519,7 @@ namespace ClosedXML.Excel
             return new XLCFDataBarMin(this);
         }
 
-        public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false)
+        public IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, bool showBarOnly = false)
         {
             Colors.Initialize(positiveColor);
             Colors.Add(negativeColor);
@@ -528,7 +528,7 @@ namespace ClosedXML.Excel
             return new XLCFDataBarMin(this);
         }
 
-        public IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false)
+        public IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, bool reverseIconOrder = false, bool showIconOnly = false)
         {
             IconSetOperators.Clear();
             Values.Clear();

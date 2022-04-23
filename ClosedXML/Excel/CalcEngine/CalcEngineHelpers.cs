@@ -31,18 +31,18 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // Excel treats TRUE and 1 as unequal, but LibreOffice treats them as equal. We follow Excel's convention
-            if (criteria is Boolean b1)
-                return (value is Boolean b2) && b1.Equals(b2);
+            if (criteria is bool b1)
+                return (value is bool b2) && b1.Equals(b2);
 
-            if (value is Boolean) return false;
+            if (value is bool) return false;
 
             // if criteria is a number, straight comparison
-            Double cdbl;
-            if (criteria is Double dbl2) cdbl = dbl2;
-            else if (criteria is Int32 i) cdbl = i; // results of DATE function can be an integer
+            double cdbl;
+            if (criteria is double dbl2) cdbl = dbl2;
+            else if (criteria is int i) cdbl = i; // results of DATE function can be an integer
             else if (criteria is DateTime dt) cdbl = dt.ToOADate();
             else if (criteria is TimeSpan ts) cdbl = ts.TotalDays;
-            else if (criteria is String cs)
+            else if (criteria is string cs)
             {
                 if (value is string && (value as string).Trim().Length == 0)
                     return cs.Length == 0;
@@ -82,7 +82,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                     var pattern = Regex.Replace(
                         cs,
-                        "(" + String.Join(
+                        "(" + string.Join(
                                 "|",
                                 patternReplacements.Value.Values.Select(t => t.Item1))
                         + ")",
@@ -101,19 +101,19 @@ namespace ClosedXML.Excel.CalcEngine
             else
                 throw new NotImplementedException();
 
-            Double vdbl;
-            if (value is Double dbl) vdbl = dbl;
-            else if (value is Int32 i) vdbl = i;
+            double vdbl;
+            if (value is double dbl) vdbl = dbl;
+            else if (value is int i) vdbl = i;
             else if (value is DateTime dt) vdbl = dt.ToOADate();
             else if (value is TimeSpan ts) vdbl = ts.TotalDays;
-            else if (value is String s)
+            else if (value is string s)
             {
-                if (!Double.TryParse(s, out vdbl)) return false;
+                if (!double.TryParse(s, out vdbl)) return false;
             }
             else
                 throw new NotImplementedException();
 
-            return Math.Abs(vdbl - cdbl) < Double.Epsilon;
+            return Math.Abs(vdbl - cdbl) < double.Epsilon;
         }
 
         internal static bool ValueIsBlank(object value)

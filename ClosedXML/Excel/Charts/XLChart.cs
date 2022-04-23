@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         {
             Container = this;
             this.worksheet = worksheet;
-            Int32 zOrder;
+            int zOrder;
             if (worksheet.Charts.Any())
                 zOrder = worksheet.Charts.Max(c => c.ZOrder) + 1;
             else
@@ -24,13 +24,13 @@ namespace ClosedXML.Excel
             RightAngleAxes = true;
         }
 
-        public Boolean RightAngleAxes { get; set; }
+        public bool RightAngleAxes { get; set; }
         public IXLChart SetRightAngleAxes()
         {
             RightAngleAxes = true;
             return this;
         }
-        public IXLChart SetRightAngleAxes(Boolean rightAngleAxes)
+        public IXLChart SetRightAngleAxes(bool rightAngleAxes)
         {
             RightAngleAxes = rightAngleAxes;
             return this;

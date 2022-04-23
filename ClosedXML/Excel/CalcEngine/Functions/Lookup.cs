@@ -87,8 +87,8 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static object Hyperlink(List<Expression> p)
         {
-            String address = p[0];
-            String toolTip = p.Count == 2 ? p[1] : String.Empty;
+            string address = p[0];
+            string toolTip = p.Count == 2 ? p[1] : string.Empty;
             return new XLHyperlink(address, toolTip);
         }
 

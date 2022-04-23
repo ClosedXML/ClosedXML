@@ -7,13 +7,13 @@ namespace ClosedXML.Excel
 {
     internal class PivotLabelFieldReference : AbstractPivotFieldReference
     {
-        private readonly Predicate<Object> predicate;
+        private readonly Predicate<object> predicate;
 
         public PivotLabelFieldReference(IXLPivotField pivotField)
             : this(pivotField, null)
         { }
 
-        public PivotLabelFieldReference(IXLPivotField pivotField, Predicate<Object> predicate)
+        public PivotLabelFieldReference(IXLPivotField pivotField, Predicate<object> predicate)
         {
             this.PivotField = pivotField ?? throw new ArgumentNullException(nameof(pivotField));
             this.predicate = predicate;
@@ -26,12 +26,12 @@ namespace ClosedXML.Excel
             return UInt32Value.FromUInt32((uint)PivotField.Offset);
         }
 
-        internal override IEnumerable<Int32> Match(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)
+        internal override IEnumerable<int> Match(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)
         {
             var values = pti.Fields[PivotField.SourceName].DistinctValues.ToList();
 
             if (predicate == null)
-                return new Int32[] { };
+                return new int[] { };
 
             return values.Select((Value, Index) => new { Value, Index })
                 .Where(v => predicate.Invoke(v.Value))

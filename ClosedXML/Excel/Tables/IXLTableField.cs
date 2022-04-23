@@ -58,7 +58,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The index.
         /// </value>
-        Int32 Index { get; }
+        int Index { get; }
 
         /// <summary>
         /// Gets or sets the name/header of this table field.
@@ -67,7 +67,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The name.
         /// </value>
-        String Name { get; set; }
+        string Name { get; set; }
 
         /// <summary>
         /// Gets the underlying table for this table field.
@@ -80,7 +80,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The totals row formula a1.
         /// </value>
-        String TotalsRowFormulaA1 { get; set; }
+        string TotalsRowFormulaA1 { get; set; }
 
         /// <summary>
         /// Gets or sets the totals row formula in R1C1 format.
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The totals row formula r1 c1.
         /// </value>
-        String TotalsRowFormulaR1C1 { get; set; }
+        string TotalsRowFormulaR1C1 { get; set; }
 
         /// <summary>
         /// Gets or sets the totals row function.
@@ -104,7 +104,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The totals row label.
         /// </value>
-        String TotalsRowLabel { get; set; }
+        string TotalsRowLabel { get; set; }
 
         /// <summary>
         /// Deletes this table field from the table.
@@ -114,16 +114,16 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Determines whether all cells this table field have a consistent data type.
         /// </summary>
-        Boolean IsConsistentDataType();
+        bool IsConsistentDataType();
 
         /// <summary>
         /// Determines whether all cells this table field have a consistent formula.
         /// </summary>
-        Boolean IsConsistentFormula();
+        bool IsConsistentFormula();
 
         /// <summary>
         /// Determines whether all cells this table field have a consistent style.
         /// </summary>
-        Boolean IsConsistentStyle();
+        bool IsConsistentStyle();
     }
 }

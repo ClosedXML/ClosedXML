@@ -61,7 +61,7 @@ namespace ClosedXML.Excel
 
         #region IXLProtection Members
 
-        public Boolean Locked
+        public bool Locked
         {
             get { return Key.Locked; }
             set
@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean Hidden
+        public bool Hidden
         {
             get { return Key.Hidden; }
             set
@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetLocked(Boolean value)
+        public IXLStyle SetLocked(bool value)
         {
             Locked = value;
             return _style;
@@ -97,7 +97,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetHidden(Boolean value)
+        public IXLStyle SetHidden(bool value)
         {
             Hidden = value;
             return _style;

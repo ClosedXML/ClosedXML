@@ -13,7 +13,7 @@ namespace ClosedXML.Examples
 
                 #region Single Column Dates
 
-                String singleColumnDates = "Single Column Dates";
+                string singleColumnDates = "Single Column Dates";
                 ws = wb.Worksheets.Add(singleColumnDates);
 
                 // Add a bunch of numbers to filter

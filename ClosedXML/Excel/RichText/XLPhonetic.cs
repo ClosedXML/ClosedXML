@@ -4,15 +4,15 @@ namespace ClosedXML.Excel
 {
     internal class XLPhonetic: IXLPhonetic
     {
-        public XLPhonetic(String text, Int32 start, Int32 end)
+        public XLPhonetic(string text, int start, int end)
         {
             Text = text;
             Start = start;
             End = end;
         }
-        public String Text { get; set; }
-        public Int32 Start { get; set; }
-        public Int32 End { get; set; }
+        public string Text { get; set; }
+        public int Start { get; set; }
+        public int End { get; set; }
 
         public bool Equals(IXLPhonetic other)
         {

@@ -10,35 +10,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void If_2_Params_true()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"")");
+            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"")");
             Assert.AreEqual("T", actual);
         }
 
         [Test]
         public void If_2_Params_false()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"")");
+            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"")");
             Assert.AreEqual(false, actual);
         }
 
         [Test]
         public void If_3_Params_true()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"", ""F"")");
+            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 1, ""T"", ""F"")");
             Assert.AreEqual("T", actual);
         }
 
         [Test]
         public void If_3_Params_false()
         {
-            Object actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"", ""F"")");
+            object actual = XLWorkbook.EvaluateExpr(@"if(1 = 2, ""T"", ""F"")");
             Assert.AreEqual("F", actual);
         }
 
         [Test]
         public void If_Comparing_Against_Empty_String()
         {
-            Object actual;
+            object actual;
             actual = XLWorkbook.EvaluateExpr(@"if(date(2016, 1, 1) = """", ""A"",""B"")");
             Assert.AreEqual("B", actual);
 
@@ -55,7 +55,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void If_Case_Insensitivity()
         {
-            Object actual;
+            object actual;
             actual = XLWorkbook.EvaluateExpr(@"IF(""text""=""TEXT"", 1, 2)");
             Assert.AreEqual(1, actual);
         }

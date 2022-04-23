@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
             LastAddress = lastAddress;
         }
 
-        public XLRangeAddress(XLWorksheet worksheet, String rangeAddress) : this()
+        public XLRangeAddress(XLWorksheet worksheet, string rangeAddress) : this()
         {
             string addressToUse = rangeAddress.Contains("!")
                 ? rangeAddress.Substring(rangeAddress.LastIndexOf("!") + 1)
@@ -67,8 +67,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                firstPart = firstPart.Replace("$", String.Empty);
-                secondPart = secondPart.Replace("$", String.Empty);
+                firstPart = firstPart.Replace("$", string.Empty);
+                secondPart = secondPart.Replace("$", string.Empty);
                 if (char.IsDigit(firstPart[0]))
                 {
                     FirstAddress = XLAddress.Create(worksheet, "A" + firstPart);
@@ -143,7 +143,7 @@ namespace ClosedXML.Excel
 
         #region Public methods
 
-        public Boolean IsNormalized => LastAddress.RowNumber >= FirstAddress.RowNumber
+        public bool IsNormalized => LastAddress.RowNumber >= FirstAddress.RowNumber
                                        && LastAddress.ColumnNumber >= FirstAddress.ColumnNumber;
 
         /// <summary>
@@ -232,17 +232,17 @@ namespace ClosedXML.Excel
                    address.ColumnNumber <= LastAddress.ColumnNumber;
         }
 
-        public String ToStringRelative()
+        public string ToStringRelative()
         {
             return ToStringRelative(false);
         }
 
-        public String ToStringFixed()
+        public string ToStringFixed()
         {
             return ToStringFixed(XLReferenceStyle.A1);
         }
 
-        public String ToStringRelative(Boolean includeSheet)
+        public string ToStringRelative(bool includeSheet)
         {
             string address;
             if (!IsValid)
@@ -252,27 +252,27 @@ namespace ClosedXML.Excel
                 if (IsEntireSheet())
                     address = $"1:{XLHelper.MaxRowNumber}";
                 else if (IsEntireRow())
-                    address = String.Concat(FirstAddress.RowNumber.ToString(), ":", LastAddress.RowNumber.ToString());
+                    address = string.Concat(FirstAddress.RowNumber.ToString(), ":", LastAddress.RowNumber.ToString());
                 else if (IsEntireColumn())
-                    address = String.Concat(FirstAddress.ColumnLetter, ":", LastAddress.ColumnLetter);
+                    address = string.Concat(FirstAddress.ColumnLetter, ":", LastAddress.ColumnLetter);
                 else
-                    address = String.Concat(FirstAddress.ToStringRelative(), ":", LastAddress.ToStringRelative());
+                    address = string.Concat(FirstAddress.ToStringRelative(), ":", LastAddress.ToStringRelative());
             }
 
             if (includeSheet || WorksheetIsDeleted)
-                return String.Concat(
+                return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     "!", address);
 
             return address;
         }
 
-        public String ToStringFixed(XLReferenceStyle referenceStyle)
+        public string ToStringFixed(XLReferenceStyle referenceStyle)
         {
             return ToStringFixed(referenceStyle, false);
         }
 
-        public String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet)
+        public string ToStringFixed(XLReferenceStyle referenceStyle, bool includeSheet)
         {
             string address;
             if (!IsValid)
@@ -282,15 +282,15 @@ namespace ClosedXML.Excel
                 if (IsEntireSheet())
                     address = $"$1:${XLHelper.MaxRowNumber}";
                 else if (IsEntireRow())
-                    address = String.Concat("$", FirstAddress.RowNumber.ToString(), ":$", LastAddress.RowNumber.ToString());
+                    address = string.Concat("$", FirstAddress.RowNumber.ToString(), ":$", LastAddress.RowNumber.ToString());
                 else if (IsEntireColumn())
-                    address = String.Concat("$", FirstAddress.ColumnLetter, ":$", LastAddress.ColumnLetter);
+                    address = string.Concat("$", FirstAddress.ColumnLetter, ":$", LastAddress.ColumnLetter);
                 else
-                    address = String.Concat(FirstAddress.ToStringFixed(referenceStyle), ":", LastAddress.ToStringFixed(referenceStyle));
+                    address = string.Concat(FirstAddress.ToStringFixed(referenceStyle), ":", LastAddress.ToStringFixed(referenceStyle));
             }
 
             if (includeSheet || WorksheetIsDeleted)
-                return String.Concat(
+                return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     "!", address);
 
@@ -303,15 +303,15 @@ namespace ClosedXML.Excel
             {
                 var worksheet = WorksheetIsDeleted ? "#REF!" : "";
 
-                var address = (!FirstAddress.IsValid || !LastAddress.IsValid) ? "#REF!" : String.Concat(FirstAddress.ToString(), ":", LastAddress.ToString());
-                return String.Concat(worksheet, address);
+                var address = (!FirstAddress.IsValid || !LastAddress.IsValid) ? "#REF!" : string.Concat(FirstAddress.ToString(), ":", LastAddress.ToString());
+                return string.Concat(worksheet, address);
             }
 
             if (IsEntireSheet())
             {
                 var worksheet = WorksheetIsDeleted ? "#REF!" : "";
                 var address = $"1:{XLHelper.MaxRowNumber}";
-                return String.Concat(worksheet, address);
+                return string.Concat(worksheet, address);
             }
             else if (IsEntireRow())
             {
@@ -319,7 +319,7 @@ namespace ClosedXML.Excel
                 var firstAddress = FirstAddress.IsValid ? FirstAddress.RowNumber.ToString() : "#REF!";
                 var lastAddress = LastAddress.IsValid ? LastAddress.RowNumber.ToString() : "#REF!";
 
-                return String.Concat(worksheet, firstAddress, ':', lastAddress);
+                return string.Concat(worksheet, firstAddress, ':', lastAddress);
             }
             else if (IsEntireColumn())
             {
@@ -327,11 +327,11 @@ namespace ClosedXML.Excel
                 var firstAddress = FirstAddress.IsValid ? FirstAddress.ColumnLetter : "#REF!";
                 var lastAddress = LastAddress.IsValid ? LastAddress.ColumnLetter : "#REF!";
 
-                return String.Concat(worksheet, firstAddress, ':', lastAddress);
+                return string.Concat(worksheet, firstAddress, ':', lastAddress);
             }
             else
             {
-                return String.Concat(FirstAddress.ToString(), ":", LastAddress.ToString());
+                return string.Concat(FirstAddress.ToString(), ":", LastAddress.ToString());
             }
         }
 

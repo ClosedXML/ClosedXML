@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        private XLColor(Int32 index) : this(new XLColorKey
+        private XLColor(int index) : this(new XLColorKey
         {
             Indexed = index,
             ColorType = XLColorType.Indexed
@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        private XLColor(XLThemeColor themeColor, Double themeTint) : this(new XLColorKey
+        private XLColor(XLThemeColor themeColor, double themeTint) : this(new XLColorKey
         {
             ThemeColor = themeColor,
             ThemeTint = themeTint,

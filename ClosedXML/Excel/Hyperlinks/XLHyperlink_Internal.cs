@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
             IsExternal = hyperlink.IsExternal;
         }
 
-        internal void SetValues(String address, String tooltip)
+        internal void SetValues(string address, string tooltip)
         {
             Tooltip = tooltip;
             if (address[0] == '.')
@@ -40,21 +40,21 @@ namespace ClosedXML.Excel
             }
         }
 
-        internal void SetValues(Uri uri, String tooltip)
+        internal void SetValues(Uri uri, string tooltip)
         {
             Tooltip = tooltip;
             _externalAddress = uri;
             IsExternal = true;
         }
 
-        internal void SetValues(IXLCell cell, String tooltip)
+        internal void SetValues(IXLCell cell, string tooltip)
         {
             Tooltip = tooltip;
             _internalAddress = cell.Address.ToString(XLReferenceStyle.A1, true);
             IsExternal = false;
         }
 
-        internal void SetValues(IXLRangeBase range, String tooltip)
+        internal void SetValues(IXLRangeBase range, string tooltip)
         {
             Tooltip = tooltip;
             _internalAddress = range.RangeAddress.ToString(XLReferenceStyle.A1, true);

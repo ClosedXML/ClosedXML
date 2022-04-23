@@ -9,7 +9,7 @@ namespace ClosedXML.Examples.Tables
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             string tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
@@ -52,8 +52,8 @@ namespace ClosedXML.Examples.Tables
                     table.Field("Age").TotalsRowFunction = XLTotalsRowFunction.Average;
 
                     // Copy all the headers
-                    Int32 columnWithHeaders = lastCell.Address.ColumnNumber + 3;
-                    Int32 currentRow = table.RangeAddress.FirstAddress.RowNumber;
+                    int columnWithHeaders = lastCell.Address.ColumnNumber + 3;
+                    int currentRow = table.RangeAddress.FirstAddress.RowNumber;
                     ws.Cell(currentRow, columnWithHeaders).Value = "Table Headers";
                     foreach (var cell in table.HeadersRow().Cells())
                     {
@@ -73,7 +73,7 @@ namespace ClosedXML.Examples.Tables
                     headersTable.Field(0).TotalsRowFormulaA1 = "CONCATENATE(\"Count: \", CountA(Headers[Table Headers]))";
 
                     // Copy the names
-                    Int32 columnWithNames = columnWithHeaders + 2;
+                    int columnWithNames = columnWithHeaders + 2;
                     currentRow = table.RangeAddress.FirstAddress.RowNumber; // reset the currentRow
                     ws.Cell(currentRow, columnWithNames).Value = "Names";
                     foreach (var row in table.DataRange.Rows())
@@ -81,7 +81,7 @@ namespace ClosedXML.Examples.Tables
                         currentRow++;
                         var fName = row.Field("FName").GetString(); // Notice how we're calling the cell by field name
                         var lName = row.Field("LName").GetString(); // Notice how we're calling the cell by field name
-                        var name = String.Format("{0} {1}", fName, lName);
+                        var name = string.Format("{0} {1}", fName, lName);
                         ws.Cell(currentRow, columnWithNames).Value = name;
                     }
 

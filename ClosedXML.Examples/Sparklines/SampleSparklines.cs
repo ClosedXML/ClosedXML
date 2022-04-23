@@ -7,7 +7,7 @@ namespace ClosedXML.Examples.Sparklines
 {
     public class SampleSparklines : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws1 = workbook.AddWorksheet("Linear");

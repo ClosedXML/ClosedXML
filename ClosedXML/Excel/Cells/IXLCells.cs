@@ -15,7 +15,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The object containing the value(s) to set.
         /// </value>
-        Object Value { set; }
+        object Value { set; }
 
         /// <summary>
         /// Sets the type of the cells' data.
@@ -50,13 +50,13 @@ namespace ClosedXML.Excel
         /// Sets the cells' formula with A1 references.
         /// </summary>
         /// <value>The formula with A1 references.</value>
-        String FormulaA1 { set; }
+        string FormulaA1 { set; }
 
         /// <summary>
         /// Sets the cells' formula with R1C1 references.
         /// </summary>
         /// <value>The formula with R1C1 references.</value>
-        String FormulaR1C1 { set; }
+        string FormulaR1C1 { set; }
 
         IXLStyle Style { get; set; }
 

@@ -25,7 +25,7 @@ namespace ClosedXML.Tests
 
                 IXLTable table = ws.RangeUsed().CreateTable();
 
-                var listOfArr = new List<Int32>();
+                var listOfArr = new List<int>();
                 listOfArr.Add(3);
                 listOfArr.Add(4);
                 listOfArr.Add(5);
