@@ -2870,8 +2870,10 @@ namespace ClosedXML.Excel
             {
                 for (var i = 0; i < pt.Values.Count(); i++)
                 {
-                    var rowItem = new RowItem();
-                    rowItem.Index = Convert.ToUInt32(i);
+                    var rowItem = new RowItem
+                    {
+                        Index = Convert.ToUInt32(i)
+                    };
                     rowItem.AppendChild(new MemberPropertyIndex() { Val = i });
                     columnItems.AppendChild(rowItem);
                 }
@@ -3025,9 +3027,10 @@ namespace ClosedXML.Excel
             if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Value))
                 return;
 
-            var format = new Format();
-
-            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Value]));
+            var format = new Format
+            {
+                FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Value]))
+            };
 
             var pivotArea = GenerateDefaultPivotArea(XLPivotStyleFormatTarget.GrandTotal);
 
@@ -3051,9 +3054,10 @@ namespace ClosedXML.Excel
             if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Value))
                 return;
 
-            var format = new Format();
-
-            format.FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Value]));
+            var format = new Format
+            {
+                FormatId = UInt32Value.FromUInt32(Convert.ToUInt32(context.DifferentialFormats[((XLStyle)styleFormat.Style).Value]))
+            };
 
             var pivotArea = GenerateDefaultPivotArea(target);
 
@@ -3083,8 +3087,10 @@ namespace ClosedXML.Excel
                 }.Contains(target)
                 && !styleFormat.FieldReferences.OfType<PivotLabelFieldReference>().Select(fr => fr.PivotField).Contains(pivotField))
             {
-                var fr = new PivotLabelFieldReference(pivotField);
-                fr.DefaultSubtotal = target == XLPivotStyleFormatTarget.Subtotal;
+                var fr = new PivotLabelFieldReference(pivotField)
+                {
+                    DefaultSubtotal = target == XLPivotStyleFormatTarget.Subtotal
+                };
                 styleFormat.FieldReferences.Insert(0, fr);
             }
 
@@ -3162,10 +3168,11 @@ namespace ClosedXML.Excel
 
         private static void GeneratePivotAreaReference(XLPivotTable pt, PivotAreaReferences pivotAreaReferences, AbstractPivotFieldReference fieldReference, SaveContext context)
         {
-            var pivotAreaReference = new PivotAreaReference();
-
-            pivotAreaReference.DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.DefaultSubtotal, false);
-            pivotAreaReference.Field = fieldReference.GetFieldOffset();
+            var pivotAreaReference = new PivotAreaReference
+            {
+                DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.DefaultSubtotal, false),
+                Field = fieldReference.GetFieldOffset()
+            };
 
             var matchedOffsets = fieldReference.Match(context.PivotTables[pt.Guid], pt);
             foreach (var o in matchedOffsets)
@@ -4376,9 +4383,10 @@ namespace ClosedXML.Excel
         {
             var fill = new Fill();
 
-            var patternFill = new PatternFill();
-
-            patternFill.PatternType = fillInfo.Fill.PatternType.ToOpenXml();
+            var patternFill = new PatternFill
+            {
+                PatternType = fillInfo.Fill.PatternType.ToOpenXml()
+            };
 
             BackgroundColor backgroundColor;
             ForegroundColor foregroundColor;
@@ -5176,8 +5184,10 @@ namespace ClosedXML.Excel
                         {
                             if (cell == null)
                             {
-                                cell = new Cell();
-                                cell.CellReference = new StringValue(cellReference);
+                                cell = new Cell
+                                {
+                                    CellReference = new StringValue(cellReference)
+                                };
 
                                 if (isNewRow)
                                     row.AppendChild(cell);
@@ -5221,8 +5231,10 @@ namespace ClosedXML.Excel
                                 }
                                 else
                                 {
-                                    cell.CellFormula = new CellFormula();
-                                    cell.CellFormula.Text = formula;
+                                    cell.CellFormula = new CellFormula
+                                    {
+                                        Text = formula
+                                    };
                                 }
 
                                 if (!options.EvaluateFormulasBeforeSaving || xlCell.CachedValue == null || xlCell.NeedsRecalculation)
@@ -6088,8 +6100,10 @@ namespace ClosedXML.Excel
             {
                 if (!string.IsNullOrWhiteSpace(field.TotalsRowLabel))
                 {
-                    var cellValue = new CellValue();
-                    cellValue.Text = xlCell.SharedStringId.ToInvariantString();
+                    var cellValue = new CellValue
+                    {
+                        Text = xlCell.SharedStringId.ToInvariantString()
+                    };
                     openXmlCell.DataType = CvSharedString;
                     openXmlCell.CellValue = cellValue;
                 }
@@ -6155,8 +6169,10 @@ namespace ClosedXML.Excel
                 {
                     if (xlCell.ShareString)
                     {
-                        var cellValue = new CellValue();
-                        cellValue.Text = xlCell.SharedStringId.ToInvariantString();
+                        var cellValue = new CellValue
+                        {
+                            Text = xlCell.SharedStringId.ToInvariantString()
+                        };
                         openXmlCell.CellValue = cellValue;
 
                         openXmlCell.InlineString = null;
@@ -6185,8 +6201,10 @@ namespace ClosedXML.Excel
             else if (dataType == XLDataType.TimeSpan)
             {
                 var timeSpan = xlCell.GetTimeSpan();
-                var cellValue = new CellValue();
-                cellValue.Text = timeSpan.TotalDays.ToInvariantString();
+                var cellValue = new CellValue
+                {
+                    Text = timeSpan.TotalDays.ToInvariantString()
+                };
                 openXmlCell.CellValue = cellValue;
             }
             else if (dataType == XLDataType.DateTime || dataType == XLDataType.Number)
@@ -6209,8 +6227,10 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var cellValue = new CellValue();
-                cellValue.Text = xlCell.InnerText;
+                var cellValue = new CellValue
+                {
+                    Text = xlCell.InnerText
+                };
                 openXmlCell.CellValue = cellValue;
             }
         }

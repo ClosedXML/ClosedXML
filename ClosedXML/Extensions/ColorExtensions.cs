@@ -37,8 +37,10 @@ namespace ClosedXML.Excel
 
         internal static Color ConvertToOpenXmlColor(this SKColor sKColor)
         {
-            var color = new Color();
-            color.Rgb = new DocumentFormat.OpenXml.HexBinaryValue(sKColor.ToHex());
+            var color = new Color
+            {
+                Rgb = new DocumentFormat.OpenXml.HexBinaryValue(sKColor.ToHex())
+            };
             return color;
         }
     }

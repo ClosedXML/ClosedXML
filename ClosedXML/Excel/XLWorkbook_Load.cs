@@ -2573,9 +2573,10 @@ namespace ClosedXML.Excel
             {
                 var ranges = conditionalFormatting.SequenceOfReferences.Items
                     .Select(sor => ws.Range(sor.Value));
-                var conditionalFormat = new XLConditionalFormat(ranges);
-
-                conditionalFormat.StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false);
+                var conditionalFormat = new XLConditionalFormat(ranges)
+                {
+                    StopIfTrue = OpenXmlHelper.GetBooleanValueAsBool(fr.StopIfTrue, false)
+                };
 
                 if (fr.FormatId != null)
                 {
@@ -2760,9 +2761,11 @@ namespace ClosedXML.Excel
 
         private static XLFormula GetFormula(string value)
         {
-            var formula = new XLFormula();
-            formula._value = value;
-            formula.IsFormula = !(value[0] == '"' && value.EndsWith("\""));
+            var formula = new XLFormula
+            {
+                _value = value,
+                IsFormula = !(value[0] == '"' && value.EndsWith("\""))
+            };
             return formula;
         }
 

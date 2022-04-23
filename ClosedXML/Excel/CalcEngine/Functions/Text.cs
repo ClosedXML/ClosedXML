@@ -390,9 +390,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object NumberValue(List<Expression> p)
         {
-            var numberFormatInfo = new NumberFormatInfo();
-
-            numberFormatInfo.NumberDecimalSeparator = p.Count > 1 ? p[1] : CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
+            var numberFormatInfo = new NumberFormatInfo
+            {
+                NumberDecimalSeparator = p.Count > 1 ? p[1] : CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator
+            };
             numberFormatInfo.CurrencyDecimalSeparator = numberFormatInfo.NumberDecimalSeparator;
 
             numberFormatInfo.NumberGroupSeparator = p.Count > 2 ? p[2] : CultureInfo.InvariantCulture.NumberFormat.NumberGroupSeparator;
