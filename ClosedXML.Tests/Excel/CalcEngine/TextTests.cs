@@ -115,7 +115,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // If we can solve ROW(), then we can solve this too.
             // For the example below, the calling cell doesn't share any
 
-            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
 
             ws.FirstCell().SetValue(20)
                 .CellBelow().SetValue("AB")
