@@ -1,7 +1,5 @@
-using System;
-using System.Linq;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Ranges
 {
@@ -9,7 +7,7 @@ namespace ClosedXML.Examples.Ranges
     {
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var wsActiveCell = wb.AddWorksheet("Set Active Cell");
             wsActiveCell.Cell("B2").SetActive();
 
@@ -24,6 +22,5 @@ namespace ClosedXML.Examples.Ranges
 
             wb.SaveAs(filePath);
         }
-
     }
 }

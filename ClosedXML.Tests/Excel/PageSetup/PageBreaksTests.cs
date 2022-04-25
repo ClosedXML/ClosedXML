@@ -9,7 +9,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void RowBreaksShouldBeSorted()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddHorizontalPageBreak(10);
@@ -21,7 +21,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void ColumnBreaksShouldBeSorted()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddVerticalPageBreak(10);
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void RowBreaksShiftWhenInsertedRowAbove()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddHorizontalPageBreak(10);
@@ -44,7 +44,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void RowBreaksNotShiftWhenInsertedRowBelow()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddHorizontalPageBreak(10);
@@ -55,7 +55,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void ColumnBreaksShiftWhenInsertedColumnBefore()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddVerticalPageBreak(10);
@@ -66,7 +66,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void ColumnBreaksNotShiftWhenInsertedColumnAfter()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddVerticalPageBreak(10);

@@ -7,7 +7,7 @@ namespace ClosedXML.Examples.Misc
     {
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
 
             var ws = wb.Worksheets.Add("RightToLeftSheet");
             ws.Cell("A1").Value = "A1";

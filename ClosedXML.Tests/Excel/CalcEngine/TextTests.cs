@@ -80,7 +80,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             actual = XLWorkbook.EvaluateExpr(@"Concat("""", ""123"")");
             Assert.AreEqual("123", actual);
 
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
 
             ws.FirstCell().SetValue(20)
                 .CellBelow().SetValue("AB")
@@ -114,7 +115,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // If we can solve ROW(), then we can solve this too.
             // For the example below, the calling cell doesn't share any
 
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
 
             ws.FirstCell().SetValue(20)
                 .CellBelow().SetValue("AB")
@@ -140,7 +142,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Concatenate_with_references()
         {
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
 
             ws.Cell("A1").Value = "Hello";
             ws.Cell("B1").Value = "World";
@@ -613,7 +616,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=TEXTJOIN(\",\", \"0\", A1:B2)", "A,,B,D")] // Excel does not accept text argument, LibreOffice does
         public void TextJoin(string formula, string expectedOutput)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "A";
             ws.Cell("A2").Value = "B";
@@ -630,7 +633,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("=TEXTJOIN(\",\", \"Invalid\", A1:B2)", "The second argument is invalid")]
         public void TextJoinWithInvalidArgumentsThrows(string formula, string explain)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
 
             ws.Cell("C1").FormulaA1 = formula;

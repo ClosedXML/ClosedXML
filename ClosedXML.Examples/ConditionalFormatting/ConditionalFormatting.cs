@@ -7,7 +7,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -28,7 +28,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -48,7 +48,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -68,7 +68,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -90,7 +90,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -109,7 +109,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -128,7 +128,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -147,7 +147,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -166,7 +166,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -185,7 +185,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -204,7 +204,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -223,7 +223,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -242,7 +242,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -261,7 +261,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue("Hello")
@@ -280,7 +280,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -299,7 +299,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -318,7 +318,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -337,7 +337,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -356,7 +356,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -375,7 +375,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -394,7 +394,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -413,7 +413,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -432,7 +432,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -451,7 +451,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -470,7 +470,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -489,7 +489,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -508,7 +508,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -528,7 +528,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.Cell(1, 1).SetValue(-1)
@@ -561,7 +561,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -582,7 +582,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -606,7 +606,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.Cell(2, 1).SetValue(1)
@@ -626,7 +626,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(1)
@@ -647,7 +647,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             var range = ws.Range("A1:A10");
@@ -666,7 +666,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.AddWorksheet("Sheet1");
 
             ws.FirstCell().SetValue(6)
@@ -729,7 +729,7 @@ namespace ClosedXML.Examples
 
             ws.Cell("A1").Value = "Automatic";
             ws.Range("A2:A6").AddConditionalFormat().DataBar(XLColor.Amber);
-            
+
             ws.Cell("B1").Value = "Lowest/Highest";
             ws.Range("B2:B6").AddConditionalFormat().DataBar(XLColor.BallBlue)
                 .LowestValue()
@@ -754,7 +754,7 @@ namespace ClosedXML.Examples
             ws.Range("F2:F6").AddConditionalFormat().DataBar(XLColor.Fandango)
                 .Minimum(XLCFContentType.Percentile, 30)
                 .Maximum(XLCFContentType.Percentile, 70);
-            
+
             workbook.SaveAs(filePath);
         }
     }

@@ -1,27 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ClosedXML.Excel;
 using System.IO;
 
-namespace ClosedXML.Examples 
+namespace ClosedXML.Examples
 {
-    class EditingComments : IXLExample 
+    internal class EditingComments : IXLExample
     {
-
-        public void Create(string filePath) {
-
+        public void Create(string filePath)
+        {
             // Exercise(@"path/to/test/resources/comments");
-          
         }
 
-        public void Exercise(string basePath) 
+        public void Exercise(string basePath)
         {
-
             // INCOMPLETE
 
-            var book = new XLWorkbook(Path.Combine(basePath, "EditingComments.xlsx"));
+            using var book = new XLWorkbook(Path.Combine(basePath, "EditingComments.xlsx"));
             var sheet = book.Worksheet(1);
 
             // no change

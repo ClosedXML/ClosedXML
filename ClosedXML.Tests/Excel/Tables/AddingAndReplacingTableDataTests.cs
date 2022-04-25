@@ -38,9 +38,8 @@ namespace ClosedXML.Tests.Excel.Tables
             public bool IsActive;
         }
 
-        private XLWorkbook PrepareWorkbook()
+        private XLWorkbook PrepareWorkbook(XLWorkbook wb)
         {
-            var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Tables");
 
             var data = new[]
@@ -57,9 +56,9 @@ namespace ClosedXML.Tests.Excel.Tables
             return wb;
         }
 
-        private XLWorkbook PrepareWorkbookWithAdditionalColumns()
+        private XLWorkbook PrepareWorkbookWithAdditionalColumns(XLWorkbook emptyXLWorkbook)
         {
-            var wb = PrepareWorkbook();
+            var wb = PrepareWorkbook(emptyXLWorkbook);
             var ws = wb.Worksheets.First();
 
             var table = ws.Tables.First();
@@ -91,8 +90,11 @@ namespace ClosedXML.Tests.Excel.Tables
 
         [Test]
         public void AddingEmptyEnumerables()
+
         {
-            using (var wb = PrepareWorkbook())
+            using var emptyXLWorkbook = new XLWorkbook();
+
+            using (var wb = PrepareWorkbook(emptyXLWorkbook))
             {
                 var ws = wb.Worksheets.First();
 
@@ -115,7 +117,9 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void ReplaceWithEmptyEnumerables()
         {
-            using (var wb = PrepareWorkbook())
+            using var emptyXLWorkbook = new XLWorkbook();
+
+            using (var wb = PrepareWorkbook(emptyXLWorkbook))
             {
                 var ws = wb.Worksheets.First();
 
@@ -138,9 +142,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanAppendTypedEnumerable()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -168,9 +174,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanAppendToTableWithTotalsRow()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -200,11 +208,13 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanAppendTypedEnumerableAndPushDownCellsBelowTable()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
                 var value = "Some value that will be overwritten";
                 IXLAddress address;
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -242,9 +252,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanAppendUntypedEnumerable()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -275,9 +287,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanAppendDataTable()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -309,9 +323,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanReplaceWithTypedEnumerable()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -339,9 +355,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanReplaceWithUntypedEnumerable()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -372,9 +390,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanReplaceWithDataTable()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -406,9 +426,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanReplaceToTableWithTablesRow1()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -439,9 +461,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanReplaceToTableWithTablesRow2()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbook())
+                using (var wb = PrepareWorkbook(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -472,9 +496,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanReplaceWithUntypedEnumerableAndPropagateExtraColumns()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbookWithAdditionalColumns())
+                using (var wb = PrepareWorkbookWithAdditionalColumns(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
                     var table = ws.Tables.First();
@@ -523,9 +549,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanReplaceWithTypedEnumerableAndPropagateExtraColumns()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbookWithAdditionalColumns())
+                using (var wb = PrepareWorkbookWithAdditionalColumns(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 
@@ -571,9 +599,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanAppendWithUntypedEnumerableAndPropagateExtraColumns()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbookWithAdditionalColumns())
+                using (var wb = PrepareWorkbookWithAdditionalColumns(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
                     var table = ws.Tables.First();
@@ -622,9 +652,11 @@ namespace ClosedXML.Tests.Excel.Tables
         [Test]
         public void CanAppendTypedEnumerableAndPropagateExtraColumns()
         {
+            using var emptyXLWorkbook = new XLWorkbook();
+
             using (var ms = new MemoryStream())
             {
-                using (var wb = PrepareWorkbookWithAdditionalColumns())
+                using (var wb = PrepareWorkbookWithAdditionalColumns(emptyXLWorkbook))
                 {
                     var ws = wb.Worksheets.First();
 

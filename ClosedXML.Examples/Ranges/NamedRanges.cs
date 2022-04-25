@@ -10,7 +10,7 @@ namespace ClosedXML.Examples.Misc
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var wsPresentation = wb.Worksheets.Add("Presentation");
             var wsData = wb.Worksheets.Add("Data");
 

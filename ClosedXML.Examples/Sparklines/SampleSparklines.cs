@@ -9,7 +9,7 @@ namespace ClosedXML.Examples.Sparklines
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws1 = workbook.AddWorksheet("Linear");
 
             FillSampleData(ws1);
@@ -55,7 +55,6 @@ namespace ClosedXML.Examples.Sparklines
                 .SetStyle(XLSparklineTheme.Colorful3)
                 .SetShowMarkers(XLSparklineMarkers.FirstPoint | XLSparklineMarkers.LastPoint);
 
-
             var ws2 = ws1.CopyTo("Column");
             ws2.SparklineGroups.ForEach(g =>
                 g.SetType(XLSparklineType.Column));
@@ -66,7 +65,6 @@ namespace ClosedXML.Examples.Sparklines
             ws2.Cell("A11").Value = "Column, Colorful 1, Date range";
             ws2.Cell("A14").Value = "Column, Colorful 4, Line weight=2, Right to left";
             ws2.Cell("A17").Value = "Column, Colorful 3, Different ranges";
-
 
             var ws3 = ws1.CopyTo("Stacked");
             ws3.SparklineGroups.ForEach(g =>

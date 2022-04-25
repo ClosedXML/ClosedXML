@@ -1,8 +1,7 @@
-using System;
 using ClosedXML.Excel;
-using System.Threading;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -19,7 +18,7 @@ namespace ClosedXML.Examples.Misc
             try
             {
                 new DataTypes().Create(tempFile);
-                var workbook = new XLWorkbook(tempFile);
+                using var workbook = new XLWorkbook(tempFile);
                 workbook.SaveAs(filePath);
             }
             finally

@@ -1,7 +1,6 @@
+using ClosedXML.Excel;
 using System;
 using System.Linq;
-using ClosedXML.Excel;
-
 
 namespace ClosedXML.Examples.PageSetup
 {
@@ -12,7 +11,7 @@ namespace ClosedXML.Examples.PageSetup
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             foreach (var ro in Enumerable.Range(1, 100))
             {
@@ -30,7 +29,6 @@ namespace ClosedXML.Examples.PageSetup
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

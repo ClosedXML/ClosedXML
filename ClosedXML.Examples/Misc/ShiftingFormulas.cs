@@ -1,7 +1,6 @@
+using ClosedXML.Excel;
 using System;
 using System.Linq;
-using ClosedXML.Excel;
-
 
 namespace ClosedXML.Examples.Misc
 {
@@ -13,8 +12,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -24,8 +22,7 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
@@ -35,15 +32,14 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Shifting Formulas");
             ws.Cell("B2").Value = 5;
             ws.Cell("B3").Value = 6;
@@ -87,7 +83,6 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

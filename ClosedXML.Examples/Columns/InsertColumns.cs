@@ -8,7 +8,7 @@ namespace ClosedXML.Examples.Columns
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Inserting Columns");
 
             // Color the entire spreadsheet using columns

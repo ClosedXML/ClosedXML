@@ -28,7 +28,7 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void InsideBorderTest()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             IXLRange range = ws.Range("B2:D4");
 
@@ -78,7 +78,8 @@ namespace ClosedXML.Tests.Excel.Misc
         [Theory]
         public void CanResolveAllThemeColors(XLThemeColor themeColor)
         {
-            var theme = new XLWorkbook().Theme;
+            using var xLWorkbook = new XLWorkbook();
+            var theme = xLWorkbook.Theme;
             var color = theme.ResolveThemeColor(themeColor);
             Assert.IsNotNull(color);
         }

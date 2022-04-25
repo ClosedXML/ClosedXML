@@ -29,7 +29,7 @@ namespace ClosedXML.Sandbox
                 rows.Add(row);
             }
 
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Sheet 1");
             worksheet.Cell(1, 1).InsertTable(rows);
 

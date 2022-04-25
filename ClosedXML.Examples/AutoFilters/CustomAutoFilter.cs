@@ -1,6 +1,6 @@
+using ClosedXML.Excel;
 using System;
 using System.IO;
-using ClosedXML.Excel;
 
 namespace ClosedXML.Examples
 {
@@ -8,10 +8,11 @@ namespace ClosedXML.Examples
     {
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws;
 
             #region Single Column Numbers
+
             String singleColumnNumbers = "Single Column Numbers";
             ws = wb.Worksheets.Add(singleColumnNumbers);
 
@@ -29,9 +30,11 @@ namespace ClosedXML.Examples
 
             // Sort the filtered list
             ws.AutoFilter.Sort(1);
-            #endregion
+
+            #endregion Single Column Numbers
 
             #region Single Column Strings
+
             String singleColumnStrings = "Single Column Strings";
             ws = wb.Worksheets.Add(singleColumnStrings);
 
@@ -49,9 +52,11 @@ namespace ClosedXML.Examples
 
             // Sort the filtered list
             ws.AutoFilter.Sort(1);
-            #endregion
+
+            #endregion Single Column Strings
 
             #region Single Column Mixed
+
             String singleColumnMixed = "Single Column Mixed";
             ws = wb.Worksheets.Add(singleColumnMixed);
 
@@ -69,9 +74,11 @@ namespace ClosedXML.Examples
 
             // Sort the filtered list
             ws.AutoFilter.Sort(1);
-            #endregion
+
+            #endregion Single Column Mixed
 
             #region Multi Column
+
             String multiColumn = "Multi Column";
             ws = wb.Worksheets.Add(multiColumn);
 
@@ -105,31 +112,40 @@ namespace ClosedXML.Examples
 
             // Sort the filtered list
             ws.AutoFilter.Sort(3);
-            #endregion
+
+            #endregion Multi Column
 
             using (var ms = new MemoryStream())
             {
                 wb.SaveAs(ms);
 
-                var workbook = new XLWorkbook(ms);
+                using var workbook = new XLWorkbook(ms);
 
                 #region Single Column Numbers
+
                 workbook.Worksheet(singleColumnNumbers).AutoFilter.Sort(1, XLSortOrder.Descending);
-                #endregion
+
+                #endregion Single Column Numbers
 
                 #region Single Column Strings
+
                 workbook.Worksheet(singleColumnStrings).AutoFilter.Sort(1, XLSortOrder.Descending);
-                #endregion
+
+                #endregion Single Column Strings
 
                 #region Single Column Mixed
+
                 workbook.Worksheet(singleColumnMixed).AutoFilter.Column(1).EqualOrGreaterThan("D");
                 workbook.Worksheet(singleColumnMixed).AutoFilter.Sort(1, XLSortOrder.Descending);
-                #endregion
+
+                #endregion Single Column Mixed
 
                 #region Multi Column
+
                 workbook.Worksheet(multiColumn).AutoFilter.Column(3).EqualTo("E");
                 workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
-                #endregion
+
+                #endregion Multi Column
 
                 workbook.SaveAs(filePath);
                 ms.Close();

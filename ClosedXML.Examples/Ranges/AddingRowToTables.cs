@@ -16,7 +16,7 @@ namespace ClosedXML.Examples.Ranges
             try
             {
                 new BasicTable().Create(tempFile);
-                var wb = new XLWorkbook(tempFile);
+                using var wb = new XLWorkbook(tempFile);
                 var ws = wb.Worksheets.First();
 
                 var firstCell = ws.FirstCellUsed();

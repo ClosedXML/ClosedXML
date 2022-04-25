@@ -11,7 +11,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyingColumns()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             IXLColumn column1 = ws.Column(1);
@@ -50,7 +50,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyingRows()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             IXLRow row1 = ws.Row(1);
@@ -86,7 +86,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyingConditionalFormats()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             FillRow(ws.Row(1));
@@ -105,7 +105,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyingConditionalFormatsDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var format = ws1.Range("A1:J2").AddConditionalFormat();
 

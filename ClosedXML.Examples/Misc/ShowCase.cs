@@ -8,7 +8,7 @@ namespace ClosedXML.Examples
         public void Create(String filePath)
         {
             // Creating a new workbook
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
 
             //Adding a worksheet
             var ws = wb.Worksheets.Add("Contacts");

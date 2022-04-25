@@ -1,5 +1,5 @@
-using System;
 using ClosedXML.Excel;
+using System;
 
 namespace ClosedXML.Examples.Styles
 {
@@ -11,8 +11,7 @@ namespace ClosedXML.Examples.Styles
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -22,19 +21,15 @@ namespace ClosedXML.Examples.Styles
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
         // Public
 
-
-
         // Private
 
-
-        #endregion
+        #endregion Constructors
 
         #region Events
 
@@ -44,15 +39,14 @@ namespace ClosedXML.Examples.Styles
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Rich Text");
 
             // Let's start with a plain text and then decorate it...
@@ -88,10 +82,9 @@ namespace ClosedXML.Examples.Styles
             // Of course you can loop through each piece of text and check its properties
             foreach (var richText in cell.GetRichText())
             {
-                if(richText.Bold)
+                if (richText.Bold)
                     ws.Cell(3, 2).Value = String.Format("\"{0}\" is Bold.", richText.Text);
             }
-
 
             // Now we'll build a cell with rich text, and some other styles 
             cell = ws.Cell(5, 1);
@@ -105,7 +98,6 @@ namespace ClosedXML.Examples.Styles
 
             ws.Cell(5, 2).Value = cell.GetRichText(); // Should copy only rich text, but not background
 
-
             ws.Columns().AdjustToContents();
 
             wb.SaveAs(filePath);
@@ -115,7 +107,6 @@ namespace ClosedXML.Examples.Styles
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

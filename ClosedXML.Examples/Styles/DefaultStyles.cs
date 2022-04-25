@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Styles
 {
@@ -9,7 +8,7 @@ namespace ClosedXML.Examples.Styles
         public void Create(String filePath)
         {
             // Create our workbook
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
 
             // This worksheet will have the default style, row height, column width, and page setup
             var ws1 = workbook.Worksheets.Add("Default Style");

@@ -12,7 +12,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void CopyFormula()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").FormulaA1 = "B1";
             ws.Cell("A1").CopyTo("A2");

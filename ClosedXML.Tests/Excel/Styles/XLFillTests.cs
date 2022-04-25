@@ -79,7 +79,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void BackgroundWithConditionalFormat()
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var worksheet = workbook.AddWorksheet("Test");
             worksheet.Cell(2, 2).SetValue("Text");
             var cf = worksheet.Cell(2, 2).AddConditionalFormat();

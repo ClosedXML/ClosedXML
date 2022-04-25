@@ -16,7 +16,8 @@ namespace ClosedXML.Tests
         [Test]
         public void CellsUsed()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Cell(1, 1);
             ws.Cell(2, 2);
             var count = ws.Range("A1:B2").CellsUsed().Count();
@@ -26,7 +27,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CellsUsedIncludeStyles1()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Row(3).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Column(3).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Cell(2, 2).Value = "ASDF";
@@ -37,7 +38,8 @@ namespace ClosedXML.Tests
         [Test]
         public void CellsUsedIncludeStyles2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Row(2).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Column(2).Style.Fill.BackgroundColor = XLColor.Red;
             ws.Cell(3, 3).Value = "ASDF";
@@ -48,7 +50,8 @@ namespace ClosedXML.Tests
         [Test]
         public void CellsUsedIncludeStyles3()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var range = ws.RangeUsed(XLCellsUsedOptions.All);
             Assert.AreEqual(null, range);
         }
@@ -56,7 +59,8 @@ namespace ClosedXML.Tests
         [Test]
         public void CellUsedIncludesSparklines()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:E4").Value = 1;
             ws.SparklineGroups.Add("B2", "C3:E3");
             ws.SparklineGroups.Add("F5", "C4:E4");
@@ -70,7 +74,8 @@ namespace ClosedXML.Tests
         [Test]
         public void Double_Infinity_is_a_string()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1");
             var doubleList = new List<double> { 1.0 / 0.0 };
 
@@ -88,7 +93,8 @@ namespace ClosedXML.Tests
         [Test]
         public void Double_NaN_is_a_string()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1");
             var doubleList = new List<double> { 0.0 / 0.0 };
 
@@ -116,7 +122,8 @@ namespace ClosedXML.Tests
                 culture.NumberFormat.CurrencyDecimalSeparator = ".";
                 Thread.CurrentThread.CurrentCulture = culture;
 
-                var cell = new XLWorkbook().AddWorksheet().FirstCell();
+                using var xLWorkbook = new XLWorkbook();
+                var cell = xLWorkbook.AddWorksheet().FirstCell();
 
                 Assert.IsNull(cell.Clear().GetValue<double?>());
                 Assert.AreEqual(1.5, cell.SetValue(1.5).GetValue<double?>());
@@ -133,7 +140,8 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertData1()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" });
             Assert.AreEqual("Sheet1!B2:B4", range.ToString());
         }
@@ -141,7 +149,8 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertData2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, false);
             Assert.AreEqual("Sheet1!B2:B4", range.ToString());
         }
@@ -149,7 +158,8 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertData3()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var range = ws.Cell(2, 2).InsertData(new[] { "a", "b", "c" }, true);
             Assert.AreEqual("Sheet1!B2:D2", range.ToString());
         }
@@ -157,7 +167,8 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertData_with_Guids()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.FirstCell().InsertData(Enumerable.Range(1, 20).Select(i => new { Guid = Guid.NewGuid() }));
 
             Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
@@ -167,9 +178,10 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertData_with_Nulls()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
 
-            var table = new DataTable
+            using var table = new DataTable
             {
                 TableName = "Patients"
             };
@@ -194,7 +206,8 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertData_with_Nulls_IEnumerable()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
 
             var dateTimeList = new List<DateTime?>()
             {
@@ -214,7 +227,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty1()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             var actual = cell.IsEmpty();
             var expected = true;
@@ -224,7 +238,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             var actual = cell.IsEmpty(XLCellsUsedOptions.All);
             var expected = true;
@@ -234,7 +249,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty3()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             var actual = cell.IsEmpty();
@@ -245,7 +261,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty4()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             var actual = cell.IsEmpty(XLCellsUsedOptions.AllContents);
@@ -256,7 +273,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty5()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             var actual = cell.IsEmpty(XLCellsUsedOptions.All);
@@ -267,7 +285,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty6()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.Value = "X";
             var actual = cell.IsEmpty();
@@ -278,7 +297,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty_Comment()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.GetComment().AddText("comment");
             var actual = cell.IsEmpty();
@@ -289,7 +309,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty_Comment_Value()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.GetComment().AddText("comment");
             cell.SetValue("value");
@@ -313,7 +334,8 @@ namespace ClosedXML.Tests
         [TestCase(XLCellsUsedOptions.All, false)]
         public void IsEmpty_Comment_Options(XLCellsUsedOptions options, bool expected)
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.GetComment().AddText("comment");
 
@@ -336,7 +358,8 @@ namespace ClosedXML.Tests
         [TestCase(XLCellsUsedOptions.All, false)]
         public void IsEmpty_Comment_Options_Value(XLCellsUsedOptions options, bool expected) // see #1575
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.GetComment().AddText("comment");
             cell.SetValue("value");
@@ -349,7 +372,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty_DataType()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.DataType = XLDataType.Boolean;
             var actual = cell.IsEmpty();
@@ -360,7 +384,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty_DataType_Text()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.DataType = XLDataType.Text;
             var actual = cell.IsEmpty();
@@ -371,7 +396,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty_DataType_Value()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.DataType = XLDataType.Number;
             cell.SetValue(42);
@@ -384,7 +410,8 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty_DataType_Text_Value()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.DataType = XLDataType.Text;
             cell.SetValue("value");
@@ -408,7 +435,8 @@ namespace ClosedXML.Tests
         [TestCase(XLCellsUsedOptions.All, false)]
         public void IsEmpty_DataType_Options(XLCellsUsedOptions options, bool expected)
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.DataType = XLDataType.Number;
 
@@ -431,7 +459,8 @@ namespace ClosedXML.Tests
         [TestCase(XLCellsUsedOptions.All, false)]
         public void IsEmpty_DataType_Options_Value(XLCellsUsedOptions options, bool expected) // see #1575
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.DataType = XLDataType.Number;
             cell.SetValue(42);
@@ -444,7 +473,7 @@ namespace ClosedXML.Tests
         [Test]
         public void NaN_is_not_a_number()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1");
             cell.Value = "NaN";
 
@@ -454,7 +483,8 @@ namespace ClosedXML.Tests
         [Test]
         public void Nan_is_not_a_number()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1");
             cell.Value = "Nan";
 
@@ -464,7 +494,8 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Boolean_Bad()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("ABC");
             var success = cell.TryGetValue(out bool outValue);
             Assert.IsFalse(success);
@@ -473,7 +504,8 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Boolean_False()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue(false);
             var success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
@@ -483,7 +515,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Boolean_Good()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("true");
             var success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
@@ -493,7 +525,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Boolean_True()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue(true);
             var success = cell.TryGetValue(out bool outValue);
             Assert.IsTrue(success);
@@ -503,7 +535,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_DateTime_Good()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var date = "2018-01-01";
             var success = ws.Cell("A1").SetValue(date).TryGetValue(out DateTime outValue);
             Assert.IsTrue(success);
@@ -513,7 +545,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_DateTime_Good2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var success = ws.Cell("A1").SetFormulaA1("=TODAY() + 10").TryGetValue(out DateTime outValue);
             Assert.IsTrue(success);
             Assert.AreEqual(DateTime.Today.AddDays(10), outValue);
@@ -522,7 +554,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_DateTime_BadButFormulaGood()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var success = ws.Cell("A1").SetFormulaA1("=\"44\"&\"020\"").TryGetValue(out DateTime outValue);
             Assert.IsFalse(success);
 
@@ -536,7 +568,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_DateTime_BadString()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var date = "ABC";
             var success = ws.Cell("A1").SetValue(date).TryGetValue(out DateTime outValue);
             Assert.IsFalse(success);
@@ -545,7 +577,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_DateTime_BadString2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var date = 5545454;
             ws.FirstCell().SetValue(date).DataType = XLDataType.DateTime;
             var success = ws.FirstCell().TryGetValue(out DateTime outValue);
@@ -555,7 +587,8 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Enum_Good()
         {
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
             Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles value));
             Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value);
 
@@ -567,7 +600,8 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Enum_BadString()
         {
-            var ws = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
             Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles value));
             Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles? value2));
         }
@@ -575,7 +609,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_RichText_Bad()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("Anything");
             var success = cell.TryGetValue(out IXLRichText outValue);
             Assert.IsTrue(success);
@@ -586,7 +620,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_RichText_Good()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1");
             cell.GetRichText().AddText("Anything");
             var success = cell.TryGetValue(out IXLRichText outValue);
@@ -597,7 +631,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_TimeSpan_BadString()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var timeSpan = "ABC";
             var success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out TimeSpan outValue);
             Assert.IsFalse(success);
@@ -606,7 +640,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_TimeSpan_Good()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var timeSpan = new TimeSpan(1, 1, 1);
             var success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out TimeSpan outValue);
             Assert.IsTrue(success);
@@ -616,7 +650,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_TimeSpan_Good_Large()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var timeSpan = TimeSpan.FromMilliseconds((double)int.MaxValue + 1);
             var success = ws.Cell("A1").SetValue(timeSpan).TryGetValue(out TimeSpan outValue);
             Assert.IsTrue(success);
@@ -626,7 +660,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_TimeSpan_GoodString()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var timeSpan = new TimeSpan(1, 1, 1);
             var success = ws.Cell("A1").SetValue(timeSpan.ToString()).TryGetValue(out TimeSpan outValue);
             Assert.IsTrue(success);
@@ -636,7 +670,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_sbyte_Bad()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue(255);
             var success = cell.TryGetValue(out sbyte outValue);
             Assert.IsFalse(success);
@@ -645,7 +679,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_sbyte_Bad2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("255");
             var success = cell.TryGetValue(out sbyte outValue);
             Assert.IsFalse(success);
@@ -654,7 +688,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_sbyte_Good()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue(5);
             var success = cell.TryGetValue(out sbyte outValue);
             Assert.IsTrue(success);
@@ -664,7 +698,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_sbyte_Good2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("5");
             var success = cell.TryGetValue(out sbyte outValue);
             Assert.IsTrue(success);
@@ -674,7 +708,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_decimal_Good()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("5");
             var success = cell.TryGetValue(out decimal outValue);
             Assert.IsTrue(success);
@@ -686,7 +720,7 @@ namespace ClosedXML.Tests
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
 
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell("A1").SetValue("1.60000001869776E-06");
             var success = cell.TryGetValue(out decimal outValue);
             Assert.IsTrue(success);
@@ -716,7 +750,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Unicode_String()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
 
             bool success;
             string outValue;
@@ -738,7 +772,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Nullable()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
 
             ws.Cell("A1").Clear();
@@ -757,7 +791,7 @@ namespace ClosedXML.Tests
         [Test]
         public void SetCellValueToGuid()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var guid = Guid.NewGuid();
             ws.FirstCell().Value = guid;
             Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
@@ -774,7 +808,7 @@ namespace ClosedXML.Tests
         [Test]
         public void SetCellValueToEnum()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var dataType = XLDataType.Number;
             ws.FirstCell().Value = dataType;
             Assert.AreEqual(XLDataType.Text, ws.FirstCell().DataType);
@@ -791,7 +825,7 @@ namespace ClosedXML.Tests
         [Test]
         public void SetCellValueToRange()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
 
             ws.Cell("A1").SetValue(2)
                 .CellRight().SetValue(3)
@@ -813,7 +847,7 @@ namespace ClosedXML.Tests
         {
             var expected = string.Empty;
 
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.Value = new DateTime(2000, 1, 2);
             cell.Value = string.Empty;
@@ -831,7 +865,7 @@ namespace ClosedXML.Tests
         {
             var expected = string.Empty;
 
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             cell.Value = new DateTime(2000, 1, 2);
             cell.Value = null;
@@ -852,7 +886,7 @@ namespace ClosedXML.Tests
             var ci = new CultureInfo(CultureInfo.InvariantCulture.LCID);
             ci.DateTimeFormat.ShortDatePattern = "dd/MM/yy";
             Thread.CurrentThread.CurrentCulture = ci;
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var cell = ws.Cell(1, 1);
             var expected = DateTime.Today.AddYears(20);
             cell.Value = expected;
@@ -999,7 +1033,7 @@ namespace ClosedXML.Tests
 
             using (var stream = new MemoryStream())
             {
-                var wb = new XLWorkbook();
+                using var wb = new XLWorkbook();
                 wb.AddWorksheet("Sheet1").FirstCell().SetValue("\u0018");
                 wb.SaveAs(stream);
                 data = stream.ToArray();
@@ -1007,7 +1041,7 @@ namespace ClosedXML.Tests
 
             using (var stream = new MemoryStream(data))
             {
-                var wb = new XLWorkbook(stream);
+                using var wb = new XLWorkbook(stream);
                 Assert.AreEqual("\u0018", wb.Worksheets.First().FirstCell().Value);
             }
         }
@@ -1074,7 +1108,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearCellRemovesSparkline()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.SparklineGroups.Add("B1:B3", "C1:E3");
 
             ws.Cell("B1").Clear(XLClearOptions.All);
@@ -1294,7 +1328,8 @@ namespace ClosedXML.Tests
         [Test]
         public void FormulaWithCircularReferenceFails2()
         {
-            var cell = new XLWorkbook().Worksheets.Add("Sheet1").FirstCell();
+            using var xLWorkbook = new XLWorkbook();
+            var cell = xLWorkbook.Worksheets.Add("Sheet1").FirstCell();
             cell.FormulaA1 = "A1";
             Assert.Throws<InvalidOperationException>(() =>
             {

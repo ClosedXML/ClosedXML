@@ -1,6 +1,6 @@
+using ClosedXML.Excel;
 using System;
 using System.IO;
-using ClosedXML.Excel;
 
 namespace ClosedXML.Examples
 {
@@ -18,7 +18,7 @@ namespace ClosedXML.Examples
 
         private static void LoadAndSaveFile(String input, String output)
         {
-            var wb = new XLWorkbook(input);
+            using var wb = new XLWorkbook(input);
             wb.SaveAs(output);
             wb.SaveAs(output);
         }

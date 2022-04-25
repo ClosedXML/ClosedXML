@@ -118,7 +118,7 @@ namespace ClosedXML.Tests.Excel.InsertData
         [Test]
         public void CanCreateDataTableReader()
         {
-            var dt = new DataTable();
+            using var dt = new DataTable();
             var reader = InsertDataReaderFactory.Instance.CreateReader(dt);
 
             Assert.IsInstanceOf<ClosedXML.Excel.InsertData.DataTableReader>(reader);
@@ -160,8 +160,10 @@ namespace ClosedXML.Tests.Excel.InsertData
             Assert.IsInstanceOf<UntypedObjectReader>(reader);
         }
 
-        private class TestEntity { }
+        private class TestEntity
+        { }
 
-        private struct TestStruct { }
+        private struct TestStruct
+        { }
     }
 }

@@ -10,7 +10,7 @@ namespace ClosedXML.Tests
         [Test]
         public void LastCellFromMerge()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
             ws.Range("B2:D4").Merge();
 

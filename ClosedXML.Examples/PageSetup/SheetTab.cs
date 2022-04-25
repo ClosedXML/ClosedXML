@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.PageSetup
 {
@@ -11,15 +10,15 @@ namespace ClosedXML.Examples.PageSetup
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Sheet Tab");
-            
+
             // Adding print areas
             ws.PageSetup.PrintAreas.Add("A1:B2");
             ws.PageSetup.PrintAreas.Add("D3:D5");
 
             // Adding rows to repeat at top
-            ws.PageSetup.SetRowsToRepeatAtTop(1,2);
+            ws.PageSetup.SetRowsToRepeatAtTop(1, 2);
 
             // Adding columns to repeat at left
             ws.PageSetup.SetColumnsToRepeatAtLeft(1, 2);
@@ -44,7 +43,7 @@ namespace ClosedXML.Examples.PageSetup
 
             // Print errors as #N/A
             ws.PageSetup.PrintErrorValue = XLPrintErrorValues.NA;
-            
+
             workbook.SaveAs(filePath);
         }
 
@@ -52,7 +51,6 @@ namespace ClosedXML.Examples.PageSetup
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

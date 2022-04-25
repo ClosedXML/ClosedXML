@@ -142,8 +142,10 @@ namespace ClosedXML.Tests.Excel.Worksheets
         [Test]
         public void SetWorksheetProtectionCloning()
         {
-            var ws1 = new XLWorkbook().AddWorksheet();
-            var ws2 = new XLWorkbook().AddWorksheet();
+            using var xLWorkbook1 = new XLWorkbook();
+            var ws1 = xLWorkbook1.AddWorksheet();
+            using var xLWorkbook2 = new XLWorkbook();
+            var ws2 = xLWorkbook2.AddWorksheet();
 
             ws1.Protect("123")
                 .AllowElement(XLSheetProtectionElements.FormatEverything)

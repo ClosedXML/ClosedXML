@@ -1,18 +1,16 @@
-using System;
 using ClosedXML.Excel;
+using System;
 
 namespace ClosedXML.Examples.Styles
 {
     public class UsingPhonetics : IXLExample
     {
-    
-
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Using Phonetics");
 
             var cell = ws.Cell(1, 1);
@@ -35,7 +33,6 @@ namespace ClosedXML.Examples.Styles
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

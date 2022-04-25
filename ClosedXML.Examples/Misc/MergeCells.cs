@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -12,8 +11,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -23,18 +21,15 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
         // Public
 
-
         // Private
 
-
-        #endregion
+        #endregion Constructors
 
         #region Events
 
@@ -44,15 +39,14 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Merge Cells");
 
             // Merge a row
@@ -82,7 +76,6 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

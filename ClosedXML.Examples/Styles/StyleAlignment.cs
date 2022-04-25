@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Styles
 {
@@ -12,8 +11,7 @@ namespace ClosedXML.Examples.Styles
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -23,22 +21,18 @@ namespace ClosedXML.Examples.Styles
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
         // Public
         public StyleAlignment()
         {
-
         }
-
 
         // Private
 
-
-        #endregion
+        #endregion Constructors
 
         #region Events
 
@@ -48,15 +42,14 @@ namespace ClosedXML.Examples.Styles
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Style Alignment");
 
             var co = 2;
@@ -99,7 +92,6 @@ namespace ClosedXML.Examples.Styles
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

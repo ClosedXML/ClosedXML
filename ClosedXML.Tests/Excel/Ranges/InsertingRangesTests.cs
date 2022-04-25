@@ -11,7 +11,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingColumnsPreservesFormatting()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
             IXLColumn column1 = ws.Column(1);
             column1.Style.Fill.SetBackgroundColor(XLColor.FrenchLilac);
@@ -40,7 +40,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingRowsAbove()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
 
             ws.Cell("B3").SetValue("X")
@@ -57,7 +57,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingRowsPreservesFormatting()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet");
             IXLRow row1 = ws.Row(1);
             row1.Style.Fill.SetBackgroundColor(XLColor.FrenchLilac);
@@ -86,7 +86,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingRowsPreservesComments()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
 
             ws.Cell("A1").SetValue("Insert Below");
@@ -100,7 +100,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingColumnsPreservesComments()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
 
             ws.Cell("A1").SetValue("Insert to the right");
@@ -213,7 +213,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertZeroColumnsFails()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsAfter(0));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsBefore(0));
@@ -222,7 +222,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertNegativeNumberOfColumnsFails()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsAfter(-1));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsBefore(-1));
@@ -231,7 +231,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertTooLargeNumberOfColumnsFails()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsAfter(16385));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertColumnsBefore(16385));
@@ -240,7 +240,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertZeroRowsFails()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(0));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(0));
@@ -249,7 +249,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertNegativeNumberOfRowsFails()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(-1));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(-1));
@@ -258,7 +258,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertTooLargeNumberOrRowsFails()
         {
-            var ws = new XLWorkbook().AddWorksheet("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var range = ws.FirstCell().AsRange();
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsAbove(1048577));
             Assert.Throws(typeof(ArgumentOutOfRangeException), () => range.InsertRowsBelow(1048577));

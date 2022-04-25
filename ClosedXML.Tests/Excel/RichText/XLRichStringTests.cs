@@ -16,7 +16,7 @@ namespace ClosedXML.Tests
         [Test]
         public void AccessRichTextTest1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.CreateRichText().AddText("12");
             cell.DataType = XLDataType.Number;
@@ -42,7 +42,7 @@ namespace ClosedXML.Tests
         [Test]
         public void AddTextTest1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             IXLRichText richString = cell.CreateRichText();
 
@@ -62,7 +62,7 @@ namespace ClosedXML.Tests
         [Test]
         public void AddTextTest2()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             Int32 number = 123;
 
@@ -85,7 +85,7 @@ namespace ClosedXML.Tests
         [Test]
         public void AddTextTest3()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             Int32 number = 123;
             cell.Value = number;
@@ -111,7 +111,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearTest()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -129,7 +129,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CountTest()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -142,7 +142,7 @@ namespace ClosedXML.Tests
         [Test]
         public void HasRichTextTest1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.GetRichText().AddText("123");
 
@@ -179,7 +179,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_All_From_OneString()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -198,7 +198,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_All_From_ThreeStrings()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
@@ -224,7 +224,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_OneString_End()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -263,7 +263,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_OneString_Middle()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -306,7 +306,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_OneString_Start()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -345,7 +345,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_ThreeStrings_End1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
@@ -394,7 +394,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_ThreeStrings_End2()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
@@ -446,7 +446,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_ThreeStrings_Mid1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
@@ -472,7 +472,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_ThreeStrings_Mid2()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
@@ -499,7 +499,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_ThreeStrings_Start1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
@@ -548,7 +548,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_From_ThreeStrings_Start2()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Good Morning");
@@ -600,7 +600,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_IndexOutsideRange1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -611,7 +611,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_IndexOutsideRange2()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -623,7 +623,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_IndexOutsideRange3()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -634,7 +634,7 @@ namespace ClosedXML.Tests
         [Test]
         public void Substring_IndexOutsideRange4()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");
@@ -649,7 +649,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ToStringTest()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLRichText richString = ws.Cell(1, 1).GetRichText();
 
             richString.AddText("Hello");

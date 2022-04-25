@@ -1,5 +1,5 @@
-using System;
 using ClosedXML.Excel;
+using System;
 
 namespace ClosedXML.Examples
 {
@@ -7,7 +7,7 @@ namespace ClosedXML.Examples
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Inserting and Deleting Rows");
 
             // Range starts with 2 rows

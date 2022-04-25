@@ -17,7 +17,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ColumnCountTime()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             DateTime start = DateTime.Now;
             ws.ColumnCount();
@@ -28,7 +28,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyConditionalFormatsCount()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Range("A1:C3").AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
             ws.Range("A1:C3").Value = 1;
@@ -39,7 +39,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyColumnVisibility()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
             ws.Columns(10, 20).Hide();
             ws.CopyTo("Sheet2");
@@ -49,7 +49,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CopyRowVisibility()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Sheet1");
             ws.Rows(2, 5).Hide();
             ws.CopyTo("Sheet2");
@@ -59,7 +59,7 @@ namespace ClosedXML.Tests
         [Test]
         public void DeletingSheets1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             wb.Worksheets.Add("Sheet3");
             wb.Worksheets.Add("Sheet2");
             wb.Worksheets.Add("Sheet1", 1);
@@ -74,7 +74,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingSheets1()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             wb.Worksheets.Add("Sheet1");
             wb.Worksheets.Add("Sheet2");
             wb.Worksheets.Add("Sheet3");
@@ -87,7 +87,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingSheets2()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             wb.Worksheets.Add("Sheet2");
             wb.Worksheets.Add("Sheet1", 1);
             wb.Worksheets.Add("Sheet3");
@@ -100,7 +100,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingSheets3()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             wb.Worksheets.Add("Sheet3");
             wb.Worksheets.Add("Sheet2", 1);
             wb.Worksheets.Add("Sheet1", 1);
@@ -113,7 +113,7 @@ namespace ClosedXML.Tests
         [Test]
         public void InsertingSheets4()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add();
 
             Assert.AreEqual("Sheet1", ws1.Name);
@@ -150,7 +150,7 @@ namespace ClosedXML.Tests
         [Test]
         public void MergedRanges()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("A1:B2").Merge();
             ws.Range("C1:D3").Merge();
             ws.Range("D2:E2").Merge();
@@ -168,7 +168,7 @@ namespace ClosedXML.Tests
         [Test]
         public void RowCountTime()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             DateTime start = DateTime.Now;
             ws.RowCount();
@@ -272,19 +272,26 @@ namespace ClosedXML.Tests
         public void CanCopySheetsWithAllAnchorTypes()
         {
             using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Examples\ImageHandling\ImageAnchors.xlsx")))
-            using (var wb = new XLWorkbook(stream))
             {
-                var ws = wb.Worksheets.First();
-                ws.CopyTo("Copy1");
+                var wb = new XLWorkbook(stream);
+                try
+                {
+                    var ws = wb.Worksheets.First();
+                    ws.CopyTo("Copy1");
 
-                var ws2 = wb.Worksheets.Skip(1).First();
-                ws2.CopyTo("Copy2");
+                    var ws2 = wb.Worksheets.Skip(1).First();
+                    ws2.CopyTo("Copy2");
 
-                var ws3 = wb.Worksheets.Skip(2).First();
-                ws3.CopyTo("Copy3");
+                    var ws3 = wb.Worksheets.Skip(2).First();
+                    ws3.CopyTo("Copy3");
 
-                var ws4 = wb.Worksheets.Skip(3).First();
-                ws3.CopyTo("Copy4");
+                    var ws4 = wb.Worksheets.Skip(3).First();
+                    ws3.CopyTo("Copy4");
+                }
+                finally
+                {
+                    wb.Dispose();
+                }
             }
         }
 

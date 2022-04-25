@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Ranges
 {
@@ -11,7 +10,7 @@ namespace ClosedXML.Examples.Ranges
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Deleting Ranges");
 
             // Deleting Columns
@@ -22,7 +21,7 @@ namespace ClosedXML.Examples.Ranges
 
             ws.Column(7).Delete();
             ws.Column(1).Delete();
-            ws.Columns(1,2).Delete();
+            ws.Columns(1, 2).Delete();
             ws.Column(2).Delete();
 
             // Deleting Rows
@@ -63,7 +62,6 @@ namespace ClosedXML.Examples.Ranges
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

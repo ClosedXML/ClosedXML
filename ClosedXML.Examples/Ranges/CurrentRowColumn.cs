@@ -1,7 +1,5 @@
-using System;
-using System.Linq;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Ranges
 {
@@ -12,7 +10,7 @@ namespace ClosedXML.Examples.Ranges
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Current Row Column");
 
             var cell = ws.Cell(5, 2);
@@ -45,7 +43,6 @@ namespace ClosedXML.Examples.Ranges
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

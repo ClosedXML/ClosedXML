@@ -31,7 +31,7 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void DefaultColorIndex64isTransparentWhite()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             XLColor color = ws.FirstCell().Style.Fill.BackgroundColor;
             Assert.AreEqual(XLColorType.Indexed, color.ColorType);

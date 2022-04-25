@@ -12,7 +12,7 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty1()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             IXLRange range = ws.Range("A1:B2");
             bool actual = range.IsEmpty();
@@ -23,7 +23,7 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty2()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             IXLRange range = ws.Range("A1:B2");
             bool actual = range.IsEmpty(XLCellsUsedOptions.All);
@@ -34,7 +34,7 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty3()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             IXLRange range = ws.Range("A1:B2");
@@ -46,7 +46,7 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty4()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             IXLRange range = ws.Range("A1:B2");
@@ -58,7 +58,7 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty5()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
             IXLRange range = ws.Range("A1:B2");
@@ -70,7 +70,7 @@ namespace ClosedXML.Tests
         [Test]
         public void IsEmpty6()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             IXLCell cell = ws.Cell(1, 1);
             cell.Value = "X";
             IXLRange range = ws.Range("A1:B2");
@@ -82,7 +82,7 @@ namespace ClosedXML.Tests
         [Test]
         public void SingleCell()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).Value = "Hello World!";
             wb.NamedRanges.Add("SingleCell", "Sheet1!$A$1");
@@ -94,7 +94,7 @@ namespace ClosedXML.Tests
         [Test]
         public void TableRange()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             IXLRangeColumn rangeColumn = ws.Column(1).Column(1, 4);
             rangeColumn.Cell(1).Value = "FName";
@@ -113,7 +113,7 @@ namespace ClosedXML.Tests
         [Test]
         public void WsNamedCell()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell", XLScope.Worksheet);
             Assert.AreEqual("Test", ws.Cell("TestCell").GetString());
@@ -122,7 +122,7 @@ namespace ClosedXML.Tests
         [Test]
         public void WsNamedCells()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell", XLScope.Worksheet);
             ws.Cell(2, 1).SetValue("B");
@@ -134,7 +134,7 @@ namespace ClosedXML.Tests
         [Test]
         public void WsNamedRange()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("A");
             ws.Cell(2, 1).SetValue("B");
@@ -147,7 +147,7 @@ namespace ClosedXML.Tests
         [Test]
         public void WsNamedRanges()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("A");
             ws.Cell(2, 1).SetValue("B");
@@ -162,7 +162,7 @@ namespace ClosedXML.Tests
         [Test]
         public void WsNamedRangesOneString()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
             ws.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
             IXLRanges namedRanges = ws.Ranges("TestRange");
@@ -174,7 +174,7 @@ namespace ClosedXML.Tests
         //[Test]
         //public void WsNamedRangeLiteral()
         //{
-        //    var wb = new XLWorkbook();
+        //using var wb = new XLWorkbook();
         //    var ws = wb.Worksheets.Add("Sheet1");
         //    ws.NamedRanges.Add("TestRange", "\"Hello\"");
         //    using (MemoryStream memoryStream = new MemoryStream())
@@ -309,7 +309,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearConditionalFormattingsWhenRangeAbove1()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
             ws.Range("B2:E3").Clear(XLClearOptions.ConditionalFormats);
 
@@ -320,7 +320,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearConditionalFormattingsWhenRangeAbove2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
             ws.Range("C3:D3").Clear(XLClearOptions.ConditionalFormats);
 
@@ -331,7 +331,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearConditionalFormattingsWhenRangeBelow1()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
             ws.Range("B7:E8").Clear(XLClearOptions.ConditionalFormats);
 
@@ -342,7 +342,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearConditionalFormattingsWhenRangeBelow2()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
             ws.Range("C7:D7").Clear(XLClearOptions.ConditionalFormats);
 
@@ -353,7 +353,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearConditionalFormattingsWhenRangeRowInMiddle()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:D7").AddConditionalFormat();
             ws.Range("C5:E5").Clear(XLClearOptions.ConditionalFormats);
 
@@ -365,7 +365,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearConditionalFormattingsWhenRangeColumnInMiddle()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:G4").AddConditionalFormat();
             ws.Range("E2:E4").Clear(XLClearOptions.ConditionalFormats);
 
@@ -377,7 +377,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearConditionalFormattingsWhenRangeContainsFormatWhole()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:G4").AddConditionalFormat();
             ws.Range("B2:G4").Clear(XLClearOptions.ConditionalFormats);
 
@@ -387,7 +387,7 @@ namespace ClosedXML.Tests
         [Test]
         public void NoClearConditionalFormattingsWhenRangePartiallySuperimposed()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.Range("C3:G4").AddConditionalFormat();
             ws.Range("C2:D3").Clear(XLClearOptions.ConditionalFormats);
 
@@ -399,7 +399,7 @@ namespace ClosedXML.Tests
         [Test]
         public void RangesRemoveAllWithoutDispose()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var ranges = new XLRanges();
             ranges.Add(ws.Range("A1:A2"));
             ranges.Add(ws.Range("B1:B2"));
@@ -417,7 +417,7 @@ namespace ClosedXML.Tests
         [Test]
         public void RangesRemoveAllByCriteria()
         {
-            var ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             var ranges = new XLRanges();
             ranges.Add(ws.Range("A1:A2"));
             ranges.Add(ws.Range("B1:B3"));
@@ -433,7 +433,7 @@ namespace ClosedXML.Tests
         [Test]
         public void XLRangesReturnsRangesInDeterministicOrder()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Another sheet");
 
@@ -472,7 +472,7 @@ namespace ClosedXML.Tests
         [Test]
         public void ClearRangeRemovesSparklines()
         {
-            IXLWorksheet ws = new XLWorkbook().Worksheets.Add("Sheet1");
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
             ws.SparklineGroups.Add("B1:B3", "C1:E3");
 
             ws.Range("B1:C1").Clear(XLClearOptions.All);
@@ -502,7 +502,7 @@ namespace ClosedXML.Tests
         [TestCase("B2:G7", "H1:H8", true, "B2:G7")]
         public void CanSplitRange(string rangeAddress, string splitBy, bool includeIntersection, string expectedResult)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var range = ws.Range(rangeAddress) as XLRange;
             var splitter = ws.Range(splitBy);

@@ -59,6 +59,7 @@ namespace ClosedXML.Tests
 
             //Run test
             example.Create(filePath1);
+            example.Create(filePath1);
             using (var wb = new XLWorkbook(filePath1))
                 wb.SaveAs(filePath2, validate: true, evaluateFormula);
 

@@ -26,7 +26,7 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void CopyConditionalFormatsCount()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().AddConditionalFormat().WhenContains("1").Fill.SetBackgroundColor(XLColor.Blue);
             ws.Cell("A2").Value = ws.FirstCell();
@@ -36,7 +36,7 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void CopyConditionalFormatsFixedNum()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "1";
             ws.Cell("B1").Value = "1";
@@ -49,7 +49,7 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void CopyConditionalFormatsFixedString()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "A";
             ws.Cell("B1").Value = "B";
@@ -62,7 +62,7 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void CopyConditionalFormatsFixedStringNum()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "1";
             ws.Cell("B1").Value = "1";
@@ -75,7 +75,7 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void CopyConditionalFormatsRelative()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws = wb.AddWorksheet("Sheet1");
             ws.Cell("A1").Value = "1";
             ws.Cell("B1").Value = "1";
@@ -88,7 +88,7 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void TestRowCopyContents()
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             IXLWorksheet originalSheet = workbook.Worksheets.Add("original");
             IXLWorksheet copyRowSheet = workbook.Worksheets.Add("copy row");
             IXLWorksheet copyRowAsRangeSheet = workbook.Worksheets.Add("copy row as range");

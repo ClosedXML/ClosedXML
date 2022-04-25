@@ -388,6 +388,8 @@ namespace ClosedXML.Tests
         [Test]
         public void BlankPivotTableField()
         {
+            using var wb = new XLWorkbook();
+
             var expectedFilePath = @"Other\PivotTableReferenceFiles\BlankPivotTableField\BlankPivotTableField.xlsx";
             using (var ms = new MemoryStream())
             {
@@ -418,8 +420,6 @@ namespace ClosedXML.Tests
                         // For ContainsBlank and integer rows/columns test
                         new Pastry("Scone", null, 255, 18.4, "", null),
                     };
-
-                    var wb = new XLWorkbook();
 
                     var sheet = wb.Worksheets.Add("PastrySalesData");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
@@ -471,6 +471,8 @@ namespace ClosedXML.Tests
         [Test]
         public void SourceSheetWithWhitespace()
         {
+            using var wb = new XLWorkbook();
+
             var expectedFilePath = @"Other\PivotTableReferenceFiles\SourceSheetWithWhitespace\outputfile.xlsx";
 
             using (var ms = new MemoryStream())
@@ -502,8 +504,6 @@ namespace ClosedXML.Tests
                         // For ContainsBlank and integer rows/columns test
                         new Pastry("Scone", null, 255, 18.4, "", null),
                     };
-
-                    var wb = new XLWorkbook();
 
                     var sheet = wb.Worksheets.Add("Pastry Sales Data");
                     // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1

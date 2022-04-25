@@ -8,7 +8,7 @@ namespace ClosedXML.Examples
     {
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws;
 
             #region Single Column Numbers
@@ -159,7 +159,7 @@ namespace ClosedXML.Examples
             {
                 wb.SaveAs(ms);
 
-                var workbook = new XLWorkbook(ms);
+                using var workbook = new XLWorkbook(ms);
 
                 #region Single Column Numbers
 

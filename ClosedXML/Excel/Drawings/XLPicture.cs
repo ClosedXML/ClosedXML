@@ -1,9 +1,7 @@
-// Keep this file CodeMaid organised and cleaned
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using System.IO;
 using System.Linq;
 
@@ -22,6 +20,7 @@ namespace ClosedXML.Excel.Drawings
         private Int32 id;
         private String name = string.Empty;
         private Int32 width;
+        private readonly SKCodec codec;
 
         static XLPicture()
         {
@@ -37,8 +36,7 @@ namespace ClosedXML.Excel.Drawings
             }
         }
 
-        internal XLPicture(IXLWorksheet worksheet, Stream stream)
-            : this(worksheet)
+        internal XLPicture(IXLWorksheet worksheet, Stream stream) : this(worksheet)
         {
             if (stream == null) { throw new ArgumentNullException(nameof(stream)); }
 
@@ -48,7 +46,7 @@ namespace ClosedXML.Excel.Drawings
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
 
-                var codec = SKCodec.Create(ImageStream, out var result);
+                codec = SKCodec.Create(ImageStream, out var result);
 
                 if (codec != null)
                 {
@@ -61,6 +59,7 @@ namespace ClosedXML.Excel.Drawings
                     }
                 }
 
+                stream.Position = 0;
                 ImageStream.Seek(0, SeekOrigin.Begin);
             }
         }
@@ -76,7 +75,9 @@ namespace ClosedXML.Excel.Drawings
                 stream.Position = 0;
                 stream.CopyTo(ImageStream);
                 ImageStream.Seek(0, SeekOrigin.Begin);
-                var codec = SKCodec.Create(ImageStream, out var result);
+
+                codec = SKCodec.Create(ImageStream, out var result);
+
                 if (codec != null)
                 {
                     using (var bitmap = SKBitmap.Decode(codec))
@@ -323,9 +324,7 @@ namespace ClosedXML.Excel.Drawings
 
         public void Dispose()
         {
-            // Dispose of unmanaged resources.
             Dispose(true);
-            // Suppress finalization.
             GC.SuppressFinalize(this);
         }
 
@@ -336,13 +335,14 @@ namespace ClosedXML.Excel.Drawings
 
             if (disposing)
             {
-                ImageStream.Dispose();
+                ImageStream?.Dispose();
+                codec?.Dispose();
             }
 
             _disposed = true;
         }
 
-        void ThrowIfDisposed()
+        private void ThrowIfDisposed()
         {
             if (_disposed)
             {

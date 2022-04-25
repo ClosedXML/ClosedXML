@@ -6,7 +6,7 @@ namespace ClosedXML.Examples.Misc
     {
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var c1 = ws.Cell("A1");
             var c2 = ws.Cell("B1");

@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -12,8 +11,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -23,8 +21,7 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
@@ -34,15 +31,14 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
 
             var originalSheet = workbook.Worksheets.Add("original");
 
@@ -85,7 +81,6 @@ namespace ClosedXML.Examples.Misc
             originalSheet.Column("F").AsRange().CopyTo(fromRangeToColumn.Column(4).AsRange());
             fromRangeToColumn.Cell(1, 5).SetValue("Range to Cell:").Style.Alignment.SetTopToBottom();
             originalSheet.Column("F").AsRange().CopyTo(fromRangeToColumn.Column(6).FirstCell());
-          
 
             workbook.SaveAs(filePath);
         }
@@ -108,7 +103,6 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

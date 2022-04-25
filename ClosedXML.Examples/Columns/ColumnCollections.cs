@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Columns
 {
@@ -12,8 +11,7 @@ namespace ClosedXML.Examples.Columns
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -23,9 +21,7 @@ namespace ClosedXML.Examples.Columns
 
         // Override
 
-
-        #endregion
-
+        #endregion Properties
 
         #region Events
 
@@ -35,15 +31,14 @@ namespace ClosedXML.Examples.Columns
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Columns of a Range");
 
             // All columns in a range
@@ -70,10 +65,10 @@ namespace ClosedXML.Examples.Columns
             bigRange.Columns("V").Style.Fill.BackgroundColor = XLColor.Cyan;
 
             // Adjust the width
-            ws.Columns("A:V").Width = 3; 
+            ws.Columns("A:V").Width = 3;
 
             var ws2 = workbook.Worksheets.Add("Columns of a worksheet");
-            
+
             // Contiguous columns by number
             ws2.Columns(1, 2).Style.Fill.BackgroundColor = XLColor.Red;
 
@@ -94,7 +89,7 @@ namespace ClosedXML.Examples.Columns
 
             // Adjust the width
             ws2.Columns("A:V").Width = 3;
-            
+
             workbook.SaveAs(filePath);
         }
 
@@ -102,7 +97,6 @@ namespace ClosedXML.Examples.Columns
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

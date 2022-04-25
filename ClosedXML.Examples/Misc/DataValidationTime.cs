@@ -7,7 +7,7 @@ namespace ClosedXML.Examples.Misc
     {
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var time1 = TimeSpan.FromHours(6);
             var time2 = TimeSpan.FromHours(12);

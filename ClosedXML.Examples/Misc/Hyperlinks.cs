@@ -1,6 +1,5 @@
-using System;
 using ClosedXML.Excel;
-
+using System;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -12,8 +11,7 @@ namespace ClosedXML.Examples.Misc
 
         // Private
 
-
-        #endregion
+        #endregion Variables
 
         #region Properties
 
@@ -23,8 +21,7 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Properties
 
         #region Events
 
@@ -34,15 +31,14 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Events
 
         #region Methods
 
         // Public
         public void Create(String filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Hyperlinks");
             wb.Worksheets.Add("Second Sheet");
 
@@ -50,7 +46,7 @@ namespace ClosedXML.Examples.Misc
 
             // You can create a link with pretty much anything you can put on a
             // browser: http, ftp, mailto, gopher, news, nntp, etc.
-            
+
             ws.Cell(++ro, 1).Value = "Link to a web page, no tooltip - Yahoo!";
             ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(@"http://www.yahoo.com"));
 
@@ -91,11 +87,11 @@ namespace ClosedXML.Examples.Misc
             ws.Cell(ro, 1).Style.Font.FontColor = XLColor.Red;
             ws.Cell(ro, 1).Style.Font.Underline = XLFontUnderlineValues.Double;
             ws.Cell(ro, 1).SetHyperlink(new XLHyperlink(ws.Range("B1:C2")));
-            
+
             // Hyperlink via formula
-            ws.Cell( ++ro, 1 ).SetValue( "Send Email" )
-                .SetFormulaA1( "=HYPERLINK(\"mailto:test@test.com\", \"Send Email\")" )
-                .SetHyperlink(new XLHyperlink( "mailto:test@test.com", "'Send Email'" ));
+            ws.Cell(++ro, 1).SetValue("Send Email")
+                .SetFormulaA1("=HYPERLINK(\"mailto:test@test.com\", \"Send Email\")")
+                .SetHyperlink(new XLHyperlink("mailto:test@test.com", "'Send Email'"));
 
             // List all hyperlinks in a worksheet:
             var hyperlinksInWorksheet = ws.Hyperlinks;
@@ -122,7 +118,6 @@ namespace ClosedXML.Examples.Misc
 
         // Override
 
-
-        #endregion
+        #endregion Methods
     }
 }

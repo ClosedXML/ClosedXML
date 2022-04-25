@@ -30,7 +30,7 @@ namespace ClosedXML.Tests.Excel.Comments
         [Test]
         public void AddingCommentDoesNotAffectCollections()
         {
-            var ws = new XLWorkbook().AddWorksheet() as XLWorksheet;
+            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet() as XLWorksheet;
             ws.Cell("A1").SetValue(10);
             ws.Cell("A4").SetValue(10);
             ws.Cell("A5").SetValue(10);

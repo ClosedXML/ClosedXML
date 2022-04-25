@@ -7,7 +7,7 @@ namespace ClosedXML.Examples.Misc
     {
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             var date1 = new DateTime(2020, 01, 31);
             var date2 = new DateTime(2020, 02, 29);

@@ -7,9 +7,11 @@ namespace ClosedXML.Examples
 {
     public class ImageFormats : IXLExample
     {
+        private readonly bool disposedValue;
+
         public void Create(string filePath)
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             IXLWorksheet ws;
 
             using (Stream fs = Assembly.GetExecutingAssembly().GetManifestResourceStream("ClosedXML.Examples.Resources.ImageHandling.jpg"))

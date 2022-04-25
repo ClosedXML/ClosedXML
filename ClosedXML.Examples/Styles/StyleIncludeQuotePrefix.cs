@@ -8,7 +8,7 @@ namespace ClosedXML.Examples.Styles
     {
         public void Create(String filePath)
         {
-            var workbook = new XLWorkbook();
+            using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Style IncludeQuotePrefix");
 
             var data = Enumerable.Range(1, 20)

@@ -10,7 +10,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateRangesSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             var ranges = new XLRanges();
             ranges.Add(ws.Range("A1:E3"));
@@ -37,7 +37,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateWideRangesSameWorksheet()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             var ranges = new XLRanges();
             ranges.Add(ws.Row(5));
@@ -62,7 +62,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateRangesDifferentWorksheets()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Sheet2");
             var ranges = new XLRanges();
@@ -106,7 +106,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         [Test]
         public void ConsolidateSparsedRanges()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
             var ranges = new XLRanges();
             ranges.Add(ws.Range("A1:C1"));
