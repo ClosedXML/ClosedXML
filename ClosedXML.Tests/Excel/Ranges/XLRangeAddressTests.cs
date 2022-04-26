@@ -209,7 +209,8 @@ namespace ClosedXML.Tests
         [Test]
         public void RangeAddressIsNormalized()
         {
-            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
 
             XLRangeAddress rangeAddress;
 
@@ -264,7 +265,8 @@ namespace ClosedXML.Tests
         [Test]
         public void RelativeRanges()
         {
-            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
 
             IXLRangeAddress rangeAddress;
 

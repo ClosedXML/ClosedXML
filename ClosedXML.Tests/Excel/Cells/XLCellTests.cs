@@ -587,7 +587,8 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Enum_Good()
         {
-            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
             Assert.IsTrue(ws.FirstCell().SetValue(NumberStyles.AllowCurrencySymbol).TryGetValue(out NumberStyles value));
             Assert.AreEqual(NumberStyles.AllowCurrencySymbol, value);
 
@@ -599,7 +600,8 @@ namespace ClosedXML.Tests
         [Test]
         public void TryGetValue_Enum_BadString()
         {
-            using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet();
+            using var xLWorkbook = new XLWorkbook();
+            var ws = xLWorkbook.AddWorksheet();
             Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles value));
             Assert.IsFalse(ws.FirstCell().SetValue("ABC").TryGetValue(out NumberStyles? value2));
         }
