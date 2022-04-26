@@ -31,7 +31,7 @@ namespace ClosedXML.Excel
             MergedRanges.RemoveAll();
         }
 
-#if _NET40_
+#if NET40
 
         public void Dispose()
         {

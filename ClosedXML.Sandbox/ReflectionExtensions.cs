@@ -1,4 +1,4 @@
-﻿#if _NET40_
+﻿#if NET40
 using System;
 using System.Collections.Generic;
 using System.Reflection;

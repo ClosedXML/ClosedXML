@@ -440,7 +440,7 @@ namespace ClosedXML.Tests.Excel
             }
         }
 
-#if _NET40_
+#if NET40
         [Ignore(".NET 40 does not support Janitor.Fody")]
 #endif
 

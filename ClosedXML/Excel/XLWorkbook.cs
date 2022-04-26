@@ -808,7 +808,7 @@ namespace ClosedXML.Excel
             Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
         }
 
-#if _NET40_
+#if NET40
         public void Dispose()
         {
             // net40 doesn't support Janitor.Fody, so let's dispose manually
