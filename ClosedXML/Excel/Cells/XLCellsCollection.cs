@@ -134,8 +134,10 @@ namespace ClosedXML.Excel
             }
             else
             {
-                delHash = new HashSet<int>();
-                delHash.Add(column);
+                delHash = new HashSet<int>
+                {
+                    column
+                };
                 Deleted.Add(row, delHash);
             }
 

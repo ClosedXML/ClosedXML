@@ -24,11 +24,13 @@ namespace ClosedXML.Tests
 
             var table = ws.RangeUsed().CreateTable();
 
-            var listOfArr = new List<int>();
-            listOfArr.Add(3);
-            listOfArr.Add(4);
-            listOfArr.Add(5);
-            listOfArr.Add(6);
+            var listOfArr = new List<int>
+            {
+                3,
+                4,
+                5,
+                6
+            };
 
             table.DataRange.InsertRowsBelow(listOfArr.Count - table.DataRange.RowCount());
             table.DataRange.FirstCell().InsertData(listOfArr);

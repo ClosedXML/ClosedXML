@@ -45,18 +45,22 @@ namespace ClosedXML.Examples.Misc
             var ws = wb.Worksheets.Add("Collections");
 
             // From a list of strings
-            var listOfStrings = new List<string>();
-            listOfStrings.Add("House");
-            listOfStrings.Add("Car");
+            var listOfStrings = new List<string>
+            {
+                "House",
+                "Car"
+            };
             ws.Cell(1, 1).Value = "Strings";
             ws.Cell(1, 1).AsRange().AddToNamed("Titles");
             ws.Cell(2, 1).Value = listOfStrings;
 
             // From a list of arrays
-            var listOfArr = new List<int[]>();
-            listOfArr.Add(new int[] { 1, 2, 3 });
-            listOfArr.Add(new int[] { 1 });
-            listOfArr.Add(new int[] { 1, 2, 3, 4, 5, 6 });
+            var listOfArr = new List<int[]>
+            {
+                new int[] { 1, 2, 3 },
+                new int[] { 1 },
+                new int[] { 1, 2, 3, 4, 5, 6 }
+            };
             ws.Cell(1, 3).Value = "Arrays";
             ws.Range(1, 3, 1, 8).Merge().AddToNamed("Titles");
             ws.Cell(2, 3).Value = listOfArr;
@@ -68,11 +72,13 @@ namespace ClosedXML.Examples.Misc
             ws.Cell(7, 1).Value = dataTable;
 
             // From a query
-            var list = new List<Person>();
-            list.Add(new Person() { Name = "John", Age = 30, House = "On Elm St." });
-            list.Add(new Person() { Name = "Mary", Age = 15, House = "On Main St." });
-            list.Add(new Person() { Name = "Luis", Age = 21, House = "On 23rd St." });
-            list.Add(new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." });
+            var list = new List<Person>
+            {
+                new Person() { Name = "John", Age = 30, House = "On Elm St." },
+                new Person() { Name = "Mary", Age = 15, House = "On Main St." },
+                new Person() { Name = "Luis", Age = 21, House = "On 23rd St." },
+                new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." }
+            };
 
             var people = from p in list
                          where p.Age >= 21

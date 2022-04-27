@@ -12,16 +12,18 @@ namespace ClosedXML.Tests.Excel.Ranges
         {
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Range("A1:E3"));
-            ranges.Add(ws.Range("A4:B10"));
-            ranges.Add(ws.Range("E2:F12"));
-            ranges.Add(ws.Range("C6:I8"));
-            ranges.Add(ws.Range("G9:G9"));
-            ranges.Add(ws.Range("C9:D9"));
-            ranges.Add(ws.Range("H9:H9"));
-            ranges.Add(ws.Range("I9:I13"));
-            ranges.Add(ws.Range("C4:D5"));
+            var ranges = new XLRanges
+            {
+                ws.Range("A1:E3"),
+                ws.Range("A4:B10"),
+                ws.Range("E2:F12"),
+                ws.Range("C6:I8"),
+                ws.Range("G9:G9"),
+                ws.Range("C9:D9"),
+                ws.Range("H9:H9"),
+                ws.Range("I9:I13"),
+                ws.Range("C4:D5")
+            };
 
             var consRanges = ranges.Consolidate().ToList();
 
@@ -39,13 +41,15 @@ namespace ClosedXML.Tests.Excel.Ranges
         {
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Row(5));
-            ranges.Add(ws.Row(7));
-            ranges.Add(ws.Row(6));
-            ranges.Add(ws.Column("D"));
-            ranges.Add(ws.Column("F"));
-            ranges.Add(ws.Column("E"));
+            var ranges = new XLRanges
+            {
+                ws.Row(5),
+                ws.Row(7),
+                ws.Row(6),
+                ws.Column("D"),
+                ws.Column("F"),
+                ws.Column("E")
+            };
 
             var consRanges = ranges.Consolidate()
                 .OrderBy(r => r.Worksheet.Name)
@@ -65,24 +69,26 @@ namespace ClosedXML.Tests.Excel.Ranges
             using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Sheet2");
-            var ranges = new XLRanges();
-            ranges.Add(ws1.Range("A1:E3"));
-            ranges.Add(ws1.Range("A4:B10"));
-            ranges.Add(ws1.Range("E2:F12"));
-            ranges.Add(ws1.Range("C6:I8"));
-            ranges.Add(ws1.Range("G9:G9"));
+            var ranges = new XLRanges
+            {
+                ws1.Range("A1:E3"),
+                ws1.Range("A4:B10"),
+                ws1.Range("E2:F12"),
+                ws1.Range("C6:I8"),
+                ws1.Range("G9:G9"),
 
-            ranges.Add(ws2.Row(5));
-            ranges.Add(ws2.Row(7));
-            ranges.Add(ws2.Row(6));
-            ranges.Add(ws2.Column("D"));
-            ranges.Add(ws2.Column("F"));
-            ranges.Add(ws2.Column("E"));
+                ws2.Row(5),
+                ws2.Row(7),
+                ws2.Row(6),
+                ws2.Column("D"),
+                ws2.Column("F"),
+                ws2.Column("E"),
 
-            ranges.Add(ws1.Range("C9:D9"));
-            ranges.Add(ws1.Range("H9:H9"));
-            ranges.Add(ws1.Range("I9:I13"));
-            ranges.Add(ws1.Range("C4:D5"));
+                ws1.Range("C9:D9"),
+                ws1.Range("H9:H9"),
+                ws1.Range("I9:I13"),
+                ws1.Range("C4:D5")
+            };
 
             var consRanges = ranges.Consolidate()
                 .OrderBy(r => r.Worksheet.Name)
@@ -108,11 +114,13 @@ namespace ClosedXML.Tests.Excel.Ranges
         {
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Range("A1:C1"));
-            ranges.Add(ws.Range("E1:G1"));
-            ranges.Add(ws.Range("A3:C3"));
-            ranges.Add(ws.Range("E3:G3"));
+            var ranges = new XLRanges
+            {
+                ws.Range("A1:C1"),
+                ws.Range("E1:G1"),
+                ws.Range("A3:C3"),
+                ws.Range("E3:G3")
+            };
 
             var consRanges = ranges.Consolidate().ToList();
 

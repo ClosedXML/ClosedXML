@@ -211,8 +211,10 @@ namespace ClosedXML.Tests.Excel.Ranges
             var range2 = ws.Range("A2:B3");
             var range3 = ws.Range("A1:B2"); // same as range1
 
-            var ranges = new XLRanges();
-            ranges.Add(range1);
+            var ranges = new XLRanges
+            {
+                range1
+            };
             Assert.AreEqual(1, ranges.Count);
             ranges.Add(range2);
             Assert.AreEqual(2, ranges.Count);

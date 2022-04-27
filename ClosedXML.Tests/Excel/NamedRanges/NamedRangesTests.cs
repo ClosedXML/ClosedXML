@@ -164,9 +164,11 @@ namespace ClosedXML.Tests.Excel
             using var wb = new XLWorkbook();
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Sheet2");
-            var ranges = new XLRanges();
-            ranges.Add(ws1.Range("B2:E6"));
-            ranges.Add(ws2.Range("D1:E2"));
+            var ranges = new XLRanges
+            {
+                ws1.Range("B2:E6"),
+                ws2.Range("D1:E2")
+            };
             var original = ws1.NamedRanges.Add("Named range", ranges);
 
             var copy = original.CopyTo(ws2);

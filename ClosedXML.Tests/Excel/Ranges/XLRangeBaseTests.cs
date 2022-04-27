@@ -388,9 +388,11 @@ namespace ClosedXML.Tests
         public void RangesRemoveAllWithoutDispose()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Range("A1:A2"));
-            ranges.Add(ws.Range("B1:B2"));
+            var ranges = new XLRanges
+            {
+                ws.Range("A1:A2"),
+                ws.Range("B1:B2")
+            };
             var rangesCopy = ranges.ToList();
 
             ranges.RemoveAll(null, false);
@@ -406,10 +408,12 @@ namespace ClosedXML.Tests
         public void RangesRemoveAllByCriteria()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Range("A1:A2"));
-            ranges.Add(ws.Range("B1:B3"));
-            ranges.Add(ws.Range("C1:C4"));
+            var ranges = new XLRanges
+            {
+                ws.Range("A1:A2"),
+                ws.Range("B1:B3"),
+                ws.Range("C1:C4")
+            };
             var otherRange = ws.Range("A3:D3");
 
             ranges.RemoveAll(r => r.Intersects(otherRange));
@@ -425,15 +429,17 @@ namespace ClosedXML.Tests
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Another sheet");
 
-            var ranges = new XLRanges();
-            ranges.Add(ws2.Range("F1:F12"));
-            ranges.Add(ws1.Range("F12:F16"));
-            ranges.Add(ws1.Range("B1:F2"));
-            ranges.Add(ws2.Range("A13:B14"));
-            ranges.Add(ws2.Range("E1:E2"));
-            ranges.Add(ws1.Range("E1:H2"));
-            ranges.Add(ws1.Range("G2:G13"));
-            ranges.Add(ws1.Range("G20:G20"));
+            var ranges = new XLRanges
+            {
+                ws2.Range("F1:F12"),
+                ws1.Range("F12:F16"),
+                ws1.Range("B1:F2"),
+                ws2.Range("A13:B14"),
+                ws2.Range("E1:E2"),
+                ws1.Range("E1:H2"),
+                ws1.Range("G2:G13"),
+                ws1.Range("G20:G20")
+            };
 
             var expectedRanges = new List<IXLRange>
             {

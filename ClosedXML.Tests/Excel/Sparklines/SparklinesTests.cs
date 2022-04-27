@@ -159,10 +159,11 @@ namespace ClosedXML.Tests.Excel.Sparklines
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
-            var group = new XLSparklineGroup(ws);
-
-            group.Add("A2", "B2:E2");
-            group.Add(ws.Cell("A3"), ws.Range("B3:E3"));
+            var group = new XLSparklineGroup(ws)
+            {
+                { "A2", "B2:E2" },
+                { ws.Cell("A3"), ws.Range("B3:E3") }
+            };
 
             Assert.AreEqual(0, ws.SparklineGroups.Count());
 
