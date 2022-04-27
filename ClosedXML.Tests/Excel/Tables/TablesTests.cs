@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Attributes;
 using ClosedXML.Excel;
 using ClosedXML.Excel.Exceptions;
+using ClosedXML.Excel.Tables;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

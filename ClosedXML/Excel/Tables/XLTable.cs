@@ -7,7 +7,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel.Tables
 {
     [DebuggerDisplay("{Name}")]
     internal class XLTable : XLRange, IXLTable
@@ -119,7 +119,7 @@ namespace ClosedXML.Excel
         {
             if (!_fieldNames.TryGetValue(oldName, out var field))
             {
-                throw new ArgumentException("The field does not exist in this table", "oldName");
+                throw new ArgumentException("The field does not exist in this table", nameof(oldName));
             }
 
             _fieldNames.Remove(oldName);
@@ -284,7 +284,7 @@ namespace ClosedXML.Excel
 
             if (scanForNewFieldsNames)
             {
-                var tempResult = FieldNames;
+                _ = FieldNames;
             }
 
             return FirstRow();

@@ -543,12 +543,9 @@ namespace ClosedXML.Excel
 
         private void SetInternalCellValueString(string cellValue, bool validate, bool parseToCachedValue)
         {
-            if (validate)
+            if (validate && cellValue.Length > 32767)
             {
-                if (cellValue.Length > 32767)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(cellValue), "Cells can hold a maximum of 32,767 characters.");
-                }
+                throw new ArgumentOutOfRangeException(nameof(cellValue), "Cells can hold a maximum of 32,767 characters.");
             }
 
             _cellValue = cellValue;
@@ -1512,12 +1509,9 @@ namespace ClosedXML.Excel
 
         public bool IsEmpty(XLCellsUsedOptions options)
         {
-            if (options.HasFlag(XLCellsUsedOptions.Contents))
+            if (options.HasFlag(XLCellsUsedOptions.Contents) && InnerText.Length > 0)
             {
-                if (InnerText.Length > 0)
-                {
-                    return false;
-                }
+                return false;
             }
 
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats))

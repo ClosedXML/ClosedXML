@@ -93,7 +93,7 @@ namespace ClosedXML.Excel
         {
             if (string.IsNullOrEmpty(columnLetter))
             {
-                throw new ArgumentNullException("columnLetter");
+                throw new ArgumentNullException(nameof(columnLetter));
             }
 
             //Extra check because we allow users to pass row col positions in as strings
@@ -367,19 +367,16 @@ namespace ClosedXML.Excel
 
         public static DateTime GetDate(object v)
         {
-            // handle dates
-            if (v is DateTime)
+            if (v is DateTime time)
             {
-                return (DateTime)v;
+                return time;
             }
 
-            // handle doubles
-            if (v is double && ((double)v).IsValidOADateNumber())
+            if (v is double @double && @double.IsValidOADateNumber())
             {
-                return DateTime.FromOADate((double)v);
+                return DateTime.FromOADate(@double);
             }
 
-            // handle everything else
             return (DateTime)Convert.ChangeType(v, typeof(DateTime));
         }
 

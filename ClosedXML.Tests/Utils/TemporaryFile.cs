@@ -39,12 +39,9 @@ namespace ClosedXML.Tests.Utils
                 return;
             }
 
-            if (disposing)
+            if (disposing && !Preserve)
             {
-                if (!Preserve)
-                {
-                    File.Delete(Path);
-                }
+                File.Delete(Path);
             }
 
             _disposed = true;

@@ -1,14 +1,11 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
-using System.IO;
 using System.Reflection;
 
 namespace ClosedXML.Examples
 {
     public class ImageFormats : IXLExample
     {
-        private readonly bool disposedValue;
-
         public void Create(string filePath)
         {
             using var wb = new XLWorkbook();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClosedXML.Excel.Tables;
+using System;
 
 namespace ClosedXML.Excel
 {

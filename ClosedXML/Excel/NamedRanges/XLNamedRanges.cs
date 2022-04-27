@@ -79,39 +79,36 @@ namespace ClosedXML.Excel
             {
                 var match = XLHelper.NamedRangeReferenceRegex.Match(rangeAddress);
 
-                if (!match.Success)
+                if (!match.Success && XLHelper.IsValidRangeAddress(rangeAddress))
                 {
-                    if (XLHelper.IsValidRangeAddress(rangeAddress))
+                    IXLRange range;
+                    if (Scope == XLNamedRangeScope.Worksheet)
                     {
-                        IXLRange range;
-                        if (Scope == XLNamedRangeScope.Worksheet)
-                        {
-                            range = Worksheet.Range(rangeAddress);
-                        }
-                        else if (Scope == XLNamedRangeScope.Workbook)
-                        {
-                            range = Workbook.Range(rangeAddress);
-                        }
-                        else
-                        {
-                            throw new NotSupportedException($"Scope {Scope} is not supported");
-                        }
-
-                        if (range == null)
-                        {
-                            throw new ArgumentException(string.Format(
-                                "The range address '{0}' for the named range '{1}' is not a valid range.", rangeAddress,
-                                rangeName));
-                        }
-
-                        if (Scope == XLNamedRangeScope.Workbook || !XLHelper.NamedRangeReferenceRegex.Match(range.ToString()).Success)
-                        {
-                            throw new ArgumentException(
-                                "For named ranges in the workbook scope, specify the sheet name in the reference.");
-                        }
-
-                        rangeAddress = Worksheet.Range(rangeAddress).ToString();
+                        range = Worksheet.Range(rangeAddress);
                     }
+                    else if (Scope == XLNamedRangeScope.Workbook)
+                    {
+                        range = Workbook.Range(rangeAddress);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException($"Scope {Scope} is not supported");
+                    }
+
+                    if (range == null)
+                    {
+                        throw new ArgumentException(string.Format(
+                            "The range address '{0}' for the named range '{1}' is not a valid range.", rangeAddress,
+                            rangeName));
+                    }
+
+                    if (Scope == XLNamedRangeScope.Workbook || !XLHelper.NamedRangeReferenceRegex.Match(range.ToString()).Success)
+                    {
+                        throw new ArgumentException(
+                            "For named ranges in the workbook scope, specify the sheet name in the reference.");
+                    }
+
+                    rangeAddress = Worksheet.Range(rangeAddress).ToString();
                 }
             }
 

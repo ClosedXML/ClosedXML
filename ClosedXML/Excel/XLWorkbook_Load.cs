@@ -1,4 +1,5 @@
 using ClosedXML.Excel.Drawings;
+using ClosedXML.Excel.Tables;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -2661,20 +2662,14 @@ namespace ClosedXML.Excel
             }
 
             var runFont = fontSource.Elements<RunFont>().FirstOrDefault();
-            if (runFont != null)
+            if (runFont != null && runFont.Val != null)
             {
-                if (runFont.Val != null)
-                {
-                    fontBase.FontName = runFont.Val;
-                }
+                fontBase.FontName = runFont.Val;
             }
             var fontSize = fontSource.Elements<FontSize>().FirstOrDefault();
-            if (fontSize != null)
+            if (fontSize != null && fontSize.Val != null)
             {
-                if (fontSize.Val != null)
-                {
-                    fontBase.FontSize = fontSize.Val;
-                }
+                fontBase.FontSize = fontSize.Val;
             }
 
             fontBase.Italic = GetBoolean(fontSource.Elements<Italic>().FirstOrDefault());
@@ -4377,19 +4372,13 @@ namespace ClosedXML.Excel
                         xlFont.FontFamilyNumbering =
                             (XLFontFamilyNumberingValues)int.Parse(font.FontFamilyNumbering.Val.ToString());
                     }
-                    if (font.FontName != null)
+                    if (font.FontName != null && font.FontName.Val != null)
                     {
-                        if (font.FontName.Val != null)
-                        {
-                            xlFont.FontName = font.FontName.Val;
-                        }
+                        xlFont.FontName = font.FontName.Val;
                     }
-                    if (font.FontSize != null)
+                    if (font.FontSize != null && font.FontSize.Val != null)
                     {
-                        if (font.FontSize.Val != null)
-                        {
-                            xlFont.FontSize = font.FontSize.Val;
-                        }
+                        xlFont.FontSize = font.FontSize.Val;
                     }
 
                     xlFont.Italic = GetBoolean(font.Italic);
@@ -4419,15 +4408,12 @@ namespace ClosedXML.Excel
                 var numberFormatId = cellFormat.NumberFormatId;
 
                 var formatCode = string.Empty;
-                if (numberingFormats != null)
-                {
-                    if (numberingFormats.FirstOrDefault(
+                if (numberingFormats != null && numberingFormats.FirstOrDefault(
                             nf =>
                             ((NumberingFormat)nf).NumberFormatId != null &&
                             ((NumberingFormat)nf).NumberFormatId.Value == numberFormatId) is NumberingFormat numberingFormat && numberingFormat.FormatCode != null)
-                    {
-                        formatCode = numberingFormat.FormatCode.Value;
-                    }
+                {
+                    formatCode = numberingFormat.FormatCode.Value;
                 }
 
                 var xlNumberFormat = xlStyle.NumberFormat;

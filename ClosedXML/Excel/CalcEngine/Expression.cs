@@ -2,7 +2,6 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 
@@ -300,7 +299,7 @@ namespace ClosedXML.Excel.CalcEngine
         public Expression Expression { get; private set; }
 
         // ** object model
-        override public object Evaluate()
+        public override object Evaluate()
         {
             switch (_token.ID)
             {
@@ -340,7 +339,7 @@ namespace ClosedXML.Excel.CalcEngine
         public Expression RightExpression { get; private set; }
 
         // ** object model
-        override public object Evaluate()
+        public override object Evaluate()
         {
             // handle comparisons
             if (_token.Type == TKTYPE.COMPARE)
@@ -399,32 +398,32 @@ namespace ClosedXML.Excel.CalcEngine
                 case TKID.POWER:
                     var a = (double)LeftExpression;
                     var b = (double)RightExpression;
-                    if (b == 0.0)
+                    if (XLHelper.AreEqual(b, 0.0))
                     {
                         return 1.0;
                     }
 
-                    if (b == 0.5)
+                    if (XLHelper.AreEqual(b, 0.5))
                     {
                         return Math.Sqrt(a);
                     }
 
-                    if (b == 1.0)
+                    if (XLHelper.AreEqual(b, 1.0))
                     {
                         return a;
                     }
 
-                    if (b == 2.0)
+                    if (XLHelper.AreEqual(b, 2.0))
                     {
                         return a * a;
                     }
 
-                    if (b == 3.0)
+                    if (XLHelper.AreEqual(b, 3.0))
                     {
                         return a * a * a;
                     }
 
-                    if (b == 4.0)
+                    if (XLHelper.AreEqual(b, 4.0))
                     {
                         return a * a * a * a;
                     }
@@ -462,7 +461,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // ** object model
-        override public object Evaluate()
+        public override object Evaluate()
         {
             return FunctionDefinition.Function(Parameters);
         }
@@ -572,7 +571,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         internal EmptyValueExpression()
             // Ensures a token of type LITERAL, with value of null is created
-            : base(value: null) 
+            : base(value: null)
         {
         }
 

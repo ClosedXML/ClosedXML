@@ -2,7 +2,6 @@ using ClosedXML.Excel.Caching;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml.Spreadsheet;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
@@ -10,9 +9,6 @@ namespace ClosedXML.Excel
     public partial class XLColor
     {
         private static readonly XLColorRepository Repository = new XLColorRepository(key => new XLColor(key));
-
-        private static readonly Dictionary<SKColors, XLColor> ByColor = new Dictionary<SKColors, XLColor>();
-        private static readonly object ByColorLock = new object();
 
         internal static XLColor FromKey(ref XLColorKey key)
         {

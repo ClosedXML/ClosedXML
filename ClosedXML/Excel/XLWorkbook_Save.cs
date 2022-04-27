@@ -1,5 +1,6 @@
 using ClosedXML.Excel.ContentManagers;
 using ClosedXML.Excel.Exceptions;
+using ClosedXML.Excel.Tables;
 using ClosedXML.Extensions;
 using ClosedXML.Utils;
 using DocumentFormat.OpenXml;
@@ -4809,13 +4810,10 @@ namespace ClosedXML.Excel
             if (borderInfo.Border.DiagonalBorder != XLBorderValue.Default.DiagonalBorder || ignoreMod)
             {
                 var DiagonalBorder = new DiagonalBorder { Style = borderInfo.Border.DiagonalBorder.ToOpenXml() };
-                if (borderInfo.Border.DiagonalBorderColor != XLBorderValue.Default.DiagonalBorderColor || ignoreMod)
+                if ((borderInfo.Border.DiagonalBorderColor != XLBorderValue.Default.DiagonalBorderColor || ignoreMod) && borderInfo.Border.DiagonalBorderColor != null)
                 {
-                    if (borderInfo.Border.DiagonalBorderColor != null)
-                    {
-                        var DiagonalBorderColor = new Color().FromClosedXMLColor<Color>(borderInfo.Border.DiagonalBorderColor);
-                        DiagonalBorder.AppendChild(DiagonalBorderColor);
-                    }
+                    var DiagonalBorderColor = new Color().FromClosedXMLColor<Color>(borderInfo.Border.DiagonalBorderColor);
+                    DiagonalBorder.AppendChild(DiagonalBorderColor);
                 }
 
                 border.AppendChild(DiagonalBorder);
@@ -7323,19 +7321,15 @@ namespace ClosedXML.Excel
                 sheetColumnsByMin.Remove(column.Min.Value);
                 if (existingColumn.Min + 1 > existingColumn.Max)
                 {
-                    //existingColumn.Min = existingColumn.Min + 1;
-                    //columns.InsertBefore(existingColumn, newColumn);
-                    //existingColumn.Remove();
                     columns.RemoveChild(existingColumn);
                     columns.AppendChild(newColumn);
                     sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
                 }
                 else
                 {
-                    //columns.InsertBefore(existingColumn, newColumn);
                     columns.AppendChild(newColumn);
                     sheetColumnsByMin.Add(newColumn.Min.Value, newColumn);
-                    existingColumn.Min = existingColumn.Min + 1;
+                    existingColumn.Min++;
                     sheetColumnsByMin.Add(existingColumn.Min.Value, existingColumn);
                 }
             }

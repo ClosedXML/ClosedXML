@@ -4,9 +4,8 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLHeaderFooter: IXLHeaderFooter
+    internal class XLHeaderFooter : IXLHeaderFooter
     {
-
         public XLHeaderFooter(XLWorksheet worksheet)
         {
             Worksheet = worksheet;
@@ -52,6 +51,7 @@ namespace ClosedXML.Excel
         }
 
         private readonly Dictionary<XLHFOccurrence, string> innerTexts = new Dictionary<XLHFOccurrence, string>();
+
         internal void SetInnerText(XLHFOccurrence occurrence, string text)
         {
             var parsedElements = ParseFormattedHeaderFooterText(text);
@@ -82,7 +82,7 @@ namespace ClosedXML.Excel
 
         private static IEnumerable<ParsedHeaderFooterElement> ParseFormattedHeaderFooterText(string text)
         {
-            bool IsAtPositionIndicator(int i) => i < text.Length - 1 && text[i] == '&' && new char[] { 'L', 'C', 'R' }.Contains(text[i + 1]);
+            bool IsAtPositionIndicator(int i) => i < text.Length - 1 && text[i] == '&' && new[] { 'L', 'C', 'R' }.Contains(text[i + 1]);
 
             var parsedElements = new List<ParsedHeaderFooterElement>();
             var currentPosition = 'L'; // default is LEFT
@@ -95,10 +95,10 @@ namespace ClosedXML.Excel
                     if (!string.IsNullOrEmpty(hfElement))
                     {
                         parsedElements.Add(new ParsedHeaderFooterElement()
-                    {
-                        Position = currentPosition,
-                        Text = hfElement
-                    });
+                        {
+                            Position = currentPosition,
+                            Text = hfElement
+                        });
                     }
 
                     currentPosition = text[i + 1];
@@ -134,6 +134,7 @@ namespace ClosedXML.Excel
         private Dictionary<XLHFOccurrence, string> _initialTexts;
 
         private bool _changed;
+
         internal bool Changed
         {
             get
@@ -151,7 +152,6 @@ namespace ClosedXML.Excel
                 _initialTexts.Add(o, GetText(o));
             }
         }
-
 
         public IXLHeaderFooter Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages)
         {
