@@ -1,4 +1,5 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.Ranges;
 using ExcelNumberFormat;
 using System;
 using System.Collections;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Text
     {
@@ -39,7 +40,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SEARCH", 2, 3, Search); // Finds one text value within another (not case-sensitive)
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, T); // Converts its arguments to text
-            ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
+            ce.RegisterFunction("TEXT", 2, GetText); // Formats a number and converts it to text
             ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
@@ -288,11 +289,6 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 return match.Index + start + 1;
             }
-            //var index = text.IndexOf(search, start, StringComparison.OrdinalIgnoreCase);
-            //if (index == -1)
-            //    throw new ArgumentException("String not found.");
-            //else
-            //    return index + 1;
         }
 
         private static object Substitute(List<Expression> p)
@@ -324,7 +320,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 throw new ArgumentException("Invalid index in Substitute.");
             }
-            var pos = text.IndexOf(oldText);
+            var pos = text.IndexOf(oldText, StringComparison.CurrentCulture);
             while (pos > -1 && index > 1)
             {
                 pos = text.IndexOf(oldText, pos + 1);
@@ -337,7 +333,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object T(List<Expression> p)
         {
-            if (p[0]._token.Value.GetType() == typeof(string))
+            if (p[0]._token.Value is string)
             {
                 return (string)p[0];
             }
@@ -347,7 +343,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private static object _Text(List<Expression> p)
+        private static object GetText(List<Expression> p)
         {
             var value = p[0].Evaluate();
 
@@ -541,9 +537,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Fixed(List<Expression> p)
         {
-            if (p[0]._token.Value.GetType() == typeof(string))
+            if (p[0]._token.Value is string)
             {
-                throw new ApplicationException("Input type can't be string");
+                throw new ArgumentException("Input type can't be string");
             }
 
             double value = p[0];

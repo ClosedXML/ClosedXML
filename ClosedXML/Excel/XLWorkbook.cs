@@ -98,8 +98,6 @@ namespace ClosedXML.Excel
 
         #endregion Static
 
-        private bool _disposed;
-
         internal readonly List<UnsupportedSheet> UnsupportedSheets =
             new List<UnsupportedSheet>();
 
@@ -258,6 +256,8 @@ namespace ClosedXML.Excel
         {
             ThrowIfDisposed();
 
+            if (rangeName == null) throw new ArgumentNullException(nameof(rangeName));
+
             if (rangeName.Contains("!"))
             {
                 var split = rangeName.Split('!');
@@ -352,7 +352,7 @@ namespace ClosedXML.Excel
         {
             ThrowIfDisposed();
 
-            checkForWorksheetsPresent();
+            CheckForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
             {
                 throw new InvalidOperationException("This is a new file. Please use one of the 'SaveAs' methods.");
@@ -401,7 +401,10 @@ namespace ClosedXML.Excel
         {
             ThrowIfDisposed();
 
-            checkForWorksheetsPresent();
+            CheckForWorksheetsPresent();
+
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (file == null) throw new ArgumentNullException(nameof(file));
 
             var directoryName = Path.GetDirectoryName(file);
             if (!string.IsNullOrWhiteSpace(directoryName))
@@ -420,7 +423,7 @@ namespace ClosedXML.Excel
             }
             else if (_loadSource == XLLoadSource.File)
             {
-                if (string.Compare(_originalFile.Trim(), file.Trim(), true) != 0)
+                if (string.Compare(_originalFile.Trim(), file.Trim(), true, CultureInfo.InvariantCulture) != 0)
                 {
                     File.Copy(_originalFile, file, true);
                     File.SetAttributes(file, FileAttributes.Normal);
@@ -451,28 +454,19 @@ namespace ClosedXML.Excel
                 throw new ArgumentException("Empty extension is not supported.");
             }
 
-            extension = extension.Substring(1).ToLowerInvariant();
+            extension = extension.Substring(1).ToUpperInvariant();
 
-            switch (extension)
+            return extension switch
             {
-                case "xlsm":
-                    return SpreadsheetDocumentType.MacroEnabledWorkbook;
-
-                case "xltm":
-                    return SpreadsheetDocumentType.MacroEnabledTemplate;
-
-                case "xlsx":
-                    return SpreadsheetDocumentType.Workbook;
-
-                case "xltx":
-                    return SpreadsheetDocumentType.Template;
-
-                default:
-                    throw new ArgumentException(string.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xlsm', '.xltx' and '.xltm'.", extension));
-            }
+                "XLSM" => SpreadsheetDocumentType.MacroEnabledWorkbook,
+                "XLTM" => SpreadsheetDocumentType.MacroEnabledTemplate,
+                "XLSX" => SpreadsheetDocumentType.Workbook,
+                "XLTX" => SpreadsheetDocumentType.Template,
+                _ => throw new ArgumentException(string.Format("Extension '{0}' is not supported. Supported extensions are '.xlsx', '.xlsm', '.xltx' and '.xltm'.", extension)),
+            };
         }
 
-        private void checkForWorksheetsPresent()
+        private void CheckForWorksheetsPresent()
         {
             if (!Worksheets.Any())
             {
@@ -513,12 +507,12 @@ namespace ClosedXML.Excel
         {
             ThrowIfDisposed();
 
-            checkForWorksheetsPresent();
+            CheckForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
             {
                 // dm 20130422, this method or better the method SpreadsheetDocument.Create which is called
                 // inside of 'CreatePackage' need a stream which CanSeek & CanRead
-                // and an ordinary Response stream of a webserver can't do this
+                // and an ordinary Response stream of a web-server can't do this
                 // so we have to ask and provide a way around this
                 if (stream.CanRead && stream.CanSeek && stream.CanWrite)
                 {
@@ -960,6 +954,7 @@ namespace ClosedXML.Excel
         private readonly SpreadsheetDocumentType _spreadsheetDocumentType;
 
         private static XLCalcEngine _calcEngineExpr;
+        private bool disposed;
 
         private static XLCalcEngine CalcEngineExpr => _calcEngineExpr ??= new XLCalcEngine();
 
@@ -1145,13 +1140,13 @@ namespace ClosedXML.Excel
                     return "XLWorkbook(new)";
 
                 case XLLoadSource.File:
-                    return string.Format("XLWorkbook({0})", _originalFile);
+                    return $"XLWorkbook({_originalFile})";
 
                 case XLLoadSource.Stream:
-                    return string.Format("XLWorkbook({0})", _originalStream.ToString());
+                    return $"XLWorkbook({_originalStream})";
 
                 default:
-                    throw new NotImplementedException();
+                    return nameof(XLWorkbook);
             }
         }
 
@@ -1175,35 +1170,31 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        public void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                Worksheets.ForEach(w => (w as XLWorksheet).Cleanup());
-            }
-
-            _disposed = true;
-        }
-
         private void ThrowIfDisposed()
         {
-            if (_disposed)
+            if (disposed)
             {
                 throw new ObjectDisposedException("TemplateClass");
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    Worksheets?.ForEach(w => (w as XLWorksheet)?.Cleanup());
+                }
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

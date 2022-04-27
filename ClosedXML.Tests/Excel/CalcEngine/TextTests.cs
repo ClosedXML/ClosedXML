@@ -232,7 +232,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Fixed_Input_Is_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Fixed(""asdf"")"), Throws.TypeOf<ApplicationException>());
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Fixed(""asdf"")"), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -367,7 +367,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("NUMBERVALUE(\"-1.234567890E-310\")")] // Too tiny (negative)
         public void NumberValue_Invalid(string expression)
         {
-            void action() => XLWorkbook.EvaluateExpr(expression);
+            void action()
+            {
+                XLWorkbook.EvaluateExpr(expression);
+            }
+
             Assert.Throws<CellValueException>(action);
         }
 

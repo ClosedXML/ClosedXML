@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Ranges;
 using ClosedXML.Excel.Tables;
 using System;
 using System.Linq;

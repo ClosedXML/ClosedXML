@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Ranges;
 using ClosedXML.Excel.Ranges.Sort;
 using ClosedXML.Excel.Style;
 using System;
@@ -2090,7 +2091,7 @@ namespace ClosedXML.Excel
                     co = XLHelper.GetColumnNumberFromLetter(coString);
                 }
 
-                SortColumns.Add(co, string.Compare(order, "ASC", true) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, ignoreBlanks, matchCase);
+                SortColumns.Add(co, string.Compare(order, "ASC", true, CultureInfo.CurrentCulture) == 0 ? XLSortOrder.Ascending : XLSortOrder.Descending, ignoreBlanks, matchCase);
             }
 
             SortRangeRows();

@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel.InsertData;
+using ClosedXML.Excel.Ranges;
 using ClosedXML.Excel.Style;
 using ClosedXML.Extensions;
 using System;

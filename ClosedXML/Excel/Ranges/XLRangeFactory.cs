@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel.Tables;
+﻿using ClosedXML.Excel.Ranges;
+using ClosedXML.Excel.Tables;
 using System;
 
 namespace ClosedXML.Excel

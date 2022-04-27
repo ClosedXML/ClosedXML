@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using ClosedXML.Excel.Style;
+using ClosedXML.Excel.Ranges;
 
 namespace ClosedXML.Excel
 {

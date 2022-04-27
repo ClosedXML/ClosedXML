@@ -1,6 +1,7 @@
 using ClosedXML.Excel.Caching;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
+using ClosedXML.Excel.Ranges;
 using ClosedXML.Excel.Ranges.Index;
 using ClosedXML.Excel.Style;
 using ClosedXML.Excel.Tables;

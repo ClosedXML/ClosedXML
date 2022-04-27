@@ -1,4 +1,5 @@
 // Keep this file CodeMaid organised and cleaned
+using ClosedXML.Excel.Ranges;
 using System;
 using System.Collections.Generic;
 using System.Linq;

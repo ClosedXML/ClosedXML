@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.Ranges;
 using NUnit.Framework;
 using System.Linq;
 

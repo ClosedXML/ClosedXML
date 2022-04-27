@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Ranges;
 using ClosedXML.Excel.Style;
 using ClosedXML.Extensions;
 using SkiaSharp;

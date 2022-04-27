@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel.Ranges
 {
     internal class XLRange : XLRangeBase, IXLRange
     {

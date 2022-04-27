@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
@@ -338,17 +339,18 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         public override string ToString() // Function returns matrix as a string
         {
-            var s = "";
+            var stringBuilder = new StringBuilder();
+
             for (var i = 0; i < rows; i++)
             {
                 for (var j = 0; j < cols; j++)
                 {
-                    s += $"{mat[i, j],5:0.00} ";
+                    stringBuilder.Append($"{mat[i, j],5:0.00} ");
                 }
 
-                s += "\r\n";
+                stringBuilder.Append("\r\n");
             }
-            return s;
+            return stringBuilder.ToString();
         }
 
         public static XLMatrix Transpose(XLMatrix m) // XLMatrix transpose, for any rectangular matrix
