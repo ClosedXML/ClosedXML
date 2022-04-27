@@ -43,7 +43,9 @@ namespace ClosedXML.Excel
                 {
                     var c = ws.Cell(sheetPoint.Row, sheetPoint.Column);
                     if (_predicate(c))
+                    {
                         yield return c;
+                    }
                 }
             }
         }
@@ -51,7 +53,9 @@ namespace ClosedXML.Excel
         private IEnumerable<XLSheetPoint> GetAllCellsInRange(IXLRangeAddress rangeAddress)
         {
             if (!rangeAddress.IsValid)
+            {
                 yield break;
+            }
 
             var normalizedAddress = ((XLRangeAddress)rangeAddress).Normalize();
             var minRow = normalizedAddress.FirstAddress.RowNumber;
@@ -84,7 +88,10 @@ namespace ClosedXML.Excel
                 var visitedCells = new HashSet<XLAddress>();
                 foreach (var cell in cells)
                 {
-                    if (visitedCells.Contains(cell.Address)) continue;
+                    if (visitedCells.Contains(cell.Address))
+                    {
+                        continue;
+                    }
 
                     visitedCells.Add(cell.Address);
 
@@ -96,7 +103,10 @@ namespace ClosedXML.Excel
         private IEnumerable<XLCell> GetUsedCellsInRange(XLRangeAddress rangeAddress, XLWorksheet worksheet, IEnumerable<XLSheetPoint> usedCellsCandidates)
         {
             if (!rangeAddress.IsValid)
+            {
                 yield break;
+            }
+
             var normalizedAddress = rangeAddress.Normalize();
             var minRow = normalizedAddress.FirstAddress.RowNumber;
             var maxRow = normalizedAddress.LastAddress.RowNumber;
@@ -110,7 +120,9 @@ namespace ClosedXML.Excel
             foreach (var cell in cellRange)
             {
                 if (_predicate(cell))
+                {
                     yield return cell;
+                }
             }
 
             foreach (var sheetPoint in usedCellsCandidates)
@@ -121,7 +133,9 @@ namespace ClosedXML.Excel
                     var cell = worksheet.Cell(sheetPoint.Row, sheetPoint.Column);
 
                     if (_predicate(cell))
+                    {
                         yield return cell;
+                    }
                 }
             }
         }
@@ -131,16 +145,22 @@ namespace ClosedXML.Excel
             var candidates = Enumerable.Empty<XLSheetPoint>();
 
             if (_options.HasFlag(XLCellsUsedOptions.MergedRanges))
+            {
                 candidates = candidates.Union(
                     worksheet.Internals.MergedRanges.SelectMany(r => GetAllCellsInRange(r.RangeAddress)));
+            }
 
             if (_options.HasFlag(XLCellsUsedOptions.ConditionalFormats))
+            {
                 candidates = candidates.Union(
                     worksheet.ConditionalFormats.SelectMany(cf => cf.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
+            }
 
             if (_options.HasFlag(XLCellsUsedOptions.DataValidation))
+            {
                 candidates = candidates.Union(
                         worksheet.DataValidations.SelectMany(dv => dv.Ranges.SelectMany(r => GetAllCellsInRange(r.RangeAddress))));
+            }
 
             return candidates.Distinct();
         }
@@ -161,7 +181,9 @@ namespace ClosedXML.Excel
         IEnumerator<IXLCell> IEnumerable<IXLCell>.GetEnumerator()
         {
             foreach (var cell in this)
+            {
                 yield return cell;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -221,7 +243,9 @@ namespace ClosedXML.Excel
             {
                 yield return Style;
                 foreach (var c in this)
+                {
                     yield return c.Style;
+                }
             }
         }
 
@@ -230,7 +254,9 @@ namespace ClosedXML.Excel
             get
             {
                 foreach (var c in this)
+                {
                     yield return c;
+                }
             }
         }
 
@@ -251,11 +277,15 @@ namespace ClosedXML.Excel
             _rangeAddresses.Add(rangeAddress);
 
             if (_styleInitialized)
+            {
                 return;
+            }
 
             var worksheetStyle = rangeAddress.Worksheet?.Style;
             if (worksheetStyle == null)
+            {
                 return;
+            }
 
             InnerStyle = worksheetStyle;
             _styleInitialized = true;
@@ -269,7 +299,9 @@ namespace ClosedXML.Excel
         public void Select()
         {
             foreach (var cell in this)
+            {
                 cell.Select();
+            }
         }
     }
 }

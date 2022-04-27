@@ -14,13 +14,19 @@ namespace ClosedXML.Excel
         {
             var hashCode = 2043579837;
 
-            if (HasNoFill()) return hashCode;
+            if (HasNoFill())
+            {
+                return hashCode;
+            }
 
             hashCode = hashCode * -1521134295 + (int)PatternType;
             hashCode = hashCode * -1521134295 + BackgroundColor.GetHashCode();
 
-            if (HasNoForeground()) return hashCode;
-                
+            if (HasNoForeground())
+            {
+                return hashCode;
+            }
+
             hashCode = hashCode * -1521134295 + PatternColor.GetHashCode();
             
             return hashCode;
@@ -29,7 +35,9 @@ namespace ClosedXML.Excel
         public bool Equals(XLFillKey other)
         {
             if (HasNoFill() && other.HasNoFill())
+            {
                 return true;
+            }
 
             return BackgroundColor == other.BackgroundColor
                    && PatternType == other.PatternType
@@ -52,7 +60,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLFillKey)
+            {
                 return Equals((XLFillKey)obj);
+            }
+
             return base.Equals(obj);
         }
 

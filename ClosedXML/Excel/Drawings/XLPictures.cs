@@ -105,12 +105,16 @@ namespace ClosedXML.Excel.Drawings
                 .ToList();
 
             if (!picturesToDelete.Any())
+            {
                 throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");
+            }
 
             foreach (var picture in picturesToDelete)
             {
                 if (!string.IsNullOrEmpty(picture.RelId))
+                {
                     Deleted.Add(picture.RelId);
+                }
 
                 _pictures.Remove(picture);
             }
@@ -134,7 +138,9 @@ namespace ClosedXML.Excel.Drawings
         public IXLPicture Picture(string pictureName)
         {
             if (TryGetPicture(pictureName, out var p))
+            {
                 return p;
+            }
 
             throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");
         }

@@ -49,7 +49,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLColorKey)
+            {
                 return Equals((XLColorKey)obj);
+            }
+
             return base.Equals(obj);
         }
 

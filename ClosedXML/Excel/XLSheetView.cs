@@ -40,7 +40,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value.HasWorksheet && !value.Worksheet.Equals(Worksheet))
+                {
                     throw new ArgumentException($"The value should be on the same worksheet as the sheet view.");
+                }
 
                 _topLeftCellAddress = value;
             }

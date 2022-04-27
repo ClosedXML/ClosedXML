@@ -493,7 +493,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
                 if (mode != null)
+                {
                     parameters = parameters + ", " + mode?.ToString(CultureInfo.InvariantCulture);
+                }
             }
 
             var actual = (double)XLWorkbook.EvaluateExpr($"CEILING.MATH({parameters})");
@@ -992,7 +994,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
                 if (mode != null)
+                {
                     parameters = parameters + ", " + mode?.ToString(CultureInfo.InvariantCulture);
+                }
             }
 
             var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"FLOOR.MATH({0})", parameters));

@@ -64,7 +64,10 @@ namespace ClosedXML.Excel
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');
             foreach (var pair in rangePairs)
+            {
                 retVal.Add(Range(pair.Trim()).RangeAddress);
+            }
+
             return retVal;
         }
 
@@ -101,10 +104,15 @@ namespace ClosedXML.Excel
 
             var lastRowNumber = target.Address.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
+            }
+
             var lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(
                 target.Address.RowNumber,
@@ -119,10 +127,15 @@ namespace ClosedXML.Excel
             base.CopyTo(target);
             var lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
+            }
+
             var lastColumnNumber = target.RangeAddress.LastAddress.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(
                 target.RangeAddress.FirstAddress.RowNumber,
@@ -208,7 +221,9 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains(':') || rangeAddressStr.Contains('-'))
             {
                 if (rangeAddressStr.Contains('-'))
+                {
                     rangeAddressStr = rangeAddressStr.Replace('-', ':');
+                }
 
                 var arrRange = rangeAddressStr.Split(':');
                 var firstPart = arrRange[0];
@@ -216,7 +231,9 @@ namespace ClosedXML.Excel
                 rangeAddressToUse = FixRowAddress(firstPart) + ":" + FixRowAddress(secondPart);
             }
             else
+            {
                 rangeAddressToUse = FixRowAddress(rangeAddressStr);
+            }
 
             var rangeAddress = new XLRangeAddress(Worksheet, rangeAddressToUse);
             return Range(rangeAddress);
@@ -234,13 +251,19 @@ namespace ClosedXML.Excel
                 if (e.IgnoreBlanks && (thisCellIsBlank || otherCellIsBlank))
                 {
                     if (thisCellIsBlank && otherCellIsBlank)
+                    {
                         comparison = 0;
+                    }
                     else
                     {
                         if (thisCellIsBlank)
+                        {
                             comparison = e.SortOrder == XLSortOrder.Ascending ? 1 : -1;
+                        }
                         else
+                        {
                             comparison = e.SortOrder == XLSortOrder.Ascending ? -1 : 1;
+                        }
                     }
                 }
                 else
@@ -276,13 +299,19 @@ namespace ClosedXML.Excel
                         }
                     }
                     else if (e.MatchCase)
+                    {
                         comparison = string.Compare(thisCell.GetString(), otherCell.GetString(), true);
+                    }
                     else
+                    {
                         comparison = thisCell.GetString().CompareTo(otherCell.GetString());
+                    }
                 }
 
                 if (comparison != 0)
+                {
                     return e.SortOrder == XLSortOrder.Ascending ? comparison : -comparison;
+                }
             }
 
             return 0;

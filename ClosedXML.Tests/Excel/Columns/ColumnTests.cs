@@ -211,10 +211,14 @@ namespace ClosedXML.Tests.Excel
             var count = 0;
 
             foreach (var row in ws.ColumnsUsed())
+            {
                 count++;
+            }
 
             foreach (var row in ws.Range("A1:C3").ColumnsUsed())
+            {
                 count++;
+            }
 
             Assert.AreEqual(0, count);
         }

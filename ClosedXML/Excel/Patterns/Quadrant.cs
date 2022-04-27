@@ -112,10 +112,14 @@ namespace ClosedXML.Excel.Patterns
             }
 
             if (!addToChild)
+            {
                 res = AddInternal(range);
+            }
 
             if (Children == null && addToChild)
+            {
                 Children = children;
+            }
 
             return res;
         }
@@ -128,7 +132,9 @@ namespace ClosedXML.Excel.Patterns
             if (Ranges != null)
             {
                 foreach (var range in Ranges)
+                {
                     yield return range;
+                }
             }
 
             if (Children != null)
@@ -137,7 +143,9 @@ namespace ClosedXML.Excel.Patterns
                 {
                     var childRanges = childQuadrant.GetAll();
                     foreach (var range in childRanges)
+                    {
                         yield return range;
+                    }
                 }
             }
         }
@@ -152,7 +160,9 @@ namespace ClosedXML.Excel.Patterns
                 foreach (var range in Ranges)
                 {
                     if (range.RangeAddress.Intersects(rangeAddress))
+                    {
                         yield return range;
+                    }
                 }
             }
 
@@ -164,7 +174,9 @@ namespace ClosedXML.Excel.Patterns
                     {
                         var childRanges = childQuadrant.GetIntersectedRanges(rangeAddress);
                         foreach (var range in childRanges)
+                        {
                             yield return range;
+                        }
                     }
                 }
             }
@@ -180,7 +192,9 @@ namespace ClosedXML.Excel.Patterns
                 foreach (var range in Ranges)
                 {
                     if (range.RangeAddress.Contains(address))
+                    {
                         yield return range;
+                    }
                 }
             }
 
@@ -192,7 +206,9 @@ namespace ClosedXML.Excel.Patterns
                     {
                         var childRanges = childQuadrant.GetIntersectedRanges(address);
                         foreach (var range in childRanges)
+                        {
                             yield return range;
+                        }
                     }
                 }
             }
@@ -222,7 +238,9 @@ namespace ClosedXML.Excel.Patterns
             if (!coveredByChild)
             {
                 if (_ranges?.Remove(rangeAddress) == true)
+                {
                     res = true;
+                }
             }
 
             return res;
@@ -253,10 +271,12 @@ namespace ClosedXML.Excel.Patterns
             if (Children != null)
             {
                 foreach (var childQuadrant in Children)
+                {
                     foreach (var childRange in childQuadrant.RemoveAll(predicate))
                     {
                         yield return childRange;
                     }
+                }
             }
         }
 
@@ -285,10 +305,14 @@ namespace ClosedXML.Excel.Patterns
         private bool AddInternal(IXLAddressable range)
         {
             if (_ranges == null)
+            {
                 _ranges = new Dictionary<IXLRangeAddress, IXLAddressable>();
+            }
 
             if (_ranges.ContainsKey(range.RangeAddress))
+            {
                 return false;
+            }
 
             _ranges.Add(range.RangeAddress, range);
             return true;
@@ -335,7 +359,10 @@ namespace ClosedXML.Excel.Patterns
         {
             var childLevel = (byte)(Level + 1);
             if (childLevel > MAX_LEVEL)
+            {
                 yield break;
+            }
+
             byte xCount = 2; // Always divide on halves
             var yCount = (byte)((Level == 0) ? (XLHelper.MaxRowNumber / XLHelper.MaxColumnNumber) : 2); // Level 0 divide onto 64 parts, the rest - on halves
 

@@ -16,9 +16,14 @@ namespace ClosedXML.Excel
             this.worksheet = worksheet;
             int zOrder;
             if (worksheet.Charts.Any())
+            {
                 zOrder = worksheet.Charts.Max(c => c.ZOrder) + 1;
+            }
             else
+            {
                 zOrder = 1;
+            }
+
             ZOrder = zOrder;
             ShapeId = worksheet.Workbook.ShapeIdManager.GetNext();
             RightAngleAxes = true;
@@ -48,10 +53,13 @@ namespace ClosedXML.Excel
             get
             {
                 if (Bar3DCharts.Contains(ChartType))
+                {
                     return XLChartTypeCategory.Bar3D;
+                }
                 else
+                {
                     throw new NotImplementedException();
-
+                }
             }
         }
 
@@ -70,9 +78,13 @@ namespace ClosedXML.Excel
             get
             {
                 if (HorizontalCharts.Contains(ChartType))
+                {
                     return XLBarOrientation.Horizontal;
+                }
                 else
+                {
                     return XLBarOrientation.Vertical;
+                }
             }
         }
 
@@ -99,13 +111,21 @@ namespace ClosedXML.Excel
             get
             {
                 if (ClusteredCharts.Contains(ChartType))
+                {
                     return XLBarGrouping.Clustered;
+                }
                 else if (PercentCharts.Contains(ChartType))
+                {
                     return XLBarGrouping.Percent;
+                }
                 else if (StackedCharts.Contains(ChartType))
+                {
                     return XLBarGrouping.Stacked;
+                }
                 else
+                {
                     return XLBarGrouping.Standard;
+                }
             }
         }
 

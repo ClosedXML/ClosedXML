@@ -168,7 +168,9 @@ namespace ClosedXML.Tests.Excel.DataValidations
             var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);
             if (setValue)
+            {
                 ws.Range(initialAddress).Value = 50;
+            }
 
             //Act
             ws.Row(rowNum).InsertRowsAbove(1);
@@ -194,7 +196,9 @@ namespace ClosedXML.Tests.Excel.DataValidations
             var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);
             if (setValue)
+            {
                 ws.Range(initialAddress).Value = 50;
+            }
 
             //Act
             ws.Column(columnNum).InsertColumnsBefore(1);

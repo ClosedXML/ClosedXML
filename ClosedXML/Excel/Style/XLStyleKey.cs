@@ -59,7 +59,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLStyleKey)
+            {
                 return Equals((XLStyleKey)obj);
+            }
+
             return base.Equals(obj);
         }
 

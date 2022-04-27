@@ -205,7 +205,9 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             if (!IsValid)
+            {
                 return "#REF!";
+            }
 
             var retVal = ColumnLetter;
             if (_fixedColumn)
@@ -229,20 +231,30 @@ namespace ClosedXML.Excel
         {
             string address;
             if (!IsValid)
+            {
                 address = "#REF!";
+            }
             else if (referenceStyle == XLReferenceStyle.A1)
+            {
                 address = GetTrimmedAddress();
+            }
             else if (referenceStyle == XLReferenceStyle.R1C1
                      || HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
+            {
                 address = "R" + _rowNumber.ToInvariantString() + "C" + ColumnNumber.ToInvariantString();
+            }
             else
+            {
                 address = GetTrimmedAddress();
+            }
 
             if (includeSheet)
+            {
                 return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address);
+            }
 
             return address;
         }
@@ -329,7 +341,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLAddress other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
             return _rowNumber == other.RowNumber &&
                    _columnNumber == other.ColumnNumber &&
@@ -384,11 +398,13 @@ namespace ClosedXML.Excel
             var address = IsValid ? GetTrimmedAddress() : "#REF!";
 
             if (includeSheet)
+            {
                 return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address
                 );
+            }
 
             return address;
         }
@@ -408,10 +424,14 @@ namespace ClosedXML.Excel
             string address;
 
             if (referenceStyle == XLReferenceStyle.Default && HasWorksheet)
+            {
                 referenceStyle = Worksheet.Workbook.ReferenceStyle;
+            }
 
             if (referenceStyle == XLReferenceStyle.Default)
+            {
                 referenceStyle = XLReferenceStyle.A1;
+            }
 
             Debug.Assert(referenceStyle != XLReferenceStyle.Default);
 
@@ -437,10 +457,12 @@ namespace ClosedXML.Excel
             }
 
             if (includeSheet)
+            {
                 return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address);
+            }
 
             return address;
         }

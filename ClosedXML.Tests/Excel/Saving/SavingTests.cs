@@ -106,7 +106,7 @@ namespace ClosedXML.Tests.Excel.Saving
         [Test]
         public void CanSaveAndValidateFileInAnotherCulture()
         {
-            var cultures = new string[] { "it", "de-AT" };
+            var cultures = new[] { "it", "de-AT" };
 
             foreach (var culture in cultures)
             {
@@ -114,9 +114,9 @@ namespace ClosedXML.Tests.Excel.Saving
 
                 using var wb = new XLWorkbook();
                 using var memoryStream = new MemoryStream();
-                var ws = wb.Worksheets.Add("Sheet1");
+                _ = wb.Worksheets.Add("Sheet1");
 
-                wb.SaveAs(memoryStream, true);
+                Assert.DoesNotThrow(() => wb.SaveAs(memoryStream, true));
             }
         }
 
@@ -237,7 +237,9 @@ namespace ClosedXML.Tests.Excel.Saving
 
                 // Assert
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
                     Assert.Throws(typeof(UnauthorizedAccessException), saveAs);
+                }
             }
             finally
             {
@@ -314,7 +316,9 @@ namespace ClosedXML.Tests.Excel.Saving
                 {
                     var pictureNames = ws.Pictures.Select(pic => pic.Name).ToArray();
                     foreach (var name in pictureNames)
+                    {
                         ws.Pictures.Delete(name);
+                    }
                 }
 
                 return wb;

@@ -12,9 +12,14 @@ namespace ClosedXML.Excel
         internal static XLStyleKey GenerateKey(IXLStyle initialStyle)
         {
             if (initialStyle == null)
+            {
                 return Default.Key;
+            }
+
             if (initialStyle is XLStyle)
+            {
                 return (initialStyle as XLStyle).Key;
+            }
 
             return new XLStyleKey
             {
@@ -189,7 +194,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLStyle other)
         {
             if (!(other is XLStyle otherS))
+            {
                 return false;
+            }
 
             return Key == otherS.Key &&
                    _container == otherS._container;

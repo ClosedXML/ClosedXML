@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
 using System.Linq;
 
 namespace ClosedXML.Tests.Excel
@@ -224,10 +223,14 @@ namespace ClosedXML.Tests.Excel
             var count = 0;
 
             foreach (var row in ws.RowsUsed())
+            {
                 count++;
+            }
 
             foreach (var row in ws.Range("A1:C3").RowsUsed())
+            {
                 count++;
+            }
 
             Assert.AreEqual(0, count);
         }

@@ -23,10 +23,25 @@ namespace ClosedXML.Excel
             {
                 var xx = (XLConditionalFormat)x;
                 var yy = (XLConditionalFormat)y;
-                if (ReferenceEquals(xx, yy)) return true;
-                if (xx is null) return false;
-                if (yy is null) return false;
-                if (xx.GetType() != yy.GetType()) return false;
+                if (ReferenceEquals(xx, yy))
+                {
+                    return true;
+                }
+
+                if (xx is null)
+                {
+                    return false;
+                }
+
+                if (yy is null)
+                {
+                    return false;
+                }
+
+                if (xx.GetType() != yy.GetType())
+                {
+                    return false;
+                }
 
                 var xxValues = xx.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
                 var yyValues = yy.Values.Values.Where(v => v == null || !v.IsFormula).Select(v => v?.Value);
@@ -62,8 +77,10 @@ namespace ClosedXML.Excel
                 var xStyle = (obj.Style as XLStyle).Value;
                 var xValues = xx.Values.Values.Where(v => !v.IsFormula).Select(v => v.Value);
                 if (obj.Ranges.Count > 0)
+                {
                     xValues = xValues
                     .Union(xx.Values.Values.Where(v => v.IsFormula).Select(f => ((XLCell)obj.Ranges.First().FirstCell()).GetFormulaR1C1(f.Value)));
+                }
 
                 unchecked
                 {
@@ -96,7 +113,9 @@ namespace ClosedXML.Excel
             foreach (var key in keys)
             {
                 if (Values[key] == null || !Values[key].IsFormula)
+                {
                     continue;
+                }
 
                 var r1c1 = baseCell.GetFormulaR1C1(Values[key].Value);
                 Values[key] = new XLFormula { _value = targetCell.GetFormulaA1(r1c1), IsFormula = true };
@@ -134,7 +153,10 @@ namespace ClosedXML.Excel
             : this(XLStyle.Default.Value)
         {
             if (range != null)
+            {
                 Ranges.Add(range);
+            }
+
             CopyDefaultModify = copyDefaultModify;
         }
 
@@ -237,7 +259,10 @@ namespace ClosedXML.Excel
         public IXLConditionalFormat CopyTo(IXLWorksheet targetSheet)
         {
             if (targetSheet == Range?.Worksheet)
+            {
                 throw new InvalidOperationException("Cannot copy conditional format to the worksheet it already belongs to.");
+            }
+
             var targetRanges = Ranges.Select(r => targetSheet.Range(((XLRangeAddress)r.RangeAddress).WithoutWorksheet()));
             var newCf = new XLConditionalFormat(this, targetRanges);
             targetSheet.ConditionalFormats.Add(newCf);
@@ -554,14 +579,28 @@ namespace ClosedXML.Excel
         public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
         {
             if (x.Count != y.Count)
+            {
                 return false;
+            }
+
             if (x.Keys.Except(y.Keys).Any())
+            {
                 return false;
+            }
+
             if (y.Keys.Except(x.Keys).Any())
+            {
                 return false;
+            }
+
             foreach (var pair in x)
+            {
                 if (!_valueComparer.Equals(pair.Value, y[pair.Key]))
+                {
                     return false;
+                }
+            }
+
             return true;
         }
 

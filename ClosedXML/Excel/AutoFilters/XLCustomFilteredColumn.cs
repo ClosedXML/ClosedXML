@@ -128,13 +128,19 @@ namespace ClosedXML.Excel
                     if (!row.WorksheetRow().IsHidden)
                     {
                         if (condition(row.Cell(_column).GetValue<T>()))
+                        {
                             row.WorksheetRow().Unhide();
+                        }
                         else
+                        {
                             row.WorksheetRow().Hide();
+                        }
                     }
                 }
                 else if (condition(row.Cell(_column).GetValue<T>()))
+                {
                     row.WorksheetRow().Unhide();
+                }
             }
         }
     }

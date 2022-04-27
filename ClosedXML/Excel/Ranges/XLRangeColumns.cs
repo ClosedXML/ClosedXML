@@ -49,7 +49,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(usedCellsOnly: false, options: XLCellsUsedOptions.AllContents);
             foreach (var container in _ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -57,7 +60,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(usedCellsOnly: true, options: XLCellsUsedOptions.AllContents);
             foreach (var container in _ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -74,7 +80,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(usedCellsOnly: true, options: options);
             foreach (var container in _ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -101,7 +110,9 @@ namespace ClosedXML.Excel
                         rng.RangeAddress.FirstAddress.ColumnNumber,
                         rng.RangeAddress.LastAddress.RowNumber,
                         rng.RangeAddress.LastAddress.ColumnNumber))
+                    {
                         yield return r.Style;
+                    }
                 }
             }
         }
@@ -111,7 +122,9 @@ namespace ClosedXML.Excel
             get
             {
                 foreach (var range in _ranges)
+                {
                     yield return range;
+                }
             }
         }
 
@@ -130,7 +143,9 @@ namespace ClosedXML.Excel
         public void Select()
         {
             foreach (var range in this)
+            {
                 range.Select();
+            }
         }
     }
 }

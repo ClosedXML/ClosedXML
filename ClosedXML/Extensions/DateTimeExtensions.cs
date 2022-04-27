@@ -26,7 +26,9 @@ namespace ClosedXML.Excel
         {
             var nextDate = date.AddDays(1);
             while (!nextDate.IsWorkDay(bankHolidays))
+            {
                 nextDate = nextDate.AddDays(1);
+            }
 
             return nextDate;
         }
@@ -35,7 +37,9 @@ namespace ClosedXML.Excel
         {
             var previousDate = date.AddDays(-1);
             while (!previousDate.IsWorkDay(bankHolidays))
+            {
                 previousDate = previousDate.AddDays(-1);
+            }
 
             return previousDate;
         }

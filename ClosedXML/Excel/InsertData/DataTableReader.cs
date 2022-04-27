@@ -30,10 +30,14 @@ namespace ClosedXML.Excel.InsertData
         public int GetPropertiesCount()
         {
             if (_dataTable != null)
+            {
                 return _dataTable.Columns.Count;
+            }
 
             if (_dataRows.Any())
+            {
                 return _dataRows.First().ItemArray.Length;
+            }
 
             return 0;
         }
@@ -41,13 +45,19 @@ namespace ClosedXML.Excel.InsertData
         public string GetPropertyName(int propertyIndex)
         {
             if (propertyIndex < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(propertyIndex), "Property index must be non-negative");
+            }
 
             if (_dataTable == null)
+            {
                 return null;
+            }
 
             if (propertyIndex >= _dataTable.Columns.Count)
+            {
                 throw new ArgumentOutOfRangeException($"{propertyIndex} exceeds the number of the table columns");
+            }
 
             return _dataTable.Columns[propertyIndex].Caption;
         }

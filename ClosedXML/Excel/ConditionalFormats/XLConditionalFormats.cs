@@ -99,7 +99,9 @@ namespace ClosedXML.Excel
                             }
 
                             if (!isSameFormat)
+                            {
                                 nextFormat.Ranges.ForEach(r => skippedRanges.Add(r));
+                            }
                         }
 
                         i++;

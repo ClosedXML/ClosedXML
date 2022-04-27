@@ -46,7 +46,9 @@ namespace ClosedXML.Excel
                     _value = value.Trim();
                     IsFormula = !string.IsNullOrWhiteSpace(_value) && _value.TrimStart()[0] == '=' ;
                     if (IsFormula)
+                    {
                         _value = _value.Substring(1);
+                    }
                 }
                 
 

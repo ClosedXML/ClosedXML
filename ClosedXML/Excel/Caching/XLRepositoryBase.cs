@@ -62,7 +62,9 @@ namespace ClosedXML.Excel.Caching
         public Tvalue Store(ref Tkey key, Tvalue value)
         {
             if (value == null)
+            {
                 return null;
+            }
 
             do
             {

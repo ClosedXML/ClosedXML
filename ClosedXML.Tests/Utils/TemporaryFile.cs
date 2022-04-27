@@ -35,12 +35,16 @@ namespace ClosedXML.Tests.Utils
         public void Dispose(bool disposing)
         {
             if (_disposed)
+            {
                 return;
+            }
 
             if (disposing)
             {
                 if (!Preserve)
+                {
                     File.Delete(Path);
+                }
             }
 
             _disposed = true;

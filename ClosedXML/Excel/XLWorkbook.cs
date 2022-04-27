@@ -327,7 +327,10 @@ namespace ClosedXML.Excel
             ThrowIfDisposed();
 
             ws = null;
-            if (!rangeAddress.Contains('!')) return null;
+            if (!rangeAddress.Contains('!'))
+            {
+                return null;
+            }
 
             var split = rangeAddress.Split('!');
             var wsName = split[0].UnescapeSheetName();
@@ -343,7 +346,10 @@ namespace ClosedXML.Excel
             ThrowIfDisposed();
 
             ws = null;
-            if (!cellAddress.Contains('!')) return null;
+            if (!cellAddress.Contains('!'))
+            {
+                return null;
+            }
 
             var split = cellAddress.Split('!');
             var wsName = split[0].UnescapeSheetName();
@@ -389,14 +395,18 @@ namespace ClosedXML.Excel
 
             checkForWorksheetsPresent();
             if (_loadSource == XLLoadSource.New)
+            {
                 throw new InvalidOperationException("This is a new file. Please use one of the 'SaveAs' methods.");
+            }
 
             if (_loadSource == XLLoadSource.Stream)
             {
                 CreatePackage(_originalStream, false, _spreadsheetDocumentType, options);
             }
             else
+            {
                 CreatePackage(_originalFile, _spreadsheetDocumentType, options);
+            }
         }
 
         /// <summary>
@@ -435,12 +445,17 @@ namespace ClosedXML.Excel
             checkForWorksheetsPresent();
 
             var directoryName = Path.GetDirectoryName(file);
-            if (!string.IsNullOrWhiteSpace(directoryName)) Directory.CreateDirectory(directoryName);
+            if (!string.IsNullOrWhiteSpace(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
 
             if (_loadSource == XLLoadSource.New)
             {
                 if (File.Exists(file))
+                {
                     File.Delete(file);
+                }
 
                 CreatePackage(file, GetSpreadsheetDocumentType(file), options);
             }
@@ -472,7 +487,11 @@ namespace ClosedXML.Excel
         {
             var extension = Path.GetExtension(filePath);
 
-            if (string.IsNullOrEmpty(extension)) throw new ArgumentException("Empty extension is not supported.");
+            if (string.IsNullOrEmpty(extension))
+            {
+                throw new ArgumentException("Empty extension is not supported.");
+            }
+
             extension = extension.Substring(1).ToLowerInvariant();
 
             switch (extension)
@@ -497,7 +516,9 @@ namespace ClosedXML.Excel
         private void checkForWorksheetsPresent()
         {
             if (!Worksheets.Any())
+            {
                 throw new InvalidOperationException("Workbooks need at least one worksheet.");
+            }
         }
 
         /// <summary>
@@ -569,7 +590,9 @@ namespace ClosedXML.Excel
             {
                 _originalStream.Position = 0;
                 if (_originalStream != stream)
+                {
                     CopyStream(_originalStream, stream);
+                }
 
                 CreatePackage(stream, false, _spreadsheetDocumentType, options);
             }
@@ -585,9 +608,14 @@ namespace ClosedXML.Excel
             int len;
             // dm 20130422, it is always a good idea to rewind the input stream, or not?
             if (input.CanSeek)
+            {
                 input.Seek(0, SeekOrigin.Begin);
+            }
+
             while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
                 output.Write(buffer, 0, len);
+            }
             // dm 20130422, and flushing the output after write
             output.Flush();
         }
@@ -601,7 +629,9 @@ namespace ClosedXML.Excel
                 .FirstOrDefault(t => t.Name.Equals(tableName, comparisonType));
 
             if (table == null)
+            {
                 throw new ArgumentOutOfRangeException($"Table {tableName} was not found.");
+            }
 
             return table;
         }
@@ -637,7 +667,9 @@ namespace ClosedXML.Excel
                 foreach (XLCell cell in ws.CellsUsed(XLCellsUsedOptions.All))
                 {
                     if (predicate(cell))
+                    {
                         cells.Add(cell);
+                    }
                 }
             }
             return cells;
@@ -651,7 +683,9 @@ namespace ClosedXML.Excel
             foreach (var ws in WorksheetsInternal)
             {
                 foreach (var row in ws.Rows().Where(predicate))
+                {
                     rows.Add(row as XLRow);
+                }
             }
             return rows;
         }
@@ -664,7 +698,9 @@ namespace ClosedXML.Excel
             foreach (var ws in WorksheetsInternal)
             {
                 foreach (var column in ws.Columns().Where(predicate))
+                {
                     columns.Add(column as XLColumn);
+                }
             }
             return columns;
         }
@@ -683,7 +719,9 @@ namespace ClosedXML.Excel
             foreach (var ws in WorksheetsInternal)
             {
                 foreach (var cell in ws.Search(searchText, compareOptions, searchFormulae))
+                {
                     yield return cell;
+                }
             }
         }
 
@@ -769,7 +807,9 @@ namespace ClosedXML.Excel
             : this(file, loadOptions.EventTracking)
         {
             if (loadOptions.RecalculateAllFormulas)
+            {
                 RecalculateAllFormulas();
+            }
         }
 
         /// <summary>
@@ -793,7 +833,9 @@ namespace ClosedXML.Excel
             : this(stream, loadOptions.EventTracking)
         {
             if (loadOptions.RecalculateAllFormulas)
+            {
                 RecalculateAllFormulas();
+            }
         }
 
         #endregion Constructor
@@ -819,7 +861,9 @@ namespace ClosedXML.Excel
                 return namedRange.Ranges?.FirstOrDefault()?.FirstCell();
             }
             else
+            {
                 return CellFromFullAddress(namedCell, out _);
+            }
         }
 
         public IXLCells Cells(string namedCells)
@@ -835,9 +879,13 @@ namespace ClosedXML.Excel
 
             var namedRange = NamedRange(range);
             if (namedRange != null)
+            {
                 return namedRange.Ranges.FirstOrDefault();
+            }
             else
+            {
                 return RangeFromFullAddress(range, out _);
+            }
         }
 
         public IXLRanges Ranges(string ranges)
@@ -978,7 +1026,9 @@ namespace ClosedXML.Excel
                 ThrowIfDisposed();
 
                 if (!Protection.IsProtected)
+                {
                     throw new InvalidOperationException($"Enable workbook protection before setting the {nameof(LockStructure)} property");
+                }
 
                 Protection.AllowElement(XLWorkbookProtectionElements.Structure, value);
             }
@@ -999,7 +1049,9 @@ namespace ClosedXML.Excel
                 ThrowIfDisposed();
 
                 if (!Protection.IsProtected)
+                {
                     throw new InvalidOperationException($"Enable workbook protection before setting the {nameof(LockWindows)} property");
+                }
 
                 Protection.AllowElement(XLWorkbookProtectionElements.Windows, value);
             }
@@ -1042,10 +1094,14 @@ namespace ClosedXML.Excel
             var protection = Protection.Protect(password, DefaultProtectionAlgorithm, allowedElements);
 
             if (lockStructure)
+            {
                 protection.DisallowElement(XLWorkbookProtectionElements.Structure);
+            }
 
             if (lockWindows)
+            {
                 protection.DisallowElement(XLWorkbookProtectionElements.Windows);
+            }
 
             return protection;
         }
@@ -1178,7 +1234,9 @@ namespace ClosedXML.Excel
         public void Dispose(bool disposing)
         {
             if (_disposed)
+            {
                 return;
+            }
 
             if (disposing)
             {

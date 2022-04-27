@@ -11,7 +11,10 @@ namespace ClosedXML.Utils
 
         public static string EncodeString(string encodeStr)
         {
-            if (encodeStr == null) return null;
+            if (encodeStr == null)
+            {
+                return null;
+            }
 
             encodeStr = xHHHHRegex.Replace(encodeStr, "_x005F_$1_");
 
@@ -34,7 +37,10 @@ namespace ClosedXML.Utils
 
         public static string DecodeString(string decodeStr)
         {
-            if (string.IsNullOrEmpty(decodeStr)) return string.Empty;
+            if (string.IsNullOrEmpty(decodeStr))
+            {
+                return string.Empty;
+            }
 
             // Strings "escaped" with _X (capital X) should not be treated as escaped
             // Example: _Xceed_Something

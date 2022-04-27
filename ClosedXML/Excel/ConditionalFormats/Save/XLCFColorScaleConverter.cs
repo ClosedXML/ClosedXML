@@ -17,7 +17,9 @@ namespace ClosedXML.Excel
 
                 var conditionalFormatValueObject = new ConditionalFormatValueObject { Type = type };
                 if (val != null)
+                {
                     conditionalFormatValueObject.Val = val;
+                }
 
                 colorScale.Append(conditionalFormatValueObject);
             }

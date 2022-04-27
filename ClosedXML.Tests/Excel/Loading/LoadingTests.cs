@@ -420,7 +420,9 @@ namespace ClosedXML.Tests.Excel
             };
 
             foreach (var pair in expected)
+            {
                 Assert.AreEqual(pair.Value, ws.Cell(pair.Key).GetString(), pair.Key);
+            }
         }
 
         [Test]

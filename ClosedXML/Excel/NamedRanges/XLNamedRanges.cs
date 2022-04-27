@@ -32,7 +32,9 @@ namespace ClosedXML.Excel
         public IXLNamedRange NamedRange(string rangeName)
         {
             if (_namedRanges.TryGetValue(rangeName, out var range))
+            {
                 return range;
+            }
 
             return null;
         }
@@ -83,20 +85,30 @@ namespace ClosedXML.Excel
                     {
                         IXLRange range;
                         if (Scope == XLNamedRangeScope.Worksheet)
+                        {
                             range = Worksheet.Range(rangeAddress);
+                        }
                         else if (Scope == XLNamedRangeScope.Workbook)
+                        {
                             range = Workbook.Range(rangeAddress);
+                        }
                         else
+                        {
                             throw new NotSupportedException($"Scope {Scope} is not supported");
+                        }
 
                         if (range == null)
+                        {
                             throw new ArgumentException(string.Format(
                                 "The range address '{0}' for the named range '{1}' is not a valid range.", rangeAddress,
                                 rangeName));
+                        }
 
                         if (Scope == XLNamedRangeScope.Workbook || !XLHelper.NamedRangeReferenceRegex.Match(range.ToString()).Success)
+                        {
                             throw new ArgumentException(
                                 "For named ranges in the workbook scope, specify the sheet name in the reference.");
+                        }
 
                         rangeAddress = Worksheet.Range(rangeAddress).ToString();
                     }
@@ -180,22 +192,34 @@ namespace ClosedXML.Excel
 
         public bool TryGetValue(string name, out IXLNamedRange range)
         {
-            if (_namedRanges.TryGetValue(name, out range)) return true;
+            if (_namedRanges.TryGetValue(name, out range))
+            {
+                return true;
+            }
 
             if (Scope == XLNamedRangeScope.Workbook)
+            {
                 range = Workbook.NamedRange(name);
+            }
 
             return range != null;
         }
 
         public bool Contains(string name)
         {
-            if (_namedRanges.ContainsKey(name)) return true;
+            if (_namedRanges.ContainsKey(name))
+            {
+                return true;
+            }
 
             if (Scope == XLNamedRangeScope.Workbook)
+            {
                 return Workbook.NamedRange(name) != null;
+            }
             else
+            {
                 return false;
+            }
         }
 
         internal void OnWorksheetDeleted(string worksheetName)

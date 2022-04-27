@@ -31,7 +31,9 @@ namespace ClosedXML.Excel
             var values = pti.Fields[PivotField.SourceName].DistinctValues.ToList();
 
             if (predicate == null)
+            {
                 return new int[] { };
+            }
 
             return values.Select((Value, Index) => new { Value, Index })
                 .Where(v => predicate.Invoke(v.Value))

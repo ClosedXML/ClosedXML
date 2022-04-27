@@ -117,7 +117,9 @@ namespace ClosedXML.Excel
             {
                 yield return GetStyle();
                 foreach (var c in Internals.CellsCollection.GetCells())
+                {
                     yield return c.Style;
+                }
             }
         }
 
@@ -131,7 +133,9 @@ namespace ClosedXML.Excel
                     .OrderBy(c => c)
                     .ToList();
                 foreach (var col in columnsUsed)
+                {
                     yield return Column(col);
+                }
 
                 var rowsUsed = Internals.RowsCollection.Keys
                     .Union(Internals.CellsCollection.RowsUsed.Keys)
@@ -139,7 +143,9 @@ namespace ClosedXML.Excel
                     .OrderBy(r => r)
                     .ToList();
                 foreach (var row in rowsUsed)
+                {
                     yield return Row(row);
+                }
             }
         }
 
@@ -197,7 +203,10 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
-                if (_name == value) return;
+                if (_name == value)
+                {
+                    return;
+                }
 
                 XLHelper.ValidateSheetName(value);
 
@@ -212,7 +221,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value > Workbook.WorksheetsInternal.Count + Workbook.UnsupportedSheets.Count + 1)
+                {
                     throw new ArgumentOutOfRangeException(nameof(value), "Index must be equal or less than the number of worksheets + 1.");
+                }
 
                 if (value < _position)
                 {
@@ -362,12 +373,16 @@ namespace ClosedXML.Excel
                 if (int.TryParse(firstColumn, out var tmp))
                 {
                     foreach (var col in Columns(int.Parse(firstColumn), int.Parse(lastColumn)))
+                    {
                         retVal.Add((XLColumn)col);
+                    }
                 }
                 else
                 {
                     foreach (var col in Columns(firstColumn, lastColumn))
+                    {
                         retVal.Add((XLColumn)col);
+                    }
                 }
             }
             return retVal;
@@ -384,7 +399,10 @@ namespace ClosedXML.Excel
             var retVal = new XLColumns(null, StyleValue);
 
             for (var co = firstColumn; co <= lastColumn; co++)
+            {
                 retVal.Add(Column(co));
+            }
+
             return retVal;
         }
 
@@ -430,7 +448,10 @@ namespace ClosedXML.Excel
             var retVal = new XLRows(null, StyleValue);
 
             for (var ro = firstRow; ro <= lastRow; ro++)
+            {
                 retVal.Add(Row(ro));
+            }
+
             return retVal;
         }
 
@@ -526,7 +547,9 @@ namespace ClosedXML.Excel
         public IXLWorksheet CollapseRows(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
+            {
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
+            }
 
             Internals.RowsCollection.Values.Where(r => r.OutlineLevel == outlineLevel).ForEach(r => r.Collapse());
             return this;
@@ -535,7 +558,9 @@ namespace ClosedXML.Excel
         public IXLWorksheet CollapseColumns(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
+            {
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
+            }
 
             Internals.ColumnsCollection.Values.Where(c => c.OutlineLevel == outlineLevel).ForEach(c => c.Collapse());
             return this;
@@ -544,7 +569,9 @@ namespace ClosedXML.Excel
         public IXLWorksheet ExpandRows(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
+            {
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
+            }
 
             Internals.RowsCollection.Values.Where(r => r.OutlineLevel == outlineLevel).ForEach(r => r.Expand());
             return this;
@@ -553,7 +580,9 @@ namespace ClosedXML.Excel
         public IXLWorksheet ExpandColumns(int outlineLevel)
         {
             if (outlineLevel < 1 || outlineLevel > 8)
+            {
                 throw new ArgumentOutOfRangeException("outlineLevel", "Outline level must be between 1 and 8.");
+            }
 
             Internals.ColumnsCollection.Values.Where(c => c.OutlineLevel == outlineLevel).ForEach(c => c.Expand());
             return this;
@@ -612,7 +641,9 @@ namespace ClosedXML.Excel
         public IXLWorksheet CopyTo(XLWorkbook workbook, string newSheetName, int position)
         {
             if (IsDeleted)
+            {
                 throw new InvalidOperationException($"`{Name}` has been deleted and cannot be copied.");
+            }
 
             var targetSheet = (XLWorksheet)workbook.WorksheetsInternal.Add(newSheetName, position);
             Internals.ColumnsCollection.ForEach(kp => kp.Value.CopyTo(targetSheet.Column(kp.Key)));
@@ -665,7 +696,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value != XLWorksheetVisibility.Visible)
+                {
                     TabSelected = false;
+                }
 
                 _visibility = value;
             }
@@ -873,7 +906,9 @@ namespace ClosedXML.Excel
                 if (value && !_tabActive)
                 {
                     foreach (var ws in Worksheet.Workbook.WorksheetsInternal)
+                    {
                         ws._tabActive = false;
+                    }
                 }
                 _tabActive = value;
             }
@@ -974,7 +1009,9 @@ namespace ClosedXML.Excel
             {
                 var row = Row(rowNum);
                 if (!row.IsEmpty(options) && (predicate == null || predicate(row)))
+                {
                     rows.Add(row);
+                }
             }
             return rows;
         }
@@ -1003,7 +1040,9 @@ namespace ClosedXML.Excel
             {
                 var column = Column(columnNum);
                 if (!column.IsEmpty(options) && (predicate == null || predicate(column)))
+                {
                     columns.Add(column);
+                }
             }
             return columns;
         }
@@ -1032,23 +1071,39 @@ namespace ClosedXML.Excel
 
         public void IncrementColumnOutline(int level)
         {
-            if (level <= 0) return;
+            if (level <= 0)
+            {
+                return;
+            }
+
             if (_columnOutlineCount.TryGetValue(level, out var value))
+            {
                 _columnOutlineCount[level] = value + 1;
+            }
             else
+            {
                 _columnOutlineCount.Add(level, 1);
+            }
         }
 
         public void DecrementColumnOutline(int level)
         {
-            if (level <= 0) return;
+            if (level <= 0)
+            {
+                return;
+            }
+
             if (_columnOutlineCount.TryGetValue(level, out var value))
             {
                 if (value > 0)
+                {
                     _columnOutlineCount[level] = value - 1;
+                }
             }
             else
+            {
                 _columnOutlineCount.Add(level, 0);
+            }
         }
 
         public int GetMaxColumnOutline()
@@ -1059,23 +1114,39 @@ namespace ClosedXML.Excel
 
         public void IncrementRowOutline(int level)
         {
-            if (level <= 0) return;
+            if (level <= 0)
+            {
+                return;
+            }
+
             if (_rowOutlineCount.TryGetValue(level, out var value))
+            {
                 _rowOutlineCount[level] = value + 1;
+            }
             else
+            {
                 _rowOutlineCount.Add(level, 0);
+            }
         }
 
         public void DecrementRowOutline(int level)
         {
-            if (level <= 0) return;
+            if (level <= 0)
+            {
+                return;
+            }
+
             if (_rowOutlineCount.TryGetValue(level, out var value))
             {
                 if (value > 0)
+                {
                     _rowOutlineCount[level] = level - 1;
+                }
             }
             else
+            {
                 _rowOutlineCount.Add(level, 0);
+            }
         }
 
         public int GetMaxRowOutline()
@@ -1157,10 +1228,14 @@ namespace ClosedXML.Excel
         public XLColumn Column(int columnNumber)
         {
             if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber)
+            {
                 throw new ArgumentOutOfRangeException(nameof(columnNumber), $"Column number must be between 1 and {XLHelper.MaxColumnNumber}");
+            }
 
             if (Internals.ColumnsCollection.TryGetValue(columnNumber, out var column))
+            {
                 return column;
+            }
             else
             {
                 // This is a new column so we're going to reference all
@@ -1224,9 +1299,16 @@ namespace ClosedXML.Excel
 
         private void ShiftConditionalFormattingColumns(XLRange range, int columnsShifted)
         {
-            if (!ConditionalFormats.Any()) return;
+            if (!ConditionalFormats.Any())
+            {
+                return;
+            }
+
             var firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
-            if (firstCol == 1) return;
+            if (firstCol == 1)
+            {
+                return;
+            }
 
             var colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
             var model = Column(colNum).AsRange();
@@ -1255,24 +1337,37 @@ namespace ClosedXML.Excel
                                          Math.Min(XLHelper.MaxColumnNumber, cfAddress.LastAddress.ColumnNumber + columnsShifted));
                     }
                     else
+                    {
                         newRange = cfRange;
+                    }
 
                     if (newRange.RangeAddress.IsValid &&
                         newRange.RangeAddress.FirstAddress.ColumnNumber <=
                         newRange.RangeAddress.LastAddress.ColumnNumber)
+                    {
                         cf.Ranges.Add(newRange);
+                    }
                 }
 
                 if (!cf.Ranges.Any())
+                {
                     ConditionalFormats.Remove(f => f == cf);
+                }
             }
         }
 
         private void ShiftDataValidationColumns(XLRange range, int columnsShifted)
         {
-            if (!DataValidations.Any()) return;
+            if (!DataValidations.Any())
+            {
+                return;
+            }
+
             var firstCol = range.RangeAddress.FirstAddress.ColumnNumber;
-            if (firstCol == 1) return;
+            if (firstCol == 1)
+            {
+                return;
+            }
 
             var colNum = columnsShifted > 0 ? firstCol - 1 : firstCol;
             var model = Column(colNum).AsRange();
@@ -1301,16 +1396,22 @@ namespace ClosedXML.Excel
                                          Math.Min(XLHelper.MaxColumnNumber, dvAddress.LastAddress.ColumnNumber + columnsShifted));
                     }
                     else
+                    {
                         newRange = dvRange;
+                    }
 
                     if (newRange.RangeAddress.IsValid &&
                         newRange.RangeAddress.FirstAddress.ColumnNumber <=
                         newRange.RangeAddress.LastAddress.ColumnNumber)
+                    {
                         dv.AddRange(newRange);
+                    }
                 }
 
                 if (!dv.Ranges.Any())
+                {
                     DataValidations.Delete(v => v == dv);
+                }
             }
         }
 
@@ -1354,9 +1455,16 @@ namespace ClosedXML.Excel
 
         private void ShiftConditionalFormattingRows(XLRange range, int rowsShifted)
         {
-            if (!ConditionalFormats.Any()) return;
+            if (!ConditionalFormats.Any())
+            {
+                return;
+            }
+
             var firstRow = range.RangeAddress.FirstAddress.RowNumber;
-            if (firstRow == 1) return;
+            if (firstRow == 1)
+            {
+                return;
+            }
 
             var rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
@@ -1385,23 +1493,36 @@ namespace ClosedXML.Excel
                                          cfAddress.LastAddress.ColumnNumber);
                     }
                     else
+                    {
                         newRange = cfRange;
+                    }
 
                     if (newRange.RangeAddress.IsValid &&
                         newRange.RangeAddress.FirstAddress.RowNumber <= newRange.RangeAddress.LastAddress.RowNumber)
+                    {
                         cf.Ranges.Add(newRange);
+                    }
                 }
 
                 if (!cf.Ranges.Any())
+                {
                     ConditionalFormats.Remove(f => f == cf);
+                }
             }
         }
 
         private void ShiftDataValidationRows(XLRange range, int rowsShifted)
         {
-            if (!DataValidations.Any()) return;
+            if (!DataValidations.Any())
+            {
+                return;
+            }
+
             var firstRow = range.RangeAddress.FirstAddress.RowNumber;
-            if (firstRow == 1) return;
+            if (firstRow == 1)
+            {
+                return;
+            }
 
             var rowNum = rowsShifted > 0 ? firstRow - 1 : firstRow;
             var model = Row(rowNum).AsRange();
@@ -1430,15 +1551,21 @@ namespace ClosedXML.Excel
                                          dvAddress.LastAddress.ColumnNumber);
                     }
                     else
+                    {
                         newRange = dvRange;
+                    }
 
                     if (newRange.RangeAddress.IsValid &&
                         newRange.RangeAddress.FirstAddress.RowNumber <= newRange.RangeAddress.LastAddress.RowNumber)
+                    {
                         dv.AddRange(newRange);
+                    }
                 }
 
                 if (!dv.Ranges.Any())
+                {
                     DataValidations.Delete(v => v == dv);
+                }
             }
         }
 
@@ -1492,10 +1619,14 @@ namespace ClosedXML.Excel
                 foreach (var storedRange in rangesToShift)
                 {
                     if (storedRange.IsEntireColumn())
+                    {
                         continue;
+                    }
 
                     if (ReferenceEquals(range, storedRange))
+                    {
                         continue;
+                    }
 
                     storedRange.WorksheetRangeShiftedRows(range, rowsShifted);
                 }
@@ -1523,10 +1654,14 @@ namespace ClosedXML.Excel
                 foreach (var storedRange in rangesToShift)
                 {
                     if (storedRange.IsEntireRow())
+                    {
                         continue;
+                    }
 
                     if (ReferenceEquals(range, storedRange))
+                    {
                         continue;
+                    }
 
                     storedRange.WorksheetRangeShiftedColumns(range, columnsShifted);
                 }
@@ -1541,10 +1676,14 @@ namespace ClosedXML.Excel
         public XLRow Row(int rowNumber, bool pingCells)
         {
             if (rowNumber <= 0 || rowNumber > XLHelper.MaxRowNumber)
+            {
                 throw new ArgumentOutOfRangeException(nameof(rowNumber), $"Row number must be between 1 and {XLHelper.MaxRowNumber}");
+            }
 
             if (Internals.RowsCollection.TryGetValue(rowNumber, out var row))
+            {
                 return row;
+            }
             else
             {
                 if (pingCells)
@@ -1577,13 +1716,17 @@ namespace ClosedXML.Excel
                 range.InsertRowsBelow(1);
             }
             else
+            {
                 rangeAddress = range.RangeAddress;
+            }
 
             var rangeKey = new XLRangeKey(XLRangeType.Table, rangeAddress);
             var table = (XLTable)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (table.Name != name)
+            {
                 table.Name = name;
+            }
 
             if (addToTables && !Tables.Contains(table))
             {
@@ -1591,7 +1734,9 @@ namespace ClosedXML.Excel
             }
 
             if (setAutofilter && !table.ShowAutoFilter)
+            {
                 table.InitializeAutoFilter();
+            }
 
             return table;
         }
@@ -1601,11 +1746,15 @@ namespace ClosedXML.Excel
             // Check that the range doesn't overlap with any existing tables
             var firstOverlappingTable = Tables.FirstOrDefault(t => t.RangeUsed().Intersects(range));
             if (firstOverlappingTable != null)
+            {
                 throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
+            }
 
             // Check that the range doesn't overlap with any filters
             if (AutoFilter.IsEnabled && AutoFilter.Range.Intersects(range))
+            {
                 throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} overlaps with the worksheet's autofilter.");
+            }
         }
 
         private string GetNewTableName(string baseName)
@@ -1648,22 +1797,31 @@ namespace ClosedXML.Excel
         public override IXLCells Cells(bool usedCellsOnly)
         {
             if (usedCellsOnly)
+            {
                 return Cells(true, XLCellsUsedOptions.AllContents);
+            }
             else
+            {
                 return Range((this as IXLRangeBase).FirstCellUsed(XLCellsUsedOptions.All),
                              (this as IXLRangeBase).LastCellUsed(XLCellsUsedOptions.All))
                     .Cells(false, XLCellsUsedOptions.All);
+            }
         }
 
         public override XLCell Cell(string cellAddressInRange)
         {
             var cell = base.Cell(cellAddressInRange);
-            if (cell != null) return cell;
+            if (cell != null)
+            {
+                return cell;
+            }
 
             if (Workbook.NamedRanges.TryGetValue(cellAddressInRange, out var workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
+                {
                     return null;
+                }
 
                 return workbookNamedRange.Ranges.FirstOrDefault().FirstCell().CastTo<XLCell>();
             }
@@ -1674,18 +1832,26 @@ namespace ClosedXML.Excel
         public override XLRange Range(string rangeAddressStr)
         {
             if (XLHelper.IsValidRangeAddress(rangeAddressStr))
+            {
                 return Range(new XLRangeAddress(Worksheet, rangeAddressStr));
+            }
 
             if (rangeAddressStr.Contains("["))
+            {
                 return Table(rangeAddressStr.Substring(0, rangeAddressStr.IndexOf("["))) as XLRange;
+            }
 
             if (NamedRanges.TryGetValue(rangeAddressStr, out var worksheetNamedRange))
+            {
                 return worksheetNamedRange.Ranges.First().CastTo<XLRange>();
+            }
 
             if (Workbook.NamedRanges.TryGetValue(rangeAddressStr, out var workbookNamedRange))
             {
                 if (!workbookNamedRange.Ranges.Any())
+                {
                     return null;
+                }
 
                 return workbookNamedRange.Ranges.First().CastTo<XLRange>();
             }
@@ -1826,11 +1992,17 @@ namespace ClosedXML.Excel
         internal void SetValue<T>(T value, int ro, int co) where T : class
         {
             if (value == null)
+            {
                 Cell(ro, co).SetValue(string.Empty, setTableHeader: true, checkMergedRanges: false);
+            }
             else if (value is IConvertible)
+            {
                 Cell(ro, co).SetValue((T)Convert.ChangeType(value, typeof(T)), setTableHeader: true, checkMergedRanges: false);
+            }
             else
+            {
                 Cell(ro, co).SetValue(value, setTableHeader: true, checkMergedRanges: false);
+            }
         }
 
         /// <summary>
@@ -1844,11 +2016,15 @@ namespace ClosedXML.Excel
             if (Internals.CellsCollection.MaxRowUsed < ro ||
                 Internals.CellsCollection.MaxColumnUsed < co ||
                 !Internals.CellsCollection.Contains(ro, co))
+            {
                 return string.Empty;
+            }
 
             var cell = Worksheet.Internals.CellsCollection.GetCell(ro, co);
             if (cell.IsEvaluating)
+            {
                 return string.Empty;
+            }
 
             return cell.Value;
         }
@@ -1858,7 +2034,9 @@ namespace ClosedXML.Excel
             var rangeKey = new XLRangeKey(XLRangeType.Range, xlRangeParameters.RangeAddress);
             var range = _rangeRepository.GetOrCreate(ref rangeKey);
             if (xlRangeParameters.DefaultStyle != null && range.StyleValue == StyleValue)
+            {
                 range.InnerStyle = xlRangeParameters.DefaultStyle;
+            }
 
             return range as XLRange;
         }
@@ -1875,7 +2053,9 @@ namespace ClosedXML.Excel
             var rangeRow = (XLRangeRow)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (defaultStyle != null && rangeRow.StyleValue == StyleValue)
+            {
                 rangeRow.InnerStyle = defaultStyle;
+            }
 
             return rangeRow;
         }
@@ -1892,7 +2072,9 @@ namespace ClosedXML.Excel
             var rangeColumn = (XLRangeColumn)_rangeRepository.GetOrCreate(ref rangeKey);
 
             if (defaultStyle != null && rangeColumn.StyleValue == StyleValue)
+            {
                 rangeColumn.InnerStyle = defaultStyle;
+            }
 
             return rangeColumn;
         }
@@ -1904,7 +2086,9 @@ namespace ClosedXML.Excel
         public void RellocateRange(XLRangeType rangeType, XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
             if (_rangeRepository == null)
+            {
                 return;
+            }
 
             var oldKey = new XLRangeKey(rangeType, oldAddress);
             var newKey = new XLRangeKey(rangeType, newAddress);
@@ -1913,7 +2097,9 @@ namespace ClosedXML.Excel
             foreach (var rangeIndex in _rangeIndices)
             {
                 if (!rangeIndex.MatchesType(rangeType))
+                {
                     continue;
+                }
 
                 if (rangeIndex.Remove(oldAddress) &&
                     newAddress.IsValid &&

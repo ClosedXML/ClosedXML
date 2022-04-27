@@ -48,16 +48,22 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     throw new InvalidOperationException("Cannot convert theme color to Color.");
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     if (Indexed == TOOLTIPCOLORINDEX)
                     {
                         var tooltipColor = SKColors.Black.WithAlpha(255);
                         return tooltipColor;
                     }
                     else
+                    {
                         return IndexedColors[Indexed].Color;
+                    }
+                }
 
                 return Key.Color;
             }
@@ -68,10 +74,14 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     throw new InvalidOperationException("Cannot convert theme color to indexed color.");
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     return Key.Indexed;
+                }
 
                 throw new InvalidOperationException("Cannot convert Color to indexed color.");
             }
@@ -82,10 +92,14 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     return Key.ThemeColor;
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     throw new InvalidOperationException("Cannot convert indexed color to theme color.");
+                }
 
                 throw new InvalidOperationException("Cannot convert Color to theme color.");
             }
@@ -96,10 +110,14 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     return Key.ThemeTint;
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
+                }
 
                 return Color.Alpha / 255.0;
             }
@@ -130,10 +148,14 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             if (ColorType == XLColorType.Color)
+            {
                 return Color.ToHex();
+            }
 
             if (ColorType == XLColorType.Theme)
+            {
                 return string.Format("Color Theme: {0}, Tint: {1}", ThemeColor.ToString(), ThemeTint.ToString());
+            }
 
             return "Color Index: " + Indexed;
         }
@@ -141,10 +163,16 @@ namespace ClosedXML.Excel
         public static bool operator ==(XLColor left, XLColor right)
         {
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(left, right)) return true;
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
 
             // If one is null, but not both, return false.
-            if ((left as object) == null || (right as object) == null) return false;
+            if ((left as object) == null || (right as object) == null)
+            {
+                return false;
+            }
 
             return left.Equals(right);
         }

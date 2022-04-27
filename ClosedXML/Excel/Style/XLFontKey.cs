@@ -45,7 +45,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLFontKey)
+            {
                 return Equals((XLFontKey)obj);
+            }
+
             return base.Equals(obj);
         }
 

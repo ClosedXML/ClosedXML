@@ -13,7 +13,10 @@ namespace ClosedXML.Excel.InsertData
 
         public DataRecordReader(IEnumerable<IDataRecord> data)
         {
-            if (data == null) throw new ArgumentNullException(nameof(data));
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
 
             _inMemoryData = ReadToEnd(data).ToArray();
         }
@@ -31,13 +34,19 @@ namespace ClosedXML.Excel.InsertData
         public string GetPropertyName(int propertyIndex)
         {
             if (propertyIndex < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(propertyIndex), "Property index must be non-negative");
+            }
 
             if (_columns == null)
+            {
                 return null;
+            }
 
             if (propertyIndex >= _columns.Length)
+            {
                 throw new ArgumentOutOfRangeException($"{propertyIndex} exceeds the number of the table columns");
+            }
 
             return _columns[propertyIndex];
         }
@@ -67,7 +76,9 @@ namespace ClosedXML.Excel.InsertData
             for (var i = 0; i < dataRecord.FieldCount; i++)
             {
                 if (firstRow)
+                {
                     _columns[i] = dataRecord.GetName(i);
+                }
 
                 yield return dataRecord[i];
             }

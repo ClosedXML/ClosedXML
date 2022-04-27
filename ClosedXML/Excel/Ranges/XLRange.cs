@@ -45,7 +45,9 @@ namespace ClosedXML.Excel
             {
                 var column = Column(c);
                 if (predicate == null || predicate(column))
+                {
                     retVal.Add(column);
+                }
             }
             return retVal;
         }
@@ -55,7 +57,10 @@ namespace ClosedXML.Excel
             var retVal = new XLRangeColumns();
 
             for (var co = firstColumn; co <= lastColumn; co++)
+            {
                 retVal.Add(Column(co));
+            }
+
             return retVal;
         }
 
@@ -89,12 +94,16 @@ namespace ClosedXML.Excel
                 if (int.TryParse(firstColumn, out var tmp))
                 {
                     foreach (var col in Columns(int.Parse(firstColumn), int.Parse(lastColumn)))
+                    {
                         retVal.Add(col);
+                    }
                 }
                 else
                 {
                     foreach (var col in Columns(firstColumn, lastColumn))
+                    {
                         retVal.Add(col);
+                    }
                 }
             }
             return retVal;
@@ -158,7 +167,9 @@ namespace ClosedXML.Excel
             {
                 var row = Row(r);
                 if (predicate == null || predicate(row))
+                {
                     retVal.Add(Row(r));
+                }
             }
             return retVal;
         }
@@ -168,7 +179,10 @@ namespace ClosedXML.Excel
             var retVal = new XLRangeRows();
 
             for (var ro = firstRow; ro <= lastRow; ro++)
+            {
                 retVal.Add(Row(ro));
+            }
+
             return retVal;
         }
 
@@ -193,7 +207,9 @@ namespace ClosedXML.Excel
                     lastRow = tPair;
                 }
                 foreach (var row in Rows(int.Parse(firstRow), int.Parse(lastRow)))
+                {
                     retVal.Add(row);
+                }
             }
             return retVal;
         }
@@ -291,10 +307,15 @@ namespace ClosedXML.Excel
 
             var lastRowNumber = target.Address.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
+            }
+
             var lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(target.Address.RowNumber,
                                           target.Address.ColumnNumber,
@@ -308,10 +329,15 @@ namespace ClosedXML.Excel
 
             var lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
+            }
+
             var lastColumnNumber = target.RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(target.RangeAddress.FirstAddress.RowNumber,
                                           target.RangeAddress.FirstAddress.ColumnNumber,
@@ -365,13 +391,18 @@ namespace ClosedXML.Excel
         internal XLRangeColumn FirstColumn(Func<IXLRangeColumn, bool> predicate = null)
         {
             if (predicate == null)
+            {
                 return Column(1);
+            }
 
             var columnCount = ColumnCount();
             for (var c = 1; c <= columnCount; c++)
             {
                 var column = Column(c);
-                if (predicate(column)) return column;
+                if (predicate(column))
+                {
+                    return column;
+                }
             }
 
             return null;
@@ -386,12 +417,17 @@ namespace ClosedXML.Excel
         {
             var columnCount = ColumnCount();
             if (predicate == null)
+            {
                 return Column(columnCount);
+            }
 
             for (var c = columnCount; c >= 1; c--)
             {
                 var column = Column(c);
-                if (predicate(column)) return column;
+                if (predicate(column))
+                {
+                    return column;
+                }
             }
 
             return null;
@@ -441,7 +477,9 @@ namespace ClosedXML.Excel
                 var column = Column(co);
 
                 if (!column.IsEmpty(options) && predicate(column))
+                {
                     return column;
+                }
             }
             return null;
         }
@@ -490,7 +528,9 @@ namespace ClosedXML.Excel
                 var column = Column(co);
 
                 if (!column.IsEmpty(options) && predicate(column))
+                {
                     return column;
+                }
             }
             return null;
         }
@@ -503,13 +543,18 @@ namespace ClosedXML.Excel
         public XLRangeRow FirstRow(Func<IXLRangeRow, bool> predicate = null)
         {
             if (predicate == null)
+            {
                 return Row(1);
+            }
 
             var rowCount = RowCount();
             for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
-                if (predicate(row)) return row;
+                if (predicate(row))
+                {
+                    return row;
+                }
             }
 
             return null;
@@ -524,12 +569,17 @@ namespace ClosedXML.Excel
         {
             var rowCount = RowCount();
             if (predicate == null)
+            {
                 return Row(rowCount);
+            }
 
             for (var ro = rowCount; ro >= 1; ro--)
             {
                 var row = Row(ro);
-                if (predicate(row)) return row;
+                if (predicate(row))
+                {
+                    return row;
+                }
             }
 
             return null;
@@ -580,7 +630,9 @@ namespace ClosedXML.Excel
                 var row = Row(ro);
 
                 if (!row.IsEmpty(options) && predicate(row))
+                {
                     return row;
+                }
             }
             return null;
         }
@@ -628,7 +680,9 @@ namespace ClosedXML.Excel
                 var row = Row(ro);
 
                 if (!row.IsEmpty(options) && predicate(row))
+                {
                     return row;
+                }
             }
             return null;
         }
@@ -656,7 +710,9 @@ namespace ClosedXML.Excel
                 var row = Row(ro);
 
                 if (!row.IsEmpty(options) && (predicate == null || predicate(row)))
+                {
                     rows.Add(row);
+                }
             }
             return rows;
         }
@@ -693,7 +749,9 @@ namespace ClosedXML.Excel
                 var column = Column(co);
 
                 if (!column.IsEmpty(options) && (predicate == null || predicate(column)))
+                {
                     columns.Add(column);
+                }
             }
             return columns;
         }
@@ -711,7 +769,9 @@ namespace ClosedXML.Excel
         public XLRangeRow Row(int row)
         {
             if (row <= 0 || row > XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1)
+            {
                 throw new ArgumentOutOfRangeException(nameof(row), string.Format("Row number must be between 1 and {0}", XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1));
+            }
 
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber + row - 1,
@@ -730,7 +790,9 @@ namespace ClosedXML.Excel
         public virtual XLRangeColumn Column(int columnNumber)
         {
             if (columnNumber <= 0 || columnNumber > XLHelper.MaxColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1)
+            {
                 throw new ArgumentOutOfRangeException(nameof(columnNumber), string.Format("Column number must be between 1 and {0}", XLHelper.MaxColumnNumber + RangeAddress.FirstAddress.ColumnNumber - 1));
+            }
 
             var firstCellAddress = new XLAddress(Worksheet,
                                                  RangeAddress.FirstAddress.RowNumber,
@@ -854,9 +916,13 @@ namespace ClosedXML.Excel
             if (transposeOption == XLTransposeOptions.MoveCells)
             {
                 if (rowCount > columnCount)
+                {
                     InsertColumnsAfter(false, rowCount - columnCount, false);
+                }
                 else if (columnCount > rowCount)
+                {
                     InsertRowsBelow(false, columnCount - rowCount, false);
+                }
             }
             else
             {
@@ -886,7 +952,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (!(obj is XLRange other))
+            {
                 return false;
+            }
+
             return RangeAddress.Equals(other.RangeAddress)
                    && Worksheet.Equals(other.Worksheet);
         }
@@ -910,7 +979,9 @@ namespace ClosedXML.Excel
             {
                 var column = Column(c);
                 if (predicate == null || predicate(column))
+                {
                     return column;
+                }
             }
             return null;
         }
@@ -922,7 +993,9 @@ namespace ClosedXML.Excel
             {
                 var row = Row(r);
                 if (predicate(row))
+                {
                     return row;
+                }
             }
             return null;
         }
@@ -952,7 +1025,9 @@ namespace ClosedXML.Excel
                     RangeAddress.LastAddress.ColumnLetter);
             }
             else
+            {
                 return base.ToString();
+            }
         }
     }
 }

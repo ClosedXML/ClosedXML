@@ -45,7 +45,10 @@ namespace ClosedXML.Excel
             {
                 Columns.ForEach(c => c.Width = value);
 
-                if (_worksheet == null) return;
+                if (_worksheet == null)
+                {
+                    return;
+                }
 
                 _worksheet.ColumnWidth = value;
                 _worksheet.Internals.ColumnsCollection.ForEach(c => c.Value.Width = value);
@@ -76,7 +79,9 @@ namespace ClosedXML.Excel
                 foreach (var kp in toDelete)
                 {
                     foreach (var c in kp.Value.OrderByDescending(c => c))
+                    {
                         kp.Key.Column(c).Delete();
+                    }
                 }
             }
         }
@@ -171,7 +176,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(false, XLCellsUsedOptions.All);
             foreach (var container in Columns)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -179,7 +187,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(true, XLCellsUsedOptions.All);
             foreach (var container in Columns)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -194,7 +205,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(true, options);
             foreach (var container in Columns)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -204,7 +218,10 @@ namespace ClosedXML.Excel
         public IXLColumns AddVerticalPageBreaks()
         {
             foreach (var col in Columns)
+            {
                 col.Worksheet.PageSetup.AddVerticalPageBreak(col.ColumnNumber());
+            }
+
             return this;
         }
 
@@ -224,7 +241,9 @@ namespace ClosedXML.Excel
             {
                 yield return Style;
                 if (_worksheet != null)
+                {
                     yield return _worksheet.Style;
+                }
                 else
                 {
                     foreach (var s in Columns.SelectMany(col => col.Styles))
@@ -240,11 +259,15 @@ namespace ClosedXML.Excel
             get
             {
                 if (_worksheet != null)
+                {
                     yield return _worksheet;
+                }
                 else
                 {
                     foreach (var column in Columns)
+                    {
                         yield return column;
+                    }
                 }
             }
         }
@@ -281,13 +304,17 @@ namespace ClosedXML.Excel
         public void Select()
         {
             foreach (var range in this)
+            {
                 range.Select();
+            }
         }
 
         private void Materialize()
         {
             if (IsMaterialized)
+            {
                 return;
+            }
 
             _columnsCollection.AddRange(Columns);
             _lazyEnumerable = null;

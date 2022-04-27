@@ -42,14 +42,20 @@ namespace ClosedXML.Excel
         public void Add(XLRange range)
         {
             if (GetRangeIndex(range.Worksheet).Add(range))
+            {
                 Count++;
+            }
 
             if (_styleInitialized)
+            {
                 return;
+            }
 
             var worksheetStyle = range?.Worksheet?.Style;
             if (worksheetStyle == null)
+            {
                 return;
+            }
 
             InnerStyle = worksheetStyle;
             _styleInitialized = true;
@@ -192,7 +198,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
             foreach (var container in Ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -200,7 +209,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
             foreach (var container in Ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -216,7 +228,10 @@ namespace ClosedXML.Excel
         {
             var cells = new XLCells(true, options);
             foreach (var container in Ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -243,7 +258,9 @@ namespace ClosedXML.Excel
                         rng.RangeAddress.FirstAddress.ColumnNumber,
                         rng.RangeAddress.LastAddress.RowNumber,
                         rng.RangeAddress.LastAddress.ColumnNumber))
+                    {
                         yield return r.Style;
+                    }
                 }
             }
         }
@@ -253,7 +270,9 @@ namespace ClosedXML.Excel
             get
             {
                 foreach (var rng in Ranges)
+                {
                     yield return rng;
+                }
             }
         }
 
@@ -267,7 +286,11 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             var retVal = Ranges.Aggregate(string.Empty, (agg, r) => agg + r.ToString() + ",");
-            if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
+            if (retVal.Length > 0)
+            {
+                retVal = retVal.Substring(0, retVal.Length - 1);
+            }
+
             return retVal;
         }
 
@@ -279,7 +302,9 @@ namespace ClosedXML.Excel
         public bool Equals(XLRanges other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
             return Ranges.Count() == other.Ranges.Count() &&
                    Ranges.Select(thisRange => Enumerable.Contains(other.Ranges, thisRange)).All(foundOne => foundOne);
@@ -312,7 +337,9 @@ namespace ClosedXML.Excel
         public void Select()
         {
             foreach (var range in this)
+            {
                 range.Select();
+            }
         }
 
         public IXLRanges Consolidate()

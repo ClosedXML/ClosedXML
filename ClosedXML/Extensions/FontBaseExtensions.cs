@@ -33,7 +33,9 @@ namespace ClosedXML.Excel
         public static double GetWidth(this IXLFontBase fontBase, string text, Dictionary<IXLFontBase, SKFont> fontCache)
         {
             if (string.IsNullOrWhiteSpace(text))
+            {
                 return 0;
+            }
 
             var font = GetCachedFont(fontBase, fontCache);
             var textWidth = GraphicsUtils.MeasureString(text, font.Typeface).Width;

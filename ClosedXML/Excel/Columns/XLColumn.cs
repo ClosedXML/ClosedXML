@@ -42,7 +42,9 @@ namespace ClosedXML.Excel
                 var column = ColumnNumber();
 
                 foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                {
                     yield return cell.Style;
+                }
             }
         }
 
@@ -52,7 +54,9 @@ namespace ClosedXML.Excel
             {
                 var column = ColumnNumber();
                 foreach (var cell in Worksheet.Internals.CellsCollection.GetCellsInColumn(column))
+                {
                     yield return cell;
+                }
             }
         }
 
@@ -85,7 +89,10 @@ namespace ClosedXML.Excel
             var retVal = new XLCells(false, XLCellsUsedOptions.All);
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
+            {
                 retVal.Add(Range(pair.Trim()).RangeAddress);
+            }
+
             return retVal;
         }
 
@@ -97,9 +104,13 @@ namespace ClosedXML.Excel
         public override IXLCells Cells(bool usedCellsOnly)
         {
             if (usedCellsOnly)
+            {
                 return Cells(true, XLCellsUsedOptions.AllContents);
+            }
             else
+            {
                 return Cells(FirstCellUsed().Address.RowNumber, LastCellUsed().Address.RowNumber);
+            }
         }
 
         public IXLCells Cells(int firstRow, int lastRow)
@@ -177,7 +188,9 @@ namespace ClosedXML.Excel
 
             var autoFilterRows = new List<int>();
             if (Worksheet.AutoFilter != null && Worksheet.AutoFilter.Range != null)
+            {
                 autoFilterRows.Add(Worksheet.AutoFilter.Range.FirstRow().RowNumber());
+            }
 
             autoFilterRows.AddRange(Worksheet.Tables.Where(t =>
                     t.AutoFilter != null
@@ -188,9 +201,15 @@ namespace ClosedXML.Excel
             XLStyle cellStyle = null;
             foreach (var c in Column(startRow, endRow).CellsUsed().Cast<XLCell>())
             {
-                if (c.IsMerged()) continue;
+                if (c.IsMerged())
+                {
+                    continue;
+                }
+
                 if (cellStyle == null || cellStyle.Value != c.StyleValue)
+                {
                     cellStyle = c.Style as XLStyle;
+                }
 
                 double thisWidthMax = 0;
                 var textRotation = cellStyle.Alignment.TextRotation;
@@ -211,7 +230,10 @@ namespace ClosedXML.Excel
                             {
                                 var s = arr[i];
                                 if (i < arrCount - 1)
+                                {
                                     s += XLConstants.NewLine;
+                                }
+
                                 kpList.Add(new KeyValuePair<IXLFontBase, string>(rt, s));
                             }
                         }
@@ -225,7 +247,10 @@ namespace ClosedXML.Excel
                         {
                             var s = arr[i];
                             if (i < arrCount - 1)
+                            {
                                 s += XLConstants.NewLine;
+                            }
+
                             kpList.Add(new KeyValuePair<IXLFontBase, string>(cellStyle.Font, s));
                         }
                     }
@@ -251,17 +276,23 @@ namespace ClosedXML.Excel
                             if (newLinePosition >= 0)
                             {
                                 if (newLinePosition > 0)
+                                {
                                     runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), fontCache);
+                                }
 
                                 if (runningWidth > thisWidthMax)
+                                {
                                     thisWidthMax = runningWidth;
+                                }
 
                                 runningWidth = newLinePosition < formattedString.Length - 2
                                                    ? f.GetWidth(formattedString.Substring(newLinePosition + 2), fontCache)
                                                    : 0;
                             }
                             else
+                            {
                                 runningWidth += f.GetWidth(formattedString, fontCache);
+                            }
 
                             #endregion if (newLinePosition >= 0)
                         }
@@ -272,34 +303,46 @@ namespace ClosedXML.Excel
                             if (textRotation == 255)
                             {
                                 if (runningWidth <= 0)
+                                {
                                     runningWidth = f.GetWidth("X", fontCache);
+                                }
 
                                 if (newLinePosition >= 0)
+                                {
                                     runningWidth += f.GetWidth("X", fontCache);
+                                }
                             }
                             else
                             {
                                 rotated = true;
                                 var vWidth = f.GetWidth("X", fontCache);
                                 if (vWidth > maxLineWidth)
+                                {
                                     maxLineWidth = vWidth;
+                                }
 
                                 if (newLinePosition >= 0)
                                 {
                                     lineCount++;
 
                                     if (newLinePosition > 0)
+                                    {
                                         runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), fontCache);
+                                    }
 
                                     if (runningWidth > thisWidthMax)
+                                    {
                                         thisWidthMax = runningWidth;
+                                    }
 
                                     runningWidth = newLinePosition < formattedString.Length - 2
                                                        ? f.GetWidth(formattedString.Substring(newLinePosition + 2), fontCache)
                                                        : 0;
                                 }
                                 else
+                                {
                                     runningWidth += f.GetWidth(formattedString, fontCache);
+                                }
                             }
 
                             #endregion if (textRotation == 255)
@@ -309,7 +352,9 @@ namespace ClosedXML.Excel
                     #endregion foreach (var kp in kpList)
 
                     if (runningWidth > thisWidthMax)
+                    {
                         thisWidthMax = runningWidth;
+                    }
 
                     #region if (rotated)
 
@@ -317,9 +362,13 @@ namespace ClosedXML.Excel
                     {
                         int rotation;
                         if (textRotation == 90 || textRotation == 180 || textRotation == 255)
+                        {
                             rotation = 90;
+                        }
                         else
+                        {
                             rotation = textRotation % 90;
+                        }
 
                         var r = DegreeToRadian(rotation);
 
@@ -329,11 +378,15 @@ namespace ClosedXML.Excel
                     #endregion if (rotated)
                 }
                 else
+                {
                     thisWidthMax = cellStyle.Font.GetWidth(c.GetFormattedString(), fontCache);
+                }
 
                 if (autoFilterRows.Contains(c.Address.RowNumber))
+                {
                     // Allow room for arrow icon in auto filter
                     thisWidthMax += 2.7148;
+                }
 
                 if (thisWidthMax >= maxWidth)
                 {
@@ -342,11 +395,15 @@ namespace ClosedXML.Excel
                 }
 
                 if (thisWidthMax > colMaxWidth)
+                {
                     colMaxWidth = thisWidthMax + 1;
+                }
             }
 
             if (colMaxWidth <= 0)
+            {
                 colMaxWidth = Worksheet.ColumnWidth;
+            }
 
             Width = colMaxWidth;
 
@@ -377,7 +434,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value < 0 || value > 8)
+                {
                     throw new ArgumentOutOfRangeException("value", "Outline level must be between 0 and 8.");
+                }
 
                 Worksheet.IncrementColumnOutline(value);
                 Worksheet.DecrementColumnOutline(_outlineLevel);
@@ -393,7 +452,9 @@ namespace ClosedXML.Excel
         public IXLColumn Group(bool collapse)
         {
             if (OutlineLevel < 8)
+            {
                 OutlineLevel += 1;
+            }
 
             Collapsed = collapse;
             return this;
@@ -419,11 +480,15 @@ namespace ClosedXML.Excel
         public IXLColumn Ungroup(bool ungroupFromAll)
         {
             if (ungroupFromAll)
+            {
                 OutlineLevel = 0;
+            }
             else
             {
                 if (OutlineLevel > 0)
+                {
                     OutlineLevel -= 1;
+                }
             }
             return this;
         }
@@ -492,7 +557,10 @@ namespace ClosedXML.Excel
             var retVal = new XLRangeColumns();
             var columnPairs = columns.Split(',');
             foreach (var pair in columnPairs)
+            {
                 AsRange().Columns(pair.Trim()).ForEach(retVal.Add);
+            }
+
             return retVal;
         }
 
@@ -563,7 +631,9 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains(':') || rangeAddressStr.Contains('-'))
             {
                 if (rangeAddressStr.Contains('-'))
+                {
                     rangeAddressStr = rangeAddressStr.Replace('-', ':');
+                }
 
                 var arrRange = rangeAddressStr.Split(':');
                 var firstPart = arrRange[0];
@@ -571,7 +641,9 @@ namespace ClosedXML.Excel
                 rangeAddressToUse = FixColumnAddress(firstPart) + ":" + FixColumnAddress(secondPart);
             }
             else
+            {
                 rangeAddressToUse = FixColumnAddress(rangeAddressStr);
+            }
 
             var rangeAddress = new XLRangeAddress(Worksheet, rangeAddressToUse);
             return Range(rangeAddress);
@@ -649,7 +721,9 @@ namespace ClosedXML.Excel
         {
             if (options.HasFlag(XLCellsUsedOptions.NormalFormats) &&
                 !StyleValue.Equals(Worksheet.StyleValue))
+            {
                 return false;
+            }
 
             return base.IsEmpty(options);
         }

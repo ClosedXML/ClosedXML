@@ -24,20 +24,31 @@ namespace ClosedXML.Utils
         public static string GenerateNewSalt(Algorithm algorithm)
         {
             if (RequiresSalt(algorithm))
+            {
                 return GetSalt();
+            }
             else
+            {
                 return string.Empty;
+            }
         }
 
         public static string GetPasswordHash(Algorithm algorithm, string password, string salt = "", uint spinCount = 0)
         {
             if (password == null)
+            {
                 throw new ArgumentNullException(nameof(password));
+            }
 
             if (salt == null)
+            {
                 throw new ArgumentNullException(nameof(salt));
+            }
 
-            if (password?.Length == 0) return "";
+            if (password?.Length == 0)
+            {
+                return "";
+            }
 
             switch (algorithm)
             {
@@ -78,7 +89,9 @@ namespace ClosedXML.Utils
         private static string GetDefaultPasswordHash(string password)
         {
             if (password == null)
+            {
                 throw new ArgumentNullException(nameof(password));
+            }
 
             // http://kohei.us/2008/01/18/excel-sheet-protection-password-hash/
             // http://sc.openoffice.org/excelfileformat.pdf - 4.18.4
@@ -106,10 +119,14 @@ namespace ClosedXML.Utils
         private static string GetSha512PasswordHash(string password, string salt, uint spinCount)
         {
             if (password == null)
+            {
                 throw new ArgumentNullException(nameof(password));
+            }
 
             if (salt == null)
+            {
                 throw new ArgumentNullException(nameof(salt));
+            }
 
             var saltBytes = Convert.FromBase64String(salt);
             var passwordBytes = Encoding.Unicode.GetBytes(password);

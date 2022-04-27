@@ -15,7 +15,10 @@ namespace ClosedXML.Excel
         public XLRangeConsolidationEngine(IXLRanges ranges)
         {
             if (ranges == null)
+            {
                 throw new ArgumentNullException(nameof(ranges));
+            }
+
             _allRanges = ranges;
         }
 
@@ -26,7 +29,9 @@ namespace ClosedXML.Excel
         public IXLRanges Consolidate()
         {
             if (!_allRanges.Any())
+            {
                 return _allRanges;
+            }
 
             var worksheets = _allRanges.Select(r => r.Worksheet).Distinct().OrderBy(ws => ws.Position);
 
@@ -92,7 +97,10 @@ namespace ClosedXML.Excel
                     foreach (var starting in startings)
                     {
                         var j = i + 1;
-                        while (j < rowNumbers.Length && RowIncludesRange(_bitMatrix[rowNumbers[j]], starting)) j++;
+                        while (j < rowNumbers.Length && RowIncludesRange(_bitMatrix[rowNumbers[j]], starting))
+                        {
+                            j++;
+                        }
 
                         var endRow = rowNumbers[j - 1];
                         var startColumn = starting.Item1 + _minColumn - 1;
@@ -165,9 +173,14 @@ namespace ClosedXML.Excel
                 for (var i = 1; i < rowArray.Length - 1; i++)
                 {
                     if (!rowArray[i - 1] && rowArray[i])
+                    {
                         startIdx = i;
+                    }
+
                     if (rowArray[i] && !rowArray[i + 1])
+                    {
                         yield return new Tuple<int, int>(startIdx, i);
+                    }
                 }
             }
 
@@ -185,11 +198,19 @@ namespace ClosedXML.Excel
                         : address.LastAddress.ColumnNumber;
 
                     if (!_bitMatrix.ContainsKey(address.FirstAddress.RowNumber))
+                    {
                         _bitMatrix.Add(address.FirstAddress.RowNumber, null);
+                    }
+
                     if (!_bitMatrix.ContainsKey(address.LastAddress.RowNumber))
+                    {
                         _bitMatrix.Add(address.LastAddress.RowNumber, null);
+                    }
+
                     if (!_bitMatrix.ContainsKey(address.LastAddress.RowNumber + 1))
+                    {
                         _bitMatrix.Add(address.LastAddress.RowNumber + 1, null);
+                    }
                 }
 
                 var keys = _bitMatrix.Keys.ToList();
@@ -203,7 +224,9 @@ namespace ClosedXML.Excel
                 for (var i = rangeBoundaries.Item1; i <= rangeBoundaries.Item2; i++)
                 {
                     if (!rowArray[i])
+                    {
                         return false;
+                    }
                 }
 
                 return true;

@@ -118,7 +118,9 @@ namespace ClosedXML.Excel
             get
             {
                 if (!IsValid)
+                {
                     throw new InvalidOperationException("Range address is invalid.");
+                }
 
                 return Math.Abs(LastAddress.ColumnNumber - FirstAddress.ColumnNumber) + 1;
             }
@@ -131,7 +133,9 @@ namespace ClosedXML.Excel
             get
             {
                 if (!IsValid)
+                {
                     throw new InvalidOperationException("Range address is invalid.");
+                }
 
                 return Math.Abs(LastAddress.RowNumber - FirstAddress.RowNumber) + 1;
             }
@@ -155,7 +159,9 @@ namespace ClosedXML.Excel
         {
             if (FirstAddress.RowNumber <= LastAddress.RowNumber &&
                 FirstAddress.ColumnNumber <= LastAddress.ColumnNumber)
+            {
                 return this;
+            }
 
             int firstRow, firstColumn, lastRow, lastColumn;
             bool firstRowFixed, firstColumnFixed, lastRowFixed, lastColumnFixed;
@@ -246,23 +252,35 @@ namespace ClosedXML.Excel
         {
             string address;
             if (!IsValid)
+            {
                 address = "#REF!";
+            }
             else
             {
                 if (IsEntireSheet())
+                {
                     address = $"1:{XLHelper.MaxRowNumber}";
+                }
                 else if (IsEntireRow())
+                {
                     address = string.Concat(FirstAddress.RowNumber.ToString(), ":", LastAddress.RowNumber.ToString());
+                }
                 else if (IsEntireColumn())
+                {
                     address = string.Concat(FirstAddress.ColumnLetter, ":", LastAddress.ColumnLetter);
+                }
                 else
+                {
                     address = string.Concat(FirstAddress.ToStringRelative(), ":", LastAddress.ToStringRelative());
+                }
             }
 
             if (includeSheet || WorksheetIsDeleted)
+            {
                 return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     "!", address);
+            }
 
             return address;
         }
@@ -276,23 +294,35 @@ namespace ClosedXML.Excel
         {
             string address;
             if (!IsValid)
+            {
                 address = "#REF!";
+            }
             else
             {
                 if (IsEntireSheet())
+                {
                     address = $"$1:${XLHelper.MaxRowNumber}";
+                }
                 else if (IsEntireRow())
+                {
                     address = string.Concat("$", FirstAddress.RowNumber.ToString(), ":$", LastAddress.RowNumber.ToString());
+                }
                 else if (IsEntireColumn())
+                {
                     address = string.Concat("$", FirstAddress.ColumnLetter, ":$", LastAddress.ColumnLetter);
+                }
                 else
+                {
                     address = string.Concat(FirstAddress.ToStringFixed(referenceStyle), ":", LastAddress.ToStringFixed(referenceStyle));
+                }
             }
 
             if (includeSheet || WorksheetIsDeleted)
+            {
                 return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     "!", address);
+            }
 
             return address;
         }
@@ -343,9 +373,13 @@ namespace ClosedXML.Excel
         public string ToString(XLReferenceStyle referenceStyle, bool includeSheet)
         {
             if (referenceStyle == XLReferenceStyle.R1C1)
+            {
                 return ToStringFixed(referenceStyle, true);
+            }
             else
+            {
                 return ToStringRelative(includeSheet);
+            }
         }
 
         public override bool Equals(object obj)
@@ -432,7 +466,9 @@ namespace ClosedXML.Excel
         public IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress)
         {
             if (otherRangeAddress == null)
+            {
                 throw new ArgumentNullException(nameof(otherRangeAddress));
+            }
 
             var xlOtherRangeAddress = (XLRangeAddress)otherRangeAddress;
             return Intersection(in xlOtherRangeAddress);
@@ -441,7 +477,9 @@ namespace ClosedXML.Excel
         internal XLRangeAddress Intersection(in XLRangeAddress otherRangeAddress)
         {
             if (!Worksheet.Equals(otherRangeAddress.Worksheet))
+            {
                 throw new ArgumentOutOfRangeException(nameof(otherRangeAddress), "The other range address is on a different worksheet");
+            }
 
             var thisRangeAddressNormalized = Normalize();
             var otherRangeAddressNormalized = otherRangeAddress.Normalize();
@@ -452,7 +490,9 @@ namespace ClosedXML.Excel
             var lastColumn = Math.Min(thisRangeAddressNormalized.LastAddress.ColumnNumber, otherRangeAddressNormalized.LastAddress.ColumnNumber);
 
             if (lastRow < firstRow || lastColumn < firstColumn)
+            {
                 return Invalid;
+            }
 
             return new XLRangeAddress
             (
@@ -464,10 +504,14 @@ namespace ClosedXML.Excel
         public IXLRange AsRange()
         {
             if (Worksheet == null)
+            {
                 throw new InvalidOperationException("The worksheet of the current range address has not been set.");
+            }
 
             if (!IsValid)
+            {
                 return null;
+            }
 
             return Worksheet.Range(this);
         }

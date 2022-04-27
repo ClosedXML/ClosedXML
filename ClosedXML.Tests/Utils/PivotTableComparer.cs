@@ -24,9 +24,15 @@ namespace ClosedXML.Tests
 
         public bool Equals(XLPivotTable x, XLPivotTable y)
         {
-            if (x == null && y == null) return true;
+            if (x == null && y == null)
+            {
+                return true;
+            }
 
-            if (x == null || y == null) return false;
+            if (x == null || y == null)
+            {
+                return false;
+            }
 
             return
                 (!_compareName || StringComparer.CurrentCulture.Equals(x.Name, y.Name))

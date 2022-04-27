@@ -64,7 +64,9 @@ namespace ClosedXML.Excel
         private void SetStyle(IXLStyle style, bool propagate = false)
         {
             if (style is XLStyle xlStyle)
+            {
                 SetStyle(xlStyle.Value, propagate);
+            }
             else
             {
                 var styleKey = XLStyle.GenerateKey(style);

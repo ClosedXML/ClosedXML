@@ -17,7 +17,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLPhonetic other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
             return Text == other.Text && Start == other.Start && End == other.End;
         }

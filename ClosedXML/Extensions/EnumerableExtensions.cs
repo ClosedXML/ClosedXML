@@ -11,7 +11,9 @@ namespace ClosedXML.Excel
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             foreach (var item in source)
+            {
                 action(item);
+            }
         }
 
         public static Type GetItemType(this IEnumerable source)
@@ -21,7 +23,9 @@ namespace ClosedXML.Excel
             Type GetGenericArgument(Type collectionType)
             {
                 if (collectionType == null)
+                {
                     return null;
+                }
 
                 var ienumerable = collectionType.GetInterfaces()
                     .SingleOrDefault(i => i.GetGenericArguments().Length == 1 &&

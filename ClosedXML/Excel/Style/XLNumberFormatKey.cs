@@ -26,7 +26,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLNumberFormatKey)
+            {
                 return Equals((XLNumberFormatKey)obj);
+            }
+
             return base.Equals(obj);
         }
 

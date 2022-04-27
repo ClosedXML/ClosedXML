@@ -81,15 +81,21 @@ namespace ClosedXML.Excel.CalcEngine
         public static implicit operator string(Expression x)
         {
             if (x is ErrorExpression)
+            {
                 (x as ErrorExpression).ThrowApplicableException();
+            }
 
             var v = x.Evaluate();
 
             if (v == null)
+            {
                 return string.Empty;
+            }
 
             if (v is bool b)
+            {
                 return b.ToString().ToUpper();
+            }
 
             return v.ToString();
         }
@@ -97,7 +103,9 @@ namespace ClosedXML.Excel.CalcEngine
         public static implicit operator double(Expression x)
         {
             if (x is ErrorExpression)
+            {
                 (x as ErrorExpression).ThrowApplicableException();
+            }
 
             // evaluate
             var v = x.Evaluate();
@@ -145,7 +153,9 @@ namespace ClosedXML.Excel.CalcEngine
         public static implicit operator bool(Expression x)
         {
             if (x is ErrorExpression)
+            {
                 (x as ErrorExpression).ThrowApplicableException();
+            }
 
             // evaluate
             var v = x.Evaluate();
@@ -175,7 +185,9 @@ namespace ClosedXML.Excel.CalcEngine
         public static implicit operator DateTime(Expression x)
         {
             if (x is ErrorExpression)
+            {
                 (x as ErrorExpression).ThrowApplicableException();
+            }
 
             // evaluate
             var v = x.Evaluate();
@@ -234,11 +246,17 @@ namespace ClosedXML.Excel.CalcEngine
                 try
                 {
                     if (c1 is DateTime)
+                    {
                         c2 = (DateTime)other;
+                    }
                     else if (c2 is DateTime)
+                    {
                         c1 = (DateTime)this;
+                    }
                     else
+                    {
                         c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
+                    }
                 }
                 catch (InvalidCastException) { return -1; }
                 catch (FormatException) { return -1; }
@@ -248,9 +266,13 @@ namespace ClosedXML.Excel.CalcEngine
 
             // String comparisons should be case insensitive
             if (c1 is string s1 && c2 is string s2)
+            {
                 return StringComparer.OrdinalIgnoreCase.Compare(s1, s2);
+            }
             else
+            {
                 return c1.CompareTo(c2);
+            }
         }
 
         #endregion ** IComparable<Expression>
@@ -358,31 +380,61 @@ namespace ClosedXML.Excel.CalcEngine
 
                 case TKID.DIV:
                     if (Math.Abs((double)RightExpression) < double.Epsilon)
+                    {
                         throw new DivisionByZeroException();
+                    }
 
                     return (double)LeftExpression / (double)RightExpression;
 
                 case TKID.DIVINT:
                     if (Math.Abs((double)RightExpression) < double.Epsilon)
+                    {
                         throw new DivisionByZeroException();
+                    }
 
                     return (double)(int)((double)LeftExpression / (double)RightExpression);
 
                 case TKID.MOD:
                     if (Math.Abs((double)RightExpression) < double.Epsilon)
+                    {
                         throw new DivisionByZeroException();
+                    }
 
                     return (double)(int)((double)LeftExpression % (double)RightExpression);
 
                 case TKID.POWER:
                     var a = (double)LeftExpression;
                     var b = (double)RightExpression;
-                    if (b == 0.0) return 1.0;
-                    if (b == 0.5) return Math.Sqrt(a);
-                    if (b == 1.0) return a;
-                    if (b == 2.0) return a * a;
-                    if (b == 3.0) return a * a * a;
-                    if (b == 4.0) return a * a * a * a;
+                    if (b == 0.0)
+                    {
+                        return 1.0;
+                    }
+
+                    if (b == 0.5)
+                    {
+                        return Math.Sqrt(a);
+                    }
+
+                    if (b == 1.0)
+                    {
+                        return a;
+                    }
+
+                    if (b == 2.0)
+                    {
+                        return a * a;
+                    }
+
+                    if (b == 3.0)
+                    {
+                        return a * a * a;
+                    }
+
+                    if (b == 4.0)
+                    {
+                        return a * a * a * a;
+                    }
+
                     return Math.Pow((double)LeftExpression, (double)RightExpression);
             }
             throw new ArgumentException("Bad expression.");
@@ -515,7 +567,9 @@ namespace ClosedXML.Excel.CalcEngine
             else if (_value is IEnumerable ie)
             {
                 foreach (var o in ie)
+                {
                     yield return o;
+                }
             }
             else
             {

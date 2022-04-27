@@ -61,7 +61,9 @@ namespace ClosedXML.Excel
             sheetName = sheetName.UnescapeSheetName();
 
             if (_worksheets.TryGetValue(sheetName, out var w))
+            {
                 return w;
+            }
 
             throw new ArgumentException("There isn't a worksheet named '" + sheetName + "'.");
         }
@@ -70,7 +72,9 @@ namespace ClosedXML.Excel
         {
             var wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
+            {
                 throw new ArgumentException("There isn't a worksheet associated with that position.");
+            }
 
             if (wsCount > 1)
             {
@@ -112,7 +116,9 @@ namespace ClosedXML.Excel
         private void Add(string sheetName, XLWorksheet sheet)
         {
             if (_worksheets.ContainsKey(sheetName))
+            {
                 throw new ArgumentException(string.Format("A worksheet with the same name ({0}) has already been added.", sheetName), nameof(sheetName));
+            }
 
             _worksheets.Add(sheetName, sheet);
         }
@@ -126,15 +132,21 @@ namespace ClosedXML.Excel
         {
             var wsCount = _worksheets.Values.Count(w => w.Position == position);
             if (wsCount == 0)
+            {
                 throw new ArgumentException("There isn't a worksheet associated with that index.");
+            }
 
             if (wsCount > 1)
+            {
                 throw new ArgumentException(
                     "Can't delete the worksheet because there are multiple worksheets associated with that index.");
+            }
 
             var ws = _worksheets.Values.Single(w => w.Position == position);
             if (!string.IsNullOrWhiteSpace(ws.RelId) && !Deleted.Contains(ws.RelId))
+            {
                 Deleted.Add(ws.RelId);
+            }
 
             _worksheets.RemoveAll(w => w.Position == position);
             _worksheets.Values.Where(w => w.Position > position).ForEach(w => w._position -= 1);
@@ -169,18 +181,25 @@ namespace ClosedXML.Excel
         public void Add(DataSet dataSet)
         {
             foreach (DataTable t in dataSet.Tables)
+            {
                 Add(t);
+            }
         }
 
         #endregion IXLWorksheets Members
 
         public void Rename(string oldSheetName, string newSheetName)
         {
-            if (string.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.TryGetValue(oldSheetName, out var ws)) return;
+            if (string.IsNullOrWhiteSpace(oldSheetName) || !_worksheets.TryGetValue(oldSheetName, out var ws))
+            {
+                return;
+            }
 
             if (!oldSheetName.Equals(newSheetName, StringComparison.OrdinalIgnoreCase)
                 && _worksheets.ContainsKey(newSheetName))
+            {
                 throw new ArgumentException(string.Format("A worksheet with the same name ({0}) has already been added.", newSheetName), nameof(newSheetName));
+            }
 
             _worksheets.Remove(oldSheetName);
             Add(newSheetName, ws);

@@ -11,7 +11,9 @@ namespace ClosedXML.Excel
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
             var cfStyle = (cf.Style as XLStyle).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
+            {
                 conditionalFormattingRule.FormatId = (uint)context.DifferentialFormats[cfStyle];
+            }
 
             conditionalFormattingRule.Operator = ConditionalFormattingOperatorValues.ContainsText;
             conditionalFormattingRule.Text = val;

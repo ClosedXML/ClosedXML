@@ -20,7 +20,9 @@ namespace ClosedXML.Tests.Excel.Worksheets
                 ws.Protect().AllowedElements = XLSheetProtectionElements.Everything;
 
                 foreach (var element in Enum.GetValues(typeof(XLSheetProtectionElements)).Cast<XLSheetProtectionElements>())
+                {
                     Assert.IsTrue(ws.Protection.AllowedElements.HasFlag(element), element.ToString());
+                }
             }
 
             using (var wb = new XLWorkbook())
@@ -29,7 +31,9 @@ namespace ClosedXML.Tests.Excel.Worksheets
                 ws.Protect().AllowElement(XLSheetProtectionElements.Everything);
 
                 foreach (var element in Enum.GetValues(typeof(XLSheetProtectionElements)).Cast<XLSheetProtectionElements>())
+                {
                     Assert.IsTrue(ws.Protection.AllowedElements.HasFlag(element), element.ToString());
+                }
             }
 
             using (var wb = new XLWorkbook())
@@ -38,7 +42,9 @@ namespace ClosedXML.Tests.Excel.Worksheets
                 ws.Protect().AllowEverything();
 
                 foreach (var element in Enum.GetValues(typeof(XLSheetProtectionElements)).Cast<XLSheetProtectionElements>())
+                {
                     Assert.IsTrue(ws.Protection.AllowedElements.HasFlag(element), element.ToString());
+                }
             }
         }
 
@@ -53,8 +59,9 @@ namespace ClosedXML.Tests.Excel.Worksheets
                 foreach (var element in Enum.GetValues(typeof(XLSheetProtectionElements))
                     .Cast<XLSheetProtectionElements>()
                     .Where(e => e != XLSheetProtectionElements.None))
-
+                {
                     Assert.IsFalse(ws.Protection.AllowedElements.HasFlag(element), element.ToString());
+                }
             }
 
             using (var wb = new XLWorkbook())
@@ -65,8 +72,9 @@ namespace ClosedXML.Tests.Excel.Worksheets
                 foreach (var element in Enum.GetValues(typeof(XLSheetProtectionElements))
                     .Cast<XLSheetProtectionElements>()
                     .Where(e => e != XLSheetProtectionElements.None))
-
+                {
                     Assert.IsFalse(ws.Protection.AllowedElements.HasFlag(element), element.ToString());
+                }
             }
         }
 

@@ -157,9 +157,13 @@ namespace ClosedXML.Excel
                 previousRowNumber--;
 
                 if (cell.Worksheet.Internals.RowsCollection.TryGetValue(previousRowNumber, out var previousRow))
+                {
                     previousRowOffset = Math.Max(0, previousRow.Height - 7);
+                }
                 else
+                {
                     previousRowOffset = Math.Max(0, cell.Worksheet.RowHeight - 7);
+                }
             }
 
             Position = new XLDrawingPosition

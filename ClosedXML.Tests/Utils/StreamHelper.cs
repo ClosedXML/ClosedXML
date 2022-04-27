@@ -138,16 +138,22 @@ namespace ClosedXML.Tests
         private static string RemoveIgnoredParts(this string s, Uri uri, bool ignoreColumnFormat, bool ignoreGuids)
         {
             foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
+            {
                 s = pair.Value.Replace(s, "");
+            }
 
             // Collapse empty xml elements
             s = emptyXmlElementRegex.Replace(s, "<$1 />");
 
             if (ignoreColumnFormat)
+            {
                 s = RemoveColumnFormatSection(s);
+            }
 
             if (ignoreGuids)
+            {
                 s = RemoveGuids(s);
+            }
 
             return RemoveNonCodingXmlFormatDiff(s);
         }

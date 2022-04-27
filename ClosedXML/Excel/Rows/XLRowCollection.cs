@@ -17,10 +17,15 @@ namespace ClosedXML.Excel
 
         public void Add(int key, XLRow value)
         {
-            if (key > MaxRowUsed) MaxRowUsed = key;
+            if (key > MaxRowUsed)
+            {
+                MaxRowUsed = key;
+            }
 
             if (Deleted.ContainsKey(key))
+            {
                 Deleted.Remove(key);
+            }
 
             _dictionary.Add(key, value);
         }
@@ -38,7 +43,9 @@ namespace ClosedXML.Excel
         public bool Remove(int key)
         {
             if (!Deleted.ContainsKey(key))
+            {
                 Deleted.Add(key, _dictionary[key]);
+            }
 
             return _dictionary.Remove(key);
         }
@@ -61,10 +68,15 @@ namespace ClosedXML.Excel
 
         public void Add(KeyValuePair<int, XLRow> item)
         {
-            if (item.Key > MaxRowUsed) MaxRowUsed = item.Key;
+            if (item.Key > MaxRowUsed)
+            {
+                MaxRowUsed = item.Key;
+            }
 
             if (Deleted.ContainsKey(item.Key))
+            {
                 Deleted.Remove(item.Key);
+            }
 
             _dictionary.Add(item.Key, item.Value);
         }
@@ -97,7 +109,9 @@ namespace ClosedXML.Excel
         public bool Remove(KeyValuePair<int, XLRow> item)
         {
             if (!Deleted.ContainsKey(item.Key))
+            {
                 Deleted.Add(item.Key, _dictionary[item.Key]);
+            }
 
             return _dictionary.Remove(item.Key);
         }

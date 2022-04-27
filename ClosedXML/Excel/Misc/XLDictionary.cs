@@ -19,7 +19,9 @@ namespace ClosedXML.Excel
         public void Initialize(T value)
         {
             if (Count > 0)
+            {
                 Clear();
+            }
 
             Add(value);
         }

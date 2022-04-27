@@ -9,9 +9,14 @@ namespace ClosedXML.Excel
         internal static XLProtectionKey GenerateKey(IXLProtection defaultProtection)
         {
             if (defaultProtection == null)
+            {
                 return XLProtectionValue.Default.Key;
+            }
+
             if (defaultProtection is XLProtection)
+            {
                 return (defaultProtection as XLProtection).Key;
+            }
 
             return new XLProtectionKey
             {
@@ -127,7 +132,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLProtection other)
         {
             if (!(other is XLProtection otherP))
+            {
                 return false;
+            }
 
             return Key == otherP.Key;
         }
@@ -135,7 +142,9 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             if (Locked)
+            {
                 return Hidden ? "Locked-Hidden" : "Locked";
+            }
 
             return Hidden ? "Hidden" : "None";
         }

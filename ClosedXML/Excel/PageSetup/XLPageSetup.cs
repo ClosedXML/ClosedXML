@@ -78,8 +78,15 @@ namespace ClosedXML.Excel
         }
         public void SetRowsToRepeatAtTop(int firstRowToRepeatAtTop, int lastRowToRepeatAtTop)
         {
-            if (firstRowToRepeatAtTop <= 0) throw new ArgumentOutOfRangeException("The first row has to be greater than zero.");
-            if (firstRowToRepeatAtTop > lastRowToRepeatAtTop) throw new ArgumentOutOfRangeException("The first row has to be less than the second row.");
+            if (firstRowToRepeatAtTop <= 0)
+            {
+                throw new ArgumentOutOfRangeException("The first row has to be greater than zero.");
+            }
+
+            if (firstRowToRepeatAtTop > lastRowToRepeatAtTop)
+            {
+                throw new ArgumentOutOfRangeException("The first row has to be less than the second row.");
+            }
 
             FirstRowToRepeatAtTop = firstRowToRepeatAtTop;
             LastRowToRepeatAtTop = lastRowToRepeatAtTop;
@@ -90,9 +97,13 @@ namespace ClosedXML.Excel
         {
             var arrRange = range.Replace("$", "").Split(':');
             if (int.TryParse(arrRange[0], out var iTest))
+            {
                 SetColumnsToRepeatAtLeft(int.Parse(arrRange[0]), int.Parse(arrRange[1]));
+            }
             else
+            {
                 SetColumnsToRepeatAtLeft(arrRange[0], arrRange[1]);
+            }
         }
         public void SetColumnsToRepeatAtLeft(string firstColumnToRepeatAtLeft, string lastColumnToRepeatAtLeft)
         {
@@ -100,8 +111,15 @@ namespace ClosedXML.Excel
         }
         public void SetColumnsToRepeatAtLeft(int firstColumnToRepeatAtLeft, int lastColumnToRepeatAtLeft)
         {
-            if (firstColumnToRepeatAtLeft <= 0) throw new ArgumentOutOfRangeException("The first column has to be greater than zero.");
-            if (firstColumnToRepeatAtLeft > lastColumnToRepeatAtLeft) throw new ArgumentOutOfRangeException("The first column has to be less than the second column.");
+            if (firstColumnToRepeatAtLeft <= 0)
+            {
+                throw new ArgumentOutOfRangeException("The first column has to be greater than zero.");
+            }
+
+            if (firstColumnToRepeatAtLeft > lastColumnToRepeatAtLeft)
+            {
+                throw new ArgumentOutOfRangeException("The first column has to be less than the second column.");
+            }
 
             FirstColumnToRepeatAtLeft = firstColumnToRepeatAtLeft;
             LastColumnToRepeatAtLeft = lastColumnToRepeatAtLeft;
@@ -128,7 +146,9 @@ namespace ClosedXML.Excel
             {
                 _pagesWide = value;
                 if (_pagesWide >0)
+                {
                     _scale = 0;
+                }
             }
         }
 
@@ -143,7 +163,9 @@ namespace ClosedXML.Excel
             {
                 _pagesTall = value;
                 if (_pagesTall >0)
+                {
                     _scale = 0;
+                }
             }
         }
 
@@ -157,7 +179,11 @@ namespace ClosedXML.Excel
             set
             {
                 _scale = value;
-                if (_scale <= 0) return;
+                if (_scale <= 0)
+                {
+                    return;
+                }
+
                 _pagesTall = 0;
                 _pagesWide = 0;
             }
@@ -196,13 +222,19 @@ namespace ClosedXML.Excel
         public void AddHorizontalPageBreak(int row)
         {
             if (!RowBreaks.Contains(row))
+            {
                 RowBreaks.Add(row);
+            }
+
             RowBreaks.Sort();
         }
         public void AddVerticalPageBreak(int column)
         {
             if (!ColumnBreaks.Contains(column))
+            {
                 ColumnBreaks.Add(column);
+            }
+
             ColumnBreaks.Sort();
         }
 

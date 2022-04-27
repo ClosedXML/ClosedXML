@@ -21,14 +21,19 @@ namespace ClosedXML.Excel
         public XLTableRow FirstRow(Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
+            {
                 return new XLTableRow(this, _range.FirstRow());
+            }
 
             var rowCount = _range.RowCount();
 
             for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = new XLTableRow(this, _range.Row(ro));
-                if (predicate(row)) return row;
+                if (predicate(row))
+                {
+                    return row;
+                }
             }
 
             return null;
@@ -60,7 +65,9 @@ namespace ClosedXML.Excel
         internal XLTableRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
+            {
                 return new XLTableRow(this, _range.FirstRowUsed(options));
+            }
 
             var rowCount = _range.RowCount();
 
@@ -69,7 +76,9 @@ namespace ClosedXML.Excel
                 var row = new XLTableRow(this, _range.Row(ro));
 
                 if (!row.IsEmpty(options) && predicate(row))
+                {
                     return row;
+                }
             }
 
             return null;
@@ -83,14 +92,19 @@ namespace ClosedXML.Excel
         public XLTableRow LastRow(Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
+            {
                 return new XLTableRow(this, _range.LastRow());
+            }
 
             var rowCount = _range.RowCount();
 
             for (var ro = rowCount; ro >= 1; ro--)
             {
                 var row = new XLTableRow(this, _range.Row(ro));
-                if (predicate(row)) return row;
+                if (predicate(row))
+                {
+                    return row;
+                }
             }
             return null;
         }
@@ -122,7 +136,9 @@ namespace ClosedXML.Excel
         internal XLTableRow LastRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
+            {
                 return new XLTableRow(this, _range.LastRowUsed(options));
+            }
 
             var rowCount = _range.RowCount();
 
@@ -131,7 +147,9 @@ namespace ClosedXML.Excel
                 var row = new XLTableRow(this, _range.Row(ro));
 
                 if (!row.IsEmpty(options) && predicate(row))
+                {
                     return row;
+                }
             }
 
             return null;
@@ -163,7 +181,9 @@ namespace ClosedXML.Excel
             {
                 var row = Row(r);
                 if (predicate == null || predicate(row))
+                {
                     retVal.Add(row);
+                }
             }
             return retVal;
         }
@@ -173,7 +193,9 @@ namespace ClosedXML.Excel
             var retVal = new XLTableRows(Worksheet.Style);
 
             for (var rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
+            {
                 retVal.Add(Row(rowNumber));
+            }
 
             return retVal;
         }
@@ -199,7 +221,9 @@ namespace ClosedXML.Excel
                     lastRow = tPair;
                 }
                 foreach (var row in Rows(int.Parse(firstRow), int.Parse(lastRow)))
+                {
                     retVal.Add(row);
+                }
             }
             return retVal;
         }
@@ -228,7 +252,9 @@ namespace ClosedXML.Excel
                 var row = Row(ro);
 
                 if (!row.IsEmpty(options) && (predicate == null || predicate(row)))
+                {
                     rows.Add(row);
+                }
             }
             return rows;
         }

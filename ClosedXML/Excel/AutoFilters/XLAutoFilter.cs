@@ -37,7 +37,9 @@ namespace ClosedXML.Excel
         {
             var columnNumber = XLHelper.GetColumnNumberFromLetter(column);
             if (columnNumber < 1 || columnNumber > XLHelper.MaxColumnNumber)
+            {
                 throw new ArgumentOutOfRangeException(nameof(column), "Column '" + column + "' is outside the allowed column range.");
+            }
 
             return Column(columnNumber);
         }
@@ -45,7 +47,9 @@ namespace ClosedXML.Excel
         public IXLFilterColumn Column(int column)
         {
             if (column < 1 || column > XLHelper.MaxColumnNumber)
+            {
                 throw new ArgumentOutOfRangeException(nameof(column), "Column " + column + " is outside the allowed column range.");
+            }
 
             if (!_columns.TryGetValue(column, out var filterColumn))
             {
@@ -92,32 +96,50 @@ namespace ClosedXML.Excel
                         bool filterMatch;
 
                         if (isText)
+                        {
                             filterMatch = condition(row.Cell(columnIndex).GetFormattedString());
+                        }
                         else if (isDateTime)
+                        {
                             filterMatch = row.Cell(columnIndex).DataType == XLDataType.DateTime &&
                                     condition(row.Cell(columnIndex).GetDateTime());
+                        }
                         else
+                        {
                             filterMatch = row.Cell(columnIndex).DataType == XLDataType.Number &&
                                     condition(row.Cell(columnIndex).GetDouble());
+                        }
 
                         if (filter.Connector == XLConnector.And)
                         {
                             columnFilterMatch &= filterMatch;
-                            if (!columnFilterMatch) break;
+                            if (!columnFilterMatch)
+                            {
+                                break;
+                            }
                         }
                         else
                         {
                             columnFilterMatch |= filterMatch;
-                            if (columnFilterMatch) break;
+                            if (columnFilterMatch)
+                            {
+                                break;
+                            }
                         }
                     }
 
                     rowMatch &= columnFilterMatch;
 
-                    if (!rowMatch) break;
+                    if (!rowMatch)
+                    {
+                        break;
+                    }
                 }
 
-                if (!rowMatch) row.WorksheetRow().Hide();
+                if (!rowMatch)
+                {
+                    row.WorksheetRow().Hide();
+                }
             }
 
             ws.ResumeEvents();
@@ -134,12 +156,18 @@ namespace ClosedXML.Excel
 
         public XLAutoFilter Clear()
         {
-            if (!IsEnabled) return this;
+            if (!IsEnabled)
+            {
+                return this;
+            }
 
             IsEnabled = false;
             Filters.Clear();
             foreach (var row in Range.Rows().Where(r => r.RowNumber() > 1))
+            {
                 row.WorksheetRow().Unhide();
+            }
+
             return this;
         }
 
@@ -147,7 +175,9 @@ namespace ClosedXML.Excel
         {
             var firstOverlappingTable = range.Worksheet.Tables.FirstOrDefault(t => t.RangeUsed().Intersects(range));
             if (firstOverlappingTable != null)
+            {
                 throw new InvalidOperationException($"The range {range.RangeAddress.ToStringRelative(includeSheet: true)} is already part of table '{firstOverlappingTable.Name}'");
+            }
 
             Range = range.AsRange();
             IsEnabled = true;
@@ -157,7 +187,9 @@ namespace ClosedXML.Excel
         public XLAutoFilter Sort(int columnToSortBy, XLSortOrder sortOrder, bool matchCase, bool ignoreBlanks)
         {
             if (!IsEnabled)
+            {
                 throw new InvalidOperationException("Filter has not been enabled.");
+            }
 
             var ws = Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();

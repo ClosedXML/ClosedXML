@@ -39,19 +39,32 @@ namespace ClosedXML.Excel
                 RowsCollection.Add(row, columnsCollection);
             }
             columnsCollection.Add(column, cell);
-            if (row > MaxRowUsed) MaxRowUsed = row;
-            if (column > MaxColumnUsed) MaxColumnUsed = column;
+            if (row > MaxRowUsed)
+            {
+                MaxRowUsed = row;
+            }
+
+            if (column > MaxColumnUsed)
+            {
+                MaxColumnUsed = column;
+            }
 
             if (Deleted.TryGetValue(row, out var delHash))
+            {
                 delHash.Remove(column);
+            }
         }
 
         private static void IncrementUsage(Dictionary<int, int> dictionary, int key)
         {
             if (dictionary.TryGetValue(key, out var value))
+            {
                 dictionary[key] = value + 1;
+            }
             else
+            {
                 dictionary.Add(key, 1);
+            }
         }
 
         /// <summary/>
@@ -59,7 +72,10 @@ namespace ClosedXML.Excel
         /// recomputation.</returns>
         private static bool DecrementUsage(Dictionary<int, int> dictionary, int key)
         {
-            if (!dictionary.TryGetValue(key, out var count)) return false;
+            if (!dictionary.TryGetValue(key, out var count))
+            {
+                return false;
+            }
 
             if (count > 1)
             {
@@ -112,7 +128,9 @@ namespace ClosedXML.Excel
             if (Deleted.TryGetValue(row, out var delHash))
             {
                 if (!delHash.Contains(column))
+                {
                     delHash.Add(column);
+                }
             }
             else
             {
@@ -145,7 +163,9 @@ namespace ClosedXML.Excel
                     {
                         if (columnsCollection.TryGetValue(co, out var cell)
                             && (predicate == null || predicate(cell)))
+                        {
                             yield return cell;
+                        }
                     }
                 }
             }
@@ -165,8 +185,9 @@ namespace ClosedXML.Excel
                         if (columnsCollection.TryGetValue(co, out var cell)
                             && !cell.IsEmpty(options)
                             && (predicate == null || predicate(cell)))
-
+                        {
                             return ro;
+                        }
                     }
                 }
             }
@@ -217,8 +238,9 @@ namespace ClosedXML.Excel
                         if (columnsCollection.TryGetValue(co, out var cell)
                             && !cell.IsEmpty(options)
                             && (predicate == null || predicate(cell)))
-
+                        {
                             return ro;
+                        }
                     }
                 }
             }
@@ -240,8 +262,9 @@ namespace ClosedXML.Excel
                         if (columnsCollection.TryGetValue(co, out var cell)
                             && !cell.IsEmpty(options)
                             && (predicate == null || predicate(cell)))
-
+                        {
                             maxCo = co;
+                        }
                     }
                 }
             }
@@ -260,7 +283,9 @@ namespace ClosedXML.Excel
                     for (var co = columnStart; co <= finalColumn; co++)
                     {
                         if (columnsCollection.ContainsKey(co))
+                        {
                             Remove(ro, co);
+                        }
                     }
                 }
             }
@@ -278,7 +303,9 @@ namespace ClosedXML.Excel
                     for (var co = columnStart; co <= finalColumn; co++)
                     {
                         if (columnsCollection.ContainsKey(co))
+                        {
                             yield return new XLSheetPoint(ro, co);
+                        }
                     }
                 }
             }
@@ -287,7 +314,9 @@ namespace ClosedXML.Excel
         public XLCell GetCell(int row, int column)
         {
             if (row > MaxRowUsed || column > MaxColumnUsed)
+            {
                 return null;
+            }
 
             if (RowsCollection.TryGetValue(row, out var columnsCollection))
             {
@@ -314,8 +343,15 @@ namespace ClosedXML.Excel
                     var cell1 = GetCell(sp1);
                     var cell2 = GetCell(sp2);
 
-                    if (cell1 == null) cell1 = worksheet.Cell(sp1.Row, sp1.Column);
-                    if (cell2 == null) cell2 = worksheet.Cell(sp2.Row, sp2.Column);
+                    if (cell1 == null)
+                    {
+                        cell1 = worksheet.Cell(sp1.Row, sp1.Column);
+                    }
+
+                    if (cell2 == null)
+                    {
+                        cell2 = worksheet.Cell(sp2.Row, sp2.Column);
+                    }
 
                     //if (cell1 != null)
                     //{
@@ -350,7 +386,9 @@ namespace ClosedXML.Excel
                     {
                         if (columnsCollection.TryGetValue(co, out var cell)
                             && (predicate == null || predicate(cell)))
+                        {
                             yield return cell;
+                        }
                     }
                 }
             }
@@ -368,8 +406,9 @@ namespace ClosedXML.Excel
             {
                 if (RowsCollection.TryGetValue(row, out var columnsCollection)
                     && columnsCollection.ContainsKey(column))
-
+                {
                     return row;
+                }
             }
 
             return 0;
@@ -381,8 +420,9 @@ namespace ClosedXML.Excel
             {
                 if (RowsCollection.TryGetValue(row, out var columnsCollection)
                     && columnsCollection.ContainsKey(column))
-
+                {
                     return row;
+                }
             }
 
             return 0;
@@ -392,8 +432,9 @@ namespace ClosedXML.Excel
         {
             if (RowsCollection.TryGetValue(row, out var columnsCollection)
                 && columnsCollection.Any())
-
+            {
                 return columnsCollection.Keys.Min();
+            }
 
             return 0;
         }
@@ -402,8 +443,9 @@ namespace ClosedXML.Excel
         {
             if (RowsCollection.TryGetValue(row, out var columnsCollection)
                 && columnsCollection.Any())
-
+            {
                 return columnsCollection.Keys.Max();
+            }
 
             return 0;
         }

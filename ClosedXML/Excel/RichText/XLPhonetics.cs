@@ -111,13 +111,17 @@ namespace ClosedXML.Excel
         public bool Equals(IXLPhonetics other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
             var phoneticsCount = _phonetics.Count;
             for (var i = 0; i < phoneticsCount; i++)
             {
                 if (!_phonetics[i].Equals(other.ElementAt(i)))
+                {
                     return false;
+                }
             }
 
             return

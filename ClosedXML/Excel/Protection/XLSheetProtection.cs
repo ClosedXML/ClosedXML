@@ -25,7 +25,9 @@ namespace ClosedXML.Excel
         public IXLSheetProtection AllowElement(XLSheetProtectionElements element, bool allowed = true)
         {
             if (!allowed)
+            {
                 return DisallowElement(element);
+            }
 
             AllowedElements |= element;
             return this;
@@ -113,11 +115,15 @@ namespace ClosedXML.Excel
                 password = password ?? "";
 
                 if (!string.IsNullOrEmpty(PasswordHash) && string.IsNullOrEmpty(password))
+                {
                     throw new InvalidOperationException("The worksheet is password protected");
+                }
 
                 var hash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
                 if (hash != PasswordHash)
+                {
                     throw new ArgumentException("Invalid password");
+                }
                 else
                 {
                     IsProtected = false;

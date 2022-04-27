@@ -69,11 +69,18 @@ namespace ClosedXML.Excel
             {
                 string letter;
                 if (i < 26)
+                {
                     letter = letters[i];
+                }
                 else if (i < 26 * 27)
+                {
                     letter = letters[i / 26 - 1] + letters[i % 26];
+                }
                 else
+                {
                     letter = letters[(i - 26) / 26 / 26 - 1] + letters[(i / 26 - 1) % 26] + letters[i % 26];
+                }
+
                 allLetters[i] = letter;
                 letterIndexes.Add(letter, i + 1);
             }
@@ -85,7 +92,10 @@ namespace ClosedXML.Excel
         /// <param name="columnLetter"> The column letter to translate into a column number. </param>
         public static int GetColumnNumberFromLetter(string columnLetter)
         {
-            if (string.IsNullOrEmpty(columnLetter)) throw new ArgumentNullException("columnLetter");
+            if (string.IsNullOrEmpty(columnLetter))
+            {
+                throw new ArgumentNullException("columnLetter");
+            }
 
             //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
@@ -94,7 +104,9 @@ namespace ClosedXML.Excel
             }
 
             if (letterIndexes.TryGetValue(columnLetter, out var retVal))
+            {
                 return retVal;
+            }
 
             throw new ArgumentOutOfRangeException(columnLetter + " is not recognized as a column letter");
         }
@@ -107,10 +119,15 @@ namespace ClosedXML.Excel
         /// <returns></returns>
         public static string GetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
-            if (trimToAllowed) columnNumber = TrimColumnNumber(columnNumber);
+            if (trimToAllowed)
+            {
+                columnNumber = TrimColumnNumber(columnNumber);
+            }
 
             if (columnNumber <= 0 || columnNumber > allLetters.Length)
+            {
                 throw new ArgumentOutOfRangeException(nameof(columnNumber));
+            }
 
             // Adjust for start on column 1
             return allLetters[columnNumber - 1];
@@ -129,30 +146,49 @@ namespace ClosedXML.Excel
         public static bool IsValidColumn(string column)
         {
             if (string.IsNullOrWhiteSpace(column))
+            {
                 return false;
+            }
+
             var length = column.Length;
             if (length > 3)
+            {
                 return false;
+            }
 
             var theColumn = column.ToUpper();
 
             var isValid = theColumn[0] >= 'A' && theColumn[0] <= 'Z';
             if (length == 1)
+            {
                 return isValid;
+            }
 
             if (length == 2)
+            {
                 return isValid && theColumn[1] >= 'A' && theColumn[1] <= 'Z';
+            }
 
             if (theColumn[0] >= 'A' && theColumn[0] < 'X')
+            {
                 return theColumn[1] >= 'A' && theColumn[1] <= 'Z'
                        && theColumn[2] >= 'A' && theColumn[2] <= 'Z';
+            }
 
-            if (theColumn[0] != 'X') return false;
+            if (theColumn[0] != 'X')
+            {
+                return false;
+            }
 
             if (theColumn[1] < 'F')
+            {
                 return theColumn[2] >= 'A' && theColumn[2] <= 'Z';
+            }
 
-            if (theColumn[1] != 'F') return false;
+            if (theColumn[1] != 'F')
+            {
+                return false;
+            }
 
             return theColumn[2] >= 'A' && theColumn[2] <= 'D';
         }
@@ -160,20 +196,27 @@ namespace ClosedXML.Excel
         public static bool IsValidRow(string rowString)
         {
             if (int.TryParse(rowString, out var row))
+            {
                 return row > 0 && row <= MaxRowNumber;
+            }
+
             return false;
         }
 
         public static bool IsValidA1Address(string address)
         {
             if (string.IsNullOrWhiteSpace(address))
+            {
                 return false;
+            }
 
             address = address.Replace("$", "");
             var rowPos = 0;
             var addressLength = address.Length;
             while (rowPos < addressLength && (address[rowPos] > '9' || address[rowPos] < '0'))
+            {
                 rowPos++;
+            }
 
             return
                 rowPos < addressLength
@@ -184,7 +227,9 @@ namespace ClosedXML.Excel
         public static bool IsValidRCAddress(string address)
         {
             if (string.IsNullOrWhiteSpace(address))
+            {
                 return false;
+            }
 
             return RCSimpleRegex.IsMatch(address);
         }
@@ -207,7 +252,9 @@ namespace ClosedXML.Excel
         {
             var rowPos = 0;
             while (cellAddressString[rowPos] > '9')
+            {
                 rowPos++;
+            }
 
             return GetColumnNumberFromLetter(cellAddressString.Substring(0, rowPos));
         }
@@ -240,7 +287,9 @@ namespace ClosedXML.Excel
             inserted.ForEach(r => rows.Add(new XLTableRow(tableRange, r as XLRangeRow)));
 
             if (expandTable)
+            {
                 tableRange.Table.ExpandTableRows(numberOfRows);
+            }
 
             ws.EventTrackingEnabled = tracking;
 
@@ -270,15 +319,29 @@ namespace ClosedXML.Excel
             if (match.Groups["one"].Success)
             {
                 var split = match.Groups["one"].Value.Split('$');
-                if (split.Length == 1) return column + row; // A1
-                if (split.Length == 3) return match.Groups["one"].Value; // $A$1
+                if (split.Length == 1)
+                {
+                    return column + row; // A1
+                }
+
+                if (split.Length == 3)
+                {
+                    return match.Groups["one"].Value; // $A$1
+                }
+
                 var a = XLAddress.Create(match.Groups["one"].Value);
-                if (split[0].Length == 0) return "$" + a.ColumnLetter + row; // $A1
+                if (split[0].Length == 0)
+                {
+                    return "$" + a.ColumnLetter + row; // $A1
+                }
+
                 return column + "$" + a.RowNumber;
             }
 
             if (match.Groups["two"].Success)
+            {
                 return ReplaceGroup(match.Groups["two"].Value, row.ToString());
+            }
 
             return ReplaceGroup(match.Groups["three"].Value, column);
         }

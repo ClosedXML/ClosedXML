@@ -64,8 +64,16 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [TestCase("2020-11-22", "2020-11-23 9:00", "D", ExpectedResult = 1)]
         public double Datedif(object startDate, object endDate, string unit)
         {
-            if (startDate is string s1) startDate = $"\"{s1}\"";
-            if (endDate is string s2) endDate = $"\"{s2}\"";
+            if (startDate is string s1)
+            {
+                startDate = $"\"{s1}\"";
+            }
+
+            if (endDate is string s2)
+            {
+                endDate = $"\"{s2}\"";
+            }
+
             return (double)XLWorkbook.EvaluateExpr($"DATEDIF({startDate}, {endDate}, \"{unit}\")");
         }
 

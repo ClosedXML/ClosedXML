@@ -28,10 +28,14 @@ namespace ClosedXML.Excel.Ranges.Index
         public bool Add(IXLAddressable range)
         {
             if (range == null)
+            {
                 throw new ArgumentNullException(nameof(range));
+            }
 
             if (!range.RangeAddress.IsValid)
+            {
                 throw new ArgumentException("Range is invalid");
+            }
 
             CheckWorksheet(range.RangeAddress.Worksheet);
 
@@ -39,14 +43,18 @@ namespace ClosedXML.Excel.Ranges.Index
             if (_count < MinimumCountForIndexing)
             {
                 if (_rangeList.Any(r => r == range))
+                {
                     return false;
+                }
 
                 _rangeList.Add(range);
                 return true;
             }
 
             if (_quadTree == null)
+            {
                 InitializeTree();
+            }
 
             return _quadTree.Add(range);
         }
@@ -114,7 +122,9 @@ namespace ClosedXML.Excel.Ranges.Index
         public bool Remove(IXLRangeAddress rangeAddress)
         {
             if (rangeAddress == null)
+            {
                 throw new ArgumentNullException(nameof(rangeAddress));
+            }
 
             CheckWorksheet(rangeAddress.Worksheet);
 
@@ -165,7 +175,9 @@ namespace ClosedXML.Excel.Ranges.Index
         private void CheckWorksheet(IXLWorksheet worksheet)
         {
             if (worksheet != _worksheet)
+            {
                 throw new ArgumentException("Range belongs to a different worksheet");
+            }
         }
 
         private void InitializeTree()
@@ -221,7 +233,9 @@ namespace ClosedXML.Excel.Ranges.Index
 
             if (innerType == typeof(IXLRangeBase) ||
                 innerType == typeof(XLRangeBase))
+            {
                 return true;
+            }
 
             switch (rangeType)
             {

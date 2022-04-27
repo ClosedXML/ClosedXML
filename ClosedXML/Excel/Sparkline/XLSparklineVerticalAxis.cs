@@ -38,7 +38,9 @@ namespace ClosedXML.Excel
         public IXLSparklineVerticalAxis SetManualMax(double? manualMax)
         {
             if (manualMax != null)
+            {
                 MaxAxisType = XLSparklineAxisMinMax.Custom;
+            }
 
             _manualMax = manualMax;
             return this;
@@ -47,7 +49,9 @@ namespace ClosedXML.Excel
         public IXLSparklineVerticalAxis SetManualMin(double? manualMin)
         {
             if (manualMin != null)
+            {
                 MinAxisType = XLSparklineAxisMinMax.Custom;
+            }
 
             _manualMin = manualMin;
             return this;
@@ -56,7 +60,9 @@ namespace ClosedXML.Excel
         public IXLSparklineVerticalAxis SetMaxAxisType(XLSparklineAxisMinMax maxAxisType)
         {
             if (maxAxisType != XLSparklineAxisMinMax.Custom)
+            {
                 _manualMax = null;
+            }
 
             _maxAxisType = maxAxisType;
             return this;
@@ -65,7 +71,9 @@ namespace ClosedXML.Excel
         public IXLSparklineVerticalAxis SetMinAxisType(XLSparklineAxisMinMax minAxisType)
         {
             if (minAxisType != XLSparklineAxisMinMax.Custom)
+            {
                 _manualMin = null;
+            }
 
             _minAxisType = minAxisType;
             return this;

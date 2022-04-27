@@ -916,9 +916,13 @@ namespace ClosedXML.Tests.Excel.Sparklines
             axis.MinAxisType = axisType;
 
             if (expectedManualMin.HasValue)
+            {
                 Assert.AreEqual(expectedManualMin.Value, axis.ManualMin.Value, XLHelper.Epsilon);
+            }
             else
+            {
                 Assert.IsNull(axis.ManualMin);
+            }
         }
 
         [TestCase(XLSparklineAxisMinMax.Custom, 100)]
@@ -934,9 +938,13 @@ namespace ClosedXML.Tests.Excel.Sparklines
             axis.MaxAxisType = axisType;
 
             if (expectedManualMax.HasValue)
+            {
                 Assert.AreEqual(expectedManualMax.Value, axis.ManualMax.Value, XLHelper.Epsilon);
+            }
             else
+            {
                 Assert.IsNull(axis.ManualMax);
+            }
         }
 
         [Test]

@@ -16,7 +16,9 @@ namespace ClosedXML.Examples.Misc
             wb.Worksheets.Add(dataSet);
 
             foreach (var ws in wb.Worksheets)
+            {
                 ws.Columns().AdjustToContents();
+            }
 
             wb.SaveAs(filePath);
         }

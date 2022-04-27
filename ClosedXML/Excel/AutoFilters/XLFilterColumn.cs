@@ -20,7 +20,9 @@ namespace ClosedXML.Excel
         public void Clear()
         {
             if (_autoFilter.Filters.ContainsKey(_column))
+            {
                 _autoFilter.Filters.Remove(_column);
+            }
         }
 
         public IXLFilteredColumn AddFilter<T>(T value) where T : IComparable<T>
@@ -47,6 +49,7 @@ namespace ClosedXML.Excel
             _autoFilter.IsEnabled = true;
 
             if (_autoFilter.Filters.TryGetValue(_column, out var filterList))
+            {
                 filterList.Add(
                     new XLFilter
                     {
@@ -57,6 +60,7 @@ namespace ClosedXML.Excel
                         DateTimeGrouping = dateTimeGrouping
                     }
                 );
+            }
             else
             {
                 _autoFilter.Filters.Add(
@@ -85,9 +89,13 @@ namespace ClosedXML.Excel
             foreach (var row in rows)
             {
                 if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
+                {
                     row.WorksheetRow().Unhide();
+                }
                 else
+                {
                     row.WorksheetRow().Hide();
+                }
             }
             ws.ResumeEvents();
 
@@ -259,12 +267,18 @@ namespace ClosedXML.Excel
                     }
 
                     var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
+                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble()))
+                    {
+                        continue;
+                    }
+
                     row.WorksheetRow().Unhide();
                     foundOne = true;
                 }
                 if (!foundOne)
+                {
                     row.WorksheetRow().Hide();
+                }
 
                 addToList = false;
             }
@@ -333,13 +347,19 @@ namespace ClosedXML.Excel
                     }
 
                     var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
+                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble()))
+                    {
+                        continue;
+                    }
+
                     row.WorksheetRow().Unhide();
                     foundOne = true;
                 }
 
                 if (!foundOne)
+                {
                     row.WorksheetRow().Hide();
+                }
 
                 addToList = false;
             }
@@ -389,6 +409,7 @@ namespace ClosedXML.Excel
             else
             {
                 if (_autoFilter.Filters.TryGetValue(_column, out var filterList))
+                {
                     filterList.Add(new XLFilter
                     {
                         Value = value,
@@ -396,6 +417,7 @@ namespace ClosedXML.Excel
                         Connector = XLConnector.Or,
                         Condition = condition
                     });
+                }
                 else
                 {
                     _autoFilter.Filters.Add(_column,

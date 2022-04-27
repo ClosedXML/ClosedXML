@@ -35,9 +35,13 @@ namespace ClosedXML.Excel
             Visible = true;
 
             if (validateName)
+            {
                 Name = rangeName;
+            }
             else
+            {
                 SetNameWithoutValidation(rangeName);
+            }
 
             Comment = comment;
         }
@@ -60,21 +64,30 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
-                if (_name == value) return;
+                if (_name == value)
+                {
+                    return;
+                }
 
                 var oldname = _name ?? string.Empty;
 
                 var existingNames = _namedRanges.Select(nr => nr.Name).ToList();
                 if (_namedRanges.Scope == XLNamedRangeScope.Workbook)
+                {
                     existingNames.AddRange(_namedRanges.Workbook.NamedRanges.Select(nr => nr.Name));
+                }
 
                 if (_namedRanges.Scope == XLNamedRangeScope.Worksheet)
+                {
                     existingNames.AddRange(_namedRanges.Worksheet.NamedRanges.Select(nr => nr.Name));
+                }
 
                 existingNames = existingNames.Distinct().ToList();
 
                 if (!XLHelper.ValidateName("named range", value, oldname, existingNames, out var message))
+                {
                     throw new ArgumentException(message, nameof(value));
+                }
 
                 _name = value;
 
@@ -106,7 +119,9 @@ namespace ClosedXML.Excel
                                .DataRange?.Column(match.Groups["Column"].Value))
                 {
                     if (rangeToAdd != null)
+                    {
                         ranges.Add(rangeToAdd);
+                    }
                 }
                 return ranges;
             }
@@ -171,7 +186,11 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             var retVal = RangeList.Aggregate(string.Empty, (agg, r) => agg + r + ",");
-            if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
+            if (retVal.Length > 0)
+            {
+                retVal = retVal.Substring(0, retVal.Length - 1);
+            }
+
             return retVal;
         }
 
@@ -188,16 +207,22 @@ namespace ClosedXML.Excel
         public IXLNamedRange CopyTo(IXLWorksheet targetSheet)
         {
             if (targetSheet == _namedRanges.Worksheet)
+            {
                 throw new InvalidOperationException("Cannot copy named range to the worksheet it already belongs to.");
+            }
 
             var ranges = new XLRanges();
             foreach (var r in Ranges)
             {
                 if (_namedRanges.Worksheet == r.Worksheet)
+                {
                     // Named ranges on the source worksheet have to point to the new destination sheet
                     ranges.Add(targetSheet.Range(((XLRangeAddress)r.RangeAddress).WithoutWorksheet()));
+                }
                 else
+                {
                     ranges.Add(r);
+                }
             }
 
             return targetSheet.NamedRanges.Add(Name, ranges);

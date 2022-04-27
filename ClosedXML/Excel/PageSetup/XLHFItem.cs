@@ -26,7 +26,9 @@ namespace ClosedXML.Excel
             if (texts.TryGetValue(occurrence, out var hfTexts))
             {
                 foreach (var hfText in hfTexts)
+                {
                     sb.Append(hfText.GetHFText(sb.ToString()));
+                }
             }
 
             return sb.ToString();
@@ -74,9 +76,13 @@ namespace ClosedXML.Excel
         private void AddTextToOccurrence(XLHFText hfText, XLHFOccurrence occurrence)
         {
             if (texts.TryGetValue(occurrence, out var hfTexts))
+            {
                 hfTexts.Add(hfText);
+            }
             else
+            {
                 texts.Add(occurrence, new List<XLHFText> { hfText });
+            }
 
             HeaderFooter.Changed = true;
         }
@@ -116,7 +122,9 @@ namespace ClosedXML.Excel
         private void ClearOccurrence(XLHFOccurrence occurrence)
         {
             if (texts.ContainsKey(occurrence))
+            {
                 texts.Remove(occurrence);
+            }
         }
     }
 }

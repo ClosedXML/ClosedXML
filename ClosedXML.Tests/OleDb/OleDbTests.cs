@@ -44,7 +44,9 @@ namespace ClosedXML.Tests.OleDb
                         Assert.Ignore("Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255");
                     }
                     else
+                    {
                         throw;
+                    }
                 }
             }
             finally
@@ -93,10 +95,12 @@ namespace ClosedXML.Tests.OleDb
                         };
 
                 foreach (var col in dt.Columns.Cast<DataColumn>())
+                {
                     foreach (var row in dt.Rows.Cast<DataRow>())
                     {
                         Assert.AreEqual(expected[col.ColumnName], row[col]);
                     }
+                }
 
                 Assert.AreEqual(2, dt.Rows.Count);
             }

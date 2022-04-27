@@ -53,9 +53,13 @@ namespace ClosedXML.Tests.Excel.DataValidations
             var actualResult = ws.DataValidations.TryGet(address, out var foundDv);
             Assert.AreEqual(expectedResult, actualResult);
             if (expectedResult)
+            {
                 Assert.AreSame(dv, foundDv);
+            }
             else
+            {
                 Assert.IsNull(foundDv);
+            }
         }
 
         [TestCase("A1:A1", 1)]

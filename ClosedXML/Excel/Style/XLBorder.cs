@@ -86,7 +86,10 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
@@ -116,7 +119,10 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
@@ -146,7 +152,10 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
                 if (_container is XLWorksheet wsContainer)
                 {
@@ -187,7 +196,10 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
                 if (_container is XLWorksheet wsContainer)
                 {
@@ -240,7 +252,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.LeftBorderColor = value.Key; return k; });
             }
@@ -262,7 +276,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.RightBorderColor = value.Key; return k; });
             }
@@ -284,7 +300,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.TopBorderColor = value.Key; return k; });
             }
@@ -306,7 +324,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.BottomBorderColor = value.Key; return k; });
             }
@@ -328,7 +348,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.DiagonalBorderColor = value.Key; return k; });
             }
@@ -507,7 +529,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLBorder other)
         {
             if (!(other is XLBorder otherB))
+            {
                 return false;
+            }
 
             return Key == otherB.Key;
         }
@@ -567,7 +591,9 @@ namespace ClosedXML.Excel
             public void Dispose(bool disposing)
             {
                 if (_disposed)
+                {
                     return;
+                }
 
                 if (disposing)
                 {

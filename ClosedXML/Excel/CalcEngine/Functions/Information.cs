@@ -43,9 +43,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var v = p[0].Evaluate();
 
             if (v is ErrorExpression.ExpressionErrorType)
+            {
                 return errorTypes[(ErrorExpression.ExpressionErrorType)v];
+            }
             else
+            {
                 throw new NoValueAvailableException();
+            }
         }
 
         static object IsBlank(List<Expression> p)
@@ -155,8 +159,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         static object IsRef(List<Expression> p)
         {
             if (!(p[0] is XObjectExpression oe))
+            {
                 return false;
-
+            }
 
             return oe.Value is CellRangeReference crr;
         }

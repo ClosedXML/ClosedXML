@@ -174,7 +174,10 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
+
                 Modify(k => { k.FontColor = value.Key; return k; });
             }
         }
@@ -339,7 +342,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLFont other)
         {
             if (!(other is XLFont otherF))
+            {
                 return false;
+            }
 
             return Key == otherF.Key;
         }

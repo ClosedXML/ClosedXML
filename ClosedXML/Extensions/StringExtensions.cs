@@ -30,7 +30,10 @@ namespace ClosedXML.Excel
 
         internal static string EscapeSheetName(this string sheetName)
         {
-            if (string.IsNullOrEmpty(sheetName)) return sheetName;
+            if (string.IsNullOrEmpty(sheetName))
+            {
+                return sheetName;
+            }
 
             var needEscape = (!char.IsLetter(sheetName[0]) && sheetName[0] != '_') ||
                              XLHelper.IsValidA1Address(sheetName) ||
@@ -40,9 +43,13 @@ namespace ClosedXML.Excel
                                                 char.IsControl(c) ||
                                                 char.IsSymbol(c));
             if (needEscape)
+            {
                 return string.Concat('\'', sheetName.Replace("'", "''"), '\'');
+            }
             else
+            {
                 return sheetName;
+            }
         }
 
         internal static string FixNewLines(this string value)
@@ -58,10 +65,14 @@ namespace ClosedXML.Excel
         internal static string ToCamel(this string value)
         {
             if (value.Length == 0)
+            {
                 return value;
+            }
 
             if (value.Length == 1)
+            {
                 return value.ToLower();
+            }
 
             return value.Substring(0, 1).ToLower() + value.Substring(1);
         }
@@ -69,10 +80,14 @@ namespace ClosedXML.Excel
         internal static string ToProper(this string value)
         {
             if (value.Length == 0)
+            {
                 return value;
+            }
 
             if (value.Length == 1)
+            {
                 return value.ToUpper();
+            }
 
             return value.Substring(0, 1).ToUpper() + value.Substring(1);
         }

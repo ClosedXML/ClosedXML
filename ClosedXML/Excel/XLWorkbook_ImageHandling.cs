@@ -19,9 +19,13 @@ namespace ClosedXML.Excel
                 );
 
             if (!matchingAnchor.Any())
+            {
                 return null;
+            }
             else
+            {
                 return matchingAnchor.First();
+            }
         }
 
         public static OpenXmlElement GetAnchorFromImageIndex(WorksheetPart worksheetPart, int index)
@@ -33,21 +37,30 @@ namespace ClosedXML.Excel
                 );
 
             if (!matchingAnchor.Any())
+            {
                 return null;
+            }
             else
+            {
                 return matchingAnchor.First();
+            }
         }
 
         public static NonVisualDrawingProperties GetPropertiesFromAnchor(OpenXmlElement anchor)
         {
             if (!IsAllowedAnchor(anchor))
+            {
                 return null;
+            }
 
             // Maybe we should not restrict here, and just search for all NonVisualDrawingProperties in an anchor?
             var shape = anchor.Descendants<Picture>().Cast<OpenXmlCompositeElement>().FirstOrDefault()
                         ?? anchor.Descendants<ConnectionShape>().Cast<OpenXmlCompositeElement>().FirstOrDefault();
 
-            if (shape == null) return null;
+            if (shape == null)
+            {
+                return null;
+            }
 
             return shape
                 .Descendants<NonVisualDrawingProperties>()
@@ -57,7 +70,9 @@ namespace ClosedXML.Excel
         public static string GetImageRelIdFromAnchor(OpenXmlElement anchor)
         {
             if (!IsAllowedAnchor(anchor))
+            {
                 return null;
+            }
 
             var blipFill = anchor.Descendants<BlipFill>().FirstOrDefault();
             return blipFill?.Blip?.Embed?.Value;

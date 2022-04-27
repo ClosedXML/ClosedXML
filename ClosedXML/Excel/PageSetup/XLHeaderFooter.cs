@@ -44,7 +44,10 @@ namespace ClosedXML.Excel
             retVal += centerText.Length > 0 ? "&C" + centerText : string.Empty;
             retVal += rightText.Length > 0 ? "&R" + rightText : string.Empty;
             if (retVal.Length > 255)
+            {
                 throw new ArgumentOutOfRangeException("Headers and Footers cannot be longer than 255 characters (including style markups)");
+            }
+
             return retVal;
         }
 
@@ -54,13 +57,19 @@ namespace ClosedXML.Excel
             var parsedElements = ParseFormattedHeaderFooterText(text);
 
             if (parsedElements.Any(e => e.Position == 'L'))
+            {
                 Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'L').Select(e => e.Text).ToArray()), occurrence);
+            }
 
             if (parsedElements.Any(e => e.Position == 'C'))
+            {
                 Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'C').Select(e => e.Text).ToArray()), occurrence);
+            }
 
             if (parsedElements.Any(e => e.Position == 'R'))
+            {
                 Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'R').Select(e => e.Text).ToArray()), occurrence);
+            }
 
             innerTexts[occurrence] = text;
         }
@@ -83,11 +92,14 @@ namespace ClosedXML.Excel
             {
                 if (IsAtPositionIndicator(i))
                 {
-                    if (!string.IsNullOrEmpty(hfElement)) parsedElements.Add(new ParsedHeaderFooterElement()
+                    if (!string.IsNullOrEmpty(hfElement))
+                    {
+                        parsedElements.Add(new ParsedHeaderFooterElement()
                     {
                         Position = currentPosition,
                         Text = hfElement
                     });
+                    }
 
                     currentPosition = text[i + 1];
                     i += 2;
@@ -97,18 +109,25 @@ namespace ClosedXML.Excel
                 if (i < text.Length)
                 {
                     if (IsAtPositionIndicator(i))
+                    {
                         i--;
+                    }
                     else
+                    {
                         hfElement += text[i];
+                    }
                 }
             }
 
             if (!string.IsNullOrEmpty(hfElement))
+            {
                 parsedElements.Add(new ParsedHeaderFooterElement()
                 {
                     Position = currentPosition,
                     Text = hfElement
                 });
+            }
+
             return parsedElements;
         }
 

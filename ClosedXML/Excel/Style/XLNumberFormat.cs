@@ -9,10 +9,14 @@ namespace ClosedXML.Excel
         internal static XLNumberFormatKey GenerateKey(IXLNumberFormat defaultNumberFormat)
         {
             if (defaultNumberFormat == null)
+            {
                 return XLNumberFormatValue.Default.Key;
+            }
 
             if (defaultNumberFormat is XLNumberFormat)
+            {
                 return (defaultNumberFormat as XLNumberFormat).Key;
+            }
 
             return new XLNumberFormatKey
             {
@@ -85,9 +89,14 @@ namespace ClosedXML.Excel
                 {
                     k.Format = value;
                     if (string.IsNullOrWhiteSpace(k.Format))
+                    {
                         k.NumberFormatId = XLNumberFormatValue.Default.NumberFormatId;
+                    }
                     else
+                    {
                         k.NumberFormatId = -1;
+                    }
+
                     return k;
                 });
             }
@@ -134,7 +143,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLNumberFormatBase other)
         {
             if (!(other is XLNumberFormat otherN))
+            {
                 return false;
+            }
 
             return Key == otherN.Key;
         }

@@ -34,10 +34,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         private static IXLRange ExtractRange(Expression expression)
         {
             if (!(expression is XObjectExpression objectExpression))
+            {
                 throw new NoValueAvailableException("Parameter has to be a valid range");
+            }
 
             if (!(objectExpression.Value is CellRangeReference cellRangeReference))
+            {
                 throw new NoValueAvailableException("lookup_array has to be a range");
+            }
 
             var range = cellRangeReference.Range;
             return range;
@@ -53,10 +57,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                                || (bool)p[3];
 
             if (row_index_num < 1)
+            {
                 throw new CellReferenceException("Row index has to be positive");
+            }
 
             if (row_index_num > range.RowCount())
+            {
                 throw new CellReferenceException("Row index has to be positive");
+            }
 
             IXLRangeColumn matching_column;
             matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
@@ -69,16 +77,24 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 {
                     var column_index_in_range = c.ColumnNumber() - first_column + 1;
                     if (column_index_in_range < number_of_columns_in_range && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && !c.ColumnRight().Cell(1).IsEmpty() && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    {
                         return true;
+                    }
                     else if (column_index_in_range == number_of_columns_in_range && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    {
                         return true;
+                    }
                     else
+                    {
                         return false;
+                    }
                 });
             }
 
             if (matching_column == null)
+            {
                 throw new NoValueAvailableException("No matches found.");
+            }
 
             return matching_column
                 .Cell(row_index_num)
@@ -103,10 +119,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var column_num = (int)p[2];
 
                 if (row_num > range.RowCount())
+                {
                     throw new CellReferenceException("Out of bound row number");
+                }
 
                 if (column_num > range.ColumnCount())
+                {
                     throw new CellReferenceException("Out of bound column number");
+                }
 
                 return range.Row(row_num).Cell(column_num).Value;
             }
@@ -114,7 +134,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 var cellOffset = (int)p[1];
                 if (cellOffset > range.RowCount() * range.ColumnCount())
+                {
                     throw new CellReferenceException();
+                }
 
                 return range.Cells().ElementAt(cellOffset - 1).Value;
             }
@@ -124,23 +146,35 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var row_num = 1;
 
                 if (!(p[1] is EmptyValueExpression))
+                {
                     row_num = (int)p[1];
+                }
 
                 if (!(p[2] is EmptyValueExpression))
+                {
                     column_num = (int)p[2];
+                }
 
                 var rangeIsRow = range.RowCount() == 1;
                 if (rangeIsRow && row_num > 1)
+                {
                     throw new CellReferenceException();
+                }
 
                 if (!rangeIsRow && column_num > 1)
+                {
                     throw new CellReferenceException();
+                }
 
                 if (row_num > range.RowCount())
+                {
                     throw new CellReferenceException("Out of bound row number");
+                }
 
                 if (column_num > range.ColumnCount())
+                {
                     throw new CellReferenceException("Out of bound column number");
+                }
 
                 return range.Row(row_num).Cell(column_num).Value;
             }
@@ -152,10 +186,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var range = ExtractRange(p[1]);
             var match_type = 1;
             if (p.Count > 2)
+            {
                 match_type = Math.Sign((int)p[2]);
+            }
 
             if (range.ColumnCount() != 1 && range.RowCount() != 1)
+            {
                 throw new CellValueException("Range has to be 1-dimensional");
+            }
 
             Predicate<int> lookupPredicate = null;
             switch (match_type)
@@ -179,9 +217,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             IXLCell foundCell = null;
 
             if (match_type == 0)
+            {
                 foundCell = range
                     .CellsUsed(XLCellsUsedOptions.Contents, c => lookupPredicate.Invoke(new Expression(c.Value).CompareTo(lookup_value)))
                     .FirstOrDefault();
+            }
             else
             {
                 object previousValue = null;
@@ -196,7 +236,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                             // When match_type != 0, we have to assume that the order of the items being search is ascending or descending
                             var previousValueExpression = new Expression(previousValue);
                             if (!lookupPredicate.Invoke(previousValueExpression.CompareTo(currentCellExpression)))
+                            {
                                 return false;
+                            }
                         }
 
                         previousValue = c.Value;
@@ -207,7 +249,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             }
 
             if (foundCell == null)
+            {
                 throw new NoValueAvailableException();
+            }
 
             var firstCell = range.FirstCell();
 
@@ -224,10 +268,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                                || (bool)p[3];
 
             if (col_index_num < 1)
+            {
                 throw new CellReferenceException("Column index has to be positive");
+            }
 
             if (col_index_num > range.ColumnCount())
+            {
                 throw new CellReferenceException("Colum index must be smaller or equal to the number of columns in the table array");
+            }
 
             IXLRangeRow matching_row;
             try
@@ -247,16 +295,24 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 {
                     var row_index_in_range = r.RowNumber() - first_row + 1;
                     if (row_index_in_range < number_of_rows_in_range && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && !r.RowBelow().Cell(1).IsEmpty() && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    {
                         return true;
+                    }
                     else if (row_index_in_range == number_of_rows_in_range && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    {
                         return true;
+                    }
                     else
+                    {
                         return false;
+                    }
                 });
             }
 
             if (matching_row == null)
+            {
                 throw new NoValueAvailableException("No matches found.");
+            }
 
             return matching_row
                 .Cell(col_index_num)

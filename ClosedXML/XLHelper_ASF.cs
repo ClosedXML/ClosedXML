@@ -41,7 +41,9 @@ namespace ClosedXML.Excel
         public static string CreateSafeSheetName(string nameProposal, char replaceChar = ' ')
         {
             if (illegalWorksheetCharacters.Contains(replaceChar) || replaceChar == '\'')
+            {
                 throw new ArgumentException("Invalid replacement character.", nameof(replaceChar));
+            }
 
             if (nameProposal == null)
             {
@@ -58,10 +60,14 @@ namespace ClosedXML.Excel
             {
                 var ch = result[i];
                 if (illegalWorksheetCharacters.Contains(result[i]))
+                {
                     result[i] = replaceChar;
+                }
 
                 if (ch == '\'' && (i == 0 || i == length - 1))
+                {
                     result[i] = replaceChar;
+                }
             }
             return result.ToString();
         }
@@ -102,7 +108,9 @@ namespace ClosedXML.Excel
             for (var i = 0; i < len; i++)
             {
                 if (illegalWorksheetCharacters.Contains(sheetName[i]))
+                {
                     throw new ArgumentException($"Invalid char ({sheetName[i]}) found at index ({i}) in sheet name '{sheetName}'");
+                }
             }
             if (sheetName[0] == '\'' || sheetName[len - 1] == '\'')
             {

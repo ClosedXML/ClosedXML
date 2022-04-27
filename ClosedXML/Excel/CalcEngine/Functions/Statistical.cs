@@ -119,7 +119,9 @@ namespace ClosedXML.Excel.CalcEngine
         private static object CountBlank(List<Expression> p)
         {
             if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
+            {
                 throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
+            }
 
             var e = p[0] as XObjectExpression;
             var totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
@@ -127,7 +129,9 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var value in e)
             {
                 if (!CalcEngineHelpers.ValueIsBlank(value))
+                {
                     nonBlankCount++;
+                }
             }
 
             return 0d + totalCount - nonBlankCount;
@@ -145,13 +149,18 @@ namespace ClosedXML.Excel.CalcEngine
                 foreach (var value in ienum)
                 {
                     if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
+                    {
                         cnt++;
+                    }
+
                     processedCount++;
                 }
 
                 // Add count of empty cells outside the used range if they match criteria
                 if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
+                {
                     cnt += totalCount - processedCount;
+                }
             }
 
             return cnt;
@@ -183,7 +192,9 @@ namespace ClosedXML.Excel.CalcEngine
                     criteriaRangeValues);
 
                 if (totalCount == 0)
+                {
                     totalCount = CalcEngineHelpers.GetTotalCellsCount(criteriaRange);
+                }
             }
 
             long processedCount = 0;
@@ -191,7 +202,9 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
                                                        criteriaPair.Item2[i], criteriaPair.Item1, ce)))
+                {
                     count++;
+                }
 
                 processedCount++;
             }
@@ -215,7 +228,10 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Fisher(List<Expression> p)
         {
             var x = (double)p[0];
-            if (x <= -1 || x >= 1) throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
+            if (x <= -1 || x >= 1)
+            {
+                throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
+            }
 
             return 0.5 * Math.Log((1 + x) / (1 - x));
         }

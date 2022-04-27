@@ -23,7 +23,9 @@ namespace ClosedXML.Excel.Drawings
         private XLMarker(IXLRange rangeCell, SKPoint offset)
         {
             if (rangeCell.RowCount() != 1 || rangeCell.ColumnCount() != 1)
+            {
                 throw new ArgumentException("Range should contain only one cell.", nameof(rangeCell));
+            }
 
             this.rangeCell = rangeCell;
             Offset = offset;

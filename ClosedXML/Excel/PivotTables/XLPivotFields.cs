@@ -25,7 +25,9 @@ namespace ClosedXML.Excel
         public IXLPivotField Add(string sourceName, string customName)
         {
             if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
+            {
                 throw new ArgumentOutOfRangeException(nameof(sourceName), string.Format("The column '{0}' does not appear in the source range.", sourceName));
+            }
 
             var pivotField = new XLPivotField(_pivotTable, sourceName) { CustomName = customName };
             _pivotFields.Add(sourceName, pivotField);
@@ -71,7 +73,9 @@ namespace ClosedXML.Excel
         {
             var selectedItem = _pivotFields.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == sourceName);
             if (selectedItem == null)
+            {
                 throw new ArgumentNullException(nameof(sourceName), "Invalid field name.");
+            }
 
             return selectedItem.Position;
         }

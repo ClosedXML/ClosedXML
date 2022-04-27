@@ -37,9 +37,13 @@ namespace ClosedXML.Excel
             set
             {
                 if (value is IXLTable)
+                {
                     SourceType = XLPivotTableSourceType.Table;
+                }
                 else
+                {
                     SourceType = XLPivotTableSourceType.Range;
+                }
 
                 sourceRange = value;
             }
@@ -69,13 +73,19 @@ namespace ClosedXML.Excel
             get
             {
                 foreach (var pf in ReportFilters)
+                {
                     yield return pf;
+                }
 
                 foreach (var pf in RowLabels)
+                {
                     yield return pf;
+                }
 
                 foreach (var pf in ColumnLabels)
+                {
                     yield return pf;
+                }
             }
         }
 
@@ -85,7 +95,9 @@ namespace ClosedXML.Excel
         {
             var addressComparer = new XLAddressComparer(ignoreFixed: true);
             if (addressComparer.Equals(targetCell.Address, TargetCell.Address))
+            {
                 throw new InvalidOperationException("Cannot copy pivot table to the target cell.");
+            }
 
             var targetSheet = targetCell.Worksheet;
 
@@ -121,19 +133,27 @@ namespace ClosedXML.Excel
                     .SetCollapsed(originalPivotField.Collapsed);
 
                 if (originalPivotField.SubtotalsAtTop.HasValue)
+                {
                     newPivotField.SetSubtotalsAtTop(originalPivotField.SubtotalsAtTop.Value);
+                }
 
                 newPivotField.AddSelectedValues(originalPivotField.SelectedValues);
             }
 
             foreach (var rf in ReportFilters)
+            {
                 copyPivotField(rf, newPivotTable.ReportFilters.Add(rf.SourceName, rf.CustomName));
+            }
 
             foreach (var cl in ColumnLabels)
+            {
                 copyPivotField(cl, newPivotTable.ColumnLabels.Add(cl.SourceName, cl.CustomName));
+            }
 
             foreach (var rl in RowLabels)
+            {
                 copyPivotField(rl, newPivotTable.RowLabels.Add(rl.SourceName, rl.CustomName));
+            }
 
             foreach (var v in Values)
             {
@@ -205,12 +225,17 @@ namespace ClosedXML.Excel
             get { return _name; }
             set
             {
-                if (_name == value) return;
+                if (_name == value)
+                {
+                    return;
+                }
 
                 var oldname = _name ?? string.Empty;
 
                 if (!XLHelper.ValidateName("pivot table", value, oldname, Worksheet.PivotTables.Select(pvt => pvt.Name), out var message))
+                {
                     throw new ArgumentException(message, nameof(value));
+                }
 
                 _name = value;
 
@@ -729,10 +754,14 @@ namespace ClosedXML.Excel
             get
             {
                 foreach (var styleFormat in StyleFormats.RowGrandTotalFormats)
+                {
                     yield return styleFormat;
+                }
 
                 foreach (var styleFormat in StyleFormats.ColumnGrandTotalFormats)
+                {
                     yield return styleFormat;
+                }
 
                 foreach (var pivotField in ImplementedFields)
                 {

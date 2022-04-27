@@ -22,7 +22,10 @@ namespace ClosedXML.Excel
             : this(defaultFont)
         {
             foreach (var rt in defaultRichText)
+            {
                 AddText(rt.Text, rt);
+            }
+
             if (defaultRichText.HasPhonetics)
             {
                 _phonetics = new XLPhonetics(defaultRichText.Phonetics, defaultFont);
@@ -92,7 +95,9 @@ namespace ClosedXML.Excel
         public IXLFormattedText<T> Substring(int index, int length)
         {
             if (index + 1 > Length || (Length - index + 1) < length || length <= 0)
+            {
                 throw new IndexOutOfRangeException("Index and length must refer to a location within the string.");
+            }
 
             var newRichTexts = new List<IXLRichString>();
             var retVal = new XLFormattedText<T>(_defaultFont);
@@ -109,20 +114,28 @@ namespace ClosedXML.Excel
                     var startIndex = index - lastPosition;
 
                     if (startIndex > 0)
+                    {
                         newRichTexts.Add(new XLRichString(rt.Text.Substring(0, startIndex), rt, this));
+                    }
                     else if (startIndex < 0)
+                    {
                         startIndex = 0;
+                    }
 
                     var leftToTake = length - retVal.Length;
                     if (leftToTake > rt.Text.Length - startIndex)
+                    {
                         leftToTake = rt.Text.Length - startIndex;
+                    }
 
                     var newRt = new XLRichString(rt.Text.Substring(startIndex, leftToTake), rt, this);
                     newRichTexts.Add(newRt);
                     retVal.AddText(newRt);
 
                     if (startIndex + leftToTake < rt.Text.Length)
+                    {
                         newRichTexts.Add(new XLRichString(rt.Text.Substring(startIndex + leftToTake), rt, this));
+                    }
                 }
                 else // We haven't reached the desired position yet
                 {
@@ -214,12 +227,16 @@ namespace ClosedXML.Excel
         {
             var count = Count;
             if (count != other.Count)
+            {
                 return false;
+            }
 
             for (var i = 0; i < count; i++)
             {
                 if (_richTexts.ElementAt(i) != other.ElementAt(i))
+                {
                     return false;
+                }
             }
 
             return _phonetics == null || Phonetics.Equals(other.Phonetics);

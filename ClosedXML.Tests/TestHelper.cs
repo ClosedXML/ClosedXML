@@ -61,13 +61,17 @@ namespace ClosedXML.Tests
             example.Create(filePath1);
             example.Create(filePath1);
             using (var wb = new XLWorkbook(filePath1))
+            {
                 wb.SaveAs(filePath2, validate: true, evaluateFormula);
+            }
 
             // Also load from template and save it again - but not necessary to test against reference file
             // We're just testing that it can save.
             using (var ms = new MemoryStream())
             using (var wb = XLWorkbook.OpenFromTemplate(filePath1))
+            {
                 wb.SaveAs(ms, validate: true, evaluateFormula);
+            }
 
             // Uncomment to replace expectation running .net6.0,
             //var expectedFileInVsSolution = Path.GetFullPath(Path.Combine("../../../", "Resource", "Examples", filePartName.Replace("\\", "/")));
@@ -134,7 +138,9 @@ namespace ClosedXML.Tests
             var filePath2 = Path.Combine(directory, fileName);
 
             using (var wb = workbookGenerator.Invoke())
+            {
                 wb.SaveAs(filePath2, true, evaluateFormulae);
+            }
 
             if (CompareWithResources)
             {

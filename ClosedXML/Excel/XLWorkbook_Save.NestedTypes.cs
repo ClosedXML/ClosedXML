@@ -88,7 +88,9 @@ namespace ClosedXML.Excel
             public void Reset(RelType relType)
             {
                 if (_relIds.ContainsKey(relType))
+                {
                     _relIds.Remove(relType);
+                }
             }
         }
 

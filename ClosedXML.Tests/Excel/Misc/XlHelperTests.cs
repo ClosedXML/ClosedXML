@@ -149,7 +149,10 @@ namespace ClosedXML.Tests.Excel
         /// <param name="columnLetter"> The column letter to translate into a column number. </param>
         private static int NaiveGetColumnNumberFromLetter(string columnLetter)
         {
-            if (string.IsNullOrEmpty(columnLetter)) throw new ArgumentNullException("columnLetter");
+            if (string.IsNullOrEmpty(columnLetter))
+            {
+                throw new ArgumentNullException("columnLetter");
+            }
 
             int retVal;
             columnLetter = columnLetter.ToUpper();
@@ -180,7 +183,10 @@ namespace ClosedXML.Tests.Excel
         /// <returns></returns>
         private static string NaiveGetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
-            if (trimToAllowed) columnNumber = XLHelper.TrimColumnNumber(columnNumber);
+            if (trimToAllowed)
+            {
+                columnNumber = XLHelper.TrimColumnNumber(columnNumber);
+            }
 
             columnNumber--; // Adjust for start on column 1
             if (columnNumber <= 25)

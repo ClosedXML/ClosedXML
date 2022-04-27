@@ -93,7 +93,9 @@ namespace ClosedXML.Excel
 
                 Modify(k => { k.Horizontal = value; return k; });
                 if (updateIndent)
+                {
                     Indent = 0;
+                }
             }
         }
 
@@ -111,7 +113,9 @@ namespace ClosedXML.Excel
                 if (Indent != value)
                 {
                     if (Horizontal == XLAlignmentHorizontalValues.General)
+                    {
                         Horizontal = XLAlignmentHorizontalValues.Left;
+                    }
 
                     if (value > 0 && !(
                                        Horizontal == XLAlignmentHorizontalValues.Left
@@ -159,7 +163,9 @@ namespace ClosedXML.Excel
                 var rotation = value;
 
                 if (rotation != 255 && (rotation < -90 || rotation > 180))
+                {
                     throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");
+                }
 
                 Modify(k => { k.TextRotation = rotation; return k; });
             }
@@ -309,7 +315,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLAlignment other)
         {
             if (!(other is XLAlignment otherA))
+            {
                 return false;
+            }
 
             return Key == otherA.Key;
         }

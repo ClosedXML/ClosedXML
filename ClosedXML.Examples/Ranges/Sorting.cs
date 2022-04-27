@@ -17,7 +17,9 @@ namespace ClosedXML.Examples.Misc
             wsTable.Row(1).InsertRowsAbove(1);
             var lastCo = wsTable.LastColumnUsed().ColumnNumber();
             for (var co = 1; co <= lastCo; co++)
+            {
                 wsTable.Cell(1, co).Value = "Column" + co.ToString();
+            }
 
             var table = wsTable.RangeUsed().AsTable();
             table.Sort("Column2 Desc, 1, 3 Asc");
@@ -29,11 +31,12 @@ namespace ClosedXML.Examples.Misc
             wsTable.Row(1).InsertRowsAbove(1);
             lastCo = wsTable.LastColumnUsed().ColumnNumber();
             for (var co = 1; co <= lastCo; co++)
+            {
                 wsTable.Cell(1, co).Value = "Column" + co.ToString();
+            }
 
             table = wsTable.RangeUsed().AsTable();
             table.Sort("Column2", XLSortOrder.Descending, false, true);
-
 
             #endregion Sort Table
 

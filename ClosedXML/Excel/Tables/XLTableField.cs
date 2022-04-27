@@ -45,9 +45,15 @@ namespace ClosedXML.Excel
                 return Column.Cells(c =>
                 {
                     if (table.ShowHeaderRow && c == HeaderCell)
+                    {
                         return false;
+                    }
+
                     if (table.ShowTotalsRow && c == TotalsCell)
+                    {
                         return false;
+                    }
+
                     return true;
                 });
             }
@@ -58,7 +64,9 @@ namespace ClosedXML.Excel
             get
             {
                 if (!table.ShowHeaderRow)
+                {
                     return null;
+                }
 
                 return Column.FirstCell();
             }
@@ -69,7 +77,11 @@ namespace ClosedXML.Excel
             get { return index; }
             internal set
             {
-                if (index == value) return;
+                if (index == value)
+                {
+                    return;
+                }
+
                 index = value;
                 _column = null;
             }
@@ -83,10 +95,15 @@ namespace ClosedXML.Excel
             }
             set
             {
-                if (name == value) return;
+                if (name == value)
+                {
+                    return;
+                }
 
                 if (table.ShowHeaderRow)
+                {
                     (table.HeadersRow(false).Cell(Index + 1) as XLCell).SetValue(value, setTableHeader: false, checkMergedRanges: true);
+                }
 
                 table.RenameField(name, value);
                 name = value;
@@ -100,7 +117,9 @@ namespace ClosedXML.Excel
             get
             {
                 if (!table.ShowTotalsRow)
+                {
                     return null;
+                }
 
                 return Column.LastCell();
             }
@@ -173,7 +192,9 @@ namespace ClosedXML.Excel
                 .Select(c => c.DataType);
 
             if (table.ShowTotalsRow)
+            {
                 dataTypes = dataTypes.Take(dataTypes.Count() - 1);
+            }
 
             var distinctDataTypes = dataTypes
                 .GroupBy(dt => dt)
@@ -190,7 +211,9 @@ namespace ClosedXML.Excel
                 .Select(c => c.FormulaR1C1);
 
             if (table.ShowTotalsRow)
+            {
                 formulas = formulas.Take(formulas.Count() - 1);
+            }
 
             var distinctFormulas = formulas
                 .GroupBy(f => f)
@@ -208,7 +231,9 @@ namespace ClosedXML.Excel
                 .Select(c => c.StyleValue);
 
             if (table.ShowTotalsRow)
+            {
                 styles = styles.Take(styles.Count() - 1);
+            }
 
             var distinctStyles = styles
                 .Distinct();

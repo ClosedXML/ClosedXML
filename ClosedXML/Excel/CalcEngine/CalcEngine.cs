@@ -83,20 +83,28 @@ namespace ClosedXML.Excel.CalcEngine
 
             // skip leading equals sign
             if (_len > 0 && _expr[0] == '=')
+            {
                 _ptr++;
+            }
 
             // skip leading +'s
             while (_len > _ptr && _expr[_ptr] == '+')
+            {
                 _ptr++;
+            }
 
             // parse the expression
             var expr = ParseExpression();
 
             // check for errors
             if (_currentToken.ID == TKID.OPEN)
+            {
                 Throw("Unknown function: " + expr.LastParseItem);
+            }
             else if (_currentToken.ID != TKID.END)
+            {
                 Throw("Expected end of expression");
+            }
 
             // optimize expression
             if (_optimize)
@@ -415,7 +423,10 @@ namespace ClosedXML.Excel.CalcEngine
                 do
                 {
                     if (_currentToken.ID == TKID.SUB)
+                    {
                         sign = -sign;
+                    }
+
                     GetToken();
                 } while (_currentToken.Type == TKTYPE.ADDSUB);
                 var a = ParseAtom();
@@ -454,10 +465,14 @@ namespace ClosedXML.Excel.CalcEngine
                         // look for functions
                         var foundFunction = _fnTbl.TryGetValue(id, out var functionDefinition);
                         if (!foundFunction && id.StartsWith($"{defaultFunctionNameSpace}."))
+                        {
                             foundFunction = _fnTbl.TryGetValue(id.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
+                        }
 
                         if (!foundFunction)
+                        {
                             throw new NameNotRecognizedException($"The identifier `{id}` was not recognised.");
+                        }
 
                         var p = GetParameters();
                         var pCnt = p == null ? 0 : p.Count;
@@ -483,7 +498,9 @@ namespace ClosedXML.Excel.CalcEngine
                     // look for external objects
                     var xObj = GetExternalObject(id);
                     if (xObj == null)
+                    {
                         throw new NameNotRecognizedException($"The identifier `{id}` was not recognised.");
+                    }
 
                     x = new XObjectExpression(xObj);
                     break;
@@ -633,7 +650,11 @@ namespace ClosedXML.Excel.CalcEngine
                     {
                         sci = true;
                         c = _expr[_ptr + i + 1];
-                        if (c == '+' || c == '-') i++;
+                        if (c == '+' || c == '-')
+                        {
+                            i++;
+                        }
+
                         continue;
                     }
 
@@ -673,9 +694,17 @@ namespace ClosedXML.Excel.CalcEngine
                 for (i = 1; i + _ptr < _len; i++)
                 {
                     c = _expr[_ptr + i];
-                    if (c != '\"') continue;
+                    if (c != '\"')
+                    {
+                        continue;
+                    }
+
                     var cNext = i + _ptr < _len - 1 ? _expr[_ptr + i + 1] : ' ';
-                    if (cNext != '\"') break;
+                    if (cNext != '\"')
+                    {
+                        break;
+                    }
+
                     i++;
                 }
 
@@ -725,14 +754,18 @@ namespace ClosedXML.Excel.CalcEngine
 
                 var disallowedSymbols = new List<char>() { '\\', '/', '*', '[', ':', '?' };
                 if (isEnclosed && disallowedSymbols.Contains(c))
+                {
                     break;
+                }
 
                 var allowedSymbols = new List<char>() { '_', '.' };
 
                 if (!isLetter && !isDigit
                     && !(isEnclosed || allowedSymbols.Contains(c))
                     && (_idChars == null || !_idChars.Contains(c)))
+                {
                     break;
+                }
             }
 
             // got identifier
@@ -741,7 +774,9 @@ namespace ClosedXML.Excel.CalcEngine
 
             // If we have a true/false, return a literal
             if (bool.TryParse(id, out var b))
+            {
                 return new Token(b, TKID.ATOM, TKTYPE.LITERAL);
+            }
 
             return new Token(id, TKID.ATOM, TKTYPE.IDENTIFIER);
         }
@@ -806,9 +841,13 @@ namespace ClosedXML.Excel.CalcEngine
 
             // make sure the list was closed correctly
             if (_currentToken.ID == TKID.OPEN)
+            {
                 Throw("Unknown function: " + expr.LastParseItem);
+            }
             else if (_currentToken.ID != TKID.CLOSE)
+            {
                 Throw("Syntax error: expected ')'");
+            }
 
             // done
             return parms;

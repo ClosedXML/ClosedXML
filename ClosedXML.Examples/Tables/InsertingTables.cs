@@ -82,8 +82,7 @@ namespace ClosedXML.Examples.Tables
             public int Age { get; set; }
 
             [XLColumn(Header = "Class Type")]
-            public static string ClassType
-            { get { return nameof(Person); } }
+            public static string ClassType => nameof(Person);
         }
 
         // Private

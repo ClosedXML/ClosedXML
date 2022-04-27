@@ -23,7 +23,10 @@ namespace ClosedXML.Excel
         public XLDataValidation(IXLRange range)
             : this(range?.Worksheet as XLWorksheet)
         {
-            if (range == null) throw new ArgumentNullException(nameof(range));
+            if (range == null)
+            {
+                throw new ArgumentNullException(nameof(range));
+            }
 
             AddRange(range);
         }
@@ -55,10 +58,15 @@ namespace ClosedXML.Excel
 
         public void CopyFrom(IXLDataValidation dataValidation)
         {
-            if (dataValidation == this) return;
+            if (dataValidation == this)
+            {
+                return;
+            }
 
             if (!_ranges.Any())
+            {
                 AddRanges(dataValidation.Ranges);
+            }
 
             IgnoreBlanks = dataValidation.IgnoreBlanks;
             InCellDropdown = dataValidation.InCellDropdown;
@@ -196,10 +204,15 @@ namespace ClosedXML.Excel
         /// <param name="range">A range to add.</param>
         public void AddRange(IXLRange range)
         {
-            if (range == null) throw new ArgumentNullException(nameof(range));
+            if (range == null)
+            {
+                throw new ArgumentNullException(nameof(range));
+            }
 
             if (range.Worksheet != Worksheet)
+            {
                 range = Worksheet.Range(((XLRangeAddress)range.RangeAddress).WithoutWorksheet());
+            }
 
             _ranges.Add(range);
 
@@ -271,7 +284,9 @@ namespace ClosedXML.Excel
         public bool RemoveRange(IXLRange range)
         {
             if (range == null)
+            {
                 return false;
+            }
 
             var res = _ranges.Remove(range);
 
@@ -288,7 +303,9 @@ namespace ClosedXML.Excel
         private void Validate(string value)
         {
             if (value.Length > 255)
+            {
                 throw new ArgumentOutOfRangeException(nameof(value), "The maximum allowed length of the value is 255 characters.");
+            }
         }
     }
 }

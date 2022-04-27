@@ -78,7 +78,9 @@ namespace ClosedXML.Tests
             finally
             {
                 if (File.Exists(path))
+                {
                     File.Delete(path);
+                }
             }
         }
 

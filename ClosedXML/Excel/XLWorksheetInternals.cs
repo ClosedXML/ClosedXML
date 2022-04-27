@@ -34,7 +34,9 @@ namespace ClosedXML.Excel
         public void Dispose(bool disposing)
         {
             if (_disposed)
+            {
                 return;
+            }
 
             if (disposing)
             {

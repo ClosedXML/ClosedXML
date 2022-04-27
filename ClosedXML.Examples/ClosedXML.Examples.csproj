@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net48;net6.0</TargetFrameworks>
+		<TargetFrameworks Condition="'$(OS)' == 'Windows_NT' ">net6.0;net48</TargetFrameworks>
 		<TargetFrameworks Condition="'$(OS)' != 'Windows_NT' ">net6.0</TargetFrameworks>
 		<LangVersion>8.0</LangVersion>
 		<OutputType>Exe</OutputType>
@@ -19,6 +19,10 @@
 		<ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.38.0.46746">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 

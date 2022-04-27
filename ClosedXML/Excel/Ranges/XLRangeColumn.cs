@@ -29,7 +29,10 @@ namespace ClosedXML.Excel
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInColumn.Split(',');
             foreach (var pair in rangePairs)
+            {
                 retVal.Add(Range(pair.Trim()).RangeAddress);
+            }
+
             return retVal;
         }
 
@@ -50,7 +53,9 @@ namespace ClosedXML.Excel
                 var table = Table as XLTable;
                 var firstCellValue = Cell(1).Value.ToString();
                 if (!table.FieldNames.ContainsKey(firstCellValue))
+                {
                     throw new ArgumentException(string.Format("Field {0} not found.", firstCellValue));
+                }
 
                 var field = table.Fields.Cast<XLTableField>().Single(f => f.Name == firstCellValue);
                 field.Delete(false);
@@ -96,10 +101,15 @@ namespace ClosedXML.Excel
 
             var lastRowNumber = target.Address.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
+            }
+
             var lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(
                 target.Address.RowNumber,
@@ -115,10 +125,15 @@ namespace ClosedXML.Excel
 
             var lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
+            }
+
             var lastColumnNumber = target.RangeAddress.FirstAddress.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(
                 target.RangeAddress.FirstAddress.RowNumber,
@@ -209,7 +224,9 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains(':') || rangeAddressStr.Contains('-'))
             {
                 if (rangeAddressStr.Contains('-'))
+                {
                     rangeAddressStr = rangeAddressStr.Replace('-', ':');
+                }
 
                 var arrRange = rangeAddressStr.Split(':');
                 var firstPart = arrRange[0];
@@ -217,7 +234,9 @@ namespace ClosedXML.Excel
                 rangeAddressToUse = FixColumnAddress(firstPart) + ":" + FixColumnAddress(secondPart);
             }
             else
+            {
                 rangeAddressToUse = FixColumnAddress(rangeAddressStr);
+            }
 
             var rangeAddress = new XLRangeAddress(Worksheet, rangeAddressToUse);
             return Range(rangeAddress);
@@ -235,13 +254,19 @@ namespace ClosedXML.Excel
                 if (e.IgnoreBlanks && (thisCellIsBlank || otherCellIsBlank))
                 {
                     if (thisCellIsBlank && otherCellIsBlank)
+                    {
                         comparison = 0;
+                    }
                     else
                     {
                         if (thisCellIsBlank)
+                        {
                             comparison = e.SortOrder == XLSortOrder.Ascending ? 1 : -1;
+                        }
                         else
+                        {
                             comparison = e.SortOrder == XLSortOrder.Ascending ? -1 : 1;
+                        }
                     }
                 }
                 else
@@ -255,18 +280,28 @@ namespace ClosedXML.Excel
                                              : string.Compare(thisCell.InnerText, otherCell.InnerText, true);
                         }
                         else if (thisCell.DataType == XLDataType.TimeSpan)
+                        {
                             comparison = thisCell.GetTimeSpan().CompareTo(otherCell.GetTimeSpan());
+                        }
                         else
+                        {
                             comparison = double.Parse(thisCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture).CompareTo(double.Parse(otherCell.InnerText, XLHelper.NumberStyle, XLHelper.ParseCulture));
+                        }
                     }
                     else if (e.MatchCase)
+                    {
                         comparison = string.Compare(thisCell.GetString(), otherCell.GetString(), true);
+                    }
                     else
+                    {
                         comparison = thisCell.GetString().CompareTo(otherCell.GetString());
+                    }
                 }
 
                 if (comparison != 0)
+                {
                     return e.SortOrder == XLSortOrder.Ascending ? comparison : comparison * -1;
+                }
             }
 
             return 0;
@@ -333,7 +368,9 @@ namespace ClosedXML.Excel
         public IXLTable AsTable()
         {
             if (IsTableColumn())
+            {
                 throw new InvalidOperationException("This column is already part of a table.");
+            }
 
             return AsRange().AsTable();
         }
@@ -341,7 +378,9 @@ namespace ClosedXML.Excel
         public IXLTable AsTable(string name)
         {
             if (IsTableColumn())
+            {
                 throw new InvalidOperationException("This column is already part of a table.");
+            }
 
             return AsRange().AsTable(name);
         }
@@ -349,7 +388,9 @@ namespace ClosedXML.Excel
         public IXLTable CreateTable()
         {
             if (IsTableColumn())
+            {
                 throw new InvalidOperationException("This column is already part of a table.");
+            }
 
             return AsRange().CreateTable();
         }
@@ -357,7 +398,9 @@ namespace ClosedXML.Excel
         public IXLTable CreateTable(string name)
         {
             if (IsTableColumn())
+            {
                 throw new InvalidOperationException("This column is already part of a table.");
+            }
 
             return AsRange().CreateTable(name);
         }

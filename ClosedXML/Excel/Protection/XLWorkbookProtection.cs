@@ -29,9 +29,13 @@ namespace ClosedXML.Excel
         public IXLWorkbookProtection AllowElement(XLWorkbookProtectionElements element, bool allowed = true)
         {
             if (allowed)
+            {
                 AllowedElements |= element;
+            }
             else
+            {
                 AllowedElements &= ~element;
+            }
 
             return this;
         }
@@ -117,11 +121,15 @@ namespace ClosedXML.Excel
                 password = password ?? "";
 
                 if (!string.IsNullOrEmpty(PasswordHash) && string.IsNullOrEmpty(password))
+                {
                     throw new InvalidOperationException("The workbook structure is password protected");
+                }
 
                 var hash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
                 if (hash != PasswordHash)
+                {
                     throw new ArgumentException("Invalid password");
+                }
                 else
                 {
                     IsProtected = false;
