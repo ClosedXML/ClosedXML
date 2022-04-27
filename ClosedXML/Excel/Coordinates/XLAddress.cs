@@ -164,39 +164,24 @@ namespace ClosedXML.Excel
             get { return Worksheet != null; }
         }
 
-        public bool FixedRow
-        {
-            get { return _fixedRow; }
-        }
+        public bool FixedRow => _fixedRow;
 
-        public bool FixedColumn
-        {
-            get { return _fixedColumn; }
-        }
+        public bool FixedColumn => _fixedColumn;
 
         /// <summary>
         /// Gets the row number of this address.
         /// </summary>
-        public int RowNumber
-        {
-            get { return _rowNumber; }
-        }
+        public int RowNumber => _rowNumber;
 
         /// <summary>
         /// Gets the column number of this address.
         /// </summary>
-        public int ColumnNumber
-        {
-            get { return _columnNumber; }
-        }
+        public int ColumnNumber => _columnNumber;
 
         /// <summary>
         /// Gets the column letter(s) of this address.
         /// </summary>
-        public string ColumnLetter
-        {
-            get { return XLHelper.GetColumnLetterFromNumber(_columnNumber); }
-        }
+        public string ColumnLetter => XLHelper.GetColumnLetterFromNumber(_columnNumber);
 
         #endregion Properties
 
@@ -467,16 +452,10 @@ namespace ClosedXML.Excel
             return address;
         }
 
-        public string UniqueId { get { return RowNumber.ToString("0000000") + ColumnNumber.ToString("00000"); } }
+        public string UniqueId => RowNumber.ToString("0000000") + ColumnNumber.ToString("00000");
 
-        public bool IsValid
-        {
-            get
-            {
-                return 0 < RowNumber && RowNumber <= XLHelper.MaxRowNumber &&
+        public bool IsValid => 0 < RowNumber && RowNumber <= XLHelper.MaxRowNumber &&
                        0 < ColumnNumber && ColumnNumber <= XLHelper.MaxColumnNumber;
-            }
-        }
 
         private bool WorksheetIsDeleted => Worksheet?.IsDeleted == true;
     }

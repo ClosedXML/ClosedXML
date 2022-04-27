@@ -268,8 +268,8 @@ namespace ClosedXML.Excel
             return RowsUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
-        IXLTable IXLTableRange.Table { get { return _table; } }
-        public XLTable Table { get { return _table; } }
+        IXLTable IXLTableRange.Table => _table;
+        public XLTable Table => _table;
 
         public new IXLTableRows InsertRowsAbove(int numberOfRows)
         {

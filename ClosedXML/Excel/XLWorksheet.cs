@@ -96,10 +96,7 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public override XLRangeType RangeType
-        {
-            get { return XLRangeType.Worksheet; }
-        }
+        public override XLRangeType RangeType => XLRangeType.Worksheet;
 
         public string LegacyDrawingId;
         public bool LegacyDrawingIsNew;
@@ -107,10 +104,7 @@ namespace ClosedXML.Excel
 
         public XLWorksheetInternals Internals { get; private set; }
 
-        public XLRangeFactory RangeFactory
-        {
-            get { return _rangeFactory; }
-        }
+        public XLRangeFactory RangeFactory => _rangeFactory;
 
         public override IEnumerable<IXLStyle> Styles
         {
@@ -603,7 +597,7 @@ namespace ClosedXML.Excel
             return NamedRanges.NamedRange(rangeName);
         }
 
-        IXLSheetView IXLWorksheet.SheetView { get => SheetView; }
+        IXLSheetView IXLWorksheet.SheetView => SheetView;
 
         public XLSheetView SheetView { get; private set; }
 
@@ -684,10 +678,7 @@ namespace ClosedXML.Excel
 
         public new IXLHyperlinks Hyperlinks { get; private set; }
 
-        IXLDataValidations IXLWorksheet.DataValidations
-        {
-            get { return DataValidations; }
-        }
+        IXLDataValidations IXLWorksheet.DataValidations => DataValidations;
 
         private XLWorksheetVisibility _visibility;
 
@@ -986,10 +977,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        IXLAutoFilter IXLWorksheet.AutoFilter
-        {
-            get { return AutoFilter; }
-        }
+        IXLAutoFilter IXLWorksheet.AutoFilter => AutoFilter;
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
         public IXLRows RowsUsed(bool includeFormats, Func<IXLRow, bool> predicate = null)
@@ -1724,10 +1712,7 @@ namespace ClosedXML.Excel
             var rangeKey = new XLRangeKey(XLRangeType.Table, rangeAddress);
             var table = (XLTable)_rangeRepository.GetOrCreate(ref rangeKey);
 
-            if (table.Name != name)
-            {
-                table.Name = name;
-            }
+            table.Name = name;
 
             if (addToTables && !Tables.Contains(table))
             {
@@ -1860,8 +1845,7 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        public IXLRanges MergedRanges
-        { get { return Internals.MergedRanges; } }
+        public IXLRanges MergedRanges => Internals.MergedRanges;
 
         public IXLConditionalFormats ConditionalFormats { get; private set; }
 
@@ -1899,10 +1883,7 @@ namespace ClosedXML.Excel
 
         private XLCalcEngine _calcEngine;
 
-        internal XLCalcEngine CalcEngine
-        {
-            get { return _calcEngine ??= new XLCalcEngine(this); }
-        }
+        internal XLCalcEngine CalcEngine => _calcEngine ??= new XLCalcEngine(this);
 
         public object Evaluate(string expression)
         {

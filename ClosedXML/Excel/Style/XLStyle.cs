@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
     {
         #region Static members
 
-        public static XLStyle Default { get { return new XLStyle(XLStyleValue.Default); } }
+        public static XLStyle Default => new XLStyle(XLStyleValue.Default);
 
         internal static XLStyleKey GenerateKey(IXLStyle initialStyle)
         {
@@ -164,10 +164,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLNumberFormat DateFormat
-        {
-            get { return NumberFormat; }
-        }
+        public IXLNumberFormat DateFormat => NumberFormat;
 
         #endregion IXLStyle members
 

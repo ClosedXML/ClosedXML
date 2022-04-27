@@ -5,7 +5,7 @@ namespace ClosedXML.Tests.Utils
 {
     internal class TemporaryFile : IDisposable
     {
-        private bool _disposed = false;
+        private bool _disposed;
 
         internal TemporaryFile()
             : this(System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "xlsx"))

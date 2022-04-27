@@ -195,10 +195,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLRangeRow Members
-        public override XLRangeType RangeType
-        {
-            get { return XLRangeType.RangeRow; }
-        }
+        public override XLRangeType RangeType => XLRangeType.RangeRow;
 
         internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {

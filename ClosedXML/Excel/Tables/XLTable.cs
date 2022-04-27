@@ -33,13 +33,10 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public override XLRangeType RangeType
-        {
-            get { return XLRangeType.Table; }
-        }
+        public override XLRangeType RangeType => XLRangeType.Table;
 
         private IXLRangeAddress _lastRangeAddress;
-        private Dictionary<string, IXLTableField> _fieldNames = null;
+        private Dictionary<string, IXLTableField> _fieldNames;
 
         public Dictionary<string, IXLTableField> FieldNames
         {
@@ -53,7 +50,7 @@ namespace ClosedXML.Excel
                 _lastRangeAddress = RangeAddress;
 
                 RescanFieldNames();
-                
+
                 return _fieldNames;
             }
         }
@@ -572,10 +569,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        IXLAutoFilter IXLTable.AutoFilter
-        {
-            get { return AutoFilter; }
-        }
+        IXLAutoFilter IXLTable.AutoFilter => AutoFilter;
 
         #endregion IXLTable Members
 

@@ -13,18 +13,9 @@ namespace ClosedXML.Tests
 {
     internal static class TestHelper
     {
-        public static string CurrencySymbol
-        {
-            get { return Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol; }
-        }
+        public static string CurrencySymbol => Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol;
 
-        public static string TestsOutputDirectory
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Generated");
-            }
-        }
+        public static string TestsOutputDirectory => Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Generated");
 
         public const string ActualTestResultPostFix = "";
         public static readonly string ExampleTestsOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");

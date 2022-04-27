@@ -49,15 +49,9 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Checks if the named range contains invalid references (#REF!).
         /// </summary>
-        public bool IsValid
-        {
-            get
-            {
-                return RangeList.SelectMany(c => c.Split(',')).All(r =>
-                    !r.StartsWith("#REF!", StringComparison.OrdinalIgnoreCase) &&
-                    !r.EndsWith("#REF!", StringComparison.OrdinalIgnoreCase));
-            }
-        }
+        public bool IsValid => RangeList.SelectMany(c => c.Split(',')).All(r =>
+                                                 !r.StartsWith("#REF!", StringComparison.OrdinalIgnoreCase) &&
+                                                 !r.EndsWith("#REF!", StringComparison.OrdinalIgnoreCase));
 
         public string Name
         {
@@ -131,8 +125,7 @@ namespace ClosedXML.Excel
 
         public bool Visible { get; set; }
 
-        public XLNamedRangeScope Scope
-        { get { return _namedRanges.Scope; } }
+        public XLNamedRangeScope Scope => _namedRanges.Scope;
 
         public IXLRanges Add(XLWorkbook workbook, string rangeAddress)
         {

@@ -125,17 +125,11 @@ namespace ClosedXML.Excel
 
         private static readonly IEqualityComparer<IXLConditionalFormat> FullComparerInstance = new FullEqualityComparer(true);
 
-        public static IEqualityComparer<IXLConditionalFormat> FullComparer
-        {
-            get { return FullComparerInstance; }
-        }
+        public static IEqualityComparer<IXLConditionalFormat> FullComparer => FullComparerInstance;
 
         private static readonly IEqualityComparer<IXLConditionalFormat> NoRangeComparerInstance = new FullEqualityComparer(false);
 
-        public static IEqualityComparer<IXLConditionalFormat> NoRangeComparer
-        {
-            get { return NoRangeComparerInstance; }
-        }
+        public static IEqualityComparer<IXLConditionalFormat> NoRangeComparer => NoRangeComparerInstance;
 
         #region Constructors
 
@@ -201,10 +195,7 @@ namespace ClosedXML.Excel
             get { yield break; }
         }
 
-        public override IXLRanges RangesUsed
-        {
-            get { return new XLRanges(); }
-        }
+        public override IXLRanges RangesUsed => new XLRanges();
 
         public XLDictionary<XLFormula> Values { get; private set; }
 

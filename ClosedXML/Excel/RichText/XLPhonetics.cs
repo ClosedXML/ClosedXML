@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public int Count { get { return _phonetics.Count; } }
+        public int Count => _phonetics.Count;
 
         public XLPhoneticAlignment Alignment { get; set; }
         public XLPhoneticType Type { get; set; }

@@ -38,26 +38,20 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLCells DataCells
-        {
-            get
-            {
-                return Column.Cells(c =>
-                {
-                    if (table.ShowHeaderRow && c == HeaderCell)
-                    {
-                        return false;
-                    }
+        public IXLCells DataCells => Column.Cells(c =>
+                                                   {
+                                                       if (table.ShowHeaderRow && c == HeaderCell)
+                                                       {
+                                                           return false;
+                                                       }
 
-                    if (table.ShowTotalsRow && c == TotalsCell)
-                    {
-                        return false;
-                    }
+                                                       if (table.ShowTotalsRow && c == TotalsCell)
+                                                       {
+                                                           return false;
+                                                       }
 
-                    return true;
-                });
-            }
-        }
+                                                       return true;
+                                                   });
 
         public IXLCell HeaderCell
         {
@@ -110,7 +104,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLTable Table { get { return table; } }
+        public IXLTable Table => table;
 
         public IXLCell TotalsCell
         {

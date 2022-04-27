@@ -1,4 +1,5 @@
 using ClosedXML.Excel.Style;
+using ClosedXML.Extensions;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -29,10 +30,7 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public override XLRangeType RangeType
-        {
-            get { return XLRangeType.Column; }
-        }
+        public override XLRangeType RangeType => XLRangeType.Column;
 
         public override IEnumerable<IXLStyle> Styles
         {

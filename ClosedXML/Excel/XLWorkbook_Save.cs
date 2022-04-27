@@ -58,8 +58,6 @@ namespace ClosedXML.Excel
     {
         private const double ColumnWidthOffset = 0.710625;
 
-        //private Dictionary<IXLStyle, StyleInfo> context.SharedStyles;
-
         private static readonly EnumValue<CellValues> CvSharedString = new EnumValue<CellValues>(CellValues.SharedString);
         private static readonly EnumValue<CellValues> CvInlineString = new EnumValue<CellValues>(CellValues.InlineString);
         private static readonly EnumValue<CellValues> CvNumber = new EnumValue<CellValues>(CellValues.Number);

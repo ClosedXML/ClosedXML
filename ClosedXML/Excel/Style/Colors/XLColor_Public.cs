@@ -38,10 +38,7 @@ namespace ClosedXML.Excel
 
         public bool HasValue { get; private set; }
 
-        public XLColorType ColorType
-        {
-            get { return Key.ColorType; }
-        }
+        public XLColorType ColorType => Key.ColorType;
 
         public SKColor Color
         {

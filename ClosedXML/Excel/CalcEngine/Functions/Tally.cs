@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal class Tally : IEnumerable<object>
     {
@@ -91,7 +91,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (hasEvenCount)
             {
-                var numElementsToSkip = (nums.Length / 2) - 1;
+                var numElementsToSkip = nums.Length / 2 - 1;
 
                 return nums.Skip(numElementsToSkip)
                            .Take(2)

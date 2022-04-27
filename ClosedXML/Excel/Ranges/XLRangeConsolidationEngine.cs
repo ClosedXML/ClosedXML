@@ -123,7 +123,7 @@ namespace ClosedXML.Excel
 
             private readonly IXLWorksheet _worksheet;
             private Dictionary<int, BitArray> _bitMatrix;
-            private int _maxColumn = 0;
+            private int _maxColumn;
             private int _minColumn = XLHelper.MaxColumnNumber + 1;
 
             #endregion Private Fields

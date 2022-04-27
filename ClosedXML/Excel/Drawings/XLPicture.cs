@@ -14,7 +14,7 @@ namespace ClosedXML.Excel.Drawings
         private const int ImageQuality = 70;
         private static readonly IDictionary<XLPictureFormat, SKEncodedImageFormat> FormatMap;
 
-        private bool _disposed = false;
+        private bool _disposed;
 
         private int height;
         private int id;

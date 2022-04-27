@@ -1,4 +1,5 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

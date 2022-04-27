@@ -29,7 +29,7 @@ namespace ClosedXML.Tests.Excel.Tables
             public string FirstName { get; set; }
 
             [XLColumn(Header = "Full name", Order = 0)]
-            public string FullName { get => string.Concat(FirstName, " ", LastName); }
+            public string FullName => string.Concat(FirstName, " ", LastName);
 
             [XLColumn(Order = 3)]
             public DateTime DateOfBirth { get; set; }
@@ -76,17 +76,11 @@ namespace ClosedXML.Tests.Excel.Tables
             return wb;
         }
 
-        private Person[] NewData
-        {
-            get
-            {
-                return new[]
+        private Person[] NewData => new[]
                 {
                     new Person{FirstName = "Michelle", LastName = "de Beer", Age = 35, DateOfBirth = new DateTime(1983,1,1), IsActive = false},
                     new Person{FirstName = "Marichen", LastName = "van der Gryp", Age = 30, DateOfBirth = new DateTime(1990,1,1), IsActive = true}
                 };
-            }
-        }
 
         [Test]
         public void AddingEmptyEnumerables()

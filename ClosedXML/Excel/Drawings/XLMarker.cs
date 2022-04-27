@@ -31,9 +31,9 @@ namespace ClosedXML.Excel.Drawings
             Offset = offset;
         }
 
-        public IXLCell Cell { get => rangeCell.FirstCell(); }
-        public int ColumnNumber { get => rangeCell.RangeAddress.FirstAddress.ColumnNumber; }
+        public IXLCell Cell => rangeCell.FirstCell();
+        public int ColumnNumber => rangeCell.RangeAddress.FirstAddress.ColumnNumber;
         public SKPoint Offset { get; set; }
-        public int RowNumber { get => rangeCell.RangeAddress.FirstAddress.RowNumber; }
+        public int RowNumber => rangeCell.RangeAddress.FirstAddress.RowNumber;
     }
 }

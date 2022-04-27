@@ -18,15 +18,9 @@ namespace ClosedXML.Excel
 
         #region IXLFilterConnector Members
 
-        public IXLCustomFilteredColumn And
-        {
-            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And); }
-        }
+        public IXLCustomFilteredColumn And => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And);
 
-        public IXLCustomFilteredColumn Or
-        {
-            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or); }
-        }
+        public IXLCustomFilteredColumn Or => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or);
 
         #endregion
     }

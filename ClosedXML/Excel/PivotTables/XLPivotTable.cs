@@ -57,10 +57,7 @@ namespace ClosedXML.Excel
 
         public XLPivotTableSourceType SourceType { get; private set; }
 
-        public IEnumerable<string> SourceRangeFieldsAvailable
-        {
-            get { return SourceRange.FirstRow().Cells().Select(c => c.GetString()); }
-        }
+        public IEnumerable<string> SourceRangeFieldsAvailable => SourceRange.FirstRow().Cells().Select(c => c.GetString());
 
         public IXLPivotFields Fields { get; private set; }
         public IXLPivotFields ReportFilters { get; private set; }

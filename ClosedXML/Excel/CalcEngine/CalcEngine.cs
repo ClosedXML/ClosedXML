@@ -232,18 +232,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Gets the dictionary that contains function definitions.
         /// </summary>
-        public Dictionary<string, FunctionDefinition> Functions
-        {
-            get { return _fnTbl; }
-        }
+        public Dictionary<string, FunctionDefinition> Functions => _fnTbl;
 
         /// <summary>
         /// Gets the dictionary that contains simple variables (not in the DataContext).
         /// </summary>
-        public Dictionary<string, object> Variables
-        {
-            get { return _vars; }
-        }
+        public Dictionary<string, object> Variables => _vars;
 
         /// <summary>
         /// Gets or sets the <see cref="CultureInfo"/> to use when parsing numbers and dates.

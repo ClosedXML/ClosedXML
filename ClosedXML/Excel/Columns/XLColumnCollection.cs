@@ -33,10 +33,7 @@ namespace ClosedXML.Excel
             return _dictionary.ContainsKey(key);
         }
 
-        public ICollection<int> Keys
-        {
-            get { return _dictionary.Keys; }
-        }
+        public ICollection<int> Keys => _dictionary.Keys;
 
         public bool Remove(int key)
         {
@@ -48,10 +45,7 @@ namespace ClosedXML.Excel
             return _dictionary.TryGetValue(key, out value);
         }
 
-        public ICollection<XLColumn> Values
-        {
-            get { return _dictionary.Values; }
-        }
+        public ICollection<XLColumn> Values => _dictionary.Values;
 
         public XLColumn this[int key]
         {
@@ -85,15 +79,9 @@ namespace ClosedXML.Excel
             throw new NotImplementedException();
         }
 
-        public int Count
-        {
-            get { return _dictionary.Count; }
-        }
+        public int Count => _dictionary.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public bool Remove(KeyValuePair<int, XLColumn> item)
         {

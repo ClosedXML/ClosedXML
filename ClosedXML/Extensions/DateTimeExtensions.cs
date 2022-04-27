@@ -7,13 +7,7 @@ namespace ClosedXML.Excel
 {
     internal static class DateTimeExtensions
     {
-        public static double MaxOADate
-        {
-            get
-            {
-                return 2958465.99999999;
-            }
-        }
+        public static double MaxOADate => 2958465.99999999;
 
         public static bool IsWorkDay(this DateTime date, IEnumerable<DateTime> bankHolidays)
         {

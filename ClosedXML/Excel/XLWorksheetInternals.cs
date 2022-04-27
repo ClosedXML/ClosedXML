@@ -4,7 +4,7 @@ namespace ClosedXML.Excel
 {
     internal class XLWorksheetInternals : IDisposable
     {
-        private bool _disposed = false;
+        private bool _disposed;
 
         public XLWorksheetInternals(
             XLCellsCollection cellsCollection,

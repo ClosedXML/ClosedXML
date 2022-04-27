@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
         public bool ConsolidateConditionalFormatRanges { get; set; } = true;
         public bool ConsolidateDataValidationRanges { get; set; } = true;
-        public bool EvaluateFormulasBeforeSaving { get; set; } = false;
+        public bool EvaluateFormulasBeforeSaving { get; set; }
 
         /// <summary>
         /// Gets or sets the filter privacy flag. Set to null to leave the current property in saved workbook unchanged

@@ -15,13 +15,12 @@ namespace ClosedXML.Excel
         public const int MinColumnNumber = 1;
         public const int MaxRowNumber = 1048576;
         public const int MaxColumnNumber = 16384;
-        public const string MaxColumnLetter = "XFD";
-        public const double Epsilon = 1e-10;
+        public static readonly string MaxColumnLetter = "XFD";
+        public static readonly double Epsilon = 1e-10;
 
-        public static string LastCell
-        { get { return $"{MaxColumnLetter}{MaxRowNumber}"; } }
+        public static string LastCell => $"{MaxColumnLetter}{MaxRowNumber}";
 
-        internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
+        internal const NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
         internal static readonly Regex RCSimpleRegex = new Regex(

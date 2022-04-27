@@ -49,10 +49,7 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Collection of ranges belonging to this quadrant (does not include ranges from child quadrants).
         /// </summary>
-        public IEnumerable<IXLAddressable> Ranges
-        {
-            get => _ranges?.Values.AsEnumerable();
-        }
+        public IEnumerable<IXLAddressable> Ranges => _ranges?.Values.AsEnumerable();
 
         /// <summary>
         /// The number of current quadrant by horizontal axis.

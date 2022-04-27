@@ -46,21 +46,9 @@ namespace ClosedXML.Excel
     {
         #region Static
 
-        public static IXLStyle DefaultStyle
-        {
-            get
-            {
-                return XLStyle.Default;
-            }
-        }
+        public static IXLStyle DefaultStyle => XLStyle.Default;
 
-        internal static XLStyleValue DefaultStyleValue
-        {
-            get
-            {
-                return XLStyleValue.Default;
-            }
-        }
+        internal static XLStyleValue DefaultStyleValue => XLStyleValue.Default;
 
         public static double DefaultRowHeight { get; private set; }
         public static double DefaultColumnWidth { get; private set; }
@@ -92,17 +80,11 @@ namespace ClosedXML.Excel
             }
         }
 
-        public static IXLOutline DefaultOutline
+        public static IXLOutline DefaultOutline => new XLOutline(null)
         {
-            get
-            {
-                return new XLOutline(null)
-                {
-                    SummaryHLocation = XLOutlineSummaryHLocation.Right,
-                    SummaryVLocation = XLOutlineSummaryVLocation.Bottom
-                };
-            }
-        }
+            SummaryHLocation = XLOutlineSummaryHLocation.Right,
+            SummaryVLocation = XLOutlineSummaryVLocation.Bottom
+        };
 
         /// <summary>
         ///   Behavior for <see cref = "IXLCell.set_Value" />
@@ -116,7 +98,7 @@ namespace ClosedXML.Excel
 
         #endregion Static
 
-        private bool _disposed = false;
+        private bool _disposed;
 
         internal readonly List<UnsupportedSheet> UnsupportedSheets =
             new List<UnsupportedSheet>();
@@ -235,47 +217,23 @@ namespace ClosedXML.Excel
         public bool ShowZeros { get; set; }
         public bool RightToLeft { get; set; }
 
-        public bool DefaultShowFormulas
-        {
-            get { return false; }
-        }
+        public bool DefaultShowFormulas => false;
 
-        public bool DefaultShowGridLines
-        {
-            get { return true; }
-        }
+        public bool DefaultShowGridLines => true;
 
-        public bool DefaultShowOutlineSymbols
-        {
-            get { return true; }
-        }
+        public bool DefaultShowOutlineSymbols => true;
 
-        public bool DefaultShowRowColHeaders
-        {
-            get { return true; }
-        }
+        public bool DefaultShowRowColHeaders => true;
 
-        public bool DefaultShowRuler
-        {
-            get { return true; }
-        }
+        public bool DefaultShowRuler => true;
 
-        public bool DefaultShowWhiteSpace
-        {
-            get { return true; }
-        }
+        public bool DefaultShowWhiteSpace => true;
 
-        public bool DefaultShowZeros
-        {
-            get { return true; }
-        }
+        public bool DefaultShowZeros => true;
 
         public IXLFileSharing FileSharing { get; } = new XLFileSharing();
 
-        public bool DefaultRightToLeft
-        {
-            get { return false; }
-        }
+        public bool DefaultRightToLeft => false;
 
         private void InitializeTheme()
         {
@@ -979,10 +937,7 @@ namespace ClosedXML.Excel
 
         private XLCalcEngine _calcEngine;
 
-        private XLCalcEngine CalcEngine
-        {
-            get { return _calcEngine ??= new XLCalcEngine(this); }
-        }
+        private XLCalcEngine CalcEngine => _calcEngine ??= new XLCalcEngine(this);
 
         public object Evaluate(string expression)
         {
@@ -1006,10 +961,7 @@ namespace ClosedXML.Excel
 
         private static XLCalcEngine _calcEngineExpr;
 
-        private static XLCalcEngine CalcEngineExpr
-        {
-            get { return _calcEngineExpr ??= new XLCalcEngine(); }
-        }
+        private static XLCalcEngine CalcEngineExpr => _calcEngineExpr ??= new XLCalcEngine();
 
         public static object EvaluateExpr(string expression)
         {

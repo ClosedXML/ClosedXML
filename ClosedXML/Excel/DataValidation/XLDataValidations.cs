@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
         /// The flag used to avoid unnecessary check for splitting intersected ranges when we already
         /// are performing the splitting.
         /// </summary>
-        private bool _skipSplittingExistingRanges = false;
+        private bool _skipSplittingExistingRanges;
 
         public XLDataValidations(XLWorksheet worksheet)
         {

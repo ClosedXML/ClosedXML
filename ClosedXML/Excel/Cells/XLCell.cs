@@ -154,15 +154,9 @@ namespace ClosedXML.Excel
 
         #region IXLCell Members
 
-        IXLWorksheet IXLCell.Worksheet
-        {
-            get { return Worksheet; }
-        }
+        IXLWorksheet IXLCell.Worksheet => Worksheet;
 
-        IXLAddress IXLCell.Address
-        {
-            get { return Address; }
-        }
+        IXLAddress IXLCell.Address => Address;
 
         IXLRange IXLCell.AsRange()
         {
@@ -1465,10 +1459,7 @@ namespace ClosedXML.Excel
             return _richText ?? CreateRichText();
         }
 
-        public bool HasRichText
-        {
-            get { return _richText != null; }
-        }
+        public bool HasRichText => _richText != null;
 
         public IXLRichText CreateRichText()
         {
@@ -1485,10 +1476,7 @@ namespace ClosedXML.Excel
             return GetComment();
         }
 
-        public bool HasComment
-        {
-            get { return _comment != null; }
-        }
+        public bool HasComment => _comment != null;
 
         IXLComment IXLCell.CreateComment()
         {
@@ -1645,10 +1633,7 @@ namespace ClosedXML.Excel
             return FindDataValidation() ?? CreateDataValidation();
         }
 
-        public bool HasDataValidation
-        {
-            get { return FindDataValidation() != null; }
-        }
+        public bool HasDataValidation => FindDataValidation() != null;
 
         /// <summary>
         /// Get the data validation rule containing current cell.
@@ -1711,10 +1696,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public bool HasHyperlink
-        {
-            get { return _hyperlink != null; }
-        }
+        public bool HasHyperlink => _hyperlink != null;
 
         public bool TryGetValue<T>(out T value)
         {
@@ -3328,21 +3310,13 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public bool HasFormula
-        { get { return !string.IsNullOrWhiteSpace(FormulaA1); } }
+        public bool HasFormula => !string.IsNullOrWhiteSpace(FormulaA1);
 
-        public bool HasArrayFormula
-        { get { return FormulaA1.StartsWith("{"); } }
+        public bool HasArrayFormula => FormulaA1.StartsWith("{");
 
         public IXLRangeAddress FormulaReference { get; set; }
 
-        public IXLRange CurrentRegion
-        {
-            get
-            {
-                return Worksheet.Range(FindCurrentRegion(AsRange()));
-            }
-        }
+        public IXLRange CurrentRegion => Worksheet.Range(FindCurrentRegion(AsRange()));
 
         internal IXLRangeAddress FindCurrentRegion(IXLRangeBase range)
         {

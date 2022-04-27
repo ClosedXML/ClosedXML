@@ -21,9 +21,9 @@ namespace ClosedXML.Excel
 
         public XLNumberFormatKey Key { get; private set; }
 
-        public int NumberFormatId { get { return Key.NumberFormatId; } }
+        public int NumberFormatId => Key.NumberFormatId;
 
-        public string Format { get { return Key.Format; } }
+        public string Format => Key.Format;
 
         private XLNumberFormatValue(XLNumberFormatKey key)
         {

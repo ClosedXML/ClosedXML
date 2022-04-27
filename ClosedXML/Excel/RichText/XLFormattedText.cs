@@ -38,8 +38,7 @@ namespace ClosedXML.Excel.RichText
             AddText(text);
         }
 
-        public int Count
-        { get { return _richTexts.Count; } }
+        public int Count => _richTexts.Count;
 
         public int Length { get; private set; }
 
@@ -252,17 +251,12 @@ namespace ClosedXML.Excel.RichText
             return _phonetics == null || Phonetics.Equals(other.Phonetics);
         }
 
-        public string Text
-        { get { return ToString(); } }
+        public string Text => ToString();
 
         private IXLPhonetics _phonetics;
 
-        public IXLPhonetics Phonetics
-        {
-            get { return _phonetics ??= new XLPhonetics(_defaultFont); }
-        }
+        public IXLPhonetics Phonetics => _phonetics ??= new XLPhonetics(_defaultFont);
 
-        public bool HasPhonetics
-        { get { return _phonetics != null; } }
+        public bool HasPhonetics => _phonetics != null;
     }
 }

@@ -1,12 +1,11 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
-using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class MathTrig
     {
@@ -1011,8 +1010,8 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Roman(List<Expression> p)
         {
             if (p.Count == 1
-                || (bool.TryParse(p[1]._token.Value.ToString(), out var boolTemp) && boolTemp)
-                || (int.TryParse(p[1]._token.Value.ToString(), out var intTemp) && intTemp == 1))
+                || bool.TryParse(p[1]._token.Value.ToString(), out var boolTemp) && boolTemp
+                || int.TryParse(p[1]._token.Value.ToString(), out var intTemp) && intTemp == 1)
             {
                 return XLMath.ToRoman((int)p[0]);
             }

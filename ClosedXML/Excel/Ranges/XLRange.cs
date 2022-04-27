@@ -15,10 +15,7 @@ namespace ClosedXML.Excel
 
         #endregion Constructor
 
-        public override XLRangeType RangeType
-        {
-            get { return XLRangeType.Range; }
-        }
+        public override XLRangeType RangeType => XLRangeType.Range;
 
         #region IXLRange Members
 

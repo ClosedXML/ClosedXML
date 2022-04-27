@@ -165,7 +165,7 @@ namespace ClosedXML.Excel.Ranges.Index
         protected readonly List<IXLAddressable> _rangeList;
 
         private readonly IXLWorksheet _worksheet;
-        private int _count = 0;
+        private int _count;
         protected Quadrant _quadTree;
 
         #endregion Private Fields

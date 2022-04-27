@@ -17,10 +17,7 @@ namespace ClosedXML.Excel.Style
         /// </summary>
         internal XLStyleValue StyleValue { get; private protected set; }
 
-        XLStyleValue IXLStylized.StyleValue
-        {
-            get { return StyleValue; }
-        }
+        XLStyleValue IXLStylized.StyleValue => StyleValue;
 
         /// <summary>
         /// Editable style of the workbook element. Modification of this property DOES affect styles of child objects as well - they will

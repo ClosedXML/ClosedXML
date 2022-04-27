@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
 
         #region Constructor
 
-        private static int IdCounter = 0;
+        private static int IdCounter;
         private readonly int Id;
 
         protected XLRangeBase(XLRangeAddress rangeAddress, XLStyleValue styleValue)
@@ -61,10 +61,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public XLWorksheet Worksheet
-        {
-            get { return RangeAddress.Worksheet; }
-        }
+        public XLWorksheet Worksheet => RangeAddress.Worksheet;
 
         public IXLDataValidation CreateDataValidation()
         {
@@ -82,15 +79,9 @@ namespace ClosedXML.Excel
 
         #region IXLRangeBase Members
 
-        IXLRangeAddress IXLAddressable.RangeAddress
-        {
-            get { return RangeAddress; }
-        }
+        IXLRangeAddress IXLAddressable.RangeAddress => RangeAddress;
 
-        IXLWorksheet IXLRangeBase.Worksheet
-        {
-            get { return RangeAddress.Worksheet; }
-        }
+        IXLWorksheet IXLRangeBase.Worksheet => RangeAddress.Worksheet;
 
         public string FormulaA1
         {
@@ -2033,15 +2024,9 @@ namespace ClosedXML.Excel
 
         #region Sort
 
-        public IXLSortElements SortRows
-        {
-            get { return _sortRows ??= new XLSortElements(); }
-        }
+        public IXLSortElements SortRows => _sortRows ??= new XLSortElements();
 
-        public IXLSortElements SortColumns
-        {
-            get { return _sortColumns ??= new XLSortElements(); }
-        }
+        public IXLSortElements SortColumns => _sortColumns ??= new XLSortElements();
 
         private string DefaultSortString()
         {

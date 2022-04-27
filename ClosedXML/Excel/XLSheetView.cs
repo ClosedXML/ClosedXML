@@ -50,7 +50,7 @@ namespace ClosedXML.Excel
 
         public XLSheetViewOptions View { get; set; }
 
-        IXLWorksheet IXLSheetView.Worksheet { get => Worksheet; }
+        IXLWorksheet IXLSheetView.Worksheet => Worksheet;
         public XLWorksheet Worksheet { get; internal set; }
 
         public int ZoomScale

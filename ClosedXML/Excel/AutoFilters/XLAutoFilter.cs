@@ -20,13 +20,13 @@ namespace ClosedXML.Excel
 
         [Obsolete("Use IsEnabled")]
         public bool Enabled { get => IsEnabled; set => IsEnabled = value; }
-        public IEnumerable<IXLRangeRow> HiddenRows { get => Range.Rows(r => r.WorksheetRow().IsHidden); }
+        public IEnumerable<IXLRangeRow> HiddenRows => Range.Rows(r => r.WorksheetRow().IsHidden);
         public bool IsEnabled { get; set; }
         public IXLRange Range { get; set; }
         public int SortColumn { get; set; }
         public bool Sorted { get; set; }
         public XLSortOrder SortOrder { get; set; }
-        public IEnumerable<IXLRangeRow> VisibleRows { get => Range.Rows(r => !r.WorksheetRow().IsHidden); }
+        public IEnumerable<IXLRangeRow> VisibleRows => Range.Rows(r => !r.WorksheetRow().IsHidden);
 
         IXLAutoFilter IXLAutoFilter.Clear()
         {

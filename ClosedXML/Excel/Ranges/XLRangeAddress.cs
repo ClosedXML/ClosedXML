@@ -94,10 +94,7 @@ namespace ClosedXML.Excel
 
         public XLAddress LastAddress { get; }
 
-        IXLWorksheet IXLRangeAddress.Worksheet
-        {
-            get { return Worksheet; }
-        }
+        IXLWorksheet IXLRangeAddress.Worksheet => Worksheet;
 
         IXLAddress IXLRangeAddress.FirstAddress
         {

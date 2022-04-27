@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         /// </summary>
         private readonly Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>> _indexes;
         private IEnumerable<XLRange> Ranges => _indexes.Values.SelectMany(index => index.GetAll());
-        private bool _styleInitialized = false;
+        private bool _styleInitialized;
 
         private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
         {
@@ -163,10 +163,7 @@ namespace ClosedXML.Excel
             return GetIntersectedRanges(cell.Address);
         }
 
-        public IEnumerable<IXLDataValidation> DataValidation
-        {
-            get { return Ranges.Select(range => range.GetDataValidation()).Where(dv => dv != null); }
-        }
+        public IEnumerable<IXLDataValidation> DataValidation => Ranges.Select(range => range.GetDataValidation()).Where(dv => dv != null);
 
         public IXLRanges AddToNamed(string rangeName)
         {
@@ -277,10 +274,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRanges RangesUsed
-        {
-            get { return this; }
-        }
+        public override IXLRanges RangesUsed => this;
 
         #endregion IXLStylized Members
 

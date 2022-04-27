@@ -26,7 +26,7 @@ namespace ClosedXML.Excel
 
         public XLColor PatternColor { get; private set; }
 
-        public XLFillPatternValues PatternType { get { return Key.PatternType; } }
+        public XLFillPatternValues PatternType => Key.PatternType;
 
         private XLFillValue(XLFillKey key)
         {

@@ -551,7 +551,7 @@ namespace ClosedXML.Excel
         /// </summary>
         private class RestoreOutsideBorder : IDisposable
         {
-            private bool _disposed = false;
+            private bool _disposed;
 
             private readonly IXLRange _range;
             private readonly Dictionary<int, XLBorderKey> _topBorders;

@@ -14,7 +14,7 @@ namespace ClosedXML.Excel
         private readonly bool _usedCellsOnly;
         private readonly Func<IXLCell, bool> _predicate;
         private readonly XLCellsUsedOptions _options;
-        private bool _styleInitialized = false;
+        private bool _styleInitialized;
 
         #endregion Fields
 

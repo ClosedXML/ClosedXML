@@ -21,9 +21,9 @@ namespace ClosedXML.Excel
 
         public XLProtectionKey Key { get; private set; }
 
-        public bool Locked { get { return Key.Locked; } }
+        public bool Locked => Key.Locked;
 
-        public bool Hidden { get { return Key.Hidden; } }
+        public bool Hidden => Key.Hidden;
 
         private XLProtectionValue(XLProtectionKey key)
         {

@@ -47,10 +47,10 @@ namespace ClosedXML.Examples.Tables
             // From a query
             var list = new List<Person>
             {
-                new Person() { Name = "John", Age = 30, House = "On Elm St." },
-                new Person() { Name = "Mary", Age = 15, House = "On Main St." },
-                new Person() { Name = "Luis", Age = 21, House = "On 23rd St." },
-                new Person() { Name = "Henry", Age = 45, House = "On 5th Ave." }
+                new Person { Name = "John", Age = 30, House = "On Elm St." },
+                new Person { Name = "Mary", Age = 15, House = "On Main St." },
+                new Person { Name = "Luis", Age = 21, House = "On 23rd St." },
+                new Person { Name = "Henry", Age = 45, House = "On 5th Ave." }
             };
 
             var people = from p in list

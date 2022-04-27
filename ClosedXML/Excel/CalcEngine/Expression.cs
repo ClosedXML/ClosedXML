@@ -281,10 +281,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** ExpressionBase
 
-        public override string LastParseItem
-        {
-            get { return _token?.Value?.ToString() ?? "Unknown value"; }
-        }
+        public override string LastParseItem => _token?.Value?.ToString() ?? "Unknown value";
 
         #endregion ** ExpressionBase
     }
@@ -324,10 +321,7 @@ namespace ClosedXML.Excel.CalcEngine
                 : this;
         }
 
-        public override string LastParseItem
-        {
-            get { return Expression.LastParseItem; }
-        }
+        public override string LastParseItem => Expression.LastParseItem;
     }
 
     /// <summary>
@@ -449,10 +443,7 @@ namespace ClosedXML.Excel.CalcEngine
                 : this;
         }
 
-        public override string LastParseItem
-        {
-            get { return RightExpression.LastParseItem; }
-        }
+        public override string LastParseItem => RightExpression.LastParseItem;
     }
 
     /// <summary>
@@ -499,10 +490,7 @@ namespace ClosedXML.Excel.CalcEngine
                 : this;
         }
 
-        public override string LastParseItem
-        {
-            get { return Parameters.Last().LastParseItem; }
-        }
+        public override string LastParseItem => Parameters.Last().LastParseItem;
     }
 
     /// <summary>
@@ -524,10 +512,7 @@ namespace ClosedXML.Excel.CalcEngine
             return _dct[_name];
         }
 
-        public override string LastParseItem
-        {
-            get { return _name; }
-        }
+        public override string LastParseItem => _name;
     }
 
     /// <summary>
@@ -543,7 +528,7 @@ namespace ClosedXML.Excel.CalcEngine
             _value = value;
         }
 
-        public object Value { get { return _value; } }
+        public object Value => _value;
 
         // ** object model
         public override object Evaluate()
@@ -577,10 +562,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public override string LastParseItem
-        {
-            get { return Value.ToString(); }
-        }
+        public override string LastParseItem => Value.ToString();
     }
 
     /// <summary>
@@ -594,10 +576,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
         }
 
-        public override string LastParseItem
-        {
-            get { return "<EMPTY VALUE>"; }
-        }
+        public override string LastParseItem => "<EMPTY VALUE>";
     }
 
     internal class ErrorExpression : Expression
