@@ -237,7 +237,7 @@ namespace ClosedXML.Excel
                         {
                             var formattedString = rt.Text;
                             var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
-                            var arrCount = arr.Count();
+                            var arrCount = arr.Length;
                             for (var i = 0; i < arrCount; i++)
                             {
                                 var s = arr[i];
@@ -254,7 +254,7 @@ namespace ClosedXML.Excel
                     {
                         var formattedString = c.GetFormattedString();
                         var arr = formattedString.Split(new[] { XLConstants.NewLine }, StringSplitOptions.None);
-                        var arrCount = arr.Count();
+                        var arrCount = arr.Length;
                         for (var i = 0; i < arrCount; i++)
                         {
                             var s = arr[i];

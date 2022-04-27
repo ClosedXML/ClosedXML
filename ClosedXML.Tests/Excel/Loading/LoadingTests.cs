@@ -409,7 +409,7 @@ namespace ClosedXML.Tests.Excel.Loading
 
             Assert.AreEqual("Page 1", ws.Name);
 
-            var expected = new Dictionary<string, string>()
+            var expected = new Dictionary<string, string>
             {
                 ["A1"] = "Action Plan.Name",
                 ["B1"] = "Action Plan.Description",
@@ -479,7 +479,7 @@ namespace ClosedXML.Tests.Excel.Loading
             using var stream = new MemoryStream();
             using (var wb = new XLWorkbook())
             {
-                var sheet = wb.AddWorksheet("sheet1");
+                wb.AddWorksheet("sheet1");
 
                 wb.Properties.Author = author;
                 wb.Properties.Title = title;

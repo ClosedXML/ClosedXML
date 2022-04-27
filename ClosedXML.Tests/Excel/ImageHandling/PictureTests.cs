@@ -360,7 +360,7 @@ namespace ClosedXML.Tests.Excel.ImageHandling
 
             pic.Id = id;
 
-            var pic2 = (ws2 as XLWorksheet).AddPicture(stream, "Picture 2", 3)
+            _ = (ws2 as XLWorksheet).AddPicture(stream, "Picture 2", 3)
                 .WithPlacement(XLPicturePlacement.FreeFloating)
                 .MoveTo(440, 300) as XLPicture;
         }
@@ -382,7 +382,7 @@ namespace ClosedXML.Tests.Excel.ImageHandling
             var copy = original.Duplicate()
                 .MoveTo(300, 200) as XLPicture;
 
-            Assert.AreEqual(2, ws1.Pictures.Count());
+            Assert.AreEqual(2, ws1.Pictures.Count);
             Assert.AreEqual(ws1, copy.Worksheet);
             Assert.AreEqual(original.Format, copy.Format);
             Assert.AreEqual(original.Height, copy.Height);
@@ -413,8 +413,8 @@ namespace ClosedXML.Tests.Excel.ImageHandling
 
             var copy = original.CopyTo(ws2);
 
-            Assert.AreEqual(1, ws1.Pictures.Count());
-            Assert.AreEqual(1, ws2.Pictures.Count());
+            Assert.AreEqual(1, ws1.Pictures.Count);
+            Assert.AreEqual(1, ws2.Pictures.Count);
 
             Assert.AreEqual(ws2, copy.Worksheet);
 

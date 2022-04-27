@@ -10,11 +10,9 @@ namespace ClosedXML.Utils
             using var paint = new SKPaint();
             paint.Typeface = fontName;
 
-            // Size: 12px
             paint.TextSize = 12f;
-
             var skBounds = SKRect.Empty;
-            var textWidth = paint.MeasureText(text.AsSpan(), ref skBounds);
+            paint.MeasureText(text.AsSpan(), ref skBounds);
             return skBounds;
         }
     }

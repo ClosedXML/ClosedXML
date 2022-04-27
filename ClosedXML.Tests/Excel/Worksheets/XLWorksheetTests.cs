@@ -705,9 +705,9 @@ namespace ClosedXML.Tests.Excel.Worksheets
 
             void AssertPicturesAreEqual(IXLWorksheet ws1, IXLWorksheet ws2)
             {
-                Assert.AreEqual(ws1.Pictures.Count(), ws2.Pictures.Count());
+                Assert.AreEqual(ws1.Pictures.Count, ws2.Pictures.Count);
 
-                for (var i = 0; i < ws1.Pictures.Count(); i++)
+                for (var i = 0; i < ws1.Pictures.Count; i++)
                 {
                     var original = ws1.Pictures.ElementAt(i);
                     var copy = ws2.Pictures.ElementAt(i);

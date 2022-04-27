@@ -750,12 +750,9 @@ namespace ClosedXML.Tests.Excel.Cells
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
 
-            bool success;
-            string outValue;
-
-            success = ws.Cell("A1")
-                .SetValue("Site_x0020_Column_x0020_Test")
-                .TryGetValue(out outValue);
+            var success = ws.Cell("A1")
+                  .SetValue("Site_x0020_Column_x0020_Test")
+                  .TryGetValue(out string outValue);
             Assert.IsTrue(success);
             Assert.AreEqual("Site Column Test", outValue);
 
@@ -902,13 +899,13 @@ namespace ClosedXML.Tests.Excel.Cells
             object expected;
 
             var date = new DateTime(2018, 4, 18);
-            expected = date.ToString();
+            expected = date.ToString(CultureInfo.CurrentCulture);
             cell.Value = expected;
             Assert.AreEqual(XLDataType.DateTime, cell.DataType);
             Assert.AreEqual(date, cell.Value);
 
             var b = true;
-            expected = b.ToString();
+            expected = b.ToString(CultureInfo.CurrentCulture);
             cell.Value = expected;
             Assert.AreEqual(XLDataType.Boolean, cell.DataType);
             Assert.AreEqual(b, cell.Value);
@@ -1259,11 +1256,11 @@ namespace ClosedXML.Tests.Excel.Cells
 
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var _ = A1.Value;
+                _ = A1.Value;
             });
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var _ = A2.Value;
+                _ = A2.Value;
             });
         }
 
@@ -1303,7 +1300,7 @@ namespace ClosedXML.Tests.Excel.Cells
             cell.FormulaA1 = "A1";
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var _ = cell.Value;
+                _ = cell.Value;
             });
         }
 

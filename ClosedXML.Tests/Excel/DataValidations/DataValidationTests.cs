@@ -381,7 +381,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
 
             IXLRange addedRange = null;
 
-            dv.RangeAdded += (s, e) => addedRange = e.Range;
+            dv.RangeAdded += (_, e) => addedRange = e.Range;
 
             dv.AddRange(range2);
 
@@ -399,7 +399,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
 
             var addedRanges = new List<IXLRange>();
 
-            dv.RangeAdded += (s, e) => addedRanges.Add(e.Range);
+            dv.RangeAdded += (_, e) => addedRanges.Add(e.Range);
 
             dv.AddRanges(ranges);
 

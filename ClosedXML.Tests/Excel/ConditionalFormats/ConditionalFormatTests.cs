@@ -88,7 +88,7 @@ namespace ClosedXML.Tests.Excel.ConditionalFormats
                 ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrGreaterThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
                 ws.Cell(i++, 1).AddConditionalFormat().WhenEqualOrLessThan(expectedValue).Fill.SetBackgroundColor(XLColor.Red);
                 ws.Cell(i++, 1).AddConditionalFormat().WhenBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
-                ws.Cell(i++, 1).AddConditionalFormat().WhenNotBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
+                ws.Cell(i, 1).AddConditionalFormat().WhenNotBetween(expectedValue, expectedValue).Fill.SetBackgroundColor(XLColor.Red);
 
                 wb.SaveAs(ms);
             }

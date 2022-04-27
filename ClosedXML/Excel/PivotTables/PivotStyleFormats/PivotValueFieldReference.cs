@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml;
-using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
@@ -20,7 +19,7 @@ namespace ClosedXML.Excel
 
         internal override IEnumerable<int> Match(XLWorkbook.PivotTableInfo pti, IXLPivotTable pt)
         {
-            return new int[]
+            return new[]
             {
                 pt.Values.IndexOf(Value.ToString())
             };

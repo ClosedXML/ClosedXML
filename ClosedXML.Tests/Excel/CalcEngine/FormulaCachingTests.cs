@@ -49,7 +49,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var cell = sheet.Cell(1, 1);
             var dependentCell = sheet.Cell(2, 1);
             dependentCell.FormulaA1 = "=A1";
-            var _ = dependentCell.Value;
+            _ = dependentCell.Value;
 
             cell.Value = "1234567";
 
@@ -205,7 +205,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             sheet.Cell(changedCell).Value = 100;
             var modifiedCells = allCells.Where(cell => cell.NeedsRecalculation);
 
-            Assert.AreEqual(affectedCells.Length, modifiedCells.Count());
+            Assert.AreEqual(affectedCells?.Length, modifiedCells.Count());
             foreach (var cellAddress in affectedCells)
             {
                 Assert.IsTrue(modifiedCells.Any(cell => cell.Address.ToString() == cellAddress),
@@ -228,10 +228,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             a4.FormulaA1 = "=A3*10";
             a1.FormulaA1 = "A2+A3+A4";
 
-            var getValueA1 = new TestDelegate(() => { var v = a1.Value; });
-            var getValueA2 = new TestDelegate(() => { var v = a2.Value; });
-            var getValueA3 = new TestDelegate(() => { var v = a3.Value; });
-            var getValueA4 = new TestDelegate(() => { var v = a4.Value; });
+            var getValueA1 = new TestDelegate(() => { _ = a1.Value; });
+            var getValueA2 = new TestDelegate(() => { _ = a2.Value; });
+            var getValueA3 = new TestDelegate(() => { _ = a3.Value; });
+            var getValueA4 = new TestDelegate(() => { _ = a4.Value; });
 
             Assert.Throws(typeof(InvalidOperationException), getValueA1);
             Assert.Throws(typeof(InvalidOperationException), getValueA2);
@@ -252,7 +252,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             a2.FormulaA1 = "=A1*10";
             a3.FormulaA1 = "=A2*10";
             a4.FormulaA1 = "=A3*10";
-            var _ = a4.Value;
+            _ = a4.Value;
             a1.FormulaA1 = "=SUM(A2:A4)";
 
             var recalcNeededA1 = a1.NeedsRecalculation;
@@ -279,7 +279,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             var val1 = sheet1_a1.Value;
             sheet2.Delete();
-            var getValue = new TestDelegate(() => { var val2 = sheet1_a1.Value; });
+            var getValue = new TestDelegate(() => { _ = sheet1_a1.Value; });
 
             Assert.AreEqual("TestValue", val1.ToString());
             Assert.Throws(typeof(ArgumentOutOfRangeException), getValue);
@@ -292,7 +292,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var sheet = wb.Worksheets.Add("TestSheet");
             var cell = sheet.Cell(1, 1);
 
-            var date = new DateTime(2018, 4, 19); ;
+            var date = new DateTime(2018, 4, 19);
             cell.Value = date;
 
             Assert.AreEqual(XLDataType.DateTime, cell.DataType);

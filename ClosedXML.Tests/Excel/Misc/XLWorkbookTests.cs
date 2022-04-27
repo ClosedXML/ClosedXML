@@ -99,7 +99,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void GetCellFromNonExistingFullAddress(string address)
         {
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            wb.AddWorksheet("Sheet1");
 
             var c = wb.Cell(address);
 
@@ -124,7 +124,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void GetRangeFromNonExistingFullAddress(string rangeAddress)
         {
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            wb.AddWorksheet("Sheet1");
 
             var r = wb.Range(rangeAddress);
 
@@ -150,7 +150,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void GetRangesFromNonExistingFullAddress(string rangesAddress)
         {
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            wb.AddWorksheet("Sheet1");
 
             var r = wb.Ranges(rangesAddress);
 
@@ -183,7 +183,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void NamedRange3()
         {
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Sheet1");
+            wb.AddWorksheet("Sheet1");
             var range = wb.NamedRange("Sheet1!Result");
             Assert.IsNull(range);
         }
@@ -239,7 +239,7 @@ namespace ClosedXML.Tests.Excel.Misc
             using var wb = new XLWorkbook();
             var ranges = wb.Ranges("ABC");
             Assert.IsNotNull(ranges);
-            Assert.AreEqual(0, ranges.Count());
+            Assert.AreEqual(0, ranges.Count);
         }
 
         [Test]
@@ -344,7 +344,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void WbProtect1()
         {
             using var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Worksheets.Add("Sheet1");
             wb.Protect();
             Assert.IsTrue(wb.LockStructure);
             Assert.IsFalse(wb.LockWindows);
@@ -355,7 +355,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void WbProtect2()
         {
             using var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Worksheets.Add("Sheet1");
 #pragma warning disable CS0618 // Type or member is obsolete, but still should be tested
             wb.Protect(true, false);
 #pragma warning restore CS0618 // Type or member is obsolete, but still should be tested
@@ -368,7 +368,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void WbProtect3()
         {
             using var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Worksheets.Add("Sheet1");
             wb.Protect("Abc@123");
             Assert.IsTrue(wb.LockStructure);
             Assert.IsFalse(wb.LockWindows);
@@ -382,7 +382,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void WbProtect4()
         {
             using var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Worksheets.Add("Sheet1");
             wb.Protect();
             Assert.IsTrue(wb.LockStructure);
             Assert.IsFalse(wb.LockWindows);
@@ -398,7 +398,7 @@ namespace ClosedXML.Tests.Excel.Misc
         public void WbProtect5()
         {
             using var wb = new XLWorkbook();
-            var ws = wb.Worksheets.Add("Sheet1");
+            wb.Worksheets.Add("Sheet1");
 #pragma warning disable CS0618 // Type or member is obsolete, but still should be tested
             wb.Protect(true, false, "Abc@123");
 #pragma warning restore CS0618 // Type or member is obsolete, but still should be tested

@@ -221,7 +221,7 @@ namespace ClosedXML.Tests.Excel.Ranges
             ranges.Add(range3);
             Assert.AreEqual(2, ranges.Count);
 
-            Assert.AreEqual(ranges.Count, ranges.Count());
+            Assert.AreEqual(ranges.Count, ranges.Count);
 
             // Add many entries to activate QuadTree
             for (var i = 1; i <= TEST_COUNT; i++)
