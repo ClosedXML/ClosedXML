@@ -37,7 +37,7 @@ namespace ClosedXML.Tests
 
             var example = new T();
             var pathParts = filePartName.Split(new[] { '\\' });
-            var filePath1 = Path.Combine(new List<string>() { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
+            var filePath1 = Path.Combine(new List<string> { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
@@ -118,7 +118,7 @@ namespace ClosedXML.Tests
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             var pathParts = referenceResource.Split(new[] { '\\' });
-            var filePath1 = Path.Combine(new List<string>() { TestsOutputDirectory }.Concat(pathParts).ToArray());
+            var filePath1 = Path.Combine(new List<string> { TestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);

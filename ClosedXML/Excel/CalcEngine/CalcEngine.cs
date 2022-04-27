@@ -543,7 +543,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** parser
 
-        private static readonly IDictionary<char, char> matchingClosingSymbols = new Dictionary<char, char>()
+        private static readonly IDictionary<char, char> matchingClosingSymbols = new Dictionary<char, char>
         {
             { '\'', '\'' },
             { '[',  ']' }
