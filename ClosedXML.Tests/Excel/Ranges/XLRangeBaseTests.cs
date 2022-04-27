@@ -14,7 +14,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         public void IsEmpty1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
+            _ = ws.Cell(1, 1);
             var range = ws.Range("A1:B2");
             var actual = range.IsEmpty();
             var expected = true;
@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Excel.Ranges
         public void IsEmpty2()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            var cell = ws.Cell(1, 1);
+            _ = ws.Cell(1, 1);
             var range = ws.Range("A1:B2");
             var actual = range.IsEmpty(XLCellsUsedOptions.All);
             var expected = true;
