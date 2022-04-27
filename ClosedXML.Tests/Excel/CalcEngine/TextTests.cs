@@ -409,7 +409,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Rept_Start_Is_Negative()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Rept(""Francois"", -1)"), Throws.TypeOf<IndexOutOfRangeException>());
+            Assert.That(() => XLWorkbook.EvaluateExpr(@"Rept(""Francois"", -1)"), Throws.TypeOf<ArithmeticException>());
         }
 
         [Test]
