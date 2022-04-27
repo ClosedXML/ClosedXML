@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
 
             if (predicate == null)
             {
-                return new int[] { };
+                return Array.Empty<int>();
             }
 
             return values.Select((Value, Index) => new { Value, Index })

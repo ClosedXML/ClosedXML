@@ -30,9 +30,9 @@ namespace ClosedXML.Examples.Tables
             // From a list of arrays
             var listOfArr = new List<int[]>
             {
-                new int[] { 1, 2, 3 },
-                new int[] { 1 },
-                new int[] { 1, 2, 3, 4, 5, 6 }
+                new [] { 1, 2, 3 },
+                new [] { 1 },
+                new [] { 1, 2, 3, 4, 5, 6 }
             };
             ws.Cell(1, 3).Value = "From Arrays";
             ws.Range(1, 3, 1, 8).Merge().AddToNamed("Titles");

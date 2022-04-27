@@ -20,7 +20,7 @@ namespace ClosedXML.Examples.Delete
                     workbook.SaveAs(tempFile);
                 }
 
-                //Note: Delate few worksheet
+                //Note: Delete few worksheet
                 {
                     using var workbook = new XLWorkbook(tempFile);
                     workbook.Worksheets.Delete("1");
