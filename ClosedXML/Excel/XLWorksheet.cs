@@ -2,6 +2,7 @@ using ClosedXML.Excel.Caching;
 using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.Drawings;
 using ClosedXML.Excel.Ranges.Index;
+using ClosedXML.Excel.Style;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

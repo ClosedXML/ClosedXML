@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Misc
 {
     [TestFixture]
     public class XLWorkbookTests

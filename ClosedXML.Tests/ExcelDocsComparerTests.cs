@@ -1,4 +1,5 @@
 using ClosedXML.Examples;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using System.IO;
 

@@ -1,7 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Coordinates
 {
     [TestFixture]
     public class XLAddressTests

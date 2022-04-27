@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.PageSetup
 {
     [TestFixture]
     public class HeaderFooterTests

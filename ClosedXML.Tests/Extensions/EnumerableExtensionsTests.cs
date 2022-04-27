@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using ClosedXML.Tests.Excel;
+using ClosedXML.Tests.Excel.Tables;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;

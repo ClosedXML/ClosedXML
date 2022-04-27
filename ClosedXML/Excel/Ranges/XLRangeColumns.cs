@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {

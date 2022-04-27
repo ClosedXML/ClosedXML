@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Ranges
 {
     [TestFixture]
     public class XLRangeBaseTests

@@ -2,7 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System.IO;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     [TestFixture]
     public class XLFillTests

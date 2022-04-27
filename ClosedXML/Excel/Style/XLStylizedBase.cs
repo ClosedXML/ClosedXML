@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel.Style
 {
     /// <summary>
     /// Base class for any workbook element that has or may have a style.
@@ -16,6 +16,7 @@ namespace ClosedXML.Excel
         /// Read-only style property.
         /// </summary>
         internal XLStyleValue StyleValue { get; private protected set; }
+
         XLStyleValue IXLStylized.StyleValue
         {
             get { return StyleValue; }

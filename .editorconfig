@@ -1036,6 +1036,9 @@ dotnet_diagnostic.IDE0058.severity = silent
 # IDE0027: Use expression body for accessors
 dotnet_diagnostic.IDE0027.severity = suggestion
 
+# S125: Sections of code should not be commented out
+dotnet_diagnostic.S125.severity = silent
+
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4

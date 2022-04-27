@@ -2,7 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Ranges
 {
     [TestFixture]
     public class MergedRangesTests

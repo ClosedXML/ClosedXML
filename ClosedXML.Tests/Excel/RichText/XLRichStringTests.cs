@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.RichText
 {
     /// <summary>
     ///     This is a test class for XLRichStringTests and is intended

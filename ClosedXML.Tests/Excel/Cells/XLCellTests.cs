@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Cells
 {
     [TestFixture]
     public class XLCellTests

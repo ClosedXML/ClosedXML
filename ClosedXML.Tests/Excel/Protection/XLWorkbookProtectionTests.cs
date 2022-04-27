@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Protection
 {
     public class XLWorkbookProtectionTests
     {

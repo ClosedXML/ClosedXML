@@ -1,7 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.PageSetup
 {
     [TestFixture]
     public class PageBreaksTests

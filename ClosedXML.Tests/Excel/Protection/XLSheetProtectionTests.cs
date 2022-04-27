@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
-namespace ClosedXML.Tests.Excel.Worksheets
+namespace ClosedXML.Tests.Excel.Protection
 {
     [TestFixture]
     public class XLSheetProtectionTests

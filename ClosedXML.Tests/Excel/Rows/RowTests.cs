@@ -2,7 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Rows
 {
     [TestFixture]
     public class RowTests

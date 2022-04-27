@@ -8,7 +8,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Tables
 {
     [TestFixture]
     public class TablesTests

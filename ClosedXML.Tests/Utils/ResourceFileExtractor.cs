@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Utils
 {
     /// <summary>
     /// Summary description for ResourceFileExtractor.

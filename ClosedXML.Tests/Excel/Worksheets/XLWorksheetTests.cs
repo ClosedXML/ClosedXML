@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using ClosedXML.Excel.Drawings;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using SkiaSharp;
 using System;
@@ -7,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Worksheets
 {
     [TestFixture]
     public class XLWorksheetTests

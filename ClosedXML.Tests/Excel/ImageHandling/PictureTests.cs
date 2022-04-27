@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.ImageHandling
 {
     [TestFixture]
     public class PictureTests

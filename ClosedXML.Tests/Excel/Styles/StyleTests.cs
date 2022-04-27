@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     [TestFixture]
     public class StyleTests

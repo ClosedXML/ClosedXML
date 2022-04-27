@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml;
 using NUnit.Framework;
 using System;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Misc
 {
     [TestFixture]
     public class ExtensionsTests
@@ -70,7 +70,7 @@ namespace ClosedXML.Tests.Excel
         [TestCase(null, ExpectedResult = null)]
         public string CanEscapeSheetName(string sheetName)
         {
-            return StringExtensions.EscapeSheetName(sheetName);
+            return sheetName.EscapeSheetName();
         }
 
         [TestCase("TestSheet", ExpectedResult = "TestSheet")]
@@ -78,7 +78,7 @@ namespace ClosedXML.Tests.Excel
         [TestCase("'O''Kelly'", ExpectedResult = "O'Kelly")]
         public string CanUnescapeSheetName(string sheetName)
         {
-            return StringExtensions.UnescapeSheetName(sheetName);
+            return sheetName.UnescapeSheetName();
         }
     }
 }

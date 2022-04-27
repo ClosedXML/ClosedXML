@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel.RichText
 {
     internal class XLFormattedText<T> : IXLFormattedText<T>
     {
@@ -40,6 +40,7 @@ namespace ClosedXML.Excel
 
         public int Count
         { get { return _richTexts.Count; } }
+
         public int Length { get; private set; }
 
         public IXLRichString AddText(string text)
@@ -94,7 +95,7 @@ namespace ClosedXML.Excel
 
         public IXLFormattedText<T> Substring(int index, int length)
         {
-            if (index + 1 > Length || (Length - index + 1) < length || length <= 0)
+            if (index + 1 > Length || Length - index + 1 < length || length <= 0)
             {
                 throw new IndexOutOfRangeException("Index and length must refer to a location within the string.");
             }
@@ -159,22 +160,31 @@ namespace ClosedXML.Excel
 
         public bool Bold
         { set { _richTexts.ForEach(rt => rt.Bold = value); } }
+
         public bool Italic
         { set { _richTexts.ForEach(rt => rt.Italic = value); } }
+
         public XLFontUnderlineValues Underline
         { set { _richTexts.ForEach(rt => rt.Underline = value); } }
+
         public bool Strikethrough
         { set { _richTexts.ForEach(rt => rt.Strikethrough = value); } }
+
         public XLFontVerticalTextAlignmentValues VerticalAlignment
         { set { _richTexts.ForEach(rt => rt.VerticalAlignment = value); } }
+
         public bool Shadow
         { set { _richTexts.ForEach(rt => rt.Shadow = value); } }
+
         public double FontSize
         { set { _richTexts.ForEach(rt => rt.FontSize = value); } }
+
         public XLColor FontColor
         { set { _richTexts.ForEach(rt => rt.FontColor = value); } }
+
         public string FontName
         { set { _richTexts.ForEach(rt => rt.FontName = value); } }
+
         public XLFontFamilyNumberingValues FontFamilyNumbering
         { set { _richTexts.ForEach(rt => rt.FontFamilyNumbering = value); } }
 

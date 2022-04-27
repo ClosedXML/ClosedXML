@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.PivotTables
 {
     [TestFixture]
     public class XLPivotTableTests

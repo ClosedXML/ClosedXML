@@ -1,3 +1,5 @@
+using ClosedXML.Excel.Ranges.Sort;
+using ClosedXML.Excel.Style;
 using System;
 using System.Collections;
 using System.Collections.Generic;

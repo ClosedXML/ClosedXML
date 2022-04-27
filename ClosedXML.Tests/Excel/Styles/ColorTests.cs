@@ -5,7 +5,7 @@ using NUnit.Framework;
 using SkiaSharp;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     [TestFixture]
     public class ColorTests

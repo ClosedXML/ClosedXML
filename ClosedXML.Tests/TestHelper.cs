@@ -1,5 +1,6 @@
 using ClosedXML.Examples;
 using ClosedXML.Excel;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

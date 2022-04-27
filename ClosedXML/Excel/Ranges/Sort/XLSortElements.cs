@@ -1,23 +1,26 @@
-using System;
 using System.Collections.Generic;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel.Ranges.Sort
 {
-    internal class XLSortElements: IXLSortElements
+    internal class XLSortElements : IXLSortElements
     {
-        readonly List<IXLSortElement> elements = new List<IXLSortElement>();
+        private readonly List<IXLSortElement> elements = new List<IXLSortElement>();
+
         public void Add(int elementNumber)
         {
             Add(elementNumber, XLSortOrder.Ascending);
         }
+
         public void Add(int elementNumber, XLSortOrder sortOrder)
         {
             Add(elementNumber, sortOrder, true);
         }
+
         public void Add(int elementNumber, XLSortOrder sortOrder, bool ignoreBlanks)
         {
             Add(elementNumber, sortOrder, ignoreBlanks, false);
         }
+
         public void Add(int elementNumber, XLSortOrder sortOrder, bool ignoreBlanks, bool matchCase)
         {
             elements.Add(new XLSortElement()
@@ -33,14 +36,17 @@ namespace ClosedXML.Excel
         {
             Add(elementNumber, XLSortOrder.Ascending);
         }
+
         public void Add(string elementNumber, XLSortOrder sortOrder)
         {
             Add(elementNumber, sortOrder, true);
         }
+
         public void Add(string elementNumber, XLSortOrder sortOrder, bool ignoreBlanks)
         {
             Add(elementNumber, sortOrder, ignoreBlanks, false);
         }
+
         public void Add(string elementNumber, XLSortOrder sortOrder, bool ignoreBlanks, bool matchCase)
         {
             elements.Add(new XLSortElement()

@@ -5,7 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     public class NumberFormatTests
     {

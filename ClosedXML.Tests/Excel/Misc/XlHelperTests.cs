@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Misc
 {
     [TestFixture]
     public class XlHelperTests
@@ -194,7 +194,7 @@ namespace ClosedXML.Tests.Excel
                 return letters[columnNumber];
             }
             var firstPart = columnNumber / 26;
-            var remainder = (columnNumber % 26) + 1;
+            var remainder = columnNumber % 26 + 1;
             return NaiveGetColumnLetterFromNumber(firstPart) + NaiveGetColumnLetterFromNumber(remainder);
         }
 

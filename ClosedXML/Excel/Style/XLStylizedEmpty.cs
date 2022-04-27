@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Style;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel

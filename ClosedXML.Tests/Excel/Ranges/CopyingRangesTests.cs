@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SkiaSharp;
 using System.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Ranges
 {
     [TestFixture]
     public class CopyingRangesTests

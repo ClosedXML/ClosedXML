@@ -5,7 +5,7 @@ using System;
 using System.Globalization;
 using System.Threading;
 
-namespace ClosedXML.Tests.Excel.DataValidations
+namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
     public class DateAndTimeTests

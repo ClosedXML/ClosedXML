@@ -1,3 +1,4 @@
+using ClosedXML.Excel.RichText;
 using System;
 using System.Text;
 

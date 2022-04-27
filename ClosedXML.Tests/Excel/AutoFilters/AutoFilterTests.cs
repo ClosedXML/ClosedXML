@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.AutoFilters
 {
     [TestFixture]
     public class AutoFilterTests

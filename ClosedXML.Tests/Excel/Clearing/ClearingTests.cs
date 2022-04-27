@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Clearing
 {
     [TestFixture]
     public class ClearingTests

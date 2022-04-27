@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Loading
 {
     // Tests in this fixture test only the successful loading of existing Excel files,
     // i.e. we test that ClosedXML doesn't choke on a given input file

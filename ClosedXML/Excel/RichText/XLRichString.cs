@@ -1,7 +1,6 @@
-using System;
 using System.Diagnostics;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel.RichText
 {
     [DebuggerDisplay("{Text}")]
     internal class XLRichString : IXLRichString

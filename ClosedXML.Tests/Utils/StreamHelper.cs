@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Utils
 {
     /// <summary>
     ///     Help methods for work with streams

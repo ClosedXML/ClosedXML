@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Columns
 {
     [TestFixture]
     public class ColumnTests

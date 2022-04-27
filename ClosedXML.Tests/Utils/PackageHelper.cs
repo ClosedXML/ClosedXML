@@ -8,7 +8,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Utils
 {
     public static class PackageHelper
     {
