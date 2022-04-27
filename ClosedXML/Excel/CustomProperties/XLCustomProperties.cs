@@ -5,13 +5,13 @@ namespace ClosedXML.Excel
 {
     internal class XLCustomProperties: IXLCustomProperties, IEnumerable<IXLCustomProperty>
     {
-        XLWorkbook workbook;
+        readonly XLWorkbook workbook;
         public XLCustomProperties(XLWorkbook workbook)
         {
             this.workbook = workbook;
         }
 
-        private Dictionary<string, IXLCustomProperty> customProperties = new Dictionary<string, IXLCustomProperty>();
+        private readonly Dictionary<string, IXLCustomProperty> customProperties = new Dictionary<string, IXLCustomProperty>();
         public void Add(IXLCustomProperty customProperty)
         {
             customProperties.Add(customProperty.Name, customProperty);

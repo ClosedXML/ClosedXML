@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
+        private static readonly ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
 
         void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
         {

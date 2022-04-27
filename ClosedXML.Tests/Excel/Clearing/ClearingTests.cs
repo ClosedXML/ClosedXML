@@ -9,8 +9,8 @@ namespace ClosedXML.Tests
     [TestFixture]
     public class ClearingTests
     {
-        private static XLColor backgroundColor = XLColor.LightBlue;
-        private static XLColor foregroundColor = XLColor.DarkBrown;
+        private static readonly XLColor backgroundColor = XLColor.LightBlue;
+        private static readonly XLColor foregroundColor = XLColor.DarkBrown;
 
         private IXLWorkbook SetupWorkbook(XLWorkbook wb)
         {

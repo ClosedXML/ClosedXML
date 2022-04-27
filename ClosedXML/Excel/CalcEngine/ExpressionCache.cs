@@ -13,8 +13,8 @@ namespace ClosedXML.Excel.CalcEngine
     /// </remarks>
     class ExpressionCache
     {
-        Dictionary<string, WeakReference> _dct;
-        CalcEngine _ce;
+        readonly Dictionary<string, WeakReference> _dct;
+        readonly CalcEngine _ce;
         int _hitCount;
 
         public ExpressionCache(CalcEngine ce)

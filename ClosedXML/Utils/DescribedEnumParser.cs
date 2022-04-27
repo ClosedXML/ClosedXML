@@ -9,12 +9,12 @@ namespace ClosedXML.Utils
 {
     internal static class DescribedEnumParser<T>
     {
-        private static Lazy<IDictionary<string, T>> fromDescriptions = new Lazy<IDictionary<string, T>>(() =>
+        private static readonly Lazy<IDictionary<string, T>> fromDescriptions = new Lazy<IDictionary<string, T>>(() =>
         {
             return ParseEnumDescriptions().ToDictionary(a => a.Item2, a => a.Item1);
         });
 
-        private static Lazy<IDictionary<T, string>> toDescriptions = new Lazy<IDictionary<T, string>>(() =>
+        private static readonly Lazy<IDictionary<T, string>> toDescriptions = new Lazy<IDictionary<T, string>>(() =>
         {
             return ParseEnumDescriptions().ToDictionary(a => a.Item1, a => a.Item2);
         });

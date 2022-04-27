@@ -245,7 +245,7 @@ namespace ClosedXML.Tests
                     var ws = wb.Worksheets.First();
                     Assert.AreEqual("10 000.00", (ws.AutoFilter as XLAutoFilter).Filters.First().Value.First().Value);
 
-                    var v = ws.AutoFilter.VisibleRows.Select(r => r.FirstCell().Value).ToList();
+                    _ = ws.AutoFilter.VisibleRows.Select(r => r.FirstCell().Value).ToList();
                     Assert.AreEqual(2, ws.AutoFilter.VisibleRows.Count());
 
                     ws.AutoFilter.Reapply();

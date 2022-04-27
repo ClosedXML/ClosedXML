@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     internal class XLSortElements: IXLSortElements
     {
-        List<IXLSortElement> elements = new List<IXLSortElement>();
+        readonly List<IXLSortElement> elements = new List<IXLSortElement>();
         public void Add(int elementNumber)
         {
             Add(elementNumber, XLSortOrder.Ascending);

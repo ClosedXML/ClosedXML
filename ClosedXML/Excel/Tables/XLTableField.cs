@@ -241,7 +241,7 @@ namespace ClosedXML.Excel
             return distinctStyles.Count() == 1;
         }
 
-        private static IEnumerable<string> QuotedTableFieldCharacters = new[] { "'", "#" };
+        private static readonly IEnumerable<string> QuotedTableFieldCharacters = new[] { "'", "#" };
 
         internal void UpdateTableFieldTotalsRowFormula()
         {

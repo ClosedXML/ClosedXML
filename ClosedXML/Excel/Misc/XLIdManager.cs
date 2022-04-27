@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
 {
     internal class XLIdManager
     {
-        private HashSet<int> _hash = new HashSet<int>();
+        private readonly HashSet<int> _hash = new HashSet<int>();
         
 
         public int GetNext()

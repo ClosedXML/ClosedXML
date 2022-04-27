@@ -51,7 +51,7 @@ namespace ClosedXML.Excel
             return retVal;
         }
 
-        private Dictionary<XLHFOccurrence, string> innerTexts = new Dictionary<XLHFOccurrence, string>();
+        private readonly Dictionary<XLHFOccurrence, string> innerTexts = new Dictionary<XLHFOccurrence, string>();
         internal void SetInnerText(XLHFOccurrence occurrence, string text)
         {
             var parsedElements = ParseFormattedHeaderFooterText(text);

@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private HashSet<XLChartType> Bar3DCharts = new HashSet<XLChartType> { 
+        private readonly HashSet<XLChartType> Bar3DCharts = new HashSet<XLChartType> { 
             XLChartType.BarClustered3D, 
             XLChartType.BarStacked100Percent3D, 
             XLChartType.BarStacked3D, 
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private HashSet<XLChartType> HorizontalCharts = new HashSet<XLChartType>{
+        private readonly HashSet<XLChartType> HorizontalCharts = new HashSet<XLChartType>{
             XLChartType.BarClustered, 
             XLChartType.BarClustered3D, 
             XLChartType.BarStacked, 

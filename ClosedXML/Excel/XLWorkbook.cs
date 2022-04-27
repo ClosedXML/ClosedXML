@@ -10,7 +10,8 @@ using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
 {
-    public enum XLEventTracking { Enabled, Disabled }
+    public enum XLEventTracking
+    { Enabled, Disabled }
 
     public enum XLCalculateMode
     {
@@ -946,7 +947,6 @@ namespace ClosedXML.Excel
             ThrowIfDisposed();
 
             return Worksheets.Add(sheetName, position);
-
         }
 
         public IXLWorksheet AddWorksheet(DataTable dataTable)
@@ -1002,7 +1002,7 @@ namespace ClosedXML.Excel
             Worksheets.ForEach(sheet => sheet.RecalculateAllFormulas());
         }
 
-        private SpreadsheetDocumentType _spreadsheetDocumentType;
+        private readonly SpreadsheetDocumentType _spreadsheetDocumentType;
 
         private static XLCalcEngine _calcEngineExpr;
 
@@ -1246,7 +1246,7 @@ namespace ClosedXML.Excel
             _disposed = true;
         }
 
-        void ThrowIfDisposed()
+        private void ThrowIfDisposed()
         {
             if (_disposed)
             {

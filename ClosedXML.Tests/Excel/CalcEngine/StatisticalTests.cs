@@ -10,7 +10,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [TestFixture]
     public class StatisticalTests
     {
-        private double tolerance = 1e-6;
+        private readonly double tolerance = 1e-6;
 
         [SetUp]
         public void Init()

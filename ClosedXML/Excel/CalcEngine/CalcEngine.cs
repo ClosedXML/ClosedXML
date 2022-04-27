@@ -35,7 +35,7 @@ namespace ClosedXML.Excel.CalcEngine
         private Token _nextToken;                       // next token being parsed. to be used by Peek
         private Dictionary<object, Token> _tkTbl;       // table with tokens (+, -, etc)
         private Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
-        private Dictionary<string, object> _vars;       // table with variables
+        private readonly Dictionary<string, object> _vars;       // table with variables
         private object _dataContext;                    // object with properties
         private bool _optimize;                         // optimize expressions when parsing
         protected ExpressionCache _cache;               // cache with parsed expressions
@@ -549,7 +549,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region ** parser
 
-        private static IDictionary<char, char> matchingClosingSymbols = new Dictionary<char, char>()
+        private static readonly IDictionary<char, char> matchingClosingSymbols = new Dictionary<char, char>()
         {
             { '\'', '\'' },
             { '[',  ']' }

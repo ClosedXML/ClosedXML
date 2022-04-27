@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TYPE", 1, Type);
         }
 
-        static IDictionary<ErrorExpression.ExpressionErrorType, int> errorTypes = new Dictionary<ErrorExpression.ExpressionErrorType, int>()
+        static readonly IDictionary<ErrorExpression.ExpressionErrorType, int> errorTypes = new Dictionary<ErrorExpression.ExpressionErrorType, int>()
         {
             [ErrorExpression.ExpressionErrorType.NullValue] = 1,
             [ErrorExpression.ExpressionErrorType.DivisionByZero] = 2,

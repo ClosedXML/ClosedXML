@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
     [DebuggerDisplay("{Text}")]
     internal class XLRichString : IXLRichString
     {
-        private IXLWithRichString _withRichString;
+        private readonly IXLWithRichString _withRichString;
 
         public XLRichString(string text, IXLFontBase font, IXLWithRichString withRichString)
         {

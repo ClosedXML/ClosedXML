@@ -64,7 +64,7 @@ namespace ClosedXML.Sandbox
             Console.WriteLine("Total bytes = " + memoryStream.ToArray().Length);
         }
 
-        private static Random rnd = new Random();
+        private static readonly Random rnd = new Random();
 
         private static T GenerateRow<T>() where T : new()
         {

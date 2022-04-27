@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class CalcEngineHelpers
     {
-        private static Lazy<Dictionary<string, Tuple<string, string>>> patternReplacements =
+        private static readonly Lazy<Dictionary<string, Tuple<string, string>>> patternReplacements =
             new Lazy<Dictionary<string, Tuple<string, string>>>(() =>
             {
                 // key: the literal string to match
