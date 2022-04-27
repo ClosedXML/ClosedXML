@@ -366,7 +366,7 @@ namespace ClosedXML.Excel.Tables
             var newHeaders = new HashSet<string>();
 
             // Force evaluation of f.Column field
-            var tempArray = Fields.Select(f => f.Column).ToArray();
+            _ = Fields.Select(f => f.Column).ToArray();
 
             var firstRow = range.Row(1);
             if (!firstRow.FirstCell().Address.Equals(HeadersRow().FirstCell().Address)

@@ -343,7 +343,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 for (var j = 0; j < cols; j++)
                 {
-                    s += string.Format("{0,5:0.00}", mat[i, j]) + " ";
+                    s += $"{mat[i, j],5:0.00} ";
                 }
 
                 s += "\r\n";

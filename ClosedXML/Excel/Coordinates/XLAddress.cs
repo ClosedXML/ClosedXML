@@ -344,9 +344,9 @@ namespace ClosedXML.Excel
                    _fixedColumn == other._fixedColumn;
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object obj)
         {
-            return Equals(other as IXLAddress);
+            return Equals(obj as IXLAddress);
         }
 
         public override int GetHashCode()

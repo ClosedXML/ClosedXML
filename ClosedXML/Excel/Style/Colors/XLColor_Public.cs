@@ -151,10 +151,10 @@ namespace ClosedXML.Excel
 
             if (ColorType == XLColorType.Theme)
             {
-                return string.Format("Color Theme: {0}, Tint: {1}", ThemeColor.ToString(), ThemeTint.ToString());
+                return $"Color Theme: {ThemeColor}, Tint: {ThemeTint}";
             }
 
-            return "Color Index: " + Indexed;
+            return $"Color Index: {Indexed}";
         }
 
         public static bool operator ==(XLColor left, XLColor right)

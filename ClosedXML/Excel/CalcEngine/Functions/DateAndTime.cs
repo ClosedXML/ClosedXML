@@ -139,7 +139,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 throw new NumberException("The start date is greater than the end date");
             }
 
-            return unit.ToUpper() switch
+            return unit.ToUpper(CultureInfo.InvariantCulture) switch
             {
                 "Y" => endDate.Year - startDate.Year - (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0),
                 "M" => Math.Truncate((endDate.Year - startDate.Year) * 12d + endDate.Month - startDate.Month - (endDate.Day < startDate.Day ? 1 : 0)),

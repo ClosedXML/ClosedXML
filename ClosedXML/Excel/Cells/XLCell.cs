@@ -711,7 +711,7 @@ namespace ClosedXML.Excel
 
         public string ToString(string format)
         {
-            return format.ToUpper() switch
+            return format.ToUpper(CultureInfo.InvariantCulture) switch
             {
                 "A" => Address.ToString(),
                 "F" => HasFormula ? FormulaA1 : string.Empty,

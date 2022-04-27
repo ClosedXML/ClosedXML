@@ -194,8 +194,6 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             var evaluator = new MatchEvaluator(MatchHandler);
-            var sb = new StringBuilder();
-
             var pattern = "\\b(\\w)(\\w+)?\\b";
             var regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.IgnoreCase);
             return regex.Replace(s.ToLower(), evaluator);
@@ -229,7 +227,7 @@ namespace ClosedXML.Excel.CalcEngine
             var repeats = (int)p[1];
             if (repeats < 0)
             {
-                throw new IndexOutOfRangeException("repeats");
+                throw new ArithmeticException("repeats");
             }
 
             for (var i = 0; i < repeats; i++)
