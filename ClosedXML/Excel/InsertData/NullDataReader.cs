@@ -16,7 +16,7 @@ namespace ClosedXML.Excel.InsertData
         public IEnumerable<IEnumerable<object>> GetData()
         {
             var res = new object[] { null }.AsEnumerable();
-            for (int i = 0; i < _count; i++)
+            for (var i = 0; i < _count; i++)
             {
                 yield return res;
             }

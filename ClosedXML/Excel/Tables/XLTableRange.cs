@@ -1,9 +1,10 @@
+using ClosedXML.Excel.Ranges;
+using ClosedXML.Excel.Tables;
 using System;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-
     internal class XLTableRange : XLRange, IXLTableRange
     {
         private readonly XLTable _table;
@@ -15,37 +16,42 @@ namespace ClosedXML.Excel
             _range = range;
         }
 
-        IXLTableRow IXLTableRange.FirstRow(Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.FirstRow(Func<IXLTableRow, bool> predicate)
         {
             return FirstRow(predicate);
         }
-        public XLTableRow FirstRow(Func<IXLTableRow, Boolean> predicate = null)
+        public XLTableRow FirstRow(Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
-                return new XLTableRow(this, (_range.FirstRow()));
-
-            Int32 rowCount = _range.RowCount();
-
-            for (Int32 ro = 1; ro <= rowCount; ro++)
             {
-                var row = new XLTableRow(this, (_range.Row(ro)));
-                if (predicate(row)) return row;
+                return new XLTableRow(this, _range.FirstRow());
+            }
+
+            var rowCount = _range.RowCount();
+
+            for (var ro = 1; ro <= rowCount; ro++)
+            {
+                var row = new XLTableRow(this, _range.Row(ro));
+                if (predicate(row))
+                {
+                    return row;
+                }
             }
 
             return null;
         }
 
-        IXLTableRow IXLTableRange.FirstRowUsed(Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.FirstRowUsed(Func<IXLTableRow, bool> predicate)
         {
             return FirstRowUsed(XLCellsUsedOptions.AllContents, predicate);
         }
-        public XLTableRow FirstRowUsed(Func<IXLTableRow, Boolean> predicate = null)
+        public XLTableRow FirstRowUsed(Func<IXLTableRow, bool> predicate = null)
         {
             return FirstRowUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLTableRow IXLTableRange.FirstRowUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.FirstRowUsed(bool includeFormats, Func<IXLTableRow, bool> predicate)
         {
             return FirstRowUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -53,60 +59,69 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        IXLTableRow IXLTableRange.FirstRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.FirstRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate)
         {
             return FirstRowUsed(options, predicate);
         }
 
-        internal XLTableRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate = null)
+        internal XLTableRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
-                return new XLTableRow(this, (_range.FirstRowUsed(options)));
-
-            Int32 rowCount = _range.RowCount();
-
-            for (Int32 ro = 1; ro <= rowCount; ro++)
             {
-                var row = new XLTableRow(this, (_range.Row(ro)));
+                return new XLTableRow(this, _range.FirstRowUsed(options));
+            }
+
+            var rowCount = _range.RowCount();
+
+            for (var ro = 1; ro <= rowCount; ro++)
+            {
+                var row = new XLTableRow(this, _range.Row(ro));
 
                 if (!row.IsEmpty(options) && predicate(row))
+                {
                     return row;
+                }
             }
 
             return null;
         }
 
 
-        IXLTableRow IXLTableRange.LastRow(Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.LastRow(Func<IXLTableRow, bool> predicate)
         {
             return LastRow(predicate);
         }
-        public XLTableRow LastRow(Func<IXLTableRow, Boolean> predicate = null)
+        public XLTableRow LastRow(Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
-                return new XLTableRow(this, (_range.LastRow()));
-
-            Int32 rowCount = _range.RowCount();
-
-            for (Int32 ro = rowCount; ro >= 1; ro--)
             {
-                var row = new XLTableRow(this, (_range.Row(ro)));
-                if (predicate(row)) return row;
+                return new XLTableRow(this, _range.LastRow());
+            }
+
+            var rowCount = _range.RowCount();
+
+            for (var ro = rowCount; ro >= 1; ro--)
+            {
+                var row = new XLTableRow(this, _range.Row(ro));
+                if (predicate(row))
+                {
+                    return row;
+                }
             }
             return null;
         }
 
-        IXLTableRow IXLTableRange.LastRowUsed(Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.LastRowUsed(Func<IXLTableRow, bool> predicate)
         {
             return LastRowUsed(XLCellsUsedOptions.AllContents, predicate);
         }
-        public XLTableRow LastRowUsed(Func<IXLTableRow, Boolean> predicate = null)
+        public XLTableRow LastRowUsed(Func<IXLTableRow, bool> predicate = null)
         {
             return LastRowUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLTableRow IXLTableRange.LastRowUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.LastRowUsed(bool includeFormats, Func<IXLTableRow, bool> predicate)
         {
             return LastRowUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -114,25 +129,29 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        IXLTableRow IXLTableRange.LastRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate)
+        IXLTableRow IXLTableRange.LastRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate)
         {
             return LastRowUsed(options, predicate);
         }
 
 
-        internal XLTableRow LastRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate = null)
+        internal XLTableRow LastRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate = null)
         {
             if (predicate == null)
-                return new XLTableRow(this, (_range.LastRowUsed(options)));
-
-            Int32 rowCount = _range.RowCount();
-
-            for (Int32 ro = rowCount; ro >= 1; ro--)
             {
-                var row = new XLTableRow(this, (_range.Row(ro)));
+                return new XLTableRow(this, _range.LastRowUsed(options));
+            }
+
+            var rowCount = _range.RowCount();
+
+            for (var ro = rowCount; ro >= 1; ro--)
+            {
+                var row = new XLTableRow(this, _range.Row(ro));
 
                 if (!row.IsEmpty(options) && predicate(row))
+                {
                     return row;
+                }
             }
 
             return null;
@@ -148,23 +167,25 @@ namespace ClosedXML.Excel
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(row),
-                    String.Format("Row number must be between 1 and {0}", XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1)
+                    string.Format("Row number must be between 1 and {0}", XLHelper.MaxRowNumber + RangeAddress.FirstAddress.RowNumber - 1)
                 );
             }
 
             return new XLTableRow(this, base.Row(row));
         }
 
-        public IXLTableRows Rows(Func<IXLTableRow, Boolean> predicate = null)
+        public IXLTableRows Rows(Func<IXLTableRow, bool> predicate = null)
         {
             var retVal = new XLTableRows(Worksheet.Style);
-            Int32 rowCount = _range.RowCount();
+            var rowCount = _range.RowCount();
 
-            for (int r = 1; r <= rowCount; r++)
+            for (var r = 1; r <= rowCount; r++)
             {
                 var row = Row(r);
                 if (predicate == null || predicate(row))
+                {
                     retVal.Add(row);
+                }
             }
             return retVal;
         }
@@ -173,8 +194,10 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLTableRows(Worksheet.Style);
 
-            for (int rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
+            for (var rowNumber = firstRow; rowNumber <= lastRow; rowNumber++)
+            {
                 retVal.Add(Row(rowNumber));
+            }
 
             return retVal;
         }
@@ -183,10 +206,10 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLTableRows(Worksheet.Style);
             var rowPairs = rows.Split(',');
-            foreach (string tPair in rowPairs.Select(pair => pair.Trim()))
+            foreach (var tPair in rowPairs.Select(pair => pair.Trim()))
             {
-                String firstRow;
-                String lastRow;
+                string firstRow;
+                string lastRow;
                 if (tPair.Contains(':') || tPair.Contains('-'))
                 {
                     var rowRange = XLHelper.SplitRange(tPair);
@@ -199,14 +222,16 @@ namespace ClosedXML.Excel
                     firstRow = tPair;
                     lastRow = tPair;
                 }
-                foreach (IXLTableRow row in Rows(Int32.Parse(firstRow), Int32.Parse(lastRow)))
+                foreach (var row in Rows(int.Parse(firstRow), int.Parse(lastRow)))
+                {
                     retVal.Add(row);
+                }
             }
             return retVal;
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLTableRows RowsUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate = null)
+        public IXLTableRows RowsUsed(bool includeFormats, Func<IXLTableRow, bool> predicate = null)
         {
             return RowsUsed(includeFormats
                 ? XLCellsUsedOptions.AllContents
@@ -214,53 +239,55 @@ namespace ClosedXML.Excel
                 predicate);
         }
 
-        IXLTableRows IXLTableRange.RowsUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate)
+        IXLTableRows IXLTableRange.RowsUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate)
         {
             return RowsUsed(options, predicate);
         }
 
-        internal XLTableRows RowsUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate = null)
+        internal XLTableRows RowsUsed(XLCellsUsedOptions options, Func<IXLTableRow, bool> predicate = null)
         {
             var rows = new XLTableRows(Worksheet.Style);
-            Int32 rowCount = RowCount();
+            var rowCount = RowCount();
 
-            for (Int32 ro = 1; ro <= rowCount; ro++)
+            for (var ro = 1; ro <= rowCount; ro++)
             {
                 var row = Row(ro);
 
                 if (!row.IsEmpty(options) && (predicate == null || predicate(row)))
+                {
                     rows.Add(row);
+                }
             }
             return rows;
         }
 
-        IXLTableRows IXLTableRange.RowsUsed(Func<IXLTableRow, Boolean> predicate)
+        IXLTableRows IXLTableRange.RowsUsed(Func<IXLTableRow, bool> predicate)
         {
             return RowsUsed(predicate);
         }
-        public IXLTableRows RowsUsed(Func<IXLTableRow, Boolean> predicate = null)
+        public IXLTableRows RowsUsed(Func<IXLTableRow, bool> predicate = null)
         {
             return RowsUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
-        IXLTable IXLTableRange.Table { get { return _table; } }
-        public XLTable Table { get { return _table; } }
+        IXLTable IXLTableRange.Table => _table;
+        public XLTable Table => _table;
 
         public new IXLTableRows InsertRowsAbove(int numberOfRows)
         {
-            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsAbove, this, numberOfRows, !Table.ShowTotalsRow );
+            return XLHelper.InsertRowsWithoutEvents(InsertRowsAbove, this, numberOfRows, !Table.ShowTotalsRow );
         }
         public new IXLTableRows InsertRowsBelow(int numberOfRows)
         {
-            return XLHelper.InsertRowsWithoutEvents(base.InsertRowsBelow, this, numberOfRows, !Table.ShowTotalsRow);
+            return XLHelper.InsertRowsWithoutEvents(InsertRowsBelow, this, numberOfRows, !Table.ShowTotalsRow);
         }
 
 
-        public new IXLRangeColumn Column(String column)
+        public new IXLRangeColumn Column(string column)
         {
             if (XLHelper.IsValidColumn(column))
             {
-                Int32 coNum = XLHelper.GetColumnNumberFromLetter(column);
+                var coNum = XLHelper.GetColumnNumberFromLetter(column);
                 return coNum > ColumnCount() ? Column(_table.GetFieldIndex(column) + 1) : Column(coNum);
             }
 

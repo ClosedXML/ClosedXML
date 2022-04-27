@@ -6,9 +6,9 @@ namespace ClosedXML.Excel
     public enum XLSortOrientation { TopToBottom, LeftToRight }
     public interface IXLSortElement
     {
-        Int32 ElementNumber { get; set; }
+        int ElementNumber { get; set; }
         XLSortOrder SortOrder { get; set; }
-        Boolean IgnoreBlanks { get; set; }
-        Boolean MatchCase { get; set; }
+        bool IgnoreBlanks { get; set; }
+        bool MatchCase { get; set; }
     }
 }

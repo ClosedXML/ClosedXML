@@ -7,11 +7,13 @@ namespace ClosedXML.Excel
     {
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
-            String val = cf.Values[1].Value;
+            var val = cf.Values[1].Value;
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
             var cfStyle = (cf.Style as XLStyle).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle];
+            {
+                conditionalFormattingRule.FormatId = (uint)context.DifferentialFormats[cfStyle];
+            }
 
             conditionalFormattingRule.Operator = ConditionalFormattingOperatorValues.BeginsWith;
             conditionalFormattingRule.Text = val;

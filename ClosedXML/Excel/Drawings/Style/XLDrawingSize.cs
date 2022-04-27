@@ -14,9 +14,9 @@ namespace ClosedXML.Excel
             _style = style;
         }
 
-        public Boolean AutomaticSize { get { return _style.Alignment.AutomaticSize; } set { _style.Alignment.AutomaticSize = value; } }	
-        public IXLDrawingStyle SetAutomaticSize() { AutomaticSize = true; return _style; }	public IXLDrawingStyle SetAutomaticSize(Boolean value) { AutomaticSize = value; return _style; }
-        public Double Height { get; set; }		public IXLDrawingStyle SetHeight(Double value) { Height = value; return _style; }
-        public Double Width { get; set; }		public IXLDrawingStyle SetWidth(Double value) { Width = value; return _style; }
+        public bool AutomaticSize { get { return _style.Alignment.AutomaticSize; } set { _style.Alignment.AutomaticSize = value; } }	
+        public IXLDrawingStyle SetAutomaticSize() { AutomaticSize = true; return _style; }	public IXLDrawingStyle SetAutomaticSize(bool value) { AutomaticSize = value; return _style; }
+        public double Height { get; set; }		public IXLDrawingStyle SetHeight(double value) { Height = value; return _style; }
+        public double Width { get; set; }		public IXLDrawingStyle SetWidth(double value) { Width = value; return _style; }
     }
 }

@@ -13,7 +13,7 @@ namespace ClosedXML.Examples
 
             #region Single Column Numbers
 
-            String singleColumnNumbers = "Single Column Numbers";
+            var singleColumnNumbers = "Single Column Numbers";
             ws = wb.Worksheets.Add(singleColumnNumbers);
 
             // Add a bunch of numbers to filter
@@ -35,7 +35,7 @@ namespace ClosedXML.Examples
 
             #region Multi Column
 
-            String multiColumn = "Multi Column";
+            var multiColumn = "Multi Column";
             ws = wb.Worksheets.Add(multiColumn);
 
             ws.Cell("A1").SetValue("First")
@@ -70,27 +70,25 @@ namespace ClosedXML.Examples
 
             #endregion Multi Column
 
-            using (var ms = new MemoryStream())
-            {
-                wb.SaveAs(ms);
+            using var ms = new MemoryStream();
+            wb.SaveAs(ms);
 
-                using var workbook = new XLWorkbook(ms);
+            using var workbook = new XLWorkbook(ms);
 
-                #region Single Column Numbers
+            #region Single Column Numbers
 
-                //workbook.Worksheet(singleColumnNumbers).AutoFilter.Sort(1, XLSortOrder.Descending);
+            //workbook.Worksheet(singleColumnNumbers).AutoFilter.Sort(1, XLSortOrder.Descending);
 
-                #endregion Single Column Numbers
+            #endregion Single Column Numbers
 
-                #region Multi Column
+            #region Multi Column
 
-                //workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
+            //workbook.Worksheet(multiColumn).AutoFilter.Sort(3, XLSortOrder.Descending);
 
-                #endregion Multi Column
+            #endregion Multi Column
 
-                workbook.SaveAs(filePath);
-                ms.Close();
-            }
+            workbook.SaveAs(filePath);
+            ms.Close();
         }
     }
 }

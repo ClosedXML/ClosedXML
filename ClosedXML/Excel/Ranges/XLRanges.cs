@@ -2,11 +2,12 @@ using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
+using ClosedXML.Excel.Style;
+using ClosedXML.Excel.Ranges;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLRanges : XLStylizedBase, IXLRanges, IXLStylized
     {
         /// <summary>
@@ -14,11 +15,11 @@ namespace ClosedXML.Excel
         /// </summary>
         private readonly Dictionary<IXLWorksheet, IXLRangeIndex<XLRange>> _indexes;
         private IEnumerable<XLRange> Ranges => _indexes.Values.SelectMany(index => index.GetAll());
-        private bool _styleInitialized = false;
+        private bool _styleInitialized;
 
         private IXLRangeIndex<XLRange> GetRangeIndex(IXLWorksheet worksheet)
         {
-            if (!_indexes.TryGetValue(worksheet, out IXLRangeIndex<XLRange> rangeIndex))
+            if (!_indexes.TryGetValue(worksheet, out var rangeIndex))
             {
                 rangeIndex = new XLRangeIndex<XLRange>(worksheet);
                 _indexes.Add(worksheet, rangeIndex);
@@ -43,14 +44,20 @@ namespace ClosedXML.Excel
         public void Add(XLRange range)
         {
             if (GetRangeIndex(range.Worksheet).Add(range))
+            {
                 Count++;
+            }
 
             if (_styleInitialized)
+            {
                 return;
+            }
 
             var worksheetStyle = range?.Worksheet?.Style;
             if (worksheetStyle == null)
+            {
                 return;
+            }
 
             InnerStyle = worksheetStyle;
             _styleInitialized = true;
@@ -109,12 +116,12 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Boolean Contains(IXLCell cell)
+        public bool Contains(IXLCell cell)
         {
             return GetIntersectedRanges((XLAddress)cell.Address).Any();
         }
 
-        public Boolean Contains(IXLRange range)
+        public bool Contains(IXLRange range)
         {
             return GetIntersectedRanges((XLRangeAddress)range.RangeAddress)
                 .Any(r => r.Contains(range));
@@ -157,28 +164,25 @@ namespace ClosedXML.Excel
             return GetIntersectedRanges(cell.Address);
         }
 
-        public IEnumerable<IXLDataValidation> DataValidation
-        {
-            get { return Ranges.Select(range => range.GetDataValidation()).Where(dv => dv != null); }
-        }
+        public IEnumerable<IXLDataValidation> DataValidation => Ranges.Select(range => range.GetDataValidation()).Where(dv => dv != null);
 
-        public IXLRanges AddToNamed(String rangeName)
+        public IXLRanges AddToNamed(string rangeName)
         {
             return AddToNamed(rangeName, XLScope.Workbook);
         }
 
-        public IXLRanges AddToNamed(String rangeName, XLScope scope)
+        public IXLRanges AddToNamed(string rangeName, XLScope scope)
         {
             return AddToNamed(rangeName, XLScope.Workbook, null);
         }
 
-        public IXLRanges AddToNamed(String rangeName, XLScope scope, String comment)
+        public IXLRanges AddToNamed(string rangeName, XLScope scope, string comment)
         {
             Ranges.ForEach(r => r.AddToNamed(rangeName, scope, comment));
             return this;
         }
 
-        public Object Value
+        public object Value
         {
             set { Ranges.ForEach(r => r.Value = value); }
         }
@@ -192,21 +196,27 @@ namespace ClosedXML.Excel
         public IXLCells Cells()
         {
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
-            foreach (XLRange container in Ranges)
+            foreach (var container in Ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
-            foreach (XLRange container in Ranges)
+            foreach (var container in Ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLCells CellsUsed(Boolean includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             return CellsUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -216,8 +226,11 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
             var cells = new XLCells(true, options);
-            foreach (XLRange container in Ranges)
+            foreach (var container in Ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -236,15 +249,17 @@ namespace ClosedXML.Excel
             get
             {
                 yield return Style;
-                foreach (XLRange rng in Ranges)
+                foreach (var rng in Ranges)
                 {
                     yield return rng.Style;
-                    foreach (XLCell r in rng.Worksheet.Internals.CellsCollection.GetCells(
+                    foreach (var r in rng.Worksheet.Internals.CellsCollection.GetCells(
                         rng.RangeAddress.FirstAddress.RowNumber,
                         rng.RangeAddress.FirstAddress.ColumnNumber,
                         rng.RangeAddress.LastAddress.RowNumber,
                         rng.RangeAddress.LastAddress.ColumnNumber))
+                    {
                         yield return r.Style;
+                    }
                 }
             }
         }
@@ -253,22 +268,25 @@ namespace ClosedXML.Excel
         {
             get
             {
-                foreach (XLRange rng in Ranges)
+                foreach (var rng in Ranges)
+                {
                     yield return rng;
+                }
             }
         }
 
-        public override IXLRanges RangesUsed
-        {
-            get { return this; }
-        }
+        public override IXLRanges RangesUsed => this;
 
         #endregion IXLStylized Members
 
         public override string ToString()
         {
-            String retVal = Ranges.Aggregate(String.Empty, (agg, r) => agg + (r.ToString() + ","));
-            if (retVal.Length > 0) retVal = retVal.Substring(0, retVal.Length - 1);
+            var retVal = Ranges.Aggregate(string.Empty, (agg, r) => agg + r.ToString() + ",");
+            if (retVal.Length > 0)
+            {
+                retVal = retVal.Substring(0, retVal.Length - 1);
+            }
+
             return retVal;
         }
 
@@ -280,7 +298,9 @@ namespace ClosedXML.Excel
         public bool Equals(XLRanges other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
             return Ranges.Count() == other.Ranges.Count() &&
                    Ranges.Select(thisRange => Enumerable.Contains(other.Ranges, thisRange)).All(foundOne => foundOne);
@@ -313,7 +333,9 @@ namespace ClosedXML.Excel
         public void Select()
         {
             foreach (var range in this)
+            {
                 range.Select();
+            }
         }
 
         public IXLRanges Consolidate()

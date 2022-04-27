@@ -15,12 +15,12 @@ namespace ClosedXML.Excel
 
         IXLFont Font { get; set; }
 
-        Boolean IncludeQuotePrefix { get; set; }
+        bool IncludeQuotePrefix { get; set; }
 
         IXLNumberFormat NumberFormat { get; set; }
 
         IXLProtection Protection { get; set; }
 
-        IXLStyle SetIncludeQuotePrefix(Boolean includeQuotePrefix = true);
+        IXLStyle SetIncludeQuotePrefix(bool includeQuotePrefix = true);
     }
 }

@@ -8,12 +8,14 @@ namespace ClosedXML.Excel
     {
         public ConditionalFormattingRule Convert(IXLConditionalFormat cf, int priority, XLWorkbook.SaveContext context)
         {
-            String val = GetQuoted(cf.Values[1]);
+            var val = GetQuoted(cf.Values[1]);
 
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
             var cfStyle = (cf.Style as XLStyle).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle];
+            {
+                conditionalFormattingRule.FormatId = (uint)context.DifferentialFormats[cfStyle];
+            }
 
             conditionalFormattingRule.Operator = cf.Operator.ToOpenXml();
 
@@ -29,18 +31,18 @@ namespace ClosedXML.Excel
             return conditionalFormattingRule;
         }
 
-        private String GetQuoted(XLFormula formula)
+        private string GetQuoted(XLFormula formula)
         {
-            String value = formula.Value;
+            var value = formula.Value;
 
             if (formula.IsFormula ||
                 value.StartsWith("\"") && value.EndsWith("\"") ||
-                Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out double num))
+                double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out var num))
             {
                 return value;
             }
 
-            return String.Format("\"{0}\"", value.Replace("\"", "\"\""));
+            return string.Format("\"{0}\"", value.Replace("\"", "\"\""));
         }
     }
 }

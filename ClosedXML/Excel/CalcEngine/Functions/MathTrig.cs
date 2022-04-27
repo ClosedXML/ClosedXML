@@ -1,12 +1,11 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
-using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class MathTrig
     {
@@ -36,7 +35,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("COTH", 1, Coth);
             ce.RegisterFunction("CSC", 1, Csc);
             ce.RegisterFunction("CSCH", 1, Csch);
-            ce.RegisterFunction("DECIMAL", 2, MathTrig.Decimal);
+            ce.RegisterFunction("DECIMAL", 2, Decimal);
             ce.RegisterFunction("DEGREES", 1, Degrees);
             ce.RegisterFunction("EVEN", 1, Even);
             ce.RegisterFunction("EXP", 1, Exp);
@@ -99,7 +98,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (Math.Abs(input) > 1)
+            {
                 throw new NumberException();
+            }
 
             return Math.Acos(p[0]);
         }
@@ -108,7 +109,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (Math.Abs(input) > 1)
+            {
                 throw new NumberException();
+            }
 
             return Math.Asin(input);
         }
@@ -123,7 +126,9 @@ namespace ClosedXML.Excel.CalcEngine
             double x = p[0];
             double y = p[1];
             if (x == 0 && y == 0)
+            {
                 throw new DivisionByZeroException();
+            }
 
             return Math.Atan2(y, x);
         }
@@ -134,32 +139,54 @@ namespace ClosedXML.Excel.CalcEngine
             double significance = p[1];
 
             if (significance == 0)
+            {
                 return 0d;
+            }
             else if (significance < 0 && number > 0)
+            {
                 throw new NumberException();
+            }
             else if (significance < 0)
+            {
                 return -Math.Ceiling(-number / -significance) * -significance;
+            }
             else
+            {
                 return Math.Ceiling(number / significance) * significance;
+            }
         }
 
         private static object CeilingMath(List<Expression> p)
         {
             double number = p[0];
             double significance = 1;
-            if (p.Count > 1) significance = p[1];
+            if (p.Count > 1)
+            {
+                significance = p[1];
+            }
 
             double mode = 0;
-            if (p.Count > 2) mode = p[2];
+            if (p.Count > 2)
+            {
+                mode = p[2];
+            }
 
             if (significance == 0)
+            {
                 return 0d;
+            }
             else if (number >= 0)
+            {
                 return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
+            }
             else if (mode == 0)
+            {
                 return Math.Ceiling(number / Math.Abs(significance)) * Math.Abs(significance);
+            }
             else
+            {
                 return -Math.Ceiling(-number / Math.Abs(significance)) * Math.Abs(significance);
+            }
         }
 
         private static object Cos(List<Expression> p)
@@ -177,7 +204,9 @@ namespace ClosedXML.Excel.CalcEngine
             var tan = (double)Math.Tan(p[0]);
 
             if (tan == 0)
+            {
                 throw new DivisionByZeroException();
+            }
 
             return 1 / tan;
         }
@@ -186,7 +215,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (input == 0)
+            {
                 throw new DivisionByZeroException();
+            }
 
             return 1 / Math.Tanh(input);
         }
@@ -195,15 +226,19 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (input == 0)
+            {
                 throw new DivisionByZeroException();
+            }
 
             return 1 / Math.Sin(input);
         }
 
         private static object Csch(List<Expression> p)
         {
-            if (Math.Abs((double)p[0].Evaluate()) < Double.Epsilon)
+            if (Math.Abs((double)p[0].Evaluate()) < double.Epsilon)
+            {
                 throw new DivisionByZeroException();
+            }
 
             return 1 / Math.Sinh(p[0]);
         }
@@ -214,26 +249,30 @@ namespace ClosedXML.Excel.CalcEngine
             double radix = p[1];
 
             if (radix < 2 || radix > 36)
+            {
                 throw new NumberException();
+            }
 
             var asciiValues = Encoding.ASCII.GetBytes(source.ToUpperInvariant());
 
             double result = 0;
-            int i = 0;
+            var i = 0;
 
-            foreach (byte digit in asciiValues)
+            foreach (var digit in asciiValues)
             {
                 if (digit > 90)
                 {
                     throw new NumberException();
                 }
 
-                int digitNumber = digit >= 48 && digit < 58
+                var digitNumber = digit >= 48 && digit < 58
                     ? digit - 48
                     : digit - 55;
 
                 if (digitNumber > radix - 1)
+                {
                     throw new NumberException();
+                }
 
                 result = result * radix + digitNumber;
                 i++;
@@ -253,32 +292,54 @@ namespace ClosedXML.Excel.CalcEngine
             double significance = p[1];
 
             if (significance == 0)
+            {
                 throw new DivisionByZeroException();
+            }
             else if (significance < 0 && number > 0)
+            {
                 throw new NumberException();
+            }
             else if (significance < 0)
+            {
                 return -Math.Floor(-number / -significance) * -significance;
+            }
             else
+            {
                 return Math.Floor(number / significance) * significance;
+            }
         }
 
         private static object FloorMath(List<Expression> p)
         {
             double number = p[0];
             double significance = 1;
-            if (p.Count > 1) significance = p[1];
+            if (p.Count > 1)
+            {
+                significance = p[1];
+            }
 
             double mode = 0;
-            if (p.Count > 2) mode = p[2];
+            if (p.Count > 2)
+            {
+                mode = p[2];
+            }
 
             if (significance == 0)
+            {
                 return 0d;
+            }
             else if (number >= 0)
+            {
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
+            }
             else if (mode == 0)
+            {
                 return Math.Floor(number / Math.Abs(significance)) * Math.Abs(significance);
+            }
             else
+            {
                 return -Math.Floor(-number / Math.Abs(significance)) * Math.Abs(significance);
+            }
         }
 
         private static object Int(List<Expression> p)
@@ -395,19 +456,19 @@ namespace ClosedXML.Excel.CalcEngine
             var ce = new CalcEngine();
             var tally = new Tally();
 
-            int numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
+            var numberOfCriteria = p.Count / 2; // int division returns floor() automatically, that's what we want.
 
             // prepare criteria-parameters:
             var criteriaRanges = new Tuple<object, IList<object>>[numberOfCriteria];
-            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            for (var criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
-                var criteriaRange = p[criteriaPair * 2 + 1] as IEnumerable;
-
-                if (criteriaRange == null)
+                if (!(p[criteriaPair * 2 + 1] is IEnumerable criteriaRange))
+                {
                     throw new CellReferenceException($"Expected parameter {criteriaPair * 2 + 2} to be a range");
+                }
 
                 var criterion = p[criteriaPair * 2 + 2].Evaluate();
-                var criteriaRangeValues = criteriaRange.Cast<Object>().ToList();
+                var criteriaRangeValues = criteriaRange.Cast<object>().ToList();
 
                 criteriaRanges[criteriaPair] = new Tuple<object, IList<object>>(
                     criterion,
@@ -416,7 +477,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             for (var i = 0; i < sumRangeValues.Count; i++)
             {
-                bool shouldUseValue = true;
+                var shouldUseValue = true;
 
                 foreach (var criteriaPair in criteriaRanges)
                 {
@@ -431,7 +492,9 @@ namespace ClosedXML.Excel.CalcEngine
                 }
 
                 if (shouldUseValue)
+                {
                     tally.AddValue(sumRangeValues[i]);
+                }
             }
 
             // done
@@ -442,20 +505,27 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // all parameters should be IEnumerable
             if (p.Any(param => !(param is IEnumerable)))
+            {
                 throw new NoValueAvailableException();
+            }
 
             var counts = p.Cast<IEnumerable>().Select(param =>
             {
-                int i = 0;
+                var i = 0;
                 foreach (var item in param)
+                {
                     i++;
+                }
+
                 return i;
             })
             .Distinct();
 
             // All parameters should have the same length
             if (counts.Count() > 1)
+            {
                 throw new NoValueAvailableException();
+            }
 
             var values = p
                 .Cast<IEnumerable>()
@@ -465,9 +535,13 @@ namespace ClosedXML.Excel.CalcEngine
                     foreach (var c in range)
                     {
                         if (c.IsNumber())
+                        {
                             results.Add(c.CastTo<double>());
+                        }
                         else
+                        {
                             results.Add(0.0);
+                        }
                     }
                     return results;
                 })
@@ -497,66 +571,72 @@ namespace ClosedXML.Excel.CalcEngine
 
             var num_digits = 0d;
             if (p.Count > 1)
+            {
                 num_digits = (double)p[1];
+            }
 
             var scaling = Math.Pow(10, num_digits);
 
             var truncated = (int)(number * scaling);
-            return (double)truncated / scaling;
+            return truncated / scaling;
         }
 
         public static double DegreesToRadians(double degrees)
         {
-            return (Math.PI / 180.0) * degrees;
+            return Math.PI / 180.0 * degrees;
         }
 
         public static double RadiansToDegrees(double radians)
         {
-            return (180.0 / Math.PI) * radians;
+            return 180.0 / Math.PI * radians;
         }
 
         public static double GradsToRadians(double grads)
         {
-            return (grads / 200.0) * Math.PI;
+            return grads / 200.0 * Math.PI;
         }
 
         public static double RadiansToGrads(double radians)
         {
-            return (radians / Math.PI) * 200.0;
+            return radians / Math.PI * 200.0;
         }
 
         public static double DegreesToGrads(double degrees)
         {
-            return (degrees / 9.0) * 10.0;
+            return degrees / 9.0 * 10.0;
         }
 
         public static double GradsToDegrees(double grads)
         {
-            return (grads / 10.0) * 9.0;
+            return grads / 10.0 * 9.0;
         }
 
         public static double ASinh(double x)
         {
-            return (Math.Log(x + Math.Sqrt(x * x + 1.0)));
+            return Math.Log(x + Math.Sqrt(x * x + 1.0));
         }
 
         private static object Acosh(List<Expression> p)
         {
             double number = p[0];
             if (number < 1)
+            {
                 throw new NumberException();
+            }
 
             return XLMath.ACosh(p[0]);
         }
 
         private static object Acot(List<Expression> p)
         {
-            double x = Math.Atan(1.0 / p[0]);
+            var x = Math.Atan(1.0 / p[0]);
 
             // Acot in Excel calculates the modulus of the function above.
             // as the % operator is not the modulus, but the remainder, we have to calculate the modulus by hand:
             while (x < 0)
+            {
                 x = x + Math.PI;
+            }
 
             return x;
         }
@@ -565,25 +645,36 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double number = p[0];
             if (Math.Abs(number) < 1)
+            {
                 throw new NumberException();
+            }
 
             return 0.5 * Math.Log((number + 1) / (number - 1));
         }
 
         private static object Arabic(List<Expression> p)
         {
-            string input = ((string)p[0]).Trim();
+            var input = ((string)p[0]).Trim();
 
             try
             {
                 if (input.Length == 0)
+                {
                     return 0;
+                }
+
                 if (input == "-")
+                {
                     throw new NumberException();
+                }
                 else if (input[0] == '-')
+                {
                     return -XLMath.RomanToArabic(input.Substring(1));
+                }
                 else
+                {
                     return XLMath.RomanToArabic(input);
+                }
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -604,7 +695,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double input = p[0];
             if (Math.Abs(input) >= 1)
+            {
                 throw new NumberException();
+            }
 
             return XLMath.ATanh(p[0]);
         }
@@ -613,73 +706,102 @@ namespace ClosedXML.Excel.CalcEngine
         {
             long number;
             int radix;
-            int minLength = 0;
+            var minLength = 0;
 
             var rawNumber = p[0].Evaluate();
             if (rawNumber is long || rawNumber is int || rawNumber is byte || rawNumber is double || rawNumber is float)
+            {
                 number = Convert.ToInt64(rawNumber);
+            }
             else
+            {
                 throw new CellValueException();
+            }
 
             var rawRadix = p[1].Evaluate();
             if (rawRadix is long || rawRadix is int || rawRadix is byte || rawRadix is double || rawRadix is float)
+            {
                 radix = Convert.ToInt32(rawRadix);
+            }
             else
+            {
                 throw new CellValueException();
+            }
 
             if (p.Count > 2)
             {
                 var rawMinLength = p[2].Evaluate();
                 if (rawMinLength is long || rawMinLength is int || rawMinLength is byte || rawMinLength is double || rawMinLength is float)
+                {
                     minLength = Convert.ToInt32(rawMinLength);
+                }
                 else
+                {
                     throw new CellValueException();
+                }
             }
 
             if (number < 0 || radix < 2 || radix > 36)
+            {
                 throw new NumberException();
+            }
 
             return XLMath.ChangeBase(number, radix).PadLeft(minLength, '0');
         }
 
         private static object Combin(List<Expression> p)
         {
-            Int32 n;
-            Int32 k;
+            int n;
+            int k;
 
             var rawN = p[0].Evaluate();
             var rawK = p[1].Evaluate();
             if (rawN is long || rawN is int || rawN is byte || rawN is double || rawN is float)
+            {
                 n = (int)Math.Floor((double)rawN);
+            }
             else
+            {
                 throw new NumberException();
+            }
 
             if (rawK is long || rawK is int || rawK is byte || rawK is double || rawK is float)
+            {
                 k = (int)Math.Floor((double)rawK);
+            }
             else
+            {
                 throw new NumberException();
+            }
 
             n = (int)p[0];
             k = (int)p[1];
 
             if (n < 0 || n < k || k < 0)
+            {
                 throw new NumberException();
+            }
 
             return XLMath.Combin(n, k);
         }
 
         private static object CombinA(List<Expression> p)
         {
-            Int32 number = (int)p[0]; // casting truncates towards 0 as specified
-            Int32 chosen = (int)p[1];
+            var number = (int)p[0]; // casting truncates towards 0 as specified
+            var chosen = (int)p[1];
 
             if (number < 0 || number < chosen)
+            {
                 throw new NumberException();
-            if (chosen < 0)
-                throw new NumberException();
+            }
 
-            int n = number + chosen - 1;
-            int k = number - 1;
+            if (chosen < 0)
+            {
+                throw new NumberException();
+            }
+
+            var n = number + chosen - 1;
+            var k = number - 1;
 
             return n == k || k == 0
                 ? 1
@@ -696,17 +818,26 @@ namespace ClosedXML.Excel.CalcEngine
             var input = p[0].Evaluate();
 
             if (!(input is long || input is int || input is byte || input is double || input is float))
+            {
                 throw new CellValueException();
+            }
 
             var num = Math.Floor((double)input);
-            double fact = 1.0;
+            var fact = 1.0;
 
             if (num < 0)
+            {
                 throw new NumberException();
+            }
 
             if (num > 1)
-                for (int i = 2; i <= num; i++)
+            {
+                for (var i = 2; i <= num; i++)
+                {
                     fact *= i;
+                }
+            }
+
             return fact;
         }
 
@@ -715,19 +846,25 @@ namespace ClosedXML.Excel.CalcEngine
             var input = p[0].Evaluate();
 
             if (!(input is long || input is int || input is byte || input is double || input is float))
+            {
                 throw new CellValueException();
+            }
 
             var num = Math.Floor(p[0]);
-            double fact = 1.0;
+            var fact = 1.0;
 
             if (num < -1)
+            {
                 throw new NumberException();
+            }
 
             if (num > 1)
             {
                 var start = Math.Abs(num % 2) < XLHelper.Epsilon ? 2 : 1;
-                for (int i = start; i <= num; i = i + 2)
+                for (var i = start; i <= num; i = i + 2)
+                {
                     fact *= i;
+                }
             }
             return fact;
         }
@@ -749,7 +886,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static int Lcm(int a, int b)
         {
-            if (a == 0 || b == 0) return 0;
+            if (a == 0 || b == 0)
+            {
+                return 0;
+            }
+
             return a * (b / Gcd(a, b));
         }
 
@@ -763,11 +904,13 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MRound(List<Expression> p)
         {
-            var number = (Double)p[0];
-            var multiple = (Double)p[1];
+            var number = (double)p[0];
+            var multiple = (double)p[1];
 
             if (Math.Sign(number) != Math.Sign(multiple))
+            {
                 throw new NumberException($"The Number and Multiple arguments must have the same sign.");
+            }
 
             return Math.Round(number / multiple, MidpointRounding.AwayFromZero) * multiple;
         }
@@ -781,20 +924,29 @@ namespace ClosedXML.Excel.CalcEngine
         {
             double numbersSum = 0;
             foreach (var number in numbers)
+            {
                 numbersSum += number;
+            }
 
-            double maxNumber = numbers.Max();
+            var maxNumber = numbers.Max();
             var denomFactorPowers = new double[(uint)numbers.Max() + 1];
             foreach (var number in numbers)
-                for (int i = 2; i <= number; i++)
+            {
+                for (var i = 2; i <= number; i++)
+                {
                     denomFactorPowers[i]++;
-            for (int i = 2; i < denomFactorPowers.Length; i++)
-                denomFactorPowers[i]--; // reduce with nominator;
+                }
+            }
 
-            int currentFactor = 2;
+            for (var i = 2; i < denomFactorPowers.Length; i++)
+            {
+                denomFactorPowers[i]--; // reduce with nominator;
+            }
+
+            var currentFactor = 2;
             double currentPower = 1;
             double result = 1;
-            for (double i = maxNumber + 1; i <= numbersSum; i++)
+            for (var i = maxNumber + 1; i <= numbersSum; i++)
             {
                 double tempDenom = 1;
                 while (tempDenom < result && currentFactor < denomFactorPowers.Length)
@@ -832,16 +984,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Product(List<Expression> p)
         {
-            if (p.Count == 0) return 0;
-            Double total = 1;
+            if (p.Count == 0)
+            {
+                return 0;
+            }
+
+            double total = 1;
             p.ForEach(v => total *= v);
             return total;
         }
 
         private static object Quotient(List<Expression> p)
         {
-            Double n = p[0];
-            Double k = p[1];
+            double n = p[0];
+            double k = p[1];
 
             return (int)(n / k);
         }
@@ -854,17 +1010,19 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Roman(List<Expression> p)
         {
             if (p.Count == 1
-                || (Boolean.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
-                || (Int32.TryParse(p[1]._token.Value.ToString(), out int intTemp) && intTemp == 1))
+                || bool.TryParse(p[1]._token.Value.ToString(), out var boolTemp) && boolTemp
+                || int.TryParse(p[1]._token.Value.ToString(), out var intTemp) && intTemp == 1)
+            {
                 return XLMath.ToRoman((int)p[0]);
+            }
 
             throw new ArgumentException("Can only support classic roman types.");
         }
 
         private static object Round(List<Expression> p)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
+            var value = (double)p[0];
+            var digits = (int)(double)p[1];
             if (digits >= 0)
             {
                 return Math.Round(value, digits, MidpointRounding.AwayFromZero);
@@ -872,7 +1030,7 @@ namespace ClosedXML.Excel.CalcEngine
             else
             {
                 digits = Math.Abs(digits);
-                double temp = value / Math.Pow(10, digits);
+                var temp = value / Math.Pow(10, digits);
                 temp = Math.Round(temp, 0, MidpointRounding.AwayFromZero);
                 return temp * Math.Pow(10, digits);
             }
@@ -880,32 +1038,40 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object RoundDown(List<Expression> p)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
+            var value = (double)p[0];
+            var digits = (int)(double)p[1];
 
             if (value >= 0)
+            {
                 return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+            }
 
             return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
         }
 
         private static object RoundUp(List<Expression> p)
         {
-            var value = (Double)p[0];
-            var digits = (Int32)(Double)p[1];
+            var value = (double)p[0];
+            var digits = (int)(double)p[1];
 
             if (value >= 0)
+            {
                 return Math.Ceiling(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
+            }
 
             return Math.Floor(value * Math.Pow(10, digits)) / Math.Pow(10, digits);
         }
 
         private static object Sec(List<Expression> p)
         {
-            if (double.TryParse(p[0], out double number))
+            if (double.TryParse(p[0], out var number))
+            {
                 return 1.0 / Math.Cos(number);
+            }
             else
+            {
                 throw new CellValueException();
+            }
         }
 
         private static object Sech(List<Expression> p)
@@ -915,16 +1081,17 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object SeriesSum(List<Expression> p)
         {
-            var x = (Double)p[0];
-            var n = (Double)p[1];
-            var m = (Double)p[2];
-            var obj = p[3] as XObjectExpression;
+            var x = (double)p[0];
+            var n = (double)p[1];
+            var m = (double)p[2];
 
-            if (obj == null)
+            if (!(p[3] is XObjectExpression obj))
+            {
                 return p[3] * Math.Pow(x, n);
+            }
 
-            Double total = 0;
-            Int32 i = 0;
+            double total = 0;
+            var i = 0;
             foreach (var e in obj)
             {
                 total += (double)e * Math.Pow(x, n + i * m);
@@ -936,7 +1103,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object SqrtPi(List<Expression> p)
         {
-            var num = (Double)p[0];
+            var num = (double)p[0];
             return Math.Sqrt(Math.PI * num);
         }
 
@@ -946,13 +1113,19 @@ namespace ClosedXML.Excel.CalcEngine
             bool hasSubtotalInFormula(Expression e)
             {
                 if (e is FunctionExpression fe && (fe.FunctionDefinition.Function.Method.Name == nameof(Subtotal) || fe.Parameters.Any(fp => hasSubtotalInFormula(fp))))
+                {
                     return true;
+                }
 
                 if (e is BinaryExpression be)
+                {
                     return hasSubtotalInFormula(be.LeftExpression) || hasSubtotalInFormula(be.RightExpression);
+                }
 
                 if (e is UnaryExpression ue)
+                {
                     return hasSubtotalInFormula(ue.Expression);
+                }
 
                 return false;
             };
@@ -971,7 +1144,9 @@ namespace ClosedXML.Excel.CalcEngine
                             return !hasSubtotalInFormula(expression);
                         }
                         else
+                        {
                             return true;
+                        }
                     })
                     .Select(c => new XObjectExpression(new CellRangeReference(c.AsRange(), (XLCalcEngine)crr.CalcEngine)) as Expression);
             };
@@ -983,7 +1158,7 @@ namespace ClosedXML.Excel.CalcEngine
                         : new[] { e })
                 .ToArray();
 
-            var fId = (int)(Double)p[0];
+            var fId = (int)(double)p[0];
             var tally = new Tally(expressions);
 
             switch (fId)
@@ -1034,18 +1209,20 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object MMult(List<Expression> p)
         {
-            Double[,] A = GetArray(p[0]);
-            Double[,] B = GetArray(p[1]);
+            var A = GetArray(p[0]);
+            var B = GetArray(p[1]);
 
             if (A.GetLength(0) != B.GetLength(0) || A.GetLength(1) != B.GetLength(1))
+            {
                 throw new ArgumentException("Ranges must have the same number of rows and columns.");
+            }
 
             var C = new double[A.GetLength(0), A.GetLength(1)];
-            for (int i = 0; i < A.GetLength(0); i++)
+            for (var i = 0; i < A.GetLength(0); i++)
             {
-                for (int j = 0; j < B.GetLength(1); j++)
+                for (var j = 0; j < B.GetLength(1); j++)
                 {
-                    for (int k = 0; k < A.GetLength(1); k++)
+                    for (var k = 0; k < A.GetLength(1); k++)
                     {
                         C[i, j] += A[i, k] * B[k, j];
                     }
@@ -1057,17 +1234,19 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static double[,] GetArray(Expression expression)
         {
-            var oExp1 = expression as XObjectExpression;
-            if (oExp1 == null) return new[,] { { (Double)expression } };
+            if (!(expression is XObjectExpression oExp1))
+            {
+                return new[,] { { (double)expression } };
+            }
 
             var range = (oExp1.Value as CellRangeReference).Range;
             var rowCount = range.RowCount();
             var columnCount = range.ColumnCount();
             var arr = new double[rowCount, columnCount];
 
-            for (int row = 0; row < rowCount; row++)
+            for (var row = 0; row < rowCount; row++)
             {
-                for (int column = 0; column < columnCount; column++)
+                for (var column = 0; column < columnCount; column++)
                 {
                     arr[row, column] = range.Cell(row + 1, column + 1).GetDouble();
                 }

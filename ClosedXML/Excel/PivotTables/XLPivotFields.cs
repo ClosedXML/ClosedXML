@@ -7,25 +7,27 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotFields : IXLPivotFields
     {
-        private readonly Dictionary<String, IXLPivotField> _pivotFields = new Dictionary<string, IXLPivotField>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, IXLPivotField> _pivotFields = new Dictionary<string, IXLPivotField>(StringComparer.OrdinalIgnoreCase);
         private readonly IXLPivotTable _pivotTable;
 
         internal XLPivotFields(IXLPivotTable pivotTable)
         {
-            this._pivotTable = pivotTable;
+            _pivotTable = pivotTable;
         }
 
         #region IXLPivotFields members
 
-        public IXLPivotField Add(String sourceName)
+        public IXLPivotField Add(string sourceName)
         {
             return Add(sourceName, sourceName);
         }
 
-        public IXLPivotField Add(String sourceName, String customName)
+        public IXLPivotField Add(string sourceName, string customName)
         {
-            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
-                throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
+            {
+                throw new ArgumentOutOfRangeException(nameof(sourceName), string.Format("The column '{0}' does not appear in the source range.", sourceName));
+            }
 
             var pivotField = new XLPivotField(_pivotTable, sourceName) { CustomName = customName };
             _pivotFields.Add(sourceName, pivotField);
@@ -37,7 +39,7 @@ namespace ClosedXML.Excel
             _pivotFields.Clear();
         }
 
-        public Boolean Contains(String sourceName)
+        public bool Contains(string sourceName)
         {
             return _pivotFields.ContainsKey(sourceName);
         }
@@ -47,12 +49,12 @@ namespace ClosedXML.Excel
             return _pivotFields.ContainsKey(pivotField.SourceName);
         }
 
-        public IXLPivotField Get(String sourceName)
+        public IXLPivotField Get(string sourceName)
         {
             return _pivotFields[sourceName];
         }
 
-        public IXLPivotField Get(Int32 index)
+        public IXLPivotField Get(int index)
         {
             return _pivotFields.Values.ElementAt(index);
         }
@@ -67,21 +69,23 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Int32 IndexOf(String sourceName)
+        public int IndexOf(string sourceName)
         {
             var selectedItem = _pivotFields.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == sourceName);
             if (selectedItem == null)
+            {
                 throw new ArgumentNullException(nameof(sourceName), "Invalid field name.");
+            }
 
             return selectedItem.Position;
         }
 
-        public Int32 IndexOf(IXLPivotField pf)
+        public int IndexOf(IXLPivotField pf)
         {
             return IndexOf(pf.SourceName);
         }
 
-        public void Remove(String sourceName)
+        public void Remove(string sourceName)
         {
             _pivotFields.Remove(sourceName);
         }

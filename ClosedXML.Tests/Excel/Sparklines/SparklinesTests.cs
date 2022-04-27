@@ -15,14 +15,14 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CannotCreateSparklineGroupsWithoutWorksheet()
         {
-            TestDelegate action = () => new XLSparklineGroups(null);
+            static void action() => new XLSparklineGroups(null);
             Assert.Throws<ArgumentNullException>(action);
         }
 
         [Test]
         public void CannotCreateSparklineGroupWithoutWorksheet()
         {
-            TestDelegate action = () => new XLSparklineGroup(null);
+            static void action() => new XLSparklineGroup(null);
             Assert.Throws<ArgumentNullException>(action);
         }
 
@@ -30,7 +30,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         public void CannotCreateSparklineWithoutGroup()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
-            TestDelegate action = () => new XLSparkline(null, ws.Cell("A1"), ws.Range("A2:A5"));
+            void action() => new XLSparkline(null, ws.Cell("A1"), ws.Range("A2:A5"));
             Assert.Throws<ArgumentNullException>(action);
         }
 
@@ -39,7 +39,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet1");
             var group = new XLSparklineGroup(ws);
-            TestDelegate action = () => new XLSparkline(group, null, ws.Range("A2:A5"));
+            void action() => new XLSparkline(group, null, ws.Range("A2:A5"));
             Assert.Throws<ArgumentNullException>(action);
         }
 
@@ -115,7 +115,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
-            TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:C2"), ws.Range("A3:C4"));
+            void action() => ws.SparklineGroups.Add(ws.Range("A1:C2"), ws.Range("A3:C4"));
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("locationRange must have either a single row or a single column", message);
@@ -126,7 +126,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
-            TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:C1"), ws.Range("A3:D4"));
+            void action() => ws.SparklineGroups.Add(ws.Range("A1:C1"), ws.Range("A3:D4"));
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("locationRange and sourceDataRange must have the same width", message);
@@ -137,7 +137,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
-            TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:A3"), ws.Range("B1:B4"));
+            void action() => ws.SparklineGroups.Add(ws.Range("A1:A3"), ws.Range("B1:B4"));
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("locationRange and sourceDataRange must have the same height", message);
@@ -148,7 +148,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
-            TestDelegate action = () => ws.SparklineGroups.Add(ws.Range("A1:A1"), ws.Range("B1:C4"));
+            void action() => ws.SparklineGroups.Add(ws.Range("A1:A1"), ws.Range("B1:C4"));
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("SourceData range must have either a single row or a single column", message);
@@ -159,10 +159,11 @@ namespace ClosedXML.Tests.Excel.Sparklines
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
 
-            var group = new XLSparklineGroup(ws);
-
-            group.Add("A2", "B2:E2");
-            group.Add(ws.Cell("A3"), ws.Range("B3:E3"));
+            var group = new XLSparklineGroup(ws)
+            {
+                { "A2", "B2:E2" },
+                { ws.Cell("A3"), ws.Range("B3:E3") }
+            };
 
             Assert.AreEqual(0, ws.SparklineGroups.Count());
 
@@ -182,7 +183,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
             var group = new XLSparklineGroup(ws1);
 
-            TestDelegate action = () => ws2.SparklineGroups.Add(group);
+            void action() => ws2.SparklineGroups.Add(group);
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("The specified sparkline group belongs to the different worksheet", message);
@@ -197,7 +198,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
             var group = new XLSparklineGroup(ws1);
 
-            TestDelegate action = () => group.Add(ws2.Cell("A3"), ws1.Range("B3:E3"));
+            void action() => group.Add(ws2.Cell("A3"), ws1.Range("B3:E3"));
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("The specified sparkline belongs to the different worksheet", message);
@@ -423,7 +424,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
 
             var group = ws1.SparklineGroups.Add("A1:A2", "B1:Z2");
 
-            TestDelegate action = () => group.First().SetLocation(ws2.FirstCell());
+            void action() => group.First().SetLocation(ws2.FirstCell());
 
             var message = Assert.Throws<InvalidOperationException>(action).Message;
             Assert.AreEqual("Cannot move the sparkline to a different worksheet", message);
@@ -452,7 +453,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
             var group = ws.SparklineGroups.Add("A1", "B1:Z1");
             var sparkline = group.Single();
 
-            TestDelegate action = () => sparkline.SetSourceData(ws.Range("B1:Z2"));
+            void action() => sparkline.SetSourceData(ws.Range("B1:Z2"));
 
             var message = Assert.Throws<ArgumentException>(action).Message;
             Assert.AreEqual("SourceData range must have either a single row or a single column", message);
@@ -494,7 +495,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1", "B1:Z1");
 
-            TestDelegate action = () => group.Style = null;
+            void action() => group.Style = null;
 
             Assert.Throws<ArgumentNullException>(action);
         }
@@ -737,11 +738,9 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void CanLoadSparklines()
         {
-            using (var ms = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
-            using (var wb = new XLWorkbook(ms))
-            {
-                Assert.IsTrue(wb.Worksheets.All(ws => ws.SparklineGroups.Count() == 6));
-            }
+            using var ms = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx"));
+            using var wb = new XLWorkbook(ms);
+            Assert.IsTrue(wb.Worksheets.All(ws => ws.SparklineGroups.Count() == 6));
         }
 
         [TestCase("Accent!B1", nameof(XLSparklineTheme.Accent1))]
@@ -802,80 +801,74 @@ namespace ClosedXML.Tests.Excel.Sparklines
         [Test]
         public void DeletedSparklinesRemovedFromFile()
         {
-            using (var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx")))
-            using (var output = new MemoryStream())
+            using var input = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\Sparklines\SparklineThemes\inputfile.xlsx"));
+            using var output = new MemoryStream();
+            using (var wb = new XLWorkbook(input))
             {
-                using (var wb = new XLWorkbook(input))
-                {
-                    wb.Worksheet(1).SparklineGroups.RemoveAll();
-                    wb.Worksheet(2).SparklineGroups.Remove(wb.Worksheet(2).Cell("B1"));
-                    wb.Worksheet(3).SparklineGroups.Remove(wb.Worksheet(3).Range("B2:B6"));
-                    wb.Worksheet(4).SparklineGroups.Remove(wb.Worksheet(4).SparklineGroups.First());
+                wb.Worksheet(1).SparklineGroups.RemoveAll();
+                wb.Worksheet(2).SparklineGroups.Remove(wb.Worksheet(2).Cell("B1"));
+                wb.Worksheet(3).SparklineGroups.Remove(wb.Worksheet(3).Range("B2:B6"));
+                wb.Worksheet(4).SparklineGroups.Remove(wb.Worksheet(4).SparklineGroups.First());
 
-                    wb.SaveAs(output);
-                }
+                wb.SaveAs(output);
+            }
 
-                using (var wb = new XLWorkbook(output))
-                {
-                    Assert.AreEqual(0, wb.Worksheet(1).SparklineGroups.Count());
-                    Assert.AreEqual(5, wb.Worksheet(2).SparklineGroups.Count());
-                    Assert.AreEqual(1, wb.Worksheet(3).SparklineGroups.Count());
-                    Assert.AreEqual(5, wb.Worksheet(4).SparklineGroups.Count());
-                    Assert.AreEqual(6, wb.Worksheet(5).SparklineGroups.Count());
-                    Assert.AreEqual(6, wb.Worksheet(6).SparklineGroups.Count());
-                }
+            using (var wb = new XLWorkbook(output))
+            {
+                Assert.AreEqual(0, wb.Worksheet(1).SparklineGroups.Count());
+                Assert.AreEqual(5, wb.Worksheet(2).SparklineGroups.Count());
+                Assert.AreEqual(1, wb.Worksheet(3).SparklineGroups.Count());
+                Assert.AreEqual(5, wb.Worksheet(4).SparklineGroups.Count());
+                Assert.AreEqual(6, wb.Worksheet(5).SparklineGroups.Count());
+                Assert.AreEqual(6, wb.Worksheet(6).SparklineGroups.Count());
             }
         }
 
         [Test]
         public void EmptySparklineGroupsSkippedOnSaving()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.AddWorksheet("Sheet 1");
-                    var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
+                var ws = wb.AddWorksheet("Sheet 1");
+                var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
 
-                    group.RemoveAll();
+                group.RemoveAll();
 
-                    wb.SaveAs(ms);
-                }
+                wb.SaveAs(ms);
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    Assert.AreEqual(0, wb.Worksheets.First().SparklineGroups.Count());
-                }
+            using (var wb = new XLWorkbook(ms))
+            {
+                Assert.AreEqual(0, wb.Worksheets.First().SparklineGroups.Count());
             }
         }
 
         [Test]
         public void CanSaveAndLoadSparklineWithInvalidRange()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws1 = wb.AddWorksheet("Sheet 1");
-                    var ws2 = wb.AddWorksheet("Sheet 2");
+                var ws1 = wb.AddWorksheet("Sheet 1");
+                var ws2 = wb.AddWorksheet("Sheet 2");
 
-                    ws1.SparklineGroups.Add("A1:A3", "'Sheet 2'!B1:F3");
-                    ws1.SparklineGroups.Add("A4:A6", "B4:F6")
-                        .SetDateRange(ws2.Range("A1:E1"));
+                ws1.SparklineGroups.Add("A1:A3", "'Sheet 2'!B1:F3");
+                ws1.SparklineGroups.Add("A4:A6", "B4:F6")
+                    .SetDateRange(ws2.Range("A1:E1"));
 
-                    ws2.Delete();
-                    wb.SaveAs(ms);
-                }
+                ws2.Delete();
+                wb.SaveAs(ms);
+            }
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.Single();
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.Single();
 
-                    Assert.AreEqual(2, ws.SparklineGroups.Count());
-                    Assert.IsFalse(ws.Cell("A2").Sparkline.IsValid);
-                    Assert.AreEqual("B5:F5", ws.Cell("A5").Sparkline.SourceData.RangeAddress.ToString());
-                    Assert.IsNull(ws.Cell("A5").Sparkline.SparklineGroup.DateRange);
-                }
+                Assert.AreEqual(2, ws.SparklineGroups.Count());
+                Assert.IsFalse(ws.Cell("A2").Sparkline.IsValid);
+                Assert.AreEqual("B5:F5", ws.Cell("A5").Sparkline.SourceData.RangeAddress.ToString());
+                Assert.IsNull(ws.Cell("A5").Sparkline.SparklineGroup.DateRange);
             }
         }
 
@@ -924,9 +917,13 @@ namespace ClosedXML.Tests.Excel.Sparklines
             axis.MinAxisType = axisType;
 
             if (expectedManualMin.HasValue)
+            {
                 Assert.AreEqual(expectedManualMin.Value, axis.ManualMin.Value, XLHelper.Epsilon);
+            }
             else
+            {
                 Assert.IsNull(axis.ManualMin);
+            }
         }
 
         [TestCase(XLSparklineAxisMinMax.Custom, 100)]
@@ -942,9 +939,13 @@ namespace ClosedXML.Tests.Excel.Sparklines
             axis.MaxAxisType = axisType;
 
             if (expectedManualMax.HasValue)
+            {
                 Assert.AreEqual(expectedManualMax.Value, axis.ManualMax.Value, XLHelper.Epsilon);
+            }
             else
+            {
                 Assert.IsNull(axis.ManualMax);
+            }
         }
 
         [Test]
@@ -976,7 +977,7 @@ namespace ClosedXML.Tests.Excel.Sparklines
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.AddWorksheet("Sheet 1");
             var group = ws.SparklineGroups.Add("A1:A2", "B1:Z2");
 
-            TestDelegate action = () => group.DateRange = ws.Range("B3:Z4");
+            void action() => group.DateRange = ws.Range("B3:Z4");
 
             Assert.Throws<ArgumentException>(action);
         }

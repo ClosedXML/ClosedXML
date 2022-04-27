@@ -25,7 +25,9 @@ namespace ClosedXML.Excel.InsertData
 
             var itemType = data.GetItemType();
             if (itemType.IsNullableType())
+            {
                 itemType = itemType.GetUnderlyingType();
+            }
 
             _members = itemType.GetFields(bindingFlags).Cast<MemberInfo>()
                 .Concat(itemType.GetProperties(bindingFlags))
@@ -49,15 +51,21 @@ namespace ClosedXML.Excel.InsertData
         public string GetPropertyName(int propertyIndex)
         {
             if (propertyIndex < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(propertyIndex), "Property index must be non-negative");
+            }
 
             if (propertyIndex >= GetPropertiesCount())
+            {
                 throw new ArgumentOutOfRangeException($"{propertyIndex} exceeds the number of the object properties");
+            }
 
             var memberInfo = _members[propertyIndex];
             var fieldName = XLColumnAttribute.GetHeader(memberInfo);
-            if (String.IsNullOrWhiteSpace(fieldName))
+            if (string.IsNullOrWhiteSpace(fieldName))
+            {
                 fieldName = memberInfo.Name;
+            }
 
             return fieldName;
         }
@@ -69,7 +77,7 @@ namespace ClosedXML.Excel.InsertData
 
         private IEnumerable<object> GetItemData(object item)
         {
-            for (int i = 0; i < _members.Length; i++)
+            for (var i = 0; i < _members.Length; i++)
             {
                 if (item == null)
                 {

@@ -4,21 +4,21 @@ namespace ClosedXML.Excel
 {
     public interface IXLTableRow : IXLRangeRow
     {
-        IXLCell Field(Int32 index);
+        IXLCell Field(int index);
 
-        IXLCell Field(String name);
+        IXLCell Field(string name);
 
         new IXLTableRow Sort();
 
-        new IXLTableRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        new IXLTableRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true);
 
         new IXLTableRow RowAbove();
 
-        new IXLTableRow RowAbove(Int32 step);
+        new IXLTableRow RowAbove(int step);
 
         new IXLTableRow RowBelow();
 
-        new IXLTableRow RowBelow(Int32 step);
+        new IXLTableRow RowBelow(int step);
 
         /// <summary>
         /// Clears the contents of this row.

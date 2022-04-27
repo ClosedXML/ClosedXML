@@ -2,7 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System.IO;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     [TestFixture]
     public class XLFillTests
@@ -102,16 +102,14 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void LoadAndSaveTransparentBackgroundFill()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx")))
-            using (var ms = new MemoryStream())
+            using var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\StyleReferenceFiles\TransparentBackgroundFill\inputfile.xlsx"));
+            using var ms = new MemoryStream();
+            TestHelper.CreateAndCompare(() =>
             {
-                TestHelper.CreateAndCompare(() =>
-                {
-                    var wb = new XLWorkbook(stream);
-                    wb.SaveAs(ms);
-                    return wb;
-                }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
-            }
+                var wb = new XLWorkbook(stream);
+                wb.SaveAs(ms);
+                return wb;
+            }, @"Other\StyleReferenceFiles\TransparentBackgroundFill\TransparentBackgroundFill.xlsx");
         }
     }
 }

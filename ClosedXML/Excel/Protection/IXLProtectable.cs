@@ -18,14 +18,14 @@ namespace ClosedXML.Excel
         /// <param name="password">The password.</param>
         /// <param name="algorithm">The algorithm.</param>
         /// <returns></returns>
-        new TProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm);
+        new TProtection Protect(string password, Algorithm algorithm = DefaultProtectionAlgorithm);
 
         /// <summary>Protects this instance with the specified password, password hash algorithm and set elements that the user is allowed to change.</summary>
         /// <param name="password">The password.</param>
         /// <param name="algorithm">The algorithm.</param>
         /// <param name="allowedElements">The allowed elements.</param>
         /// <returns></returns>
-        TProtection Protect(String password, Algorithm algorithm, TElement allowedElements);
+        TProtection Protect(string password, Algorithm algorithm, TElement allowedElements);
 
         /// <summary>Unprotects this instance without a password.</summary>
         /// <returns></returns>
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
         /// <summary>Unprotects this instance using the specified password.</summary>
         /// <param name="password">The password.</param>
         /// <returns></returns>
-        new TProtection Unprotect(String password);
+        new TProtection Unprotect(string password);
     }
 
     public interface IXLProtectable
@@ -43,13 +43,13 @@ namespace ClosedXML.Excel
         /// <value>
         ///   <c>true</c> if this instance is password protected; otherwise, <c>false</c>.
         /// </value>
-        Boolean IsPasswordProtected { get; }
+        bool IsPasswordProtected { get; }
 
         /// <summary>Gets a value indicating whether this instance is protected, either with or without a password.</summary>
         /// <value>
         ///   <c>true</c> if this instance is protected; otherwise, <c>false</c>.
         /// </value>
-        Boolean IsProtected { get; }
+        bool IsProtected { get; }
 
         /// <summary>Protects this instance without a password.</summary>
         /// <returns></returns>
@@ -59,7 +59,7 @@ namespace ClosedXML.Excel
         /// <param name="password">The password.</param>
         /// <param name="algorithm">The algorithm.</param>
         /// <returns></returns>
-        IXLElementProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm);
+        IXLElementProtection Protect(string password, Algorithm algorithm = DefaultProtectionAlgorithm);
 
         /// <summary>Unprotects this instance without a password.</summary>
         /// <returns></returns>
@@ -68,6 +68,6 @@ namespace ClosedXML.Excel
         /// <summary>Unprotects this instance using the specified password.</summary>
         /// <param name="password">The password.</param>
         /// <returns></returns>
-        IXLElementProtection Unprotect(String password);
+        IXLElementProtection Unprotect(string password);
     }
 }

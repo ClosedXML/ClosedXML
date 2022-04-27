@@ -5,7 +5,7 @@ namespace ClosedXML.Examples
 {
     public class HelloWorld
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Sample Sheet");

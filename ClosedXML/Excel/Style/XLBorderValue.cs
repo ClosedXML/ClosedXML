@@ -31,29 +31,29 @@ namespace ClosedXML.Excel
 
         public XLBorderKey Key { get; private set; }
 
-        public XLBorderStyleValues LeftBorder { get { return Key.LeftBorder; } }
+        public XLBorderStyleValues LeftBorder => Key.LeftBorder;
 
         public XLColor LeftBorderColor { get; private set; }
 
-        public XLBorderStyleValues RightBorder { get { return Key.RightBorder; } }
+        public XLBorderStyleValues RightBorder => Key.RightBorder;
 
         public XLColor RightBorderColor { get; private set; }
 
-        public XLBorderStyleValues TopBorder { get { return Key.TopBorder; } }
+        public XLBorderStyleValues TopBorder => Key.TopBorder;
 
         public XLColor TopBorderColor { get; private set; }
 
-        public XLBorderStyleValues BottomBorder { get { return Key.BottomBorder; } }
+        public XLBorderStyleValues BottomBorder => Key.BottomBorder;
 
         public XLColor BottomBorderColor { get; private set; }
 
-        public XLBorderStyleValues DiagonalBorder { get { return Key.DiagonalBorder; } }
+        public XLBorderStyleValues DiagonalBorder => Key.DiagonalBorder;
 
         public XLColor DiagonalBorderColor { get; private set; }
 
-        public bool DiagonalUp { get { return Key.DiagonalUp; } }
+        public bool DiagonalUp => Key.DiagonalUp;
 
-        public bool DiagonalDown { get { return Key.DiagonalDown; } }
+        public bool DiagonalDown => Key.DiagonalDown;
 
         private XLBorderValue(XLBorderKey key)
         {
@@ -72,8 +72,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLBorderValue;
-            return cached != null &&
+            return obj is XLBorderValue cached &&
                    Key.Equals(cached.Key);
         }
 

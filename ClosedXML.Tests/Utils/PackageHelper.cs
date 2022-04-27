@@ -8,7 +8,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Utils
 {
     public static class PackageHelper
     {
@@ -18,11 +18,9 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(uri);
             }
-            PackagePart part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
-            using (Stream stream = part.GetStream())
-            {
-                serializer.Serialize(stream, content);
-            }
+            var part = package.CreatePart(uri, MediaTypeNames.Text.Xml, CompressionOption.Fast);
+            using var stream = part.GetStream();
+            serializer.Serialize(stream, content);
         }
 
         public static object ReadXmlPart(Package package, Uri uri, XmlSerializer serializer)
@@ -31,11 +29,9 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
-            {
-                return serializer.Deserialize(stream);
-            }
+            var part = package.GetPart(uri);
+            using var stream = part.GetStream();
+            return serializer.Deserialize(stream);
         }
 
         public static void WriteBinaryPart(Package package, Uri uri, Stream content)
@@ -44,11 +40,9 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(uri);
             }
-            PackagePart part = package.CreatePart(uri, MediaTypeNames.Application.Octet, CompressionOption.Fast);
-            using (Stream stream = part.GetStream())
-            {
-                StreamHelper.StreamToStreamAppend(content, stream);
-            }
+            var part = package.CreatePart(uri, MediaTypeNames.Application.Octet, CompressionOption.Fast);
+            using var stream = part.GetStream();
+            StreamHelper.StreamToStreamAppend(content, stream);
         }
 
         /// <summary>
@@ -63,7 +57,7 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException("Package part doesn't exists!");
             }
-            PackagePart part = package.GetPart(uri);
+            var part = package.GetPart(uri);
             return part.GetStream();
         }
 
@@ -76,15 +70,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(source, null))
+            if (source is null)
             {
                 throw new ArgumentNullException("source");
             }
-            if (ReferenceEquals(dest, null))
+            if (dest is null)
             {
                 throw new ArgumentNullException("dest");
             }
@@ -100,16 +94,12 @@ namespace ClosedXML.Tests
                 dest.DeletePart(uri);
             }
 
-            PackagePart sourcePart = source.GetPart(uri);
-            PackagePart destPart = dest.CreatePart(uri, sourcePart.ContentType, sourcePart.CompressionOption);
+            var sourcePart = source.GetPart(uri);
+            var destPart = dest.CreatePart(uri, sourcePart.ContentType, sourcePart.CompressionOption);
 
-            using (Stream sourceStream = sourcePart.GetStream())
-            {
-                using (Stream destStream = destPart.GetStream())
-                {
-                    StreamHelper.StreamToStreamAppend(sourceStream, destStream);
-                }
-            }
+            using var sourceStream = sourcePart.GetStream();
+            using var destStream = destPart.GetStream();
+            StreamHelper.StreamToStreamAppend(sourceStream, destStream);
         }
 
         public static void WritePart<T>(Package package, PackagePartDescriptor descriptor, T content,
@@ -117,15 +107,15 @@ namespace ClosedXML.Tests
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(descriptor, null))
+            if (descriptor is null)
             {
                 throw new ArgumentNullException("descriptor");
             }
-            if (ReferenceEquals(serializeAction, null))
+            if (serializeAction is null)
             {
                 throw new ArgumentNullException("serializeAction");
             }
@@ -136,26 +126,24 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(descriptor.Uri);
             }
-            PackagePart part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (Stream stream = part.GetStream())
-            {
-                serializeAction(stream, content);
-            }
+            var part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
+            using var stream = part.GetStream();
+            serializeAction(stream, content);
         }
 
         public static void WritePart(Package package, PackagePartDescriptor descriptor, Action<Stream> serializeAction)
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(descriptor, null))
+            if (descriptor is null)
             {
                 throw new ArgumentNullException("descriptor");
             }
-            if (ReferenceEquals(serializeAction, null))
+            if (serializeAction is null)
             {
                 throw new ArgumentNullException("serializeAction");
             }
@@ -166,26 +154,24 @@ namespace ClosedXML.Tests
             {
                 package.DeletePart(descriptor.Uri);
             }
-            PackagePart part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
-            using (Stream stream = part.GetStream())
-            {
-                serializeAction(stream);
-            }
+            var part = package.CreatePart(descriptor.Uri, descriptor.ContentType, descriptor.CompressOption);
+            using var stream = part.GetStream();
+            serializeAction(stream);
         }
 
         public static T ReadPart<T>(Package package, Uri uri, Func<Stream, T> deserializeFunc)
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(deserializeFunc, null))
+            if (deserializeFunc is null)
             {
                 throw new ArgumentNullException("deserializeFunc");
             }
@@ -196,26 +182,24 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
-            {
-                return deserializeFunc(stream);
-            }
+            var part = package.GetPart(uri);
+            using var stream = part.GetStream();
+            return deserializeFunc(stream);
         }
 
         public static void ReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(deserializeAction, null))
+            if (deserializeAction is null)
             {
                 throw new ArgumentNullException("deserializeAction");
             }
@@ -226,26 +210,24 @@ namespace ClosedXML.Tests
             {
                 throw new ApplicationException(string.Format("Package part '{0}' doesn't exists!", uri.OriginalString));
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
-            {
-                deserializeAction(stream);
-            }
+            var part = package.GetPart(uri);
+            using var stream = part.GetStream();
+            deserializeAction(stream);
         }
 
         public static bool TryReadPart(Package package, Uri uri, Action<Stream> deserializeAction)
         {
             #region Check
 
-            if (ReferenceEquals(package, null))
+            if (package is null)
             {
                 throw new ArgumentNullException("package");
             }
-            if (ReferenceEquals(uri, null))
+            if (uri is null)
             {
                 throw new ArgumentNullException("uri");
             }
-            if (ReferenceEquals(deserializeAction, null))
+            if (deserializeAction is null)
             {
                 throw new ArgumentNullException("deserializeAction");
             }
@@ -256,8 +238,8 @@ namespace ClosedXML.Tests
             {
                 return false;
             }
-            PackagePart part = package.GetPart(uri);
-            using (Stream stream = part.GetStream())
+            var part = package.GetPart(uri);
+            using (var stream = part.GetStream())
             {
                 deserializeAction(stream);
             }
@@ -304,11 +286,11 @@ namespace ClosedXML.Tests
             #endregion Check
 
             excludeMethod = excludeMethod ?? (uri => false);
-            PackagePartCollection leftParts = left.GetParts();
-            PackagePartCollection rightParts = right.GetParts();
+            var leftParts = left.GetParts();
+            var rightParts = right.GetParts();
 
             var pairs = new Dictionary<Uri, PartPair>();
-            foreach (PackagePart part in leftParts)
+            foreach (var part in leftParts)
             {
                 if (excludeMethod(part.Uri))
                 {
@@ -316,13 +298,13 @@ namespace ClosedXML.Tests
                 }
                 pairs.Add(part.Uri, new PartPair(part.Uri, CompareStatus.OnlyOnLeft));
             }
-            foreach (PackagePart part in rightParts)
+            foreach (var part in rightParts)
             {
                 if (excludeMethod(part.Uri))
                 {
                     continue;
                 }
-                if (pairs.TryGetValue(part.Uri, out PartPair pair))
+                if (pairs.TryGetValue(part.Uri, out var pair))
                 {
                     pair.Status = CompareStatus.Equal;
                 }
@@ -337,7 +319,7 @@ namespace ClosedXML.Tests
                 return AgregateCompareResult(out message, pairs);
             }
 
-            foreach (PartPair pair in pairs.Values)
+            foreach (var pair in pairs.Values)
             {
                 if (pair.Status != CompareStatus.Equal)
                 {
@@ -345,39 +327,37 @@ namespace ClosedXML.Tests
                 }
                 var leftPart = left.GetPart(pair.Uri);
                 var rightPart = right.GetPart(pair.Uri);
-                using (Stream leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (Stream rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read))
-                using (var leftMemoryStream = new MemoryStream())
-                using (var rightMemoryStream = new MemoryStream())
+                using var leftPackagePartStream = leftPart.GetStream(FileMode.Open, FileAccess.Read);
+                using var rightPackagePartStream = rightPart.GetStream(FileMode.Open, FileAccess.Read);
+                using var leftMemoryStream = new MemoryStream();
+                using var rightMemoryStream = new MemoryStream();
+                leftPackagePartStream.CopyTo(leftMemoryStream);
+                rightPackagePartStream.CopyTo(rightMemoryStream);
+
+                leftMemoryStream.Seek(0, SeekOrigin.Begin);
+                rightMemoryStream.Seek(0, SeekOrigin.Begin);
+
+                var stripColumnWidthsFromSheet = ignoreColumnFormat &&
+                    leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
+                    rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
+
+                var tuple1 = new Tuple<Uri, Stream>(pair.Uri, leftMemoryStream);
+                var tuple2 = new Tuple<Uri, Stream>(pair.Uri, rightMemoryStream);
+
+                if (!StreamHelper.Compare(tuple1, tuple2, stripColumnWidthsFromSheet))
                 {
-                    leftPackagePartStream.CopyTo(leftMemoryStream);
-                    rightPackagePartStream.CopyTo(rightMemoryStream);
-
-                    leftMemoryStream.Seek(0, SeekOrigin.Begin);
-                    rightMemoryStream.Seek(0, SeekOrigin.Begin);
-
-                    bool stripColumnWidthsFromSheet = ignoreColumnFormat &&
-                        leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
-                        rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
-
-                    var tuple1 = new Tuple<Uri, Stream>(pair.Uri, leftMemoryStream);
-                    var tuple2 = new Tuple<Uri, Stream>(pair.Uri, rightMemoryStream);
-
-                    if (!StreamHelper.Compare(tuple1, tuple2, stripColumnWidthsFromSheet))
+                    pair.Status = CompareStatus.NonEqual;
+                    if (compareToFirstDifference)
                     {
-                        pair.Status = CompareStatus.NonEqual;
-                        if (compareToFirstDifference)
-                        {
-                            return AgregateCompareResult(out message, pairs);
-                        }
+                        return AgregateCompareResult(out message, pairs);
                     }
                 }
             }
 
-            List<PartPair> sortedPairs = pairs.Values.ToList();
+            var sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();
-            foreach (PartPair pair in sortedPairs)
+            foreach (var pair in sortedPairs)
             {
                 if (pair.Status == CompareStatus.Equal)
                 {
@@ -392,10 +372,10 @@ namespace ClosedXML.Tests
 
         private static bool AgregateCompareResult(out string message, Dictionary<Uri, PartPair> pairs)
         {
-            List<PartPair> sortedPairs = pairs.Values.ToList();
+            var sortedPairs = pairs.Values.ToList();
             sortedPairs.Sort((one, other) => one.Uri.OriginalString.CompareTo(other.Uri.OriginalString));
             var sbuilder = new StringBuilder();
-            foreach (PartPair pair in sortedPairs)
+            foreach (var pair in sortedPairs)
             {
                 if (pair.Status == CompareStatus.Equal)
                 {
@@ -427,7 +407,7 @@ namespace ClosedXML.Tests
             /// <param name="compressOption"></param>
             public PackagePartDescriptor(Uri uri, string contentType, CompressionOption compressOption)
             {
-                if (ReferenceEquals(uri, null))
+                if (uri is null)
                 {
                     throw new ArgumentNullException("uri");
                 }

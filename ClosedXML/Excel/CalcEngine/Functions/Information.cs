@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TYPE", 1, Type);
         }
 
-        static IDictionary<ErrorExpression.ExpressionErrorType, int> errorTypes = new Dictionary<ErrorExpression.ExpressionErrorType, int>()
+        static readonly IDictionary<ErrorExpression.ExpressionErrorType, int> errorTypes = new Dictionary<ErrorExpression.ExpressionErrorType, int>()
         {
             [ErrorExpression.ExpressionErrorType.NullValue] = 1,
             [ErrorExpression.ExpressionErrorType.DivisionByZero] = 2,
@@ -43,9 +43,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var v = p[0].Evaluate();
 
             if (v is ErrorExpression.ExpressionErrorType)
+            {
                 return errorTypes[(ErrorExpression.ExpressionErrorType)v];
+            }
             else
+            {
                 throw new NoValueAvailableException();
+            }
         }
 
         static object IsBlank(List<Expression> p)
@@ -130,7 +134,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 try
                 {
                     var stringValue = (string) v;
-                    return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out double dv);
+                    return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out var dv);
                 }
                 catch (Exception)
                 {
@@ -154,13 +158,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object IsRef(List<Expression> p)
         {
-            var oe = p[0] as XObjectExpression;
-            if (oe == null)
+            if (!(p[0] is XObjectExpression oe))
+            {
                 return false;
+            }
 
-            var crr = oe.Value as CellRangeReference;
-
-            return crr != null;
+            return oe.Value is CellRangeReference crr;
         }
 
         static object IsText(List<Expression> p)

@@ -21,23 +21,34 @@ namespace ClosedXML.Utils
             return Convert.ToBase64String(plainTextBytes);
         }
 
-        public static String GenerateNewSalt(Algorithm algorithm)
+        public static string GenerateNewSalt(Algorithm algorithm)
         {
             if (RequiresSalt(algorithm))
+            {
                 return GetSalt();
+            }
             else
-                return String.Empty;
+            {
+                return string.Empty;
+            }
         }
 
-        public static String GetPasswordHash(Algorithm algorithm, String password, String salt = "", UInt32 spinCount = 0)
+        public static string GetPasswordHash(Algorithm algorithm, string password, string salt = "", uint spinCount = 0)
         {
             if (password == null)
+            {
                 throw new ArgumentNullException(nameof(password));
+            }
 
             if (salt == null)
+            {
                 throw new ArgumentNullException(nameof(salt));
+            }
 
-            if (password?.Length == 0) return "";
+            if (password?.Length == 0)
+            {
+                return "";
+            }
 
             switch (algorithm)
             {
@@ -54,15 +65,13 @@ namespace ClosedXML.Utils
 
         public static string GetSalt(int length = 32)
         {
-            using (var random = new RNGCryptoServiceProvider())
-            {
-                var salt = new byte[length];
-                random.GetNonZeroBytes(salt);
-                return Convert.ToBase64String(salt);
-            }
+            using var random = new RNGCryptoServiceProvider();
+            var salt = new byte[length];
+            random.GetNonZeroBytes(salt);
+            return Convert.ToBase64String(salt);
         }
 
-        public static Boolean RequiresSalt(Algorithm algorithm)
+        public static bool RequiresSalt(Algorithm algorithm)
         {
             switch (algorithm)
             {
@@ -77,19 +86,21 @@ namespace ClosedXML.Utils
             }
         }
 
-        private static String GetDefaultPasswordHash(String password)
+        private static string GetDefaultPasswordHash(string password)
         {
             if (password == null)
+            {
                 throw new ArgumentNullException(nameof(password));
+            }
 
             // http://kohei.us/2008/01/18/excel-sheet-protection-password-hash/
             // http://sc.openoffice.org/excelfileformat.pdf - 4.18.4
             // http://web.archive.org/web/20080906232341/http://blogs.infosupport.com/wouterv/archive/2006/11/21/Hashing-password-for-use-in-SpreadsheetML.aspx
-            byte[] passwordCharacters = Encoding.ASCII.GetBytes(password);
-            int hash = 0;
+            var passwordCharacters = Encoding.ASCII.GetBytes(password);
+            var hash = 0;
             if (passwordCharacters.Length > 0)
             {
-                int charIndex = passwordCharacters.Length;
+                var charIndex = passwordCharacters.Length;
 
                 while (charIndex-- > 0)
                 {
@@ -99,19 +110,23 @@ namespace ClosedXML.Utils
                 // Main difference from spec, also hash with charcount
                 hash = ((hash >> 14) & 0x01) | ((hash << 1) & 0x7fff);
                 hash ^= passwordCharacters.Length;
-                hash ^= (0x8000 | ('N' << 8) | 'K');
+                hash ^= 0x8000 | ('N' << 8) | 'K';
             }
 
             return Convert.ToString(hash, 16).ToUpperInvariant();
         }
 
-        private static String GetSha512PasswordHash(String password, String salt, UInt32 spinCount)
+        private static string GetSha512PasswordHash(string password, string salt, uint spinCount)
         {
             if (password == null)
+            {
                 throw new ArgumentNullException(nameof(password));
+            }
 
             if (salt == null)
+            {
                 throw new ArgumentNullException(nameof(salt));
+            }
 
             var saltBytes = Convert.FromBase64String(salt);
             var passwordBytes = Encoding.Unicode.GetBytes(password);

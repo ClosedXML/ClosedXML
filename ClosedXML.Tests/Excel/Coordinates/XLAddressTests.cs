@@ -1,7 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Coordinates
 {
     [TestFixture]
     public class XLAddressTests
@@ -10,7 +10,7 @@ namespace ClosedXML.Tests
         public void ToStringTest()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLAddress address = ws.Cell(1, 1).Address;
+            var address = ws.Cell(1, 1).Address;
 
             Assert.AreEqual("A1", address.ToString());
             Assert.AreEqual("A1", address.ToString(XLReferenceStyle.A1));
@@ -34,7 +34,7 @@ namespace ClosedXML.Tests
         public void ToStringTestWithSpace()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
-            IXLAddress address = ws.Cell(1, 1).Address;
+            var address = ws.Cell(1, 1).Address;
 
             Assert.AreEqual("A1", address.ToString());
             Assert.AreEqual("A1", address.ToString(XLReferenceStyle.A1));

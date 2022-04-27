@@ -36,13 +36,13 @@ namespace ClosedXML.Examples.Misc
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Hyperlinks");
             wb.Worksheets.Add("Second Sheet");
 
-            Int32 ro = 0;
+            var ro = 0;
 
             // You can create a link with pretty much anything you can put on a
             // browser: http, ftp, mailto, gopher, news, nntp, etc.

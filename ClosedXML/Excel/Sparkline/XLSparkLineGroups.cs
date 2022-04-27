@@ -40,7 +40,9 @@ namespace ClosedXML.Excel
         public IXLSparklineGroup Add(IXLSparklineGroup sparklineGroup)
         {
             if (sparklineGroup.Worksheet != Worksheet)
+            {
                 throw new ArgumentException("The specified sparkline group belongs to the different worksheet");
+            }
 
             _sparklineGroups.Add(sparklineGroup);
             return sparklineGroup;

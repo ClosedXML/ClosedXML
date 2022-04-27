@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
 
         public XLPivotFieldStyleFormats(IXLPivotField field)
         {
-            this.PivotField = field;
+            PivotField = field;
         }
 
         public IXLPivotField PivotField { get; }

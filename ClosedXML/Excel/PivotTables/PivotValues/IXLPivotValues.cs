@@ -6,24 +6,24 @@ namespace ClosedXML.Excel
 {
     public interface IXLPivotValues : IEnumerable<IXLPivotValue>
     {
-        IXLPivotValue Add(String sourceName);
+        IXLPivotValue Add(string sourceName);
 
-        IXLPivotValue Add(String sourceName, String customName);
+        IXLPivotValue Add(string sourceName, string customName);
 
         void Clear();
 
-        Boolean Contains(String sourceName);
+        bool Contains(string sourceName);
 
-        Boolean Contains(IXLPivotValue pivotValue);
+        bool Contains(IXLPivotValue pivotValue);
 
-        IXLPivotValue Get(String sourceName);
+        IXLPivotValue Get(string sourceName);
 
-        IXLPivotValue Get(Int32 index);
+        IXLPivotValue Get(int index);
 
-        Int32 IndexOf(String sourceName);
+        int IndexOf(string sourceName);
 
-        Int32 IndexOf(IXLPivotValue pivotValue);
+        int IndexOf(IXLPivotValue pivotValue);
 
-        void Remove(String sourceName);
+        void Remove(string sourceName);
     }
 }

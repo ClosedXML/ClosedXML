@@ -9,54 +9,54 @@ namespace ClosedXML.Excel
 {
     public interface IXLWorkbook : IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>, IDisposable
     {
-        String Author { get; set; }
+        string Author { get; set; }
 
         /// <summary>
         ///   Gets or sets the workbook's calculation mode.
         /// </summary>
         XLCalculateMode CalculateMode { get; set; }
 
-        Boolean CalculationOnSave { get; set; }
+        bool CalculationOnSave { get; set; }
 
         /// <summary>
         ///   Gets or sets the default column width for the workbook.
         ///   <para>All new worksheets will use this column width.</para>
         /// </summary>
-        Double ColumnWidth { get; set; }
+        double ColumnWidth { get; set; }
 
         IXLCustomProperties CustomProperties { get; }
 
-        Boolean DefaultRightToLeft { get; }
+        bool DefaultRightToLeft { get; }
 
-        Boolean DefaultShowFormulas { get; }
+        bool DefaultShowFormulas { get; }
 
-        Boolean DefaultShowGridLines { get; }
+        bool DefaultShowGridLines { get; }
 
-        Boolean DefaultShowOutlineSymbols { get; }
+        bool DefaultShowOutlineSymbols { get; }
 
-        Boolean DefaultShowRowColHeaders { get; }
+        bool DefaultShowRowColHeaders { get; }
 
-        Boolean DefaultShowRuler { get; }
+        bool DefaultShowRuler { get; }
 
-        Boolean DefaultShowWhiteSpace { get; }
+        bool DefaultShowWhiteSpace { get; }
 
-        Boolean DefaultShowZeros { get; }
+        bool DefaultShowZeros { get; }
 
         IXLFileSharing FileSharing { get; }
 
-        Boolean ForceFullCalculation { get; set; }
+        bool ForceFullCalculation { get; set; }
 
-        Boolean FullCalculationOnLoad { get; set; }
+        bool FullCalculationOnLoad { get; set; }
 
-        Boolean FullPrecision { get; set; }
+        bool FullPrecision { get; set; }
 
         //Boolean IsPasswordProtected { get; }
 
         //Boolean IsProtected { get; }
 
-        Boolean LockStructure { get; set; }
+        bool LockStructure { get; set; }
 
-        Boolean LockWindows { get; set; }
+        bool LockWindows { get; set; }
 
         /// <summary>
         ///   Gets an object to manipulate this workbook's named ranges.
@@ -85,27 +85,27 @@ namespace ClosedXML.Excel
         /// </summary>
         XLReferenceStyle ReferenceStyle { get; set; }
 
-        Boolean RightToLeft { get; set; }
+        bool RightToLeft { get; set; }
 
         /// <summary>
         ///   Gets or sets the default row height for the workbook.
         ///   <para>All new worksheets will use this row height.</para>
         /// </summary>
-        Double RowHeight { get; set; }
+        double RowHeight { get; set; }
 
-        Boolean ShowFormulas { get; set; }
+        bool ShowFormulas { get; set; }
 
-        Boolean ShowGridLines { get; set; }
+        bool ShowGridLines { get; set; }
 
-        Boolean ShowOutlineSymbols { get; set; }
+        bool ShowOutlineSymbols { get; set; }
 
-        Boolean ShowRowColHeaders { get; set; }
+        bool ShowRowColHeaders { get; set; }
 
-        Boolean ShowRuler { get; set; }
+        bool ShowRuler { get; set; }
 
-        Boolean ShowWhiteSpace { get; set; }
+        bool ShowWhiteSpace { get; set; }
 
-        Boolean ShowZeros { get; set; }
+        bool ShowZeros { get; set; }
 
         /// <summary>
         ///   Gets or sets the default style for the workbook.
@@ -118,7 +118,7 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLTheme Theme { get; }
 
-        Boolean Use1904DateSystem { get; set; }
+        bool Use1904DateSystem { get; set; }
 
         /// <summary>
         ///   Gets an object to manipulate the worksheets.
@@ -127,11 +127,11 @@ namespace ClosedXML.Excel
 
         IXLWorksheet AddWorksheet();
 
-        IXLWorksheet AddWorksheet(Int32 position);
+        IXLWorksheet AddWorksheet(int position);
 
-        IXLWorksheet AddWorksheet(String sheetName);
+        IXLWorksheet AddWorksheet(string sheetName);
 
-        IXLWorksheet AddWorksheet(String sheetName, Int32 position);
+        IXLWorksheet AddWorksheet(string sheetName, int position);
 
         IXLWorksheet AddWorksheet(DataTable dataTable);
 
@@ -139,38 +139,38 @@ namespace ClosedXML.Excel
 
         void AddWorksheet(IXLWorksheet worksheet);
 
-        IXLWorksheet AddWorksheet(DataTable dataTable, String sheetName);
+        IXLWorksheet AddWorksheet(DataTable dataTable, string sheetName);
 
-        IXLCell Cell(String namedCell);
+        IXLCell Cell(string namedCell);
 
-        IXLCells Cells(String namedCells);
+        IXLCells Cells(string namedCells);
 
-        IXLCustomProperty CustomProperty(String name);
+        IXLCustomProperty CustomProperty(string name);
 
-        Object Evaluate(String expression);
+        object Evaluate(string expression);
 
-        IXLCells FindCells(Func<IXLCell, Boolean> predicate);
+        IXLCells FindCells(Func<IXLCell, bool> predicate);
 
-        IXLColumns FindColumns(Func<IXLColumn, Boolean> predicate);
+        IXLColumns FindColumns(Func<IXLColumn, bool> predicate);
 
-        IXLRows FindRows(Func<IXLRow, Boolean> predicate);
+        IXLRows FindRows(Func<IXLRow, bool> predicate);
 
-        IXLNamedRange NamedRange(String rangeName);
-
-        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password);
+        IXLNamedRange NamedRange(string rangeName);
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        IXLWorkbookProtection Protect(Boolean lockStructure);
+        IXLWorkbookProtection Protect(bool lockStructure, bool lockWindows, string password);
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows);
+        IXLWorkbookProtection Protect(bool lockStructure);
 
-        IXLRange Range(String range);
+        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
+        IXLWorkbookProtection Protect(bool lockStructure, bool lockWindows);
 
-        IXLRange RangeFromFullAddress(String rangeAddress, out IXLWorksheet ws);
+        IXLRange Range(string range);
 
-        IXLRanges Ranges(String ranges);
+        IXLRange RangeFromFullAddress(string rangeAddress, out IXLWorksheet ws);
+
+        IXLRanges Ranges(string ranges);
 
         /// <summary>
         /// Force recalculation of all cell formulas.
@@ -185,21 +185,21 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Saves the current workbook and optionally performs validation
         /// </summary>
-        void Save(Boolean validate, Boolean evaluateFormulae = false);
+        void Save(bool validate, bool evaluateFormulae = false);
 
         void Save(SaveOptions options);
 
         /// <summary>
         ///   Saves the current workbook to a file.
         /// </summary>
-        void SaveAs(String file);
+        void SaveAs(string file);
 
         /// <summary>
         ///   Saves the current workbook to a file and optionally validates it.
         /// </summary>
-        void SaveAs(String file, Boolean validate, Boolean evaluateFormulae = false);
+        void SaveAs(string file, bool validate, bool evaluateFormulae = false);
 
-        void SaveAs(String file, SaveOptions options);
+        void SaveAs(string file, SaveOptions options);
 
         /// <summary>
         ///   Saves the current workbook to a stream.
@@ -209,7 +209,7 @@ namespace ClosedXML.Excel
         /// <summary>
         ///   Saves the current workbook to a stream and optionally validates it.
         /// </summary>
-        void SaveAs(Stream stream, Boolean validate, Boolean evaluateFormulae = false);
+        void SaveAs(Stream stream, bool validate, bool evaluateFormulae = false);
 
         void SaveAs(Stream stream, SaveOptions options);
 
@@ -220,15 +220,15 @@ namespace ClosedXML.Excel
         /// <param name="compareOptions">The compare options.</param>
         /// <param name="searchFormulae">if set to <c>true</c> search formulae instead of cell values.</param>
         /// <returns></returns>
-        IEnumerable<IXLCell> Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false);
+        IEnumerable<IXLCell> Search(string searchText, CompareOptions compareOptions = CompareOptions.Ordinal, bool searchFormulae = false);
 
-        XLWorkbook SetLockStructure(Boolean value);
+        XLWorkbook SetLockStructure(bool value);
 
-        XLWorkbook SetLockWindows(Boolean value);
+        XLWorkbook SetLockWindows(bool value);
 
         XLWorkbook SetUse1904DateSystem();
 
-        XLWorkbook SetUse1904DateSystem(Boolean value);
+        XLWorkbook SetUse1904DateSystem(bool value);
 
         /// <summary>
         /// Gets the Excel table of the given name
@@ -237,12 +237,12 @@ namespace ClosedXML.Excel
         /// <param name="comparisonType">One of the enumeration values that specifies how the strings will be compared.</param>
         /// <returns>The table with given name</returns>
         /// <exception cref="ArgumentOutOfRangeException">If no tables with this name could be found in the workbook.</exception>
-        IXLTable Table(String tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
+        IXLTable Table(string tableName, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase);
 
-        Boolean TryGetWorksheet(String name, out IXLWorksheet worksheet);
+        bool TryGetWorksheet(string name, out IXLWorksheet worksheet);
 
-        IXLWorksheet Worksheet(String name);
+        IXLWorksheet Worksheet(string name);
 
-        IXLWorksheet Worksheet(Int32 position);
+        IXLWorksheet Worksheet(int position);
     }
 }

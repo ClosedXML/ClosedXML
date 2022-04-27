@@ -6,10 +6,10 @@ namespace ClosedXML.Excel
     internal class XLCustomFilteredColumn : IXLCustomFilteredColumn
     {
         private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
+        private readonly int _column;
         private readonly XLConnector _connector;
 
-        public XLCustomFilteredColumn(XLAutoFilter autoFilter, Int32 column, XLConnector connector)
+        public XLCustomFilteredColumn(XLAutoFilter autoFilter, int column, XLConnector connector)
         {
             _autoFilter = autoFilter;
             _column = column;
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
 
         public void EqualTo<T>(T value) where T: IComparable<T>
         {
-            if (typeof(T) == typeof(String))
+            if (typeof(T) == typeof(string))
             {
                 ApplyCustomFilter(value, XLFilterOperator.Equal,
                                   v =>
@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
 
         public void NotEqualTo<T>(T value) where T: IComparable<T>
         {
-            if (typeof(T) == typeof(String))
+            if (typeof(T) == typeof(string))
             {
                 ApplyCustomFilter(value, XLFilterOperator.NotEqual,
                                   v =>
@@ -71,38 +71,38 @@ namespace ClosedXML.Excel
                               v => v.CastTo<T>().CompareTo(value) <= 0);
         }
 
-        public void BeginsWith(String value)
+        public void BeginsWith(string value)
         {
             ApplyCustomFilter(value + "*", XLFilterOperator.Equal,
                               s => ((string)s).StartsWith(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public void NotBeginsWith(String value)
+        public void NotBeginsWith(string value)
         {
             ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual,
                               s =>
                               !((string)s).StartsWith(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public void EndsWith(String value)
+        public void EndsWith(string value)
         {
             ApplyCustomFilter("*" + value, XLFilterOperator.Equal,
                               s => ((string)s).EndsWith(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public void NotEndsWith(String value)
+        public void NotEndsWith(string value)
         {
             ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual,
                               s => !((string)s).EndsWith(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public void Contains(String value)
+        public void Contains(string value)
         {
             ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal,
                               s => ((string)s).ToLower().Contains(value.ToLower()));
         }
 
-        public void NotContains(String value)
+        public void NotContains(string value)
         {
             ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal,
                               s => !((string)s).ToLower().Contains(value.ToLower()));
@@ -110,7 +110,7 @@ namespace ClosedXML.Excel
 
         #endregion
 
-        private void ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition)
+        private void ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<object, bool> condition)
             where T : IComparable<T>
         {
             _autoFilter.Filters[_column].Add(new XLFilter
@@ -121,20 +121,26 @@ namespace ClosedXML.Excel
                 Condition = condition
             });
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 if (_connector == XLConnector.And)
                 {
                     if (!row.WorksheetRow().IsHidden)
                     {
                         if (condition(row.Cell(_column).GetValue<T>()))
+                        {
                             row.WorksheetRow().Unhide();
+                        }
                         else
+                        {
                             row.WorksheetRow().Hide();
+                        }
                     }
                 }
                 else if (condition(row.Cell(_column).GetValue<T>()))
+                {
                     row.WorksheetRow().Unhide();
+                }
             }
         }
     }

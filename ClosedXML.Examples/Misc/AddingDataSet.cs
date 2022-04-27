@@ -6,7 +6,7 @@ namespace ClosedXML.Examples.Misc
 {
     public class AddingDataSet : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var wb = new XLWorkbook();
 
@@ -16,7 +16,9 @@ namespace ClosedXML.Examples.Misc
             wb.Worksheets.Add(dataSet);
 
             foreach (var ws in wb.Worksheets)
+            {
                 ws.Columns().AdjustToContents();
+            }
 
             wb.SaveAs(filePath);
         }
@@ -30,10 +32,12 @@ namespace ClosedXML.Examples.Misc
             return ds;
         }
 
-        private DataTable GetTable(String tableName)
+        private DataTable GetTable(string tableName)
         {
-            DataTable table = new DataTable();
-            table.TableName = tableName;
+            var table = new DataTable
+            {
+                TableName = tableName
+            };
             table.Columns.Add("Dosage", typeof(int));
             table.Columns.Add("Drug", typeof(string));
             table.Columns.Add("Patient", typeof(string));

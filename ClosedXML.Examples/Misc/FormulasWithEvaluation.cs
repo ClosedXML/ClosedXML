@@ -7,10 +7,8 @@ namespace ClosedXML.Examples.Misc
         public override void Create(string filePath)
         {
             base.Create(filePath);
-            using (var wb = new XLWorkbook(filePath))
-            {
-                wb.Save(true, true);
-            }
+            using var wb = new XLWorkbook(filePath);
+            wb.Save(true, true);
         }
     }
 }

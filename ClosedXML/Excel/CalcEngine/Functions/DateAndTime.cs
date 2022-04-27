@@ -49,11 +49,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             firstDay = firstDay.Date;
             lastDay = lastDay.Date;
             if (firstDay > lastDay)
+            {
                 return -BusinessDaysUntil(lastDay, firstDay, bankHolidays);
+            }
 
-            TimeSpan span = lastDay - firstDay;
-            int businessDays = span.Days + 1;
-            int fullWeekCount = businessDays / 7;
+            var span = lastDay - firstDay;
+            var businessDays = span.Days + 1;
+            var fullWeekCount = businessDays / 7;
             // find out if there are weekends during the time exceedng the full weeks
             if (businessDays > fullWeekCount * 7)
             {
@@ -62,16 +64,25 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var firstDayOfWeek = (int)firstDay.DayOfWeek;
                 var lastDayOfWeek = (int)lastDay.DayOfWeek;
                 if (lastDayOfWeek < firstDayOfWeek)
+                {
                     lastDayOfWeek += 7;
+                }
+
                 if (firstDayOfWeek <= 6)
                 {
                     if (lastDayOfWeek >= 7)// Both Saturday and Sunday are in the remaining time interval
+                    {
                         businessDays -= 2;
+                    }
                     else if (lastDayOfWeek >= 6)// Only Saturday is in the remaining time interval
+                    {
                         businessDays -= 1;
+                    }
                 }
                 else if (firstDayOfWeek <= 7 && lastDayOfWeek >= 7)// Only Sunday is in the remaining time interval
+                {
                     businessDays -= 1;
+                }
             }
 
             // subtract the weekends during the full weeks in the interval
@@ -81,7 +92,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             foreach (var bh in bankHolidays)
             {
                 if (firstDay <= bh && bh <= lastDay)
+                {
                     --businessDays;
+                }
             }
 
             return businessDays;
@@ -100,7 +113,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 month -= (int)Math.Floor((double)(month - 1d) / 12.0) * 12;
             }
 
-            int daysAdjustment = 0;
+            var daysAdjustment = 0;
             if (day > DateTime.DaysInMonth(year, month))
             {
                 daysAdjustment = day - DateTime.DaysInMonth(year, month);
@@ -122,9 +135,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             string unit = p[2];
 
             if (startDate > endDate)
+            {
                 throw new NumberException("The start date is greater than the end date");
+            }
 
-            return (unit.ToUpper()) switch
+            return unit.ToUpper(CultureInfo.InvariantCulture) switch
             {
                 "Y" => endDate.Year - startDate.Year - (new DateTime(startDate.Year, endDate.Month, endDate.Day) < startDate ? 1 : 0),
                 "M" => Math.Truncate((endDate.Year - startDate.Year) * 12d + endDate.Month - startDate.Month - (endDate.Day < startDate.Day ? 1 : 0)),
@@ -162,17 +177,25 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             type = p[0]._token.Value.GetType();
             if (type == typeof(string))
+            {
                 end_date = (int)Datevalue(new List<Expression>() { p[0] });
+            }
             else
+            {
                 end_date = (int)p[0];
+            }
 
             int start_date;
 
             type = p[1]._token.Value.GetType();
             if (type == typeof(string))
+            {
                 start_date = (int)Datevalue(new List<Expression>() { p[1] });
+            }
             else
+            {
                 start_date = (int)p[1];
+            }
 
             return end_date - start_date;
         }
@@ -186,7 +209,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return Days360(date1, date2, isEuropean);
         }
 
-        private static Int32 Days360(DateTime date1, DateTime date2, Boolean isEuropean)
+        private static int Days360(DateTime date1, DateTime date2, bool isEuropean)
         {
             var d1 = date1.Day;
             var m1 = date1.Month;
@@ -197,13 +220,27 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             if (isEuropean)
             {
-                if (d1 == 31) d1 = 30;
-                if (d2 == 31) d2 = 30;
+                if (d1 == 31)
+                {
+                    d1 = 30;
+                }
+
+                if (d2 == 31)
+                {
+                    d2 = 30;
+                }
             }
             else
             {
-                if (d1 == 31) d1 = 30;
-                if (d2 == 31 && d1 == 30) d2 = 30;
+                if (d1 == 31)
+                {
+                    d1 = 30;
+                }
+
+                if (d2 == 31 && d1 == 30)
+                {
+                    d2 = 30;
+                }
             }
 
             return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
@@ -227,11 +264,14 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return new DateTime(retDate.Year, retDate.Month, DateTime.DaysInMonth(retDate.Year, retDate.Month));
         }
 
-        private static Double GetYearAverage(DateTime date1, DateTime date2)
+        private static double GetYearAverage(DateTime date1, DateTime date2)
         {
-            var daysInYears = new List<Int32>();
-            for (int year = date1.Year; year <= date2.Year; year++)
+            var daysInYears = new List<int>();
+            for (var year = date1.Year; year <= date2.Year; year++)
+            {
                 daysInYears.Add(DateTime.IsLeapYear(year) ? 366 : 365);
+            }
+
             return daysInYears.Average();
         }
 
@@ -250,7 +290,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll
             // be the same week# as whatever Thursday, Friday or Saturday are,
             // and we always get those right
-            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
+            var day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(date);
             if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
             {
                 date = date.AddDays(3);
@@ -327,8 +367,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var dayOfWeek = (int)((DateTime)p[0]).DayOfWeek;
             var retType = p.Count == 2 ? (int)p[1] : 1;
 
-            if (retType == 2) return dayOfWeek;
-            if (retType == 1) return dayOfWeek + 1;
+            if (retType == 2)
+            {
+                return dayOfWeek;
+            }
+
+            if (retType == 1)
+            {
+                return dayOfWeek + 1;
+            }
 
             return dayOfWeek - 1;
         }
@@ -338,7 +385,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var date = (DateTime)p[0];
             var retType = p.Count == 2 ? (int)p[1] : 1;
 
-            DayOfWeek dayOfWeek = retType == 1 ? DayOfWeek.Sunday : DayOfWeek.Monday;
+            var dayOfWeek = retType == 1 ? DayOfWeek.Sunday : DayOfWeek.Monday;
             var cal = new GregorianCalendar(GregorianCalendarTypes.Localized);
             var val = cal.GetWeekOfYear(date, CalendarWeekRule.FirstDay, dayOfWeek);
 
@@ -350,7 +397,10 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var startDate = (DateTime)p[0];
             var daysRequired = (int)p[1];
 
-            if (daysRequired == 0) return startDate;
+            if (daysRequired == 0)
+            {
+                return startDate;
+            }
 
             var bankHolidays = new List<DateTime>();
             if (p.Count == 3)
@@ -362,9 +412,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var testDate = startDate.AddDays(((daysRequired / 7) + 2) * 7 * Math.Sign(daysRequired));
             var return_date = Workday(startDate, testDate, daysRequired, bankHolidays);
             if (Math.Sign(daysRequired) == 1)
+            {
                 return_date = return_date.NextWorkday(bankHolidays);
+            }
             else
+            {
                 return_date = return_date.PreviousWorkDay(bankHolidays);
+            }
 
             return return_date;
         }
@@ -373,9 +427,11 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var businessDays = BusinessDaysUntil(startDate, testDate, bankHolidays);
             if (businessDays == daysRequired)
+            {
                 return testDate;
+            }
 
-            int days = businessDays > daysRequired ? -1 : 1;
+            var days = businessDays > daysRequired ? -1 : 1;
 
             return Workday(startDate, testDate.AddDays(days), daysRequired, bankHolidays);
         }
@@ -394,13 +450,24 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             var option = p.Count == 3 ? (int)p[2] : 0;
 
             if (option == 0)
+            {
                 return Days360(date1, date2, false) / 360.0;
+            }
+
             if (option == 1)
+            {
                 return Math.Floor((date2 - date1).TotalDays) / GetYearAverage(date1, date2);
+            }
+
             if (option == 2)
+            {
                 return Math.Floor((date2 - date1).TotalDays) / 360.0;
+            }
+
             if (option == 3)
+            {
                 return Math.Floor((date2 - date1).TotalDays) / 365.0;
+            }
 
             return Days360(date1, date2, true) / 360.0;
         }

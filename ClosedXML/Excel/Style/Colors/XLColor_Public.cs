@@ -34,44 +34,51 @@ namespace ClosedXML.Excel
         /// Some people claim it's the index for tooltip color.
         /// We'll return normal black when index 81 is found.
         /// </summary>
-        private const Int32 TOOLTIPCOLORINDEX = 81;
+        private const int TOOLTIPCOLORINDEX = 81;
 
-        public Boolean HasValue { get; private set; }
+        public bool HasValue { get; private set; }
 
-        public XLColorType ColorType
-        {
-            get { return Key.ColorType; }
-        }
+        public XLColorType ColorType => Key.ColorType;
 
         public SKColor Color
         {
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     throw new InvalidOperationException("Cannot convert theme color to Color.");
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     if (Indexed == TOOLTIPCOLORINDEX)
                     {
                         var tooltipColor = SKColors.Black.WithAlpha(255);
                         return tooltipColor;
                     }
                     else
+                    {
                         return IndexedColors[Indexed].Color;
+                    }
+                }
 
                 return Key.Color;
             }
         }
 
-        public Int32 Indexed
+        public int Indexed
         {
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     throw new InvalidOperationException("Cannot convert theme color to indexed color.");
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     return Key.Indexed;
+                }
 
                 throw new InvalidOperationException("Cannot convert Color to indexed color.");
             }
@@ -82,24 +89,32 @@ namespace ClosedXML.Excel
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     return Key.ThemeColor;
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     throw new InvalidOperationException("Cannot convert indexed color to theme color.");
+                }
 
                 throw new InvalidOperationException("Cannot convert Color to theme color.");
             }
         }
 
-        public Double ThemeTint
+        public double ThemeTint
         {
             get
             {
                 if (ColorType == XLColorType.Theme)
+                {
                     return Key.ThemeTint;
+                }
 
                 if (ColorType == XLColorType.Indexed)
+                {
                     throw new InvalidOperationException("Cannot extract theme tint from an indexed color.");
+                }
 
                 return Color.Alpha / 255.0;
             }
@@ -130,26 +145,36 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             if (ColorType == XLColorType.Color)
+            {
                 return Color.ToHex();
+            }
 
             if (ColorType == XLColorType.Theme)
-                return String.Format("Color Theme: {0}, Tint: {1}", ThemeColor.ToString(), ThemeTint.ToString());
+            {
+                return $"Color Theme: {ThemeColor}, Tint: {ThemeTint}";
+            }
 
-            return "Color Index: " + Indexed;
+            return $"Color Index: {Indexed}";
         }
 
-        public static Boolean operator ==(XLColor left, XLColor right)
+        public static bool operator ==(XLColor left, XLColor right)
         {
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(left, right)) return true;
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
 
             // If one is null, but not both, return false.
-            if ((left as object) == null || (right as Object) == null) return false;
+            if ((left as object) == null || (right as object) == null)
+            {
+                return false;
+            }
 
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(XLColor left, XLColor right)
+        public static bool operator !=(XLColor left, XLColor right)
         {
             return !(left == right);
         }

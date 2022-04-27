@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// marks around a text string in a formula.
     /// Corresponds to the #NAME? error in Excel
     /// </summary>
-    /// <seealso cref="System.ApplicationException" />
+    /// <seealso cref="ApplicationException" />
     public class NameNotRecognizedException : CalcEngineException
     {
         internal NameNotRecognizedException()

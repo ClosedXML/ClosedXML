@@ -133,23 +133,23 @@ namespace ClosedXML.Excel
 
     public interface IXLFont : IXLFontBase, IEquatable<IXLFont>
     {
-        IXLStyle SetBold(); IXLStyle SetBold(Boolean value);
+        IXLStyle SetBold(); IXLStyle SetBold(bool value);
 
-        IXLStyle SetItalic(); IXLStyle SetItalic(Boolean value);
+        IXLStyle SetItalic(); IXLStyle SetItalic(bool value);
 
         IXLStyle SetUnderline(); IXLStyle SetUnderline(XLFontUnderlineValues value);
 
-        IXLStyle SetStrikethrough(); IXLStyle SetStrikethrough(Boolean value);
+        IXLStyle SetStrikethrough(); IXLStyle SetStrikethrough(bool value);
 
         IXLStyle SetVerticalAlignment(XLFontVerticalTextAlignmentValues value);
 
-        IXLStyle SetShadow(); IXLStyle SetShadow(Boolean value);
+        IXLStyle SetShadow(); IXLStyle SetShadow(bool value);
 
-        IXLStyle SetFontSize(Double value);
+        IXLStyle SetFontSize(double value);
 
         IXLStyle SetFontColor(XLColor value);
 
-        IXLStyle SetFontName(String value);
+        IXLStyle SetFontName(string value);
 
         IXLStyle SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
 

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
+using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLRangeColumns : XLStylizedBase, IXLRangeColumns, IXLStylized
     {
         private readonly List<XLRangeColumn> _ranges = new List<XLRangeColumn>();
@@ -49,21 +49,27 @@ namespace ClosedXML.Excel
         public IXLCells Cells()
         {
             var cells = new XLCells(usedCellsOnly: false, options: XLCellsUsedOptions.AllContents);
-            foreach (XLRangeColumn container in _ranges)
+            foreach (var container in _ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(usedCellsOnly: true, options: XLCellsUsedOptions.AllContents);
-            foreach (XLRangeColumn container in _ranges)
+            foreach (var container in _ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLCells CellsUsed(Boolean includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             return CellsUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -74,8 +80,11 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
             var cells = new XLCells(usedCellsOnly: true, options: options);
-            foreach (XLRangeColumn container in _ranges)
+            foreach (var container in _ranges)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
@@ -94,15 +103,17 @@ namespace ClosedXML.Excel
             get
             {
                 yield return Style;
-                foreach (XLRangeColumn rng in _ranges)
+                foreach (var rng in _ranges)
                 {
                     yield return rng.Style;
-                    foreach (XLCell r in rng.Worksheet.Internals.CellsCollection.GetCells(
+                    foreach (var r in rng.Worksheet.Internals.CellsCollection.GetCells(
                         rng.RangeAddress.FirstAddress.RowNumber,
                         rng.RangeAddress.FirstAddress.ColumnNumber,
                         rng.RangeAddress.LastAddress.RowNumber,
                         rng.RangeAddress.LastAddress.ColumnNumber))
+                    {
                         yield return r.Style;
+                    }
                 }
             }
         }
@@ -112,7 +123,9 @@ namespace ClosedXML.Excel
             get
             {
                 foreach (var range in _ranges)
+                {
                     yield return range;
+                }
             }
         }
 
@@ -131,7 +144,9 @@ namespace ClosedXML.Excel
         public void Select()
         {
             foreach (var range in this)
+            {
                 range.Select();
+            }
         }
     }
 }

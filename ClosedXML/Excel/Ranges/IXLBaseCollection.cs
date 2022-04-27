@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     public interface IXLBaseCollection<TSingle, TMultiple> : IEnumerable<TSingle>
     {
-        Int32 Count { get; }
+        int Count { get; }
 
         IXLStyle Style { get; set; }
 
@@ -17,7 +17,7 @@ namespace ClosedXML.Excel
         /// <para>The default scope for the named range is Workbook.</para>
         /// </summary>
         /// <param name="rangeName">Name of the range.</param>
-        TMultiple AddToNamed(String rangeName);
+        TMultiple AddToNamed(string rangeName);
 
         /// <summary>
         /// Creates a named range out of these ranges.
@@ -25,7 +25,7 @@ namespace ClosedXML.Excel
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
         /// </summary>
-        TMultiple AddToNamed(String rangeName, XLScope scope);
+        TMultiple AddToNamed(string rangeName, XLScope scope);
 
         /// <summary>
         /// Creates a named range out of these ranges.
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
         /// <param name="scope">The scope for the named range.</param>
         /// <param name="comment">The comments for the named range.</param>
         /// </summary>
-        TMultiple AddToNamed(String rangeName, XLScope scope, String comment);
+        TMultiple AddToNamed(string rangeName, XLScope scope, string comment);
 
         /// <summary>
         /// Sets the cells' value.
@@ -46,7 +46,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The object containing the value(s) to set.
         /// </value>
-        Object Value { set; }
+        object Value { set; }
 
         TMultiple SetValue<T>(T value);
 
@@ -64,7 +64,7 @@ namespace ClosedXML.Excel
         /// Returns the collection of cells that have a value.
         /// </summary>
         /// <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        IXLCells CellsUsed(Boolean includeFormats);
+        IXLCells CellsUsed(bool includeFormats);
 
         TMultiple SetDataType(XLDataType dataType);
 

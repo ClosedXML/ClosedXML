@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClosedXML.Excel
 {
-    public class XLDictionary<T>: Dictionary<Int32, T>
+    public class XLDictionary<T>: Dictionary<int, T>
     {
         public XLDictionary()
         {
@@ -19,7 +19,9 @@ namespace ClosedXML.Excel
         public void Initialize(T value)
         {
             if (Count > 0)
+            {
                 Clear();
+            }
 
             Add(value);
         }

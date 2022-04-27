@@ -7,10 +7,10 @@ namespace ClosedXML.Excel
 {
     internal class XLIdManager
     {
-        private HashSet<Int32> _hash = new HashSet<Int32>();
+        private readonly HashSet<int> _hash = new HashSet<int>();
         
 
-        public Int32 GetNext()
+        public int GetNext()
         {
             if (_hash.Count == 0)
             {
@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
                 return 1;
             }
 
-            Int32 id = 1;
+            var id = 1;
             while (true)
             {
                 if (!_hash.Contains(id))
@@ -29,11 +29,11 @@ namespace ClosedXML.Excel
                 id++;
             }
         }
-        public void Add(Int32 value)
+        public void Add(int value)
         {
             _hash.Add(value);
         }
-        public void Add(IEnumerable<Int32> values)
+        public void Add(IEnumerable<int> values)
         {
             values.ForEach(v => _hash.Add(v));
         }

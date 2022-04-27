@@ -8,24 +8,26 @@ namespace ClosedXML.Excel
     {
         public XLSheetProtection(Algorithm algorithm)
         {
-            this.Algorithm = algorithm;
+            Algorithm = algorithm;
             AllowedElements = XLSheetProtectionElements.SelectEverything;
         }
 
         public Algorithm Algorithm { get; internal set; }
         public XLSheetProtectionElements AllowedElements { get; set; }
 
-        public Boolean IsPasswordProtected => this.IsProtected && !String.IsNullOrEmpty(PasswordHash);
-        public Boolean IsProtected { get; internal set; }
+        public bool IsPasswordProtected => IsProtected && !string.IsNullOrEmpty(PasswordHash);
+        public bool IsProtected { get; internal set; }
 
-        internal String Base64EncodedSalt { get; set; }
-        internal String PasswordHash { get; set; }
-        internal UInt32 SpinCount { get; set; } = 100000;
+        internal string Base64EncodedSalt { get; set; }
+        internal string PasswordHash { get; set; }
+        internal uint SpinCount { get; set; } = 100000;
 
-        public IXLSheetProtection AllowElement(XLSheetProtectionElements element, Boolean allowed = true)
+        public IXLSheetProtection AllowElement(XLSheetProtectionElements element, bool allowed = true)
         {
             if (!allowed)
+            {
                 return DisallowElement(element);
+            }
 
             AllowedElements |= element;
             return this;
@@ -44,13 +46,13 @@ namespace ClosedXML.Excel
 
         public object Clone()
         {
-            return new XLSheetProtection(this.Algorithm)
+            return new XLSheetProtection(Algorithm)
             {
-                IsProtected = this.IsProtected,
-                PasswordHash = this.PasswordHash,
-                SpinCount = this.SpinCount,
-                Base64EncodedSalt = this.Base64EncodedSalt,
-                AllowedElements = this.AllowedElements
+                IsProtected = IsProtected,
+                PasswordHash = PasswordHash,
+                SpinCount = SpinCount,
+                Base64EncodedSalt = Base64EncodedSalt,
+                AllowedElements = AllowedElements
             };
         }
 
@@ -58,12 +60,12 @@ namespace ClosedXML.Excel
         {
             if (sheetProtection is XLSheetProtection xlSheetProtection)
             {
-                this.IsProtected = xlSheetProtection.IsProtected;
-                this.Algorithm = xlSheetProtection.Algorithm;
-                this.PasswordHash = xlSheetProtection.PasswordHash;
-                this.SpinCount = xlSheetProtection.SpinCount;
-                this.Base64EncodedSalt = xlSheetProtection.Base64EncodedSalt;
-                this.AllowedElements = xlSheetProtection.AllowedElements;
+                IsProtected = xlSheetProtection.IsProtected;
+                Algorithm = xlSheetProtection.Algorithm;
+                PasswordHash = xlSheetProtection.PasswordHash;
+                SpinCount = xlSheetProtection.SpinCount;
+                Base64EncodedSalt = xlSheetProtection.Base64EncodedSalt;
+                AllowedElements = xlSheetProtection.AllowedElements;
             }
             return this;
         }
@@ -76,10 +78,10 @@ namespace ClosedXML.Excel
 
         public IXLSheetProtection Protect()
         {
-            return Protect(String.Empty);
+            return Protect(string.Empty);
         }
 
-        public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm, XLSheetProtectionElements allowedElements = XLSheetProtectionElements.SelectEverything)
+        public IXLSheetProtection Protect(string password, Algorithm algorithm = DefaultProtectionAlgorithm, XLSheetProtectionElements allowedElements = XLSheetProtectionElements.SelectEverything)
         {
             if (IsProtected)
             {
@@ -91,38 +93,42 @@ namespace ClosedXML.Excel
 
                 password = password ?? "";
 
-                this.Algorithm = algorithm;
-                this.Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(this.Algorithm);
-                this.PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
+                Algorithm = algorithm;
+                Base64EncodedSalt = Utils.CryptographicAlgorithms.GenerateNewSalt(Algorithm);
+                PasswordHash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
             }
 
-            this.AllowedElements = allowedElements;
+            AllowedElements = allowedElements;
 
             return this;
         }
 
         public IXLSheetProtection Unprotect()
         {
-            return Unprotect(String.Empty);
+            return Unprotect(string.Empty);
         }
 
-        public IXLSheetProtection Unprotect(String password)
+        public IXLSheetProtection Unprotect(string password)
         {
             if (IsProtected)
             {
                 password = password ?? "";
 
                 if (!string.IsNullOrEmpty(PasswordHash) && string.IsNullOrEmpty(password))
+                {
                     throw new InvalidOperationException("The worksheet is password protected");
+                }
 
-                var hash = Utils.CryptographicAlgorithms.GetPasswordHash(this.Algorithm, password, this.Base64EncodedSalt, this.SpinCount);
+                var hash = Utils.CryptographicAlgorithms.GetPasswordHash(Algorithm, password, Base64EncodedSalt, SpinCount);
                 if (hash != PasswordHash)
+                {
                     throw new ArgumentException("Invalid password");
+                }
                 else
                 {
                     IsProtected = false;
-                    PasswordHash = String.Empty;
-                    this.Base64EncodedSalt = String.Empty;
+                    PasswordHash = string.Empty;
+                    Base64EncodedSalt = string.Empty;
                 }
             }
 
@@ -131,7 +137,7 @@ namespace ClosedXML.Excel
 
         #region IXLProtectable interface
 
-        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.AllowElement(XLSheetProtectionElements element, Boolean allowed) => AllowElement(element, allowed);
+        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.AllowElement(XLSheetProtectionElements element, bool allowed) => AllowElement(element, allowed);
 
         IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.AllowEverything() => AllowEverything();
 
@@ -143,11 +149,11 @@ namespace ClosedXML.Excel
 
         IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Protect() => Protect();
 
-        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Protect(String password, Algorithm algorithm) => Protect(password, algorithm);
+        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Protect(string password, Algorithm algorithm) => Protect(password, algorithm);
 
         IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Unprotect() => Unprotect();
 
-        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Unprotect(String password) => Unprotect(password);
+        IXLElementProtection<XLSheetProtectionElements> IXLElementProtection<XLSheetProtectionElements>.Unprotect(string password) => Unprotect(password);
 
         #endregion IXLProtectable interface
     }

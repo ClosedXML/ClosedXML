@@ -5,7 +5,7 @@ namespace ClosedXML.Examples
 {
     public class InsertingDeletingRows : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Inserting and Deleting Rows");

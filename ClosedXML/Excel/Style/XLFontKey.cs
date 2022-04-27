@@ -45,7 +45,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLFontKey)
+            {
                 return Equals((XLFontKey)obj);
+            }
+
             return base.Equals(obj);
         }
 
@@ -76,6 +79,6 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLFontKey left, XLFontKey right) => left.Equals(right);
 
-        public static bool operator !=(XLFontKey left, XLFontKey right) => !(left.Equals(right));
+        public static bool operator !=(XLFontKey left, XLFontKey right) => !left.Equals(right);
     }
 }

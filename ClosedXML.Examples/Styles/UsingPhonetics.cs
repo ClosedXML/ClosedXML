@@ -8,7 +8,7 @@ namespace ClosedXML.Examples.Styles
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Using Phonetics");

@@ -4,14 +4,14 @@ namespace ClosedXML.Excel
 {
     internal struct XLSheetPoint:IEquatable<XLSheetPoint>
     {
-        public XLSheetPoint(Int32  row, Int32 column)
+        public XLSheetPoint(int row, int column)
         {
             Row = row;
             Column = column;
         }
 
-        public readonly Int32 Row;
-        public readonly Int32 Column;
+        public readonly int Row;
+        public readonly int Column;
 
         public override bool Equals(object obj)
         {

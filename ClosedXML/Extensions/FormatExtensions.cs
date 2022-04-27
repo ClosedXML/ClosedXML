@@ -10,7 +10,9 @@ namespace ClosedXML.Extensions
         {
             var nf = new NumberFormat(format);
             if (!nf.IsValid)
+            {
                 return format;
+            }
 
             return nf.Format(o, CultureInfo.InvariantCulture);
         }

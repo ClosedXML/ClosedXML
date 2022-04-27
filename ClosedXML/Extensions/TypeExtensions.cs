@@ -33,7 +33,7 @@ namespace ClosedXML.Excel
         public static bool IsSimpleType(this Type type)
         {
             return type.IsPrimitive
-                   || type == typeof(String)
+                   || type == typeof(string)
                    || type == typeof(DateTime)
                    || type == typeof(TimeSpan)
                    || type.IsNumber();

@@ -1,7 +1,7 @@
 using ClosedXML.Utils;
 using NUnit.Framework;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Misc
 {
     [TestFixture]
     public class XmlEncoderTest

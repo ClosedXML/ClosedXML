@@ -9,11 +9,11 @@ namespace ClosedXML.Excel
 
         XLColor Color { get; set; }
 
-        Boolean DateAxis { get; }
+        bool DateAxis { get; }
 
-        Boolean IsVisible { get; set; }
+        bool IsVisible { get; set; }
 
-        Boolean RightToLeft { get; set; }
+        bool RightToLeft { get; set; }
 
         #endregion Public Properties
 
@@ -21,9 +21,9 @@ namespace ClosedXML.Excel
 
         IXLSparklineHorizontalAxis SetColor(XLColor value);
 
-        IXLSparklineHorizontalAxis SetRightToLeft(Boolean value);
+        IXLSparklineHorizontalAxis SetRightToLeft(bool value);
 
-        IXLSparklineHorizontalAxis SetVisible(Boolean value);
+        IXLSparklineHorizontalAxis SetVisible(bool value);
 
         #endregion Public Methods
     }

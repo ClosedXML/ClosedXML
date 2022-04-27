@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The comment for this named range.
         /// </value>
-        String Comment { get; set; }
+        string Comment { get; set; }
 
         /// <summary>
         /// Checks if the named range contains invalid references (#REF!).
@@ -31,14 +31,14 @@ namespace ClosedXML.Excel
         /// <value>
         /// The name of the range.
         /// </value>
-        String Name { get; set; }
+        string Name { get; set; }
 
         /// <summary>
         /// Gets the ranges associated with this named range.
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
         IXLRanges Ranges { get; }
-        String RefersTo { get; set; }
+        string RefersTo { get; set; }
 
         /// <summary>
         /// Gets the scope of this named range.
@@ -51,7 +51,7 @@ namespace ClosedXML.Excel
         /// <value>
         ///   <c>true</c> if visible; otherwise, <c>false</c>.
         /// </value>
-        Boolean Visible { get; set; }
+        bool Visible { get; set; }
 
         #endregion Public Properties
 
@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="workbook">Workbook containing the range</param>
         /// <param name="rangeAddress">The range address to add.</param>
-        IXLRanges Add(XLWorkbook workbook, String rangeAddress);
+        IXLRanges Add(XLWorkbook workbook, string rangeAddress);
 
         /// <summary>
         /// Adds the specified range to this named range.
@@ -96,7 +96,7 @@ namespace ClosedXML.Excel
         /// <para>Note: A named range can point to multiple ranges.</para>
         /// </summary>
         /// <param name="rangeAddress">The range address to remove.</param>
-        void Remove(String rangeAddress);
+        void Remove(string rangeAddress);
 
         /// <summary>
         /// Removes the specified range from this named range.
@@ -112,7 +112,7 @@ namespace ClosedXML.Excel
         /// <param name="ranges">The ranges to remove.</param>
         void Remove(IXLRanges ranges);
 
-        IXLNamedRange SetRefersTo(String range);
+        IXLNamedRange SetRefersTo(string range);
 
         IXLNamedRange SetRefersTo(IXLRangeBase range);
 

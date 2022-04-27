@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Utils
 {
     internal class PivotTableComparer : IEqualityComparer<XLPivotTable>
     {
@@ -17,16 +17,22 @@ namespace ClosedXML.Tests
 
         public PivotTableComparer(bool compareName, bool compareRelId, bool compareTargetCellAddress)
         {
-            this._compareName = compareName;
-            this._compareRelId = compareRelId;
-            this._compareTargetCellAddress = compareTargetCellAddress;
+            _compareName = compareName;
+            _compareRelId = compareRelId;
+            _compareTargetCellAddress = compareTargetCellAddress;
         }
 
         public bool Equals(XLPivotTable x, XLPivotTable y)
         {
-            if (x == null && y == null) return true;
+            if (x == null && y == null)
+            {
+                return true;
+            }
 
-            if (x == null || y == null) return false;
+            if (x == null || y == null)
+            {
+                return false;
+            }
 
             return
                 (!_compareName || StringComparer.CurrentCulture.Equals(x.Name, y.Name))

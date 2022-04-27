@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClosedXML.Excel.Ranges;
+using ClosedXML.Excel.Tables;
+using System;
 
 namespace ClosedXML.Excel
 {
@@ -15,7 +17,10 @@ namespace ClosedXML.Excel
         public XLRangeFactory(XLWorksheet worksheet)
         {
             if (worksheet == null)
+            {
                 throw new ArgumentNullException(nameof(worksheet));
+            }
+
             Worksheet = worksheet;
         }
 
