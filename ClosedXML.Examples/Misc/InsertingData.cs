@@ -87,6 +87,10 @@ namespace ClosedXML.Examples.Misc
             public string House { get; set; }
             public string Name { get; set; }
             public int Age { get; set; }
+
+#pragma warning disable S1144 // Causing failing test if removed
+            public static string ClassType => nameof(Person);
+#pragma warning restore S1144 // Causing failing test if removed
         }
 
         // Private
