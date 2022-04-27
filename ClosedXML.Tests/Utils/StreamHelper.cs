@@ -113,19 +113,19 @@ namespace ClosedXML.Tests
         {
             if (tuple1 == null || tuple1.Item1 == null || tuple1.Item2 == null)
             {
-                throw new ArgumentNullException("one");
+                throw new ArgumentNullException(nameof(tuple1));
             }
             if (tuple2 == null || tuple2.Item1 == null || tuple2.Item2 == null)
             {
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(tuple2));
             }
             if (tuple1.Item2.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "one");
+                throw new ArgumentException("Must be in position 0", nameof(tuple1));
             }
             if (tuple2.Item2.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "other");
+                throw new ArgumentException("Must be in position 0", nameof(tuple2));
             }
 
             using var streamReader = new StreamReader(tuple1.Item2);
