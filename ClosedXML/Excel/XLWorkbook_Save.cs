@@ -4555,7 +4555,7 @@ namespace ClosedXML.Excel
                 workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(new NumberingFormat()
                 {
                     NumberFormatId = 0,
-                    FormatCode = ""
+                    FormatCode = "#,###"
                 });
             }
 
