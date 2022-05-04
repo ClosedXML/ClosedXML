@@ -33,5 +33,21 @@ namespace ClosedXML.Excel
         IXLWorksheet Worksheet(String sheetName);
 
         IXLWorksheet Worksheet(Int32 position);
+
+        /// <summary>
+        /// Gets an <see cref="IXLWorksheet"/> by it's ID.
+        /// </summary>
+        /// <param name="id">The ID of the worksheet to look for</param>
+        /// <returns>The requested <see cref="IXLWorksheet"/></returns>
+        /// <throws>If no <see cref="IXLWorksheet"/> with the given ID was not found, an <see cref="InvalidOperationException"/> is thrown</throws>
+        IXLWorksheet GetWorksheetById(int id);
+
+        /// <summary>
+        /// Trys to gets an <see cref="IXLWorksheet"/> by it's ID.
+        /// </summary>
+        /// <param name="id">The ID of the worksheet to look for</param>
+        /// <param name="result">The <see cref="IXLWorksheet"/> if found, otherwise <see langword="null"/></param>
+        /// <returns><see langword="true"/> if found, otherwise <see langword="false"/></returns>
+        bool TryGetWorksheetById(int id, out IXLWorksheet result);
     }
 }

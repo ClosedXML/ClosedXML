@@ -62,9 +62,10 @@ namespace ClosedXML.Excel
 
         private void ResetAllRelIds()
         {
+            var currentSheetId = 0;
             foreach (var ws in Worksheets.Cast<XLWorksheet>())
             {
-                ws.SheetId = 0;
+                ws.SheetId = ++currentSheetId;
                 ws.RelId = null;
 
                 foreach (var pt in ws.PivotTables.Cast<XLPivotTable>())

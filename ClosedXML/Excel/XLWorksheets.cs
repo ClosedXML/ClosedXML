@@ -81,23 +81,11 @@ namespace ClosedXML.Excel
             return _worksheets.Values.Single(w => w.Position == position);
         }
 
-        /// <summary>
-        /// Gets an <see cref="IXLWorksheet"/> by it's ID.
-        /// </summary>
-        /// <param name="id">The ID of the worksheet to look for</param>
-        /// <returns>The requested <see cref="IXLWorksheet"/></returns>
-        /// <throws>If no <see cref="IXLWorksheet"/> with the given ID was not found, an <see cref="InvalidOperationException"/> is thrown</throws>
         public IXLWorksheet GetWorksheetById(int id)
         {
-            return _worksheets.Values.First(ws => ws.SheetId == id);
+            return _worksheets.Values.First(ws => ws.SheetId.Equals(id));
         }
 
-        /// <summary>
-        /// Trys to gets an <see cref="IXLWorksheet"/> by it's ID.
-        /// </summary>
-        /// <param name="id">The ID of the worksheet to look for</param>
-        /// <param name="result">The <see cref="IXLWorksheet"/> if found, otherwise <see langword="null"/></param>
-        /// <returns><see langword="true"/> if found, otherwise <see langword="false"/></returns>
         public bool TryGetWorksheetById(int id, out IXLWorksheet result)
         {
             try

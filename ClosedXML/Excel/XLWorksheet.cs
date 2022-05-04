@@ -89,6 +89,7 @@ namespace ClosedXML.Excel
             RightToLeft = workbook.RightToLeft;
             TabColor = XLColor.NoColor;
             SelectedRanges = new XLRanges();
+            SheetId = workbook.Worksheets.Count > 0 ? workbook.Worksheets.Max(ws => ((XLWorksheet)ws).SheetId) + 1 : 1;
 
             Author = workbook.Author;
         }

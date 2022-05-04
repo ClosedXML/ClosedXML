@@ -723,25 +723,18 @@ namespace ClosedXML.Excel
             foreach (var xlSheet in WorksheetsInternal.Cast<XLWorksheet>().OrderBy(w => w.Position))
             {
                 string rId;
-                if (xlSheet.SheetId == 0 && String.IsNullOrWhiteSpace(xlSheet.RelId))
+                if (String.IsNullOrWhiteSpace(xlSheet.RelId))
                 {
                     rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                    while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
+                    while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.RelId == rId))
                         rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                    xlSheet.SheetId = Int32.Parse(rId.Substring(3));
                     xlSheet.RelId = rId;
                 }
                 else
                 {
-                    if (String.IsNullOrWhiteSpace(xlSheet.RelId))
-                    {
-                        rId = String.Concat("rId", xlSheet.SheetId);
-                        context.RelIdGenerator.AddValues(new List<String> { rId }, RelType.Workbook);
-                    }
-                    else
-                        rId = xlSheet.RelId;
+                    rId = xlSheet.RelId;
                 }
 
                 if (workbook.Sheets.Cast<Sheet>().All(s => s.Id != rId))
