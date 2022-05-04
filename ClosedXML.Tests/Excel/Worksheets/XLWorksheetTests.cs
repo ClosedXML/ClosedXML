@@ -1242,5 +1242,33 @@ namespace ClosedXML.Tests
                 Assert.AreEqual(XLWorksheetVisibility.Visible, wb.Worksheets.First().Visibility);
             }
         }
+
+        [Test]
+        public void GetWorksheetById()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add("Sheet 1");
+                wb.Worksheets.Add("Sheet 2");
+
+                // Get sheet number 2 and assert that the name is Sheet 2
+                Assert.IsTrue(wb.Worksheets.GetWorksheetById(2).Name == "Sheet 2");
+
+                // Test if an exception is thrown if sheet with the given ID is not found
+                Assert.Throws<InvalidOperationException>(() => wb.Worksheets.GetWorksheetById(3));
+
+                // Test if TryGetWorksheetById returns true if a sheet is found and otherwise false
+                Assert.IsTrue(wb.Worksheets.TryGetWorksheetById(2, out var result1) && result1 != null);
+                Assert.IsTrue(!wb.Worksheets.TryGetWorksheetById(3, out var result2) && result2 == null);
+
+                // Rename sheet 1 and check if the name is still valid
+                wb.Worksheet(1).Name = "New Name";
+                Assert.IsTrue(wb.Worksheets.GetWorksheetById(1).Name == "New Name");
+
+                // Reorder the sheets and test again
+                wb.Worksheets.Worksheet(1).Position = 2;
+                Assert.IsTrue(wb.Worksheets.GetWorksheetById(1).Name == "New Name");
+            }
+        }
     }
 }
