@@ -192,15 +192,15 @@ namespace ClosedXML.Tests.Excel
         {
             using (var wb = new XLWorkbook())
             {
-                var ws1 = wb.AddWorksheet("Sheet C CÄ");
-                var ws2 = wb.AddWorksheet("ÖC");
+                var ws1 = wb.AddWorksheet("Sheet C CÃ„");
+                var ws2 = wb.AddWorksheet("Ã–C");
                 var ws3 = wb.AddWorksheet("Sheet3");
 
                 ws1.FirstCell().SetValue(100);
                 ws2.FirstCell().SetValue(50);
 
-                ws3.FirstCell().FormulaA1 = "='Sheet C CÄ'!A1";
-                ws3.FirstCell().CellBelow().FormulaA1 = "ÖC!A1";
+                ws3.FirstCell().FormulaA1 = "='Sheet C CÃ„'!A1";
+                ws3.FirstCell().CellBelow().FormulaA1 = "Ã–C!A1";
 
                 Assert.AreEqual(100, ws3.FirstCell().Value);
                 Assert.AreEqual(50, ws3.FirstCell().CellBelow().Value);
