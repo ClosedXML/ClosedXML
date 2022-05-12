@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel.InsertData;
+﻿using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.InsertData;
 using ClosedXML.Extensions;
 using System;
 using System.Collections;
@@ -13,7 +14,7 @@ using System.Text.RegularExpressions;
 namespace ClosedXML.Excel
 {
     [DebuggerDisplay("{Address}")]
-    internal class XLCell : XLStylizedBase, IXLCell, IXLStylized
+    internal class XLCell : XLStylizedBase, IXLCell, IXLStylized, IXLVersionable
     {
         public static readonly DateTime BaseDate = new DateTime(1899, 12, 30);
 
@@ -1188,9 +1189,7 @@ namespace ClosedXML.Excel
                     return _recalculationNeededLastValue;
 
                 bool res = EvaluatedAtVersion < ModifiedAtVersion ||                                       // the cell itself was modified
-                           GetAffectingCells().Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
-                                                           cell.EvaluatedAtVersion > EvaluatedAtVersion || // the affecting cell was evaluated after this one (normally this should not happen)
-                                                           cell.NeedsRecalculation);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
+                           GetAffectingObjects().Any(NeedsRecalculationDueToPrecedentObject); // some of the the affecting objects forces this cell to re-evaluate
 
                 NeedsRecalculation = res;
                 return res;
@@ -1202,16 +1201,24 @@ namespace ClosedXML.Excel
             }
         }
 
-        private IEnumerable<XLCell> GetAffectingCells()
+        private IEnumerable<IXLVersionable> GetAffectingObjects()
         {
-            return Worksheet.CalcEngine.GetPrecedentCells(_formulaA1).Cast<XLCell>();
+            return Worksheet.CalcEngine.GetPrecedentObjects(_formulaA1);
+        }
+
+        private bool NeedsRecalculationDueToPrecedentObject(IXLVersionable precedentObject)
+        {
+            return precedentObject.ModifiedAtVersion > EvaluatedAtVersion || // the affecting object was modified after this one was evaluated
+                   precedentObject is XLCell cell && (
+                       cell.EvaluatedAtVersion > EvaluatedAtVersion ||       // the affecting cell was evaluated after this one (normally this should not happen)
+                       cell.NeedsRecalculation);
         }
 
         /// <summary>
         /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell last modification.
         /// If this value is greater than <see cref="EvaluatedAtVersion"/> then cell needs re-evaluation, as well as all dependent cells do.
         /// </summary>
-        private long ModifiedAtVersion { get; set; }
+        public long ModifiedAtVersion { get; private set; }
 
         /// <summary>
         /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of cell formula evaluation.
