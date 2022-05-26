@@ -18,7 +18,7 @@
     <PackageIcon>nuget-logo.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/ClosedXML/ClosedXML/develop/resources/logo/nuget-logo.png</PackageIconUrl>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
+    <NoWarn>$(NoWarn);NU1605;CS1591;NU5104</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Configurations>Debug;Release</Configurations>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -61,7 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.13.0-beta0001" />
     <PackageReference Include="ExcelNumberFormat" Version="1.0.10" />
 
     <!-- SourceLink , see https://github.com/ctaggart/SourceLink -->

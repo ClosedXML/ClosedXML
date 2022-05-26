@@ -107,7 +107,7 @@ namespace ClosedXML.Excel
 
             if (errors.Any())
             {
-                var message = string.Join("\r\n", errors.Select(e => string.Format("Part {0}, Path {1}: {2}", e.Part.Uri, e.Path.XPath, e.Description)).ToArray());
+                var message = string.Join("\r\n", errors.Select(e => $"Part {e.Part.Uri}, Path {e.Path.XPath}:\r\n{e.Description}"));
                 throw new ApplicationException(message);
             }
             return true;

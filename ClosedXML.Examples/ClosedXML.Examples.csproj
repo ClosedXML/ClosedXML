@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.13.0-beta0001" />
     <PackageReference Include="morelinq" Version="2.10.0" />
   </ItemGroup>
 

@@ -657,19 +657,27 @@ namespace ClosedXML.Excel
         ///   Creates a new Excel workbook.
         /// </summary>
         public XLWorkbook()
-            : this(XLEventTracking.Enabled)
+            : this(new LoadOptions())
         {
         }
 
         internal XLWorkbook(String file, Boolean asTemplate)
-            : this(XLEventTracking.Enabled)
+            : this(new LoadOptions())
         {
+            if (!asTemplate) throw new NotSupportedException();
+
             LoadSheetsFromTemplate(file);
         }
 
         public XLWorkbook(XLEventTracking eventTracking)
+            : this(new LoadOptions { EventTracking = eventTracking })
         {
-            EventTracking = eventTracking;
+        }
+
+        public XLWorkbook(LoadOptions loadOptions)
+        {
+            EventTracking = loadOptions.EventTracking;
+
             Protection = new XLWorkbookProtection(DefaultProtectionAlgorithm);
             DefaultRowHeight = 15;
             DefaultColumnWidth = 8.43;
@@ -697,32 +705,29 @@ namespace ClosedXML.Excel
             Author = Environment.UserName;
         }
 
-        public XLWorkbook(LoadOptions loadOptions)
-            : this(loadOptions.EventTracking)
-        {
-        }
-
         /// <summary>
         ///   Opens an existing workbook from a file.
         /// </summary>
         /// <param name = "file">The file to open.</param>
         public XLWorkbook(String file)
-            : this(file, XLEventTracking.Enabled)
+            : this(file, new LoadOptions())
         {
         }
 
         public XLWorkbook(String file, XLEventTracking eventTracking)
-            : this(eventTracking)
+            : this(file, new LoadOptions { EventTracking = eventTracking })
+        {
+        }
+
+        public XLWorkbook(String file, LoadOptions loadOptions)
+            : this(loadOptions)
         {
             _loadSource = XLLoadSource.File;
             _originalFile = file;
             _spreadsheetDocumentType = GetSpreadsheetDocumentType(_originalFile);
-            Load(file);
-        }
 
-        public XLWorkbook(String file, LoadOptions loadOptions)
-            : this(file, loadOptions.EventTracking)
-        {
+            Load(file, loadOptions);
+
             if (loadOptions.RecalculateAllFormulas)
                 this.RecalculateAllFormulas();
         }
@@ -732,21 +737,23 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name = "stream">The stream to open.</param>
         public XLWorkbook(Stream stream)
-            : this(stream, XLEventTracking.Enabled)
+            : this(stream, new LoadOptions())
         {
         }
 
         public XLWorkbook(Stream stream, XLEventTracking eventTracking)
-            : this(eventTracking)
+            : this(stream, new LoadOptions { EventTracking = eventTracking })
         {
-            _loadSource = XLLoadSource.Stream;
-            _originalStream = stream;
-            Load(stream);
         }
 
         public XLWorkbook(Stream stream, LoadOptions loadOptions)
-            : this(stream, loadOptions.EventTracking)
+            : this(loadOptions)
         {
+            _loadSource = XLLoadSource.Stream;
+            _originalStream = stream;
+
+            Load(stream, loadOptions);
+
             if (loadOptions.RecalculateAllFormulas)
                 this.RecalculateAllFormulas();
         }
