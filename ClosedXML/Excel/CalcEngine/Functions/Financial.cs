@@ -1,3 +1,7 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
+using System;
+using System.Collections.Generic;
+
 namespace ClosedXML.Excel.CalcEngine
 {
     internal static class Financial
@@ -39,7 +43,7 @@ namespace ClosedXML.Excel.CalcEngine
             // ODDLPRICE Returns the price per $100 face value of a security with an odd last period
             // ODDLYIELD Returns the yield of a security with an odd last period
             // PDURATION Returns the number of periods required by an investment to reach a specified value
-            // PMT Returns the periodic payment for an annuity
+            ce.RegisterFunction("PMT", 3, 5, Payment); // Returns the periodic payment for an annuity
             // PPMT Returns the payment on the principal for an investment for a given period
             // PRICE Returns the price per $100 face value of a security that pays periodic interest
             // PRICEDISC Returns the price per $100 face value of a discounted security
@@ -59,6 +63,32 @@ namespace ClosedXML.Excel.CalcEngine
             // YIELD Returns the yield on a security that pays periodic interest
             // YIELDDISC Returns the annual yield for a discounted security; for example, a Treasury bill
             // YIELDMAT Returns the annual yield of a security that pays interest at maturity
+        }
+
+        private static object Payment(List<Expression> p)
+        {
+            double rate = 1.0 + p[0];
+            double numberPayments = p[1];
+            if (numberPayments == 0) throw new NumberException();
+            double presentValue = p[2];
+            double futureValue = 0;
+            if (p.Count > 3) futureValue = p[3];
+
+            // type is
+            // 0 - Payment at the end of period
+            // 1 - Payment at the beginning of period
+            double type = 0;
+            if (p.Count > 4) type = p[4];
+            var timingOffset = type == 0.0 ? 0 : 1;
+
+            // PMT is basically equated monthly installment calculation.
+            var geometricSeriesSum = numberPayments;
+            if (rate != 1.0)
+            {
+                geometricSeriesSum = (Math.Pow(rate, numberPayments) - 1) / (rate - 1);
+            }
+
+            return -(presentValue * Math.Pow(rate, numberPayments - timingOffset) + futureValue) / geometricSeriesSum;
         }
     }
 }
