@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
 using System.Globalization;
@@ -13,6 +14,29 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void SetCultureInfo()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+        }
+
+        [TestCase("#NULL!", 1)]
+        [TestCase("#DIV/0!", 2)]
+        [TestCase("1/0", 2)]
+        [TestCase("#VALUE!", 3)]
+        [TestCase("#REF!", 4)]
+        [TestCase("#NAME?", 5)]
+        [TestCase("#NUM!", 6)]
+        [TestCase("#N/A", 7)]
+        public void ErrorType_ErrorsAreConvertedToValues(string errorValue, int expectedValue)
+        {
+            var actual = XLWorkbook.EvaluateExpr($"ERROR.TYPE({errorValue})");
+            Assert.AreEqual(expectedValue, actual);
+        }
+
+        [TestCase("\"Texts\"")]
+        [TestCase("1.4")]
+        [TestCase("TRUE")]
+        [TestCase("DATE(2020,1,17)")]
+        public void ErrorType_NonErrorValuesReturnError(string argument)
+        {
+            Assert.Throws<NoValueAvailableException>(() => XLWorkbook.EvaluateExpr($"ERROR.TYPE({argument})"));
         }
 
         #region IsBlank Tests
@@ -78,7 +102,63 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }
         }
 
+        [Test]
+        public void IsBlank_NonStringTypes_false()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet("Sheet");
+                ws.Cell("A1").Value = new DateTime(2020, 1, 1);
+                var actual = ws.Evaluate("=IsBlank(A1)");
+                Assert.AreEqual(false, actual);
+            }
+        }
+
         #endregion IsBlank Tests
+
+        [TestCase("#NULL!")]
+        [TestCase("#DIV/0!")]
+        [TestCase("#VALUE!")]
+        [TestCase("#REF!")]
+        [TestCase("#NAME?")]
+        [TestCase("#NUM!")]
+        public void IsErr_ErrorsOtherThanNA_True(string error)
+        {
+            Assert.True((bool)XLWorkbook.EvaluateExpr($"ISERR({error})"));
+        }
+
+        [Test]
+        public void IsErr_NA_False()
+        {
+            Assert.False((bool)XLWorkbook.EvaluateExpr("ISERR(#N/A)"));
+        }
+
+        [TestCase("\"text\"")]
+        [TestCase("1.4")]
+        [TestCase("FALSE")]
+        public void IsErr_Values_False(string value)
+        {
+            Assert.False((bool)XLWorkbook.EvaluateExpr($"ISERR({value})"));
+        }
+
+        [TestCase("#NULL!")]
+        [TestCase("#DIV/0!")]
+        [TestCase("#VALUE!")]
+        [TestCase("#REF!")]
+        [TestCase("#NAME?")]
+        [TestCase("#NUM!")]
+        [TestCase("#N/A")]
+        public void IsError_AllErrors_True(string error)
+        {
+            Assert.True((bool)XLWorkbook.EvaluateExpr($"ISERROR({error})"));
+        }
+
+        [TestCase("\"text\"")]
+        [TestCase("\"-74.5\"")]
+        public void IsError_Values_False(string value)
+        {
+            Assert.False((bool)XLWorkbook.EvaluateExpr($"ISERROR({value})"));
+        }
 
         #region IsEven Tests
 
@@ -167,7 +247,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             actual = XLWorkbook.EvaluateExpr("ISNA(#N/A)");
             Assert.AreEqual(true, actual);
 
+            actual = XLWorkbook.EvaluateExpr("ISNA(NA())");
+            Assert.AreEqual(true, actual);
+
             actual = XLWorkbook.EvaluateExpr("ISNA(#REF!)");
+            Assert.AreEqual(false, actual);
+
+            actual = XLWorkbook.EvaluateExpr("ISNA(\"not available\")");
             Assert.AreEqual(false, actual);
         }
 
@@ -331,6 +417,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region IsText Tests
 
         [Test]
+        public void IsText_BlankCell_False()
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                ws.Cell("A1").FormulaA1="=ISTEXT(B1)";
+                Assert.AreEqual(false, ws.Cell("A1").Value);
+            }
+        }
+
+        [Test]
         public void IsText_Simple_false()
         {
             using (var wb = new XLWorkbook())
@@ -439,5 +536,36 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         #endregion N Tests
+
+        [Test]
+        public void NA_ReturnsNAValue()
+        {
+            Assert.Throws<NoValueAvailableException>(() => XLWorkbook.EvaluateExpr("NA()"));
+        }
+
+        [Test]
+        public void NA_DocumentationExample()
+        {
+            Assert.AreEqual("T", XLWorkbook.EvaluateExpr("IF(ISNA(NA()),\"T\",\"F\")"));
+        }
+
+        [TestCase("451", 1)]
+        [TestCase("\"some text\"", 2)]
+        [TestCase("TRUE", 4)]
+        [TestCase("FALSE", 4)]
+        [TestCase("#N/A", 16)]
+        [TestCase("#REF!", 16)]
+        [TestCase("B1:B1", 64)]
+        [TestCase("B2:D4", 64)]
+        public void Type_CorrectlyDeducesType(string value, int expected)
+        {
+            using (var wb = new XLWorkbook())
+            {
+                var ws = wb.AddWorksheet();
+                ws.Cell("A1").FormulaA1 = $"=TYPE({value})";
+                var actual = ws.Cell("A1").Value;
+                Assert.AreEqual(expected, actual);
+            }
+        }
     }
 }

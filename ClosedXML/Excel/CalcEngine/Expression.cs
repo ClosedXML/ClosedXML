@@ -72,6 +72,19 @@ namespace ClosedXML.Excel.CalcEngine
             return this;
         }
 
+        internal static Expression ToLiteralExpression(Expression expression)
+        {
+            try
+            {
+                return new Expression(expression.Evaluate());
+            }
+            catch (CalcEngineException)
+            {
+                // Is there is an error, we want stack from original place, so don't optimize
+                return expression;
+            }
+        }
+
         #endregion ** object model
 
         //---------------------------------------------------------------------------
@@ -80,9 +93,6 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator string(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
             var v = x.Evaluate();
 
             if (v == null)
@@ -96,9 +106,6 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator double(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
             // evaluate
             var v = x.Evaluate();
 
@@ -144,9 +151,6 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator bool(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
             // evaluate
             var v = x.Evaluate();
 
@@ -174,9 +178,6 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator DateTime(Expression x)
         {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
             // evaluate
             var v = x.Evaluate();
 
@@ -298,7 +299,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             Expression = Expression.Optimize();
             return Expression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? ToLiteralExpression(this)
                 : this;
         }
 
@@ -393,7 +394,7 @@ namespace ClosedXML.Excel.CalcEngine
             LeftExpression = LeftExpression.Optimize();
             RightExpression = RightExpression.Optimize();
             return LeftExpression._token.Type == TKTYPE.LITERAL && RightExpression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
+                ? ToLiteralExpression(this)
                 : this;
         }
 
@@ -443,7 +444,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
             return allLits
-                ? new Expression(this.Evaluate())
+                ? ToLiteralExpression(this)
                 : this;
         }
 
@@ -537,7 +538,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         internal EmptyValueExpression()
             // Ensures a token of type LITERAL, with value of null is created
-            : base(value: null) 
+            : base(value: null)
         {
         }
 
@@ -564,12 +565,11 @@ namespace ClosedXML.Excel.CalcEngine
             : base(new Token(eet, TKID.ATOM, TKTYPE.ERROR))
         { }
 
-        public override object Evaluate()
-        {
-            return this._token.Value;
-        }
+        internal ErrorExpression(CalcEngineException e)
+            : this(ExceptionToErrorType(e))
+        { }
 
-        public void ThrowApplicableException()
+        public override object Evaluate()
         {
             var eet = (ExpressionErrorType)_token.Value;
             switch (eet)
@@ -589,7 +589,24 @@ namespace ClosedXML.Excel.CalcEngine
                     throw new NullValueException();
                 case ExpressionErrorType.NumberInvalid:
                     throw new NumberException();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private static ExpressionErrorType ExceptionToErrorType(CalcEngineException ex)
+        {
+            return ex switch
+            {
+                CellReferenceException _ => ExpressionErrorType.CellReference,
+                CellValueException _ => ExpressionErrorType.CellValue,
+                DivisionByZeroException _ => ExpressionErrorType.DivisionByZero,
+                NameNotRecognizedException _ => ExpressionErrorType.NameNotRecognized,
+                NoValueAvailableException _ => ExpressionErrorType.NoValueAvailable,
+                NullValueException _ => ExpressionErrorType.NullValue,
+                NumberException _ => ExpressionErrorType.NumberInvalid,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
         }
     }
 

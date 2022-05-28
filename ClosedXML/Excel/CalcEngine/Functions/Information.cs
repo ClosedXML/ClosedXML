@@ -10,13 +10,13 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         public static void Register(CalcEngine ce)
         {
             //TODO: Add documentation
-            ce.RegisterFunction("ERRORTYPE", 1, ErrorType);
-            ce.RegisterFunction("ISBLANK", 1, int.MaxValue, IsBlank);
-            ce.RegisterFunction("ISERR", 1, int.MaxValue, IsErr);
-            ce.RegisterFunction("ISERROR", 1, int.MaxValue, IsError);
+            ce.RegisterFunction("ERROR.TYPE", 1, ErrorType);
+            ce.RegisterFunction("ISBLANK", 1, 1, IsBlank);
+            ce.RegisterFunction("ISERR", 1, 1, IsErr);
+            ce.RegisterFunction("ISERROR", 1, 1, IsError);
             ce.RegisterFunction("ISEVEN", 1, IsEven);
             ce.RegisterFunction("ISLOGICAL", 1, int.MaxValue, IsLogical);
-            ce.RegisterFunction("ISNA", 1, int.MaxValue, IsNa);
+            ce.RegisterFunction("ISNA", 1, 1, IsNa);
             ce.RegisterFunction("ISNONTEXT", 1, int.MaxValue, IsNonText);
             ce.RegisterFunction("ISNUMBER", 1, int.MaxValue, IsNumber);
             ce.RegisterFunction("ISODD", 1, IsOdd);
@@ -27,34 +27,51 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             ce.RegisterFunction("TYPE", 1, Type);
         }
 
-        static IDictionary<ErrorExpression.ExpressionErrorType, int> errorTypes = new Dictionary<ErrorExpression.ExpressionErrorType, int>()
+        private static object ErrorType(List<Expression> p)
         {
-            [ErrorExpression.ExpressionErrorType.NullValue] = 1,
-            [ErrorExpression.ExpressionErrorType.DivisionByZero] = 2,
-            [ErrorExpression.ExpressionErrorType.CellValue] = 3,
-            [ErrorExpression.ExpressionErrorType.CellReference] = 4,
-            [ErrorExpression.ExpressionErrorType.NameNotRecognized] = 5,
-            [ErrorExpression.ExpressionErrorType.NumberInvalid] = 6,
-            [ErrorExpression.ExpressionErrorType.NoValueAvailable] = 7
-        };
+            try
+            {
+                p[0].Evaluate();
+            }
+            catch (NullValueException)
+            {
+                return 1;
+            }
+            catch (DivisionByZeroException)
+            {
+                return 2;
+            }
+            catch (CellValueException)
+            {
+                return 3;
+            }
+            catch (CellReferenceException)
+            {
+                return 4;
+            }
+            catch (NameNotRecognizedException)
+            {
+                return 5;
+            }
+            catch (NumberException)
+            {
+                return 6;
+            }
+            catch (NoValueAvailableException)
+            {
+                return 7;
+            }
 
-        static object ErrorType(List<Expression> p)
-        {
-            var v = p[0].Evaluate();
-
-            if (v is ErrorExpression.ExpressionErrorType)
-                return errorTypes[(ErrorExpression.ExpressionErrorType)v];
-            else
-                throw new NoValueAvailableException();
+            throw new NoValueAvailableException();
         }
 
-        static object IsBlank(List<Expression> p)
+        private static object IsBlank(List<Expression> p)
         {
-            var v = (string) p[0];
+            var v = (string)p[0];
             var isBlank = string.IsNullOrEmpty(v);
 
-
-            if (isBlank && p.Count > 1) {
+            if (isBlank && p.Count > 1)
+            {
                 var sublist = p.GetRange(1, p.Count);
                 isBlank = (bool)IsBlank(sublist);
             }
@@ -62,33 +79,48 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return isBlank;
         }
 
-        static object IsErr(List<Expression> p)
+        private static object IsErr(List<Expression> p)
         {
-            var v = p[0].Evaluate();
-
-            return v is ErrorExpression.ExpressionErrorType
-                && ((ErrorExpression.ExpressionErrorType)v) != ErrorExpression.ExpressionErrorType.NoValueAvailable;
+            try
+            {
+                p[0].Evaluate();
+                return false;
+            }
+            catch (NoValueAvailableException)
+            {
+                return false;
+            }
+            catch (CalcEngineException)
+            {
+                return true;
+            }
         }
 
-        static object IsError(List<Expression> p)
+        private static object IsError(List<Expression> p)
         {
-            var v = p[0].Evaluate();
-
-            return v is ErrorExpression.ExpressionErrorType;
+            try
+            {
+                p[0].Evaluate();
+                return false;
+            }
+            catch (CalcEngineException)
+            {
+                return true;
+            }
         }
 
-        static object IsEven(List<Expression> p)
+        private static object IsEven(List<Expression> p)
         {
             var v = p[0].Evaluate();
             if (v is double)
             {
-                return Math.Abs((double) v%2) < 1;
+                return Math.Abs((double)v % 2) < 1;
             }
             //TODO: Error Exceptions
             throw new ArgumentException("Expression doesn't evaluate to double");
         }
 
-        static object IsLogical(List<Expression> p)
+        private static object IsLogical(List<Expression> p)
         {
             var v = p[0].Evaluate();
             var isLogical = v is bool;
@@ -96,26 +128,35 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             if (isLogical && p.Count > 1)
             {
                 var sublist = p.GetRange(1, p.Count);
-                isLogical = (bool) IsLogical(sublist);
+                isLogical = (bool)IsLogical(sublist);
             }
 
             return isLogical;
         }
 
-        static object IsNa(List<Expression> p)
+        private static object IsNa(List<Expression> p)
         {
-            var v = p[0].Evaluate();
-
-            return v is ErrorExpression.ExpressionErrorType
-                && ((ErrorExpression.ExpressionErrorType)v) == ErrorExpression.ExpressionErrorType.NoValueAvailable;
+            try
+            {
+                p[0].Evaluate();
+                return false;
+            }
+            catch (NoValueAvailableException)
+            {
+                return true;
+            }
+            catch (CalcEngineException)
+            {
+                return false;
+            }
         }
 
-        static object IsNonText(List<Expression> p)
+        private static object IsNonText(List<Expression> p)
         {
-            return !(bool) IsText(p);
+            return !(bool)IsText(p);
         }
 
-        static object IsNumber(List<Expression> p)
+        private static object IsNumber(List<Expression> p)
         {
             var v = p[0].Evaluate();
 
@@ -129,7 +170,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 //Handle Number Styles
                 try
                 {
-                    var stringValue = (string) v;
+                    var stringValue = (string)v;
                     return double.TryParse(stringValue.TrimEnd('%', ' '), NumberStyles.Any, null, out double dv);
                 }
                 catch (Exception)
@@ -147,12 +188,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return isNumber;
         }
 
-        static object IsOdd(List<Expression> p)
+        private static object IsOdd(List<Expression> p)
         {
-            return !(bool) IsEven(p);
+            return !(bool)IsEven(p);
         }
 
-        static object IsRef(List<Expression> p)
+        private static object IsRef(List<Expression> p)
         {
             var oe = p[0] as XObjectExpression;
             if (oe == null)
@@ -163,53 +204,55 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             return crr != null;
         }
 
-        static object IsText(List<Expression> p)
+        private static object IsText(List<Expression> p)
         {
             //Evaluate Expressions
-            var isText = !(bool) IsBlank(p);
+            var isText = !(bool)IsBlank(p);
             if (isText)
             {
-                isText = !(bool) IsNumber(p);
+                isText = !(bool)IsNumber(p);
             }
             if (isText)
             {
-                isText = !(bool) IsLogical(p);
+                isText = !(bool)IsLogical(p);
             }
             return isText;
         }
 
-        static object N(List<Expression> p)
+        private static object N(List<Expression> p)
         {
-            return (double) p[0];
+            return (double)p[0];
         }
 
-        static object NA(List<Expression> p)
+        private static object NA(List<Expression> p)
         {
-            return ErrorExpression.ExpressionErrorType.NoValueAvailable;
+            throw new NoValueAvailableException();
         }
 
-        static object Type(List<Expression> p)
+        private static object Type(List<Expression> p)
         {
-            if ((bool) IsNumber(p))
-            {
-                return 1;
-            }
-            if ((bool) IsText(p))
-            {
-                return 2;
-            }
-            if ((bool) IsLogical(p))
-            {
-                return 4;
-            }
-            if ((bool) IsError(p))
+            if ((bool)IsError(p))
             {
                 return 16;
             }
-            if(p.Count > 1)
+            if (p[0] is XObjectExpression)
             {
+                // Any kind of array, ranges, names
                 return 64;
             }
+            if ((bool)IsNumber(p))
+            {
+                return 1;
+            }
+            if ((bool)IsText(p))
+            {
+                return 2;
+            }
+            if ((bool)IsLogical(p))
+            {
+                return 4;
+            }
+
             return null;
         }
     }
