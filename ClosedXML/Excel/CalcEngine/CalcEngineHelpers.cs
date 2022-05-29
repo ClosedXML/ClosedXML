@@ -128,7 +128,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Get total count of cells in the specified range without initalizing them all
+        /// Get total count of cells in the specified range without initializing them all
         /// (which might cause serious performance issues on column-wide calculations).
         /// </summary>
         /// <param name="rangeExpression">Expression referring to the cell range.</param>

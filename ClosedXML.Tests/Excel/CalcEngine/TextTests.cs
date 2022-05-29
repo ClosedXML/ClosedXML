@@ -656,7 +656,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
-        public void Trim_EmptyInput_Striong()
+        public void Trim_EmptyInput_String()
         {
             Object actual = XLWorkbook.EvaluateExpr(@"Trim("""")");
             Assert.AreEqual("", actual);

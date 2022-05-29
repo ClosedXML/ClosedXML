@@ -1900,7 +1900,7 @@ namespace ClosedXML.Excel
         {
         }
 
-        public void RellocateRange(XLRangeType rangeType, XLRangeAddress oldAddress, XLRangeAddress newAddress)
+        public void RelocateRange(XLRangeType rangeType, XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
             if (_rangeRepository == null)
                 return;

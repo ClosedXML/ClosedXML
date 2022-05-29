@@ -58,7 +58,7 @@ namespace ClosedXML.Examples.Misc
             // relativeRange1 will point to C4.
             wsPresentation.NamedRanges.Add("relativeRange1", "Presentation!B1");
 
-            // The following creates a ralative named range pointing to the same row
+            // The following creates a relative named range pointing to the same row
             // and one column to the left. For example if the current cell is D2
             // relativeRange2 will point to C2.
             wb.NamedRanges.Add("relativeRange2", "Presentation!XFD1");

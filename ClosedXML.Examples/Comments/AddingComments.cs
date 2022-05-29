@@ -20,7 +20,7 @@ namespace ClosedXML.Examples
             AddSignatures(wb);
             AddStyleAlignment(wb);
             AddColorsAndLines(wb);
-            AddMagins(wb);
+            AddMargins(wb);
             AddProperties(wb);
             AddProtection(wb);
             AddSize(wb);
@@ -72,7 +72,7 @@ namespace ClosedXML.Examples
             ws.Cell("A3").GetComment().Style.Properties.Positioning = XLDrawingAnchor.MoveWithCells;
         }
 
-        private void AddMagins(XLWorkbook wb)
+        private void AddMargins(XLWorkbook wb)
         {
             var ws = wb.Worksheets.Add("Margins");
 

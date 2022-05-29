@@ -520,7 +520,7 @@ namespace ClosedXML.Excel
                     using (var ms = new MemoryStream())
                     {
                         CreatePackage(ms, true, _spreadsheetDocumentType, options);
-                        // not really nessesary, because I changed CopyStream too.
+                        // not really necessary, because I changed CopyStream too.
                         // but for better understanding and if somebody in the future
                         // provide an changed version of CopyStream
                         ms.Position = 0;

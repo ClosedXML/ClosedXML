@@ -34,8 +34,8 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetAllCells()
         {
-            var grouppedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
-            foreach (var worksheetGroup in grouppedAddresses)
+            var groupedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
+            foreach (var worksheetGroup in groupedAddresses)
             {
                 var ws = worksheetGroup.Key;
                 var sheetPoints = worksheetGroup.SelectMany(addr => GetAllCellsInRange(addr))
@@ -71,8 +71,8 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetUsedCells()
         {
-            var grouppedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
-            foreach (var worksheetGroup in grouppedAddresses)
+            var groupedAddresses = _rangeAddresses.GroupBy(addr => addr.Worksheet);
+            foreach (var worksheetGroup in groupedAddresses)
             {
                 var ws = worksheetGroup.Key;
 
