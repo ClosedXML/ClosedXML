@@ -19,7 +19,7 @@ namespace ClosedXML.Excel
         IXLAddress Address { get; }
 
         /// <summary>
-        /// Calculated value of cell formula. Is used for decreasing number of computations perfromed.
+        /// Calculated value of cell formula. Is used for decreasing number of computations performed.
         /// May hold invalid value when <see cref="NeedsRecalculation"/> flag is True.
         /// </summary>
         Object CachedValue { get; }

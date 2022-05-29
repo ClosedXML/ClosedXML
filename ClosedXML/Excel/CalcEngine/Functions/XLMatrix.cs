@@ -113,7 +113,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         }
 
 
-        public XLMatrix SolveWith(XLMatrix v) // Function solves Ax = v in confirmity with solution vector "v"
+        public XLMatrix SolveWith(XLMatrix v) // Function solves Ax = v in conformity with solution vector "v"
         {
             if (rows != cols) throw new InvalidOperationException("The matrix is not square!");
             if (rows != v.rows) throw new ArgumentException("Wrong number of results in solution vector!");

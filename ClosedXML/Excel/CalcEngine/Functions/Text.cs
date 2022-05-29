@@ -320,7 +320,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <exception cref="ApplicationException">
         /// Delimiter in first param must be a string
         /// or
-        /// Second param must be a boolen (TRUE/FALSE)
+        /// Second param must be a boolean (TRUE/FALSE)
         /// </exception>
         private static object TextJoin(List<Expression> p)
         {

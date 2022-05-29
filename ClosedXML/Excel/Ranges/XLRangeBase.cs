@@ -38,7 +38,7 @@ namespace ClosedXML.Excel
 
         protected virtual void OnRangeAddressChanged(XLRangeAddress oldAddress, XLRangeAddress newAddress)
         {
-            Worksheet.RellocateRange(RangeType, oldAddress, newAddress);
+            Worksheet.RelocateRange(RangeType, oldAddress, newAddress);
         }
 
         #region Public properties

@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.Patterns
         #region Public Properties
 
         /// <summary>
-        /// Smaller quadrants which the current one is splitted to. Is NULL until ranges are added to child quadrants.
+        /// Smaller quadrants which the current one is split to. Is NULL until ranges are added to child quadrants.
         /// </summary>
         public IEnumerable<Quadrant> Children { get; private set; }
 

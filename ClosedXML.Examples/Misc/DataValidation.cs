@@ -58,7 +58,7 @@ namespace ClosedXML.Examples.Misc
             dv1.ErrorTitle = "Number out of range";
             dv1.ErrorMessage = "This cell only allows the number 2.";
 
-            // Date after the millenium
+            // Date after the millennium
             var dv2 = ws.Cell("A4").CreateDataValidation();
             dv2.Date.EqualOrGreaterThan(new DateTime(2000, 1, 1));
             // Change the input message

@@ -196,7 +196,7 @@ namespace ClosedXML.Excel
             var style = GetStyleForRead();
 
             // For SetValue<T> we set the cell value directly to the parameter
-            // as opposed to the other SetValue(object value) where we parse the string and try to decude the value
+            // as opposed to the other SetValue(object value) where we parse the string and try to deduce the value
             var tuple = SetKnownTypedValue(value, style, acceptString: true);
             var parsedValue = tuple.Item1;
             var parsed = tuple.Item2;
@@ -469,7 +469,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Perform an evaluation of cell formula. If cell does not contain formula nothing happens, if cell does not need
         /// recalculation (<see cref="NeedsRecalculation"/> is False) nothing happens either, unless <paramref name="force"/> flag is specified.
-        /// Otherwise recalculation is perfomed, result value is preserved in <see cref="CachedValue"/> and returned.
+        /// Otherwise recalculation is performed, result value is preserved in <see cref="CachedValue"/> and returned.
         /// </summary>
         /// <param name="force">Flag indicating whether a recalculation must be performed even is cell does not need it.</param>
         /// <returns>Null if cell does not contain a formula. Calculated value otherwise.</returns>
@@ -1222,7 +1222,7 @@ namespace ClosedXML.Excel
 
         /// <summary>
         /// The value of <see cref="XLWorkbook.RecalculationCounter"/> that workbook had at the moment of determining whether the cell
-        /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If thie value equals to <see cref="XLWorkbook.RecalculationCounter"/>
+        /// needs re-evaluation (due to it has been edited or some of the affecting cells has). If this value equals to <see cref="XLWorkbook.RecalculationCounter"/>
         /// it indicates that <see cref="_recalculationNeededLastValue"/> stores correct value and no check has to be performed.
         /// </summary>
         private long NeedsRecalculationEvaluatedAtVersion { get; set; }

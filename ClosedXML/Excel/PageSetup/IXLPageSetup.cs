@@ -170,7 +170,7 @@ namespace ClosedXML.Excel
         /// Gets or sets a value indicating whether the worksheet will be centered on the page vertically.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if the worksheet will be centered on the page vartically; otherwise, <c>false</c>.
+        ///   <c>true</c> if the worksheet will be centered on the page vertically; otherwise, <c>false</c>.
         /// </value>
         Boolean CenterVertically { get; set; }
         /// <summary>

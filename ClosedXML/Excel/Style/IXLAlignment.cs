@@ -78,7 +78,7 @@ namespace ClosedXML.Excel
         Boolean WrapText { get; set; }
 
         /// <summary>
-        /// Gets or sets wheter the cell's text should be displayed from to to bottom
+        /// Gets or sets whether the cell's text should be displayed from to to bottom
         /// <para>(as opposed to the normal left to right).</para>
         /// </summary>
         Boolean TopToBottom { get; set; }

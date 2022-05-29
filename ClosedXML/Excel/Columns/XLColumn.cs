@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
         #region Constructor
 
         /// <summary>
-        /// The direct contructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
+        /// The direct constructor should only be used in <see cref="XLWorksheet.RangeFactory"/>.
         /// </summary>
         public XLColumn(XLWorksheet worksheet, Int32 column)
             : base(XLRangeAddress.EntireColumn(worksheet, column), worksheet.StyleValue)

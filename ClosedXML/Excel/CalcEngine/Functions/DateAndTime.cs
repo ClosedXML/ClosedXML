@@ -54,7 +54,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             TimeSpan span = lastDay - firstDay;
             int businessDays = span.Days + 1;
             int fullWeekCount = businessDays / 7;
-            // find out if there are weekends during the time exceedng the full weeks
+            // find out if there are weekends during the time exceeding the full weeks
             if (businessDays > fullWeekCount * 7)
             {
                 // we are here to find out if there is a 1-day or 2-days weekend
@@ -130,7 +130,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 "M" => Math.Truncate((endDate.Year - startDate.Year) * 12d + endDate.Month - startDate.Month - (endDate.Day < startDate.Day ? 1 : 0)),
                 "D" => Math.Truncate(endDate.Date.Subtract(startDate.Date).TotalDays),
 
-                // Microsoft discouranges the use of the MD parameter
+                // Microsoft discourages the use of the MD parameter
                 // https://support.microsoft.com/en-us/office/datedif-function-25dba1a4-2812-480b-84dd-8b32a451b35c
                 "MD" => (endDate.Day - startDate.Day + DateTime.DaysInMonth(startDate.Year, startDate.Month)) % DateTime.DaysInMonth(startDate.Year, startDate.Month),
 

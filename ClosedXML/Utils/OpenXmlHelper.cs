@@ -19,7 +19,7 @@ namespace ClosedXML.Utils
         /// <typeparam name="T">The descendant of <see cref="ColorType"/>.</typeparam>
         /// <param name="openXMLColor">The existing instance of ColorType.</param>
         /// <param name="xlColor">Color in ClosedXML format.</param>
-        /// <param name="isDifferential">Flag specifiying that the color should be saved in
+        /// <param name="isDifferential">Flag specifying that the color should be saved in
         /// differential format (affects the transparent color processing).</param>
         /// <returns>The original color in OpenXML format.</returns>
         public static T FromClosedXMLColor<T>(this ColorType openXMLColor, XLColor xlColor, bool isDifferential = false)
@@ -36,7 +36,7 @@ namespace ClosedXML.Utils
         /// <typeparam name="T">The descendant of <see cref="X14.ColorType"/>.</typeparam>
         /// <param name="openXMLColor">The existing instance of ColorType.</param>
         /// <param name="xlColor">Color in ClosedXML format.</param>
-        /// <param name="isDifferential">Flag specifiying that the color should be saved in
+        /// <param name="isDifferential">Flag specifying that the color should be saved in
         /// differential format (affects the transparent color processing).</param>
         /// <returns>The original color in OpenXML format.</returns>
         public static T FromClosedXMLColor<T>(this X14.ColorType openXMLColor, XLColor xlColor, bool isDifferential = false)
@@ -84,7 +84,7 @@ namespace ClosedXML.Utils
         #region Private Methods
 
         /// <summary>
-        /// Here we perform the actual convertion from OpenXML color to ClosedXML color.
+        /// Here we perform the actual conversion from OpenXML color to ClosedXML color.
         /// </summary>
         /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>. 
         /// Since these types do not implement a common interface we use dynamic.</param>
@@ -125,7 +125,7 @@ namespace ClosedXML.Utils
         /// <param name="openXMLColor">OpenXML color. Must be either <see cref="ColorType"/> or <see cref="X14.ColorType"/>. 
         /// Since these types do not implement a common interface we use dynamic.</param>
         /// <param name="xlColor">Color in ClosedXML format.</param>
-        /// <param name="isDifferential">Flag specifiying that the color should be saved in
+        /// <param name="isDifferential">Flag specifying that the color should be saved in
         /// differential format (affects the transparent color processing).</param>
         private static void FillFromClosedXMLColor(IColorTypeAdapter openXMLColor, XLColor xlColor, bool isDifferential)
         {
