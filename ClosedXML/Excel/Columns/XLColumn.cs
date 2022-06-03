@@ -1,6 +1,6 @@
+using ClosedXML.Utils;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -171,7 +171,7 @@ namespace ClosedXML.Excel
 
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
-            var fontCache = new Dictionary<IXLFontBase, Font>();
+            using var fontCache = new FontCache();
 
             Double colMaxWidth = minWidth;
 
@@ -349,10 +349,6 @@ namespace ClosedXML.Excel
 
             Width = colMaxWidth;
 
-            foreach (IDisposable font in fontCache.Values)
-            {
-                font.Dispose();
-            }
             return this;
         }
 

@@ -1,6 +1,6 @@
+using ClosedXML.Utils;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace ClosedXML.Excel
@@ -209,7 +209,7 @@ namespace ClosedXML.Excel
 
         public IXLRow AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
         {
-            var fontCache = new Dictionary<IXLFontBase, Font>();
+            using var fontCache = new FontCache();
 
             Double rowMaxHeight = minHeight;
             foreach (XLCell c in from XLCell c in Row(startColumn, endColumn).CellsUsed() where !c.IsMerged() select c)
@@ -287,10 +287,6 @@ namespace ClosedXML.Excel
 
             Height = rowMaxHeight;
 
-            foreach (IDisposable font in fontCache.Values)
-            {
-                font.Dispose();
-            }
             return this;
         }
 
