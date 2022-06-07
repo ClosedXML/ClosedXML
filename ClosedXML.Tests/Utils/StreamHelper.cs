@@ -114,31 +114,32 @@ namespace ClosedXML.Tests
         /// <param name="other"></param>
         /// /// <param name="stripColumnWidths"></param>
         /// <returns></returns>
-        public static bool Compare(Tuple<Uri, Stream> tuple1, Tuple<Uri, Stream> tuple2, bool stripColumnWidths)
+        public static bool Compare((string ContentType, Stream Stream) tuple1, (string ContentType, Stream Stream) tuple2, Uri partUri, bool stripColumnWidths)
         {
             #region Check
 
-            if (tuple1 == null || tuple1.Item1 == null || tuple1.Item2 == null)
+            if (tuple1.ContentType == null || tuple1.Stream == null)
             {
-                throw new ArgumentNullException("one");
+                throw new ArgumentNullException(nameof(tuple1));
             }
-            if (tuple2 == null || tuple2.Item1 == null || tuple2.Item2 == null)
+            if (tuple2.ContentType == null || tuple2.Stream == null)
             {
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(tuple2));
             }
-            if (tuple1.Item2.Position != 0)
+            if (tuple1.Stream.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "one");
+                throw new ArgumentException("Must be in position 0", nameof(tuple1));
             }
-            if (tuple2.Item2.Position != 0)
+            if (tuple2.Stream.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "other");
+                throw new ArgumentException("Must be in position 0", nameof(tuple2));
             }
 
             #endregion Check
 
-            var stringOne = new StreamReader(tuple1.Item2).ReadToEnd().RemoveIgnoredParts(tuple1.Item1, stripColumnWidths, ignoreGuids: true);
-            var stringOther = new StreamReader(tuple2.Item2).ReadToEnd().RemoveIgnoredParts(tuple2.Item1, stripColumnWidths, ignoreGuids: true);
+            var stringOne = new StreamReader(tuple1.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
+            var stringOther = new StreamReader(tuple2.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
+
             return stringOne == stringOther;
         }
 
