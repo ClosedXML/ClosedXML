@@ -154,8 +154,9 @@ namespace ClosedXML.Tests
 
             #endregion Check
 
-            var leftString = new StreamReader(left.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
-            var rightString = new StreamReader(right.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
+
+            var leftString = new StreamReader(left.Stream).ReadToEnd().RemoveIgnoredParts(ignoreGuids: true);
+            var rightString = new StreamReader(right.Stream).ReadToEnd().RemoveIgnoredParts(ignoreGuids: true);
 
             var isXmlContent = left.ContentType.EndsWith("+xml");
             if (!isXmlContent)
@@ -166,7 +167,7 @@ namespace ClosedXML.Tests
             var leftXml = XDocument.Parse(leftString);
             var rightXml = XDocument.Parse(rightString);
 
-            var toleranceInPercent = 0.00m;
+            var toleranceInPercent = stripColumnWidths ? decimal.MaxValue : 0.03m;
             var leftWidths = GetWidths(leftXml);
             var rightWidths = GetWidths(rightXml);
 
@@ -218,13 +219,10 @@ namespace ClosedXML.Tests
                     node.Remove();
         }
 
-        private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnWidths, Boolean ignoreGuids)
+        private static string RemoveIgnoredParts(this string s, Boolean ignoreGuids)
         {
             // Collapse empty xml elements
             s = emptyXmlElementRegex.Replace(s, "<$1 />");
-
-            if (ignoreColumnWidths)
-                s = RemoveColumnWidths(s);
 
             if (ignoreGuids)
                 s = RemoveGuids(s);
@@ -234,26 +232,6 @@ namespace ClosedXML.Tests
 
 
         private static Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
-        private static Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
-        private static Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);
-
-        private static String RemoveColumnWidths(String s)
-        {
-            var replacements = new Dictionary<String, String>();
-
-            foreach (var m in columnRegex.Matches(s).OfType<Match>())
-            {
-                var original = m.Groups[0].Value;
-                var replacement = widthRegex.Replace(original, "");
-                replacements.Add(original, replacement);
-            }
-
-            foreach (var r in replacements)
-            {
-                s = s.Replace(r.Key, r.Value);
-            }
-            return s;
-        }
 
         private static Regex guidRegex = new Regex(@"{[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}}", RegexOptions.Compiled | RegexOptions.Multiline);
 
