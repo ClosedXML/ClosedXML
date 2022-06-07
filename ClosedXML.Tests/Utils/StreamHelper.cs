@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace ClosedXML.Tests
 {
@@ -135,12 +136,25 @@ namespace ClosedXML.Tests
                 throw new ArgumentException("Must be in position 0", nameof(right));
             }
 
+            if (left.ContentType != right.ContentType)
+            {
+                throw new ArgumentException("Different content types.");
+            }
+
             #endregion Check
 
-            var stringOne = new StreamReader(left.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
-            var stringOther = new StreamReader(right.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
+            var leftString = new StreamReader(left.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
+            var rightString = new StreamReader(right.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
 
-            return stringOne == stringOther;
+            var isXmlContent = left.ContentType.EndsWith("+xml");
+            if (isXmlContent)
+            {
+                var leftXml = XDocument.Parse(leftString);
+                var rightXml = XDocument.Parse(rightString);
+                return XNode.DeepEquals(leftXml, rightXml);
+            }
+
+            return leftString == rightString;
         }
 
         private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnWidths, Boolean ignoreGuids)
