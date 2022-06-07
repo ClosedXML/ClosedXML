@@ -21,18 +21,18 @@ namespace ClosedXML.Excel
             font.FontCharSet = sourceFont.FontCharSet;
         }
 
-        public static Double GetHeight(this IXLFontBase fontBase, FontCache fontCache)
+        public static Double GetHeight(this IXLFontBase fontBase, ITextMeasurer measurer)
         {
-            var textHeight = fontCache.MeasureString("X", fontBase).Height;
+            var textHeight = measurer.MeasureString("X", fontBase).Height;
             return (double)textHeight * 0.85;
         }
 
-        public static Double GetWidth(this IXLFontBase fontBase, String text, FontCache fontCache)
+        public static Double GetWidth(this IXLFontBase fontBase, String text, ITextMeasurer measurer)
         {
             if (String.IsNullOrWhiteSpace(text))
                 return 0;
 
-            var textWidth = fontCache.MeasureString(text, fontBase).Width;
+            var textWidth = measurer.MeasureString(text, fontBase).Width;
 
             double width = (textWidth / 7d * 256 - 128 / 7) / 256;
             width = Math.Round(width + 0.2, 2);

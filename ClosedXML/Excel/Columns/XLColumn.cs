@@ -171,7 +171,12 @@ namespace ClosedXML.Excel
 
         public IXLColumn AdjustToContents(Int32 startRow, Int32 endRow, Double minWidth, Double maxWidth)
         {
-            using var fontCache = new FontCache();
+            using var measurer =
+#if NETFRAMEWORK
+                new GdiPlusMeasurer();
+#else
+                new SixLaborsFontMeasurer();
+#endif
 
             Double colMaxWidth = minWidth;
 
@@ -251,17 +256,17 @@ namespace ClosedXML.Excel
                             if (newLinePosition >= 0)
                             {
                                 if (newLinePosition > 0)
-                                    runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), fontCache);
+                                    runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), measurer);
 
                                 if (runningWidth > thisWidthMax)
                                     thisWidthMax = runningWidth;
 
                                 runningWidth = newLinePosition < formattedString.Length - 2
-                                                   ? f.GetWidth(formattedString.Substring(newLinePosition + 2), fontCache)
+                                                   ? f.GetWidth(formattedString.Substring(newLinePosition + 2), measurer)
                                                    : 0;
                             }
                             else
-                                runningWidth += f.GetWidth(formattedString, fontCache);
+                                runningWidth += f.GetWidth(formattedString, measurer);
 
                             #endregion if (newLinePosition >= 0)
                         }
@@ -272,15 +277,15 @@ namespace ClosedXML.Excel
                             if (textRotation == 255)
                             {
                                 if (runningWidth <= 0)
-                                    runningWidth = f.GetWidth("X", fontCache);
+                                    runningWidth = f.GetWidth("X", measurer);
 
                                 if (newLinePosition >= 0)
-                                    runningWidth += f.GetWidth("X", fontCache);
+                                    runningWidth += f.GetWidth("X", measurer);
                             }
                             else
                             {
                                 rotated = true;
-                                Double vWidth = f.GetWidth("X", fontCache);
+                                Double vWidth = f.GetWidth("X", measurer);
                                 if (vWidth > maxLineWidth)
                                     maxLineWidth = vWidth;
 
@@ -289,17 +294,17 @@ namespace ClosedXML.Excel
                                     lineCount++;
 
                                     if (newLinePosition > 0)
-                                        runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), fontCache);
+                                        runningWidth += f.GetWidth(formattedString.Substring(0, newLinePosition), measurer);
 
                                     if (runningWidth > thisWidthMax)
                                         thisWidthMax = runningWidth;
 
                                     runningWidth = newLinePosition < formattedString.Length - 2
-                                                       ? f.GetWidth(formattedString.Substring(newLinePosition + 2), fontCache)
+                                                       ? f.GetWidth(formattedString.Substring(newLinePosition + 2), measurer)
                                                        : 0;
                                 }
                                 else
-                                    runningWidth += f.GetWidth(formattedString, fontCache);
+                                    runningWidth += f.GetWidth(formattedString, measurer);
                             }
 
                             #endregion if (textRotation == 255)
@@ -329,7 +334,7 @@ namespace ClosedXML.Excel
                     #endregion if (rotated)
                 }
                 else
-                    thisWidthMax = cellStyle.Font.GetWidth(c.GetFormattedString(), fontCache);
+                    thisWidthMax = cellStyle.Font.GetWidth(c.GetFormattedString(), measurer);
 
                 if (autoFilterRows.Contains(c.Address.RowNumber))
                     thisWidthMax += 2.7148; // Allow room for arrow icon in autofilter
