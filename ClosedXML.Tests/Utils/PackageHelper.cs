@@ -360,10 +360,10 @@ namespace ClosedXML.Tests
                         leftPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" &&
                         rightPart.ContentType == @"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml";
 
-                    var tuple1 = new Tuple<Uri, Stream>(pair.Uri, leftMemoryStream);
-                    var tuple2 = new Tuple<Uri, Stream>(pair.Uri, rightMemoryStream);
+                    var tuple1 = (leftPart.ContentType, Stream: leftMemoryStream);
+                    var tuple2 = (rightPart.ContentType, Stream: rightMemoryStream);
 
-                    if (!StreamHelper.Compare(tuple1, tuple2, stripColumnWidthsFromSheet))
+                    if (!StreamHelper.Compare(tuple1, tuple2, pair.Uri, stripColumnWidthsFromSheet))
                     {
                         pair.Status = CompareStatus.NonEqual;
                         if (compareToFirstDifference)
