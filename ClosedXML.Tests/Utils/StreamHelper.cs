@@ -1,9 +1,12 @@
+using MoreLinq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace ClosedXML.Tests
 {
@@ -12,6 +15,14 @@ namespace ClosedXML.Tests
     /// </summary>
     public static class StreamHelper
     {
+        private static readonly XName colTagName = XName.Get("col", @"http://schemas.openxmlformats.org/spreadsheetml/2006/main");
+        private static readonly XName widthAttrName = XName.Get("width");
+        private static readonly IEnumerable<(string PartUri, string NodesXPath)> uriSpecificIgnores = new List<(string PartUri, string NodesXPath)>()
+        {
+            // Remove dcterms elements, e.g. created, modified
+            ("/docProps/core.xml", "//*[namespace-uri() = 'http://purl.org/dc/terms/']")
+        };
+
         /// <summary>
         ///     Convert stream to byte array
         /// </summary>
@@ -147,21 +158,68 @@ namespace ClosedXML.Tests
             var rightString = new StreamReader(right.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
 
             var isXmlContent = left.ContentType.EndsWith("+xml");
-            if (isXmlContent)
+            if (!isXmlContent)
             {
-                var leftXml = XDocument.Parse(leftString);
-                var rightXml = XDocument.Parse(rightString);
-                return XNode.DeepEquals(leftXml, rightXml);
+                return leftString == rightString;
             }
 
-            return leftString == rightString;
+            var leftXml = XDocument.Parse(leftString);
+            var rightXml = XDocument.Parse(rightString);
+
+            var toleranceInPercent = 0.00m;
+            var leftWidths = GetWidths(leftXml);
+            var rightWidths = GetWidths(rightXml);
+
+            var areWeightsEqual = AreWidthsEqual(leftWidths, rightWidths, toleranceInPercent);
+            if (!areWeightsEqual) return false;
+
+            CopyWeights(rightWidths, leftWidths);
+
+            RemoveIgnoredParts(leftXml, partUri);
+            RemoveIgnoredParts(rightXml, partUri);
+
+            return XNode.DeepEquals(leftXml, rightXml);
+        }
+
+        private static List<(XAttribute Attr, decimal Width)> GetWidths(XDocument document)
+        {
+            return document.Descendants(colTagName)
+                .Select(tag => tag.Attribute(widthAttrName))
+                .Where(attr => !(attr is null))
+                .Select(attr => (attr, decimal.Parse(attr.Value, CultureInfo.InvariantCulture)))
+                .ToList();
+        }
+
+        private static bool AreWidthsEqual(List<(XAttribute Attr, decimal Width)> leftWidths, List<(XAttribute Attr, decimal Width)> rightWidths, decimal tolerance)
+        {
+            // This checks values and count, position of width attributes is checked when comparing whole document
+            if (leftWidths.Count != rightWidths.Count)
+                return false;
+
+            return leftWidths.Zip(rightWidths, (First, Second) => (First, Second)).All(t =>
+            {
+                var delta = Math.Abs(t.Second.Width - t.First.Width);
+                return Math.Max(delta / t.First.Width, delta / t.Second.Width) <= tolerance;
+            });
+        }
+
+        private static void CopyWeights(List<(XAttribute Attr, decimal Width)> fromWidths, List<(XAttribute Attr, decimal Width)> toWidths)
+        {
+            fromWidths.Zip(toWidths, (From, To) => (From, To)).ForEach(t =>
+            {
+                t.To.Attr.SetValue(t.From.Attr.Value);
+            });
+        }
+
+        private static void RemoveIgnoredParts(XDocument document, Uri partUri)
+        {
+            foreach (var (_, NodesXPath) in uriSpecificIgnores.Where(p => p.PartUri.Equals(partUri.OriginalString)))
+                foreach (var node in document.XPathSelectElements(NodesXPath).ToList())
+                    node.Remove();
         }
 
         private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnWidths, Boolean ignoreGuids)
         {
-            foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
-                s = pair.Value.Replace(s, "");
-
             // Collapse empty xml elements
             s = emptyXmlElementRegex.Replace(s, "<$1 />");
 
@@ -174,11 +232,6 @@ namespace ClosedXML.Tests
             return s;
         }
 
-        private static IEnumerable<KeyValuePair<string, Regex>> uriSpecificIgnores = new List<KeyValuePair<string, Regex>>()
-        {
-            // Remove dcterms elements
-            new KeyValuePair<string, Regex>("/docProps/core.xml", new Regex(@"<dcterms:(\w+).*?<\/dcterms:\1>", RegexOptions.Compiled))
-        };
 
         private static Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
         private static Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
