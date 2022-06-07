@@ -114,31 +114,31 @@ namespace ClosedXML.Tests
         /// <param name="other"></param>
         /// /// <param name="stripColumnWidths"></param>
         /// <returns></returns>
-        public static bool Compare((string ContentType, Stream Stream) tuple1, (string ContentType, Stream Stream) tuple2, Uri partUri, bool stripColumnWidths)
+        public static bool Compare((string ContentType, Stream Stream) left, (string ContentType, Stream Stream) right, Uri partUri, bool stripColumnWidths)
         {
             #region Check
 
-            if (tuple1.ContentType == null || tuple1.Stream == null)
+            if (left.ContentType == null || left.Stream == null)
             {
-                throw new ArgumentNullException(nameof(tuple1));
+                throw new ArgumentNullException(nameof(left));
             }
-            if (tuple2.ContentType == null || tuple2.Stream == null)
+            if (right.ContentType == null || right.Stream == null)
             {
-                throw new ArgumentNullException(nameof(tuple2));
+                throw new ArgumentNullException(nameof(right));
             }
-            if (tuple1.Stream.Position != 0)
+            if (left.Stream.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", nameof(tuple1));
+                throw new ArgumentException("Must be in position 0", nameof(left));
             }
-            if (tuple2.Stream.Position != 0)
+            if (right.Stream.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", nameof(tuple2));
+                throw new ArgumentException("Must be in position 0", nameof(right));
             }
 
             #endregion Check
 
-            var stringOne = new StreamReader(tuple1.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
-            var stringOther = new StreamReader(tuple2.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
+            var stringOne = new StreamReader(left.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
+            var stringOther = new StreamReader(right.Stream).ReadToEnd().RemoveIgnoredParts(partUri, stripColumnWidths, ignoreGuids: true);
 
             return stringOne == stringOther;
         }
