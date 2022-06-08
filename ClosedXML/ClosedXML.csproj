@@ -62,7 +62,7 @@
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
-    <PackageReference Include="ExcelNumberFormat" Version="1.0.10" />
+    <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
 
     <!-- SourceLink , see https://github.com/ctaggart/SourceLink -->
     <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.3" PrivateAssets="All" />

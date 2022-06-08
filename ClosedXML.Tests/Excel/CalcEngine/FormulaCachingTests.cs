@@ -367,7 +367,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 ws.Cell(1, 2).Value = new DateTime(2019, 1, 1, 17, 45, 0);
                 var cell = ws.Cell(1, 3);
                 cell.FormulaA1 = "=B1-A1";
-                cell.Style.DateFormat.Format = "hh:mm";
 
                 Assert.IsNull(cell.CachedValue);
 
@@ -376,7 +375,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
                 cell.DataType = XLDataType.DateTime;
                 Assert.AreEqual(DateTime.FromOADate(value), cell.CachedValue);
-                Assert.AreEqual("03:45", cell.GetFormattedString());
+                Assert.AreEqual("12/30/1899 03:45:00", cell.GetFormattedString());
 
                 cell.DataType = XLDataType.Number;
                 Assert.AreEqual(value, (double)cell.CachedValue, 1e-10);
