@@ -85,13 +85,3 @@ jobs:
       run: |
           ls ./ClosedXML/bin/Release
           dotnet nuget push .\ClosedXML\bin\Release\*.nupkg --skip-duplicate --api-key ${{secrets.NUGET_TEST_TOKEN}} --source https://apiint.nugettest.org/v3/index.json
-    - name: GithubReleasesPush
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest-prerelease"
-        prerelease: true
-        title: "Prerelease Build ${{ env.CURRENT_VERSION }}"
-        files: |
-          ./ClosedXML/bin/Release/*.nupkg
-          ./ClosedXML/bin/Release/*.snupkg

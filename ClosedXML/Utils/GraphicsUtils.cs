@@ -5,19 +5,16 @@ namespace ClosedXML.Utils
 {
     internal static class GraphicsUtils
     {
-        public static SKRect MeasureString(string text, SKTypeface fontName)
+        internal static SKRect MeasureString(string text, SKFont font)
         {
-            using (var paint = new SKPaint())
-            {
-                paint.Typeface = fontName;
+            using var paint = new SKPaint();
+            paint.Typeface = font.Typeface;
 
-                // Size: 12px
-                paint.TextSize = 12f;
+            paint.TextSize = font.Size;
 
-                var skBounds = SKRect.Empty;
-                var textWidth = paint.MeasureText(text.AsSpan(), ref skBounds);
-                return skBounds;
-            }
+            var skBounds = SKRect.Empty;
+            var textWidth = paint.MeasureText(text.AsSpan(), ref skBounds);
+            return skBounds;
         }
     }
 }

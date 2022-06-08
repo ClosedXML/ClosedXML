@@ -23,14 +23,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void AdjustToContents()
         {
-            var allowedDiff = "/xl/worksheets/sheet1.xml :NonEqual\n/xl/worksheets/sheet4.xml :NonEqual\n/xl/worksheets/sheet5.xml :NonEqual\n";
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                allowedDiff = null;
-            }
-
-            TestHelper.RunTestExample<AdjustToContents>(@"Misc\AdjustToContents.xlsx", false, allowedDiff, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
+            TestHelper.RunTestExample<AdjustToContents>(@"Misc\AdjustToContents.xlsx", false, ignoreColumnFormats: !RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
         }
 
         [Test]

@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -333,7 +334,7 @@ namespace ClosedXML.Excel
 
                 if (autoFilterRows.Contains(c.Address.RowNumber))
                     // Allow room for arrow icon in auto filter
-                    thisWidthMax += 2.7148;
+                    thisWidthMax += 6.7148;
 
                 if (thisWidthMax >= maxWidth)
                 {

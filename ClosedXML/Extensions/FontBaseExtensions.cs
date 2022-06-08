@@ -1,10 +1,11 @@
 // Keep this file CodeMaid organised and cleaned
+using ClosedXML.Excel;
 using ClosedXML.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Extensions
 {
     internal static class FontBaseExtensions
     {
@@ -23,30 +24,32 @@ namespace ClosedXML.Excel
             font.FontCharSet = sourceFont.FontCharSet;
         }
 
-        public static Double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
+        public static double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
         {
             var font = GetCachedFont(fontBase, fontCache);
-            var textHeight = GraphicsUtils.MeasureString("X", font.Typeface).Height;
-            return (double)textHeight * 0.85;
+            var textHeight = GraphicsUtils.MeasureString("X", font).Height;
+            return (double)textHeight * 1.8;
         }
 
-        public static Double GetWidth(this IXLFontBase fontBase, String text, Dictionary<IXLFontBase, SKFont> fontCache)
+        public static double GetWidth(this IXLFontBase fontBase, string text, Dictionary<IXLFontBase, SKFont> fontCache)
         {
-            if (String.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(text))
+            {
                 return 0;
+            }
 
             var font = GetCachedFont(fontBase, fontCache);
-            var textWidth = GraphicsUtils.MeasureString(text, font.Typeface).Width;
+            var textWidth = GraphicsUtils.MeasureString(text, font).Width;
 
-            double width = (textWidth / 7d * 256 - 128 / 7) / 256;
-            width = Math.Round(width + 0.2, 2);
+            var width = ((textWidth / 7d * 256) - (128 / 7)) / 256;
+            width = Math.Round(width + 1.2, 2);
 
             return width;
         }
 
         private static SKFont GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
         {
-            if (!fontCache.TryGetValue(fontBase, out SKFont font))
+            if (!fontCache.TryGetValue(fontBase, out var font))
             {
                 using var fontManager = SKFontManager.CreateDefault();
                 var typeface = fontManager.MatchFamily(fontBase.FontName);
