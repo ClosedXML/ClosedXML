@@ -25,6 +25,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [TestCase("PMT(0,1,1000)", -1000)] // Zero interest rate
+        [TestCase("PMT(0,5,10000,5000)", -3000)] // Zero interest rate for 5 years, (10k principal, pay all and have 5k in bank at the end = payment is 3k/year)
         [TestCase("PMT(-0.4,2,1000)", -225)] // Negative interest rate
         [TestCase("PMT(0.01,0.5,1000)", -2014.98756211209)] // Non-integer period
         [TestCase("PMT(0.1,-2,1000)", 476.19047619048)] // Negative periods
