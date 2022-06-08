@@ -33,33 +33,19 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             {
                 p[0].Evaluate();
             }
-            catch (NullValueException)
+            catch (CalcEngineException ex)
             {
-                return 1;
-            }
-            catch (DivisionByZeroException)
-            {
-                return 2;
-            }
-            catch (CellValueException)
-            {
-                return 3;
-            }
-            catch (CellReferenceException)
-            {
-                return 4;
-            }
-            catch (NameNotRecognizedException)
-            {
-                return 5;
-            }
-            catch (NumberException)
-            {
-                return 6;
-            }
-            catch (NoValueAvailableException)
-            {
-                return 7;
+                return ex switch
+                {
+                    NullValueException _ => 1,
+                    DivisionByZeroException _ => 2,
+                    CellValueException _ => 3,
+                    CellReferenceException _ => 4,
+                    NameNotRecognizedException _ => 5,
+                    NumberException _ => 6,
+                    NoValueAvailableException _ => 7,
+                    _ => throw new NoValueAvailableException()
+                };
             }
 
             throw new NoValueAvailableException();
