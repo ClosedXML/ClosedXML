@@ -1,5 +1,5 @@
-﻿using System;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
+using System;
 
 namespace ClosedXML.Examples.Misc
 {
@@ -13,11 +13,11 @@ namespace ClosedXML.Examples.Misc
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Workbook Protection");
-                wb.Protect(true, false, "Abc@123");
+                wb.Protect("Abc@123");
                 wb.SaveAs(filePath);
             }
         }
 
-        #endregion
+        #endregion Methods
     }
 }
