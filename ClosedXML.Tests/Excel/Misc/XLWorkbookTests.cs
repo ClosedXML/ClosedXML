@@ -359,7 +359,7 @@ namespace ClosedXML.Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Sheet1");
-                wb.Protect(password: String.Empty);
+                wb.Protect(true, false);
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsFalse(wb.IsPasswordProtected);
@@ -406,7 +406,7 @@ namespace ClosedXML.Tests.Excel
             using (var wb = new XLWorkbook())
             {
                 var ws = wb.Worksheets.Add("Sheet1");
-                wb.Protect("Abc@123");
+                wb.Protect(true, false, "Abc@123");
                 Assert.IsTrue(wb.LockStructure);
                 Assert.IsFalse(wb.LockWindows);
                 Assert.IsTrue(wb.IsPasswordProtected);
