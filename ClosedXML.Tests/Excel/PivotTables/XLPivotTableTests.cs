@@ -293,7 +293,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
                 Assert.AreEqual(XLColor.Yellow, monthPivotField.StyleFormats.Header.Style.Font.FontColor);
 
                 var nameDataValuesFormat = namePivotField.StyleFormats.DataValuesFormat as XLPivotValueStyleFormat;
-                Assert.AreEqual(2, nameDataValuesFormat.FieldReferences.Count());
+                Assert.AreEqual(2, nameDataValuesFormat.FieldReferences.Count);
 
                 Assert.AreEqual(monthPivotField, nameDataValuesFormat.FieldReferences.First().CastTo<PivotLabelFieldReference>().PivotField);
 
@@ -327,7 +327,7 @@ namespace ClosedXML.Tests.Excel.PivotTables
             AssertPivotTablesAreEqual(pt1, pt1.CopyTo(wb2.AddWorksheet("pvt").FirstCell()) as XLPivotTable, compareName: true);
         }
 
-        private void AssertPivotTablesAreEqual(XLPivotTable original, XLPivotTable copy, Boolean compareName)
+        private void AssertPivotTablesAreEqual(XLPivotTable original, XLPivotTable copy, bool compareName)
         {
             Assert.AreNotEqual(original.Guid, copy.Guid);
             Assert.AreEqual(compareName, original.Name.Equals(copy.Name));
