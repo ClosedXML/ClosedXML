@@ -21,9 +21,9 @@ namespace ClosedXML.Excel
 
         public XLNumberFormatKey Key { get; private set; }
 
-        public int NumberFormatId { get { return Key.NumberFormatId; } }
+        public int NumberFormatId => Key.NumberFormatId;
 
-        public string Format { get { return Key.Format; } }
+        public string Format => Key.Format;
 
         private XLNumberFormatValue(XLNumberFormatKey key)
         {
@@ -32,8 +32,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLNumberFormatValue;
-            return cached != null &&
+            return obj is XLNumberFormatValue cached &&
                    Key.Equals(cached.Key);
         }
 

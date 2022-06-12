@@ -37,7 +37,7 @@ namespace ClosedXML.Examples.Misc
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("Shifting Formulas");
@@ -72,7 +72,7 @@ namespace ClosedXML.Examples.Misc
             ws.Row(1).InsertRowsAbove(1);
             var newRow = dataGrid.LastRow().InsertRowsAbove(1).First();
             newRow.Value = 1;
-            dataGrid.LastColumn().FormulaR1C1 = String.Format("SUM(RC[-{0}]:RC[-1])", dataGrid.ColumnCount() - 1);
+            dataGrid.LastColumn().FormulaR1C1 = string.Format("SUM(RC[-{0}]:RC[-1])", dataGrid.ColumnCount() - 1);
             ws.Cell(1, 1).InsertCellsBelow(1);
             ws.Column(1).InsertColumnsBefore(1);
             ws.Row(4).Delete();

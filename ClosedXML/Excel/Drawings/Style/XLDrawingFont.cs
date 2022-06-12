@@ -15,15 +15,15 @@ namespace ClosedXML.Excel
             FontColor = XLColor.FromIndex(64);
         }
 
-        public Boolean Bold { get; set; }
-        public Boolean Italic { get; set; }
+        public bool Bold { get; set; }
+        public bool Italic { get; set; }
         public XLFontUnderlineValues Underline { get; set; }
-        public Boolean Strikethrough { get; set; }
+        public bool Strikethrough { get; set; }
         public XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
-        public Boolean Shadow { get; set; }
-        public Double FontSize { get; set; }
+        public bool Shadow { get; set; }
+        public double FontSize { get; set; }
         public XLColor FontColor { get; set; }
-        public String FontName { get; set; }
+        public string FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
 
         public XLFontCharSet FontCharSet { get; set; }
@@ -34,7 +34,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLDrawingStyle SetBold(Boolean value)
+        public IXLDrawingStyle SetBold(bool value)
         {
             Bold = value;
             return _style;
@@ -46,7 +46,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLDrawingStyle SetItalic(Boolean value)
+        public IXLDrawingStyle SetItalic(bool value)
         {
             Italic = value;
             return _style;
@@ -70,7 +70,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLDrawingStyle SetStrikethrough(Boolean value)
+        public IXLDrawingStyle SetStrikethrough(bool value)
         {
             Strikethrough = value;
             return _style;
@@ -88,13 +88,13 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLDrawingStyle SetShadow(Boolean value)
+        public IXLDrawingStyle SetShadow(bool value)
         {
             Shadow = value;
             return _style;
         }
 
-        public IXLDrawingStyle SetFontSize(Double value)
+        public IXLDrawingStyle SetFontSize(double value)
         {
             FontSize = value;
             return _style;
@@ -106,7 +106,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLDrawingStyle SetFontName(String value)
+        public IXLDrawingStyle SetFontName(string value)
         {
             FontName = value;
             return _style;

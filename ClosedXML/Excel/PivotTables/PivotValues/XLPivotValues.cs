@@ -9,28 +9,32 @@ namespace ClosedXML.Excel
     internal class XLPivotValues : IXLPivotValues
     {
         private readonly IXLPivotTable _pivotTable;
-        private readonly Dictionary<String, IXLPivotValue> _pivotValues = new Dictionary<string, IXLPivotValue>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, IXLPivotValue> _pivotValues = new Dictionary<string, IXLPivotValue>(StringComparer.OrdinalIgnoreCase);
 
         internal XLPivotValues(IXLPivotTable pivotTable)
         {
-            this._pivotTable = pivotTable;
+            _pivotTable = pivotTable;
         }
 
-        public IXLPivotValue Add(String sourceName)
+        public IXLPivotValue Add(string sourceName)
         {
             return Add(sourceName, sourceName);
         }
 
-        public IXLPivotValue Add(String sourceName, String customName)
+        public IXLPivotValue Add(string sourceName, string customName)
         {
-            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !this._pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
-                throw new ArgumentOutOfRangeException(nameof(sourceName), String.Format("The column '{0}' does not appear in the source range.", sourceName));
+            if (sourceName != XLConstants.PivotTable.ValuesSentinalLabel && !_pivotTable.SourceRangeFieldsAvailable.Contains(sourceName))
+            {
+                throw new ArgumentOutOfRangeException(nameof(sourceName), string.Format("The column '{0}' does not appear in the source range.", sourceName));
+            }
 
             var pivotValue = new XLPivotValue(sourceName) { CustomName = customName };
             _pivotValues.Add(customName, pivotValue);
 
-            if (_pivotValues.Count > 1 && this._pivotTable.ColumnLabels.All(cl => cl.SourceName != XLConstants.PivotTable.ValuesSentinalLabel) && this._pivotTable.RowLabels.All(rl => rl.SourceName != XLConstants.PivotTable.ValuesSentinalLabel))
+            if (_pivotValues.Count > 1 && _pivotTable.ColumnLabels.All(cl => cl.SourceName != XLConstants.PivotTable.ValuesSentinalLabel) && _pivotTable.RowLabels.All(rl => rl.SourceName != XLConstants.PivotTable.ValuesSentinalLabel))
+            {
                 _pivotTable.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+            }
 
             return pivotValue;
         }
@@ -40,22 +44,22 @@ namespace ClosedXML.Excel
             _pivotValues.Clear();
         }
 
-        public Boolean Contains(String sourceName)
+        public bool Contains(string sourceName)
         {
             return _pivotValues.ContainsKey(sourceName);
         }
 
-        public Boolean Contains(IXLPivotValue pivotValue)
+        public bool Contains(IXLPivotValue pivotValue)
         {
             return _pivotValues.ContainsKey(pivotValue.SourceName);
         }
 
-        public IXLPivotValue Get(String sourceName)
+        public IXLPivotValue Get(string sourceName)
         {
             return _pivotValues[sourceName];
         }
 
-        public IXLPivotValue Get(Int32 index)
+        public IXLPivotValue Get(int index)
         {
             return _pivotValues.Values.ElementAt(index);
         }
@@ -70,21 +74,23 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public Int32 IndexOf(String sourceName)
+        public int IndexOf(string sourceName)
         {
             var selectedItem = _pivotValues.Select((item, index) => new { Item = item, Position = index }).FirstOrDefault(i => i.Item.Key == sourceName);
             if (selectedItem == null)
+            {
                 throw new ArgumentNullException(nameof(sourceName), "Invalid field name.");
+            }
 
             return selectedItem.Position;
         }
 
-        public Int32 IndexOf(IXLPivotValue pivotValue)
+        public int IndexOf(IXLPivotValue pivotValue)
         {
             return IndexOf(pivotValue.SourceName);
         }
 
-        public void Remove(String sourceName)
+        public void Remove(string sourceName)
         {
             _pivotValues.Remove(sourceName);
         }

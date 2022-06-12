@@ -23,15 +23,17 @@ namespace ClosedXML.Excel.Drawings
         private XLMarker(IXLRange rangeCell, SKPoint offset)
         {
             if (rangeCell.RowCount() != 1 || rangeCell.ColumnCount() != 1)
+            {
                 throw new ArgumentException("Range should contain only one cell.", nameof(rangeCell));
+            }
 
             this.rangeCell = rangeCell;
-            this.Offset = offset;
+            Offset = offset;
         }
 
-        public IXLCell Cell { get => rangeCell.FirstCell(); }
-        public Int32 ColumnNumber { get => rangeCell.RangeAddress.FirstAddress.ColumnNumber; }
+        public IXLCell Cell => rangeCell.FirstCell();
+        public int ColumnNumber => rangeCell.RangeAddress.FirstAddress.ColumnNumber;
         public SKPoint Offset { get; set; }
-        public Int32 RowNumber { get => rangeCell.RangeAddress.FirstAddress.RowNumber; }
+        public int RowNumber => rangeCell.RangeAddress.FirstAddress.RowNumber;
     }
 }

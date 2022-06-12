@@ -79,9 +79,9 @@ namespace ClosedXML.Excel
     }
     public interface IXLChart: IXLDrawing<IXLChart>
     {
-        Boolean RightAngleAxes { get; set; }
+        bool RightAngleAxes { get; set; }
         IXLChart SetRightAngleAxes();
-        IXLChart SetRightAngleAxes(Boolean rightAngleAxes);
+        IXLChart SetRightAngleAxes(bool rightAngleAxes);
 
         XLChartType ChartType { get; set; }
         IXLChart SetChartType(XLChartType chartType);

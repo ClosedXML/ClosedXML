@@ -13,8 +13,8 @@ namespace ClosedXML.Excel
         {
             _style = style;
         }
-        public Boolean Locked { get; set; }	public IXLDrawingStyle SetLocked() { Locked = true; return _style; }	public IXLDrawingStyle SetLocked(Boolean value) { Locked = value; return _style; }
-        public Boolean LockText { get; set; }	public IXLDrawingStyle SetLockText() { LockText = true; return _style; }	public IXLDrawingStyle SetLockText(Boolean value) { LockText = value; return _style; }
+        public bool Locked { get; set; }	public IXLDrawingStyle SetLocked() { Locked = true; return _style; }	public IXLDrawingStyle SetLocked(bool value) { Locked = value; return _style; }
+        public bool LockText { get; set; }	public IXLDrawingStyle SetLockText() { LockText = true; return _style; }	public IXLDrawingStyle SetLockText(bool value) { LockText = value; return _style; }
 
     }
 }

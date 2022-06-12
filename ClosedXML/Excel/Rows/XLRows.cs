@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
+using ClosedXML.Excel.Style;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLRows : XLStylizedBase, IXLRows, IXLStylized
     {
         private readonly List<XLRow> _rowsCollection = new List<XLRow>();
@@ -48,7 +48,11 @@ namespace ClosedXML.Excel
             set
             {
                 Rows.ForEach(c => c.Height = value);
-                if (_worksheet == null) return;
+                if (_worksheet == null)
+                {
+                    return;
+                }
+
                 _worksheet.RowHeight = value;
                 _worksheet.Internals.RowsCollection.ForEach(r => r.Value.Height = value);
             }
@@ -63,22 +67,24 @@ namespace ClosedXML.Excel
             }
             else
             {
-                var toDelete = new Dictionary<IXLWorksheet, List<Int32>>();
-                foreach (XLRow r in Rows)
+                var toDelete = new Dictionary<IXLWorksheet, List<int>>();
+                foreach (var r in Rows)
                 {
-                    if (!toDelete.TryGetValue(r.Worksheet, out List<Int32> list))
+                    if (!toDelete.TryGetValue(r.Worksheet, out var list))
                     {
-                        list = new List<Int32>();
+                        list = new List<int>();
                         toDelete.Add(r.Worksheet, list);
                     }
 
                     list.Add(r.RowNumber());
                 }
 
-                foreach (KeyValuePair<IXLWorksheet, List<int>> kp in toDelete)
+                foreach (var kp in toDelete)
                 {
-                    foreach (int r in kp.Value.OrderByDescending(r => r))
+                    foreach (var r in kp.Value.OrderByDescending(r => r))
+                    {
                         kp.Key.Row(r).Delete();
+                    }
                 }
             }
         }
@@ -89,31 +95,31 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn)
+        public IXLRows AdjustToContents(int startColumn)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn));
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn)
+        public IXLRows AdjustToContents(int startColumn, int endColumn)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn, endColumn));
             return this;
         }
 
-        public IXLRows AdjustToContents(Double minHeight, Double maxHeight)
+        public IXLRows AdjustToContents(double minHeight, double maxHeight)
         {
             Rows.ForEach(r => r.AdjustToContents(minHeight, maxHeight));
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn, Double minHeight, Double maxHeight)
+        public IXLRows AdjustToContents(int startColumn, double minHeight, double maxHeight)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn, minHeight, maxHeight));
             return this;
         }
 
-        public IXLRows AdjustToContents(Int32 startColumn, Int32 endColumn, Double minHeight, Double maxHeight)
+        public IXLRows AdjustToContents(int startColumn, int endColumn, double minHeight, double maxHeight)
         {
             Rows.ForEach(r => r.AdjustToContents(startColumn, endColumn, minHeight, maxHeight));
             return this;
@@ -134,7 +140,7 @@ namespace ClosedXML.Excel
             Group(false);
         }
 
-        public void Group(Int32 outlineLevel)
+        public void Group(int outlineLevel)
         {
             Group(outlineLevel, false);
         }
@@ -144,17 +150,17 @@ namespace ClosedXML.Excel
             Ungroup(false);
         }
 
-        public void Group(Boolean collapse)
+        public void Group(bool collapse)
         {
             Rows.ForEach(r => r.Group(collapse));
         }
 
-        public void Group(Int32 outlineLevel, Boolean collapse)
+        public void Group(int outlineLevel, bool collapse)
         {
             Rows.ForEach(r => r.Group(outlineLevel, collapse));
         }
 
-        public void Ungroup(Boolean ungroupFromAll)
+        public void Ungroup(bool ungroupFromAll)
         {
             Rows.ForEach(r => r.Ungroup(ungroupFromAll));
         }
@@ -172,21 +178,27 @@ namespace ClosedXML.Excel
         public IXLCells Cells()
         {
             var cells = new XLCells(false, XLCellsUsedOptions.AllContents);
-            foreach (XLRow container in Rows)
+            foreach (var container in Rows)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
         public IXLCells CellsUsed()
         {
             var cells = new XLCells(true, XLCellsUsedOptions.AllContents);
-            foreach (XLRow container in Rows)
+            foreach (var container in Rows)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLCells CellsUsed(Boolean includeFormats)
+        public IXLCells CellsUsed(bool includeFormats)
         {
             return CellsUsed(includeFormats
                 ? XLCellsUsedOptions.All
@@ -196,15 +208,21 @@ namespace ClosedXML.Excel
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
             var cells = new XLCells(true, options);
-            foreach (XLRow container in Rows)
+            foreach (var container in Rows)
+            {
                 cells.Add(container.RangeAddress);
+            }
+
             return cells;
         }
 
         public IXLRows AddHorizontalPageBreaks()
         {
-            foreach (XLRow row in Rows)
+            foreach (var row in Rows)
+            {
                 row.Worksheet.PageSetup.AddHorizontalPageBreak(row.RowNumber());
+            }
+
             return this;
         }
 
@@ -222,11 +240,15 @@ namespace ClosedXML.Excel
             get
             {
                 if (_worksheet != null)
+                {
                     yield return _worksheet;
+                }
                 else
                 {
-                    foreach (XLRow row in Rows)
+                    foreach (var row in Rows)
+                    {
                         yield return row;
+                    }
                 }
             }
         }
@@ -237,10 +259,12 @@ namespace ClosedXML.Excel
             {
                 yield return Style;
                 if (_worksheet != null)
+                {
                     yield return _worksheet.Style;
+                }
                 else
                 {
-                    foreach (IXLStyle s in Rows.SelectMany(row => row.Styles))
+                    foreach (var s in Rows.SelectMany(row => row.Styles))
                     {
                         yield return s;
                     }
@@ -275,13 +299,17 @@ namespace ClosedXML.Excel
         public void Select()
         {
             foreach (var range in this)
+            {
                 range.Select();
+            }
         }
 
         private void Materialize()
         {
             if (IsMaterialized)
+            {
                 return;
+            }
 
             _rowsCollection.AddRange(Rows);
             _lazyEnumerable = null;

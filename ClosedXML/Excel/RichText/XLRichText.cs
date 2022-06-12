@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using ClosedXML.Excel.RichText;
 
 namespace ClosedXML.Excel
 {
@@ -20,7 +21,7 @@ namespace ClosedXML.Excel
             Container = this;
         }
 
-        public XLRichText(String text, IXLFontBase defaultFont)
+        public XLRichText(string text, IXLFontBase defaultFont)
             :base(text, defaultFont)
         {
             Container = this;

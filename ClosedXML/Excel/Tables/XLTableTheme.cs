@@ -72,17 +72,17 @@ namespace ClosedXML.Excel
 
         public XLTableTheme(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         private static IEnumerable<XLTableTheme> allThemes;
 
         public static IEnumerable<XLTableTheme> GetAllThemes()
         {
-            return (allThemes ?? (allThemes = typeof(XLTableTheme).GetFields(BindingFlags.Static | BindingFlags.Public)
+            return allThemes ??= typeof(XLTableTheme).GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(fi => fi.FieldType.Equals(typeof(XLTableTheme)))
                 .Select(fi => (XLTableTheme)fi.GetValue(null))
-                .ToArray()));
+                .ToArray();
         }
 
         public static XLTableTheme FromName(string name)
@@ -98,22 +98,21 @@ namespace ClosedXML.Excel
             {
                 return false;
             }
-            XLTableTheme theme = obj as XLTableTheme;
-            if (theme == null)
+            if (!(obj is XLTableTheme theme))
             {
                 return false;
             }
-            return this.Name.Equals(theme.Name);
+            return Name.Equals(theme.Name);
         }
 
         public override int GetHashCode()
         {
-            return this.Name.GetHashCode();
+            return Name.GetHashCode();
         }
 
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         #endregion Overrides

@@ -1,4 +1,5 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,15 +120,19 @@ namespace ClosedXML.Excel.CalcEngine
         private static object CountBlank(List<Expression> p)
         {
             if ((p[0] as XObjectExpression)?.Value as CellRangeReference == null)
+            {
                 throw new NoValueAvailableException("COUNTBLANK should have a single argument which is a range reference");
+            }
 
             var e = p[0] as XObjectExpression;
-            long totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
+            var totalCount = CalcEngineHelpers.GetTotalCellsCount(e);
             long nonBlankCount = 0;
             foreach (var value in e)
             {
                 if (!CalcEngineHelpers.ValueIsBlank(value))
+                {
                     nonBlankCount++;
+                }
             }
 
             return 0d + totalCount - nonBlankCount;
@@ -135,23 +140,28 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object CountIf(List<Expression> p)
         {
-            CalcEngine ce = new CalcEngine();
+            var ce = new CalcEngine();
             var cnt = 0.0;
             long processedCount = 0;
             if (p[0] is XObjectExpression ienum)
             {
-                long totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
+                var totalCount = CalcEngineHelpers.GetTotalCellsCount(ienum);
                 var criteria = p[1].Evaluate();
                 foreach (var value in ienum)
                 {
                     if (CalcEngineHelpers.ValueSatisfiesCriteria(value, criteria, ce))
+                    {
                         cnt++;
+                    }
+
                     processedCount++;
                 }
 
                 // Add count of empty cells outside the used range if they match criteria
                 if (CalcEngineHelpers.ValueSatisfiesCriteria(string.Empty, criteria, ce))
-                    cnt += (totalCount - processedCount);
+                {
+                    cnt += totalCount - processedCount;
+                }
             }
 
             return cnt;
@@ -163,12 +173,12 @@ namespace ClosedXML.Excel.CalcEngine
             var ce = new CalcEngine();
             long count = 0;
 
-            int numberOfCriteria = p.Count / 2;
+            var numberOfCriteria = p.Count / 2;
 
             long totalCount = 0;
             // prepare criteria-parameters:
             var criteriaRanges = new Tuple<object, List<object>>[numberOfCriteria];
-            for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
+            for (var criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
                 var criteriaRange = p[criteriaPair * 2] as XObjectExpression;
                 var criterion = p[(criteriaPair * 2) + 1].Evaluate();
@@ -183,7 +193,9 @@ namespace ClosedXML.Excel.CalcEngine
                     criteriaRangeValues);
 
                 if (totalCount == 0)
+                {
                     totalCount = CalcEngineHelpers.GetTotalCellsCount(criteriaRange);
+                }
             }
 
             long processedCount = 0;
@@ -191,7 +203,9 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
                                                        criteriaPair.Item2[i], criteriaPair.Item1, ce)))
+                {
                     count++;
+                }
 
                 processedCount++;
             }
@@ -200,7 +214,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (criteriaRanges.All(criteriaPair => CalcEngineHelpers.ValueSatisfiesCriteria(
                                                    string.Empty, criteriaPair.Item1, ce)))
             {
-                count += (totalCount - processedCount);
+                count += totalCount - processedCount;
             }
 
             // done
@@ -215,7 +229,10 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Fisher(List<Expression> p)
         {
             var x = (double)p[0];
-            if (x <= -1 || x >= 1) throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
+            if (x <= -1 || x >= 1)
+            {
+                throw new NumberException("Incorrect value. Should be: -1 > x < 1.");
+            }
 
             return 0.5 * Math.Log((1 + x) / (1 - x));
         }

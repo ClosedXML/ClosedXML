@@ -7,13 +7,7 @@ namespace ClosedXML.Excel
 {
     internal static class DateTimeExtensions
     {
-        public static Double MaxOADate
-        {
-            get
-            {
-                return 2958465.99999999;
-            }
-        }
+        public static double MaxOADate => 2958465.99999999;
 
         public static bool IsWorkDay(this DateTime date, IEnumerable<DateTime> bankHolidays)
         {
@@ -26,7 +20,9 @@ namespace ClosedXML.Excel
         {
             var nextDate = date.AddDays(1);
             while (!nextDate.IsWorkDay(bankHolidays))
+            {
                 nextDate = nextDate.AddDays(1);
+            }
 
             return nextDate;
         }
@@ -35,7 +31,9 @@ namespace ClosedXML.Excel
         {
             var previousDate = date.AddDays(-1);
             while (!previousDate.IsWorkDay(bankHolidays))
+            {
                 previousDate = previousDate.AddDays(-1);
+            }
 
             return previousDate;
         }

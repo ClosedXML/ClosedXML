@@ -41,7 +41,9 @@ namespace ClosedXML.Excel
         public static string CreateSafeSheetName(string nameProposal, char replaceChar = ' ')
         {
             if (illegalWorksheetCharacters.Contains(replaceChar) || replaceChar == '\'')
+            {
                 throw new ArgumentException("Invalid replacement character.", nameof(replaceChar));
+            }
 
             if (nameProposal == null)
             {
@@ -51,17 +53,21 @@ namespace ClosedXML.Excel
             {
                 return "empty";
             }
-            int length = Math.Min(MaxWorksheetNameCharsCount, nameProposal.Length);
+            var length = Math.Min(MaxWorksheetNameCharsCount, nameProposal.Length);
             var shortenedName = nameProposal.Substring(0, length);
             var result = new System.Text.StringBuilder(shortenedName);
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                char ch = result[i];
+                var ch = result[i];
                 if (illegalWorksheetCharacters.Contains(result[i]))
+                {
                     result[i] = replaceChar;
+                }
 
                 if (ch == '\'' && (i == 0 || i == length - 1))
+                {
                     result[i] = replaceChar;
+                }
             }
             return result.ToString();
         }
@@ -86,23 +92,25 @@ namespace ClosedXML.Excel
         /// </exception>
         ///
         // This method was ported from the POI project at https://github.com/apache/poi/blob/trunk/src/java/org/apache/poi/ss/util/WorkbookUtil.java
-        public static void ValidateSheetName(String sheetName)
+        public static void ValidateSheetName(string sheetName)
         {
-            if (String.IsNullOrWhiteSpace(sheetName))
+            if (string.IsNullOrWhiteSpace(sheetName))
             {
                 throw new ArgumentException("sheetName must not be null or whitespace");
             }
 
-            int len = sheetName.Length;
+            var len = sheetName.Length;
             if (len < 1 || len > MaxWorksheetNameCharsCount)
             {
                 throw new ArgumentException($"sheetName '{sheetName}' is invalid - character count MUST be greater than or equal to 1 and less than or equal to {MaxWorksheetNameCharsCount}");
             }
 
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 if (illegalWorksheetCharacters.Contains(sheetName[i]))
+                {
                     throw new ArgumentException($"Invalid char ({sheetName[i]}) found at index ({i}) in sheet name '{sheetName}'");
+                }
             }
             if (sheetName[0] == '\'' || sheetName[len - 1] == '\'')
             {

@@ -8,9 +8,9 @@ namespace ClosedXML.Excel
     internal class XLFilterConnector : IXLFilterConnector
     {
         private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
+        private readonly int _column;
 
-        public XLFilterConnector(XLAutoFilter autoFilter, Int32 column)
+        public XLFilterConnector(XLAutoFilter autoFilter, int column)
         {
             _autoFilter = autoFilter;
             _column = column;
@@ -18,15 +18,9 @@ namespace ClosedXML.Excel
 
         #region IXLFilterConnector Members
 
-        public IXLCustomFilteredColumn And
-        {
-            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And); }
-        }
+        public IXLCustomFilteredColumn And => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.And);
 
-        public IXLCustomFilteredColumn Or
-        {
-            get { return new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or); }
-        }
+        public IXLCustomFilteredColumn Or => new XLCustomFilteredColumn(_autoFilter, _column, XLConnector.Or);
 
         #endregion
     }

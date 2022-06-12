@@ -30,7 +30,9 @@ namespace ClosedXML.Excel.InsertData
         public string GetPropertyName(int propertyIndex = 0)
         {
             if (propertyIndex != 0)
+            {
                 throw new ArgumentException("SimpleTypeReader supports only a single property");
+            }
 
             return _itemType.Name;
         }

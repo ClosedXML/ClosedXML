@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         {
             _style = style;
         }
-        public String AlternateText { get; set; }		public IXLDrawingStyle SetAlternateText(String value) { AlternateText = value; return _style; }
+        public string AlternateText { get; set; }		public IXLDrawingStyle SetAlternateText(string value) { AlternateText = value; return _style; }
 
     }
 }

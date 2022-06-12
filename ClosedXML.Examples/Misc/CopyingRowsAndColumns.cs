@@ -36,7 +36,7 @@ namespace ClosedXML.Examples.Misc
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
 
@@ -92,7 +92,7 @@ namespace ClosedXML.Examples.Misc
                 destinationRow.Clear();
 
                 var originalRow = originalSheet.Row(originalRowNumber);
-                int columnNumber = originalRow.LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
+                var columnNumber = originalRow.LastCellUsed(XLCellsUsedOptions.All).Address.ColumnNumber;
 
                 var originalRange = originalSheet.Range(originalRowNumber, 1, originalRowNumber, columnNumber);
                 var destRange = destSheet.Range(destRowNumber, 1, destRowNumber, columnNumber);

@@ -26,7 +26,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLProtectionKey)
+            {
                 return Equals((XLProtectionKey)obj);
+            }
+
             return base.Equals(obj);
         }
 
@@ -37,6 +40,6 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLProtectionKey left, XLProtectionKey right) => left.Equals(right);
 
-        public static bool operator !=(XLProtectionKey left, XLProtectionKey right) => !(left.Equals(right));
+        public static bool operator !=(XLProtectionKey left, XLProtectionKey right) => !left.Equals(right);
     }
 }

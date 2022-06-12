@@ -16,7 +16,7 @@ namespace ClosedXML.Examples
             }
         }
 
-        private static void LoadAndSaveFile(String input, String output)
+        private static void LoadAndSaveFile(string input, string output)
         {
             using var wb = new XLWorkbook(input);
             wb.SaveAs(output);

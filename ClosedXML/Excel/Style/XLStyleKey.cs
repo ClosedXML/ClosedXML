@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
 
         public XLFontKey Font { get; set; }
 
-        public Boolean IncludeQuotePrefix { get; set; }
+        public bool IncludeQuotePrefix { get; set; }
 
         public XLNumberFormatKey NumberFormat { get; set; }
 
@@ -59,20 +59,23 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLStyleKey)
+            {
                 return Equals((XLStyleKey)obj);
+            }
+
             return base.Equals(obj);
         }
 
         public static bool operator ==(XLStyleKey left, XLStyleKey right) => left.Equals(right);
 
-        public static bool operator !=(XLStyleKey left, XLStyleKey right) => !(left.Equals(right));
+        public static bool operator !=(XLStyleKey left, XLStyleKey right) => !left.Equals(right);
 
         public void Deconstruct(
             out XLAlignmentKey alignment,
             out XLBorderKey border,
             out XLFillKey fill,
             out XLFontKey font,
-            out Boolean includeQuotePrefix,
+            out bool includeQuotePrefix,
             out XLNumberFormatKey numberFormat,
             out XLProtectionKey protection)
         {

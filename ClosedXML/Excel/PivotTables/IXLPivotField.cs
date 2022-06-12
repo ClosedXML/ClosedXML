@@ -24,59 +24,59 @@ namespace ClosedXML.Excel
 
     public interface IXLPivotField
     {
-        String SourceName { get; }
-        String CustomName { get; set; }
-        String SubtotalCaption { get; set; }
+        string SourceName { get; }
+        string CustomName { get; set; }
+        string SubtotalCaption { get; set; }
 
         List<XLSubtotalFunction> Subtotals { get; }
-        Boolean IncludeNewItemsInFilter { get; set; }
+        bool IncludeNewItemsInFilter { get; set; }
 
-        Boolean Outline { get; set; }
-        Boolean Compact { get; set; }
-        Boolean? SubtotalsAtTop { get; set; }
-        Boolean RepeatItemLabels { get; set; }
-        Boolean InsertBlankLines { get; set; }
-        Boolean ShowBlankItems { get; set; }
-        Boolean InsertPageBreaks { get; set; }
-        Boolean Collapsed { get; set; }
+        bool Outline { get; set; }
+        bool Compact { get; set; }
+        bool? SubtotalsAtTop { get; set; }
+        bool RepeatItemLabels { get; set; }
+        bool InsertBlankLines { get; set; }
+        bool ShowBlankItems { get; set; }
+        bool InsertPageBreaks { get; set; }
+        bool Collapsed { get; set; }
         XLPivotSortType SortType { get; set; }
 
-        IXLPivotField SetCustomName(String value);
+        IXLPivotField SetCustomName(string value);
 
-        IXLPivotField SetSubtotalCaption(String value);
+        IXLPivotField SetSubtotalCaption(string value);
 
         IXLPivotField AddSubtotal(XLSubtotalFunction value);
 
-        IXLPivotField SetIncludeNewItemsInFilter(); IXLPivotField SetIncludeNewItemsInFilter(Boolean value);
+        IXLPivotField SetIncludeNewItemsInFilter(); IXLPivotField SetIncludeNewItemsInFilter(bool value);
 
         IXLPivotField SetLayout(XLPivotLayout value);
 
-        IXLPivotField SetSubtotalsAtTop(); IXLPivotField SetSubtotalsAtTop(Boolean value);
+        IXLPivotField SetSubtotalsAtTop(); IXLPivotField SetSubtotalsAtTop(bool value);
 
-        IXLPivotField SetRepeatItemLabels(); IXLPivotField SetRepeatItemLabels(Boolean value);
+        IXLPivotField SetRepeatItemLabels(); IXLPivotField SetRepeatItemLabels(bool value);
 
-        IXLPivotField SetInsertBlankLines(); IXLPivotField SetInsertBlankLines(Boolean value);
+        IXLPivotField SetInsertBlankLines(); IXLPivotField SetInsertBlankLines(bool value);
 
-        IXLPivotField SetShowBlankItems(); IXLPivotField SetShowBlankItems(Boolean value);
+        IXLPivotField SetShowBlankItems(); IXLPivotField SetShowBlankItems(bool value);
 
-        IXLPivotField SetInsertPageBreaks(); IXLPivotField SetInsertPageBreaks(Boolean value);
+        IXLPivotField SetInsertPageBreaks(); IXLPivotField SetInsertPageBreaks(bool value);
 
-        IXLPivotField SetCollapsed(); IXLPivotField SetCollapsed(Boolean value);
+        IXLPivotField SetCollapsed(); IXLPivotField SetCollapsed(bool value);
 
         IXLPivotField SetSort(XLPivotSortType value);
 
-        IList<Object> SelectedValues { get; }
+        IList<object> SelectedValues { get; }
 
-        IXLPivotField AddSelectedValue(Object value);
+        IXLPivotField AddSelectedValue(object value);
 
-        IXLPivotField AddSelectedValues(IEnumerable<Object> values);
+        IXLPivotField AddSelectedValues(IEnumerable<object> values);
 
         IXLPivotFieldStyleFormats StyleFormats { get; }
 
-        Boolean IsOnRowAxis { get; }
-        Boolean IsOnColumnAxis { get; }
-        Boolean IsInFilterList { get; }
+        bool IsOnRowAxis { get; }
+        bool IsOnColumnAxis { get; }
+        bool IsInFilterList { get; }
 
-        Int32 Offset { get; }
+        int Offset { get; }
     }
 }

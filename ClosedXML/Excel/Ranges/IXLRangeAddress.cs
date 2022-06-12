@@ -24,7 +24,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
         /// </value>
-        Boolean IsValid { get; }
+        bool IsValid { get; }
 
         /// <summary>
         /// Gets or sets the last address in the range.
@@ -49,7 +49,7 @@ namespace ClosedXML.Excel
         /// <summary>Allocates the current range address in the internal range repository and returns it</summary>
         IXLRange AsRange();
 
-        Boolean Contains(IXLAddress address);
+        bool Contains(IXLAddress address);
 
         /// <summary>
         /// Returns the intersection of this range address with another range address on the same worksheet.
@@ -58,7 +58,7 @@ namespace ClosedXML.Excel
         /// <returns>The intersection's range address</returns>
         IXLRangeAddress Intersection(IXLRangeAddress otherRangeAddress);
 
-        Boolean Intersects(IXLRangeAddress otherAddress);
+        bool Intersects(IXLRangeAddress otherAddress);
 
         /// <summary>
         /// Determines whether range address spans the entire column.
@@ -66,7 +66,7 @@ namespace ClosedXML.Excel
         /// <returns>
         ///   <c>true</c> if is entire column; otherwise, <c>false</c>.
         /// </returns>
-        Boolean IsEntireColumn();
+        bool IsEntireColumn();
 
         /// <summary>
         /// Determines whether range address spans the entire row.
@@ -74,7 +74,7 @@ namespace ClosedXML.Excel
         /// <returns>
         ///   <c>true</c> if is entire row; otherwise, <c>false</c>.
         /// </returns>
-        Boolean IsEntireRow();
+        bool IsEntireRow();
 
         /// <summary>
         /// Determines whether the range address spans the entire worksheet.
@@ -82,7 +82,7 @@ namespace ClosedXML.Excel
         /// <returns>
         ///   <c>true</c> if is entire sheet; otherwise, <c>false</c>.
         /// </returns>
-        Boolean IsEntireSheet();
+        bool IsEntireSheet();
 
         /// <summary>
         /// Returns a range address so that its offset from the target base address is equal to the offset of the current range address to the source base address.
@@ -93,18 +93,18 @@ namespace ClosedXML.Excel
         /// <returns>The relative range</returns>
         IXLRangeAddress Relative(IXLRangeAddress sourceRangeAddress, IXLRangeAddress targetRangeAddress);
 
-        String ToString(XLReferenceStyle referenceStyle);
+        string ToString(XLReferenceStyle referenceStyle);
 
-        String ToString(XLReferenceStyle referenceStyle, Boolean includeSheet);
+        string ToString(XLReferenceStyle referenceStyle, bool includeSheet);
 
-        String ToStringFixed();
+        string ToStringFixed();
 
-        String ToStringFixed(XLReferenceStyle referenceStyle);
+        string ToStringFixed(XLReferenceStyle referenceStyle);
 
-        String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet);
+        string ToStringFixed(XLReferenceStyle referenceStyle, bool includeSheet);
 
-        String ToStringRelative();
+        string ToStringRelative();
 
-        String ToStringRelative(Boolean includeSheet);
+        string ToStringRelative(bool includeSheet);
     }
 }

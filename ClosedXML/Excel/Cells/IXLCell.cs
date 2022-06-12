@@ -12,7 +12,7 @@ namespace ClosedXML.Excel
 
     public interface IXLCell
     {
-        Boolean Active { get; set; }
+        bool Active { get; set; }
 
         /// <summary>Gets this cell's address, relative to the worksheet.</summary>
         /// <value>The cell's address.</value>
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
         /// Calculated value of cell formula. Is used for decreasing number of computations perfromed.
         /// May hold invalid value when <see cref="NeedsRecalculation"/> flag is True.
         /// </summary>
-        Object CachedValue { get; }
+        object CachedValue { get; }
 
         /// <summary>
         /// Returns the current region. The current region is a range bounded by any combination of blank rows and blank columns
@@ -47,34 +47,34 @@ namespace ClosedXML.Excel
         /// Gets or sets the cell's formula with A1 references.
         /// </summary>
         /// <value>The formula with A1 references.</value>
-        String FormulaA1 { get; set; }
+        string FormulaA1 { get; set; }
 
         /// <summary>
         /// Gets or sets the cell's formula with R1C1 references.
         /// </summary>
         /// <value>The formula with R1C1 references.</value>
-        String FormulaR1C1 { get; set; }
+        string FormulaR1C1 { get; set; }
 
         IXLRangeAddress FormulaReference { get; set; }
 
-        Boolean HasArrayFormula { get; }
+        bool HasArrayFormula { get; }
 
-        Boolean HasComment { get; }
+        bool HasComment { get; }
 
-        Boolean HasDataValidation { get; }
+        bool HasDataValidation { get; }
 
-        Boolean HasFormula { get; }
+        bool HasFormula { get; }
 
-        Boolean HasHyperlink { get; }
+        bool HasHyperlink { get; }
 
-        Boolean HasRichText { get; }
+        bool HasRichText { get; }
 
-        Boolean HasSparkline { get; }
+        bool HasSparkline { get; }
 
         /// <summary>
         /// Flag indicating that previously calculated cell value may be not valid anymore and has to be re-evaluated.
         /// </summary>
-        Boolean NeedsRecalculation { get; }
+        bool NeedsRecalculation { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this cell's text should be shared or not.
@@ -82,7 +82,7 @@ namespace ClosedXML.Excel
         /// <value>
         ///   If false the cell's text will not be shared and stored as an inline value.
         /// </value>
-        Boolean ShareString { get; set; }
+        bool ShareString { get; set; }
 
         IXLSparkline Sparkline { get; }
 
@@ -102,7 +102,7 @@ namespace ClosedXML.Excel
         /// <value>
         /// The object containing the value(s) to set.
         /// </value>
-        Object Value { get; set; }
+        object Value { get; set; }
 
         IXLWorksheet Worksheet { get; }
 
@@ -114,7 +114,7 @@ namespace ClosedXML.Excel
         /// <para>The default scope for the named range is Workbook.</para>
         /// </summary>
         /// <param name="rangeName">Name of the range.</param>
-        IXLCell AddToNamed(String rangeName);
+        IXLCell AddToNamed(string rangeName);
 
         /// <summary>
         /// Creates a named range out of this cell.
@@ -122,7 +122,7 @@ namespace ClosedXML.Excel
         /// <param name="rangeName">Name of the range.</param>
         /// <param name="scope">The scope for the named range.</param>
         /// </summary>
-        IXLCell AddToNamed(String rangeName, XLScope scope);
+        IXLCell AddToNamed(string rangeName, XLScope scope);
 
         /// <summary>
         /// Creates a named range out of this cell.
@@ -131,7 +131,7 @@ namespace ClosedXML.Excel
         /// <param name="scope">The scope for the named range.</param>
         /// <param name="comment">The comments for the named range.</param>
         /// </summary>
-        IXLCell AddToNamed(String rangeName, XLScope scope, String comment);
+        IXLCell AddToNamed(string rangeName, XLScope scope, string comment);
 
         /// <summary>
         /// Returns this cell as an IXLRange.
@@ -140,19 +140,19 @@ namespace ClosedXML.Excel
 
         IXLCell CellAbove();
 
-        IXLCell CellAbove(Int32 step);
+        IXLCell CellAbove(int step);
 
         IXLCell CellBelow();
 
-        IXLCell CellBelow(Int32 step);
+        IXLCell CellBelow(int step);
 
         IXLCell CellLeft();
 
-        IXLCell CellLeft(Int32 step);
+        IXLCell CellLeft(int step);
 
         IXLCell CellRight();
 
-        IXLCell CellRight(Int32 step);
+        IXLCell CellRight(int step);
 
         /// <summary>
         /// Clears the contents of this cell.
@@ -162,11 +162,11 @@ namespace ClosedXML.Excel
 
         IXLCell CopyFrom(IXLCell otherCell);
 
-        IXLCell CopyFrom(String otherCell);
+        IXLCell CopyFrom(string otherCell);
 
         IXLCell CopyTo(IXLCell target);
 
-        IXLCell CopyTo(String target);
+        IXLCell CopyTo(string target);
 
         /// <summary>
         /// Creates a new comment for the cell, replacing the existing one.
@@ -199,7 +199,7 @@ namespace ClosedXML.Excel
         /// <para>ClosedXML will try to covert the current value to Boolean.</para>
         /// <para>An exception will be thrown if the current value cannot be converted to Boolean.</para>
         /// </summary>
-        Boolean GetBoolean();
+        bool GetBoolean();
 
         /// <summary>
         /// Returns the comment for the cell or create a new instance if there is no comment on the cell.
@@ -223,12 +223,12 @@ namespace ClosedXML.Excel
         /// <para>ClosedXML will try to covert the current value to Double.</para>
         /// <para>An exception will be thrown if the current value cannot be converted to Double.</para>
         /// </summary>
-        Double GetDouble();
+        double GetDouble();
 
         /// <summary>
         /// Gets the cell's value formatted depending on the cell's data type and style.
         /// </summary>
-        String GetFormattedString();
+        string GetFormattedString();
 
         /// <summary>
         /// Returns a hyperlink for the cell, if any, or creates a new instance is there is no hyperlink.
@@ -243,7 +243,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the cell's value converted to a String.
         /// </summary>
-        String GetString();
+        string GetString();
 
         /// <summary>
         /// Gets the cell's value converted to TimeSpan.
@@ -281,7 +281,7 @@ namespace ClosedXML.Excel
         /// <param name="data">The IEnumerable data.</param>
         /// <param name="transpose">if set to <c>true</c> the data will be transposed before inserting.</param>
         /// <returns></returns>
-        IXLRange InsertData(IEnumerable data, Boolean transpose);
+        IXLRange InsertData(IEnumerable data, bool transpose);
 
         /// <summary>
         /// Inserts the data of a data table.
@@ -306,14 +306,14 @@ namespace ClosedXML.Excel
         /// if set to <c>true</c> it will create an Excel table.
         /// <para>if set to <c>false</c> the table will be created in memory.</para>
         /// </param>
-        IXLTable InsertTable<T>(IEnumerable<T> data, Boolean createTable);
+        IXLTable InsertTable<T>(IEnumerable<T> data, bool createTable);
 
         /// <summary>
         /// Creates an Excel table from the given IEnumerable data elements.
         /// </summary>
         /// <param name="data">The table data.</param>
         /// <param name="tableName">Name of the table.</param>
-        IXLTable InsertTable<T>(IEnumerable<T> data, String tableName);
+        IXLTable InsertTable<T>(IEnumerable<T> data, string tableName);
 
         /// <summary>
         /// Inserts the IEnumerable data elements as a table and returns it.
@@ -324,7 +324,7 @@ namespace ClosedXML.Excel
         /// if set to <c>true</c> it will create an Excel table.
         /// <para>if set to <c>false</c> the table will be created in memory.</para>
         /// </param>
-        IXLTable InsertTable<T>(IEnumerable<T> data, String tableName, Boolean createTable);
+        IXLTable InsertTable<T>(IEnumerable<T> data, string tableName, bool createTable);
 
         /// <summary>
         /// Inserts the DataTable data elements as a table and returns it.
@@ -342,14 +342,14 @@ namespace ClosedXML.Excel
         /// if set to <c>true</c> it will create an Excel table.
         /// <para>if set to <c>false</c> the table will be created in memory.</para>
         /// </param>
-        IXLTable InsertTable(DataTable data, Boolean createTable);
+        IXLTable InsertTable(DataTable data, bool createTable);
 
         /// <summary>
         /// Creates an Excel table from the given DataTable data elements.
         /// </summary>
         /// <param name="data">The table data.</param>
         /// <param name="tableName">Name of the table.</param>
-        IXLTable InsertTable(DataTable data, String tableName);
+        IXLTable InsertTable(DataTable data, string tableName);
 
         /// <summary>
         /// Inserts the DataTable data elements as a table and returns it.
@@ -360,7 +360,7 @@ namespace ClosedXML.Excel
         /// if set to <c>true</c> it will create an Excel table.
         /// <para>if set to <c>false</c> the table will be created in memory.</para>
         /// </param>
-        IXLTable InsertTable(DataTable data, String tableName, Boolean createTable);
+        IXLTable InsertTable(DataTable data, string tableName, bool createTable);
 
         /// <summary>
         /// Invalidate <see cref="CachedValue"/> so the formula will be re-evaluated next time <see cref="Value"/> is accessed.
@@ -368,20 +368,20 @@ namespace ClosedXML.Excel
         /// </summary>
         void InvalidateFormula();
 
-        Boolean IsEmpty();
+        bool IsEmpty();
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        Boolean IsEmpty(Boolean includeFormats);
+        bool IsEmpty(bool includeFormats);
 
-        Boolean IsEmpty(XLCellsUsedOptions options);
+        bool IsEmpty(XLCellsUsedOptions options);
 
-        Boolean IsMerged();
+        bool IsMerged();
 
         IXLRange MergedRange();
 
         void Select();
 
-        IXLCell SetActive(Boolean value = true);
+        IXLCell SetActive(bool value = true);
 
         /// <summary>
         /// Sets the type of this cell's data.
@@ -395,9 +395,9 @@ namespace ClosedXML.Excel
         [Obsolete("Use GetDataValidation to access the existing rule, or CreateDataValidation() to create a new one.")]
         IXLDataValidation SetDataValidation();
 
-        IXLCell SetFormulaA1(String formula);
+        IXLCell SetFormulaA1(string formula);
 
-        IXLCell SetFormulaR1C1(String formula);
+        IXLCell SetFormulaR1C1(string formula);
 
         void SetHyperlink(XLHyperlink hyperlink);
 
@@ -422,7 +422,7 @@ namespace ClosedXML.Excel
         /// <returns></returns>
         string ToString(string format);
 
-        Boolean TryGetValue<T>(out T value);
+        bool TryGetValue<T>(out T value);
 
         IXLColumn WorksheetColumn();
 

@@ -1,10 +1,11 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.Ranges;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Ranges
 {
     [TestFixture]
     public class XLRangeBaseTests
@@ -13,10 +14,10 @@ namespace ClosedXML.Tests
         public void IsEmpty1()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
-            IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty();
-            bool expected = true;
+            _ = ws.Cell(1, 1);
+            var range = ws.Range("A1:B2");
+            var actual = range.IsEmpty();
+            var expected = true;
             Assert.AreEqual(expected, actual);
         }
 
@@ -24,10 +25,10 @@ namespace ClosedXML.Tests
         public void IsEmpty2()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
-            IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty(XLCellsUsedOptions.All);
-            bool expected = true;
+            _ = ws.Cell(1, 1);
+            var range = ws.Range("A1:B2");
+            var actual = range.IsEmpty(XLCellsUsedOptions.All);
+            var expected = true;
             Assert.AreEqual(expected, actual);
         }
 
@@ -35,11 +36,11 @@ namespace ClosedXML.Tests
         public void IsEmpty3()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
+            var cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
-            IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty();
-            bool expected = true;
+            var range = ws.Range("A1:B2");
+            var actual = range.IsEmpty();
+            var expected = true;
             Assert.AreEqual(expected, actual);
         }
 
@@ -47,11 +48,11 @@ namespace ClosedXML.Tests
         public void IsEmpty4()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
+            var cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
-            IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty(XLCellsUsedOptions.AllContents);
-            bool expected = true;
+            var range = ws.Range("A1:B2");
+            var actual = range.IsEmpty(XLCellsUsedOptions.AllContents);
+            var expected = true;
             Assert.AreEqual(expected, actual);
         }
 
@@ -59,11 +60,11 @@ namespace ClosedXML.Tests
         public void IsEmpty5()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
+            var cell = ws.Cell(1, 1);
             cell.Style.Fill.BackgroundColor = XLColor.Red;
-            IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty(XLCellsUsedOptions.All);
-            bool expected = false;
+            var range = ws.Range("A1:B2");
+            var actual = range.IsEmpty(XLCellsUsedOptions.All);
+            var expected = false;
             Assert.AreEqual(expected, actual);
         }
 
@@ -71,11 +72,11 @@ namespace ClosedXML.Tests
         public void IsEmpty6()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLCell cell = ws.Cell(1, 1);
+            var cell = ws.Cell(1, 1);
             cell.Value = "X";
-            IXLRange range = ws.Range("A1:B2");
-            bool actual = range.IsEmpty();
-            bool expected = false;
+            var range = ws.Range("A1:B2");
+            var actual = range.IsEmpty();
+            var expected = false;
             Assert.AreEqual(expected, actual);
         }
 
@@ -83,10 +84,10 @@ namespace ClosedXML.Tests
         public void SingleCell()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).Value = "Hello World!";
             wb.NamedRanges.Add("SingleCell", "Sheet1!$A$1");
-            IXLRange range = wb.Range("SingleCell");
+            var range = wb.Range("SingleCell");
             Assert.AreEqual(1, range.CellsUsed().Count());
             Assert.AreEqual("Hello World!", range.CellsUsed().Single().GetString());
         }
@@ -95,16 +96,16 @@ namespace ClosedXML.Tests
         public void TableRange()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            IXLRangeColumn rangeColumn = ws.Column(1).Column(1, 4);
+            var ws = wb.Worksheets.Add("Sheet1");
+            var rangeColumn = ws.Column(1).Column(1, 4);
             rangeColumn.Cell(1).Value = "FName";
             rangeColumn.Cell(2).Value = "John";
             rangeColumn.Cell(3).Value = "Hank";
             rangeColumn.Cell(4).Value = "Dagny";
-            IXLTable table = rangeColumn.CreateTable();
-            wb.NamedRanges.Add("FNameColumn", String.Format("{0}[{1}]", table.Name, "FName"));
+            var table = rangeColumn.CreateTable();
+            wb.NamedRanges.Add("FNameColumn", string.Format("{0}[{1}]", table.Name, "FName"));
 
-            IXLRange namedRange = wb.Range("FNameColumn");
+            var namedRange = wb.Range("FNameColumn");
             Assert.AreEqual(3, namedRange.Cells().Count());
             Assert.IsTrue(
                 namedRange.CellsUsed().Select(cell => cell.GetString()).SequenceEqual(new[] { "John", "Hank", "Dagny" }));
@@ -114,7 +115,7 @@ namespace ClosedXML.Tests
         public void WsNamedCell()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell", XLScope.Worksheet);
             Assert.AreEqual("Test", ws.Cell("TestCell").GetString());
         }
@@ -123,10 +124,10 @@ namespace ClosedXML.Tests
         public void WsNamedCells()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("Test").AddToNamed("TestCell", XLScope.Worksheet);
             ws.Cell(2, 1).SetValue("B");
-            IXLCells cells = ws.Cells("TestCell, A2");
+            var cells = ws.Cells("TestCell, A2");
             Assert.AreEqual("Test", cells.First().GetString());
             Assert.AreEqual("B", cells.Last().GetString());
         }
@@ -135,12 +136,12 @@ namespace ClosedXML.Tests
         public void WsNamedRange()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("A");
             ws.Cell(2, 1).SetValue("B");
-            IXLRange original = ws.Range("A1:A2");
+            var original = ws.Range("A1:A2");
             original.AddToNamed("TestRange", XLScope.Worksheet);
-            IXLRange named = ws.Range("TestRange");
+            var named = ws.Range("TestRange");
             Assert.AreEqual(original.RangeAddress.ToStringFixed(), named.RangeAddress.ToString());
         }
 
@@ -148,13 +149,13 @@ namespace ClosedXML.Tests
         public void WsNamedRanges()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 1).SetValue("A");
             ws.Cell(2, 1).SetValue("B");
             ws.Cell(3, 1).SetValue("C");
-            IXLRange original = ws.Range("A1:A2");
+            var original = ws.Range("A1:A2");
             original.AddToNamed("TestRange", XLScope.Worksheet);
-            IXLRanges namedRanges = ws.Ranges("TestRange, A3");
+            var namedRanges = ws.Ranges("TestRange, A3");
             Assert.AreEqual(original.RangeAddress.ToStringFixed(), namedRanges.First().RangeAddress.ToString());
             Assert.AreEqual("$A$3:$A$3", namedRanges.Last().RangeAddress.ToStringFixed());
         }
@@ -163,9 +164,9 @@ namespace ClosedXML.Tests
         public void WsNamedRangesOneString()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.NamedRanges.Add("TestRange", "Sheet1!$A$1,Sheet1!$A$3");
-            IXLRanges namedRanges = ws.Ranges("TestRange");
+            var namedRanges = ws.Ranges("TestRange");
 
             Assert.AreEqual("$A$1:$A$1", namedRanges.First().RangeAddress.ToStringFixed());
             Assert.AreEqual("$A$3:$A$3", namedRanges.Last().RangeAddress.ToStringFixed());
@@ -190,120 +191,108 @@ namespace ClosedXML.Tests
         [Test]
         public void GrowRange()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                Assert.AreEqual("A1:B2", ws.Cell("A1").AsRange().Grow().RangeAddress.ToString());
-                Assert.AreEqual("A1:B3", ws.Cell("A2").AsRange().Grow().RangeAddress.ToString());
-                Assert.AreEqual("A1:C2", ws.Cell("B1").AsRange().Grow().RangeAddress.ToString());
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            Assert.AreEqual("A1:B2", ws.Cell("A1").AsRange().Grow().RangeAddress.ToString());
+            Assert.AreEqual("A1:B3", ws.Cell("A2").AsRange().Grow().RangeAddress.ToString());
+            Assert.AreEqual("A1:C2", ws.Cell("B1").AsRange().Grow().RangeAddress.ToString());
 
-                Assert.AreEqual("E4:G6", ws.Cell("F5").AsRange().Grow().RangeAddress.ToString());
-                Assert.AreEqual("D3:H7", ws.Cell("F5").AsRange().Grow(2).RangeAddress.ToString());
-                Assert.AreEqual("A1:DB105", ws.Cell("F5").AsRange().Grow(100).RangeAddress.ToString());
-            }
+            Assert.AreEqual("E4:G6", ws.Cell("F5").AsRange().Grow().RangeAddress.ToString());
+            Assert.AreEqual("D3:H7", ws.Cell("F5").AsRange().Grow(2).RangeAddress.ToString());
+            Assert.AreEqual("A1:DB105", ws.Cell("F5").AsRange().Grow(100).RangeAddress.ToString());
         }
 
         [Test]
         public void ShrinkRange()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                Assert.Null(ws.Cell("A1").AsRange().Shrink());
-                Assert.Null(ws.Range("B2:C3").Shrink());
-                Assert.AreEqual("C3:C3", ws.Range("B2:D4").Shrink().RangeAddress.ToString());
-                Assert.AreEqual("K11:P16", ws.Range("A1:Z26").Shrink(10).RangeAddress.ToString());
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            Assert.Null(ws.Cell("A1").AsRange().Shrink());
+            Assert.Null(ws.Range("B2:C3").Shrink());
+            Assert.AreEqual("C3:C3", ws.Range("B2:D4").Shrink().RangeAddress.ToString());
+            Assert.AreEqual("K11:P16", ws.Range("A1:Z26").Shrink(10).RangeAddress.ToString());
 
-                // Grow and shrink back
-                Assert.AreEqual("Z26:Z26", ws.Cell("Z26").AsRange().Grow(10).Shrink(10).RangeAddress.ToString());
-            }
+            // Grow and shrink back
+            Assert.AreEqual("Z26:Z26", ws.Cell("Z26").AsRange().Grow(10).Shrink(10).RangeAddress.ToString());
         }
 
         [Test]
         public void Intersection()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                Assert.AreEqual("D9:G11", ws.Range("B9:I11").Intersection(ws.Range("D4:G16")).ToString());
-                Assert.AreEqual("E9:G11", ws.Range("E9:I11").Intersection(ws.Range("D4:G16")).ToString());
-                Assert.AreEqual("E9:E9", ws.Cell("E9").AsRange().Intersection(ws.Range("D4:G16")).ToString());
-                Assert.AreEqual("E9:E9", ws.Range("D4:G16").Intersection(ws.Cell("E9").AsRange()).ToString());
+            Assert.AreEqual("D9:G11", ws.Range("B9:I11").Intersection(ws.Range("D4:G16")).ToString());
+            Assert.AreEqual("E9:G11", ws.Range("E9:I11").Intersection(ws.Range("D4:G16")).ToString());
+            Assert.AreEqual("E9:E9", ws.Cell("E9").AsRange().Intersection(ws.Range("D4:G16")).ToString());
+            Assert.AreEqual("E9:E9", ws.Range("D4:G16").Intersection(ws.Cell("E9").AsRange()).ToString());
 
-                XLRangeAddress rangeAddress;
+            XLRangeAddress rangeAddress;
 
-                rangeAddress = (XLRangeAddress)ws.Cell("C3").AsRange().Intersection(ws.Cell("A1").AsRange());
-                Assert.IsFalse(rangeAddress.IsValid);
+            rangeAddress = (XLRangeAddress)ws.Cell("C3").AsRange().Intersection(ws.Cell("A1").AsRange());
+            Assert.IsFalse(rangeAddress.IsValid);
 
-                rangeAddress = (XLRangeAddress)ws.Cell("A1").AsRange().Intersection(ws.Cell("C3").AsRange());
-                Assert.IsFalse(rangeAddress.IsValid);
+            rangeAddress = (XLRangeAddress)ws.Cell("A1").AsRange().Intersection(ws.Cell("C3").AsRange());
+            Assert.IsFalse(rangeAddress.IsValid);
 
-                Assert.Null(ws.Range("A1:C3").Intersection(null));
+            Assert.Null(ws.Range("A1:C3").Intersection(null));
 
-                var otherWs = wb.AddWorksheet("Sheet2");
-                Assert.Null(ws.Intersection(otherWs));
-                Assert.Null(ws.Cell("A1").AsRange().Intersection(otherWs.Cell("A2").AsRange()));
-            }
+            var otherWs = wb.AddWorksheet("Sheet2");
+            Assert.Null(ws.Intersection(otherWs));
+            Assert.Null(ws.Cell("A1").AsRange().Intersection(otherWs.Cell("A2").AsRange()));
         }
 
         [Test]
         public void Union()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                Assert.AreEqual(64, ws.Range("B9:I11").Union(ws.Range("D4:G16")).Count());
-                Assert.AreEqual(58, ws.Range("E9:I11").Union(ws.Range("D4:G16")).Count());
-                Assert.AreEqual(52, ws.Cell("E9").AsRange().Union(ws.Range("D4:G16")).Count());
-                Assert.AreEqual(52, ws.Range("D4:G16").Union(ws.Cell("E9").AsRange()).Count());
+            Assert.AreEqual(64, ws.Range("B9:I11").Union(ws.Range("D4:G16")).Count());
+            Assert.AreEqual(58, ws.Range("E9:I11").Union(ws.Range("D4:G16")).Count());
+            Assert.AreEqual(52, ws.Cell("E9").AsRange().Union(ws.Range("D4:G16")).Count());
+            Assert.AreEqual(52, ws.Range("D4:G16").Union(ws.Cell("E9").AsRange()).Count());
 
-                Assert.AreEqual(2, ws.Cell("A1").AsRange().Union(ws.Cell("C3").AsRange()).Count());
+            Assert.AreEqual(2, ws.Cell("A1").AsRange().Union(ws.Cell("C3").AsRange()).Count());
 
-                Assert.AreEqual(9, ws.Range("A1:C3").Union(null).Count());
+            Assert.AreEqual(9, ws.Range("A1:C3").Union(null).Count());
 
-                var otherWs = wb.AddWorksheet("Sheet2");
-                Assert.False(ws.Union(otherWs).Any());
-                Assert.False(ws.Cell("A1").AsRange().Union(otherWs.Cell("A2").AsRange()).Any());
-            }
+            var otherWs = wb.AddWorksheet("Sheet2");
+            Assert.False(ws.Union(otherWs).Any());
+            Assert.False(ws.Cell("A1").AsRange().Union(otherWs.Cell("A2").AsRange()).Any());
         }
 
         [Test]
         public void Difference()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                Assert.AreEqual(12, ws.Range("B9:I11").Difference(ws.Range("D4:G16")).Count());
-                Assert.AreEqual(6, ws.Range("E9:I11").Difference(ws.Range("D4:G16")).Count());
-                Assert.AreEqual(0, ws.Cell("E9").AsRange().Difference(ws.Range("D4:G16")).Count());
-                Assert.AreEqual(51, ws.Range("D4:G16").Difference(ws.Cell("E9").AsRange()).Count());
+            Assert.AreEqual(12, ws.Range("B9:I11").Difference(ws.Range("D4:G16")).Count());
+            Assert.AreEqual(6, ws.Range("E9:I11").Difference(ws.Range("D4:G16")).Count());
+            Assert.AreEqual(0, ws.Cell("E9").AsRange().Difference(ws.Range("D4:G16")).Count());
+            Assert.AreEqual(51, ws.Range("D4:G16").Difference(ws.Cell("E9").AsRange()).Count());
 
-                Assert.AreEqual(1, ws.Cell("A1").AsRange().Difference(ws.Cell("C3").AsRange()).Count());
+            Assert.AreEqual(1, ws.Cell("A1").AsRange().Difference(ws.Cell("C3").AsRange()).Count());
 
-                Assert.AreEqual(9, ws.Range("A1:C3").Difference(null).Count());
+            Assert.AreEqual(9, ws.Range("A1:C3").Difference(null).Count());
 
-                var otherWs = wb.AddWorksheet("Sheet2");
-                Assert.False(ws.Difference(otherWs).Any());
-                Assert.False(ws.Cell("A1").AsRange().Difference(otherWs.Cell("A2").AsRange()).Any());
-            }
+            var otherWs = wb.AddWorksheet("Sheet2");
+            Assert.False(ws.Difference(otherWs).Any());
+            Assert.False(ws.Cell("A1").AsRange().Difference(otherWs.Cell("A2").AsRange()).Any());
         }
 
         [Test]
         public void SurroundingCells()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                Assert.AreEqual(3, ws.FirstCell().AsRange().SurroundingCells().Count());
-                Assert.AreEqual(8, ws.Cell("C3").AsRange().SurroundingCells().Count());
-                Assert.AreEqual(16, ws.Range("C3:D6").AsRange().SurroundingCells().Count());
+            Assert.AreEqual(3, ws.FirstCell().AsRange().SurroundingCells().Count());
+            Assert.AreEqual(8, ws.Cell("C3").AsRange().SurroundingCells().Count());
+            Assert.AreEqual(16, ws.Range("C3:D6").AsRange().SurroundingCells().Count());
 
-                Assert.AreEqual(0, ws.Range("C3:D6").AsRange().SurroundingCells(c => !c.IsEmpty()).Count());
-            }
+            Assert.AreEqual(0, ws.Range("C3:D6").AsRange().SurroundingCells(c => !c.IsEmpty()).Count());
         }
 
         [Test]
@@ -400,9 +389,11 @@ namespace ClosedXML.Tests
         public void RangesRemoveAllWithoutDispose()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Range("A1:A2"));
-            ranges.Add(ws.Range("B1:B2"));
+            var ranges = new XLRanges
+            {
+                ws.Range("A1:A2"),
+                ws.Range("B1:B2")
+            };
             var rangesCopy = ranges.ToList();
 
             ranges.RemoveAll(null, false);
@@ -418,10 +409,12 @@ namespace ClosedXML.Tests
         public void RangesRemoveAllByCriteria()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet1");
-            var ranges = new XLRanges();
-            ranges.Add(ws.Range("A1:A2"));
-            ranges.Add(ws.Range("B1:B3"));
-            ranges.Add(ws.Range("C1:C4"));
+            var ranges = new XLRanges
+            {
+                ws.Range("A1:A2"),
+                ws.Range("B1:B3"),
+                ws.Range("C1:C4")
+            };
             var otherRange = ws.Range("A3:D3");
 
             ranges.RemoveAll(r => r.Intersects(otherRange));
@@ -437,15 +430,17 @@ namespace ClosedXML.Tests
             var ws1 = wb.Worksheets.Add("Sheet1");
             var ws2 = wb.Worksheets.Add("Another sheet");
 
-            var ranges = new XLRanges();
-            ranges.Add(ws2.Range("F1:F12"));
-            ranges.Add(ws1.Range("F12:F16"));
-            ranges.Add(ws1.Range("B1:F2"));
-            ranges.Add(ws2.Range("A13:B14"));
-            ranges.Add(ws2.Range("E1:E2"));
-            ranges.Add(ws1.Range("E1:H2"));
-            ranges.Add(ws1.Range("G2:G13"));
-            ranges.Add(ws1.Range("G20:G20"));
+            var ranges = new XLRanges
+            {
+                ws2.Range("F1:F12"),
+                ws1.Range("F12:F16"),
+                ws1.Range("B1:F2"),
+                ws2.Range("A13:B14"),
+                ws2.Range("E1:E2"),
+                ws1.Range("E1:H2"),
+                ws1.Range("G2:G13"),
+                ws1.Range("G20:G20")
+            };
 
             var expectedRanges = new List<IXLRange>
             {
@@ -463,7 +458,7 @@ namespace ClosedXML.Tests
             var actualRanges = ranges.ToList();
 
             Assert.AreEqual(expectedRanges.Count, actualRanges.Count);
-            for (int i = 0; i < actualRanges.Count; i++)
+            for (var i = 0; i < actualRanges.Count; i++)
             {
                 Assert.AreEqual(expectedRanges[i], actualRanges[i]);
             }

@@ -280,7 +280,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(6, 7, 0.86217005466723)]
         public void Atan2_ReturnsCorrectResults_EqualOnAllMultiplesOfFraction(double x, double y, double expectedResult)
         {
-            for (int i = 1; i < 5; i++)
+            for (var i = 1; i < 5; i++)
             {
                 var actual = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
@@ -488,12 +488,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 0, 10, 0)]
         public void CeilingMath(double input, double? step, int? mode, double expectedResult)
         {
-            string parameters = input.ToString(CultureInfo.InvariantCulture);
+            var parameters = input.ToString(CultureInfo.InvariantCulture);
             if (step != null)
             {
                 parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
                 if (mode != null)
+                {
                     parameters = parameters + ", " + mode?.ToString(CultureInfo.InvariantCulture);
+                }
             }
 
             var actual = (double)XLWorkbook.EvaluateExpr($"CEILING.MATH({parameters})");
@@ -987,12 +989,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-5.5, 0, 0, 0)]
         public void FloorMath(double input, double? step, int? mode, double expectedResult)
         {
-            string parameters = input.ToString(CultureInfo.InvariantCulture);
+            var parameters = input.ToString(CultureInfo.InvariantCulture);
             if (step != null)
             {
                 parameters = parameters + ", " + step?.ToString(CultureInfo.InvariantCulture);
                 if (mode != null)
+                {
                     parameters = parameters + ", " + mode?.ToString(CultureInfo.InvariantCulture);
+                }
             }
 
             var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"FLOOR.MATH({0})", parameters));
@@ -1117,14 +1121,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(30, 6.48292)]
         public void Sec_ReturnsCorrectNumber(double input, double expectedOutput)
         {
-            double result = (double)XLWorkbook.EvaluateExpr(
+            var result = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SEC({0})",
                     input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedOutput, result, 0.00001);
 
             // as the secant is symmetric for positive and negative numbers, let's assert twice:
-            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
+            var resultForNegative = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SEC({0})",
                     (-input).ToString(CultureInfo.InvariantCulture)));
@@ -1149,14 +1153,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(0, 1)]
         public void Sech_ReturnsCorrectNumber(double input, double expectedOutput)
         {
-            double result = (double)XLWorkbook.EvaluateExpr(
+            var result = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SECH({0})",
                     input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedOutput, result, 0.00001);
 
             // as the secant is symmetric for positive and negative numbers, let's assert twice:
-            double resultForNegative = (double)XLWorkbook.EvaluateExpr(
+            var resultForNegative = (double)XLWorkbook.EvaluateExpr(
                 string.Format(
                     @"SECH({0})",
                     (-input).ToString(CultureInfo.InvariantCulture)));
@@ -1175,24 +1179,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(28000, "SUMIF(A1:A4, \">\" &C1, B1:B4)")]
         public void SumIf_ReturnsCorrectValues_ReferenceExample1FromMicrosoft(int expectedOutcome, string formula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
+            using var wb = new XLWorkbook();
+            wb.ReferenceStyle = XLReferenceStyle.A1;
 
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell(1, 1).Value = 100000;
-                ws.Cell(1, 2).Value = 7000;
-                ws.Cell(2, 1).Value = 200000;
-                ws.Cell(2, 2).Value = 14000;
-                ws.Cell(3, 1).Value = 300000;
-                ws.Cell(3, 2).Value = 21000;
-                ws.Cell(4, 1).Value = 400000;
-                ws.Cell(4, 2).Value = 28000;
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell(1, 1).Value = 100000;
+            ws.Cell(1, 2).Value = 7000;
+            ws.Cell(2, 1).Value = 200000;
+            ws.Cell(2, 2).Value = 14000;
+            ws.Cell(3, 1).Value = 300000;
+            ws.Cell(3, 2).Value = 21000;
+            ws.Cell(4, 1).Value = 400000;
+            ws.Cell(4, 2).Value = 28000;
 
-                ws.Cell(1, 3).Value = 300000;
+            ws.Cell(1, 3).Value = 300000;
 
-                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
-            }
+            Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
         }
 
         /// <summary>
@@ -1207,81 +1209,75 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(400, "SUMIF(A2:A7, \"\", C2:C7)")]
         public void SumIf_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedOutcome, string formula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
+            using var wb = new XLWorkbook();
+            wb.ReferenceStyle = XLReferenceStyle.A1;
 
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell(2, 1).Value = "Vegetables";
-                ws.Cell(3, 1).Value = "Vegetables";
-                ws.Cell(4, 1).Value = "Fruits";
-                ws.Cell(5, 1).Value = "";
-                ws.Cell(6, 1).Value = "Vegetables";
-                ws.Cell(7, 1).Value = "Fruits";
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell(2, 1).Value = "Vegetables";
+            ws.Cell(3, 1).Value = "Vegetables";
+            ws.Cell(4, 1).Value = "Fruits";
+            ws.Cell(5, 1).Value = "";
+            ws.Cell(6, 1).Value = "Vegetables";
+            ws.Cell(7, 1).Value = "Fruits";
 
-                ws.Cell(2, 2).Value = "Tomatoes";
-                ws.Cell(3, 2).Value = "Celery";
-                ws.Cell(4, 2).Value = "Oranges";
-                ws.Cell(5, 2).Value = "Butter";
-                ws.Cell(6, 2).Value = "Carrots";
-                ws.Cell(7, 2).Value = "Apples";
+            ws.Cell(2, 2).Value = "Tomatoes";
+            ws.Cell(3, 2).Value = "Celery";
+            ws.Cell(4, 2).Value = "Oranges";
+            ws.Cell(5, 2).Value = "Butter";
+            ws.Cell(6, 2).Value = "Carrots";
+            ws.Cell(7, 2).Value = "Apples";
 
-                ws.Cell(2, 3).Value = 2300;
-                ws.Cell(3, 3).Value = 5500;
-                ws.Cell(4, 3).Value = 800;
-                ws.Cell(5, 3).Value = 400;
-                ws.Cell(6, 3).Value = 4200;
-                ws.Cell(7, 3).Value = 1200;
+            ws.Cell(2, 3).Value = 2300;
+            ws.Cell(3, 3).Value = 5500;
+            ws.Cell(4, 3).Value = 800;
+            ws.Cell(5, 3).Value = 400;
+            ws.Cell(6, 3).Value = 4200;
+            ws.Cell(7, 3).Value = 1200;
 
-                ws.Cell(1, 3).Value = 300000;
+            ws.Cell(1, 3).Value = 300000;
 
-                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
-            }
+            Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
         }
 
         [Test]
         public void SumIf_ReturnsCorrectValues_WhenCalledOnFullColumn()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Data");
+            var data = new object[]
             {
-                var ws = wb.AddWorksheet("Data");
-                var data = new object[]
-                {
                     new { Id = "A", Value = 2},
                     new { Id = "B", Value = 3},
                     new { Id = "C", Value = 2},
                     new { Id = "A", Value = 1},
                     new { Id = "B", Value = 4}
-                };
-                ws.Cell("A1").InsertTable(data);
-                var formula = "=SUMIF(A:A,\"=A\",B:B)";
-                var value = ws.Evaluate(formula);
-                Assert.AreEqual(3, value);
-            }
+            };
+            ws.Cell("A1").InsertTable(data);
+            var formula = "=SUMIF(A:A,\"=A\",B:B)";
+            var value = ws.Evaluate(formula);
+            Assert.AreEqual(3, value);
         }
 
         [Test]
         public void SumIf_ReturnsCorrectValues_WhenFormulaBelongToSameRange()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Data");
+            var data = new object[]
             {
-                var ws = wb.AddWorksheet("Data");
-                var data = new object[]
-                {
                     new { Id = "A", Value = 2},
                     new { Id = "B", Value = 3},
                     new { Id = "C", Value = 2},
                     new { Id = "A", Value = 1},
                     new { Id = "B", Value = 4},
-                };
-                ws.Cell("A1").InsertTable(data);
-                ws.Cell("A7").SetValue("Sum A");
-                // SUMIF formula
-                var formula = "=SUMIF(A:A,\"=A\",B:B)";
-                ws.Cell("B7").SetFormulaA1(formula);
-                var value = ws.Cell("B7").Value;
-                Assert.AreEqual(3, value);
-            }
+            };
+            ws.Cell("A1").InsertTable(data);
+            ws.Cell("A7").SetValue("Sum A");
+            // SUMIF formula
+            var formula = "=SUMIF(A:A,\"=A\",B:B)";
+            ws.Cell("B7").SetFormulaA1(formula);
+            var value = ws.Cell("B7").Value;
+            Assert.AreEqual(3, value);
         }
 
         /// <summary>
@@ -1297,37 +1293,35 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(400, "SUMIFS(C2:C7, A2:A7, \"\")")]
         public void SumIfs_ReturnsCorrectValues_ReferenceExample2FromMicrosoft(int expectedResult, string formula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
+            using var wb = new XLWorkbook();
+            wb.ReferenceStyle = XLReferenceStyle.A1;
 
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell(2, 1).Value = "Vegetables";
-                ws.Cell(3, 1).Value = "Vegetables";
-                ws.Cell(4, 1).Value = "Fruits";
-                ws.Cell(5, 1).Value = "";
-                ws.Cell(6, 1).Value = "Vegetables";
-                ws.Cell(7, 1).Value = "Fruits";
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell(2, 1).Value = "Vegetables";
+            ws.Cell(3, 1).Value = "Vegetables";
+            ws.Cell(4, 1).Value = "Fruits";
+            ws.Cell(5, 1).Value = "";
+            ws.Cell(6, 1).Value = "Vegetables";
+            ws.Cell(7, 1).Value = "Fruits";
 
-                ws.Cell(2, 2).Value = "Tomatoes";
-                ws.Cell(3, 2).Value = "Celery";
-                ws.Cell(4, 2).Value = "Oranges";
-                ws.Cell(5, 2).Value = "Butter";
-                ws.Cell(6, 2).Value = "Carrots";
-                ws.Cell(7, 2).Value = "Apples";
+            ws.Cell(2, 2).Value = "Tomatoes";
+            ws.Cell(3, 2).Value = "Celery";
+            ws.Cell(4, 2).Value = "Oranges";
+            ws.Cell(5, 2).Value = "Butter";
+            ws.Cell(6, 2).Value = "Carrots";
+            ws.Cell(7, 2).Value = "Apples";
 
-                ws.Cell(2, 3).Value = 2300;
-                ws.Cell(3, 3).Value = 5500;
-                ws.Cell(4, 3).Value = 800;
-                ws.Cell(5, 3).Value = 400;
-                ws.Cell(6, 3).Value = 4200;
-                ws.Cell(7, 3).Value = 1200;
+            ws.Cell(2, 3).Value = 2300;
+            ws.Cell(3, 3).Value = 5500;
+            ws.Cell(4, 3).Value = 800;
+            ws.Cell(5, 3).Value = 400;
+            ws.Cell(6, 3).Value = 4200;
+            ws.Cell(7, 3).Value = 1200;
 
-                ws.Cell(1, 3).Value = 300000;
+            ws.Cell(1, 3).Value = 300000;
 
-                var actualResult = ws.Evaluate(formula).CastTo<double>();
-                Assert.AreEqual(expectedResult, actualResult);
-            }
+            var actualResult = ws.Evaluate(formula).CastTo<double>();
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
         /// <summary>
@@ -1342,24 +1336,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(28000, "SUMIFS(B1:B4, A1:A4, \">\" &C1)")]
         public void SumIfs_ReturnsCorrectValues_ReferenceExampleForSumIf1FromMicrosoft(int expectedOutcome, string formula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
+            using var wb = new XLWorkbook();
+            wb.ReferenceStyle = XLReferenceStyle.A1;
 
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell(1, 1).Value = 100000;
-                ws.Cell(1, 2).Value = 7000;
-                ws.Cell(2, 1).Value = 200000;
-                ws.Cell(2, 2).Value = 14000;
-                ws.Cell(3, 1).Value = 300000;
-                ws.Cell(3, 2).Value = 21000;
-                ws.Cell(4, 1).Value = 400000;
-                ws.Cell(4, 2).Value = 28000;
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell(1, 1).Value = 100000;
+            ws.Cell(1, 2).Value = 7000;
+            ws.Cell(2, 1).Value = 200000;
+            ws.Cell(2, 2).Value = 14000;
+            ws.Cell(3, 1).Value = 300000;
+            ws.Cell(3, 2).Value = 21000;
+            ws.Cell(4, 1).Value = 400000;
+            ws.Cell(4, 2).Value = 28000;
 
-                ws.Cell(1, 3).Value = 300000;
+            ws.Cell(1, 3).Value = 300000;
 
-                Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
-            }
+            Assert.AreEqual(expectedOutcome, (double)ws.Evaluate(formula));
         }
 
         /// <summary>
@@ -1372,81 +1364,77 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             int expectedResult,
             string formula)
         {
-            using (var wb = new XLWorkbook())
-            {
-                wb.ReferenceStyle = XLReferenceStyle.A1;
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            wb.ReferenceStyle = XLReferenceStyle.A1;
+            var ws = wb.AddWorksheet("Sheet1");
 
-                var row = 2;
+            var row = 2;
 
-                ws.Cell(row, 1).Value = 5;
-                ws.Cell(row, 2).Value = "Apples";
-                ws.Cell(row, 3).Value = "Tom";
-                row++;
+            ws.Cell(row, 1).Value = 5;
+            ws.Cell(row, 2).Value = "Apples";
+            ws.Cell(row, 3).Value = "Tom";
+            row++;
 
-                ws.Cell(row, 1).Value = 4;
-                ws.Cell(row, 2).Value = "Apples";
-                ws.Cell(row, 3).Value = "Sarah";
-                row++;
+            ws.Cell(row, 1).Value = 4;
+            ws.Cell(row, 2).Value = "Apples";
+            ws.Cell(row, 3).Value = "Sarah";
+            row++;
 
-                ws.Cell(row, 1).Value = 15;
-                ws.Cell(row, 2).Value = "Artichokes";
-                ws.Cell(row, 3).Value = "Tom";
-                row++;
+            ws.Cell(row, 1).Value = 15;
+            ws.Cell(row, 2).Value = "Artichokes";
+            ws.Cell(row, 3).Value = "Tom";
+            row++;
 
-                ws.Cell(row, 1).Value = 3;
-                ws.Cell(row, 2).Value = "Artichokes";
-                ws.Cell(row, 3).Value = "Sarah";
-                row++;
+            ws.Cell(row, 1).Value = 3;
+            ws.Cell(row, 2).Value = "Artichokes";
+            ws.Cell(row, 3).Value = "Sarah";
+            row++;
 
-                ws.Cell(row, 1).Value = 22;
-                ws.Cell(row, 2).Value = "Bananas";
-                ws.Cell(row, 3).Value = "Tom";
-                row++;
+            ws.Cell(row, 1).Value = 22;
+            ws.Cell(row, 2).Value = "Bananas";
+            ws.Cell(row, 3).Value = "Tom";
+            row++;
 
-                ws.Cell(row, 1).Value = 12;
-                ws.Cell(row, 2).Value = "Bananas";
-                ws.Cell(row, 3).Value = "Sarah";
-                row++;
+            ws.Cell(row, 1).Value = 12;
+            ws.Cell(row, 2).Value = "Bananas";
+            ws.Cell(row, 3).Value = "Sarah";
+            row++;
 
-                ws.Cell(row, 1).Value = 10;
-                ws.Cell(row, 2).Value = "Carrots";
-                ws.Cell(row, 3).Value = "Tom";
-                row++;
+            ws.Cell(row, 1).Value = 10;
+            ws.Cell(row, 2).Value = "Carrots";
+            ws.Cell(row, 3).Value = "Tom";
+            row++;
 
-                ws.Cell(row, 1).Value = 33;
-                ws.Cell(row, 2).Value = "Carrots";
-                ws.Cell(row, 3).Value = "Sarah";
+            ws.Cell(row, 1).Value = 33;
+            ws.Cell(row, 2).Value = "Carrots";
+            ws.Cell(row, 3).Value = "Sarah";
 
-                var actualResult = ws.Evaluate(formula).CastTo<Double>();
+            var actualResult = ws.Evaluate(formula).CastTo<double>();
 
-                Assert.AreEqual(expectedResult, actualResult, tolerance);
-            }
+            Assert.AreEqual(expectedResult, actualResult, tolerance);
         }
 
         [Test]
         public void SumProduct()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                ws.FirstCell().Value = Enumerable.Range(1, 10);
-                ws.FirstCell().CellRight().Value = Enumerable.Range(1, 10).Reverse();
+            ws.FirstCell().Value = Enumerable.Range(1, 10);
+            ws.FirstCell().CellRight().Value = Enumerable.Range(1, 10).Reverse();
 
-                Assert.AreEqual(2, ws.Evaluate("SUMPRODUCT(A2)"));
-                Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
-                Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+            Assert.AreEqual(2, ws.Evaluate("SUMPRODUCT(A2)"));
+            Assert.AreEqual(55, ws.Evaluate("SUMPRODUCT(A1:A10)"));
+            Assert.AreEqual(220, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
 
-                Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
+            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate("SUMPRODUCT(A1:A10, B1:B5)"));
 
-                // Blank cells and cells with text should be treated as zeros
-                ws.Range("A1:A5").Clear();
-                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
+            // Blank cells and cells with text should be treated as zeros
+            ws.Range("A1:A5").Clear();
+            Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
 
-                ws.Range("A1:A5").SetValue("asdf");
-                Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
-            }
+            ws.Range("A1:A5").SetValue("asdf");
+            Assert.AreEqual(110, ws.Evaluate("SUMPRODUCT(A1:A10, B1:B10)"));
         }
 
         [Test]

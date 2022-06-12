@@ -11,7 +11,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// General
         /// </summary>
-        public static int General { get { return 0; } }
+        public static int General => 0;
 
         public enum Number
         {

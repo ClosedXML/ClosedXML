@@ -9,11 +9,11 @@ namespace ClosedXML.Excel
         void LessThan<T>(T value) where T : IComparable<T>;
         void EqualOrGreaterThan<T>(T value) where T : IComparable<T>;
         void EqualOrLessThan<T>(T value) where T : IComparable<T>;
-        void BeginsWith(String value);
-        void NotBeginsWith(String value);
-        void EndsWith(String value);
-        void NotEndsWith(String value);
-        void Contains(String value);
-        void NotContains(String value);
+        void BeginsWith(string value);
+        void NotBeginsWith(string value);
+        void EndsWith(string value);
+        void NotEndsWith(string value);
+        void Contains(string value);
+        void NotContains(string value);
     }
 }

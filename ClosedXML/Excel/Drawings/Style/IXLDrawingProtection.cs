@@ -7,11 +7,11 @@ namespace ClosedXML.Excel
 {
     public interface IXLDrawingProtection
     {
-        Boolean Locked { get; set; }
-        Boolean LockText { get; set; }
+        bool Locked { get; set; }
+        bool LockText { get; set; }
 
-        IXLDrawingStyle SetLocked(); IXLDrawingStyle SetLocked(Boolean value);
-        IXLDrawingStyle SetLockText(); IXLDrawingStyle SetLockText(Boolean value);
+        IXLDrawingStyle SetLocked(); IXLDrawingStyle SetLocked(bool value);
+        IXLDrawingStyle SetLockText(); IXLDrawingStyle SetLockText(bool value);
 
     }
 }

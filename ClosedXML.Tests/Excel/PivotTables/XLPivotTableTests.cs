@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.PivotTables
 {
     [TestFixture]
     public class XLPivotTableTests

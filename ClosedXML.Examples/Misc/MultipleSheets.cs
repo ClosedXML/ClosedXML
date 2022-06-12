@@ -14,7 +14,7 @@ namespace ClosedXML.Examples.Misc
             }
 
             // Move first worksheet to the last position
-            wb.Worksheet(1).Position = wb.Worksheets.Count() + 1;
+            wb.Worksheet(1).Position = wb.Worksheets.Count + 1;
 
             // Delete worksheet on position 4 (in this case it's where original position = 5)
             wb.Worksheet(4).Delete();

@@ -7,9 +7,9 @@ namespace ClosedXML.Excel
     {
         #region Public Properties
 
-        Double? ManualMax { get; set; }
+        double? ManualMax { get; set; }
 
-        Double? ManualMin { get; set; }
+        double? ManualMin { get; set; }
 
         XLSparklineAxisMinMax MaxAxisType { get; set; }
 
@@ -19,9 +19,9 @@ namespace ClosedXML.Excel
 
         #region Public Methods
 
-        IXLSparklineVerticalAxis SetManualMax(Double? value);
+        IXLSparklineVerticalAxis SetManualMax(double? value);
 
-        IXLSparklineVerticalAxis SetManualMin(Double? value);
+        IXLSparklineVerticalAxis SetManualMin(double? value);
 
         IXLSparklineVerticalAxis SetMaxAxisType(XLSparklineAxisMinMax value);
 

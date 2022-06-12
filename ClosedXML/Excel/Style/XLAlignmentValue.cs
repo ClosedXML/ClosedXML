@@ -28,25 +28,25 @@ namespace ClosedXML.Excel
 
         public XLAlignmentKey Key { get; private set; }
 
-        public XLAlignmentHorizontalValues Horizontal { get { return Key.Horizontal; } }
+        public XLAlignmentHorizontalValues Horizontal => Key.Horizontal;
 
-        public XLAlignmentVerticalValues Vertical { get { return Key.Vertical; } }
+        public XLAlignmentVerticalValues Vertical => Key.Vertical;
 
-        public int Indent { get { return Key.Indent; } }
+        public int Indent => Key.Indent;
 
-        public bool JustifyLastLine { get { return Key.JustifyLastLine; } }
+        public bool JustifyLastLine => Key.JustifyLastLine;
 
-        public XLAlignmentReadingOrderValues ReadingOrder { get { return Key.ReadingOrder; } }
+        public XLAlignmentReadingOrderValues ReadingOrder => Key.ReadingOrder;
 
-        public int RelativeIndent { get { return Key.RelativeIndent; } }
+        public int RelativeIndent => Key.RelativeIndent;
 
-        public bool ShrinkToFit { get { return Key.ShrinkToFit; } }
+        public bool ShrinkToFit => Key.ShrinkToFit;
 
-        public int TextRotation { get { return Key.TextRotation; } }
+        public int TextRotation => Key.TextRotation;
 
-        public bool WrapText { get { return Key.WrapText; } }
+        public bool WrapText => Key.WrapText;
 
-        public bool TopToBottom { get { return Key.TopToBottom; } }
+        public bool TopToBottom => Key.TopToBottom;
 
         private XLAlignmentValue(XLAlignmentKey key)
         {
@@ -55,8 +55,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLAlignmentValue;
-            return cached != null &&
+            return obj is XLAlignmentValue cached &&
                    Key.Equals(cached.Key);
         }
 

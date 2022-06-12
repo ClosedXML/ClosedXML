@@ -47,13 +47,19 @@ namespace ClosedXML.Excel
         public XLSparkline(IXLSparklineGroup sparklineGroup, IXLCell cell, IXLRange sourceData)
         {
             if (sparklineGroup == null)
+            {
                 throw new ArgumentNullException(nameof(sparklineGroup));
+            }
 
             if (cell == null)
+            {
                 throw new ArgumentNullException(nameof(cell));
+            }
 
             if (sparklineGroup.Worksheet != cell.Worksheet)
+            {
                 throw new InvalidOperationException("Cell must belong to the same worksheet as the sparkline group");
+            }
 
             SparklineGroup = sparklineGroup;
             Location = cell;
@@ -67,10 +73,14 @@ namespace ClosedXML.Excel
         public IXLSparkline SetLocation(IXLCell cell)
         {
             if (cell != null && cell.Worksheet != SparklineGroup.Worksheet)
+            {
                 throw new InvalidOperationException("Cannot move the sparkline to a different worksheet");
+            }
 
             if (_location != null)
+            {
                 SparklineGroup.Remove(_location);
+            }
 
             _location = cell;
             (SparklineGroup as XLSparklineGroup).Add(this);
@@ -80,7 +90,9 @@ namespace ClosedXML.Excel
         public IXLSparkline SetSourceData(IXLRange range)
         {
             if (range != null && range.RowCount() != 1 && range.ColumnCount() != 1)
+            {
                 throw new ArgumentException("SourceData range must have either a single row or a single column");
+            }
 
             _sourceData = range;
             return this;

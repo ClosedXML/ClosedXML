@@ -9,7 +9,7 @@ namespace ClosedXML.Examples.Ranges
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var workbook = new XLWorkbook();
             var ws = workbook.Worksheets.Add("Clearing Ranges");

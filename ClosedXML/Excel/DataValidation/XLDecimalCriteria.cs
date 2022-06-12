@@ -10,20 +10,20 @@ namespace ClosedXML.Excel
         {
         }
 
-        public void Between(Double minValue, Double maxValue) => base.Between(minValue.ToInvariantString(), maxValue.ToInvariantString());
+        public void Between(double minValue, double maxValue) => Between(minValue.ToInvariantString(), maxValue.ToInvariantString());
 
-        public void EqualOrGreaterThan(Double value) => base.EqualOrGreaterThan(value.ToInvariantString());
+        public void EqualOrGreaterThan(double value) => EqualOrGreaterThan(value.ToInvariantString());
 
-        public void EqualOrLessThan(Double value) => base.EqualOrLessThan(value.ToInvariantString());
+        public void EqualOrLessThan(double value) => EqualOrLessThan(value.ToInvariantString());
 
-        public void EqualTo(Double value) => base.EqualTo(value.ToInvariantString());
+        public void EqualTo(double value) => EqualTo(value.ToInvariantString());
 
-        public void GreaterThan(Double value) => base.GreaterThan(value.ToInvariantString());
+        public void GreaterThan(double value) => GreaterThan(value.ToInvariantString());
 
-        public void LessThan(Double value) => base.LessThan(value.ToInvariantString());
+        public void LessThan(double value) => LessThan(value.ToInvariantString());
 
-        public void NotBetween(Double minValue, Double maxValue) => base.NotBetween(minValue.ToInvariantString(), maxValue.ToInvariantString());
+        public void NotBetween(double minValue, double maxValue) => NotBetween(minValue.ToInvariantString(), maxValue.ToInvariantString());
 
-        public void NotEqualTo(Double value) => base.NotEqualTo(value.ToInvariantString());
+        public void NotEqualTo(double value) => NotEqualTo(value.ToInvariantString());
     }
 }

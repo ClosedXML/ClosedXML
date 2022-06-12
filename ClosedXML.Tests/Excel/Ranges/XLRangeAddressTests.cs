@@ -2,7 +2,7 @@ using ClosedXML.Excel;
 using NUnit.Framework;
 using System;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Excel.Ranges
 {
     [TestFixture]
     public class XLRangeAddressTests
@@ -11,8 +11,8 @@ namespace ClosedXML.Tests
         public void ToStringTest()
         {
             using var xLWorkbook = new XLWorkbook();
-            IXLWorksheet ws = xLWorkbook.Worksheets.Add("Sheet1");
-            IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
+            var ws = xLWorkbook.Worksheets.Add("Sheet1");
+            var address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
             Assert.AreEqual("Sheet1!R1C1:R1C1", address.ToString(XLReferenceStyle.R1C1, true));
@@ -33,7 +33,7 @@ namespace ClosedXML.Tests
         public void ToStringTestWithSpace()
         {
             using var xLWorkbook = new XLWorkbook(); var ws = xLWorkbook.Worksheets.Add("Sheet 1");
-            IXLRangeAddress address = ws.Cell(1, 1).AsRange().RangeAddress;
+            var address = ws.Cell(1, 1).AsRange().RangeAddress;
 
             Assert.AreEqual("A1:A1", address.ToString());
             Assert.AreEqual("'Sheet 1'!R1C1:R1C1", address.ToString(XLReferenceStyle.R1C1, true));
@@ -64,7 +64,7 @@ namespace ClosedXML.Tests
         public void RangeAddressNormalizeTest(string inputAddress, string expectedAddress)
         {
             using var xLWorkbook = new XLWorkbook();
-            XLWorksheet ws = xLWorkbook.Worksheets.Add("Sheet 1") as XLWorksheet;
+            var ws = xLWorkbook.Worksheets.Add("Sheet 1") as XLWorksheet;
             var rangeAddress = new XLRangeAddress(ws, inputAddress);
 
             var normalizedAddress = rangeAddress.Normalize();
@@ -187,25 +187,23 @@ namespace ClosedXML.Tests
         [Test]
         public void FullSpanAddressCannotChange()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
 
-                var wsRange = ws.AsRange();
-                var row = ws.FirstRow().RowBelow(4).AsRange();
-                var column = ws.FirstColumn().ColumnRight(4).AsRange();
+            var wsRange = ws.AsRange();
+            var row = ws.FirstRow().RowBelow(4).AsRange();
+            var column = ws.FirstColumn().ColumnRight(4).AsRange();
 
-                Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
-                Assert.AreEqual("5:5", row.RangeAddress.ToString());
-                Assert.AreEqual("E:E", column.RangeAddress.ToString());
+            Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
+            Assert.AreEqual("5:5", row.RangeAddress.ToString());
+            Assert.AreEqual("E:E", column.RangeAddress.ToString());
 
-                ws.Columns("Y:Z").Delete();
-                ws.Rows("9:10").Delete();
+            ws.Columns("Y:Z").Delete();
+            ws.Rows("9:10").Delete();
 
-                Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
-                Assert.AreEqual("5:5", row.RangeAddress.ToString());
-                Assert.AreEqual("E:E", column.RangeAddress.ToString());
-            }
+            Assert.AreEqual($"1:{XLHelper.MaxRowNumber}", wsRange.RangeAddress.ToString());
+            Assert.AreEqual("5:5", row.RangeAddress.ToString());
+            Assert.AreEqual("E:E", column.RangeAddress.ToString());
         }
 
         [Test]
@@ -305,7 +303,7 @@ namespace ClosedXML.Tests
             Assert.AreEqual(12, rangeAddress.NumberOfCells);
 
             range = ws.Range("E5:B3");
-            rangeAddress = range.RangeAddress as IXLRangeAddress;
+            rangeAddress = range.RangeAddress;
             Assert.AreEqual(4, rangeAddress.ColumnSpan);
             Assert.AreEqual(3, rangeAddress.RowSpan);
             Assert.AreEqual(12, rangeAddress.NumberOfCells);

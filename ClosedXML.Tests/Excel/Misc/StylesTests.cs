@@ -29,15 +29,15 @@ namespace ClosedXML.Tests.Excel.Misc
         public void InsideBorderTest()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-            IXLRange range = ws.Range("B2:D4");
+            var ws = wb.AddWorksheet("Sheet1");
+            var range = ws.Range("B2:D4");
 
             SetupBorders(range);
 
             range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
             range.Style.Border.InsideBorderColor = XLColor.Red;
 
-            IXLCell center = range.Cell(2, 2);
+            var center = range.Cell(2, 2);
 
             Assert.AreEqual(XLColor.Red, center.Style.Border.TopBorderColor);
             Assert.AreEqual(XLColor.Red, center.Style.Border.BottomBorderColor);
@@ -64,15 +64,13 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void ResolveThemeColors()
         {
-            using (var wb = new XLWorkbook())
-            {
-                string color;
-                color = wb.Theme.ResolveThemeColor(XLThemeColor.Accent1).Color.ToHex();
-                Assert.AreEqual("FF4F81BD", color);
+            using var wb = new XLWorkbook();
+            string color;
+            color = wb.Theme.ResolveThemeColor(XLThemeColor.Accent1).Color.ToHex();
+            Assert.AreEqual("FF4F81BD", color);
 
-                color = wb.Theme.ResolveThemeColor(XLThemeColor.Background1).Color.ToHex();
-                Assert.AreEqual("FFFFFFFF", color);
-            }
+            color = wb.Theme.ResolveThemeColor(XLThemeColor.Background1).Color.ToHex();
+            Assert.AreEqual("FFFFFFFF", color);
         }
 
         [Theory]
@@ -87,25 +85,23 @@ namespace ClosedXML.Tests.Excel.Misc
         [Test]
         public void SetStyleViaRowReference()
         {
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Style
+               .Font.SetFontSize(8)
+               .Font.SetFontColor(XLColor.Green)
+               .Font.SetBold(true);
+
+            var row = ws.Row(1);
+            ws.Cell(1, 1).Value = "Test";
+            row.Cell(2).Value = "Test";
+            row.Cells(3, 3).Value = "Test";
+
+            foreach (var cell in ws.CellsUsed())
             {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Style
-                   .Font.SetFontSize(8)
-                   .Font.SetFontColor(XLColor.Green)
-                   .Font.SetBold(true);
-
-                var row = ws.Row(1);
-                ws.Cell(1, 1).Value = "Test";
-                row.Cell(2).Value = "Test";
-                row.Cells(3, 3).Value = "Test";
-
-                foreach (var cell in ws.CellsUsed())
-                {
-                    Assert.AreEqual(8, ws.Cell("A1").Style.Font.FontSize);
-                    Assert.AreEqual(XLColor.Green, ws.Cell("B1").Style.Font.FontColor);
-                    Assert.AreEqual(true, ws.Cell("C1").Style.Font.Bold);
-                }
+                Assert.AreEqual(8, ws.Cell("A1").Style.Font.FontSize);
+                Assert.AreEqual(XLColor.Green, ws.Cell("B1").Style.Font.FontColor);
+                Assert.AreEqual(true, ws.Cell("C1").Style.Font.Bold);
             }
         }
     }

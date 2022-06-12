@@ -23,7 +23,7 @@ namespace ClosedXML.Sandbox
         {
             var rows = new List<OneRow>();
 
-            for (int i = 0; i < rowCount; i++)
+            for (var i = 0; i < rowCount; i++)
             {
                 var row = GenerateRow<OneRow>();
                 rows.Add(row);
@@ -42,13 +42,11 @@ namespace ClosedXML.Sandbox
 
         public static void OpenTestFile()
         {
-            using (var wb = new XLWorkbook("test.xlsx"))
-            {
-                wb.RecalculateAllFormulas();
-                var ws = wb.Worksheets.First();
-                var cell = ws.FirstCellUsed();
-                Console.WriteLine(cell.Value);
-            }
+            using var wb = new XLWorkbook("test.xlsx");
+            wb.RecalculateAllFormulas();
+            var ws = wb.Worksheets.First();
+            var cell = ws.FirstCellUsed();
+            Console.WriteLine(cell.Value);
         }
 
         private static void CreateMergedCell(IXLWorksheet worksheet)
@@ -60,15 +58,13 @@ namespace ClosedXML.Sandbox
 
         private static void EmulateSave(XLWorkbook workbook)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                workbook.SaveAs(memoryStream);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                Console.WriteLine("Total bytes = " + memoryStream.ToArray().Length);
-            }
+            using var memoryStream = new MemoryStream();
+            workbook.SaveAs(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            Console.WriteLine("Total bytes = " + memoryStream.ToArray().Length);
         }
 
-        private static Random rnd = new Random();
+        private static readonly Random rnd = new Random();
 
         private static T GenerateRow<T>() where T : new()
         {
@@ -86,9 +82,9 @@ namespace ClosedXML.Sandbox
             // Format strings
             var tmpString = new StringBuilder();
             var tmpStringLength = rnd.Next(5, 50);
-            for (int x = 0; x <= tmpStringLength; x++)
+            for (var x = 0; x <= tmpStringLength; x++)
             {
-                tmpString.Append((char)(rnd.Next(48, 120)));
+                tmpString.Append((char)rnd.Next(48, 120));
             }
             foreach (var str in strings)
             {
@@ -96,7 +92,7 @@ namespace ClosedXML.Sandbox
             }
 
             // Format decimals
-            var tmpDec = (decimal)(rnd.Next(-10000, 100000) / (Math.Pow(10.0, rnd.Next(1, 4))));
+            var tmpDec = (decimal)(rnd.Next(-10000, 100000) / Math.Pow(10.0, rnd.Next(1, 4)));
 
             foreach (var dec in decimals)
             {
@@ -128,7 +124,7 @@ namespace ClosedXML.Sandbox
             }
 
             // Format booleans
-            var tmpBool = (rnd.Next(0, 2) > 0);
+            var tmpBool = rnd.Next(0, 2) > 0;
             foreach (var bl in booleans)
             {
                 bl.SetValue(row, tmpBool, null);
@@ -139,32 +135,30 @@ namespace ClosedXML.Sandbox
 
         public static void PerformHeavyCalculation()
         {
-            int rows = 200;
-            int columns = 200;
-            using (var wb = new XLWorkbook())
+            var rows = 200;
+            var columns = 200;
+            using var wb = new XLWorkbook();
+            var sheet = wb.Worksheets.Add("TestSheet");
+            var lastColumnLetter = sheet.Column(columns).ColumnLetter();
+            for (var i = 1; i <= rows; i++)
             {
-                var sheet = wb.Worksheets.Add("TestSheet");
-                var lastColumnLetter = sheet.Column(columns).ColumnLetter();
-                for (int i = 1; i <= rows; i++)
+                for (var j = 1; j <= columns; j++)
                 {
-                    for (int j = 1; j <= columns; j++)
+                    if (i == 1)
                     {
-                        if (i == 1)
-                        {
-                            sheet.Cell(i, j).FormulaA1 = string.Format("=ROUND({0}*SIN({0}),2)", j);
-                        }
-                        else
-                        {
-                            sheet.Cell(i, j).FormulaA1 = string.Format("=SUM({0}$1:{0}{1})/SUM($A{1}:${2}{1})",
-                                sheet.Column(j).ColumnLetter(), i - 1, lastColumnLetter); // i.e. for K8 there will be =SUM(K$1:K7)/SUM($A7:$GR7)
-                        }
+                        sheet.Cell(i, j).FormulaA1 = string.Format("=ROUND({0}*SIN({0}),2)", j);
+                    }
+                    else
+                    {
+                        sheet.Cell(i, j).FormulaA1 = string.Format("=SUM({0}$1:{0}{1})/SUM($A{1}:${2}{1})",
+                            sheet.Column(j).ColumnLetter(), i - 1, lastColumnLetter); // i.e. for K8 there will be =SUM(K$1:K7)/SUM($A7:$GR7)
                     }
                 }
-
-                var cells = sheet.CellsUsed();
-                var sum1 = cells.Sum(cell => (double)cell.Value);
-                Console.WriteLine("Total sum: {0:N2}", sum1);
             }
+
+            var cells = sheet.CellsUsed();
+            var sum1 = cells.Sum(cell => (double)cell.Value);
+            Console.WriteLine("Total sum: {0:N2}", sum1);
         }
     }
 }

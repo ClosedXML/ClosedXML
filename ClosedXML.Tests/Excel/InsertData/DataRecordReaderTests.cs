@@ -20,25 +20,21 @@ namespace ClosedXML.Tests.Excel.InsertData
             union all
             select 'Value 3', 300";
 
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(queryString, connection))
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(queryString, connection);
+            try
             {
-                try
-                {
-                    connection.Open();
-                }
-                catch
-                {
-                    Assert.Ignore("Could not connect to localdb");
-                }
+                connection.Open();
+            }
+            catch
+            {
+                Assert.Ignore("Could not connect to localdb");
+            }
 
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        yield return reader;
-                    }
-                }
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                yield return reader;
             }
         }
 

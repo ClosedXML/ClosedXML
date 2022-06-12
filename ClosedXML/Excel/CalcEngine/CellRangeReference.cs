@@ -24,7 +24,9 @@ namespace ClosedXML.Excel.CalcEngine
         public IEnumerator GetEnumerator()
         {
             if (Range.Worksheet.IsEmpty(XLCellsUsedOptions.AllContents))
+            {
                 yield break;
+            }
 
             var lastCellAddress = Range.Worksheet.LastCellUsed().Address;
             var maxRow = Math.Min(Range.RangeAddress.LastAddress.RowNumber, lastCellAddress.RowNumber);
@@ -37,10 +39,12 @@ namespace ClosedXML.Excel.CalcEngine
                 );
 
             foreach (var c in trimmedRange.CellValues())
+            {
                 yield return c;
+            }
         }
 
-        private Boolean _evaluating;
+        private bool _evaluating;
 
         // ** implementation
         private object GetValue(IXLCell cell)
@@ -53,8 +57,10 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 _evaluating = true;
                 var f = cell.FormulaA1;
-                if (String.IsNullOrWhiteSpace(f))
+                if (string.IsNullOrWhiteSpace(f))
+                {
                     return cell.Value;
+                }
                 else
                 {
                     return (cell as XLCell).Evaluate();

@@ -18,7 +18,7 @@ namespace ClosedXML.Excel
         /// <param name="element">The element to add</param>
         /// <param name="allowed">Set to <c>true</c> to allow the element or <c>false</c> to disallow the element</param>
         /// <returns>The current protection instance</returns>
-        IXLElementProtection<T> AllowElement(T element, Boolean allowed = true);
+        IXLElementProtection<T> AllowElement(T element, bool allowed = true);
 
         /// <summary>Allows all elements to be edited.</summary>
         /// <returns></returns>
@@ -49,7 +49,7 @@ namespace ClosedXML.Excel
         /// <param name="password">The password.</param>
         /// <param name="algorithm">The algorithm.</param>
         /// <returns></returns>
-        IXLElementProtection<T> Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm);
+        IXLElementProtection<T> Protect(string password, Algorithm algorithm = DefaultProtectionAlgorithm);
 
         /// <summary>Unprotects this instance without a password.</summary>
         /// <returns></returns>
@@ -58,7 +58,7 @@ namespace ClosedXML.Excel
         /// <summary>Unprotects this instance using the specified password.</summary>
         /// <param name="password">The password.</param>
         /// <returns></returns>
-        IXLElementProtection<T> Unprotect(String password);
+        IXLElementProtection<T> Unprotect(string password);
     }
 
     public interface IXLElementProtection : ICloneable
@@ -71,12 +71,12 @@ namespace ClosedXML.Excel
         /// <value>
         ///   <c>true</c> if this instance is password protected; otherwise, <c>false</c>.
         /// </value>
-        Boolean IsPasswordProtected { get; }
+        bool IsPasswordProtected { get; }
 
         /// <summary>Gets a value indicating whether this instance is protected, either with or without a password.</summary>
         /// <value>
         ///   <c>true</c> if this instance is protected; otherwise, <c>false</c>.
         /// </value>
-        Boolean IsProtected { get; }
+        bool IsProtected { get; }
     }
 }

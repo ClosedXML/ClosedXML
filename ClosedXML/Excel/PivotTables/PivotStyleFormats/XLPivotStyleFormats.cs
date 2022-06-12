@@ -16,7 +16,7 @@ namespace ClosedXML.Excel
 
         public XLPivotStyleFormats(IXLPivotField pivotField)
         {
-            this._pivotField = pivotField;
+            _pivotField = pivotField;
         }
 
         #region IXLPivotStyleFormats members
@@ -24,9 +24,11 @@ namespace ClosedXML.Excel
         public IXLPivotStyleFormat ForElement(XLPivotStyleFormatElement element)
         {
             if (element == XLPivotStyleFormatElement.None)
+            {
                 throw new ArgumentException("Choose an enum value that represents an element", nameof(element));
+            }
 
-            if (!_styleFormats.TryGetValue(element, out IXLPivotStyleFormat pivotStyleFormat))
+            if (!_styleFormats.TryGetValue(element, out var pivotStyleFormat))
             {
                 pivotStyleFormat = new XLPivotStyleFormat(_pivotField) { AppliesTo = element };
                 _styleFormats.Add(element, pivotStyleFormat);
@@ -55,7 +57,9 @@ namespace ClosedXML.Excel
         public void AddRange(IEnumerable<IXLPivotStyleFormat> styleFormats)
         {
             foreach (var styleFormat in styleFormats)
+            {
                 Add(styleFormat);
+            }
         }
     }
 }

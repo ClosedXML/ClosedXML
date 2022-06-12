@@ -15,8 +15,8 @@ namespace ClosedXML.Excel
             _numberFormatId = 0;
         }
 
-        private Int32 _numberFormatId = -1;
-        public Int32 NumberFormatId
+        private int _numberFormatId = -1;
+        public int NumberFormatId
         {
             get { return _numberFormatId; }
             set
@@ -26,8 +26,8 @@ namespace ClosedXML.Excel
             }
         }
 
-        private String _format = String.Empty;
-        public String Format
+        private string _format = string.Empty;
+        public string Format
         {
             get { return _format; }
             set
@@ -37,12 +37,12 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLPivotValue SetNumberFormatId(Int32 value)
+        public IXLPivotValue SetNumberFormatId(int value)
         {
             NumberFormatId = value;
             return _pivotValue;
         }
-        public IXLPivotValue SetFormat(String value)
+        public IXLPivotValue SetFormat(string value)
         {
             Format = value;
 

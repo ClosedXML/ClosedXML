@@ -4,8 +4,8 @@ namespace ClosedXML.Excel
 {
     public interface IXLNumberFormat : IXLNumberFormatBase, IEquatable<IXLNumberFormatBase>
     {
-        IXLStyle SetNumberFormatId(Int32 value);
+        IXLStyle SetNumberFormatId(int value);
 
-        IXLStyle SetFormat(String value);
+        IXLStyle SetFormat(string value);
     }
 }

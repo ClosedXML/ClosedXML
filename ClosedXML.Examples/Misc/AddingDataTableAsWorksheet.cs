@@ -38,7 +38,7 @@ namespace ClosedXML.Examples.Misc
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             using var wb = new XLWorkbook();
 
@@ -52,10 +52,12 @@ namespace ClosedXML.Examples.Misc
         }
 
         // Private
-        private DataTable GetTable(String tableName)
+        private DataTable GetTable(string tableName)
         {
-            DataTable table = new DataTable();
-            table.TableName = tableName;
+            var table = new DataTable
+            {
+                TableName = tableName
+            };
             table.Columns.Add("Dosage", typeof(int));
             table.Columns.Add("Drug", typeof(string));
             table.Columns.Add("Patient", typeof(string));

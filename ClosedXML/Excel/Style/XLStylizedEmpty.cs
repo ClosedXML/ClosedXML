@@ -1,3 +1,4 @@
+using ClosedXML.Excel.Style;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel
@@ -17,10 +18,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public override IXLRanges RangesUsed
-        {
-            get { return new XLRanges(); }
-        }
+        public override IXLRanges RangesUsed => new XLRanges();
 
         protected override IEnumerable<XLStylizedBase> Children
         {

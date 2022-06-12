@@ -75,63 +75,63 @@ namespace ClosedXML.Excel
 
         IXLStyle WhenDateIs(XLTimePeriod timePeriod);
 
-        IXLStyle WhenContains(String value);
+        IXLStyle WhenContains(string value);
 
-        IXLStyle WhenNotContains(String value);
+        IXLStyle WhenNotContains(string value);
 
-        IXLStyle WhenStartsWith(String value);
+        IXLStyle WhenStartsWith(string value);
 
-        IXLStyle WhenEndsWith(String value);
+        IXLStyle WhenEndsWith(string value);
 
-        IXLStyle WhenEquals(String value);
+        IXLStyle WhenEquals(string value);
 
-        IXLStyle WhenNotEquals(String value);
+        IXLStyle WhenNotEquals(string value);
 
-        IXLStyle WhenGreaterThan(String value);
+        IXLStyle WhenGreaterThan(string value);
 
-        IXLStyle WhenLessThan(String value);
+        IXLStyle WhenLessThan(string value);
 
-        IXLStyle WhenEqualOrGreaterThan(String value);
+        IXLStyle WhenEqualOrGreaterThan(string value);
 
-        IXLStyle WhenEqualOrLessThan(String value);
+        IXLStyle WhenEqualOrLessThan(string value);
 
-        IXLStyle WhenBetween(String minValue, String maxValue);
+        IXLStyle WhenBetween(string minValue, string maxValue);
 
-        IXLStyle WhenNotBetween(String minValue, String maxValue);
+        IXLStyle WhenNotBetween(string minValue, string maxValue);
 
-        IXLStyle WhenEquals(Double value);
+        IXLStyle WhenEquals(double value);
 
-        IXLStyle WhenNotEquals(Double value);
+        IXLStyle WhenNotEquals(double value);
 
-        IXLStyle WhenGreaterThan(Double value);
+        IXLStyle WhenGreaterThan(double value);
 
-        IXLStyle WhenLessThan(Double value);
+        IXLStyle WhenLessThan(double value);
 
-        IXLStyle WhenEqualOrGreaterThan(Double value);
+        IXLStyle WhenEqualOrGreaterThan(double value);
 
-        IXLStyle WhenEqualOrLessThan(Double value);
+        IXLStyle WhenEqualOrLessThan(double value);
 
-        IXLStyle WhenBetween(Double minValue, Double maxValue);
+        IXLStyle WhenBetween(double minValue, double maxValue);
 
-        IXLStyle WhenNotBetween(Double minValue, Double maxValue);
+        IXLStyle WhenNotBetween(double minValue, double maxValue);
 
         IXLStyle WhenIsDuplicate();
 
         IXLStyle WhenIsUnique();
 
-        IXLStyle WhenIsTrue(String formula);
+        IXLStyle WhenIsTrue(string formula);
 
-        IXLStyle WhenIsTop(Int32 value, XLTopBottomType topBottomType = XLTopBottomType.Items);
+        IXLStyle WhenIsTop(int value, XLTopBottomType topBottomType = XLTopBottomType.Items);
 
-        IXLStyle WhenIsBottom(Int32 value, XLTopBottomType topBottomType);
+        IXLStyle WhenIsBottom(int value, XLTopBottomType topBottomType);
 
         IXLCFColorScaleMin ColorScale();
 
-        IXLCFDataBarMin DataBar(XLColor color, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor color, bool showBarOnly = false);
 
-        IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, Boolean showBarOnly = false);
+        IXLCFDataBarMin DataBar(XLColor positiveColor, XLColor negativeColor, bool showBarOnly = false);
 
-        IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, Boolean reverseIconOrder = false, Boolean showIconOnly = false);
+        IXLCFIconSet IconSet(XLIconSetStyle iconSetStyle, bool reverseIconOrder = false, bool showIconOnly = false);
 
         XLConditionalFormatType ConditionalFormatType { get; }
 
@@ -139,13 +139,13 @@ namespace ClosedXML.Excel
 
         XLTimePeriod TimePeriod { get; }
 
-        Boolean ReverseIconOrder { get; }
+        bool ReverseIconOrder { get; }
 
-        Boolean ShowIconOnly { get; }
+        bool ShowIconOnly { get; }
 
-        Boolean ShowBarOnly { get; }
+        bool ShowBarOnly { get; }
 
-        Boolean StopIfTrue { get; }
+        bool StopIfTrue { get; }
 
         /// <summary>
         /// The first of the <see cref="Ranges"/>.
@@ -164,13 +164,13 @@ namespace ClosedXML.Excel
 
         XLCFOperator Operator { get; }
 
-        Boolean Bottom { get; }
+        bool Bottom { get; }
 
-        Boolean Percent { get; }
+        bool Percent { get; }
 
         IXLConditionalFormat SetStopIfTrue();
 
-        IXLConditionalFormat SetStopIfTrue(Boolean value);
+        IXLConditionalFormat SetStopIfTrue(bool value);
 
         IXLConditionalFormat CopyTo(IXLWorksheet targetSheet);
     }

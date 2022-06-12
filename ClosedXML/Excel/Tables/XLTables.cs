@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
+using ClosedXML.Excel.Tables;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
     internal class XLTables : IXLTables
     {
-        private readonly Dictionary<String, IXLTable> _tables;
+        private readonly Dictionary<string, IXLTable> _tables;
 
         public XLTables()
         {
-            _tables = new Dictionary<String, IXLTable>(StringComparer.OrdinalIgnoreCase);
-            Deleted = new HashSet<String>();
+            _tables = new Dictionary<string, IXLTable>(StringComparer.OrdinalIgnoreCase);
+            Deleted = new HashSet<string>();
         }
 
-        internal ICollection<String> Deleted { get; private set; }
+        internal ICollection<string> Deleted { get; private set; }
 
         #region IXLTables Members
 
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Boolean Contains(String name)
+        public bool Contains(string name)
         {
             return _tables.ContainsKey(name);
         }
@@ -47,33 +47,39 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public void Remove(Int32 index)
+        public void Remove(int index)
         {
-            this.Remove(_tables.ElementAt(index).Key);
+            Remove(_tables.ElementAt(index).Key);
         }
 
-        public void Remove(String name)
+        public void Remove(string name)
         {
-            if (!_tables.TryGetValue(name, out IXLTable table))
+            if (!_tables.TryGetValue(name, out var table))
+            {
                 throw new ArgumentOutOfRangeException(nameof(name), $"Unable to delete table because the table name {name} could not be found.");
+            }
 
             _tables.Remove(name);
 
             var relId = (table as XLTable)?.RelId;
 
             if (relId != null)
+            {
                 Deleted.Add(relId);
+            }
         }
 
-        public IXLTable Table(Int32 index)
+        public IXLTable Table(int index)
         {
             return _tables.ElementAt(index).Value;
         }
 
-        public IXLTable Table(String name)
+        public IXLTable Table(string name)
         {
-            if (TryGetTable(name, out IXLTable table))
+            if (TryGetTable(name, out var table))
+            {
                 return table;
+            }
 
             throw new ArgumentOutOfRangeException(nameof(name), $"Table {name} was not found.");
         }

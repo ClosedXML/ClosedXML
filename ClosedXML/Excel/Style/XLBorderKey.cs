@@ -40,15 +40,29 @@ namespace ClosedXML.Excel
             hashCode = hashCode * -1521134295 + DiagonalDown.GetHashCode();
 
             if (LeftBorder != XLBorderStyleValues.None)
+            {
                 hashCode = hashCode * -1521134295 + LeftBorderColor.GetHashCode();
+            }
+
             if (RightBorder != XLBorderStyleValues.None)
+            {
                 hashCode = hashCode * -1521134295 + RightBorderColor.GetHashCode();
+            }
+
             if (TopBorder != XLBorderStyleValues.None)
+            {
                 hashCode = hashCode * -1521134295 + TopBorderColor.GetHashCode();
+            }
+
             if (BottomBorder != XLBorderStyleValues.None)
+            {
                 hashCode = hashCode * -1521134295 + BottomBorderColor.GetHashCode();
+            }
+
             if (DiagonalBorder != XLBorderStyleValues.None)
+            {
                 hashCode = hashCode * -1521134295 + DiagonalBorderColor.GetHashCode();
+            }
 
             return hashCode;
         }
@@ -78,7 +92,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLBorderKey)
+            {
                 return Equals((XLBorderKey)obj);
+            }
+
             return base.Equals(obj);
         }
 
@@ -92,6 +109,6 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLBorderKey left, XLBorderKey right) => left.Equals(right);
 
-        public static bool operator !=(XLBorderKey left, XLBorderKey right) => !(left.Equals(right));
+        public static bool operator !=(XLBorderKey left, XLBorderKey right) => !left.Equals(right);
     }
 }

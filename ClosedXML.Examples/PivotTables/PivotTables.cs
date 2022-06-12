@@ -26,7 +26,7 @@ namespace ClosedXML.Examples
             public DateTime? BakeDate { get; set; }
         }
 
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             var pastries = new List<Pastry>
             {
@@ -52,109 +52,40 @@ namespace ClosedXML.Examples
                 new Pastry("Scone", null, 255, 18.4, null, null),
             };
 
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("PastrySalesData");
+            // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
+            var table = ws.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
+            ws.Columns().AdjustToContents();
+
+
+            IXLWorksheet ptSheet;
+            IXLPivotTable pt;
+
+            #region Pivots
+
+            for (var i = 1; i <= 3; i++)
             {
-                var ws = wb.Worksheets.Add("PastrySalesData");
-                // Insert our list of pastry data into the "PastrySalesData" sheet at cell 1,1
-                var table = ws.Cell(1, 1).InsertTable(pastries, "PastrySalesData", true);
-                ws.Columns().AdjustToContents();
-
-
-                IXLWorksheet ptSheet;
-                IXLPivotTable pt;
-
-                #region Pivots
-
-                for (int i = 1; i <= 3; i++)
-                {
-                    // Add a new sheet for our pivot table
-                    ptSheet = wb.Worksheets.Add("pvt" + i);
-
-                    // Create the pivot table, using the data from the "PastrySalesData" table
-                    pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table.AsRange());
-
-                    // The rows in our pivot table will be the names of the pastries
-                    if (i == 2) pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
-                    pt.RowLabels.Add("Name");
-
-                    // The columns will be the months
-                    pt.ColumnLabels.Add("Month");
-                    if (i == 3) pt.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
-
-                    // The values in our table will come from the "NumberOfOrders" field
-                    // The default calculation setting is a total of each row/column
-                    pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
-                        .ShowAsPercentageFrom("Name").And("Bearclaw")
-                        .NumberFormat.Format = "0%";
-
-                    if (i > 1)
-                    {
-                        pt.Values.Add("Quality", "Sum of Quality")
-                            .NumberFormat.SetFormat("#,##0.00");
-                    }
-                    if (i > 2)
-                    {
-                        pt.Values.Add("NumberOfOrders", "Sum of NumberOfOrders");
-                    }
-
-                    ptSheet.Columns().AdjustToContents();
-                }
-
-                #endregion Pivots
-
-                #region Different kind of pivot
-
-                ptSheet = wb.Worksheets.Add("pvtNoColumnLabels");
-                pt = ptSheet.PivotTables.Add("pvtNoColumnLabels", ptSheet.Cell(1, 1), table.AsRange());
-
-                pt.RowLabels.Add("Name");
-                pt.RowLabels.Add("Month");
-
-                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
-                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
-
-                pt.SetRowHeaderCaption("Pastry name");
-
-                #endregion Different kind of pivot
-
-                #region Pivot table with collapsed fields
-
-                ptSheet = wb.Worksheets.Add("pvtCollapsedFields");
-                pt = ptSheet.PivotTables.Add("pvtCollapsedFields", ptSheet.Cell(1, 1), table.AsRange());
-
-                pt.RowLabels.Add("Name").SetCollapsed();
-                pt.RowLabels.Add("Month").SetCollapsed();
-
-                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
-                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
-
-                #endregion Pivot table with collapsed fields
-
-                #region Pivot table with a field both as a value and as a row/column/filter label
-
-                ptSheet = wb.Worksheets.Add("pvtFieldAsValueAndLabel");
-                pt = ptSheet.PivotTables.Add("pvtFieldAsValueAndLabel", ptSheet.Cell(1, 1), table.AsRange());
-
-                pt.RowLabels.Add("Name");
-                pt.RowLabels.Add("Month");
-
-                pt.Values.Add("Name").SetSummaryFormula(XLPivotSummary.Count);//.NumberFormat.Format = "#0.00";
-
-                #endregion Pivot table with a field both as a value and as a row/column/filter label
-
-                #region Pivot table with subtotals disabled
-
-                ptSheet = wb.Worksheets.Add("pvtHideSubTotals");
+                // Add a new sheet for our pivot table
+                ptSheet = wb.Worksheets.Add("pvt" + i);
 
                 // Create the pivot table, using the data from the "PastrySalesData" table
-                pt = ptSheet.PivotTables.Add("pvtHidesubTotals", ptSheet.Cell(1, 1), table.AsRange());
+                pt = ptSheet.PivotTables.Add("pvt", ptSheet.Cell(1, 1), table.AsRange());
 
                 // The rows in our pivot table will be the names of the pastries
-                pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+                if (i == 2)
+                {
+                    pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+                }
+
+                pt.RowLabels.Add("Name");
 
                 // The columns will be the months
                 pt.ColumnLabels.Add("Month");
-                pt.ColumnLabels.Add("Name");
+                if (i == 3)
+                {
+                    pt.ColumnLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+                }
 
                 // The values in our table will come from the "NumberOfOrders" field
                 // The default calculation setting is a total of each row/column
@@ -162,73 +93,147 @@ namespace ClosedXML.Examples
                     .ShowAsPercentageFrom("Name").And("Bearclaw")
                     .NumberFormat.Format = "0%";
 
-                pt.Values.Add("Quality", "Sum of Quality")
-                    .NumberFormat.SetFormat("#,##0.00");
-
-                pt.Subtotals = XLPivotSubtotals.DoNotShow;
-
-                pt.SetColumnHeaderCaption("Measures");
+                if (i > 1)
+                {
+                    pt.Values.Add("Quality", "Sum of Quality")
+                        .NumberFormat.SetFormat("#,##0.00");
+                }
+                if (i > 2)
+                {
+                    pt.Values.Add("NumberOfOrders", "Sum of NumberOfOrders");
+                }
 
                 ptSheet.Columns().AdjustToContents();
-
-                #endregion Pivot table with subtotals disabled
-
-                #region Pivot Table with filter
-
-                ptSheet = wb.Worksheets.Add("pvtFilter");
-
-                pt = table.CreatePivotTable(ptSheet.FirstCell(), "pvtFilter");
-
-                pt.RowLabels.Add("Month");
-
-                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
-
-                pt.ReportFilters.Add("Name")
-                    .AddSelectedValue("Scone")
-                    .AddSelectedValue("Doughnut");
-
-                pt.ReportFilters.Add("Quality")
-                    .AddSelectedValue(5.19);
-
-                pt.ReportFilters.Add("BakeDate")
-                    .AddSelectedValue(new DateTime(2017, 05, 03));
-
-                #endregion Pivot Table with filter
-                
-                #region Pivot table sorting
-
-                ptSheet = wb.Worksheets.Add("pvtSort");
-                pt = ptSheet.PivotTables.Add("pvtSort", ptSheet.Cell(1, 1), table.AsRange());
-
-                pt.RowLabels.Add("Name").SetSort(XLPivotSortType.Ascending);
-                pt.RowLabels.Add("Month").SetSort(XLPivotSortType.Descending);
-
-                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
-                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
-
-                pt.SetRowHeaderCaption("Pastry name");
-
-                #endregion Different kind of pivot
-
-                #region Pivot Table with integer rows
-
-                ptSheet = wb.Worksheets.Add("pvtInteger");
-
-                pt = ptSheet.PivotTables.Add("pvtInteger", ptSheet.Cell(1, 1), table);
-
-                pt.RowLabels.Add("Name");
-                pt.RowLabels.Add("Code");
-                pt.RowLabels.Add("BakeDate");
-
-                pt.ColumnLabels.Add("Month");
-
-                pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
-                pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
-
-                #endregion Pivot Table with filter
-
-                wb.SaveAs(filePath);
             }
+
+            #endregion Pivots
+
+            #region Different kind of pivot
+
+            ptSheet = wb.Worksheets.Add("pvtNoColumnLabels");
+            pt = ptSheet.PivotTables.Add("pvtNoColumnLabels", ptSheet.Cell(1, 1), table.AsRange());
+
+            pt.RowLabels.Add("Name");
+            pt.RowLabels.Add("Month");
+
+            pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+            pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
+            pt.SetRowHeaderCaption("Pastry name");
+
+            #endregion Different kind of pivot
+
+            #region Pivot table with collapsed fields
+
+            ptSheet = wb.Worksheets.Add("pvtCollapsedFields");
+            pt = ptSheet.PivotTables.Add("pvtCollapsedFields", ptSheet.Cell(1, 1), table.AsRange());
+
+            pt.RowLabels.Add("Name").SetCollapsed();
+            pt.RowLabels.Add("Month").SetCollapsed();
+
+            pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+            pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
+            #endregion Pivot table with collapsed fields
+
+            #region Pivot table with a field both as a value and as a row/column/filter label
+
+            ptSheet = wb.Worksheets.Add("pvtFieldAsValueAndLabel");
+            pt = ptSheet.PivotTables.Add("pvtFieldAsValueAndLabel", ptSheet.Cell(1, 1), table.AsRange());
+
+            pt.RowLabels.Add("Name");
+            pt.RowLabels.Add("Month");
+
+            pt.Values.Add("Name").SetSummaryFormula(XLPivotSummary.Count);//.NumberFormat.Format = "#0.00";
+
+            #endregion Pivot table with a field both as a value and as a row/column/filter label
+
+            #region Pivot table with subtotals disabled
+
+            ptSheet = wb.Worksheets.Add("pvtHideSubTotals");
+
+            // Create the pivot table, using the data from the "PastrySalesData" table
+            pt = ptSheet.PivotTables.Add("pvtHidesubTotals", ptSheet.Cell(1, 1), table.AsRange());
+
+            // The rows in our pivot table will be the names of the pastries
+            pt.RowLabels.Add(XLConstants.PivotTable.ValuesSentinalLabel);
+
+            // The columns will be the months
+            pt.ColumnLabels.Add("Month");
+            pt.ColumnLabels.Add("Name");
+
+            // The values in our table will come from the "NumberOfOrders" field
+            // The default calculation setting is a total of each row/column
+            pt.Values.Add("NumberOfOrders", "NumberOfOrdersPercentageOfBearclaw")
+                .ShowAsPercentageFrom("Name").And("Bearclaw")
+                .NumberFormat.Format = "0%";
+
+            pt.Values.Add("Quality", "Sum of Quality")
+                .NumberFormat.SetFormat("#,##0.00");
+
+            pt.Subtotals = XLPivotSubtotals.DoNotShow;
+
+            pt.SetColumnHeaderCaption("Measures");
+
+            ptSheet.Columns().AdjustToContents();
+
+            #endregion Pivot table with subtotals disabled
+
+            #region Pivot Table with filter
+
+            ptSheet = wb.Worksheets.Add("pvtFilter");
+
+            pt = table.CreatePivotTable(ptSheet.FirstCell(), "pvtFilter");
+
+            pt.RowLabels.Add("Month");
+
+            pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+
+            pt.ReportFilters.Add("Name")
+                .AddSelectedValue("Scone")
+                .AddSelectedValue("Doughnut");
+
+            pt.ReportFilters.Add("Quality")
+                .AddSelectedValue(5.19);
+
+            pt.ReportFilters.Add("BakeDate")
+                .AddSelectedValue(new DateTime(2017, 05, 03));
+
+            #endregion Pivot Table with filter
+
+            #region Pivot table sorting
+
+            ptSheet = wb.Worksheets.Add("pvtSort");
+            pt = ptSheet.PivotTables.Add("pvtSort", ptSheet.Cell(1, 1), table.AsRange());
+
+            pt.RowLabels.Add("Name").SetSort(XLPivotSortType.Ascending);
+            pt.RowLabels.Add("Month").SetSort(XLPivotSortType.Descending);
+
+            pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+            pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
+            pt.SetRowHeaderCaption("Pastry name");
+
+            #endregion Different kind of pivot
+
+            #region Pivot Table with integer rows
+
+            ptSheet = wb.Worksheets.Add("pvtInteger");
+
+            pt = ptSheet.PivotTables.Add("pvtInteger", ptSheet.Cell(1, 1), table);
+
+            pt.RowLabels.Add("Name");
+            pt.RowLabels.Add("Code");
+            pt.RowLabels.Add("BakeDate");
+
+            pt.ColumnLabels.Add("Month");
+
+            pt.Values.Add("NumberOfOrders").SetSummaryFormula(XLPivotSummary.Sum);
+            pt.Values.Add("Quality").SetSummaryFormula(XLPivotSummary.Sum);
+
+            #endregion Pivot Table with filter
+
+            wb.SaveAs(filePath);
         }
     }
 }

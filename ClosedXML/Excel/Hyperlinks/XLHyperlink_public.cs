@@ -7,49 +7,49 @@ namespace ClosedXML.Excel
     public partial class XLHyperlink
     {
         private Uri _externalAddress;
-        private String _internalAddress;
+        private string _internalAddress;
 
-        public XLHyperlink(String address)
+        public XLHyperlink(string address)
         {
-            SetValues(address, String.Empty);
+            SetValues(address, string.Empty);
         }
 
-        public XLHyperlink(String address, String tooltip)
+        public XLHyperlink(string address, string tooltip)
         {
             SetValues(address, tooltip);
         }
 
         public XLHyperlink(IXLCell cell)
         {
-            SetValues(cell, String.Empty);
+            SetValues(cell, string.Empty);
         }
 
-        public XLHyperlink(IXLCell cell, String tooltip)
+        public XLHyperlink(IXLCell cell, string tooltip)
         {
             SetValues(cell, tooltip);
         }
 
         public XLHyperlink(IXLRangeBase range)
         {
-            SetValues(range, String.Empty);
+            SetValues(range, string.Empty);
         }
 
-        public XLHyperlink(IXLRangeBase range, String tooltip)
+        public XLHyperlink(IXLRangeBase range, string tooltip)
         {
             SetValues(range, tooltip);
         }
 
         public XLHyperlink(Uri uri)
         {
-            SetValues(uri, String.Empty);
+            SetValues(uri, string.Empty);
         }
 
-        public XLHyperlink(Uri uri, String tooltip)
+        public XLHyperlink(Uri uri, string tooltip)
         {
             SetValues(uri, tooltip);
         }
 
-        public Boolean IsExternal { get; set; }
+        public bool IsExternal { get; set; }
 
         public Uri ExternalAddress
         {
@@ -66,16 +66,19 @@ namespace ClosedXML.Excel
 
         public IXLCell Cell { get; internal set; }
 
-        public String InternalAddress
+        public string InternalAddress
         {
             get
             {
                 if (IsExternal)
+                {
                     return null;
+                }
+
                 if (_internalAddress.Contains('!'))
                 {
                     return _internalAddress[0] != '\''
-                               ? String.Concat(
+                               ? string.Concat(
                                     _internalAddress
                                         .Substring(0, _internalAddress.IndexOf('!'))
                                         .EscapeSheetName(),
@@ -83,7 +86,7 @@ namespace ClosedXML.Excel
                                     _internalAddress.Substring(_internalAddress.IndexOf('!') + 1))
                                : _internalAddress;
                 }
-                return String.Concat(
+                return string.Concat(
                     Worksheet.Name.EscapeSheetName(),
                     '!',
                     _internalAddress);
@@ -95,14 +98,20 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String Tooltip { get; set; }
+        public string Tooltip { get; set; }
 
         public void Delete()
         {
-            if (Cell == null) return;
+            if (Cell == null)
+            {
+                return;
+            }
+
             Worksheet.Hyperlinks.Delete(Cell.Address);
             if (Cell.Style.Font.FontColor.Equals(XLColor.FromTheme(XLThemeColor.Hyperlink)))
+            {
                 Cell.Style.Font.FontColor = Worksheet.StyleValue.Font.FontColor;
+            }
 
             Cell.Style.Font.Underline = Worksheet.StyleValue.Font.Underline;
         }

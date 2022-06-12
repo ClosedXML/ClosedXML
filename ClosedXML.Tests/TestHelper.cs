@@ -1,5 +1,6 @@
 using ClosedXML.Examples;
 using ClosedXML.Excel;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,18 +13,9 @@ namespace ClosedXML.Tests
 {
     internal static class TestHelper
     {
-        public static string CurrencySymbol
-        {
-            get { return Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol; }
-        }
+        public static string CurrencySymbol => Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencySymbol;
 
-        public static string TestsOutputDirectory
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Generated");
-            }
-        }
+        public static string TestsOutputDirectory => Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Generated");
 
         public const string ActualTestResultPostFix = "";
         public static readonly string ExampleTestsOutputDirectory = Path.Combine(TestsOutputDirectory, "Examples");
@@ -44,8 +36,8 @@ namespace ClosedXML.Tests
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
             var example = new T();
-            var pathParts = filePartName.Split(new char[] { '\\' });
-            var filePath1 = Path.Combine(new List<string>() { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
+            var pathParts = filePartName.Split(new[] { '\\' });
+            var filePath1 = Path.Combine(new List<string> { ExampleTestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);
@@ -125,8 +117,8 @@ namespace ClosedXML.Tests
         {
             Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
 
-            var pathParts = referenceResource.Split(new char[] { '\\' });
-            var filePath1 = Path.Combine(new List<string>() { TestsOutputDirectory }.Concat(pathParts).ToArray());
+            var pathParts = referenceResource.Split(new[] { '\\' });
+            var filePath1 = Path.Combine(new List<string> { TestsOutputDirectory }.Concat(pathParts).ToArray());
 
             var extension = Path.GetExtension(filePath1);
             var directory = Path.GetDirectoryName(filePath1);

@@ -86,7 +86,10 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
@@ -101,7 +104,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (IXLRange r in _container.RangesUsed)
+                    foreach (var r in _container.RangesUsed)
                     {
                         r.FirstColumn().Style.Border.LeftBorder = value;
                         r.LastColumn().Style.Border.RightBorder = value;
@@ -116,7 +119,10 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
                 if (_container is XLWorksheet || _container is XLConditionalFormat)
                 {
@@ -131,7 +137,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (IXLRange r in _container.RangesUsed)
+                    foreach (var r in _container.RangesUsed)
                     {
                         r.FirstColumn().Style.Border.LeftBorderColor = value;
                         r.LastColumn().Style.Border.RightBorderColor = value;
@@ -146,10 +152,12 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
-                var wsContainer = _container as XLWorksheet;
-                if (wsContainer != null)
+                if (_container is XLWorksheet wsContainer)
                 {
                     Modify(k =>
                     {
@@ -162,7 +170,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (IXLRange r in _container.RangesUsed)
+                    foreach (var r in _container.RangesUsed)
                     {
                         using (new RestoreOutsideBorder(r))
                         {
@@ -188,10 +196,12 @@ namespace ClosedXML.Excel
         {
             set
             {
-                if (_container == null) return;
+                if (_container == null)
+                {
+                    return;
+                }
 
-                var wsContainer = _container as XLWorksheet;
-                if (wsContainer != null)
+                if (_container is XLWorksheet wsContainer)
                 {
                     Modify(k =>
                     {
@@ -204,7 +214,7 @@ namespace ClosedXML.Excel
                 }
                 else
                 {
-                    foreach (IXLRange r in _container.RangesUsed)
+                    foreach (var r in _container.RangesUsed)
                     {
                         using (new RestoreOutsideBorder(r))
                         {
@@ -242,7 +252,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.LeftBorderColor = value.Key; return k; });
             }
@@ -264,7 +276,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.RightBorderColor = value.Key; return k; });
             }
@@ -286,7 +300,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.TopBorderColor = value.Key; return k; });
             }
@@ -308,7 +324,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.BottomBorderColor = value.Key; return k; });
             }
@@ -330,19 +348,21 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.DiagonalBorderColor = value.Key; return k; });
             }
         }
 
-        public Boolean DiagonalUp
+        public bool DiagonalUp
         {
             get { return Key.DiagonalUp; }
             set { Modify(k => { k.DiagonalUp = value; return k; }); }
         }
 
-        public Boolean DiagonalDown
+        public bool DiagonalDown
         {
             get { return Key.DiagonalDown; }
             set { Modify(k => { k.DiagonalDown = value; return k; }); }
@@ -426,7 +446,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetDiagonalUp(Boolean value)
+        public IXLStyle SetDiagonalUp(bool value)
         {
             DiagonalUp = value;
             return _container.Style;
@@ -438,7 +458,7 @@ namespace ClosedXML.Excel
             return _container.Style;
         }
 
-        public IXLStyle SetDiagonalDown(Boolean value)
+        public IXLStyle SetDiagonalDown(bool value)
         {
             DiagonalDown = value;
             return _container.Style;
@@ -508,9 +528,10 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLBorder other)
         {
-            var otherB = other as XLBorder;
-            if (otherB == null)
+            if (!(other is XLBorder otherB))
+            {
                 return false;
+            }
 
             return Key == otherB.Key;
         }
@@ -530,7 +551,7 @@ namespace ClosedXML.Excel
         /// </summary>
         private class RestoreOutsideBorder : IDisposable
         {
-            private bool _disposed = false;
+            private bool _disposed;
 
             private readonly IXLRange _range;
             private readonly Dictionary<int, XLBorderKey> _topBorders;
@@ -570,7 +591,9 @@ namespace ClosedXML.Excel
             public void Dispose(bool disposing)
             {
                 if (_disposed)
+                {
                     return;
+                }
 
                 if (disposing)
                 {

@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// to be represented in the worksheet.
     /// Corresponds to the #NUM! error in Excel
     /// </summary>
-    /// <seealso cref="ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException" />
+    /// <seealso cref="CalcEngineException" />
     public class NumberException : CalcEngineException
     {
         internal NumberException()

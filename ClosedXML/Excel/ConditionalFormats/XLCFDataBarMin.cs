@@ -13,13 +13,13 @@ namespace ClosedXML.Excel
             _conditionalFormat = conditionalFormat;
         }
 
-        public IXLCFDataBarMax Minimum(XLCFContentType type, String value)
+        public IXLCFDataBarMax Minimum(XLCFContentType type, string value)
         {
             _conditionalFormat.ContentTypes.Initialize(type);
             _conditionalFormat.Values.Initialize(new XLFormula { Value = value });
             return new XLCFDataBarMax(_conditionalFormat);
         }
-        public IXLCFDataBarMax Minimum(XLCFContentType type, Double value)
+        public IXLCFDataBarMax Minimum(XLCFContentType type, double value)
         {
             return Minimum(type, value.ToInvariantString());
         }

@@ -1,7 +1,7 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.PageSetup
 {
     [TestFixture]
     public class PageBreaksTests
@@ -10,7 +10,7 @@ namespace ClosedXML.Tests.Excel
         public void RowBreaksShouldBeSorted()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
+            var sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddHorizontalPageBreak(10);
             sheet.PageSetup.AddHorizontalPageBreak(12);
@@ -22,7 +22,7 @@ namespace ClosedXML.Tests.Excel
         public void ColumnBreaksShouldBeSorted()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
+            var sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddVerticalPageBreak(10);
             sheet.PageSetup.AddVerticalPageBreak(12);
@@ -34,7 +34,7 @@ namespace ClosedXML.Tests.Excel
         public void RowBreaksShiftWhenInsertedRowAbove()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
+            var sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddHorizontalPageBreak(10);
             sheet.Row(5).InsertRowsAbove(1);
@@ -45,7 +45,7 @@ namespace ClosedXML.Tests.Excel
         public void RowBreaksNotShiftWhenInsertedRowBelow()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
+            var sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddHorizontalPageBreak(10);
             sheet.Row(15).InsertRowsAbove(1);
@@ -56,7 +56,7 @@ namespace ClosedXML.Tests.Excel
         public void ColumnBreaksShiftWhenInsertedColumnBefore()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
+            var sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddVerticalPageBreak(10);
             sheet.Column(5).InsertColumnsBefore(1);
@@ -67,7 +67,7 @@ namespace ClosedXML.Tests.Excel
         public void ColumnBreaksNotShiftWhenInsertedColumnAfter()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet sheet = wb.AddWorksheet("Sheet1");
+            var sheet = wb.AddWorksheet("Sheet1");
 
             sheet.PageSetup.AddVerticalPageBreak(10);
             sheet.Column(15).InsertColumnsBefore(1);

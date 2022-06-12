@@ -30,8 +30,8 @@ namespace ClosedXML.Excel.CalcEngine
                 WorksheetName = obj.Worksheet.Name.ToUpperInvariant(),
                 obj.ColumnNumber,
                 obj.RowNumber,
-                FixedColumn = (_ignoreFixed ? false : obj.FixedColumn),
-                FixedRow = (_ignoreFixed ? false : obj.FixedRow)
+                FixedColumn = _ignoreFixed ? false : obj.FixedColumn,
+                FixedRow = _ignoreFixed ? false : obj.FixedRow
             }.GetHashCode();
         }
     }

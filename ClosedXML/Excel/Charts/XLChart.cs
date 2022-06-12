@@ -14,23 +14,28 @@ namespace ClosedXML.Excel
         {
             Container = this;
             this.worksheet = worksheet;
-            Int32 zOrder;
+            int zOrder;
             if (worksheet.Charts.Any())
+            {
                 zOrder = worksheet.Charts.Max(c => c.ZOrder) + 1;
+            }
             else
+            {
                 zOrder = 1;
+            }
+
             ZOrder = zOrder;
             ShapeId = worksheet.Workbook.ShapeIdManager.GetNext();
             RightAngleAxes = true;
         }
 
-        public Boolean RightAngleAxes { get; set; }
+        public bool RightAngleAxes { get; set; }
         public IXLChart SetRightAngleAxes()
         {
             RightAngleAxes = true;
             return this;
         }
-        public IXLChart SetRightAngleAxes(Boolean rightAngleAxes)
+        public IXLChart SetRightAngleAxes(bool rightAngleAxes)
         {
             RightAngleAxes = rightAngleAxes;
             return this;
@@ -48,14 +53,17 @@ namespace ClosedXML.Excel
             get
             {
                 if (Bar3DCharts.Contains(ChartType))
+                {
                     return XLChartTypeCategory.Bar3D;
+                }
                 else
+                {
                     throw new NotImplementedException();
-
+                }
             }
         }
 
-        private HashSet<XLChartType> Bar3DCharts = new HashSet<XLChartType> { 
+        private readonly HashSet<XLChartType> Bar3DCharts = new HashSet<XLChartType> { 
             XLChartType.BarClustered3D, 
             XLChartType.BarStacked100Percent3D, 
             XLChartType.BarStacked3D, 
@@ -70,13 +78,17 @@ namespace ClosedXML.Excel
             get
             {
                 if (HorizontalCharts.Contains(ChartType))
+                {
                     return XLBarOrientation.Horizontal;
+                }
                 else
+                {
                     return XLBarOrientation.Vertical;
+                }
             }
         }
 
-        private HashSet<XLChartType> HorizontalCharts = new HashSet<XLChartType>{
+        private readonly HashSet<XLChartType> HorizontalCharts = new HashSet<XLChartType>{
             XLChartType.BarClustered, 
             XLChartType.BarClustered3D, 
             XLChartType.BarStacked, 
@@ -99,13 +111,21 @@ namespace ClosedXML.Excel
             get
             {
                 if (ClusteredCharts.Contains(ChartType))
+                {
                     return XLBarGrouping.Clustered;
+                }
                 else if (PercentCharts.Contains(ChartType))
+                {
                     return XLBarGrouping.Percent;
+                }
                 else if (StackedCharts.Contains(ChartType))
+                {
                     return XLBarGrouping.Stacked;
+                }
                 else
+                {
                     return XLBarGrouping.Standard;
+                }
             }
         }
 

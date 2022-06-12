@@ -5,7 +5,7 @@ namespace ClosedXML.Tests.Utils
 {
     internal class TemporaryFile : IDisposable
     {
-        private bool _disposed = false;
+        private bool _disposed;
 
         internal TemporaryFile()
             : this(System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "xlsx"))
@@ -15,10 +15,10 @@ namespace ClosedXML.Tests.Utils
             : this(path, false)
         { }
 
-        internal TemporaryFile(String path, bool preserve)
+        internal TemporaryFile(string path, bool preserve)
         {
-            this.Path = path;
-            this.Preserve = preserve;
+            Path = path;
+            Preserve = preserve;
         }
 
         public string Path { get; private set; }
@@ -35,12 +35,13 @@ namespace ClosedXML.Tests.Utils
         public void Dispose(bool disposing)
         {
             if (_disposed)
-                return;
-
-            if (disposing)
             {
-                if (!Preserve)
-                    File.Delete(Path);
+                return;
+            }
+
+            if (disposing && !Preserve)
+            {
+                File.Delete(Path);
             }
 
             _disposed = true;
@@ -48,7 +49,7 @@ namespace ClosedXML.Tests.Utils
 
         public override string ToString()
         {
-            return this.Path;
+            return Path;
         }
     }
 }

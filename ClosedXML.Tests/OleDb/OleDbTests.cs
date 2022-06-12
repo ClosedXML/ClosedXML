@@ -20,73 +20,73 @@ namespace ClosedXML.Tests.OleDb
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Using NUnit platform filter to achieve that this test does only run on .net4.x")]
         public void TestOleDbValues()
         {
-            using (var tf = new TemporaryFile(CreateTestFile()))
+            using var tf = new TemporaryFile(CreateTestFile());
+            Console.Write("Using temporary file\t{0}", tf.Path);
+            var connectionString = string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1';", tf.Path);
+            using var connection = new OleDbConnection(connectionString);
+            var currentUserCulture = Thread.CurrentThread.CurrentCulture;
+            var currentUserUiCulture = Thread.CurrentThread.CurrentUICulture;
+            try
             {
-                Console.Write("Using temporary file\t{0}", tf.Path);
-                var connectionString = string.Format(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1';", tf.Path);
-                using (var connection = new OleDbConnection(connectionString))
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
+                // Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255 if required
+                // Also check that test runner is running under correct architecture:
+                try
                 {
-                    var currentUserCulture = Thread.CurrentThread.CurrentCulture;
-                    var currentUserUiCulture = Thread.CurrentThread.CurrentUICulture;
-                    try
+                    connection.Open();
+                }
+                catch (InvalidOperationException excpetion)
+                {
+                    if (excpetion.Message == "The 'Microsoft.ACE.OLEDB.12.0' provider is not registered on the local machine.")
                     {
-                        Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-
-                        // Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255 if required
-                        // Also check that test runner is running under correct architecture:
-                        try
-                        {
-                            connection.Open();
-                        }
-                        catch (InvalidOperationException excpetion)
-                        {
-                            if (excpetion.Message == "The 'Microsoft.ACE.OLEDB.12.0' provider is not registered on the local machine.")
-                            {
-                                Assert.Ignore("Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255");
-                            }
-                            else
-                                throw;
-                        }
+                        Assert.Ignore("Install driver from https://www.microsoft.com/en-za/download/details.aspx?id=13255");
                     }
-                    finally
+                    else
                     {
-                        Thread.CurrentThread.CurrentCulture = currentUserCulture;
-                        Thread.CurrentThread.CurrentUICulture = currentUserUiCulture;
+                        throw;
                     }
+                }
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentUserCulture;
+                Thread.CurrentThread.CurrentUICulture = currentUserUiCulture;
+            }
 
-                    using (var command = new OleDbCommand("select * from [Sheet1$]", connection))
-                    using (var dataAdapter = new OleDbDataAdapter())
-                    {
-                        dataAdapter.SelectCommand = command;
-                        using var dt = new DataTable();
-                        dataAdapter.Fill(dt);
+            using (var command = new OleDbCommand("select * from [Sheet1$]", connection))
+            using (var dataAdapter = new OleDbDataAdapter())
+            {
+                dataAdapter.SelectCommand = command;
+                using var dt = new DataTable();
+                dataAdapter.Fill(dt);
 
-                        Assert.AreEqual("Base", dt.Columns[0].ColumnName);
-                        Assert.AreEqual("Ref", dt.Columns[1].ColumnName);
+                Assert.AreEqual("Base", dt.Columns[0].ColumnName);
+                Assert.AreEqual("Ref", dt.Columns[1].ColumnName);
 
-                        Assert.AreEqual(2, dt.Rows.Count);
+                Assert.AreEqual(2, dt.Rows.Count);
 
-                        Assert.AreEqual(42, dt.Rows.Cast<DataRow>().First()[0]);
-                        Assert.AreEqual(42, dt.Rows.Cast<DataRow>().First()[1]);
+                Assert.AreEqual(42, dt.Rows.Cast<DataRow>().First()[0]);
+                Assert.AreEqual(42, dt.Rows.Cast<DataRow>().First()[1]);
 
-                        Assert.AreEqual(41, dt.Rows.Cast<DataRow>().Last()[0]);
-                        Assert.AreEqual(41, dt.Rows.Cast<DataRow>().Last()[1]);
-                    }
+                Assert.AreEqual(41, dt.Rows.Cast<DataRow>().Last()[0]);
+                Assert.AreEqual(41, dt.Rows.Cast<DataRow>().Last()[1]);
+            }
 
-                    using (var command = new OleDbCommand("select * from [Sheet2$]", connection))
-                    using (var dataAdapter = new OleDbDataAdapter())
-                    {
-                        dataAdapter.SelectCommand = command;
-                        using var dt = new DataTable();
-                        dataAdapter.Fill(dt);
+            using (var command = new OleDbCommand("select * from [Sheet2$]", connection))
+            using (var dataAdapter = new OleDbDataAdapter())
+            {
+                dataAdapter.SelectCommand = command;
+                using var dt = new DataTable();
+                dataAdapter.Fill(dt);
 
-                        Assert.AreEqual("Ref1", dt.Columns[0].ColumnName);
-                        Assert.AreEqual("Ref2", dt.Columns[1].ColumnName);
-                        Assert.AreEqual("Sum", dt.Columns[2].ColumnName);
-                        Assert.AreEqual("SumRef", dt.Columns[3].ColumnName);
+                Assert.AreEqual("Ref1", dt.Columns[0].ColumnName);
+                Assert.AreEqual("Ref2", dt.Columns[1].ColumnName);
+                Assert.AreEqual("Sum", dt.Columns[2].ColumnName);
+                Assert.AreEqual("SumRef", dt.Columns[3].ColumnName);
 
-                        var expected = new Dictionary<string, double>()
+                var expected = new Dictionary<string, double>()
                         {
                             {"Ref1", 42 },
                             {"Ref2", 41 },
@@ -94,55 +94,53 @@ namespace ClosedXML.Tests.OleDb
                             {"SumRef", 83 },
                         };
 
-                        foreach (var col in dt.Columns.Cast<DataColumn>())
-                            foreach (var row in dt.Rows.Cast<DataRow>())
-                            {
-                                Assert.AreEqual(expected[col.ColumnName], row[col]);
-                            }
-
-                        Assert.AreEqual(2, dt.Rows.Count);
+                foreach (var col in dt.Columns.Cast<DataColumn>())
+                {
+                    foreach (var row in dt.Rows.Cast<DataRow>())
+                    {
+                        Assert.AreEqual(expected[col.ColumnName], row[col]);
                     }
-
-                    connection.Close();
                 }
+
+                Assert.AreEqual(2, dt.Rows.Count);
             }
+
+            connection.Close();
         }
 
         private string CreateTestFile()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Cell("A1").Value = "Base";
-                ws.Cell("B1").Value = "Ref";
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cell("A1").Value = "Base";
+            ws.Cell("B1").Value = "Ref";
 
-                ws.Cell("A2").Value = 42;
-                ws.Cell("A3").Value = 41;
+            ws.Cell("A2").Value = 42;
+            ws.Cell("A3").Value = 41;
 
-                ws.Cell("B2").FormulaA1 = "=A2";
-                ws.Cell("B3").FormulaA1 = "=A3";
+            ws.Cell("B2").FormulaA1 = "=A2";
+            ws.Cell("B3").FormulaA1 = "=A3";
 
-                ws = wb.AddWorksheet("Sheet2");
-                ws.Cell("A1").Value = "Ref1";
-                ws.Cell("B1").Value = "Ref2";
-                ws.Cell("C1").Value = "Sum";
-                ws.Cell("D1").Value = "SumRef";
+            ws = wb.AddWorksheet("Sheet2");
+            ws.Cell("A1").Value = "Ref1";
+            ws.Cell("B1").Value = "Ref2";
+            ws.Cell("C1").Value = "Sum";
+            ws.Cell("D1").Value = "SumRef";
 
-                ws.Cell("A2").FormulaA1 = "=Sheet1!A2";
-                ws.Cell("B2").FormulaA1 = "=Sheet1!A3";
-                ws.Cell("C2").FormulaA1 = "=SUM(A2:B2)";
-                ws.Cell("D2").FormulaA1 = "=SUM(Sheet1!A2:Sheet1!A3)";
+            ws.Cell("A2").FormulaA1 = "=Sheet1!A2";
+            ws.Cell("B2").FormulaA1 = "=Sheet1!A3";
+            ws.Cell("C2").FormulaA1 = "=SUM(A2:B2)";
+            ws.Cell("D2").FormulaA1 = "=SUM(Sheet1!A2:Sheet1!A3)";
 
-                ws.Cell("A3").FormulaA1 = "=Sheet1!B2";
-                ws.Cell("B3").FormulaA1 = "=Sheet1!B3";
-                ws.Cell("C3").FormulaA1 = "=SUM(A3:B3)";
-                ws.Cell("D3").FormulaA1 = "=SUM(Sheet1!B2:Sheet1!B3)";
+            ws.Cell("A3").FormulaA1 = "=Sheet1!B2";
+            ws.Cell("B3").FormulaA1 = "=Sheet1!B3";
+            ws.Cell("C3").FormulaA1 = "=SUM(A3:B3)";
+            ws.Cell("D3").FormulaA1 = "=SUM(Sheet1!B2:Sheet1!B3)";
 
-                var path = Path.ChangeExtension(Path.GetTempFileName(), "xlsx");
-                wb.SaveAs(path, true, true);
+            var path = Path.ChangeExtension(Path.GetTempFileName(), "xlsx");
+            wb.SaveAs(path, true, true);
 
-                return path;
-            }
+            return path;
         }
     }
 }

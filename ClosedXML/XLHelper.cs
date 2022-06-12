@@ -15,13 +15,12 @@ namespace ClosedXML.Excel
         public const int MinColumnNumber = 1;
         public const int MaxRowNumber = 1048576;
         public const int MaxColumnNumber = 16384;
-        public const String MaxColumnLetter = "XFD";
-        public const Double Epsilon = 1e-10;
+        public static readonly string MaxColumnLetter = "XFD";
+        public static readonly double Epsilon = 1e-10;
 
-        public static String LastCell
-        { get { return $"{MaxColumnLetter}{MaxRowNumber}"; } }
+        public static string LastCell => $"{MaxColumnLetter}{MaxRowNumber}";
 
-        internal static readonly NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
+        internal const NumberStyles NumberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite | NumberStyles.AllowExponent;
         internal static readonly CultureInfo ParseCulture = CultureInfo.InvariantCulture;
 
         internal static readonly Regex RCSimpleRegex = new Regex(
@@ -63,17 +62,24 @@ namespace ClosedXML.Excel
 
         static XLHelper()
         {
-            allLetters = new string[XLHelper.MaxColumnNumber];
-            letterIndexes = new Dictionary<string, int>(XLHelper.MaxColumnNumber, StringComparer.Create(ParseCulture, true));
-            for (int i = 0; i < XLHelper.MaxColumnNumber; i++)
+            allLetters = new string[MaxColumnNumber];
+            letterIndexes = new Dictionary<string, int>(MaxColumnNumber, StringComparer.Create(ParseCulture, true));
+            for (var i = 0; i < MaxColumnNumber; i++)
             {
                 string letter;
                 if (i < 26)
+                {
                     letter = letters[i];
+                }
                 else if (i < 26 * 27)
+                {
                     letter = letters[i / 26 - 1] + letters[i % 26];
+                }
                 else
+                {
                     letter = letters[(i - 26) / 26 / 26 - 1] + letters[(i / 26 - 1) % 26] + letters[i % 26];
+                }
+
                 allLetters[i] = letter;
                 letterIndexes.Add(letter, i + 1);
             }
@@ -85,16 +91,21 @@ namespace ClosedXML.Excel
         /// <param name="columnLetter"> The column letter to translate into a column number. </param>
         public static int GetColumnNumberFromLetter(string columnLetter)
         {
-            if (string.IsNullOrEmpty(columnLetter)) throw new ArgumentNullException("columnLetter");
+            if (string.IsNullOrEmpty(columnLetter))
+            {
+                throw new ArgumentNullException(nameof(columnLetter));
+            }
 
             //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
             {
-                return Int32.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
+                return int.Parse(columnLetter, NumberStyle, ParseCulture);
             }
 
             if (letterIndexes.TryGetValue(columnLetter, out var retVal))
+            {
                 return retVal;
+            }
 
             throw new ArgumentOutOfRangeException(columnLetter + " is not recognized as a column letter");
         }
@@ -107,10 +118,15 @@ namespace ClosedXML.Excel
         /// <returns></returns>
         public static string GetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
-            if (trimToAllowed) columnNumber = TrimColumnNumber(columnNumber);
+            if (trimToAllowed)
+            {
+                columnNumber = TrimColumnNumber(columnNumber);
+            }
 
             if (columnNumber <= 0 || columnNumber > allLetters.Length)
+            {
                 throw new ArgumentOutOfRangeException(nameof(columnNumber));
+            }
 
             // Adjust for start on column 1
             return allLetters[columnNumber - 1];
@@ -118,62 +134,88 @@ namespace ClosedXML.Excel
 
         internal static int TrimColumnNumber(int columnNumber)
         {
-            return Math.Max(XLHelper.MinColumnNumber, Math.Min(XLHelper.MaxColumnNumber, columnNumber));
+            return Math.Max(MinColumnNumber, Math.Min(MaxColumnNumber, columnNumber));
         }
 
         internal static int TrimRowNumber(int rowNumber)
         {
-            return Math.Max(XLHelper.MinRowNumber, Math.Min(XLHelper.MaxRowNumber, rowNumber));
+            return Math.Max(MinRowNumber, Math.Min(MaxRowNumber, rowNumber));
         }
 
         public static bool IsValidColumn(string column)
         {
-            if (String.IsNullOrWhiteSpace(column))
+            if (string.IsNullOrWhiteSpace(column))
+            {
                 return false;
+            }
+
             var length = column.Length;
             if (length > 3)
+            {
                 return false;
+            }
 
             var theColumn = column.ToUpper();
 
             var isValid = theColumn[0] >= 'A' && theColumn[0] <= 'Z';
             if (length == 1)
+            {
                 return isValid;
+            }
 
             if (length == 2)
+            {
                 return isValid && theColumn[1] >= 'A' && theColumn[1] <= 'Z';
+            }
 
             if (theColumn[0] >= 'A' && theColumn[0] < 'X')
+            {
                 return theColumn[1] >= 'A' && theColumn[1] <= 'Z'
                        && theColumn[2] >= 'A' && theColumn[2] <= 'Z';
+            }
 
-            if (theColumn[0] != 'X') return false;
+            if (theColumn[0] != 'X')
+            {
+                return false;
+            }
 
             if (theColumn[1] < 'F')
+            {
                 return theColumn[2] >= 'A' && theColumn[2] <= 'Z';
+            }
 
-            if (theColumn[1] != 'F') return false;
+            if (theColumn[1] != 'F')
+            {
+                return false;
+            }
 
             return theColumn[2] >= 'A' && theColumn[2] <= 'D';
         }
 
         public static bool IsValidRow(string rowString)
         {
-            if (Int32.TryParse(rowString, out int row))
+            if (int.TryParse(rowString, out var row))
+            {
                 return row > 0 && row <= MaxRowNumber;
+            }
+
             return false;
         }
 
         public static bool IsValidA1Address(string address)
         {
-            if (String.IsNullOrWhiteSpace(address))
+            if (string.IsNullOrWhiteSpace(address))
+            {
                 return false;
+            }
 
             address = address.Replace("$", "");
             var rowPos = 0;
             var addressLength = address.Length;
             while (rowPos < addressLength && (address[rowPos] > '9' || address[rowPos] < '0'))
+            {
                 rowPos++;
+            }
 
             return
                 rowPos < addressLength
@@ -183,18 +225,20 @@ namespace ClosedXML.Excel
 
         public static bool IsValidRCAddress(string address)
         {
-            if (String.IsNullOrWhiteSpace(address))
+            if (string.IsNullOrWhiteSpace(address))
+            {
                 return false;
+            }
 
             return RCSimpleRegex.IsMatch(address);
         }
 
-        public static Boolean IsValidRangeAddress(String rangeAddress)
+        public static bool IsValidRangeAddress(string rangeAddress)
         {
             return A1SimpleRegex.IsMatch(rangeAddress);
         }
 
-        public static Boolean IsValidRangeAddress(IXLRangeAddress rangeAddress)
+        public static bool IsValidRangeAddress(IXLRangeAddress rangeAddress)
         {
             return rangeAddress.IsValid
                    && rangeAddress.FirstAddress.RowNumber >= 1 && rangeAddress.LastAddress.RowNumber <= MaxRowNumber
@@ -207,7 +251,9 @@ namespace ClosedXML.Excel
         {
             var rowPos = 0;
             while (cellAddressString[rowPos] > '9')
+            {
                 rowPos++;
+            }
 
             return GetColumnNumberFromLetter(cellAddressString.Substring(0, rowPos));
         }
@@ -217,19 +263,19 @@ namespace ClosedXML.Excel
             return range.Contains('-') ? range.Replace('-', ':').Split(':') : range.Split(':');
         }
 
-        public static Int32 GetPtFromPx(Double px)
+        public static int GetPtFromPx(double px)
         {
             return Convert.ToInt32(px * 72.0);
         }
 
-        public static Double GetPxFromPt(Int32 pt)
+        public static double GetPxFromPt(int pt)
         {
             return Convert.ToDouble(pt) / 72.0;
         }
 
         internal static IXLTableRows InsertRowsWithoutEvents(Func<int, bool, IXLRangeRows> insertFunc,
-                                                             XLTableRange tableRange, Int32 numberOfRows,
-                                                             Boolean expandTable)
+                                                             XLTableRange tableRange, int numberOfRows,
+                                                             bool expandTable)
         {
             var ws = tableRange.Worksheet;
             var tracking = ws.EventTrackingEnabled;
@@ -240,7 +286,9 @@ namespace ClosedXML.Excel
             inserted.ForEach(r => rows.Add(new XLTableRow(tableRange, r as XLRangeRow)));
 
             if (expandTable)
+            {
                 tableRange.Table.ExpandTableRows(numberOfRows);
+            }
 
             ws.EventTrackingEnabled = tracking;
 
@@ -265,59 +313,70 @@ namespace ClosedXML.Excel
     + @"|(?<=\W)(?<two>\$?\d{1,7}:\$?\d{1,7})(?=\W)" // 1:1
     + @"|(?<=\W)(?<three>\$?[a-zA-Z]{1,3}:\$?[a-zA-Z]{1,3})(?=\W)", RegexOptions.Compiled); // A:A
 
-        private static string Evaluator(Match match, Int32 row, String column)
+        private static string Evaluator(Match match, int row, string column)
         {
             if (match.Groups["one"].Success)
             {
                 var split = match.Groups["one"].Value.Split('$');
-                if (split.Length == 1) return column + row; // A1
-                if (split.Length == 3) return match.Groups["one"].Value; // $A$1
+                if (split.Length == 1)
+                {
+                    return column + row; // A1
+                }
+
+                if (split.Length == 3)
+                {
+                    return match.Groups["one"].Value; // $A$1
+                }
+
                 var a = XLAddress.Create(match.Groups["one"].Value);
-                if (split[0].Length == 0) return "$" + a.ColumnLetter + row; // $A1
+                if (split[0].Length == 0)
+                {
+                    return "$" + a.ColumnLetter + row; // $A1
+                }
+
                 return column + "$" + a.RowNumber;
             }
 
             if (match.Groups["two"].Success)
+            {
                 return ReplaceGroup(match.Groups["two"].Value, row.ToString());
+            }
 
             return ReplaceGroup(match.Groups["three"].Value, column);
         }
 
-        private static String ReplaceGroup(String value, String item)
+        private static string ReplaceGroup(string value, string item)
         {
             var split = value.Split(':');
-            String ret1 = split[0].StartsWith("$") ? split[0] : item;
-            String ret2 = split[1].StartsWith("$") ? split[1] : item;
+            var ret1 = split[0].StartsWith("$") ? split[0] : item;
+            var ret2 = split[1].StartsWith("$") ? split[1] : item;
             return ret1 + ":" + ret2;
         }
 
-        internal static String ReplaceRelative(String value, Int32 row, String column)
+        internal static string ReplaceRelative(string value, int row, string column)
         {
             var oldValue = ">" + value + "<";
             var newVal = A1RegexRelative.Replace(oldValue, m => Evaluator(m, row, column));
             return newVal.Substring(1, newVal.Length - 2);
         }
 
-        public static Boolean AreEqual(Double d1, Double d2)
+        public static bool AreEqual(double d1, double d2)
         {
             return Math.Abs(d1 - d2) < Epsilon;
         }
 
-        public static DateTime GetDate(Object v)
+        public static DateTime GetDate(object v)
         {
-            // handle dates
-            if (v is DateTime)
+            if (v is DateTime time)
             {
-                return (DateTime)v;
+                return time;
             }
 
-            // handle doubles
-            if (v is double && ((double)v).IsValidOADateNumber())
+            if (v is double @double && @double.IsValidOADateNumber())
             {
-                return DateTime.FromOADate((double)v);
+                return DateTime.FromOADate(@double);
             }
 
-            // handle everything else
             return (DateTime)Convert.ChangeType(v, typeof(DateTime));
         }
 
@@ -338,10 +397,10 @@ namespace ClosedXML.Excel
             return TimeSpan.FromMilliseconds(roundedMilliseconds);
         }
 
-        public static Boolean ValidateName(String objectType, String newName, String oldName, IEnumerable<String> existingNames, out String message)
+        public static bool ValidateName(string objectType, string newName, string oldName, IEnumerable<string> existingNames, out string message)
         {
             message = "";
-            if (String.IsNullOrWhiteSpace(newName))
+            if (string.IsNullOrWhiteSpace(newName))
             {
                 message = $"The {objectType} name '{newName}' is invalid";
                 return false;

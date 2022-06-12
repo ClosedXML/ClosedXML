@@ -25,9 +25,13 @@ namespace ClosedXML.Excel.ContentManagers
                 .OrderBy(key => key.CastTo<int>());
 
             if (previousElements.Any())
+            {
                 return contents[previousElements.Last()];
+            }
             else
+            {
                 return null;
+            }
         }
 
         public void SetElement(T content, OpenXmlElement element)

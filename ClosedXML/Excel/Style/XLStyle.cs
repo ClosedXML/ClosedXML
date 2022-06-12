@@ -7,14 +7,19 @@ namespace ClosedXML.Excel
     {
         #region Static members
 
-        public static XLStyle Default { get { return new XLStyle(XLStyleValue.Default); } }
+        public static XLStyle Default => new XLStyle(XLStyleValue.Default);
 
         internal static XLStyleKey GenerateKey(IXLStyle initialStyle)
         {
             if (initialStyle == null)
+            {
                 return Default.Key;
+            }
+
             if (initialStyle is XLStyle)
+            {
                 return (initialStyle as XLStyle).Key;
+            }
 
             return new XLStyleKey
             {
@@ -53,7 +58,7 @@ namespace ClosedXML.Excel
 
         #region constructors
 
-        public XLStyle(IXLStylized container, IXLStyle initialStyle = null, Boolean useDefaultModify = true) : this(container, GenerateKey(initialStyle))
+        public XLStyle(IXLStylized container, IXLStyle initialStyle = null, bool useDefaultModify = true) : this(container, GenerateKey(initialStyle))
         {
         }
 
@@ -63,7 +68,7 @@ namespace ClosedXML.Excel
 
         internal XLStyle(IXLStylized container, XLStyleValue value)
         {
-            _container = container ?? new XLStylizedEmpty(XLStyle.Default);
+            _container = container ?? new XLStylizedEmpty(Default);
             Value = value;
         }
 
@@ -126,7 +131,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean IncludeQuotePrefix
+        public bool IncludeQuotePrefix
         {
             get { return Value.IncludeQuotePrefix; }
             set
@@ -135,7 +140,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLStyle SetIncludeQuotePrefix(Boolean includeQuotePrefix = true)
+        public IXLStyle SetIncludeQuotePrefix(bool includeQuotePrefix = true)
         {
             IncludeQuotePrefix = includeQuotePrefix;
             return this;
@@ -159,10 +164,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public IXLNumberFormat DateFormat
-        {
-            get { return NumberFormat; }
-        }
+        public IXLNumberFormat DateFormat => NumberFormat;
 
         #endregion IXLStyle members
 
@@ -188,10 +190,10 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLStyle other)
         {
-            var otherS = other as XLStyle;
-
-            if (otherS == null)
+            if (!(other is XLStyle otherS))
+            {
                 return false;
+            }
 
             return Key == otherS.Key &&
                    _container == otherS._container;

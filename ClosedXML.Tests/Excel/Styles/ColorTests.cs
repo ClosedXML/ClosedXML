@@ -5,7 +5,7 @@ using NUnit.Framework;
 using SkiaSharp;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     [TestFixture]
     public class ColorTests
@@ -32,8 +32,8 @@ namespace ClosedXML.Tests.Excel
         public void DefaultColorIndex64isTransparentWhite()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
-            XLColor color = ws.FirstCell().Style.Fill.BackgroundColor;
+            var ws = wb.AddWorksheet("Sheet1");
+            var color = ws.FirstCell().Style.Fill.BackgroundColor;
             Assert.AreEqual(XLColorType.Indexed, color.ColorType);
             Assert.AreEqual(64, color.Indexed);
             Assert.AreEqual(SKColors.Transparent, color.Color);

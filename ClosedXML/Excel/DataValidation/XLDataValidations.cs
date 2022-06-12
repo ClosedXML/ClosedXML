@@ -2,12 +2,11 @@
 using ClosedXML.Excel.Ranges.Index;
 using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-    using System.Linq;
-
     internal class XLDataValidations : IXLDataValidations
     {
         private readonly XLRangeIndex<XLDataValidationIndexEntry> _dataValidationIndex;
@@ -19,7 +18,7 @@ namespace ClosedXML.Excel
         /// The flag used to avoid unnecessary check for splitting intersected ranges when we already
         /// are performing the splitting.
         /// </summary>
-        private bool _skipSplittingExistingRanges = false;
+        private bool _skipSplittingExistingRanges;
 
         public XLDataValidations(XLWorksheet worksheet)
         {
@@ -38,13 +37,16 @@ namespace ClosedXML.Excel
             return Add(dataValidation, skipIntersectionsCheck: false);
         }
 
-        public Boolean ContainsSingle(IXLRange range)
+        public bool ContainsSingle(IXLRange range)
         {
-            Int32 count = 0;
+            var count = 0;
             foreach (var xlDataValidation in _dataValidations.Where(dv => dv.Ranges.Contains(range)))
             {
                 count++;
-                if (count > 1) return false;
+                if (count > 1)
+                {
+                    return false;
+                }
             }
 
             return count == 1;
@@ -61,7 +63,10 @@ namespace ClosedXML.Excel
         public void Delete(IXLDataValidation dataValidation)
         {
             if (!_dataValidations.Remove(dataValidation))
+            {
                 return;
+            }
+
             var xlDataValidation = dataValidation as XLDataValidation;
             xlDataValidation.RangeAdded -= OnRangeAdded;
             xlDataValidation.RangeRemoved -= OnRangeRemoved;
@@ -74,7 +79,10 @@ namespace ClosedXML.Excel
 
         public void Delete(IXLRange range)
         {
-            if (range == null) throw new ArgumentNullException(nameof(range));
+            if (range == null)
+            {
+                throw new ArgumentNullException(nameof(range));
+            }
 
             var dataValidationsToRemove = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress)range.RangeAddress)
                 .Select(e => e.DataValidation)
@@ -90,7 +98,9 @@ namespace ClosedXML.Excel
         public IEnumerable<IXLDataValidation> GetAllInRange(IXLRangeAddress rangeAddress)
         {
             if (rangeAddress == null || !rangeAddress.IsValid)
+            {
                 return Enumerable.Empty<IXLDataValidation>();
+            }
 
             return _dataValidationIndex.GetIntersectedRanges((XLRangeAddress)rangeAddress)
                 .Select(indexEntry => indexEntry.DataValidation)
@@ -120,14 +130,18 @@ namespace ClosedXML.Excel
         {
             dataValidation = null;
             if (rangeAddress == null || !rangeAddress.IsValid)
+            {
                 return false;
+            }
 
             var candidates = _dataValidationIndex.GetIntersectedRanges((XLRangeAddress)rangeAddress)
                 .Where(c => c.RangeAddress.Contains(rangeAddress.FirstAddress) &&
                             c.RangeAddress.Contains(rangeAddress.LastAddress));
 
             if (!candidates.Any())
+            {
                 return false;
+            }
 
             dataValidation = candidates.First().DataValidation;
 
@@ -136,7 +150,10 @@ namespace ClosedXML.Excel
 
         internal IXLDataValidation Add(IXLDataValidation dataValidation, bool skipIntersectionsCheck)
         {
-            if (dataValidation == null) throw new ArgumentNullException(nameof(dataValidation));
+            if (dataValidation == null)
+            {
+                throw new ArgumentNullException(nameof(dataValidation));
+            }
 
             XLDataValidation xlDataValidation;
             if (!(dataValidation is XLDataValidation) ||
@@ -166,7 +183,7 @@ namespace ClosedXML.Excel
 
         public void Consolidate()
         {
-            Func<IXLDataValidation, IXLDataValidation, bool> areEqual = (dv1, dv2) =>
+            bool areEqual(IXLDataValidation dv1, IXLDataValidation dv2)
             {
                 return
                     dv1.IgnoreBlanks == dv2.IgnoreBlanks &&
@@ -183,7 +200,7 @@ namespace ClosedXML.Excel
                     dv1.MinValue == dv2.MinValue &&
                     dv1.MaxValue == dv2.MaxValue &&
                     dv1.Value == dv2.Value;
-            };
+            }
 
             var rules = _dataValidations.ToList();
             rules.ForEach(Delete);
@@ -240,7 +257,10 @@ namespace ClosedXML.Excel
 
         private void SplitExistingRanges(IXLRangeAddress rangeAddress)
         {
-            if (_skipSplittingExistingRanges) return;
+            if (_skipSplittingExistingRanges)
+            {
+                return;
+            }
 
             try
             {

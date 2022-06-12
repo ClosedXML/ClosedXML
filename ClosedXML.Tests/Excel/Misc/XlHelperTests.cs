@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Misc
 {
     [TestFixture]
     public class XlHelperTests
@@ -95,8 +95,8 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void TestColumnLetterLookup()
         {
-            var columnLetters = new List<String>();
-            for (int c = 1; c <= XLHelper.MaxColumnNumber; c++)
+            var columnLetters = new List<string>();
+            for (var c = 1; c <= XLHelper.MaxColumnNumber; c++)
             {
                 var columnLetter = NaiveGetColumnLetterFromNumber(c);
                 columnLetters.Add(columnLetter);
@@ -149,7 +149,10 @@ namespace ClosedXML.Tests.Excel
         /// <param name="columnLetter"> The column letter to translate into a column number. </param>
         private static int NaiveGetColumnNumberFromLetter(string columnLetter)
         {
-            if (string.IsNullOrEmpty(columnLetter)) throw new ArgumentNullException("columnLetter");
+            if (string.IsNullOrEmpty(columnLetter))
+            {
+                throw new ArgumentNullException("columnLetter");
+            }
 
             int retVal;
             columnLetter = columnLetter.ToUpper();
@@ -157,16 +160,16 @@ namespace ClosedXML.Tests.Excel
             //Extra check because we allow users to pass row col positions in as strings
             if (columnLetter[0] <= '9')
             {
-                retVal = Int32.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
+                retVal = int.Parse(columnLetter, XLHelper.NumberStyle, XLHelper.ParseCulture);
                 return retVal;
             }
 
-            int sum = 0;
+            var sum = 0;
 
-            for (int i = 0; i < columnLetter.Length; i++)
+            for (var i = 0; i < columnLetter.Length; i++)
             {
                 sum *= 26;
-                sum += (columnLetter[i] - 'A' + 1);
+                sum += columnLetter[i] - 'A' + 1;
             }
 
             return sum;
@@ -180,15 +183,18 @@ namespace ClosedXML.Tests.Excel
         /// <returns></returns>
         private static string NaiveGetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
-            if (trimToAllowed) columnNumber = XLHelper.TrimColumnNumber(columnNumber);
+            if (trimToAllowed)
+            {
+                columnNumber = XLHelper.TrimColumnNumber(columnNumber);
+            }
 
             columnNumber--; // Adjust for start on column 1
             if (columnNumber <= 25)
             {
                 return letters[columnNumber];
             }
-            var firstPart = (columnNumber) / 26;
-            var remainder = ((columnNumber) % 26) + 1;
+            var firstPart = columnNumber / 26;
+            var remainder = columnNumber % 26 + 1;
             return NaiveGetColumnLetterFromNumber(firstPart) + NaiveGetColumnLetterFromNumber(remainder);
         }
 

@@ -7,7 +7,7 @@ namespace ClosedXML.Examples
     {
         public void Create(string filePath)
         {
-            string tempFile = ExampleHelper.GetTempFilePath(filePath);
+            var tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new BasicTable().Create(tempFile);
@@ -26,7 +26,7 @@ namespace ClosedXML.Examples
                 var rngNumbers = ws.Range("F4:F6");
                 foreach (var cell in rngNumbers.Cells())
                 {
-                    string formattedString = cell.GetFormattedString();
+                    var formattedString = cell.GetFormattedString();
                     cell.DataType = XLDataType.Text;
                     cell.Value = formattedString + " Dollars";
                 }

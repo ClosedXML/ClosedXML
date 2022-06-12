@@ -16,7 +16,7 @@ namespace ClosedXML.Excel.Drawings
         public XLPictures(XLWorksheet worksheet)
         {
             _worksheet = worksheet;
-            Deleted = new HashSet<String>();
+            Deleted = new HashSet<string>();
         }
 
         public int Count
@@ -25,7 +25,7 @@ namespace ClosedXML.Excel.Drawings
             get { return _pictures.Count; }
         }
 
-        internal ICollection<String> Deleted { get; private set; }
+        internal ICollection<string> Deleted { get; private set; }
 
         public IXLPicture Add(Stream stream)
         {
@@ -74,13 +74,11 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Add(string imageFile)
         {
-            using (var fs = File.OpenRead(imageFile))
-            {
-                var picture = new XLPicture(_worksheet, fs);
-                _pictures.Add(picture);
-                picture.Name = GetNextPictureName();
-                return picture;
-            }
+            using var fs = File.OpenRead(imageFile);
+            var picture = new XLPicture(_worksheet, fs);
+            _pictures.Add(picture);
+            picture.Name = GetNextPictureName();
+            return picture;
         }
 
         public IXLPicture Add(string imageFile, string name)
@@ -107,12 +105,16 @@ namespace ClosedXML.Excel.Drawings
                 .ToList();
 
             if (!picturesToDelete.Any())
+            {
                 throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");
+            }
 
             foreach (var picture in picturesToDelete)
             {
                 if (!string.IsNullOrEmpty(picture.RelId))
+                {
                     Deleted.Add(picture.RelId);
+                }
 
                 _pictures.Remove(picture);
             }
@@ -135,8 +137,10 @@ namespace ClosedXML.Excel.Drawings
 
         public IXLPicture Picture(string pictureName)
         {
-            if (TryGetPicture(pictureName, out IXLPicture p))
+            if (TryGetPicture(pictureName, out var p))
+            {
                 return p;
+            }
 
             throw new ArgumentOutOfRangeException(nameof(pictureName), $"Picture {pictureName} was not found.");
         }
@@ -162,9 +166,9 @@ namespace ClosedXML.Excel.Drawings
             return picture;
         }
 
-        private String GetNextPictureName()
+        private string GetNextPictureName()
         {
-            var pictureNumber = this.Count;
+            var pictureNumber = Count;
             while (_pictures.Any(p => p.Name == $"Picture {pictureNumber}"))
             {
                 pictureNumber++;

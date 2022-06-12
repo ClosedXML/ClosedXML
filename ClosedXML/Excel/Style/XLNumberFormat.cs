@@ -9,10 +9,14 @@ namespace ClosedXML.Excel
         internal static XLNumberFormatKey GenerateKey(IXLNumberFormat defaultNumberFormat)
         {
             if (defaultNumberFormat == null)
+            {
                 return XLNumberFormatValue.Default.Key;
+            }
 
             if (defaultNumberFormat is XLNumberFormat)
+            {
                 return (defaultNumberFormat as XLNumberFormat).Key;
+            }
 
             return new XLNumberFormatKey
             {
@@ -62,7 +66,7 @@ namespace ClosedXML.Excel
 
         #region IXLNumberFormat Members
 
-        public Int32 NumberFormatId
+        public int NumberFormatId
         {
             get { return Key.NumberFormatId; }
             set
@@ -76,7 +80,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public String Format
+        public string Format
         {
             get { return Key.Format; }
             set
@@ -85,21 +89,26 @@ namespace ClosedXML.Excel
                 {
                     k.Format = value;
                     if (string.IsNullOrWhiteSpace(k.Format))
+                    {
                         k.NumberFormatId = XLNumberFormatValue.Default.NumberFormatId;
+                    }
                     else
+                    {
                         k.NumberFormatId = -1;
+                    }
+
                     return k;
                 });
             }
         }
 
-        public IXLStyle SetNumberFormatId(Int32 value)
+        public IXLStyle SetNumberFormatId(int value)
         {
             NumberFormatId = value;
             return _style;
         }
 
-        public IXLStyle SetFormat(String value)
+        public IXLStyle SetFormat(string value)
         {
             Format = value;
             return _style;
@@ -133,9 +142,10 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLNumberFormatBase other)
         {
-            var otherN = other as XLNumberFormat;
-            if (otherN == null)
+            if (!(other is XLNumberFormat otherN))
+            {
                 return false;
+            }
 
             return Key == otherN.Key;
         }

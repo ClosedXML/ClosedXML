@@ -29,7 +29,7 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCells CellsUsed(Boolean includeFormats);
+        IXLCells CellsUsed(bool includeFormats);
 
         IXLCells CellsUsed(XLCellsUsedOptions options);
 
