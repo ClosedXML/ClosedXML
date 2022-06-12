@@ -10,7 +10,8 @@ namespace ClosedXML.Extensions
     {
         private const int maxExcelColumnHeight = 409;
         private const int maxExcelColumnWidth = 255;
-        private static double CachedCalibraionFactor = 0;
+        private static double CachedWidthCalibrationFactor = 0;
+        private static double CachedHeightCalibrationFactor = 0;
 
         public static void CopyFont(this IXLFontBase font, IXLFontBase sourceFont)
         {
@@ -29,10 +30,37 @@ namespace ClosedXML.Extensions
 
         public static double GetHeight(this IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
         {
+            var systemSpecificWidthScalingFactor = GetCachedHeightCalibration(fontCache);
+            var height = SystemSpecificHeightCalculator(fontBase, fontCache, systemSpecificWidthScalingFactor);
+
+            return height < maxExcelColumnHeight ? height : maxExcelColumnHeight;
+        }
+
+        private static double GetCachedHeightCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
+        {
+            if (CachedHeightCalibrationFactor == 0)
+            {
+                var calibratedValue = 288;
+
+                var xLFont = new XLFont
+                {
+                    FontSize = 200,
+                    FontName = "Verdana"
+                };
+
+                var SystemSpecificWidthOfKnownWidth = SystemSpecificHeightCalculator(xLFont, fontCache, 1);
+                CachedHeightCalibrationFactor = calibratedValue / SystemSpecificWidthOfKnownWidth;
+            }
+
+            return CachedHeightCalibrationFactor;
+        }
+
+        private static double SystemSpecificHeightCalculator(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache, double systemSpecificHeightScalingFactor)
+        {
             var font = GetCachedFont(fontBase, fontCache);
             var textHeight = GraphicsUtils.MeasureString("X", font).Height;
-            var height = Math.Round(textHeight * 1.9921875, 2);
-            return height < maxExcelColumnHeight ? height : maxExcelColumnHeight;
+            var height = Math.Round(textHeight * systemSpecificHeightScalingFactor, 2);
+            return height;
         }
 
         public static double GetWidth(this IXLFontBase fontBase, string text, Dictionary<IXLFontBase, SKFont> fontCache)
@@ -41,15 +69,15 @@ namespace ClosedXML.Extensions
             {
                 return 0;
             }
-            var systemSpecificScalingFactor = GetCachedCalibration(fontCache);
-            var width = SystemSpecificWidthCalculator(fontBase, text, fontCache, systemSpecificScalingFactor);
+            var systemSpecificWidthScalingFactor = GetCachedWidthCalibration(fontCache);
+            var width = SystemSpecificWidthCalculator(fontBase, text, fontCache, systemSpecificWidthScalingFactor);
 
             return width < maxExcelColumnWidth ? width : maxExcelColumnWidth;
         }
 
-        private static double GetCachedCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
+        private static double GetCachedWidthCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
         {
-            if (CachedCalibraionFactor == 0)
+            if (CachedWidthCalibrationFactor == 0)
             {
                 var calibratedValue = 36.535187641402715d;
                 var text = "Very Wide Column";
@@ -61,10 +89,10 @@ namespace ClosedXML.Extensions
                 };
 
                 var SystemSpecificWidthOfKnownWidth = SystemSpecificWidthCalculator(xLFont, text, fontCache, 1);
-                CachedCalibraionFactor = calibratedValue / SystemSpecificWidthOfKnownWidth;
+                CachedWidthCalibrationFactor = calibratedValue / SystemSpecificWidthOfKnownWidth;
             }
 
-            return CachedCalibraionFactor;
+            return CachedWidthCalibrationFactor;
         }
 
         private static double SystemSpecificWidthCalculator(IXLFontBase fontBase, string text, Dictionary<IXLFontBase, SKFont> fontCache, double systemSpecificScalingFactor)
