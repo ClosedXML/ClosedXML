@@ -1,4 +1,3 @@
-// Keep this file CodeMaid organised and cleaned
 using ClosedXML.Excel;
 using ClosedXML.Utils;
 using SkiaSharp;
@@ -10,6 +9,8 @@ namespace ClosedXML.Extensions
     internal static class FontBaseExtensions
     {
         private const int maxExcelColumnHeight = 409;
+        private const int maxExcelColumnWidth = 255;
+        private static double CachedCalibraionFactor = 0;
 
         public static void CopyFont(this IXLFontBase font, IXLFontBase sourceFont)
         {
@@ -40,14 +41,40 @@ namespace ClosedXML.Extensions
             {
                 return 0;
             }
+            var systemSpecificScalingFactor = GetCachedCalibration(fontCache);
+            var width = SystemSpecificWidthCalculator(fontBase, text, fontCache, systemSpecificScalingFactor);
 
+            return width < maxExcelColumnWidth ? width : maxExcelColumnWidth;
+        }
+
+        private static double GetCachedCalibration(Dictionary<IXLFontBase, SKFont> fontCache)
+        {
+            if (CachedCalibraionFactor == 0)
+            {
+                var calibratedValue = 36.535187641402715d;
+                var text = "Very Wide Column";
+
+                var xLFont = new XLFont
+                {
+                    FontSize = 20,
+                    FontName = "Verdana"
+                };
+
+                var SystemSpecificWidthOfKnownWidth = SystemSpecificWidthCalculator(xLFont, text, fontCache, 1);
+                CachedCalibraionFactor = calibratedValue / SystemSpecificWidthOfKnownWidth;
+            }
+
+            return CachedCalibraionFactor;
+        }
+
+        private static double SystemSpecificWidthCalculator(IXLFontBase fontBase, string text, Dictionary<IXLFontBase, SKFont> fontCache, double systemSpecificScalingFactor)
+        {
             var font = GetCachedFont(fontBase, fontCache);
             var marginPoints = ((font.Size * 0.4) + 8) / 1.326;
             var textWidthPoints = GraphicsUtils.MeasureString(text, font).Width;
-            var columnWidth = (textWidthPoints + marginPoints) * 0.186;
+            var columnWidth = (textWidthPoints + marginPoints) * systemSpecificScalingFactor;
             var width = Math.Round(columnWidth, 2);
-
-            return width < 255 ? width : 255;
+            return width;
         }
 
         private static SKFont GetCachedFont(IXLFontBase fontBase, Dictionary<IXLFontBase, SKFont> fontCache)
