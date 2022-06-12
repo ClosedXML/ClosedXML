@@ -1,5 +1,4 @@
 using SkiaSharp;
-using System;
 
 namespace ClosedXML.Utils
 {
@@ -9,11 +8,10 @@ namespace ClosedXML.Utils
         {
             using var paint = new SKPaint();
             paint.Typeface = font.Typeface;
-
             paint.TextSize = font.Size;
 
             var skBounds = SKRect.Empty;
-            var textWidth = paint.MeasureText(text.AsSpan(), ref skBounds);
+            var textWidth = paint.MeasureText(text, ref skBounds);
             return skBounds;
         }
     }
