@@ -11,7 +11,7 @@ namespace ClosedXML.Utils
             paint.TextSize = font.Size;
 
             var skBounds = SKRect.Empty;
-            var textWidth = paint.MeasureText(text, ref skBounds);
+            paint.MeasureText(text, ref skBounds);
             return skBounds;
         }
     }

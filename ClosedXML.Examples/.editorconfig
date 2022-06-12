@@ -1,0 +1,5 @@
+# C# files
+[*.cs]
+
+# S1481: Unused local variables should be removed
+dotnet_diagnostic.S1481.severity = none
