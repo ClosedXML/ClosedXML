@@ -1,3 +1,7 @@
+using ClosedXML.Excel.CalcEngine.Exceptions;
+using System;
+using System.Collections.Generic;
+
 namespace ClosedXML.Excel.CalcEngine
 {
     internal static class Financial
@@ -39,7 +43,7 @@ namespace ClosedXML.Excel.CalcEngine
             // ODDLPRICE Returns the price per $100 face value of a security with an odd last period
             // ODDLYIELD Returns the yield of a security with an odd last period
             // PDURATION Returns the number of periods required by an investment to reach a specified value
-            // PMT Returns the periodic payment for an annuity
+            ce.RegisterFunction("PMT", 3, 5, Pmt); // Returns the periodic payment for an annuity
             // PPMT Returns the payment on the principal for an investment for a given period
             // PRICE Returns the price per $100 face value of a security that pays periodic interest
             // PRICEDISC Returns the price per $100 face value of a discounted security
@@ -59,6 +63,29 @@ namespace ClosedXML.Excel.CalcEngine
             // YIELD Returns the yield on a security that pays periodic interest
             // YIELDDISC Returns the annual yield for a discounted security; for example, a Treasury bill
             // YIELDMAT Returns the annual yield of a security that pays interest at maturity
+        }
+
+        private static object Pmt(List<Expression> p)
+        {
+            double rate = p[0];
+
+            double numberOfPayments = p[1];
+            if (numberOfPayments == 0)
+                throw new NumberException();
+
+            double presentValue = p[2];
+            double futureValue = p.Count > 3 ? p[3] : 0.0;
+
+            if (rate == 0.0)
+                return -(presentValue + futureValue) / numberOfPayments;
+
+            const int paymentAtTheEndOfPeriod = 0;
+            const int paymentAtTheBeginningOfPeriod = 1;
+            bool type = p.Count > 4 && p[4];
+            var timingOffset = type ? paymentAtTheBeginningOfPeriod : paymentAtTheEndOfPeriod;
+
+            return (-futureValue - presentValue * Math.Pow(1.0 + rate, numberOfPayments)) /
+               (1 + rate * timingOffset) / ((Math.Pow(1.0 + rate, numberOfPayments) - 1) / rate);
         }
     }
 }
