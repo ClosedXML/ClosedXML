@@ -263,8 +263,25 @@ namespace ClosedXML.Excel
         /// <param name="transposeOption">How to handle the surrounding cells when transposing the range.</param>
         void Transpose(XLTransposeOptions transposeOption);
 
+        /// <summary>
+        /// Use this range as a table, but do not add it to the Tables list
+        /// </summary>
+        /// <remarks>
+        /// NOTES:<br/>
+        ///     The AsTable method will use the first row of the range as a header row.<br/>
+        ///     If this range contains only one row, then an empty data row will be inserted into the returned table.
+        /// </remarks>
         IXLTable AsTable();
 
+        /// <summary>
+        /// Use this range as a table with the passed name, but do not add it to the Tables list
+        /// </summary>
+        /// <param name="name">Table name to be used.</param>
+        /// <remarks>
+        /// NOTES:<br/>
+        ///     The AsTable method will use the first row of the range as a header row.<br/>
+        ///     If this range contains only one row, then an empty data row will be inserted into the returned table.
+        /// </remarks>
         IXLTable AsTable(String name);
 
         IXLTable CreateTable();
