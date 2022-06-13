@@ -72,19 +72,15 @@ namespace ClosedXML.Excel.CalcEngine
             if (numberPayments == 0)
                 throw new NumberException();
             double presentValue = p[2];
-            double futureValue = 0;
-            if (p.Count > 3)
-                futureValue = p[3];
+            double futureValue = p.Count > 3 ? p[3] : 0.0;
 
             if (rate == 0.0)
                 return -(presentValue + futureValue) / numberPayments;
 
-            // type is
-            // 0 - Payment at the end of period
-            // 1 - Payment at the beginning of period
-            double type = 0;
-            if (p.Count > 4) type = p[4];
-            var timingOffset = type == 0.0 ? 0 : 1;
+            const int paymentAtTheEndOfPeriod = 0;
+            const int paymentAtTheBeginningOfPeriod = 1;
+            bool type = p.Count > 4 ? p[4] : false;
+            var timingOffset = type ? paymentAtTheBeginningOfPeriod : paymentAtTheEndOfPeriod;
 
             // PMT is basically equated monthly installment calculation.
             var multiplier = 1.0 + rate;
