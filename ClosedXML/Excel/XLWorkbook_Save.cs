@@ -725,13 +725,13 @@ namespace ClosedXML.Excel
                 string rId;
                 if (xlSheet.SheetId == 0 && String.IsNullOrWhiteSpace(xlSheet.RelId))
                 {
-                    rId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    xlSheet.RelId = rId = context.RelIdGenerator.GetNext(RelType.Workbook);
 
-                    while (WorksheetsInternal.Cast<XLWorksheet>().Any(w => w.SheetId == Int32.Parse(rId.Substring(3))))
-                        rId = context.RelIdGenerator.GetNext(RelType.Workbook);
+                    var currentMaximumSheetId = WorksheetsInternal.Count == 0
+                        ? 0
+                        : WorksheetsInternal.Cast<XLWorksheet>().Max(w => w.SheetId);
 
-                    xlSheet.SheetId = Int32.Parse(rId.Substring(3));
-                    xlSheet.RelId = rId;
+                    xlSheet.SheetId = currentMaximumSheetId + 1;
                 }
                 else
                 {
