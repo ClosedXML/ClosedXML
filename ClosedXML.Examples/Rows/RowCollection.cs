@@ -81,7 +81,7 @@ namespace ClosedXML.Examples.Rows
             ws2.Rows("13").Style.Fill.BackgroundColor = XLColor.Cyan;
 
             // Adjust the height
-            ws2.Rows("1:13").Height = 15;
+            ws2.Rows("1:13").Height = 30;
 
             workbook.SaveAs(filePath);
         }
