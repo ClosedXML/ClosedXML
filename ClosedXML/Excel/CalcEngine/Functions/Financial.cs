@@ -68,24 +68,24 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Pmt(List<Expression> p)
         {
             double rate = p[0];
-            double numberPayments = p[1];
-            if (numberPayments == 0)
+
+            double numberOfPayments = p[1];
+            if (numberOfPayments == 0)
                 throw new NumberException();
+
             double presentValue = p[2];
             double futureValue = p.Count > 3 ? p[3] : 0.0;
 
             if (rate == 0.0)
-                return -(presentValue + futureValue) / numberPayments;
+                return -(presentValue + futureValue) / numberOfPayments;
 
             const int paymentAtTheEndOfPeriod = 0;
             const int paymentAtTheBeginningOfPeriod = 1;
-            bool type = p.Count > 4 ? p[4] : false;
+            bool type = p.Count > 4 && p[4];
             var timingOffset = type ? paymentAtTheBeginningOfPeriod : paymentAtTheEndOfPeriod;
 
-            // PMT is basically equated monthly installment calculation.
-            var multiplier = 1.0 + rate;
-            var geometricSeriesSum = (Math.Pow(multiplier, numberPayments) - 1) / (multiplier - 1);
-            return -(presentValue * Math.Pow(multiplier, numberPayments - timingOffset) + futureValue) / geometricSeriesSum;
+            return (-futureValue - presentValue * Math.Pow(1.0 + rate, numberOfPayments)) /
+               (1 + rate * timingOffset) / ((Math.Pow(1.0 + rate, numberOfPayments) - 1) / rate);
         }
     }
 }
