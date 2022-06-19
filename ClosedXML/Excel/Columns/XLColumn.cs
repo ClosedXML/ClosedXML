@@ -383,8 +383,10 @@ namespace ClosedXML.Excel
                 }
 
                 if (autoFilterRows.Contains(c.Address.RowNumber))
+                {
                     // Allow room for arrow icon in auto filter
                     thisWidthMax += 2.7148;
+                }
 
                 if (thisWidthMax >= maxWidth)
                 {

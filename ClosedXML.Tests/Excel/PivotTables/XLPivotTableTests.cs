@@ -409,16 +409,26 @@ namespace ClosedXML.Tests.Excel.PivotTables
                     pt = ptSheet.PivotTables.Add("pvt" + i, ptSheet.Cell(1, 1), table);
 
                     if (i == 1 || i == 4 || i == 5)
+                    {
                         pt.ColumnLabels.Add("Name");
+                    }
                     else if (i == 2 || i == 3)
+                    {
                         pt.RowLabels.Add("Name");
+                    }
 
                     if (i == 1 || i == 3)
+                    {
                         pt.RowLabels.Add("Month");
+                    }
                     else if (i == 2 || i == 4)
+                    {
                         pt.ColumnLabels.Add("Month");
+                    }
                     else if (i == 5)
+                    {
                         pt.RowLabels.Add("BakeDate");
+                    }
 
                     // The values in our table will come from the "NumberOfOrders" field
                     // The default calculation setting is a total of each row/column
