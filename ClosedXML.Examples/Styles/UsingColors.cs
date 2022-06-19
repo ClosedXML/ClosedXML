@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using SkiaSharp;
-using System;
 
 namespace ClosedXML.Examples.Styles
 {

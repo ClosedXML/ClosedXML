@@ -1,5 +1,4 @@
 // Keep this file CodeMaid organised and cleaned
-using System;
 
 namespace ClosedXML.Excel
 {

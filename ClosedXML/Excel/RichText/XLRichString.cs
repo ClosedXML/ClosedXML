@@ -1,5 +1,4 @@
 using ClosedXML.Extensions;
-using ClosedXML.Extensions;
 using System.Diagnostics;
 
 namespace ClosedXML.Excel.RichText

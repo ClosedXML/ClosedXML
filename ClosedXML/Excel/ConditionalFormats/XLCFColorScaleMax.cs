@@ -1,5 +1,3 @@
-using System;
-
 namespace ClosedXML.Excel
 {
     internal class XLCFColorScaleMax : IXLCFColorScaleMax

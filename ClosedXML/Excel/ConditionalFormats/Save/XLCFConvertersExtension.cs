@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using System;
 using System.Collections.Generic;
 
 namespace ClosedXML.Excel

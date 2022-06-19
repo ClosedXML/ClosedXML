@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using NUnit.Framework;
-using System;
 using System.IO;
 using System.Linq;
 

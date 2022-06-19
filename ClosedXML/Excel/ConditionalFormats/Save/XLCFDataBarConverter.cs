@@ -1,7 +1,5 @@
 using ClosedXML.Extensions;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System;
 
 namespace ClosedXML.Excel
 {

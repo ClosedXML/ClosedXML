@@ -1,5 +1,4 @@
 ﻿// Keep this file CodeMaid organised and cleaned
-using System;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Excel
