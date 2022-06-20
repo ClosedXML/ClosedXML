@@ -10,7 +10,7 @@ namespace ClosedXML.Tests.Extensions
     {
         [Test]
         [Platform("Win", Reason = "Expectation only fits windows system because the font calibri isn't available on other OSs")]
-        public void GetHeightCalibri()
+        public void ShouldGetHeightUsingCalibriFont()
         {
             var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
@@ -25,7 +25,7 @@ namespace ClosedXML.Tests.Extensions
         }
 
         [Test]
-        public void GetHeightUsingOsAgnosticFriendlyFont()
+        public void ShouldGetHeightUsingOsAgnosticFriendlyFont()
         {
             var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
@@ -47,7 +47,7 @@ namespace ClosedXML.Tests.Extensions
         [TestCase(8, "SmallText", 6.55)]
         // Excel adjusts to unreasonable large 253.09
         [TestCase(11, "LongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongTextLongText", 244.45)]
-        public void GetWidthCalibri(int fontSize, string text, double expectedFontSize)
+        public void ShouldGetWidthCalibriFont(int fontSize, string text, double expectedFontSize)
         {
             var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
@@ -67,7 +67,7 @@ namespace ClosedXML.Tests.Extensions
         [TestCase(20, "Very Wide Column", 36.18, 2)]
         [TestCase(72, "BigText", 55.27, 5)]
         [TestCase(200, "X", 37, 5)]
-        public void GetWidthUsingOsAgnosticFriendlyFont(int fontSize, string text, double expectedFontSize, int tolerance)
+        public void ShouldGetWidthUsingOsAgnosticFriendlyFont(int fontSize, string text, double expectedFontSize, int tolerance)
         {
             var fontCache = new Dictionary<IXLFontBase, SKFont>();
 
