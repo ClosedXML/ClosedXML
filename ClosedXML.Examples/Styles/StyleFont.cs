@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using System;
 
 namespace ClosedXML.Examples.Styles
 {

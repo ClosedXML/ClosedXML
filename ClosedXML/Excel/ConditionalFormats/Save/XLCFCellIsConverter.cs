@@ -1,6 +1,4 @@
 using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Globalization;
 
 namespace ClosedXML.Excel
 {

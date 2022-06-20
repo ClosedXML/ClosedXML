@@ -1,5 +1,4 @@
 using ClosedXML.Excel;
-using System;
 using System.Linq;
 
 namespace ClosedXML.Examples.Columns

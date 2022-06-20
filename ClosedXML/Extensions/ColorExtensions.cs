@@ -1,7 +1,6 @@
 // Keep this file CodeMaid organised and cleaned
 using DocumentFormat.OpenXml.Spreadsheet;
 using SkiaSharp;
-using System;
 
 namespace ClosedXML.Excel
 {

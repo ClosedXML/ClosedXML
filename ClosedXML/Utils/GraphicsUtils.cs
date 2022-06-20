@@ -1,18 +1,17 @@
 using SkiaSharp;
-using System;
 
 namespace ClosedXML.Utils
 {
     internal static class GraphicsUtils
     {
-        public static SKRect MeasureString(string text, SKTypeface fontName)
+        internal static SKRect MeasureString(string text, SKFont font)
         {
             using var paint = new SKPaint();
-            paint.Typeface = fontName;
+            paint.Typeface = font.Typeface;
+            paint.TextSize = font.Size;
 
-            paint.TextSize = 12f;
             var skBounds = SKRect.Empty;
-            paint.MeasureText(text.AsSpan(), ref skBounds);
+            paint.MeasureText(text, ref skBounds);
             return skBounds;
         }
     }

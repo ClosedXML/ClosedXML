@@ -1,5 +1,3 @@
-using System;
-
 namespace ClosedXML.Excel
 {
     internal class XLDrawing<T>: IXLDrawing<T>

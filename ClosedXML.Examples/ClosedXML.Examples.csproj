@@ -19,7 +19,7 @@
 		<ProjectReference Include="..\ClosedXML\ClosedXML.csproj" />
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
 		<PackageReference Include="morelinq" Version="3.3.2" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.38.0.46746">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.40.0.48530">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

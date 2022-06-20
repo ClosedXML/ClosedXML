@@ -1,5 +1,3 @@
-using System;
-
 namespace ClosedXML.Excel
 {
     public enum XLHFMode { OddPagesOnly, OddAndEvenPages, Odd }

@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
 using System.Linq;
 
 namespace ClosedXML.Tests.Excel.Columns

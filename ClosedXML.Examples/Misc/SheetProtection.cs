@@ -1,5 +1,4 @@
 using ClosedXML.Excel;
-using System;
 using static ClosedXML.Excel.XLProtectionAlgorithm;
 
 namespace ClosedXML.Examples.Misc

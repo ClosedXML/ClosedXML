@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace ClosedXML.Excel
 {
     public enum XLDashStyle
@@ -16,10 +11,12 @@ namespace ClosedXML.Excel
         LongDashDot,
         LongDashDotDot
     }
+
     public enum XLLineStyle
     {
         Single, ThinThin, ThinThick, ThickThin, ThickBetweenThin
     }
+
     public interface IXLDrawingColorsAndLines
     {
         XLColor FillColor { get; set; }
@@ -31,12 +28,17 @@ namespace ClosedXML.Excel
         XLLineStyle LineStyle { get; set; }
 
         IXLDrawingStyle SetFillColor(XLColor value);
-        IXLDrawingStyle SetFillTransparency(double value);
-        IXLDrawingStyle SetLineColor(XLColor value);
-        IXLDrawingStyle SetLineTransparency(double value);
-        IXLDrawingStyle SetLineWeight(double value);
-        IXLDrawingStyle SetLineDash(XLDashStyle value);
-        IXLDrawingStyle SetLineStyle(XLLineStyle value);
 
+        IXLDrawingStyle SetFillTransparency(double value);
+
+        IXLDrawingStyle SetLineColor(XLColor value);
+
+        IXLDrawingStyle SetLineTransparency(double value);
+
+        IXLDrawingStyle SetLineWeight(double value);
+
+        IXLDrawingStyle SetLineDash(XLDashStyle value);
+
+        IXLDrawingStyle SetLineStyle(XLLineStyle value);
     }
 }

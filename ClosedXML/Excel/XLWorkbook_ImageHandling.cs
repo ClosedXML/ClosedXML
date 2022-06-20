@@ -4,8 +4,6 @@ using DocumentFormat.OpenXml.Packaging;
 using System;
 using System.Linq;
 
-using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
-
 namespace ClosedXML.Excel
 {
     public partial class XLWorkbook

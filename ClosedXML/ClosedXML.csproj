@@ -55,7 +55,7 @@
 		</PackageReference>
 		<PackageReference Include="SkiaSharp" Version="2.80.2" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.38.0.46746">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.40.0.48530">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

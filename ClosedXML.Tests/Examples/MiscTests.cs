@@ -23,6 +23,7 @@ namespace ClosedXML.Tests.Examples
         [Test]
         public void AdjustToContents()
         {
+            // adjusted cell height depends on fonts available on the test system
             var allowedDiff = "/xl/worksheets/sheet1.xml :NonEqual\n/xl/worksheets/sheet4.xml :NonEqual\n/xl/worksheets/sheet5.xml :NonEqual\n";
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
