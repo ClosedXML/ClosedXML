@@ -19,9 +19,11 @@ namespace ClosedXML.Excel.InsertData
             IEnumerable<IInsertDataReader> CreateReaders()
             {
                 if (!_data.Any())
+                {
                     yield break;
+                }
 
-                List<object> itemsOfSameType = new List<object>();
+                var itemsOfSameType = new List<object>();
                 Type previousType = null;
 
                 foreach (var item in _data)
@@ -46,7 +48,9 @@ namespace ClosedXML.Excel.InsertData
             IInsertDataReader CreateReader(List<object> itemsOfSameType, Type itemType)
             {
                 if (itemType == null)
+                {
                     return new NullDataReader(itemsOfSameType);
+                }
 
                 var items = Array.CreateInstance(itemType, itemsOfSameType.Count);
                 Array.Copy(itemsOfSameType.ToArray(), items, items.Length);

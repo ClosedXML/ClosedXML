@@ -13,8 +13,8 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_1()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Data Validation Issue");
-            IXLCell cell = ws.Cell("E1");
+            var ws = wb.Worksheets.Add("Data Validation Issue");
+            var cell = ws.Cell("E1");
             cell.SetValue("Value 1");
             cell = cell.CellBelow();
             cell.SetValue("Value 2");
@@ -61,11 +61,11 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_2()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("Sheet1!A1");
 
-            IXLWorksheet ws2 = wb.AddWorksheet("Sheet2");
+            var ws2 = wb.AddWorksheet("Sheet2");
             ws2.Cell("A1").SetValue("B");
             ws.Cell("B1").CopyTo(ws2.Cell("B1"));
 
@@ -76,7 +76,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_3()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.FirstRow().InsertRowsAbove(1);
@@ -88,7 +88,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_4()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("B2"));
@@ -99,7 +99,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_5()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.FirstColumn().InsertColumnsBefore(1);
@@ -111,7 +111,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_6()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell("A1").SetValue("A");
             ws.Cell("B1").CreateDataValidation().Custom("A1");
             ws.Cell("B1").CopyTo(ws.Cell("C1"));
@@ -122,15 +122,15 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_persists_on_Cell_DataValidation()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("People");
+            var ws = wb.Worksheets.Add("People");
 
             ws.FirstCell().SetValue("Categories")
                 .CellBelow().SetValue("A")
                 .CellBelow().SetValue("B");
 
-            IXLTable table = ws.RangeUsed().CreateTable();
+            var table = ws.RangeUsed().CreateTable();
 
-            IXLDataValidation dv = table.DataRange.CreateDataValidation();
+            var dv = table.DataRange.CreateDataValidation();
             dv.ErrorTitle = "Error";
 
             Assert.AreEqual("Error", table.DataRange.FirstCell().GetDataValidation().ErrorTitle);
@@ -140,14 +140,14 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Validation_persists_on_Worksheet_DataValidations()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("People");
+            var ws = wb.Worksheets.Add("People");
 
             ws.FirstCell().SetValue("Categories")
                 .CellBelow().SetValue("A");
 
-            IXLTable table = ws.RangeUsed().CreateTable();
+            var table = ws.RangeUsed().CreateTable();
 
-            IXLDataValidation dv = table.DataRange.CreateDataValidation();
+            var dv = table.DataRange.CreateDataValidation();
             dv.ErrorTitle = "Error";
 
             Assert.AreEqual("Error", ws.DataValidations.Single().ErrorTitle);
@@ -168,7 +168,9 @@ namespace ClosedXML.Tests.Excel.DataValidations
             var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);
             if (setValue)
+            {
                 ws.Range(initialAddress).Value = 50;
+            }
 
             //Act
             ws.Row(rowNum).InsertRowsAbove(1);
@@ -194,7 +196,9 @@ namespace ClosedXML.Tests.Excel.DataValidations
             var validation = ws.Range(initialAddress).CreateDataValidation();
             validation.WholeNumber.Between(0, 100);
             if (setValue)
+            {
                 ws.Range(initialAddress).Value = 50;
+            }
 
             //Act
             ws.Column(columnNum).InsertColumnsBefore(1);
@@ -208,39 +212,35 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void DataValidationClearSplitsRange()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("DataValidation");
-                var validation = ws.Range("A1:C3").CreateDataValidation();
-                validation.WholeNumber.Between(0, 100);
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("DataValidation");
+            var validation = ws.Range("A1:C3").CreateDataValidation();
+            validation.WholeNumber.Between(0, 100);
 
-                //Act
-                ws.Cell("B2").Clear(XLClearOptions.DataValidation);
+            //Act
+            ws.Cell("B2").Clear(XLClearOptions.DataValidation);
 
-                //Assert
-                Assert.IsFalse(ws.Cell("B2").HasDataValidation);
-                Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
-            }
+            //Assert
+            Assert.IsFalse(ws.Cell("B2").HasDataValidation);
+            Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
         }
 
         [Test]
         public void NewDataValidationSplitsRange()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("DataValidation");
-                var validation = ws.Range("A1:C3").CreateDataValidation();
-                validation.WholeNumber.Between(10, 100);
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("DataValidation");
+            var validation = ws.Range("A1:C3").CreateDataValidation();
+            validation.WholeNumber.Between(10, 100);
 
-                //Act
-                ws.Cell("B2").CreateDataValidation().WholeNumber.Between(-100, -0);
+            //Act
+            ws.Cell("B2").CreateDataValidation().WholeNumber.Between(-100, -0);
 
-                //Assert
-                Assert.AreEqual("-100", ws.Cell("B2").GetDataValidation().MinValue);
-                Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
-                Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2")
-                                .All(c => c.GetDataValidation().MinValue == "10"));
-            }
+            //Assert
+            Assert.AreEqual("-100", ws.Cell("B2").GetDataValidation().MinValue);
+            Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2").All(c => c.HasDataValidation));
+            Assert.IsTrue(ws.Range("A1:C3").Cells().Where(c => c.Address.ToString() != "B2")
+                            .All(c => c.GetDataValidation().MinValue == "10"));
         }
 
         [Test]
@@ -251,23 +251,21 @@ namespace ClosedXML.Tests.Excel.DataValidations
 
             Assert.True(values.Length > 255);
 
-            using (var wb = new XLWorkbook())
+            using var wb = new XLWorkbook();
+            var dv = wb.AddWorksheet("Sheet 1").Cell(1, 1).GetDataValidation();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => dv.List(values));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
-                var dv = wb.AddWorksheet("Sheet 1").Cell(1, 1).GetDataValidation();
+                dv.TextLength.Between(0, 5);
+                dv.MinValue = values;
+            });
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => dv.List(values));
-                Assert.Throws<ArgumentOutOfRangeException>(() =>
-                {
-                    dv.TextLength.Between(0, 5);
-                    dv.MinValue = values;
-                });
-
-                Assert.Throws<ArgumentOutOfRangeException>(() =>
-                {
-                    dv.TextLength.Between(0, 5);
-                    dv.MaxValue = values;
-                });
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                dv.TextLength.Between(0, 5);
+                dv.MaxValue = values;
+            });
         }
 
         [Test]
@@ -279,205 +277,183 @@ namespace ClosedXML.Tests.Excel.DataValidations
         [Test]
         public void DataValidationHasWorksheetAndRangesWhenCreated()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range = ws.Range("A1:A3");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range = ws.Range("A1:A3");
 
-                var dv = new XLDataValidation(range);
+            var dv = new XLDataValidation(range);
 
-                Assert.AreSame(ws, dv.Worksheet);
-                Assert.AreSame(range, dv.Ranges.Single());
-            }
+            Assert.AreSame(ws, dv.Worksheet);
+            Assert.AreSame(range, dv.Ranges.Single());
         }
 
         [Test]
         public void CanAddRangeFromSameWorksheet()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
-                var ranges3 = ws.Ranges("D1:D3,F1:F3");
-                var dv = new XLDataValidation(range1);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
+            var ranges3 = ws.Ranges("D1:D3,F1:F3");
+            var dv = new XLDataValidation(range1);
 
-                dv.AddRange(range2);
-                dv.AddRanges(ranges3);
+            dv.AddRange(range2);
+            dv.AddRanges(ranges3);
 
-                Assert.IsTrue(dv.Ranges.Any(r => r == range1));
-                Assert.IsTrue(dv.Ranges.Any(r => r == range2));
-                Assert.IsTrue(dv.Ranges.Any(r => r == ranges3.First()));
-                Assert.IsTrue(dv.Ranges.Any(r => r == ranges3.Last()));
-            }
+            Assert.IsTrue(dv.Ranges.Any(r => r == range1));
+            Assert.IsTrue(dv.Ranges.Any(r => r == range2));
+            Assert.IsTrue(dv.Ranges.Any(r => r == ranges3.First()));
+            Assert.IsTrue(dv.Ranges.Any(r => r == ranges3.Last()));
         }
 
         [Test]
         public void CanAddRangeFromAnotherWorksheet()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws1 = wb.AddWorksheet();
-                var ws2 = wb.AddWorksheet();
-                var range1 = ws1.Range("A1:A3");
-                var range2 = ws2.Range("C1:C3");
-                var dv = new XLDataValidation(range1);
+            using var wb = new XLWorkbook();
+            var ws1 = wb.AddWorksheet();
+            var ws2 = wb.AddWorksheet();
+            var range1 = ws1.Range("A1:A3");
+            var range2 = ws2.Range("C1:C3");
+            var dv = new XLDataValidation(range1);
 
-                dv.AddRange(range2);
+            dv.AddRange(range2);
 
-                Assert.IsTrue(dv.Ranges.Any(r => r != range2 && r.RangeAddress.ToString() == range2.RangeAddress.ToString()));
-            }
+            Assert.IsTrue(dv.Ranges.Any(r => r != range2 && r.RangeAddress.ToString() == range2.RangeAddress.ToString()));
         }
 
         [Test]
         public void CanClearRanges()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
-                var ranges3 = ws.Ranges("D1:D3,F1:F3");
-                var dv = new XLDataValidation(range1);
-                dv.AddRange(range2);
-                dv.AddRanges(ranges3);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
+            var ranges3 = ws.Ranges("D1:D3,F1:F3");
+            var dv = new XLDataValidation(range1);
+            dv.AddRange(range2);
+            dv.AddRanges(ranges3);
 
-                dv.ClearRanges();
+            dv.ClearRanges();
 
-                Assert.IsEmpty(dv.Ranges);
-            }
+            Assert.IsEmpty(dv.Ranges);
         }
 
         [Test]
         public void CanRemoveExistingRange()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
 
-                var dv = new XLDataValidation(range1);
-                dv.AddRange(range2);
+            var dv = new XLDataValidation(range1);
+            dv.AddRange(range2);
 
-                dv.RemoveRange(range1);
+            dv.RemoveRange(range1);
 
-                Assert.AreSame(range2, dv.Ranges.Single());
-            }
+            Assert.AreSame(range2, dv.Ranges.Single());
         }
 
         [Test]
         public void RemovingExistingRangeDoesNoFail()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
 
-                var dv = new XLDataValidation(range1);
+            var dv = new XLDataValidation(range1);
 
-                dv.RemoveRange(range2);
-                dv.RemoveRange(null);
+            dv.RemoveRange(range2);
+            dv.RemoveRange(null);
 
-                Assert.AreSame(range1, dv.Ranges.Single());
-            }
+            Assert.AreSame(range1, dv.Ranges.Single());
         }
 
         [Test]
         public void AddRangeFiresEvent()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
-                var dv = new XLDataValidation(range1);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
+            var dv = new XLDataValidation(range1);
 
-                IXLRange addedRange = null;
+            IXLRange addedRange = null;
 
-                dv.RangeAdded += (s, e) => addedRange = e.Range;
+            dv.RangeAdded += (_, e) => addedRange = e.Range;
 
-                dv.AddRange(range2);
+            dv.AddRange(range2);
 
-                Assert.AreSame(range2, addedRange);
-            }
+            Assert.AreSame(range2, addedRange);
         }
 
         [Test]
         public void AddRangesFiresMultipleEvents()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var ranges = ws.Ranges("D1:D3,F1:F3");
-                var dv = new XLDataValidation(range1);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var ranges = ws.Ranges("D1:D3,F1:F3");
+            var dv = new XLDataValidation(range1);
 
-                var addedRanges = new List<IXLRange>();
+            var addedRanges = new List<IXLRange>();
 
-                dv.RangeAdded += (s, e) => addedRanges.Add(e.Range);
+            dv.RangeAdded += (_, e) => addedRanges.Add(e.Range);
 
-                dv.AddRanges(ranges);
+            dv.AddRanges(ranges);
 
-                Assert.AreEqual(2, addedRanges.Count);
-            }
+            Assert.AreEqual(2, addedRanges.Count);
         }
 
         [Test]
         public void RemoveRangeFiresEvent()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
-                var dv = new XLDataValidation(range1);
-                dv.AddRange(range2);
-                IXLRange removedRange = null;
-                dv.RangeRemoved += (s, e) => removedRange = e.Range;
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
+            var dv = new XLDataValidation(range1);
+            dv.AddRange(range2);
+            IXLRange removedRange = null;
+            dv.RangeRemoved += (s, e) => removedRange = e.Range;
 
-                dv.RemoveRange(range2);
+            dv.RemoveRange(range2);
 
-                Assert.AreSame(range2, removedRange);
-            }
+            Assert.AreSame(range2, removedRange);
         }
 
         [Test]
         public void RemoveNonExistingRangeDoesNotFireEvent()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
-                var dv = new XLDataValidation(range1);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
+            var dv = new XLDataValidation(range1);
 
-                dv.RangeRemoved += (s, e) => Assert.Fail("Expected not to fire event");
+            dv.RangeRemoved += (s, e) => Assert.Fail("Expected not to fire event");
 
-                dv.RemoveRange(range2);
-            }
+            dv.RemoveRange(range2);
         }
 
         [Test]
         public void ClearRangesFiresMultipleEvents()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
-                var range1 = ws.Range("A1:A3");
-                var range2 = ws.Range("C1:C3");
-                var dv = new XLDataValidation(range1);
-                dv.AddRange(range2);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var range1 = ws.Range("A1:A3");
+            var range2 = ws.Range("C1:C3");
+            var dv = new XLDataValidation(range1);
+            dv.AddRange(range2);
 
-                var removedRanges = new List<IXLRange>();
+            var removedRanges = new List<IXLRange>();
 
-                dv.RangeRemoved += (s, e) => removedRanges.Add(e.Range);
+            dv.RangeRemoved += (s, e) => removedRanges.Add(e.Range);
 
-                dv.ClearRanges();
+            dv.ClearRanges();
 
-                Assert.AreEqual(2, removedRanges.Count);
-            }
+            Assert.AreEqual(2, removedRanges.Count);
         }
     }
 }

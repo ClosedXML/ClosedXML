@@ -18,7 +18,7 @@ namespace ClosedXML.Utils
     {
         public ColorTypeAdapter(ColorType colorType)
         {
-            this.ColorType = colorType;
+            ColorType = colorType;
         }
 
         #region ColorType
@@ -38,7 +38,7 @@ namespace ClosedXML.Utils
     {
         public X14ColorTypeAdapter(X14.ColorType colorType)
         {
-            this.ColorType = colorType;
+            ColorType = colorType;
         }
 
         #region ColorType

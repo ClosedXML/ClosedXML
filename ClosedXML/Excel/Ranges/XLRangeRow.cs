@@ -1,8 +1,9 @@
+using ClosedXML.Excel.Ranges;
+using System;
+using System.Linq;
+
 namespace ClosedXML.Excel
 {
-    using System;
-    using System.Linq;
-
     internal class XLRangeRow : XLRangeBase, IXLRangeRow
     {
         #region Constructor
@@ -63,8 +64,11 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLCells(false, XLCellsUsedOptions.AllContents);
             var rangePairs = cellsInRow.Split(',');
-            foreach (string pair in rangePairs)
+            foreach (var pair in rangePairs)
+            {
                 retVal.Add(Range(pair.Trim()).RangeAddress);
+            }
+
             return retVal;
         }
 
@@ -89,7 +93,7 @@ namespace ClosedXML.Excel
             return SortLeftToRight();
         }
 
-        public new IXLRangeRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true)
+        public new IXLRangeRow SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true)
         {
             base.SortLeftToRight(sortOrder, matchCase, ignoreBlanks);
             return this;
@@ -99,12 +103,17 @@ namespace ClosedXML.Excel
         {
             base.CopyTo(target);
 
-            int lastRowNumber = target.Address.RowNumber + RowCount() - 1;
+            var lastRowNumber = target.Address.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
-            int lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
+            }
+
+            var lastColumnNumber = target.Address.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(
                 target.Address.RowNumber,
@@ -117,12 +126,17 @@ namespace ClosedXML.Excel
         public new IXLRangeRow CopyTo(IXLRangeBase target)
         {
             base.CopyTo(target);
-            int lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
+            var lastRowNumber = target.RangeAddress.FirstAddress.RowNumber + RowCount() - 1;
             if (lastRowNumber > XLHelper.MaxRowNumber)
+            {
                 lastRowNumber = XLHelper.MaxRowNumber;
-            int lastColumnNumber = target.RangeAddress.LastAddress.ColumnNumber + ColumnCount() - 1;
+            }
+
+            var lastColumnNumber = target.RangeAddress.LastAddress.ColumnNumber + ColumnCount() - 1;
             if (lastColumnNumber > XLHelper.MaxColumnNumber)
+            {
                 lastColumnNumber = XLHelper.MaxColumnNumber;
+            }
 
             return target.Worksheet.Range(
                 target.RangeAddress.FirstAddress.RowNumber,
@@ -146,7 +160,7 @@ namespace ClosedXML.Excel
         {
             var retVal = new XLRangeRows();
             var columnPairs = rows.Split(',');
-            foreach (string trimmedPair in columnPairs.Select(pair => pair.Trim()))
+            foreach (var trimmedPair in columnPairs.Select(pair => pair.Trim()))
             {
                 string firstColumn;
                 string lastColumn;
@@ -182,10 +196,7 @@ namespace ClosedXML.Excel
         }
 
         #endregion IXLRangeRow Members
-        public override XLRangeType RangeType
-        {
-            get { return XLRangeType.RangeRow; }
-        }
+        public override XLRangeType RangeType => XLRangeType.RangeRow;
 
         internal override void WorksheetRangeShiftedColumns(XLRange range, int columnsShifted)
         {
@@ -208,15 +219,19 @@ namespace ClosedXML.Excel
             if (rangeAddressStr.Contains(':') || rangeAddressStr.Contains('-'))
             {
                 if (rangeAddressStr.Contains('-'))
+                {
                     rangeAddressStr = rangeAddressStr.Replace('-', ':');
+                }
 
                 var arrRange = rangeAddressStr.Split(':');
-                string firstPart = arrRange[0];
-                string secondPart = arrRange[1];
+                var firstPart = arrRange[0];
+                var secondPart = arrRange[1];
                 rangeAddressToUse = FixRowAddress(firstPart) + ":" + FixRowAddress(secondPart);
             }
             else
+            {
                 rangeAddressToUse = FixRowAddress(rangeAddressStr);
+            }
 
             var rangeAddress = new XLRangeAddress(Worksheet, rangeAddressToUse);
             return Range(rangeAddress);
@@ -224,23 +239,29 @@ namespace ClosedXML.Excel
 
         public int CompareTo(XLRangeRow otherRow, IXLSortElements columnsToSort)
         {
-            foreach (IXLSortElement e in columnsToSort)
+            foreach (var e in columnsToSort)
             {
                 var thisCell = (XLCell)Cell(e.ElementNumber);
                 var otherCell = (XLCell)otherRow.Cell(e.ElementNumber);
                 int comparison;
-                bool thisCellIsBlank = thisCell.IsEmpty();
-                bool otherCellIsBlank = otherCell.IsEmpty();
+                var thisCellIsBlank = thisCell.IsEmpty();
+                var otherCellIsBlank = otherCell.IsEmpty();
                 if (e.IgnoreBlanks && (thisCellIsBlank || otherCellIsBlank))
                 {
                     if (thisCellIsBlank && otherCellIsBlank)
+                    {
                         comparison = 0;
+                    }
                     else
                     {
                         if (thisCellIsBlank)
+                        {
                             comparison = e.SortOrder == XLSortOrder.Ascending ? 1 : -1;
+                        }
                         else
+                        {
                             comparison = e.SortOrder == XLSortOrder.Ascending ? -1 : 1;
+                        }
                     }
                 }
                 else
@@ -252,7 +273,7 @@ namespace ClosedXML.Excel
                             case XLDataType.Text:
                                 comparison = e.MatchCase
                                                  ? thisCell.InnerText.CompareTo(otherCell.InnerText)
-                                                 : String.Compare(thisCell.InnerText, otherCell.InnerText, true);
+                                                 : string.Compare(thisCell.InnerText, otherCell.InnerText, true);
                                 break;
 
                             case XLDataType.TimeSpan:
@@ -276,21 +297,27 @@ namespace ClosedXML.Excel
                         }
                     }
                     else if (e.MatchCase)
-                        comparison = String.Compare(thisCell.GetString(), otherCell.GetString(), true);
+                    {
+                        comparison = string.Compare(thisCell.GetString(), otherCell.GetString(), true);
+                    }
                     else
+                    {
                         comparison = thisCell.GetString().CompareTo(otherCell.GetString());
+                    }
                 }
 
                 if (comparison != 0)
+                {
                     return e.SortOrder == XLSortOrder.Ascending ? comparison : -comparison;
+                }
             }
 
             return 0;
         }
 
-        private XLRangeRow RowShift(Int32 rowsToShift)
+        private XLRangeRow RowShift(int rowsToShift)
         {
-            Int32 rowNum = RowNumber() + rowsToShift;
+            var rowNum = RowNumber() + rowsToShift;
 
             var range = Worksheet.Range(
                 rowNum,
@@ -308,7 +335,7 @@ namespace ClosedXML.Excel
             return RowAbove();
         }
 
-        IXLRangeRow IXLRangeRow.RowAbove(Int32 step)
+        IXLRangeRow IXLRangeRow.RowAbove(int step)
         {
             return RowAbove(step);
         }
@@ -318,7 +345,7 @@ namespace ClosedXML.Excel
             return RowAbove(1);
         }
 
-        public XLRangeRow RowAbove(Int32 step)
+        public XLRangeRow RowAbove(int step)
         {
             return RowShift(step * -1);
         }
@@ -332,7 +359,7 @@ namespace ClosedXML.Excel
             return RowBelow();
         }
 
-        IXLRangeRow IXLRangeRow.RowBelow(Int32 step)
+        IXLRangeRow IXLRangeRow.RowBelow(int step)
         {
             return RowBelow(step);
         }
@@ -342,7 +369,7 @@ namespace ClosedXML.Excel
             return RowBelow(1);
         }
 
-        public XLRangeRow RowBelow(Int32 step)
+        public XLRangeRow RowBelow(int step)
         {
             return RowShift(step);
         }
@@ -356,7 +383,7 @@ namespace ClosedXML.Excel
         }
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLRangeRow RowUsed(Boolean includeFormats)
+        public IXLRangeRow RowUsed(bool includeFormats)
         {
             return RowUsed(includeFormats
                 ? XLCellsUsedOptions.All

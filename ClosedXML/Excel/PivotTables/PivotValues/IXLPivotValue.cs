@@ -39,29 +39,29 @@ namespace ClosedXML.Excel
 
     public interface IXLPivotValue
     {
-        String SourceName { get; }
-        String CustomName { get; set; }
+        string SourceName { get; }
+        string CustomName { get; set; }
 
         IXLPivotValueFormat NumberFormat { get; }
 
         XLPivotSummary SummaryFormula { get; set; }
         XLPivotCalculation Calculation { get; set; }
-        String BaseField { get; set; }
-        String BaseItem { get; set; }
+        string BaseField { get; set; }
+        string BaseItem { get; set; }
         XLPivotCalculationItem CalculationItem { get; set; }
 
         IXLPivotValue SetSummaryFormula(XLPivotSummary value);
         IXLPivotValue SetCalculation(XLPivotCalculation value);
-        IXLPivotValue SetBaseField(String value);
-        IXLPivotValue SetBaseItem(String value);
+        IXLPivotValue SetBaseField(string value);
+        IXLPivotValue SetBaseItem(string value);
         IXLPivotValue SetCalculationItem(XLPivotCalculationItem value);
 
 
         IXLPivotValue ShowAsNormal();
-        IXLPivotValueCombination ShowAsDifferenceFrom(String fieldSourceName);
-        IXLPivotValueCombination ShowAsPercentageFrom(String fieldSourceName);
-        IXLPivotValueCombination ShowAsPercentageDifferenceFrom(String fieldSourceName);
-        IXLPivotValue ShowAsRunningTotalIn(String fieldSourceName);
+        IXLPivotValueCombination ShowAsDifferenceFrom(string fieldSourceName);
+        IXLPivotValueCombination ShowAsPercentageFrom(string fieldSourceName);
+        IXLPivotValueCombination ShowAsPercentageDifferenceFrom(string fieldSourceName);
+        IXLPivotValue ShowAsRunningTotalIn(string fieldSourceName);
         IXLPivotValue ShowAsPercentageOfRow();
         IXLPivotValue ShowAsPercentageOfColumn();
         IXLPivotValue ShowAsPercentageOfTotal();

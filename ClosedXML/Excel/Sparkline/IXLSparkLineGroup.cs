@@ -46,11 +46,11 @@ namespace ClosedXML.Excel
 
         XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
 
-        Boolean DisplayHidden { get; set; }
+        bool DisplayHidden { get; set; }
 
         IXLSparklineHorizontalAxis HorizontalAxis { get; }
 
-        Double LineWeight { get; set; }
+        double LineWeight { get; set; }
 
         XLSparklineMarkers ShowMarkers { get; set; }
 
@@ -90,9 +90,9 @@ namespace ClosedXML.Excel
 
         IXLSparklineGroup SetDisplayEmptyCellsAs(XLDisplayBlanksAsValues value);
 
-        IXLSparklineGroup SetDisplayHidden(Boolean value);
+        IXLSparklineGroup SetDisplayHidden(bool value);
 
-        IXLSparklineGroup SetLineWeight(Double value);
+        IXLSparklineGroup SetLineWeight(double value);
 
         IXLSparklineGroup SetShowMarkers(XLSparklineMarkers value);
 

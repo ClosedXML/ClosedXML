@@ -1,9 +1,8 @@
 using ClosedXML.Excel;
 using NUnit.Framework;
-using System;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Rows
 {
     [TestFixture]
     public class RowTests
@@ -22,7 +21,7 @@ namespace ClosedXML.Tests.Excel
         public void CopyRow()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.AddWorksheet("Sheet1");
+            var ws = wb.AddWorksheet("Sheet1");
             ws.FirstCell().SetValue("Test").Style.Font.SetBold();
             ws.FirstRow().CopyTo(ws.Row(2));
 
@@ -33,17 +32,17 @@ namespace ClosedXML.Tests.Excel
         public void InsertingRowsAbove1()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
 
             ws.Rows("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
             ws.Row(2).Style.Fill.SetBackgroundColor(XLColor.Yellow);
             ws.Cell(2, 2).SetValue("X").Style.Fill.SetBackgroundColor(XLColor.Green);
 
-            IXLRow row1 = ws.Row(1);
-            IXLRow row2 = ws.Row(2);
-            IXLRow row3 = ws.Row(3);
+            var row1 = ws.Row(1);
+            var row2 = ws.Row(2);
+            var row3 = ws.Row(3);
 
-            IXLRow rowIns = ws.Row(1).InsertRowsAbove(1).First();
+            var rowIns = ws.Row(1).InsertRowsAbove(1).First();
 
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, ws.Row(1).Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(ws.Style.Fill.BackgroundColor, ws.Row(1).Cell(2).Style.Fill.BackgroundColor);
@@ -86,17 +85,17 @@ namespace ClosedXML.Tests.Excel
         public void InsertingRowsAbove2()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
 
             ws.Rows("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
             ws.Row(2).Style.Fill.SetBackgroundColor(XLColor.Yellow);
             ws.Cell(2, 2).SetValue("X").Style.Fill.SetBackgroundColor(XLColor.Green);
 
-            IXLRow row1 = ws.Row(1);
-            IXLRow row2 = ws.Row(2);
-            IXLRow row3 = ws.Row(3);
+            var row1 = ws.Row(1);
+            var row2 = ws.Row(2);
+            var row3 = ws.Row(3);
 
-            IXLRow rowIns = ws.Row(2).InsertRowsAbove(1).First();
+            var rowIns = ws.Row(2).InsertRowsAbove(1).First();
 
             Assert.AreEqual(XLColor.Red, ws.Row(1).Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, ws.Row(1).Cell(2).Style.Fill.BackgroundColor);
@@ -139,17 +138,17 @@ namespace ClosedXML.Tests.Excel
         public void InsertingRowsAbove3()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
 
             ws.Rows("1,3").Style.Fill.SetBackgroundColor(XLColor.Red);
             ws.Row(2).Style.Fill.SetBackgroundColor(XLColor.Yellow);
             ws.Cell(2, 2).SetValue("X").Style.Fill.SetBackgroundColor(XLColor.Green);
 
-            IXLRow row1 = ws.Row(1);
-            IXLRow row2 = ws.Row(2);
-            IXLRow row3 = ws.Row(3);
+            var row1 = ws.Row(1);
+            var row2 = ws.Row(2);
+            var row3 = ws.Row(3);
 
-            IXLRow rowIns = ws.Row(3).InsertRowsAbove(1).First();
+            var rowIns = ws.Row(3).InsertRowsAbove(1).First();
 
             Assert.AreEqual(XLColor.Red, ws.Row(1).Cell(1).Style.Fill.BackgroundColor);
             Assert.AreEqual(XLColor.Red, ws.Row(1).Cell(2).Style.Fill.BackgroundColor);
@@ -191,45 +190,47 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void InsertingRowsAbove4()
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.Worksheets.Add("Sheet1");
+            using var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Sheet1");
 
-                ws.Row(2).Height = 15;
-                ws.Row(3).Height = 20;
-                ws.Row(4).Height = 25;
-                ws.Row(5).Height = 35;
+            ws.Row(2).Height = 15;
+            ws.Row(3).Height = 20;
+            ws.Row(4).Height = 25;
+            ws.Row(5).Height = 35;
 
-                ws.Row(2).FirstCell().SetValue("Row height: 15");
-                ws.Row(3).FirstCell().SetValue("Row height: 20");
-                ws.Row(4).FirstCell().SetValue("Row height: 25");
-                ws.Row(5).FirstCell().SetValue("Row height: 35");
+            ws.Row(2).FirstCell().SetValue("Row height: 15");
+            ws.Row(3).FirstCell().SetValue("Row height: 20");
+            ws.Row(4).FirstCell().SetValue("Row height: 25");
+            ws.Row(5).FirstCell().SetValue("Row height: 35");
 
-                ws.Range("3:3").InsertRowsAbove(1);
+            ws.Range("3:3").InsertRowsAbove(1);
 
-                Assert.AreEqual(15, ws.Row(2).Height);
-                Assert.AreEqual(20, ws.Row(4).Height);
-                Assert.AreEqual(25, ws.Row(5).Height);
-                Assert.AreEqual(35, ws.Row(6).Height);
+            Assert.AreEqual(15, ws.Row(2).Height);
+            Assert.AreEqual(20, ws.Row(4).Height);
+            Assert.AreEqual(25, ws.Row(5).Height);
+            Assert.AreEqual(35, ws.Row(6).Height);
 
-                Assert.AreEqual(20, ws.Row(3).Height);
-                ws.Row(3).ClearHeight();
-                Assert.AreEqual(ws.RowHeight, ws.Row(3).Height);
-            }
+            Assert.AreEqual(20, ws.Row(3).Height);
+            ws.Row(3).ClearHeight();
+            Assert.AreEqual(ws.RowHeight, ws.Row(3).Height);
         }
 
         [Test]
         public void NoRowsUsed()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
-            Int32 count = 0;
+            var ws = wb.Worksheets.Add("Sheet1");
+            var count = 0;
 
-            foreach (IXLRow row in ws.RowsUsed())
+            foreach (var row in ws.RowsUsed())
+            {
                 count++;
+            }
 
-            foreach (IXLRangeRow row in ws.Range("A1:C3").RowsUsed())
+            foreach (var row in ws.Range("A1:C3").RowsUsed())
+            {
                 count++;
+            }
 
             Assert.AreEqual(0, count);
         }
@@ -238,14 +239,14 @@ namespace ClosedXML.Tests.Excel
         public void RowUsed()
         {
             using var wb = new XLWorkbook();
-            IXLWorksheet ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Sheet1");
             ws.Cell(1, 2).SetValue("Test");
             ws.Cell(1, 3).SetValue("Test");
 
-            IXLRangeRow fromRow = ws.Row(1).RowUsed();
+            var fromRow = ws.Row(1).RowUsed();
             Assert.AreEqual("B1:C1", fromRow.RangeAddress.ToStringRelative());
 
-            IXLRangeRow fromRange = ws.Range("A1:E1").FirstRow().RowUsed();
+            var fromRange = ws.Range("A1:E1").FirstRow().RowUsed();
             Assert.AreEqual("B1:C1", fromRange.RangeAddress.ToStringRelative());
         }
 

@@ -14,9 +14,9 @@ namespace ClosedXML.Excel
 
         IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping);
 
-        void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items);
+        void Top(int value, XLTopBottomType type = XLTopBottomType.Items);
 
-        void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items);
+        void Bottom(int value, XLTopBottomType type = XLTopBottomType.Items);
 
         void AboveAverage();
 
@@ -38,28 +38,28 @@ namespace ClosedXML.Excel
 
         void NotBetween<T>(T minValue, T maxValue) where T : IComparable<T>;
 
-        IXLFilterConnector BeginsWith(String value);
+        IXLFilterConnector BeginsWith(string value);
 
-        IXLFilterConnector NotBeginsWith(String value);
+        IXLFilterConnector NotBeginsWith(string value);
 
-        IXLFilterConnector EndsWith(String value);
+        IXLFilterConnector EndsWith(string value);
 
-        IXLFilterConnector NotEndsWith(String value);
+        IXLFilterConnector NotEndsWith(string value);
 
-        IXLFilterConnector Contains(String value);
+        IXLFilterConnector Contains(string value);
 
-        IXLFilterConnector NotContains(String value);
+        IXLFilterConnector NotContains(string value);
 
         XLFilterType FilterType { get; set; }
-        Int32 TopBottomValue { get; set; }
+        int TopBottomValue { get; set; }
         XLTopBottomType TopBottomType { get; set; }
         XLTopBottomPart TopBottomPart { get; set; }
         XLFilterDynamicType DynamicType { get; set; }
-        Double DynamicValue { get; set; }
+        double DynamicValue { get; set; }
 
         IXLFilterColumn SetFilterType(XLFilterType value);
 
-        IXLFilterColumn SetTopBottomValue(Int32 value);
+        IXLFilterColumn SetTopBottomValue(int value);
 
         IXLFilterColumn SetTopBottomType(XLTopBottomType value);
 
@@ -67,6 +67,6 @@ namespace ClosedXML.Excel
 
         IXLFilterColumn SetDynamicType(XLFilterDynamicType value);
 
-        IXLFilterColumn SetDynamicValue(Double value);
+        IXLFilterColumn SetDynamicValue(double value);
     }
 }

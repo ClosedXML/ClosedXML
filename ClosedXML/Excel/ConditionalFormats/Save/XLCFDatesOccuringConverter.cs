@@ -25,12 +25,14 @@ namespace ClosedXML.Excel
             var conditionalFormattingRule = XLCFBaseConverter.Convert(cf, priority);
             var cfStyle = (cf.Style as XLStyle).Value;
             if (!cfStyle.Equals(XLWorkbook.DefaultStyleValue))
-                conditionalFormattingRule.FormatId = (UInt32)context.DifferentialFormats[cfStyle];
+            {
+                conditionalFormattingRule.FormatId = (uint)context.DifferentialFormats[cfStyle];
+            }
 
             conditionalFormattingRule.TimePeriod = cf.TimePeriod.ToOpenXml();
 
             var address = cf.Range.RangeAddress.FirstAddress.ToStringRelative(false);
-            var formula = new Formula { Text = String.Format(formulaTemplates[cf.TimePeriod], address) };
+            var formula = new Formula { Text = string.Format(formulaTemplates[cf.TimePeriod], address) };
 
             conditionalFormattingRule.Append(formula);
 

@@ -20,7 +20,7 @@ namespace ClosedXML.Excel
         public static XLAddress Create(XLWorksheet worksheet, string cellAddressString)
         {
             var fixedColumn = cellAddressString[0] == '$';
-            Int32 startPos;
+            int startPos;
             if (fixedColumn)
             {
                 startPos = 1;
@@ -30,7 +30,7 @@ namespace ClosedXML.Excel
                 startPos = 0;
             }
 
-            int rowPos = startPos;
+            var rowPos = startPos;
             while (cellAddressString[rowPos] > '9')
             {
                 rowPos++;
@@ -63,7 +63,7 @@ namespace ClosedXML.Excel
                     columnLetter = cellAddressString.Substring(startPos, rowPos);
                 }
 
-                rowNumber = Int32.Parse(cellAddressString.Substring(rowPos), XLHelper.NumberStyle, XLHelper.ParseCulture);
+                rowNumber = int.Parse(cellAddressString.Substring(rowPos), XLHelper.NumberStyle, XLHelper.ParseCulture);
             }
             return new XLAddress(worksheet, rowNumber, columnLetter, fixedRow, fixedColumn);
         }
@@ -164,39 +164,24 @@ namespace ClosedXML.Excel
             get { return Worksheet != null; }
         }
 
-        public bool FixedRow
-        {
-            get { return _fixedRow; }
-        }
+        public bool FixedRow => _fixedRow;
 
-        public bool FixedColumn
-        {
-            get { return _fixedColumn; }
-        }
+        public bool FixedColumn => _fixedColumn;
 
         /// <summary>
         /// Gets the row number of this address.
         /// </summary>
-        public Int32 RowNumber
-        {
-            get { return _rowNumber; }
-        }
+        public int RowNumber => _rowNumber;
 
         /// <summary>
         /// Gets the column number of this address.
         /// </summary>
-        public Int32 ColumnNumber
-        {
-            get { return _columnNumber; }
-        }
+        public int ColumnNumber => _columnNumber;
 
         /// <summary>
         /// Gets the column letter(s) of this address.
         /// </summary>
-        public String ColumnLetter
-        {
-            get { return XLHelper.GetColumnLetterFromNumber(_columnNumber); }
-        }
+        public string ColumnLetter => XLHelper.GetColumnLetterFromNumber(_columnNumber);
 
         #endregion Properties
 
@@ -205,9 +190,11 @@ namespace ClosedXML.Excel
         public override string ToString()
         {
             if (!IsValid)
+            {
                 return "#REF!";
+            }
 
-            String retVal = ColumnLetter;
+            var retVal = ColumnLetter;
             if (_fixedColumn)
             {
                 retVal = "$" + retVal;
@@ -229,20 +216,30 @@ namespace ClosedXML.Excel
         {
             string address;
             if (!IsValid)
+            {
                 address = "#REF!";
+            }
             else if (referenceStyle == XLReferenceStyle.A1)
+            {
                 address = GetTrimmedAddress();
+            }
             else if (referenceStyle == XLReferenceStyle.R1C1
                      || HasWorksheet && Worksheet.Workbook.ReferenceStyle == XLReferenceStyle.R1C1)
+            {
                 address = "R" + _rowNumber.ToInvariantString() + "C" + ColumnNumber.ToInvariantString();
+            }
             else
+            {
                 address = GetTrimmedAddress();
+            }
 
             if (includeSheet)
-                return String.Concat(
+            {
+                return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address);
+            }
 
             return address;
         }
@@ -253,7 +250,7 @@ namespace ClosedXML.Excel
 
         public string GetTrimmedAddress()
         {
-            return _trimmedAddress ?? (_trimmedAddress = ColumnLetter + _rowNumber.ToInvariantString());
+            return _trimmedAddress ??= ColumnLetter + _rowNumber.ToInvariantString();
         }
 
         #endregion Methods
@@ -278,7 +275,7 @@ namespace ClosedXML.Excel
                                  left._fixedColumn);
         }
 
-        public static XLAddress operator +(XLAddress left, Int32 right)
+        public static XLAddress operator +(XLAddress left, int right)
         {
             return new XLAddress(left.Worksheet,
                                  left.RowNumber + right,
@@ -287,7 +284,7 @@ namespace ClosedXML.Excel
                                  left._fixedColumn);
         }
 
-        public static XLAddress operator -(XLAddress left, Int32 right)
+        public static XLAddress operator -(XLAddress left, int right)
         {
             return new XLAddress(left.Worksheet,
                                  left.RowNumber - right,
@@ -296,12 +293,12 @@ namespace ClosedXML.Excel
                                  left._fixedColumn);
         }
 
-        public static Boolean operator ==(XLAddress left, XLAddress right)
+        public static bool operator ==(XLAddress left, XLAddress right)
         {
             return object.Equals(left, right);
         }
 
-        public static Boolean operator !=(XLAddress left, XLAddress right)
+        public static bool operator !=(XLAddress left, XLAddress right)
         {
             return !(left == right);
         }
@@ -312,12 +309,12 @@ namespace ClosedXML.Excel
 
         #region IEqualityComparer<XLCellAddress> Members
 
-        public Boolean Equals(IXLAddress x, IXLAddress y)
+        public bool Equals(IXLAddress x, IXLAddress y)
         {
             return x == y;
         }
 
-        public new Boolean Equals(object x, object y)
+        public new bool Equals(object x, object y)
         {
             return x == y;
         }
@@ -329,7 +326,9 @@ namespace ClosedXML.Excel
         public bool Equals(IXLAddress other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
             return _rowNumber == other.RowNumber &&
                    _columnNumber == other.ColumnNumber &&
@@ -345,9 +344,9 @@ namespace ClosedXML.Excel
                    _fixedColumn == other._fixedColumn;
         }
 
-        public override Boolean Equals(Object other)
+        public override bool Equals(object obj)
         {
-            return Equals(other as IXLAddress);
+            return Equals(obj as IXLAddress);
         }
 
         public override int GetHashCode()
@@ -369,26 +368,28 @@ namespace ClosedXML.Excel
 
         #endregion Interface Requirements
 
-        public String ToStringRelative()
+        public string ToStringRelative()
         {
             return ToStringRelative(false);
         }
 
-        public String ToStringFixed()
+        public string ToStringFixed()
         {
             return ToStringFixed(XLReferenceStyle.Default);
         }
 
-        public String ToStringRelative(Boolean includeSheet)
+        public string ToStringRelative(bool includeSheet)
         {
             var address = IsValid ? GetTrimmedAddress() : "#REF!";
 
             if (includeSheet)
-                return String.Concat(
+            {
+                return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address
                 );
+            }
 
             return address;
         }
@@ -398,20 +399,24 @@ namespace ClosedXML.Excel
             return new XLAddress(RowNumber, ColumnNumber, FixedRow, FixedColumn);
         }
 
-        public String ToStringFixed(XLReferenceStyle referenceStyle)
+        public string ToStringFixed(XLReferenceStyle referenceStyle)
         {
             return ToStringFixed(referenceStyle, false);
         }
 
-        public String ToStringFixed(XLReferenceStyle referenceStyle, Boolean includeSheet)
+        public string ToStringFixed(XLReferenceStyle referenceStyle, bool includeSheet)
         {
-            String address;
+            string address;
 
             if (referenceStyle == XLReferenceStyle.Default && HasWorksheet)
+            {
                 referenceStyle = Worksheet.Workbook.ReferenceStyle;
+            }
 
             if (referenceStyle == XLReferenceStyle.Default)
+            {
                 referenceStyle = XLReferenceStyle.A1;
+            }
 
             Debug.Assert(referenceStyle != XLReferenceStyle.Default);
 
@@ -424,11 +429,11 @@ namespace ClosedXML.Excel
                 switch (referenceStyle)
                 {
                     case XLReferenceStyle.A1:
-                        address = String.Concat('$', ColumnLetter, '$', _rowNumber.ToInvariantString());
+                        address = string.Concat('$', ColumnLetter, '$', _rowNumber.ToInvariantString());
                         break;
 
                     case XLReferenceStyle.R1C1:
-                        address = String.Concat('R', _rowNumber.ToInvariantString(), 'C', ColumnNumber);
+                        address = string.Concat('R', _rowNumber.ToInvariantString(), 'C', ColumnNumber);
                         break;
 
                     default:
@@ -437,24 +442,20 @@ namespace ClosedXML.Excel
             }
 
             if (includeSheet)
-                return String.Concat(
+            {
+                return string.Concat(
                     WorksheetIsDeleted ? "#REF" : Worksheet.Name.EscapeSheetName(),
                     '!',
                     address);
+            }
 
             return address;
         }
 
-        public String UniqueId { get { return RowNumber.ToString("0000000") + ColumnNumber.ToString("00000"); } }
+        public string UniqueId => RowNumber.ToString("0000000") + ColumnNumber.ToString("00000");
 
-        public bool IsValid
-        {
-            get
-            {
-                return 0 < RowNumber && RowNumber <= XLHelper.MaxRowNumber &&
+        public bool IsValid => 0 < RowNumber && RowNumber <= XLHelper.MaxRowNumber &&
                        0 < ColumnNumber && ColumnNumber <= XLHelper.MaxColumnNumber;
-            }
-        }
 
         private bool WorksheetIsDeleted => Worksheet?.IsDeleted == true;
     }

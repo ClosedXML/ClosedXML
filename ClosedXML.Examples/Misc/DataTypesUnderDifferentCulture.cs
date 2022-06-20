@@ -14,7 +14,7 @@ namespace ClosedXML.Examples.Misc
             // Set thread culture to French, which should format numbers using decimal COMMA
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-FR");
 
-            string tempFile = ExampleHelper.GetTempFilePath(filePath);
+            var tempFile = ExampleHelper.GetTempFilePath(filePath);
             try
             {
                 new DataTypes().Create(tempFile);

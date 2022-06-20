@@ -1,27 +1,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections;
-
-    internal class XLRowsCollection : IDictionary<Int32, XLRow>
+    internal class XLRowsCollection : IDictionary<int, XLRow>
     {
-        private readonly Dictionary<Int32, XLRow> _dictionary = new Dictionary<Int32, XLRow>();
+        private readonly Dictionary<int, XLRow> _dictionary = new Dictionary<int, XLRow>();
 
-        public Dictionary<Int32, XLRow> Deleted { get; } = new Dictionary<Int32, XLRow>();
+        public Dictionary<int, XLRow> Deleted { get; } = new Dictionary<int, XLRow>();
 
-        public Int32 MaxRowUsed;
+        public int MaxRowUsed;
 
         #region IDictionary<int,XLRow> Members
 
         public void Add(int key, XLRow value)
         {
-            if (key > MaxRowUsed) MaxRowUsed = key;
+            if (key > MaxRowUsed)
+            {
+                MaxRowUsed = key;
+            }
 
             if (Deleted.ContainsKey(key))
+            {
                 Deleted.Remove(key);
+            }
 
             _dictionary.Add(key, value);
         }
@@ -31,15 +35,14 @@ namespace ClosedXML.Excel
             return _dictionary.ContainsKey(key);
         }
 
-        public ICollection<int> Keys
-        {
-            get { return _dictionary.Keys; }
-        }
+        public ICollection<int> Keys => _dictionary.Keys;
 
         public bool Remove(int key)
         {
             if (!Deleted.ContainsKey(key))
+            {
                 Deleted.Add(key, _dictionary[key]);
+            }
 
             return _dictionary.Remove(key);
         }
@@ -49,10 +52,7 @@ namespace ClosedXML.Excel
             return _dictionary.TryGetValue(key, out value);
         }
 
-        public ICollection<XLRow> Values
-        {
-            get { return _dictionary.Values; }
-        }
+        public ICollection<XLRow> Values => _dictionary.Values;
 
         public XLRow this[int key]
         {
@@ -62,10 +62,15 @@ namespace ClosedXML.Excel
 
         public void Add(KeyValuePair<int, XLRow> item)
         {
-            if (item.Key > MaxRowUsed) MaxRowUsed = item.Key;
+            if (item.Key > MaxRowUsed)
+            {
+                MaxRowUsed = item.Key;
+            }
 
             if (Deleted.ContainsKey(item.Key))
+            {
                 Deleted.Remove(item.Key);
+            }
 
             _dictionary.Add(item.Key, item.Value);
         }
@@ -85,20 +90,16 @@ namespace ClosedXML.Excel
             throw new NotImplementedException();
         }
 
-        public int Count
-        {
-            get { return _dictionary.Count; }
-        }
+        public int Count => _dictionary.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public bool Remove(KeyValuePair<int, XLRow> item)
         {
             if (!Deleted.ContainsKey(item.Key))
+            {
                 Deleted.Add(item.Key, _dictionary[item.Key]);
+            }
 
             return _dictionary.Remove(item.Key);
         }
@@ -115,13 +116,13 @@ namespace ClosedXML.Excel
 
         #endregion IDictionary<int,XLRow> Members
 
-        public void ShiftRowsDown(Int32 startingRow, Int32 rowsToShift)
+        public void ShiftRowsDown(int startingRow, int rowsToShift)
         {
-            foreach (int ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
+            foreach (var ro in _dictionary.Keys.Where(k => k >= startingRow).OrderByDescending(k => k))
             {
                 var rowToMove = _dictionary[ro];
                 _dictionary.Remove(ro);
-                Int32 newRowNum = ro + rowsToShift;
+                var newRowNum = ro + rowsToShift;
                 if (newRowNum <= XLHelper.MaxRowNumber)
                 {
                     rowToMove.SetRowNumber(newRowNum);
@@ -130,7 +131,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public void RemoveAll(Func<XLRow, Boolean> predicate)
+        public void RemoveAll(Func<XLRow, bool> predicate)
         {
             foreach (var row in _dictionary.Values.Where(predicate).Where(row1 => !Deleted.ContainsKey(row1.RowNumber())))
             {

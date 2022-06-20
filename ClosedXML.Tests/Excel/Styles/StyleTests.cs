@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ClosedXML.Tests.Excel
+namespace ClosedXML.Tests.Excel.Styles
 {
     [TestFixture]
     public class StyleTests
@@ -13,34 +13,32 @@ namespace ClosedXML.Tests.Excel
         [Test]
         public void EmptyCellWithQuotePrefixNotTreatedAsEmpty()
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var wb = new XLWorkbook())
             {
-                using (var wb = new XLWorkbook())
-                {
-                    var ws = wb.AddWorksheet("Sheet1");
-                    ws.FirstCell().SetValue("Empty cell with quote prefix:");
-                    var cell = ws.FirstCell().CellRight() as XLCell;
+                var ws = wb.AddWorksheet("Sheet1");
+                ws.FirstCell().SetValue("Empty cell with quote prefix:");
+                var cell = ws.FirstCell().CellRight() as XLCell;
 
-                    Assert.IsTrue(cell.IsEmpty());
-                    cell.Style.IncludeQuotePrefix = true;
+                Assert.IsTrue(cell.IsEmpty());
+                cell.Style.IncludeQuotePrefix = true;
 
-                    Assert.IsTrue(cell.IsEmpty());
-                    Assert.IsFalse(cell.IsEmpty(XLCellsUsedOptions.All));
+                Assert.IsTrue(cell.IsEmpty());
+                Assert.IsFalse(cell.IsEmpty(XLCellsUsedOptions.All));
 
-                    wb.SaveAs(ms);
-                }
+                wb.SaveAs(ms);
+            }
 
-                ms.Seek(0, SeekOrigin.Begin);
+            ms.Seek(0, SeekOrigin.Begin);
 
-                using (var wb = new XLWorkbook(ms))
-                {
-                    var ws = wb.Worksheets.First();
-                    var cell = ws.FirstCell().CellRight() as XLCell;
-                    Assert.AreEqual(1, cell.SharedStringId);
+            using (var wb = new XLWorkbook(ms))
+            {
+                var ws = wb.Worksheets.First();
+                var cell = ws.FirstCell().CellRight() as XLCell;
+                Assert.AreEqual(1, cell.SharedStringId);
 
-                    Assert.IsTrue(cell.IsEmpty());
-                    Assert.IsFalse(cell.IsEmpty(XLCellsUsedOptions.All));
-                }
+                Assert.IsTrue(cell.IsEmpty());
+                Assert.IsFalse(cell.IsEmpty(XLCellsUsedOptions.All));
             }
         }
 
@@ -51,34 +49,30 @@ namespace ClosedXML.Tests.Excel
         [TestCase("F6", TestName = "Non-initialized cell")]
         public void CellTakesWorksheetStyle(string cellAddress)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet("Sheet1");
-                ws.Column(2);
-                ws.Row(2);
-                ws.Cell("D4").Value = "Non empty";
-                ws.Style.Font.SetFontName("Arial");
-                ws.Style.Font.SetFontSize(9);
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Column(2);
+            ws.Row(2);
+            ws.Cell("D4").Value = "Non empty";
+            ws.Style.Font.SetFontName("Arial");
+            ws.Style.Font.SetFontSize(9);
 
-                var cell = ws.Cell(cellAddress);
-                Assert.AreEqual("Arial", cell.Style.Font.FontName);
-                Assert.AreEqual(9, cell.Style.Font.FontSize);
-            }
+            var cell = ws.Cell(cellAddress);
+            Assert.AreEqual("Arial", cell.Style.Font.FontName);
+            Assert.AreEqual(9, cell.Style.Font.FontSize);
         }
 
         [TestCaseSource(nameof(StylizedEntities))]
         public void WorksheetStyleAffectsAllNestedEntities(Func<IXLWorksheet, IXLStyle> getEntityStyle)
         {
-            using (var wb = new XLWorkbook())
-            {
-                var ws = wb.AddWorksheet();
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
 
-                ws.Style.Font.FontSize = 8;
+            ws.Style.Font.FontSize = 8;
 
-                var style = getEntityStyle(ws);
+            var style = getEntityStyle(ws);
 
-                Assert.AreEqual(8, style.Font.FontSize);
-            }
+            Assert.AreEqual(8, style.Font.FontSize);
         }
 
         private static IEnumerable<TestCaseData> StylizedEntities

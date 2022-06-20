@@ -37,7 +37,7 @@ namespace ClosedXML.Examples.Delete
         #region Methods
 
         // Public
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             #region Create case
 
@@ -47,8 +47,12 @@ namespace ClosedXML.Examples.Delete
 
                 // Put a value in a few cells
                 foreach (var r in Enumerable.Range(1, 5))
+                {
                     foreach (var c in Enumerable.Range(1, 5))
+                    {
                         ws.Cell(r, c).Value = string.Format("R{0}C{1}", r, c);
+                    }
+                }
 
                 var blueRow = ws.Rows(1, 2);
                 var redRow = ws.Row(5);

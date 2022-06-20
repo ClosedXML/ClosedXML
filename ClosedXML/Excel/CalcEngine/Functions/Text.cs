@@ -1,4 +1,5 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
+using ClosedXML.Excel.Ranges;
 using ExcelNumberFormat;
 using System;
 using System.Collections;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Text
     {
@@ -39,7 +40,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SEARCH", 2, 3, Search); // Finds one text value within another (not case-sensitive)
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, T); // Converts its arguments to text
-            ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
+            ce.RegisterFunction("TEXT", 2, GetText); // Formats a number and converts it to text
             ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
@@ -50,7 +51,9 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var i = (int)p[0];
             if (i < 1 || i > 255)
+            {
                 throw new CellValueException(string.Format("The number {0} is out of the required range (1 to 255)", i));
+            }
 
             var c = (char)i;
             return c.ToString();
@@ -70,10 +73,14 @@ namespace ClosedXML.Excel.CalcEngine
                 if (x is IEnumerable enumerable)
                 {
                     foreach (var i in enumerable)
-                        sb.Append((string)(new Expression(i)));
+                    {
+                        sb.Append((string)new Expression(i));
+                    }
                 }
                 else
+                {
                     sb.Append((string)x);
+                }
             }
             return sb.ToString();
         }
@@ -88,15 +95,21 @@ namespace ClosedXML.Excel.CalcEngine
                     if (objectExpression.Value is CellRangeReference cellRangeReference)
                     {
                         if (!cellRangeReference.Range.RangeAddress.IsValid)
+                        {
                             throw new CellReferenceException();
+                        }
 
                         // Only single cell range references allows at this stage. See unit test for more details
                         if (cellRangeReference.Range.RangeAddress.NumberOfCells > 1)
+                        {
                             throw new CellValueException("This function does not accept cell ranges as parameters.");
+                        }
                     }
                     else
+                    {
                         // I'm unsure about what else objectExpression.Value could be, but let's throw CellReferenceException
                         throw new CellReferenceException();
+                    }
                 }
 
                 sb.Append((string)x);
@@ -115,9 +128,13 @@ namespace ClosedXML.Excel.CalcEngine
             }
             var index = text.IndexOf(srch, start, StringComparison.Ordinal);
             if (index == -1)
+            {
                 throw new ArgumentException("String not found.");
+            }
             else
+            {
                 return index + 1;
+            }
         }
 
         private static object Left(List<Expression> p)
@@ -128,7 +145,10 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 n = (int)p[1];
             }
-            if (n >= str.Length) return str;
+            if (n >= str.Length)
+            {
+                return str;
+            }
 
             return str.Substring(0, n);
         }
@@ -149,9 +169,15 @@ namespace ClosedXML.Excel.CalcEngine
             var start = (int)p[1] - 1;
             var length = (int)p[2];
             if (start > str.Length - 1)
-                return String.Empty;
+            {
+                return string.Empty;
+            }
+
             if (start + length > str.Length - 1)
+            {
                 return str.Substring(start);
+            }
+
             return str.Substring(start, length);
         }
 
@@ -163,13 +189,14 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Proper(List<Expression> p)
         {
             var s = (string)p[0];
-            if (s.Length == 0) return "";
+            if (s.Length == 0)
+            {
+                return "";
+            }
 
-            MatchEvaluator evaluator = new MatchEvaluator(MatchHandler);
-            StringBuilder sb = new StringBuilder();
-
-            string pattern = "\\b(\\w)(\\w+)?\\b";
-            Regex regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.IgnoreCase);
+            var evaluator = new MatchEvaluator(MatchHandler);
+            var pattern = "\\b(\\w)(\\w+)?\\b";
+            var regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.IgnoreCase);
             return regex.Replace(s.ToLower(), evaluator);
         }
 
@@ -181,7 +208,10 @@ namespace ClosedXML.Excel.CalcEngine
             var len = (int)p[2];
             var rep = (string)p[3];
 
-            if (s.Length == 0) return rep;
+            if (s.Length == 0)
+            {
+                return rep;
+            }
 
             var sb = new StringBuilder();
             sb.Append(s.Substring(0, start));
@@ -196,8 +226,12 @@ namespace ClosedXML.Excel.CalcEngine
             var sb = new StringBuilder();
             var s = (string)p[0];
             var repeats = (int)p[1];
-            if (repeats < 0) throw new IndexOutOfRangeException("repeats");
-            for (int i = 0; i < repeats; i++)
+            if (repeats < 0)
+            {
+                throw new ArithmeticException("repeats");
+            }
+
+            for (var i = 0; i < repeats; i++)
             {
                 sb.Append(s);
             }
@@ -213,7 +247,10 @@ namespace ClosedXML.Excel.CalcEngine
                 n = (int)p[1];
             }
 
-            if (n >= str.Length) return str;
+            if (n >= str.Length)
+            {
+                return str;
+            }
 
             return str.Substring(str.Length - n);
         }
@@ -231,7 +268,10 @@ namespace ClosedXML.Excel.CalcEngine
             var search = WildcardToRegex(p[0]);
             var text = (string)p[1];
 
-            if (string.IsNullOrEmpty(text)) throw new ArgumentException("Invalid input string.");
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new ArgumentException("Invalid input string.");
+            }
 
             var start = 0;
             if (p.Count > 2)
@@ -239,17 +279,16 @@ namespace ClosedXML.Excel.CalcEngine
                 start = (int)p[2] - 1;
             }
 
-            Regex r = new Regex(search, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var r = new Regex(search, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var match = r.Match(text.Substring(start));
             if (!match.Success)
+            {
                 throw new ArgumentException("Search failed.");
+            }
             else
+            {
                 return match.Index + start + 1;
-            //var index = text.IndexOf(search, start, StringComparison.OrdinalIgnoreCase);
-            //if (index == -1)
-            //    throw new ArgumentException("String not found.");
-            //else
-            //    return index + 1;
+            }
         }
 
         private static object Substitute(List<Expression> p)
@@ -259,8 +298,15 @@ namespace ClosedXML.Excel.CalcEngine
             var oldText = (string)p[1];
             var newText = (string)p[2];
 
-            if (string.IsNullOrEmpty(text)) return "";
-            if (string.IsNullOrEmpty(oldText)) return text;
+            if (string.IsNullOrEmpty(text))
+            {
+                return "";
+            }
+
+            if (string.IsNullOrEmpty(oldText))
+            {
+                return text;
+            }
 
             // if index not supplied, replace all
             if (p.Count == 3)
@@ -269,12 +315,12 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // replace specific instance
-            int index = (int)p[3];
+            var index = (int)p[3];
             if (index < 1)
             {
                 throw new ArgumentException("Invalid index in Substitute.");
             }
-            int pos = text.IndexOf(oldText);
+            var pos = text.IndexOf(oldText, StringComparison.CurrentCulture);
             while (pos > -1 && index > 1)
             {
                 pos = text.IndexOf(oldText, pos + 1);
@@ -287,29 +333,43 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object T(List<Expression> p)
         {
-            if (p[0]._token.Value.GetType() == typeof(string))
+            if (p[0]._token.Value is string)
+            {
                 return (string)p[0];
+            }
             else
+            {
                 return "";
+            }
         }
 
-        private static object _Text(List<Expression> p)
+        private static object GetText(List<Expression> p)
         {
             var value = p[0].Evaluate();
 
             // Input values of type string don't get any formatting applied.
-            if (value is string) return value;
+            if (value is string)
+            {
+                return value;
+            }
 
             var number = (double)p[0];
             var format = (string)p[1];
-            if (string.IsNullOrEmpty(format.Trim())) return "";
+            if (string.IsNullOrEmpty(format.Trim()))
+            {
+                return "";
+            }
 
             var nf = new NumberFormat(format);
 
             if (nf.IsDateTimeFormat)
+            {
                 return nf.Format(DateTime.FromOADate(number), CultureInfo.InvariantCulture);
+            }
             else
+            {
                 return nf.Format(number, CultureInfo.InvariantCulture);
+            }
         }
 
         /// <summary>
@@ -342,18 +402,24 @@ namespace ClosedXML.Excel.CalcEngine
                 if (param is XObjectExpression tableArray)
                 {
                     if (!(tableArray.Value is CellRangeReference rangeReference))
+                    {
                         throw new NoValueAvailableException("tableArray has to be a range");
+                    }
 
                     var range = rangeReference.Range;
                     IEnumerable<string> cellValues;
                     if (ignoreEmptyStrings)
+                    {
                         cellValues = range.CellsUsed()
                             .Select(c => c.GetString())
                             .Where(s => !string.IsNullOrEmpty(s));
+                    }
                     else
+                    {
                         cellValues = (range as XLRange).CellValues()
                             .Cast<object>()
                             .Select(o => o.ToString());
+                    }
 
                     values.AddRange(cellValues);
                 }
@@ -366,7 +432,9 @@ namespace ClosedXML.Excel.CalcEngine
             var retVal = string.Join(delimiter, values);
 
             if (retVal.Length > 32767)
+            {
                 throw new CellValueException();
+            }
 
             return retVal;
         }
@@ -390,9 +458,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object NumberValue(List<Expression> p)
         {
-            var numberFormatInfo = new NumberFormatInfo();
-
-            numberFormatInfo.NumberDecimalSeparator = p.Count > 1 ? p[1] : CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
+            var numberFormatInfo = new NumberFormatInfo
+            {
+                NumberDecimalSeparator = p.Count > 1 ? p[1] : CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator
+            };
             numberFormatInfo.CurrencyDecimalSeparator = numberFormatInfo.NumberDecimalSeparator;
 
             numberFormatInfo.NumberGroupSeparator = p.Count > 2 ? p[2] : CultureInfo.InvariantCulture.NumberFormat.NumberGroupSeparator;
@@ -413,13 +482,19 @@ namespace ClosedXML.Excel.CalcEngine
             if (double.TryParse(input, NumberStyles.Any, numberFormatInfo, out var result))
             {
                 if (result <= -1e308 || result >= 1e308)
+                {
                     throw new CellValueException("The value is too large");
+                }
 
                 if (result >= -1e-309 && result <= 1e-309 && result != 0)
+                {
                     throw new CellValueException("The value is too tiny");
+                }
 
                 if (result >= -1e-308 && result <= 1e-308)
+                {
                     result = 0d;
+                }
 
                 return result;
             }
@@ -446,8 +521,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Dollar(List<Expression> p)
         {
-            Double value = p[0];
-            int dec = p.Count == 2 ? (int)p[1] : 2;
+            double value = p[0];
+            var dec = p.Count == 2 ? (int)p[1] : 2;
 
             return value.ToString("C" + dec);
         }
@@ -462,18 +537,24 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Fixed(List<Expression> p)
         {
-            if (p[0]._token.Value.GetType() == typeof(string))
-                throw new ApplicationException("Input type can't be string");
+            if (p[0]._token.Value is string)
+            {
+                throw new ArgumentException("Input type can't be string");
+            }
 
-            Double value = p[0];
-            int decimal_places = p.Count >= 2 ? (int)p[1] : 2;
-            Boolean no_commas = p.Count == 3 && p[2];
+            double value = p[0];
+            var decimal_places = p.Count >= 2 ? (int)p[1] : 2;
+            var no_commas = p.Count == 3 && p[2];
 
             var retVal = value.ToString("N" + decimal_places);
             if (no_commas)
-                return retVal.Replace(",", String.Empty);
+            {
+                return retVal.Replace(",", string.Empty);
+            }
             else
+            {
                 return retVal;
+            }
         }
     }
 }

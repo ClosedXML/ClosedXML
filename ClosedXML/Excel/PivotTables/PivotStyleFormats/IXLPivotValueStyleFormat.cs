@@ -7,7 +7,7 @@ namespace ClosedXML.Excel
     {
         IXLPivotValueStyleFormat AndWith(IXLPivotField field);
 
-        IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<Object> predicate);
+        IXLPivotValueStyleFormat AndWith(IXLPivotField field, Predicate<object> predicate);
 
         IXLPivotValueStyleFormat ForValueField(IXLPivotValue valueField);
     }

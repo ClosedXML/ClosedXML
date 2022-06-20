@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace ClosedXML.Excel
+namespace ClosedXML.Excel.Style
 {
     /// <summary>
     /// Base class for any workbook element that has or may have a style.
@@ -16,10 +16,8 @@ namespace ClosedXML.Excel
         /// Read-only style property.
         /// </summary>
         internal XLStyleValue StyleValue { get; private protected set; }
-        XLStyleValue IXLStylized.StyleValue
-        {
-            get { return StyleValue; }
-        }
+
+        XLStyleValue IXLStylized.StyleValue => StyleValue;
 
         /// <summary>
         /// Editable style of the workbook element. Modification of this property DOES affect styles of child objects as well - they will
@@ -64,7 +62,9 @@ namespace ClosedXML.Excel
         private void SetStyle(IXLStyle style, bool propagate = false)
         {
             if (style is XLStyle xlStyle)
+            {
                 SetStyle(xlStyle.Value, propagate);
+            }
             else
             {
                 var styleKey = XLStyle.GenerateKey(style);
@@ -86,7 +86,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private static ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
+        private static readonly ReferenceEqualityComparer<XLStyleValue> _comparer = new ReferenceEqualityComparer<XLStyleValue>();
 
         void IXLStylized.ModifyStyle(Func<XLStyleKey, XLStyleKey> modification)
         {

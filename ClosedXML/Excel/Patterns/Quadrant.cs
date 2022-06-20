@@ -49,10 +49,7 @@ namespace ClosedXML.Excel.Patterns
         /// <summary>
         /// Collection of ranges belonging to this quadrant (does not include ranges from child quadrants).
         /// </summary>
-        public IEnumerable<IXLAddressable> Ranges
-        {
-            get => _ranges?.Values.AsEnumerable();
-        }
+        public IEnumerable<IXLAddressable> Ranges => _ranges?.Values.AsEnumerable();
 
         /// <summary>
         /// The number of current quadrant by horizontal axis.
@@ -97,9 +94,9 @@ namespace ClosedXML.Excel.Patterns
         /// <returns>True, if range was successfully added, false if it has been added before.</returns>
         public bool Add(IXLAddressable range)
         {
-            bool res = false;
+            var res = false;
             var children = Children ?? CreateChildren().ToList();
-            bool addToChild = false;
+            var addToChild = false;
             foreach (var childQuadrant in children)
             {
                 var rangeAddress = range.RangeAddress;
@@ -112,10 +109,14 @@ namespace ClosedXML.Excel.Patterns
             }
 
             if (!addToChild)
+            {
                 res = AddInternal(range);
+            }
 
             if (Children == null && addToChild)
+            {
                 Children = children;
+            }
 
             return res;
         }
@@ -128,7 +129,9 @@ namespace ClosedXML.Excel.Patterns
             if (Ranges != null)
             {
                 foreach (var range in Ranges)
+                {
                     yield return range;
+                }
             }
 
             if (Children != null)
@@ -137,7 +140,9 @@ namespace ClosedXML.Excel.Patterns
                 {
                     var childRanges = childQuadrant.GetAll();
                     foreach (var range in childRanges)
+                    {
                         yield return range;
+                    }
                 }
             }
         }
@@ -152,7 +157,9 @@ namespace ClosedXML.Excel.Patterns
                 foreach (var range in Ranges)
                 {
                     if (range.RangeAddress.Intersects(rangeAddress))
+                    {
                         yield return range;
+                    }
                 }
             }
 
@@ -164,7 +171,9 @@ namespace ClosedXML.Excel.Patterns
                     {
                         var childRanges = childQuadrant.GetIntersectedRanges(rangeAddress);
                         foreach (var range in childRanges)
+                        {
                             yield return range;
+                        }
                     }
                 }
             }
@@ -180,7 +189,9 @@ namespace ClosedXML.Excel.Patterns
                 foreach (var range in Ranges)
                 {
                     if (range.RangeAddress.Contains(address))
+                    {
                         yield return range;
+                    }
                 }
             }
 
@@ -192,7 +203,9 @@ namespace ClosedXML.Excel.Patterns
                     {
                         var childRanges = childQuadrant.GetIntersectedRanges(address);
                         foreach (var range in childRanges)
+                        {
                             yield return range;
+                        }
                     }
                 }
             }
@@ -204,9 +217,9 @@ namespace ClosedXML.Excel.Patterns
         /// <returns>True if the range was removed, false if it does not exist in the QuadTree.</returns>
         public bool Remove(IXLRangeAddress rangeAddress)
         {
-            bool res = false;
+            var res = false;
 
-            bool coveredByChild = false;
+            var coveredByChild = false;
             if (Children != null)
             {
                 foreach (var childQuadrant in Children)
@@ -219,10 +232,9 @@ namespace ClosedXML.Excel.Patterns
                 }
             }
 
-            if (!coveredByChild)
+            if (!coveredByChild && _ranges?.Remove(rangeAddress) == true)
             {
-                if (_ranges?.Remove(rangeAddress) == true)
-                    res = true;
+                res = true;
             }
 
             return res;
@@ -253,10 +265,12 @@ namespace ClosedXML.Excel.Patterns
             if (Children != null)
             {
                 foreach (var childQuadrant in Children)
+                {
                     foreach (var childRange in childQuadrant.RemoveAll(predicate))
                     {
                         yield return childRange;
                     }
+                }
             }
         }
 
@@ -285,10 +299,14 @@ namespace ClosedXML.Excel.Patterns
         private bool AddInternal(IXLAddressable range)
         {
             if (_ranges == null)
+            {
                 _ranges = new Dictionary<IXLRangeAddress, IXLAddressable>();
+            }
 
             if (_ranges.ContainsKey(range.RangeAddress))
+            {
                 return false;
+            }
 
             _ranges.Add(range.RangeAddress, range);
             return true;
@@ -333,11 +351,14 @@ namespace ClosedXML.Excel.Patterns
         /// </summary>
         private IEnumerable<Quadrant> CreateChildren()
         {
-            byte childLevel = (byte)(Level + 1);
+            var childLevel = (byte)(Level + 1);
             if (childLevel > MAX_LEVEL)
+            {
                 yield break;
+            }
+
             byte xCount = 2; // Always divide on halves
-            byte yCount = (byte)((Level == 0) ? (XLHelper.MaxRowNumber / XLHelper.MaxColumnNumber) : 2); // Level 0 divide onto 64 parts, the rest - on halves
+            var yCount = (byte)((Level == 0) ? (XLHelper.MaxRowNumber / XLHelper.MaxColumnNumber) : 2); // Level 0 divide onto 64 parts, the rest - on halves
 
             for (byte dy = 0; dy < yCount; dy++)
             {
@@ -355,7 +376,7 @@ namespace ClosedXML.Excel.Patterns
     /// A generic version of <see cref="Quadrant"/>
     /// </summary>
     internal class Quadrant<T> : Quadrant
-        where T:IXLAddressable
+        where T : IXLAddressable
     {
         public new IEnumerable<T> Ranges => base.Ranges.Cast<T>();
 
@@ -383,9 +404,10 @@ namespace ClosedXML.Excel.Patterns
         {
             return Remove(range.RangeAddress);
         }
+
         public IEnumerable<T> RemoveAll(Predicate<T> predicate)
         {
-            return base.RemoveAll(r => predicate((T) r)).Cast<T>();
+            return base.RemoveAll(r => predicate((T)r)).Cast<T>();
         }
     }
 }

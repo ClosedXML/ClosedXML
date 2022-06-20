@@ -10,7 +10,7 @@ namespace ClosedXML.Excel
 
         static XLCFConvertersExtension()
         {
-            XLCFConvertersExtension.Converters = new Dictionary<XLConditionalFormatType, IXLCFConverterExtension>()
+            Converters = new Dictionary<XLConditionalFormatType, IXLCFConverterExtension>()
             {
                 { XLConditionalFormatType.DataBar, new XLCFDataBarConverterExtension() }
             };
@@ -22,7 +22,7 @@ namespace ClosedXML.Excel
 
         public static ConditionalFormattingRule Convert(IXLConditionalFormat conditionalFormat, XLWorkbook.SaveContext context)
         {
-            return XLCFConvertersExtension.Converters[conditionalFormat.ConditionalFormatType].Convert(conditionalFormat, context);
+            return Converters[conditionalFormat.ConditionalFormatType].Convert(conditionalFormat, context);
         }
     }
 }

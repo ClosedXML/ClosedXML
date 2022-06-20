@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace ClosedXML.Excel.CalcEngine
+namespace ClosedXML.Excel.CalcEngine.Functions
 {
-    internal class Tally : IEnumerable<Object>
+    internal class Tally : IEnumerable<object>
     {
         private readonly List<object> _list = new List<object>();
         private readonly bool NumbersOnly;
@@ -56,15 +56,21 @@ namespace ClosedXML.Excel.CalcEngine
             // handle expressions
             var val = e.Evaluate();
             if (val is string || !(val is IEnumerable valEnumerable))
+            {
                 _list.Add(val);
+            }
             else
+            {
                 foreach (var v in valEnumerable)
+                {
                     _list.Add(v);
+                }
+            }
 
             _numericValues = null;
         }
 
-        public void AddValue(Object v)
+        public void AddValue(object v)
         {
             _list.Add(v);
             _numericValues = null;
@@ -76,13 +82,16 @@ namespace ClosedXML.Excel.CalcEngine
                         .OrderBy(n => n)
                         .ToArray();
 
-            if (nums.Length == 0) throw new ApplicationException("No values");
+            if (nums.Length == 0)
+            {
+                throw new ApplicationException("No values");
+            }
 
             var hasEvenCount = nums.Length % 2 == 0;
 
             if (hasEvenCount)
             {
-                var numElementsToSkip = (nums.Length / 2) - 1;
+                var numElementsToSkip = nums.Length / 2 - 1;
 
                 return nums.Skip(numElementsToSkip)
                            .Take(2)
@@ -97,8 +106,12 @@ namespace ClosedXML.Excel.CalcEngine
         public double Average()
         {
             var nums = NumericValuesInternal();
-            if (nums.Length == 0) throw new ApplicationException("No values");
-              return nums.Average();
+            if (nums.Length == 0)
+            {
+                throw new ApplicationException("No values");
+            }
+
+            return nums.Average();
         }
 
         public double Count()
@@ -109,15 +122,22 @@ namespace ClosedXML.Excel.CalcEngine
         public double Count(bool numbersOnly)
         {
             if (numbersOnly)
+            {
                 return NumericValuesInternal().Length;
+            }
             else
+            {
                 return _list.Count(o => !CalcEngineHelpers.ValueIsBlank(o));
+            }
         }
 
         public double DevSq()
         {
             var nums = NumericValuesInternal();
-            if (nums.Length == 0) throw new CellValueException("No numeric parameters.");
+            if (nums.Length == 0)
+            {
+                throw new CellValueException("No numeric parameters.");
+            }
 
             return nums.Sum(x => Math.Pow(x - Average(), 2));
         }
@@ -126,8 +146,15 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var nums = NumericValuesInternal();
 
-            if (nums.Length == 0) throw new NumberException("No numeric parameters.");
-            if (HasNonPositiveNumbers()) throw new NumberException("Incorrect parameters. Use only positive numbers in your data.");
+            if (nums.Length == 0)
+            {
+                throw new NumberException("No numeric parameters.");
+            }
+
+            if (HasNonPositiveNumbers())
+            {
+                throw new NumberException("Incorrect parameters. Use only positive numbers in your data.");
+            }
 
             return Math.Pow(Product(), 1.0 / nums.Length);
         }
@@ -175,11 +202,11 @@ namespace ClosedXML.Excel.CalcEngine
             if (count != 0)
             {
                 //Compute the Average
-                double avg = values.Average();
+                var avg = values.Average();
                 //Perform the Sum of (value-avg)_2_2
-                double sum = values.Sum(d => Math.Pow(d - avg, 2));
+                var sum = values.Sum(d => Math.Pow(d - avg, 2));
                 //Put it all together
-                ret = Math.Sqrt((sum) / (count - 1));
+                ret = Math.Sqrt(sum / (count - 1));
             }
             else
             {
@@ -234,15 +261,19 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 if (value is string || !(value is IEnumerable vEnumerable))
                 {
-                    if (TryParseToDouble(value, aggressiveConversion: false, out double tmp))
+                    if (TryParseToDouble(value, aggressiveConversion: false, out var tmp))
+                    {
                         yield return tmp;
+                    }
                 }
                 else
                 {
                     foreach (var v in vEnumerable)
                     {
-                        if (TryParseToDouble(v, aggressiveConversion: false, out double tmp))
+                        if (TryParseToDouble(v, aggressiveConversion: false, out var tmp))
+                        {
                             yield return tmp;
+                        }
                     }
                 }
             }
@@ -260,11 +291,14 @@ namespace ClosedXML.Excel.CalcEngine
                 d = Convert.ToDouble(value);
                 return true;
             }
-            else if (value is Boolean b)
+            else if (value is bool b)
             {
-                if (!aggressiveConversion) return false;
+                if (!aggressiveConversion)
+                {
+                    return false;
+                }
 
-                d = (b ? 1 : 0);
+                d = b ? 1 : 0;
                 return true;
             }
             else if (value is DateTime dt)
@@ -279,7 +313,11 @@ namespace ClosedXML.Excel.CalcEngine
             }
             else if (value is string s)
             {
-                if (!aggressiveConversion) return false;
+                if (!aggressiveConversion)
+                {
+                    return false;
+                }
+
                 return double.TryParse(s, out d);
             }
 

@@ -18,23 +18,23 @@ namespace ClosedXML.Excel
 
         XLDecimalCriteria Decimal { get; }
 
-        String ErrorMessage { get; set; }
+        string ErrorMessage { get; set; }
 
         XLErrorStyle ErrorStyle { get; set; }
 
-        String ErrorTitle { get; set; }
+        string ErrorTitle { get; set; }
 
-        Boolean IgnoreBlanks { get; set; }
+        bool IgnoreBlanks { get; set; }
 
-        Boolean InCellDropdown { get; set; }
+        bool InCellDropdown { get; set; }
 
-        String InputMessage { get; set; }
+        string InputMessage { get; set; }
 
-        String InputTitle { get; set; }
+        string InputTitle { get; set; }
 
-        String MaxValue { get; set; }
+        string MaxValue { get; set; }
 
-        String MinValue { get; set; }
+        string MinValue { get; set; }
 
         XLOperator Operator { get; set; }
 
@@ -43,17 +43,17 @@ namespace ClosedXML.Excel
         /// </summary>
         IEnumerable<IXLRange> Ranges { get; }
 
-        Boolean ShowErrorMessage { get; set; }
+        bool ShowErrorMessage { get; set; }
 
         //void Delete();
         //void CopyFrom(IXLDataValidation dataValidation);
-        Boolean ShowInputMessage { get; set; }
+        bool ShowInputMessage { get; set; }
 
         XLTextLengthCriteria TextLength { get; }
 
         XLTimeCriteria Time { get; }
 
-        String Value { get; set; }
+        string Value { get; set; }
 
         XLWholeNumberCriteria WholeNumber { get; }
 
@@ -80,17 +80,17 @@ namespace ClosedXML.Excel
         /// </summary>
         void ClearRanges();
 
-        void Custom(String customValidation);
+        void Custom(string customValidation);
 
-        Boolean IsDirty();
+        bool IsDirty();
 
-        void List(String list);
+        void List(string list);
 
-        void List(String list, Boolean inCellDropdown);
+        void List(string list, bool inCellDropdown);
 
         void List(IXLRange range);
 
-        void List(IXLRange range, Boolean inCellDropdown);
+        void List(IXLRange range, bool inCellDropdown);
 
         /// <summary>
         /// Remove the specified range from the collection of range this rule applies to.

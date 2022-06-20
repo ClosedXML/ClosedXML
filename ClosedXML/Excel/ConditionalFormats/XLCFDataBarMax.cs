@@ -13,12 +13,12 @@ namespace ClosedXML.Excel
             _conditionalFormat = conditionalFormat;
         }
 
-        public void Maximum(XLCFContentType type, String value)
+        public void Maximum(XLCFContentType type, string value)
         {
             _conditionalFormat.ContentTypes.Add(type);
             _conditionalFormat.Values.Add(new XLFormula { Value = value });
         }
-        public void Maximum(XLCFContentType type, Double value)
+        public void Maximum(XLCFContentType type, double value)
         {
             Maximum(type, value.ToInvariantString());
         }

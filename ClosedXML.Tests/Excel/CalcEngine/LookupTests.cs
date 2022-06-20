@@ -143,7 +143,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             var ws = workbook.Worksheets.First();
 
-            Object value;
+            object value;
             value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2, 0)");
             Assert.AreEqual(4, value);
 

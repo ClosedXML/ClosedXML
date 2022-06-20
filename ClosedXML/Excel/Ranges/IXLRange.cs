@@ -52,37 +52,37 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the first column of the range.
         /// </summary>
-        IXLRangeColumn FirstColumn(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn FirstColumn(Func<IXLRangeColumn, bool> predicate = null);
 
         /// <summary>
         /// Gets the first column of the range that contains a cell with a value.
         /// </summary>
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumn FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn FirstColumnUsed(bool includeFormats, Func<IXLRangeColumn, bool> predicate = null);
 
-        IXLRangeColumn FirstColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn FirstColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, bool> predicate = null);
 
-        IXLRangeColumn FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn FirstColumnUsed(Func<IXLRangeColumn, bool> predicate = null);
 
         /// <summary>
         /// Gets the last column of the range.
         /// </summary>
-        IXLRangeColumn LastColumn(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumn(Func<IXLRangeColumn, bool> predicate = null);
 
         /// <summary>
         /// Gets the last column of the range that contains a cell with a value.
         /// </summary>
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumn LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumnUsed(bool includeFormats, Func<IXLRangeColumn, bool> predicate = null);
 
-        IXLRangeColumn LastColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, bool> predicate = null);
 
-        IXLRangeColumn LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumn LastColumnUsed(Func<IXLRangeColumn, bool> predicate = null);
 
         /// <summary>
         /// Gets a collection of all columns in this range.
         /// </summary>
-        IXLRangeColumns Columns(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumns Columns(Func<IXLRangeColumn, bool> predicate = null);
 
         /// <summary>
         /// Gets a collection of the specified columns in this range.
@@ -109,42 +109,42 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Returns the first row that matches the given predicate
         /// </summary>
-        IXLRangeColumn FindColumn(Func<IXLRangeColumn, Boolean> predicate);
+        IXLRangeColumn FindColumn(Func<IXLRangeColumn, bool> predicate);
 
         /// <summary>
         /// Returns the first row that matches the given predicate
         /// </summary>
-        IXLRangeRow FindRow(Func<IXLRangeRow, Boolean> predicate);
+        IXLRangeRow FindRow(Func<IXLRangeRow, bool> predicate);
 
         /// <summary>
         /// Gets the first row of the range.
         /// </summary>
-        IXLRangeRow FirstRow(Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow FirstRow(Func<IXLRangeRow, bool> predicate = null);
 
         /// <summary>
         /// Gets the first row of the range that contains a cell with a value.
         /// </summary>
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRow FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow FirstRowUsed(bool includeFormats, Func<IXLRangeRow, bool> predicate = null);
 
-        IXLRangeRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, bool> predicate = null);
 
-        IXLRangeRow FirstRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow FirstRowUsed(Func<IXLRangeRow, bool> predicate = null);
 
         /// <summary>
         /// Gets the last row of the range.
         /// </summary>
-        IXLRangeRow LastRow(Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow LastRow(Func<IXLRangeRow, bool> predicate = null);
 
         /// <summary>
         /// Gets the last row of the range that contains a cell with a value.
         /// </summary>
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRow LastRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow LastRowUsed(bool includeFormats, Func<IXLRangeRow, bool> predicate = null);
 
-        IXLRangeRow LastRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow LastRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, bool> predicate = null);
 
-        IXLRangeRow LastRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRow LastRowUsed(Func<IXLRangeRow, bool> predicate = null);
 
         /// <summary>
         /// Gets the specified row of the range.
@@ -153,7 +153,7 @@ namespace ClosedXML.Excel
         /// <returns>The relevant row</returns>
         IXLRangeRow Row(int row);
 
-        IXLRangeRows Rows(Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRows Rows(Func<IXLRangeRow, bool> predicate = null);
 
         /// <summary>
         /// Gets a collection of the specified rows in this range.
@@ -222,7 +222,7 @@ namespace ClosedXML.Excel
         /// <param name="numberOfColumns">Number of columns to insert.</param>
         IXLRangeColumns InsertColumnsAfter(int numberOfColumns);
 
-        IXLRangeColumns InsertColumnsAfter(int numberOfColumns, Boolean expandRange);
+        IXLRangeColumns InsertColumnsAfter(int numberOfColumns, bool expandRange);
 
         /// <summary>
         /// Inserts X number of columns to the left of this range.
@@ -231,7 +231,7 @@ namespace ClosedXML.Excel
         /// <param name="numberOfColumns">Number of columns to insert.</param>
         IXLRangeColumns InsertColumnsBefore(int numberOfColumns);
 
-        IXLRangeColumns InsertColumnsBefore(int numberOfColumns, Boolean expandRange);
+        IXLRangeColumns InsertColumnsBefore(int numberOfColumns, bool expandRange);
 
         /// <summary>
         /// Inserts X number of rows on top of this range.
@@ -240,7 +240,7 @@ namespace ClosedXML.Excel
         /// <param name="numberOfRows">Number of rows to insert.</param>
         IXLRangeRows InsertRowsAbove(int numberOfRows);
 
-        IXLRangeRows InsertRowsAbove(int numberOfRows, Boolean expandRange);
+        IXLRangeRows InsertRowsAbove(int numberOfRows, bool expandRange);
 
         /// <summary>
         /// Inserts X number of rows below this range.
@@ -249,7 +249,7 @@ namespace ClosedXML.Excel
         /// <param name="numberOfRows">Number of rows to insert.</param>
         IXLRangeRows InsertRowsBelow(int numberOfRows);
 
-        IXLRangeRows InsertRowsBelow(int numberOfRows, Boolean expandRange);
+        IXLRangeRows InsertRowsBelow(int numberOfRows, bool expandRange);
 
         /// <summary>
         /// Deletes this range and shifts the surrounding cells accordingly.
@@ -265,11 +265,11 @@ namespace ClosedXML.Excel
 
         IXLTable AsTable();
 
-        IXLTable AsTable(String name);
+        IXLTable AsTable(string name);
 
         IXLTable CreateTable();
 
-        IXLTable CreateTable(String name);
+        IXLTable CreateTable(string name);
 
         IXLRange RangeUsed();
 
@@ -282,11 +282,11 @@ namespace ClosedXML.Excel
 
         IXLRange Sort();
 
-        IXLRange Sort(String columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange Sort(string columnsToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true);
 
-        IXLRange Sort(Int32 columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange Sort(int columnToSortBy, XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true);
 
-        IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLRange SortLeftToRight(XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true);
 
         IXLRange SetDataType(XLDataType dataType);
 
@@ -297,17 +297,17 @@ namespace ClosedXML.Excel
         new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRows RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRows RowsUsed(bool includeFormats, Func<IXLRangeRow, bool> predicate = null);
 
-        IXLRangeRows RowsUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRows RowsUsed(XLCellsUsedOptions options, Func<IXLRangeRow, bool> predicate = null);
 
-        IXLRangeRows RowsUsed(Func<IXLRangeRow, Boolean> predicate = null);
+        IXLRangeRows RowsUsed(Func<IXLRangeRow, bool> predicate = null);
 
         [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumns ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumns ColumnsUsed(bool includeFormats, Func<IXLRangeColumn, bool> predicate = null);
 
-        IXLRangeColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, bool> predicate = null);
 
-        IXLRangeColumns ColumnsUsed(Func<IXLRangeColumn, Boolean> predicate = null);
+        IXLRangeColumns ColumnsUsed(Func<IXLRangeColumn, bool> predicate = null);
     }
 }

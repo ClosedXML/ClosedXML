@@ -13,10 +13,10 @@ namespace ClosedXML.Tests.Excel.Caching
         public void DifferentEntitiesWithSameKeyStoredOnce()
         {
             // Arrange
-            int key = 12345;
+            var key = 12345;
             var entity1 = new SampleEntity(key);
             var entity2 = new SampleEntity(key);
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
 
             // Act
             var storedEntity1 = sampleRepository.Store(ref key, entity1);
@@ -98,18 +98,18 @@ namespace ClosedXML.Tests.Excel.Caching
         public void ConcurrentAddingCausesNoDuplication()
         {
             // Arrange
-            int countUnique = 30;
-            int repeatCount = 1000;
-            SampleEntity[] entities = new SampleEntity[countUnique * repeatCount];
-            for (int i = 0; i < countUnique; i++)
+            var countUnique = 30;
+            var repeatCount = 1000;
+            var entities = new SampleEntity[countUnique * repeatCount];
+            for (var i = 0; i < countUnique; i++)
             {
-                for (int j = 0; j < repeatCount; j++)
+                for (var j = 0; j < repeatCount; j++)
                 {
                     entities[i * repeatCount + j] = new SampleEntity(i);
                 }
             }
 
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
 
             // Act
             Parallel.ForEach(entities, new ParallelOptions { MaxDegreeOfParallelism = 8 },
@@ -129,16 +129,16 @@ namespace ClosedXML.Tests.Excel.Caching
         public void ReplaceKeyInRepository()
         {
             // Arrange
-            int key1 = 12345;
-            int key2 = 54321;
+            var key1 = 12345;
+            var key2 = 54321;
             var entity = new SampleEntity(key1);
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
             var storedEntity1 = sampleRepository.Store(ref key1, entity);
 
             // Act
             sampleRepository.Replace(ref key1, ref key2);
-            bool containsOld = sampleRepository.ContainsKey(ref key1, out var _);
-            bool containsNew = sampleRepository.ContainsKey(ref key2, out var _);
+            var containsOld = sampleRepository.ContainsKey(ref key1, out var _);
+            var containsNew = sampleRepository.ContainsKey(ref key2, out var _);
             var storedEntity2 = sampleRepository.GetOrCreate(ref key2);
 
             // Assert
@@ -152,7 +152,7 @@ namespace ClosedXML.Tests.Excel.Caching
         public void ConcurrentReplaceKeyInRepository()
         {
             var sampleRepository = new EditableRepository();
-            int[] keys = Enumerable.Range(0, 1000).ToArray();
+            var keys = Enumerable.Range(0, 1000).ToArray();
             keys.ForEach(key => sampleRepository.GetOrCreate(ref key));
 
             Parallel.ForEach(keys, key =>
@@ -168,11 +168,11 @@ namespace ClosedXML.Tests.Excel.Caching
         [Test]
         public void ReplaceNonExistingKeyInRepository()
         {
-            int key1 = 100;
-            int key2 = 200;
-            int key3 = 300;
+            var key1 = 100;
+            var key2 = 200;
+            var key3 = 300;
             var entity = new SampleEntity(key1);
-            var sampleRepository = this.CreateSampleRepository();
+            var sampleRepository = CreateSampleRepository();
             sampleRepository.Store(ref key1, entity);
 
             sampleRepository.Replace(ref key2, ref key3);

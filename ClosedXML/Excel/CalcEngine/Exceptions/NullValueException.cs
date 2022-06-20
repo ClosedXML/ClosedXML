@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// between ranges used in function arguments.
     /// Corresponds to the #NULL! error in Excel
     /// </summary>
-    /// <seealso cref="ClosedXML.Excel.CalcEngine.Exceptions.CalcEngineException" />
+    /// <seealso cref="CalcEngineException" />
     public class NullValueException : CalcEngineException
     {
         internal NullValueException()

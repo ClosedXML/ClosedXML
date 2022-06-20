@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Linq;
 
-namespace ClosedXML.Tests
+namespace ClosedXML.Tests.Utils
 {
     /// <summary>
     ///     Help methods for work with streams
@@ -21,9 +21,9 @@ namespace ClosedXML.Tests
         /// <returns>Byte array</returns>
         public static byte[] StreamToArray(Stream pStream)
         {
-            long iLength = pStream.Length;
+            var iLength = pStream.Length;
             var bytes = new byte[iLength];
-            for (int i = 0; i < iLength; i++)
+            for (var i = 0; i < iLength; i++)
             {
                 bytes[i] = (byte)pStream.ReadByte();
             }
@@ -39,11 +39,11 @@ namespace ClosedXML.Tests
         /// <returns></returns>
         public static Stream ArrayToStreamAppend(byte[] pBynaryArray, Stream pStream)
         {
-            if (ReferenceEquals(pBynaryArray, null))
+            if (pBynaryArray is null)
             {
                 throw new ArgumentNullException("pBynaryArray");
             }
-            if (ReferenceEquals(pStream, null))
+            if (pStream is null)
             {
                 throw new ArgumentNullException("pStream");
             }
@@ -52,7 +52,7 @@ namespace ClosedXML.Tests
                 throw new ArgumentException("Can't write to stream", "pStream");
             }
 
-            foreach (byte b in pBynaryArray)
+            foreach (var b in pBynaryArray)
             {
                 pStream.WriteByte(b);
             }
@@ -66,11 +66,11 @@ namespace ClosedXML.Tests
 
         public static void StreamToStreamAppend(Stream streamIn, Stream streamToWrite, long dataLength)
         {
-            if (ReferenceEquals(streamIn, null))
+            if (streamIn is null)
             {
                 throw new ArgumentNullException("streamIn");
             }
-            if (ReferenceEquals(streamToWrite, null))
+            if (streamToWrite is null)
             {
                 throw new ArgumentNullException("streamToWrite");
             }
@@ -93,10 +93,10 @@ namespace ClosedXML.Tests
             {
                 length = dataLength;
             }
-            long rest = length;
+            var rest = length;
             while (rest > 0)
             {
-                int len1 = streamIn.Read(buf, 0, rest >= 512 ? 512 : (int)rest);
+                var len1 = streamIn.Read(buf, 0, rest >= 512 ? 512 : (int)rest);
                 streamToWrite.Write(buf, 0, len1);
                 rest -= len1;
             }
@@ -113,19 +113,19 @@ namespace ClosedXML.Tests
         {
             if (tuple1 == null || tuple1.Item1 == null || tuple1.Item2 == null)
             {
-                throw new ArgumentNullException("one");
+                throw new ArgumentNullException(nameof(tuple1));
             }
             if (tuple2 == null || tuple2.Item1 == null || tuple2.Item2 == null)
             {
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(tuple2));
             }
             if (tuple1.Item2.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "one");
+                throw new ArgumentException("Must be in position 0", nameof(tuple1));
             }
             if (tuple2.Item2.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "other");
+                throw new ArgumentException("Must be in position 0", nameof(tuple2));
             }
 
             using var streamReader = new StreamReader(tuple1.Item2);
@@ -135,19 +135,25 @@ namespace ClosedXML.Tests
             return stringOne == stringOther;
         }
 
-        private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnFormat, Boolean ignoreGuids)
+        private static string RemoveIgnoredParts(this string s, Uri uri, bool ignoreColumnFormat, bool ignoreGuids)
         {
             foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
+            {
                 s = pair.Value.Replace(s, "");
+            }
 
             // Collapse empty xml elements
             s = emptyXmlElementRegex.Replace(s, "<$1 />");
 
             if (ignoreColumnFormat)
+            {
                 s = RemoveColumnFormatSection(s);
+            }
 
             if (ignoreGuids)
+            {
                 s = RemoveGuids(s);
+            }
 
             return RemoveNonCodingXmlFormatDiff(s);
         }
@@ -203,14 +209,14 @@ namespace ClosedXML.Tests
         private static readonly Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
         private static readonly Regex columnRegex = new Regex("(<x:col .*?/>)", RegexOptions.Compiled);
 
-        private static String RemoveColumnFormatSection(String s)
+        private static string RemoveColumnFormatSection(string s)
         {
-            var replacements = new Dictionary<String, String>();
+            var replacements = new Dictionary<string, string>();
 
             foreach (var m in columnRegex.Matches(s).OfType<Match>())
             {
                 var original = m.Groups[0].Value;
-                replacements.Add(original, String.Empty);
+                replacements.Add(original, string.Empty);
             }
 
             foreach (var r in replacements)
@@ -222,7 +228,7 @@ namespace ClosedXML.Tests
 
         private static readonly Regex guidRegex = new Regex(@"{[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}}", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        private static String RemoveGuids(String s)
+        private static string RemoveGuids(string s)
         {
             return guidRegex.Replace(s, delegate (Match m)
             {

@@ -5,7 +5,7 @@ namespace ClosedXML.Examples.Styles
 {
     public class DefaultStyles : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             // Create our workbook
             using var workbook = new XLWorkbook();

@@ -42,7 +42,10 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (obj is XLAlignment)
+            {
                 return Equals((XLAlignment)obj);
+            }
+
             return base.Equals(obj);
         }
 
@@ -73,6 +76,6 @@ namespace ClosedXML.Excel
 
         public static bool operator ==(XLAlignmentKey left, XLAlignmentKey right) => left.Equals(right);
 
-        public static bool operator !=(XLAlignmentKey left, XLAlignmentKey right) => !(left.Equals(right));
+        public static bool operator !=(XLAlignmentKey left, XLAlignmentKey right) => !left.Equals(right);
     }
 }

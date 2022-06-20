@@ -23,7 +23,9 @@ namespace ClosedXML.Excel.InsertData
         public int GetPropertiesCount()
         {
             if (!_data.Any())
+            {
                 return 0;
+            }
 
             return _data.First().Cast<object>().Count();
         }

@@ -10,17 +10,17 @@ namespace ClosedXML.Excel
     {
         private static readonly Regex RegexNewLine = new Regex(@"((?<!\r)\n|\r\n)", RegexOptions.Compiled);
 
-        public static Int32 CharCount(this String instance, Char c)
+        public static int CharCount(this string instance, char c)
         {
             return instance.Length - instance.Replace(c.ToString(), "").Length;
         }
 
-        public static String RemoveSpecialCharacters(this String str)
+        public static string RemoveSpecialCharacters(this string str)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in str)
+            var sb = new StringBuilder();
+            foreach (var c in str)
             {
-                if (Char.IsLetterOrDigit(c) || c == '.' || c == '_')
+                if (char.IsLetterOrDigit(c) || c == '.' || c == '_')
                 {
                     sb.Append(c);
                 }
@@ -28,56 +28,71 @@ namespace ClosedXML.Excel
             return sb.ToString();
         }
 
-        internal static string EscapeSheetName(this String sheetName)
+        internal static string EscapeSheetName(this string sheetName)
         {
-            if (String.IsNullOrEmpty(sheetName)) return sheetName;
+            if (string.IsNullOrEmpty(sheetName))
+            {
+                return sheetName;
+            }
 
-            var needEscape = (!Char.IsLetter(sheetName[0]) && sheetName[0] != '_') ||
+            var needEscape = (!char.IsLetter(sheetName[0]) && sheetName[0] != '_') ||
                              XLHelper.IsValidA1Address(sheetName) ||
                              XLHelper.IsValidRCAddress(sheetName) ||
-                             sheetName.Any(c => (Char.IsPunctuation(c) && c != '.' && c != '_') ||
-                                                Char.IsSeparator(c) ||
-                                                Char.IsControl(c) ||
-                                                Char.IsSymbol(c));
+                             sheetName.Any(c => (char.IsPunctuation(c) && c != '.' && c != '_') ||
+                                                char.IsSeparator(c) ||
+                                                char.IsControl(c) ||
+                                                char.IsSymbol(c));
             if (needEscape)
-                return String.Concat('\'', sheetName.Replace("'", "''"), '\'');
+            {
+                return string.Concat('\'', sheetName.Replace("'", "''"), '\'');
+            }
             else
+            {
                 return sheetName;
+            }
         }
 
-        internal static String FixNewLines(this String value)
+        internal static string FixNewLines(this string value)
         {
             return value.Contains("\n") ? RegexNewLine.Replace(value, XLConstants.NewLine) : value;
         }
 
-        internal static Boolean PreserveSpaces(this String value)
+        internal static bool PreserveSpaces(this string value)
         {
             return value.StartsWith(" ") || value.EndsWith(" ") || value.Contains(XLConstants.NewLine);
         }
 
-        internal static String ToCamel(this String value)
+        internal static string ToCamel(this string value)
         {
             if (value.Length == 0)
+            {
                 return value;
+            }
 
             if (value.Length == 1)
+            {
                 return value.ToLower();
+            }
 
             return value.Substring(0, 1).ToLower() + value.Substring(1);
         }
 
-        internal static String ToProper(this String value)
+        internal static string ToProper(this string value)
         {
             if (value.Length == 0)
+            {
                 return value;
+            }
 
             if (value.Length == 1)
+            {
                 return value.ToUpper();
+            }
 
             return value.Substring(0, 1).ToUpper() + value.Substring(1);
         }
 
-        internal static string UnescapeSheetName(this String sheetName)
+        internal static string UnescapeSheetName(this string sheetName)
         {
             return sheetName
                 .Trim('\'')

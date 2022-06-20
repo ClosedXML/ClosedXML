@@ -10,21 +10,21 @@ namespace ClosedXML.Excel.Drawings
     [DebuggerDisplay("{Name}")]
     internal class XLPicture : IXLPicture
     {
-        private const String InvalidNameChars = @":\/?*[]";
+        private const string InvalidNameChars = @":\/?*[]";
         private const int ImageQuality = 70;
         private static readonly IDictionary<XLPictureFormat, SKEncodedImageFormat> FormatMap;
 
-        private bool _disposed = false;
+        private bool _disposed;
 
-        private Int32 height;
-        private Int32 id;
-        private String name = string.Empty;
-        private Int32 width;
+        private int height;
+        private int id;
+        private string name = string.Empty;
+        private int width;
         private readonly SKCodec codec;
 
         static XLPicture()
         {
-            List<SKEncodedImageFormat> SKEncodedImageFormatValues = Enum.GetValues(typeof(SKEncodedImageFormat)).OfType<SKEncodedImageFormat>().ToList();
+            var SKEncodedImageFormatValues = Enum.GetValues(typeof(SKEncodedImageFormat)).OfType<SKEncodedImageFormat>().ToList();
 
             FormatMap = new Dictionary<XLPictureFormat, SKEncodedImageFormat>();
 
@@ -50,13 +50,13 @@ namespace ClosedXML.Excel.Drawings
 
                 if (codec != null)
                 {
-                    using (var bitmap = SKBitmap.Decode(codec))
+                    using var bitmap = SKBitmap.Decode(codec);
+                    if (FormatMap.Values.Contains(codec.EncodedFormat))
                     {
-                        if (FormatMap.Values.Contains(codec.EncodedFormat))
-                            Format = FormatMap.Single(f => f.Value.Equals(codec.EncodedFormat)).Key;
-
-                        DeduceDimensionsFromBitmap(bitmap);
+                        Format = FormatMap.Single(f => f.Value.Equals(codec.EncodedFormat)).Key;
                     }
+
+                    DeduceDimensionsFromBitmap(bitmap);
                 }
 
                 stream.Position = 0;
@@ -67,7 +67,11 @@ namespace ClosedXML.Excel.Drawings
         internal XLPicture(IXLWorksheet worksheet, Stream stream, XLPictureFormat format)
             : this(worksheet)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             Format = format;
 
             ImageStream = new MemoryStream();
@@ -80,13 +84,13 @@ namespace ClosedXML.Excel.Drawings
 
                 if (codec != null)
                 {
-                    using (var bitmap = SKBitmap.Decode(codec))
+                    using var bitmap = SKBitmap.Decode(codec);
+                    if (FormatMap.TryGetValue(Format, out var imageFormat) && imageFormat != codec.EncodedFormat)
                     {
-                        if (FormatMap.TryGetValue(Format, out var imageFormat) && imageFormat != codec.EncodedFormat)
-                            throw new ArgumentException("The picture format in the stream and the parameter don't match");
-
-                        DeduceDimensionsFromBitmap(bitmap);
+                        throw new ArgumentException("The picture format in the stream and the parameter don't match");
                     }
+
+                    DeduceDimensionsFromBitmap(bitmap);
                 }
 
                 ImageStream.Seek(0, SeekOrigin.Begin);
@@ -95,22 +99,26 @@ namespace ClosedXML.Excel.Drawings
 
         internal XLPicture(IXLWorksheet worksheet, SKCodec codec) : this(worksheet)
         {
-            if (codec == null) throw new ArgumentNullException(nameof(codec));
+            if (codec == null)
+            {
+                throw new ArgumentNullException(nameof(codec));
+            }
+
             ImageStream = new MemoryStream();
 
             using (var bitmap = SKBitmap.Decode(codec))
             {
-                using (var data = bitmap.Encode(codec.EncodedFormat, ImageQuality))
-                {
-                    data.SaveTo(ImageStream);
-                    ImageStream.Seek(0, SeekOrigin.Begin);
-                    DeduceDimensionsFromBitmap(bitmap);
-                }
+                using var data = bitmap.Encode(codec.EncodedFormat, ImageQuality);
+                data.SaveTo(ImageStream);
+                ImageStream.Seek(0, SeekOrigin.Begin);
+                DeduceDimensionsFromBitmap(bitmap);
             }
 
             var formats = FormatMap.Where(f => f.Value.Equals(codec.EncodedFormat));
             if (!formats.Any() || formats.Count() > 1)
+            {
                 throw new ArgumentException($"Unsupported or unknown image format '{codec.EncodedFormat}' in bitmap");
+            }
 
             Format = formats.Single().Key;
         }
@@ -128,9 +136,13 @@ namespace ClosedXML.Excel.Drawings
             // Calculate default picture ID
             var allPictures = worksheet.Workbook.Worksheets.SelectMany(ws => ws.Pictures);
             if (allPictures.Any())
+            {
                 id = allPictures.Max(p => p.Id) + 1;
+            }
             else
+            {
                 id = 1;
+            }
         }
 
         public IXLCell BottomRightCell
@@ -147,7 +159,9 @@ namespace ClosedXML.Excel.Drawings
                 ThrowIfDisposed();
 
                 if (!value.Worksheet.Equals(Worksheet))
+                {
                     throw new InvalidOperationException("A picture and its anchor cells must be on the same worksheet");
+                }
 
                 Markers[XLMarkerPosition.BottomRight] = new XLMarker(value);
             }
@@ -155,7 +169,7 @@ namespace ClosedXML.Excel.Drawings
 
         public XLPictureFormat Format { get; private set; }
 
-        public Int32 Height
+        public int Height
         {
             get
             {
@@ -168,12 +182,15 @@ namespace ClosedXML.Excel.Drawings
                 ThrowIfDisposed();
 
                 if (Placement == XLPicturePlacement.MoveAndSize)
+                {
                     throw new ArgumentException("To set the height, the placement should be FreeFloating or Move");
+                }
+
                 height = value;
             }
         }
 
-        public Int32 Id
+        public int Id
         {
             get
             {
@@ -186,7 +203,9 @@ namespace ClosedXML.Excel.Drawings
                 ThrowIfDisposed();
 
                 if ((Worksheet.Pictures.FirstOrDefault(p => p.Id.Equals(value)) ?? this) != this)
+                {
                     throw new ArgumentException($"The picture ID '{value}' already exists.");
+                }
 
                 id = value;
             }
@@ -207,13 +226,15 @@ namespace ClosedXML.Excel.Drawings
                 ThrowIfDisposed();
 
                 if (Placement != XLPicturePlacement.FreeFloating)
+                {
                     throw new ArgumentException("To set the left-hand offset, the placement should be FreeFloating");
+                }
 
                 Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new SKPoint(value, Top));
             }
         }
 
-        public String Name
+        public string Name
         {
             get
             {
@@ -225,18 +246,23 @@ namespace ClosedXML.Excel.Drawings
             {
                 ThrowIfDisposed();
 
-                if (name == value) return;
+                if (name == value)
+                {
+                    return;
+                }
 
                 if ((Worksheet.Pictures.FirstOrDefault(p => p.Name.Equals(value, StringComparison.OrdinalIgnoreCase)) ?? this) != this)
+                {
                     throw new ArgumentException($"The picture name '{value}' already exists.");
+                }
 
                 SetName(value);
             }
         }
 
-        public Int32 OriginalHeight { get; private set; }
+        public int OriginalHeight { get; private set; }
 
-        public Int32 OriginalWidth { get; private set; }
+        public int OriginalWidth { get; private set; }
 
         public XLPicturePlacement Placement { get; set; }
 
@@ -253,7 +279,9 @@ namespace ClosedXML.Excel.Drawings
                 ThrowIfDisposed();
 
                 if (Placement != XLPicturePlacement.FreeFloating)
+                {
                     throw new ArgumentException("To set the top offset, the placement should be FreeFloating");
+                }
 
                 Markers[XLMarkerPosition.TopLeft] = new XLMarker(Worksheet.Cell(1, 1), new SKPoint(Left, value));
             }
@@ -273,13 +301,15 @@ namespace ClosedXML.Excel.Drawings
                 ThrowIfDisposed();
 
                 if (!value.Worksheet.Equals(Worksheet))
+                {
                     throw new InvalidOperationException("A picture and its anchor cells must be on the same worksheet");
+                }
 
                 Markers[XLMarkerPosition.TopLeft] = new XLMarker(value);
             }
         }
 
-        public Int32 Width
+        public int Width
         {
             get
             {
@@ -292,7 +322,10 @@ namespace ClosedXML.Excel.Drawings
                 ThrowIfDisposed();
 
                 if (Placement == XLPicturePlacement.MoveAndSize)
+                {
                     throw new ArgumentException("To set the width, the placement should be FreeFloating or Move");
+                }
+
                 width = value;
             }
         }
@@ -301,7 +334,7 @@ namespace ClosedXML.Excel.Drawings
 
         internal IDictionary<XLMarkerPosition, XLMarker> Markers { get; private set; }
 
-        internal String RelId { get; set; }
+        internal string RelId { get; set; }
 
         /// <summary>
         /// Create a copy of the picture on a different worksheet.
@@ -331,7 +364,9 @@ namespace ClosedXML.Excel.Drawings
         public void Dispose(bool disposing)
         {
             if (_disposed)
+            {
                 return;
+            }
 
             if (disposing)
             {
@@ -385,7 +420,7 @@ namespace ClosedXML.Excel.Drawings
             return MoveTo(cell, 0, 0);
         }
 
-        public IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset)
+        public IXLPicture MoveTo(IXLCell cell, int xOffset, int yOffset)
         {
             ThrowIfDisposed();
 
@@ -396,7 +431,11 @@ namespace ClosedXML.Excel.Drawings
         {
             ThrowIfDisposed();
 
-            if (cell == null) throw new ArgumentNullException(nameof(cell));
+            if (cell == null)
+            {
+                throw new ArgumentNullException(nameof(cell));
+            }
+
             Placement = XLPicturePlacement.Move;
             TopLeftCell = cell;
             Markers[XLMarkerPosition.TopLeft].Offset = offset;
@@ -410,7 +449,7 @@ namespace ClosedXML.Excel.Drawings
             return MoveTo(fromCell, 0, 0, toCell, 0, 0);
         }
 
-        public IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset)
+        public IXLPicture MoveTo(IXLCell fromCell, int fromCellXOffset, int fromCellYOffset, IXLCell toCell, int toCellXOffset, int toCellYOffset)
         {
             ThrowIfDisposed();
 
@@ -421,8 +460,16 @@ namespace ClosedXML.Excel.Drawings
         {
             ThrowIfDisposed();
 
-            if (fromCell == null) throw new ArgumentNullException(nameof(fromCell));
-            if (toCell == null) throw new ArgumentNullException(nameof(toCell));
+            if (fromCell == null)
+            {
+                throw new ArgumentNullException(nameof(fromCell));
+            }
+
+            if (toCell == null)
+            {
+                throw new ArgumentNullException(nameof(toCell));
+            }
+
             Placement = XLPicturePlacement.MoveAndSize;
 
             TopLeftCell = fromCell;
@@ -434,14 +481,14 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-        public IXLPicture Scale(Double factor, Boolean relativeToOriginal = false)
+        public IXLPicture Scale(double factor, bool relativeToOriginal = false)
         {
             ThrowIfDisposed();
 
             return ScaleHeight(factor, relativeToOriginal).ScaleWidth(factor, relativeToOriginal);
         }
 
-        public IXLPicture ScaleHeight(Double factor, Boolean relativeToOriginal = false)
+        public IXLPicture ScaleHeight(double factor, bool relativeToOriginal = false)
         {
             ThrowIfDisposed();
 
@@ -449,7 +496,7 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-        public IXLPicture ScaleWidth(Double factor, Boolean relativeToOriginal = false)
+        public IXLPicture ScaleWidth(double factor, bool relativeToOriginal = false)
         {
             ThrowIfDisposed();
 
@@ -465,7 +512,7 @@ namespace ClosedXML.Excel.Drawings
             return this;
         }
 
-        public IXLPicture WithSize(Int32 width, Int32 height)
+        public IXLPicture WithSize(int width, int height)
         {
             ThrowIfDisposed();
 
@@ -479,13 +526,19 @@ namespace ClosedXML.Excel.Drawings
             ThrowIfDisposed();
 
             if (targetSheet == null)
+            {
                 targetSheet = Worksheet as XLWorksheet;
+            }
 
             IXLPicture newPicture;
             if (targetSheet == Worksheet)
+            {
                 newPicture = targetSheet.AddPicture(ImageStream, Format);
+            }
             else
+            {
                 newPicture = targetSheet.AddPicture(ImageStream, Format, Name);
+            }
 
             newPicture = newPicture
                     .WithPlacement(XLPicturePlacement.FreeFloating)
@@ -515,14 +568,20 @@ namespace ClosedXML.Excel.Drawings
         {
             ThrowIfDisposed();
 
-            if (String.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value))
+            {
                 throw new ArgumentException("Picture names cannot be empty");
+            }
 
             if (value.IndexOfAny(InvalidNameChars.ToCharArray()) != -1)
+            {
                 throw new ArgumentException($"Picture names cannot contain any of the following characters: {InvalidNameChars}");
+            }
 
             if (value.Length > 31)
+            {
                 throw new ArgumentException("Picture names cannot be more than 31 characters");
+            }
 
             name = value;
         }

@@ -4,15 +4,15 @@ using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    internal class XLColumnsCollection : IDictionary<Int32, XLColumn>
+    internal class XLColumnsCollection : IDictionary<int, XLColumn>
     {
-        public void ShiftColumnsRight(Int32 startingColumn, Int32 columnsToShift)
+        public void ShiftColumnsRight(int startingColumn, int columnsToShift)
         {
             foreach (var co in _dictionary.Keys.Where(k => k >= startingColumn).OrderByDescending(k => k))
             {
                 var columnToMove = _dictionary[co];
                 _dictionary.Remove(co);
-                Int32 newColumnNum = co + columnsToShift;
+                var newColumnNum = co + columnsToShift;
                 if (newColumnNum <= XLHelper.MaxColumnNumber)
                 {
                     columnToMove.SetColumnNumber(newColumnNum);
@@ -21,7 +21,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        private readonly Dictionary<Int32, XLColumn> _dictionary = new Dictionary<Int32, XLColumn>();
+        private readonly Dictionary<int, XLColumn> _dictionary = new Dictionary<int, XLColumn>();
 
         public void Add(int key, XLColumn value)
         {
@@ -33,10 +33,7 @@ namespace ClosedXML.Excel
             return _dictionary.ContainsKey(key);
         }
 
-        public ICollection<int> Keys
-        {
-            get { return _dictionary.Keys; }
-        }
+        public ICollection<int> Keys => _dictionary.Keys;
 
         public bool Remove(int key)
         {
@@ -48,10 +45,7 @@ namespace ClosedXML.Excel
             return _dictionary.TryGetValue(key, out value);
         }
 
-        public ICollection<XLColumn> Values
-        {
-            get { return _dictionary.Values; }
-        }
+        public ICollection<XLColumn> Values => _dictionary.Values;
 
         public XLColumn this[int key]
         {
@@ -85,15 +79,9 @@ namespace ClosedXML.Excel
             throw new NotImplementedException();
         }
 
-        public int Count
-        {
-            get { return _dictionary.Count; }
-        }
+        public int Count => _dictionary.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public bool Remove(KeyValuePair<int, XLColumn> item)
         {
@@ -110,7 +98,7 @@ namespace ClosedXML.Excel
             return _dictionary.GetEnumerator();
         }
 
-        public void RemoveAll(Func<XLColumn, Boolean> predicate)
+        public void RemoveAll(Func<XLColumn, bool> predicate)
         {
             _dictionary.RemoveAll(predicate);
         }

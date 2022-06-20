@@ -1,3 +1,4 @@
+using ClosedXML.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,25 +28,25 @@ namespace ClosedXML.Excel
             this.CopyFont(defaultPhonetics);
         }
 
-        public Boolean Bold { get; set; }
-        public Boolean Italic { get; set; }
+        public bool Bold { get; set; }
+        public bool Italic { get; set; }
         public XLFontUnderlineValues Underline { get; set; }
-        public Boolean Strikethrough { get; set; }
+        public bool Strikethrough { get; set; }
         public XLFontVerticalTextAlignmentValues VerticalAlignment { get; set; }
-        public Boolean Shadow { get; set; }
-        public Double FontSize { get; set; }
+        public bool Shadow { get; set; }
+        public double FontSize { get; set; }
         public XLColor FontColor { get; set; }
-        public String FontName { get; set; }
+        public string FontName { get; set; }
         public XLFontFamilyNumberingValues FontFamilyNumbering { get; set; }
         public XLFontCharSet FontCharSet { get; set; }
 
         public IXLPhonetics SetBold() { Bold = true; return this; }
 
-        public IXLPhonetics SetBold(Boolean value) { Bold = value; return this; }
+        public IXLPhonetics SetBold(bool value) { Bold = value; return this; }
 
         public IXLPhonetics SetItalic() { Italic = true; return this; }
 
-        public IXLPhonetics SetItalic(Boolean value) { Italic = value; return this; }
+        public IXLPhonetics SetItalic(bool value) { Italic = value; return this; }
 
         public IXLPhonetics SetUnderline() { Underline = XLFontUnderlineValues.Single; return this; }
 
@@ -53,25 +54,25 @@ namespace ClosedXML.Excel
 
         public IXLPhonetics SetStrikethrough() { Strikethrough = true; return this; }
 
-        public IXLPhonetics SetStrikethrough(Boolean value) { Strikethrough = value; return this; }
+        public IXLPhonetics SetStrikethrough(bool value) { Strikethrough = value; return this; }
 
         public IXLPhonetics SetVerticalAlignment(XLFontVerticalTextAlignmentValues value) { VerticalAlignment = value; return this; }
 
         public IXLPhonetics SetShadow() { Shadow = true; return this; }
 
-        public IXLPhonetics SetShadow(Boolean value) { Shadow = value; return this; }
+        public IXLPhonetics SetShadow(bool value) { Shadow = value; return this; }
 
-        public IXLPhonetics SetFontSize(Double value) { FontSize = value; return this; }
+        public IXLPhonetics SetFontSize(double value) { FontSize = value; return this; }
 
         public IXLPhonetics SetFontColor(XLColor value) { FontColor = value; return this; }
 
-        public IXLPhonetics SetFontName(String value) { FontName = value; return this; }
+        public IXLPhonetics SetFontName(string value) { FontName = value; return this; }
 
         public IXLPhonetics SetFontFamilyNumbering(XLFontFamilyNumberingValues value) { FontFamilyNumbering = value; return this; }
 
         public IXLPhonetics SetFontCharSet(XLFontCharSet value) { FontCharSet = value; return this; }
 
-        public IXLPhonetics Add(String text, Int32 start, Int32 end)
+        public IXLPhonetics Add(string text, int start, int end)
         {
             _phonetics.Add(new XLPhonetic(text, start, end));
             return this;
@@ -89,7 +90,7 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public Int32 Count { get { return _phonetics.Count; } }
+        public int Count => _phonetics.Count;
 
         public XLPhoneticAlignment Alignment { get; set; }
         public XLPhoneticType Type { get; set; }
@@ -111,13 +112,17 @@ namespace ClosedXML.Excel
         public bool Equals(IXLPhonetics other)
         {
             if (other == null)
+            {
                 return false;
+            }
 
-            Int32 phoneticsCount = _phonetics.Count;
-            for (Int32 i = 0; i < phoneticsCount; i++)
+            var phoneticsCount = _phonetics.Count;
+            for (var i = 0; i < phoneticsCount; i++)
             {
                 if (!_phonetics[i].Equals(other.ElementAt(i)))
+                {
                     return false;
+                }
             }
 
             return

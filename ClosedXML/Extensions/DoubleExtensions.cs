@@ -5,7 +5,7 @@ namespace ClosedXML.Excel
 {
     internal static class DoubleExtensions
     {
-        public static Double SaveRound(this Double value)
+        public static double SaveRound(this double value)
         {
             return Math.Round(value, 6);
         }

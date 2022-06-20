@@ -1,4 +1,5 @@
 using ClosedXML.Examples;
+using ClosedXML.Tests.Utils;
 using NUnit.Framework;
 using System.IO;
 
@@ -10,13 +11,13 @@ namespace ClosedXML.Tests
         [Test]
         public void CheckEqual()
         {
-            string left = ExampleHelper.GetTempFilePath("left.xlsx");
-            string right = ExampleHelper.GetTempFilePath("right.xlsx");
+            var left = ExampleHelper.GetTempFilePath("left.xlsx");
+            var right = ExampleHelper.GetTempFilePath("right.xlsx");
             try
             {
                 new BasicTable().Create(left);
                 new BasicTable().Create(right);
-                Assert.IsTrue(ExcelDocsComparer.Compare(left, right, out string message));
+                Assert.IsTrue(ExcelDocsComparer.Compare(left, right, out var message));
             }
             finally
             {
@@ -34,14 +35,14 @@ namespace ClosedXML.Tests
         [Test]
         public void CheckNonEqual()
         {
-            string left = ExampleHelper.GetTempFilePath("left.xlsx");
-            string right = ExampleHelper.GetTempFilePath("right.xlsx");
+            var left = ExampleHelper.GetTempFilePath("left.xlsx");
+            var right = ExampleHelper.GetTempFilePath("right.xlsx");
             try
             {
                 new BasicTable().Create(left);
                 new HelloWorld().Create(right);
 
-                Assert.IsFalse(ExcelDocsComparer.Compare(left, right, out string message));
+                Assert.IsFalse(ExcelDocsComparer.Compare(left, right, out var message));
             }
             finally
             {

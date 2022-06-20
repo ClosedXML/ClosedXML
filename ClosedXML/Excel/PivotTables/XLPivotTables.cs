@@ -6,21 +6,21 @@ namespace ClosedXML.Excel
 {
     internal class XLPivotTables : IXLPivotTables
     {
-        private readonly Dictionary<String, XLPivotTable> _pivotTables = new Dictionary<string, XLPivotTable>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, XLPivotTable> _pivotTables = new Dictionary<string, XLPivotTable>(StringComparer.OrdinalIgnoreCase);
 
         public XLPivotTables(IXLWorksheet worksheet)
         {
-            this.Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
+            Worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
         }
 
-        internal void Add(String name, IXLPivotTable pivotTable)
+        internal void Add(string name, IXLPivotTable pivotTable)
         {
             _pivotTables.Add(name, (XLPivotTable)pivotTable);
         }
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLRange range)
         {
-            var pivotTable = new XLPivotTable(this.Worksheet)
+            var pivotTable = new XLPivotTable(Worksheet)
             {
                 Name = name,
                 TargetCell = targetCell,
@@ -32,7 +32,7 @@ namespace ClosedXML.Excel
 
         public IXLPivotTable Add(string name, IXLCell targetCell, IXLTable table)
         {
-            var pivotTable = new XLPivotTable(this.Worksheet)
+            var pivotTable = new XLPivotTable(Worksheet)
             {
                 Name = name,
                 TargetCell = targetCell,
@@ -52,12 +52,12 @@ namespace ClosedXML.Excel
             return Add(name, targetCell, table);
         }
 
-        public Boolean Contains(String name)
+        public bool Contains(string name)
         {
             return _pivotTables.ContainsKey(name);
         }
 
-        public void Delete(String name)
+        public void Delete(string name)
         {
             _pivotTables.Remove(name);
         }
@@ -77,12 +77,12 @@ namespace ClosedXML.Excel
             return GetEnumerator();
         }
 
-        public XLPivotTable PivotTable(String name)
+        public XLPivotTable PivotTable(string name)
         {
             return _pivotTables[name];
         }
 
-        IXLPivotTable IXLPivotTables.PivotTable(String name)
+        IXLPivotTable IXLPivotTables.PivotTable(string name)
         {
             return PivotTable(name);
         }

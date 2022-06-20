@@ -45,12 +45,12 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets or sets the cell's text indentation.
         /// </summary>
-        Int32 Indent { get; set; }
+        int Indent { get; set; }
 
         /// <summary>
         /// Gets or sets whether the cell's last line is justified or not.
         /// </summary>
-        Boolean JustifyLastLine { get; set; }
+        bool JustifyLastLine { get; set; }
 
         /// <summary>
         /// Gets or sets the cell's reading order.
@@ -60,47 +60,47 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets or sets the cell's relative indent.
         /// </summary>
-        Int32 RelativeIndent { get; set; }
+        int RelativeIndent { get; set; }
 
         /// <summary>
         /// Gets or sets whether the cell's font size should decrease to fit the contents.
         /// </summary>
-        Boolean ShrinkToFit { get; set; }
+        bool ShrinkToFit { get; set; }
 
         /// <summary>
         /// Gets or sets the cell's text rotation.
         /// </summary>
-        Int32 TextRotation { get; set; }
+        int TextRotation { get; set; }
 
         /// <summary>
         /// Gets or sets whether the cell's text should wrap if it doesn't fit.
         /// </summary>
-        Boolean WrapText { get; set; }
+        bool WrapText { get; set; }
 
         /// <summary>
         /// Gets or sets wheter the cell's text should be displayed from to to bottom
         /// <para>(as opposed to the normal left to right).</para>
         /// </summary>
-        Boolean TopToBottom { get; set; }
+        bool TopToBottom { get; set; }
 
         IXLStyle SetHorizontal(XLAlignmentHorizontalValues value);
 
         IXLStyle SetVertical(XLAlignmentVerticalValues value);
 
-        IXLStyle SetIndent(Int32 value);
+        IXLStyle SetIndent(int value);
 
-        IXLStyle SetJustifyLastLine(); IXLStyle SetJustifyLastLine(Boolean value);
+        IXLStyle SetJustifyLastLine(); IXLStyle SetJustifyLastLine(bool value);
 
         IXLStyle SetReadingOrder(XLAlignmentReadingOrderValues value);
 
-        IXLStyle SetRelativeIndent(Int32 value);
+        IXLStyle SetRelativeIndent(int value);
 
-        IXLStyle SetShrinkToFit(); IXLStyle SetShrinkToFit(Boolean value);
+        IXLStyle SetShrinkToFit(); IXLStyle SetShrinkToFit(bool value);
 
-        IXLStyle SetTextRotation(Int32 value);
+        IXLStyle SetTextRotation(int value);
 
-        IXLStyle SetWrapText(); IXLStyle SetWrapText(Boolean value);
+        IXLStyle SetWrapText(); IXLStyle SetWrapText(bool value);
 
-        IXLStyle SetTopToBottom(); IXLStyle SetTopToBottom(Boolean value);
+        IXLStyle SetTopToBottom(); IXLStyle SetTopToBottom(bool value);
     }
 }

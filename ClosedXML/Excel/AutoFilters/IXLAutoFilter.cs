@@ -13,23 +13,23 @@ namespace ClosedXML.Excel
     public interface IXLAutoFilter
     {
         [Obsolete("Use IsEnabled")]
-        Boolean Enabled { get; set; }
+        bool Enabled { get; set; }
         IEnumerable<IXLRangeRow> HiddenRows { get; }
-        Boolean IsEnabled { get; set; }
+        bool IsEnabled { get; set; }
         IXLRange Range { get; set; }
-        Int32 SortColumn { get; set; }
-        Boolean Sorted { get; set; }
+        int SortColumn { get; set; }
+        bool Sorted { get; set; }
         XLSortOrder SortOrder { get; set; }
         IEnumerable<IXLRangeRow> VisibleRows { get; }
 
         IXLAutoFilter Clear();
 
-        IXLFilterColumn Column(String column);
+        IXLFilterColumn Column(string column);
 
-        IXLFilterColumn Column(Int32 column);
+        IXLFilterColumn Column(int column);
 
         IXLAutoFilter Reapply();
 
-        IXLAutoFilter Sort(Int32 columnToSortBy = 1, XLSortOrder sortOrder = XLSortOrder.Ascending, Boolean matchCase = false, Boolean ignoreBlanks = true);
+        IXLAutoFilter Sort(int columnToSortBy = 1, XLSortOrder sortOrder = XLSortOrder.Ascending, bool matchCase = false, bool ignoreBlanks = true);
     }
 }

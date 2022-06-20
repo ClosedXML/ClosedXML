@@ -7,14 +7,14 @@ namespace ClosedXML.Excel
 {
     public interface IXLDrawingPosition
     {
-        Int32 Column { get; set; }
-        IXLDrawingPosition SetColumn(Int32 column);
-        Double ColumnOffset { get; set; }
-        IXLDrawingPosition SetColumnOffset(Double columnOffset);
+        int Column { get; set; }
+        IXLDrawingPosition SetColumn(int column);
+        double ColumnOffset { get; set; }
+        IXLDrawingPosition SetColumnOffset(double columnOffset);
 
-        Int32 Row { get; set; }
-        IXLDrawingPosition SetRow(Int32 row);
-        Double RowOffset { get; set; }
-        IXLDrawingPosition SetRowOffset(Double rowOffset);
+        int Row { get; set; }
+        IXLDrawingPosition SetRow(int row);
+        double RowOffset { get; set; }
+        IXLDrawingPosition SetRowOffset(double rowOffset);
     }
 }

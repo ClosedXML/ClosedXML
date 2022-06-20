@@ -5,7 +5,7 @@ namespace ClosedXML.Examples
 {
     public class ShowCase : IXLExample
     {
-        public void Create(String filePath)
+        public void Create(string filePath)
         {
             // Creating a new workbook
             using var wb = new XLWorkbook();

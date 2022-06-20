@@ -85,7 +85,7 @@ namespace ClosedXML.Excel
             get { return Key.Horizontal; }
             set
             {
-                Boolean updateIndent = !(
+                var updateIndent = !(
                                                value == XLAlignmentHorizontalValues.Left
                                             || value == XLAlignmentHorizontalValues.Right
                                             || value == XLAlignmentHorizontalValues.Distributed
@@ -93,7 +93,9 @@ namespace ClosedXML.Excel
 
                 Modify(k => { k.Horizontal = value; return k; });
                 if (updateIndent)
+                {
                     Indent = 0;
+                }
             }
         }
 
@@ -103,7 +105,7 @@ namespace ClosedXML.Excel
             set { Modify(k => { k.Vertical = value; return k; }); }
         }
 
-        public Int32 Indent
+        public int Indent
         {
             get { return Key.Indent; }
             set
@@ -111,7 +113,9 @@ namespace ClosedXML.Excel
                 if (Indent != value)
                 {
                     if (Horizontal == XLAlignmentHorizontalValues.General)
+                    {
                         Horizontal = XLAlignmentHorizontalValues.Left;
+                    }
 
                     if (value > 0 && !(
                                        Horizontal == XLAlignmentHorizontalValues.Left
@@ -127,7 +131,7 @@ namespace ClosedXML.Excel
             }
         }
 
-        public Boolean JustifyLastLine
+        public bool JustifyLastLine
         {
             get { return Key.JustifyLastLine; }
             set { Modify(k => { k.JustifyLastLine = value; return k; }); }
@@ -139,39 +143,41 @@ namespace ClosedXML.Excel
             set { Modify(k => { k.ReadingOrder = value; return k; }); }
         }
 
-        public Int32 RelativeIndent
+        public int RelativeIndent
         {
             get { return Key.RelativeIndent; }
             set { Modify(k => { k.RelativeIndent = value; return k; }); }
         }
 
-        public Boolean ShrinkToFit
+        public bool ShrinkToFit
         {
             get { return Key.ShrinkToFit; }
             set { Modify(k => { k.ShrinkToFit = value; return k; }); }
         }
 
-        public Int32 TextRotation
+        public int TextRotation
         {
             get { return Key.TextRotation; }
             set
             {
-                Int32 rotation = value;
+                var rotation = value;
 
                 if (rotation != 255 && (rotation < -90 || rotation > 180))
+                {
                     throw new ArgumentException("TextRotation must be between -90 and 180 degrees, or 255.");
+                }
 
                 Modify(k => { k.TextRotation = rotation; return k; });
             }
         }
 
-        public Boolean WrapText
+        public bool WrapText
         {
             get { return Key.WrapText; }
             set { Modify(k => { k.WrapText = value; return k; }); }
         }
 
-        public Boolean TopToBottom
+        public bool TopToBottom
         {
             get { return TextRotation == 255; }
             set { TextRotation = value ? 255 : 0; }
@@ -189,7 +195,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetIndent(Int32 value)
+        public IXLStyle SetIndent(int value)
         {
             Indent = value;
             return _style;
@@ -201,7 +207,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetJustifyLastLine(Boolean value)
+        public IXLStyle SetJustifyLastLine(bool value)
         {
             JustifyLastLine = value;
             return _style;
@@ -213,7 +219,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetRelativeIndent(Int32 value)
+        public IXLStyle SetRelativeIndent(int value)
         {
             RelativeIndent = value;
             return _style;
@@ -225,13 +231,13 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetShrinkToFit(Boolean value)
+        public IXLStyle SetShrinkToFit(bool value)
         {
             ShrinkToFit = value;
             return _style;
         }
 
-        public IXLStyle SetTextRotation(Int32 value)
+        public IXLStyle SetTextRotation(int value)
         {
             TextRotation = value;
             return _style;
@@ -243,7 +249,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetWrapText(Boolean value)
+        public IXLStyle SetWrapText(bool value)
         {
             WrapText = value;
             return _style;
@@ -255,7 +261,7 @@ namespace ClosedXML.Excel
             return _style;
         }
 
-        public IXLStyle SetTopToBottom(Boolean value)
+        public IXLStyle SetTopToBottom(bool value)
         {
             TopToBottom = value;
             return _style;
@@ -308,9 +314,10 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLAlignment other)
         {
-            var otherA = other as XLAlignment;
-            if (otherA == null)
+            if (!(other is XLAlignment otherA))
+            {
                 return false;
+            }
 
             return Key == otherA.Key;
         }

@@ -18,11 +18,11 @@ namespace ClosedXML.Excel
 
         public XLDisplayBlanksAsValues DisplayEmptyCellsAs { get; set; }
 
-        public Boolean DisplayHidden { get; set; }
+        public bool DisplayHidden { get; set; }
 
         public IXLSparklineHorizontalAxis HorizontalAxis { get; }
 
-        public Double LineWeight { get; set; }
+        public double LineWeight { get; set; }
 
         public XLSparklineMarkers ShowMarkers { get; set; }
 
@@ -109,8 +109,11 @@ namespace ClosedXML.Excel
             else if (singleRow)
             {
                 if (locationRange.ColumnCount() != sourceDataRange.ColumnCount())
+                {
                     throw new ArgumentException("locationRange and sourceDataRange must have the same width");
-                for (int i = 1; i <= locationRange.ColumnCount(); i++)
+                }
+
+                for (var i = 1; i <= locationRange.ColumnCount(); i++)
                 {
                     newSparklines.Add(Add(locationRange.Cell(1, i), sourceDataRange.Column(i).AsRange()));
                 }
@@ -118,15 +121,19 @@ namespace ClosedXML.Excel
             else if (singleColumn)
             {
                 if (locationRange.RowCount() != sourceDataRange.RowCount())
+                {
                     throw new ArgumentException("locationRange and sourceDataRange must have the same height");
+                }
 
-                for (int i = 1; i <= locationRange.RowCount(); i++)
+                for (var i = 1; i <= locationRange.RowCount(); i++)
                 {
                     newSparklines.Add(Add(locationRange.Cell(i, 1), sourceDataRange.Row(i).AsRange()));
                 }
             }
             else
+            {
                 throw new ArgumentException("locationRange must have either a single row or a single column");
+            }
 
             return newSparklines;
         }
@@ -141,7 +148,9 @@ namespace ClosedXML.Excel
         public IXLSparkline Add(IXLCell location, IXLRange sourceData)
         {
             if (location.Worksheet != Worksheet)
+            {
                 throw new ArgumentException("The specified sparkline belongs to the different worksheet");
+            }
 
             return new XLSparkline(this, location, sourceData);
         }
@@ -184,8 +193,10 @@ namespace ClosedXML.Excel
         public IXLSparklineGroup CopyTo(IXLWorksheet targetSheet)
         {
             if (targetSheet == Worksheet)
+            {
                 throw new InvalidOperationException(
                     "Cannot copy the sparkline group to the same worksheet it belongs to");
+            }
 
             var copy = targetSheet.SparklineGroups.Add(new XLSparklineGroup(targetSheet, this));
             foreach (var sparkline in _sparklines.Values)
@@ -212,7 +223,7 @@ namespace ClosedXML.Excel
 
         public IXLSparkline GetSparkline(IXLCell cell)
         {
-            return _sparklines.TryGetValue(cell, out IXLSparkline sparkline) ? sparkline : null;
+            return _sparklines.TryGetValue(cell, out var sparkline) ? sparkline : null;
         }
 
         public IEnumerable<IXLSparkline> GetSparklines(IXLRangeBase searchRange)
@@ -230,7 +241,9 @@ namespace ClosedXML.Excel
         public void Remove(IXLCell cell)
         {
             if (_sparklines.ContainsKey(cell))
+            {
                 _sparklines.Remove(cell);
+            }
         }
 
         /// <summary>
@@ -252,10 +265,9 @@ namespace ClosedXML.Excel
 
         public IXLSparklineGroup SetDateRange(IXLRange value)
         {
-            if (value != null)
+            if (value != null && value.RowCount() != 1 && value.ColumnCount() != 1)
             {
-                if (value.RowCount() != 1 && value.ColumnCount() != 1)
-                    throw new ArgumentException("The date range must be either one row high or one column wide");
+                throw new ArgumentException("The date range must be either one row high or one column wide");
             }
 
             _dateRange = value;
@@ -268,13 +280,13 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        public IXLSparklineGroup SetDisplayHidden(Boolean displayHidden)
+        public IXLSparklineGroup SetDisplayHidden(bool displayHidden)
         {
             DisplayHidden = displayHidden;
             return this;
         }
 
-        public IXLSparklineGroup SetLineWeight(Double lineWeight)
+        public IXLSparklineGroup SetLineWeight(double lineWeight)
         {
             LineWeight = lineWeight;
             return this;
@@ -301,7 +313,9 @@ namespace ClosedXML.Excel
         internal IXLSparkline Add(IXLSparkline sparkline)
         {
             if (sparkline.Location.Worksheet != Worksheet)
+            {
                 throw new ArgumentException("The specified sparkline belongs to the different worksheet");
+            }
 
             SparklineGroups.Remove(sparkline.Location);
             _sparklines[sparkline.Location] = sparkline;

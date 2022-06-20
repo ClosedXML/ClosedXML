@@ -16,19 +16,19 @@ namespace ClosedXML.Excel.Drawings
         /// </summary>
         XLPictureFormat Format { get; }
 
-        Int32 Height { get; set; }
+        int Height { get; set; }
 
-        Int32 Id { get; }
+        int Id { get; }
 
         MemoryStream ImageStream { get; }
 
         float Left { get; set; }
 
-        String Name { get; set; }
+        string Name { get; set; }
 
-        Int32 OriginalHeight { get; }
+        int OriginalHeight { get; }
 
-        Int32 OriginalWidth { get; }
+        int OriginalWidth { get; }
 
         XLPicturePlacement Placement { get; set; }
 
@@ -36,7 +36,7 @@ namespace ClosedXML.Excel.Drawings
 
         IXLCell TopLeftCell { get; }
 
-        Int32 Width { get; set; }
+        int Width { get; set; }
 
         IXLWorksheet Worksheet { get; }
 
@@ -64,24 +64,24 @@ namespace ClosedXML.Excel.Drawings
 
         IXLPicture MoveTo(IXLCell cell);
 
-        IXLPicture MoveTo(IXLCell cell, Int32 xOffset, Int32 yOffset);
+        IXLPicture MoveTo(IXLCell cell, int xOffset, int yOffset);
 
         IXLPicture MoveTo(IXLCell cell, SKPoint offset);
 
         IXLPicture MoveTo(IXLCell fromCell, IXLCell toCell);
 
-        IXLPicture MoveTo(IXLCell fromCell, Int32 fromCellXOffset, Int32 fromCellYOffset, IXLCell toCell, Int32 toCellXOffset, Int32 toCellYOffset);
+        IXLPicture MoveTo(IXLCell fromCell, int fromCellXOffset, int fromCellYOffset, IXLCell toCell, int toCellXOffset, int toCellYOffset);
 
         IXLPicture MoveTo(IXLCell fromCell, SKPoint fromOffset, IXLCell toCell, SKPoint toOffset);
 
-        IXLPicture Scale(Double factor, Boolean relativeToOriginal = false);
+        IXLPicture Scale(double factor, bool relativeToOriginal = false);
 
-        IXLPicture ScaleHeight(Double factor, Boolean relativeToOriginal = false);
+        IXLPicture ScaleHeight(double factor, bool relativeToOriginal = false);
 
-        IXLPicture ScaleWidth(Double factor, Boolean relativeToOriginal = false);
+        IXLPicture ScaleWidth(double factor, bool relativeToOriginal = false);
 
         IXLPicture WithPlacement(XLPicturePlacement value);
 
-        IXLPicture WithSize(Int32 width, Int32 height);
+        IXLPicture WithSize(int width, int height);
     }
 }

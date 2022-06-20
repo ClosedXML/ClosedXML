@@ -10,7 +10,11 @@ namespace ClosedXML.Examples
             get
             {
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Created");
-                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
                 return path;
             }
         }
@@ -20,7 +24,11 @@ namespace ClosedXML.Examples
             get
             {
                 var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Modified");
-                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
                 return path;
             }
         }

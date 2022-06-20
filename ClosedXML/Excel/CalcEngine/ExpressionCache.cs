@@ -13,8 +13,8 @@ namespace ClosedXML.Excel.CalcEngine
     /// </remarks>
     class ExpressionCache
     {
-        Dictionary<string, WeakReference> _dct;
-        CalcEngine _ce;
+        readonly Dictionary<string, WeakReference> _dct;
+        readonly CalcEngine _ce;
         int _hitCount;
 
         public ExpressionCache(CalcEngine ce)
@@ -29,7 +29,7 @@ namespace ClosedXML.Excel.CalcEngine
             get
             {
                 Expression x;
-                if (_dct.TryGetValue(expression, out WeakReference wr) && wr.IsAlive)
+                if (_dct.TryGetValue(expression, out var wr) && wr.IsAlive)
                 {
                     x = wr.Target as Expression;
                 }
@@ -53,7 +53,7 @@ namespace ClosedXML.Excel.CalcEngine
         // remove all dead references from the cache
         void RemoveDeadReferences()
         {
-            for (bool done = false; !done; )
+            for (var done = false; !done; )
             {
                 done = true;
                 foreach (var k in _dct.Keys)

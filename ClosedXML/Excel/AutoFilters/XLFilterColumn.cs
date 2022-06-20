@@ -1,16 +1,15 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ClosedXML.Excel
 {
-    using System.Collections.Generic;
-
     internal class XLFilterColumn : IXLFilterColumn
     {
         private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
+        private readonly int _column;
 
-        public XLFilterColumn(XLAutoFilter autoFilter, Int32 column)
+        public XLFilterColumn(XLAutoFilter autoFilter, int column)
         {
             _autoFilter = autoFilter;
             _column = column;
@@ -21,12 +20,14 @@ namespace ClosedXML.Excel
         public void Clear()
         {
             if (_autoFilter.Filters.ContainsKey(_column))
+            {
                 _autoFilter.Filters.Remove(_column);
+            }
         }
 
         public IXLFilteredColumn AddFilter<T>(T value) where T : IComparable<T>
         {
-            if (typeof(T) == typeof(String))
+            if (typeof(T) == typeof(string))
             {
                 ApplyCustomFilter(value, XLFilterOperator.Equal,
                                   v =>
@@ -43,11 +44,12 @@ namespace ClosedXML.Excel
 
         public IXLDateTimeGroupFilteredColumn AddDateGroupFilter(DateTime date, XLDateTimeGrouping dateTimeGrouping)
         {
-            Func<Object, Boolean> condition = date2 => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
+            bool condition(object date2) => XLDateTimeGroupFilteredColumn.IsMatch(date, (DateTime)date2, dateTimeGrouping);
 
             _autoFilter.IsEnabled = true;
 
-            if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
+            if (_autoFilter.Filters.TryGetValue(_column, out var filterList))
+            {
                 filterList.Add(
                     new XLFilter
                     {
@@ -58,6 +60,7 @@ namespace ClosedXML.Excel
                         DateTimeGrouping = dateTimeGrouping
                     }
                 );
+            }
             else
             {
                 _autoFilter.Filters.Add(
@@ -83,25 +86,29 @@ namespace ClosedXML.Excel
 
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 if (row.Cell(_column).DataType == XLDataType.DateTime && condition(row.Cell(_column).GetDateTime()))
+                {
                     row.WorksheetRow().Unhide();
+                }
                 else
+                {
                     row.WorksheetRow().Hide();
+                }
             }
             ws.ResumeEvents();
 
             return new XLDateTimeGroupFilteredColumn(_autoFilter, _column);
         }
 
-        public void Top(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
+        public void Top(int value, XLTopBottomType type = XLTopBottomType.Items)
         {
             _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Top;
             SetTopBottom(value, type);
         }
 
-        public void Bottom(Int32 value, XLTopBottomType type = XLTopBottomType.Items)
+        public void Bottom(int value, XLTopBottomType type = XLTopBottomType.Items)
         {
             _autoFilter.Column(_column).TopBottomPart = XLTopBottomPart.Bottom;
             SetTopBottom(value, type, false);
@@ -119,7 +126,7 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector EqualTo<T>(T value) where T : IComparable<T>
         {
-            if (typeof(T) == typeof(String))
+            if (typeof(T) == typeof(string))
             {
                 return ApplyCustomFilter(value, XLFilterOperator.Equal,
                                          v =>
@@ -133,7 +140,7 @@ namespace ClosedXML.Excel
 
         public IXLFilterConnector NotEqualTo<T>(T value) where T : IComparable<T>
         {
-            if (typeof(T) == typeof(String))
+            if (typeof(T) == typeof(string))
             {
                 return ApplyCustomFilter(value, XLFilterOperator.NotEqual,
                                          v =>
@@ -179,54 +186,54 @@ namespace ClosedXML.Excel
             LessThan(minValue).Or.GreaterThan(maxValue);
         }
 
-        public static Func<String, Object, Boolean> BeginsWithFunction { get; } = (value, input) => ((string)input).StartsWith(value, StringComparison.InvariantCultureIgnoreCase);
+        public static Func<string, object, bool> BeginsWithFunction { get; } = (value, input) => ((string)input).StartsWith(value, StringComparison.InvariantCultureIgnoreCase);
 
-        public IXLFilterConnector BeginsWith(String value)
+        public IXLFilterConnector BeginsWith(string value)
         {
             return ApplyCustomFilter(value + "*", XLFilterOperator.Equal, s => BeginsWithFunction(value, s));
         }
 
-        public IXLFilterConnector NotBeginsWith(String value)
+        public IXLFilterConnector NotBeginsWith(string value)
         {
             return ApplyCustomFilter(value + "*", XLFilterOperator.NotEqual, s => !BeginsWithFunction(value, s));
         }
 
-        public static Func<String, Object, Boolean> EndsWithFunction { get; } = (value, input) => ((string)input).EndsWith(value, StringComparison.InvariantCultureIgnoreCase);
+        public static Func<string, object, bool> EndsWithFunction { get; } = (value, input) => ((string)input).EndsWith(value, StringComparison.InvariantCultureIgnoreCase);
 
-        public IXLFilterConnector EndsWith(String value)
+        public IXLFilterConnector EndsWith(string value)
         {
             return ApplyCustomFilter("*" + value, XLFilterOperator.Equal, s => EndsWithFunction(value, s));
         }
 
-        public IXLFilterConnector NotEndsWith(String value)
+        public IXLFilterConnector NotEndsWith(string value)
         {
             return ApplyCustomFilter("*" + value, XLFilterOperator.NotEqual, s => !EndsWithFunction(value, s));
         }
 
-        public static Func<String, Object, Boolean> ContainsFunction { get; } = (value, input) => ((string)input).IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
+        public static Func<string, object, bool> ContainsFunction { get; } = (value, input) => ((string)input).IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
 
-        public IXLFilterConnector Contains(String value)
+        public IXLFilterConnector Contains(string value)
         {
             return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal, s => ContainsFunction(value, s));
         }
 
-        public IXLFilterConnector NotContains(String value)
+        public IXLFilterConnector NotContains(string value)
         {
             return ApplyCustomFilter("*" + value + "*", XLFilterOperator.Equal, s => !ContainsFunction(value, s));
         }
 
         public XLFilterType FilterType { get; set; }
 
-        public Int32 TopBottomValue { get; set; }
+        public int TopBottomValue { get; set; }
         public XLTopBottomType TopBottomType { get; set; }
         public XLTopBottomPart TopBottomPart { get; set; }
 
         public XLFilterDynamicType DynamicType { get; set; }
-        public Double DynamicValue { get; set; }
+        public double DynamicValue { get; set; }
 
         #endregion IXLFilterColumn Members
 
-        private void SetTopBottom(Int32 value, XLTopBottomType type, Boolean takeTop = true)
+        private void SetTopBottom(int value, XLTopBottomType type, bool takeTop = true)
         {
             _autoFilter.IsEnabled = true;
             _autoFilter.Column(_column).SetFilterType(XLFilterType.TopBottom)
@@ -238,16 +245,16 @@ namespace ClosedXML.Excel
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
-            Boolean addToList = true;
+            var addToList = true;
             var ws = _autoFilter.Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
-                Boolean foundOne = false;
-                foreach (double val in values)
+                var foundOne = false;
+                foreach (var val in values)
                 {
-                    Func<Object, Boolean> condition = v => (v as IComparable).CompareTo(val) == 0;
+                    bool condition(object v) => (v as IComparable).CompareTo(val) == 0;
                     if (addToList)
                     {
                         _autoFilter.Filters[_column].Add(new XLFilter
@@ -260,12 +267,18 @@ namespace ClosedXML.Excel
                     }
 
                     var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
+                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble()))
+                    {
+                        continue;
+                    }
+
                     row.WorksheetRow().Unhide();
                     foundOne = true;
                 }
                 if (!foundOne)
+                {
                     row.WorksheetRow().Hide();
+                }
 
                 addToList = false;
             }
@@ -285,7 +298,7 @@ namespace ClosedXML.Excel
                 }
 
                 var numerics1 = cellsUsed.Select(c => c.GetDouble());
-                Int32 valsToTake1 = numerics1.Count() * value / 100;
+                var valsToTake1 = numerics1.Count() * value / 100;
                 return numerics1.OrderByDescending(d => d).Take(valsToTake1).Distinct();
             }
 
@@ -295,11 +308,11 @@ namespace ClosedXML.Excel
             }
 
             var numerics = cellsUsed.Select(c => c.GetDouble());
-            Int32 valsToTake = numerics.Count() * value / 100;
+            var valsToTake = numerics.Count() * value / 100;
             return numerics.OrderBy(d => d).Take(valsToTake).Distinct();
         }
 
-        private void ShowAverage(Boolean aboveAverage)
+        private void ShowAverage(bool aboveAverage)
         {
             _autoFilter.IsEnabled = true;
             _autoFilter.Column(_column).SetFilterType(XLFilterType.Dynamic)
@@ -311,17 +324,17 @@ namespace ClosedXML.Excel
             Clear();
             _autoFilter.Filters.Add(_column, new List<XLFilter>());
 
-            Boolean addToList = true;
+            var addToList = true;
             var ws = _autoFilter.Range.Worksheet as XLWorksheet;
             ws.SuspendEvents();
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
-                Boolean foundOne = false;
-                foreach (double val in values)
+                var foundOne = false;
+                foreach (var val in values)
                 {
-                    Func<Object, Boolean> condition = v => (v as IComparable).CompareTo(val) == 0;
+                    bool condition(object v) => (v as IComparable).CompareTo(val) == 0;
                     if (addToList)
                     {
                         _autoFilter.Filters[_column].Add(new XLFilter
@@ -334,13 +347,19 @@ namespace ClosedXML.Excel
                     }
 
                     var cell = row.Cell(_column);
-                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble())) continue;
+                    if (cell.DataType != XLDataType.Number || !condition(cell.GetDouble()))
+                    {
+                        continue;
+                    }
+
                     row.WorksheetRow().Unhide();
                     foundOne = true;
                 }
 
                 if (!foundOne)
+                {
                     row.WorksheetRow().Hide();
+                }
 
                 addToList = false;
             }
@@ -352,7 +371,7 @@ namespace ClosedXML.Excel
         {
             var column = _autoFilter.Range.Column(_column);
             var subColumn = column.Column(2, column.CellCount());
-            Double average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
+            var average = subColumn.CellsUsed(c => c.DataType == XLDataType.Number).Select(c => c.GetDouble())
                 .Average();
 
             if (aboveAverage)
@@ -367,7 +386,7 @@ namespace ClosedXML.Excel
                     .Where(c => c < average).Distinct();
         }
 
-        private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<Object, Boolean> condition,
+        private IXLFilterConnector ApplyCustomFilter<T>(T value, XLFilterOperator op, Func<object, bool> condition,
                                                         XLFilterType filterType = XLFilterType.Custom)
             where T : IComparable<T>
         {
@@ -389,7 +408,8 @@ namespace ClosedXML.Excel
             }
             else
             {
-                if (_autoFilter.Filters.TryGetValue(_column, out List<XLFilter> filterList))
+                if (_autoFilter.Filters.TryGetValue(_column, out var filterList))
+                {
                     filterList.Add(new XLFilter
                     {
                         Value = value,
@@ -397,6 +417,7 @@ namespace ClosedXML.Excel
                         Connector = XLConnector.Or,
                         Condition = condition
                     });
+                }
                 else
                 {
                     _autoFilter.Filters.Add(_column,
@@ -419,7 +440,7 @@ namespace ClosedXML.Excel
 
         public IXLFilterColumn SetFilterType(XLFilterType value) { FilterType = value; return this; }
 
-        public IXLFilterColumn SetTopBottomValue(Int32 value) { TopBottomValue = value; return this; }
+        public IXLFilterColumn SetTopBottomValue(int value) { TopBottomValue = value; return this; }
 
         public IXLFilterColumn SetTopBottomType(XLTopBottomType value) { TopBottomType = value; return this; }
 
@@ -427,6 +448,6 @@ namespace ClosedXML.Excel
 
         public IXLFilterColumn SetDynamicType(XLFilterDynamicType value) { DynamicType = value; return this; }
 
-        public IXLFilterColumn SetDynamicValue(Double value) { DynamicValue = value; return this; }
+        public IXLFilterColumn SetDynamicValue(double value) { DynamicValue = value; return this; }
     }
 }

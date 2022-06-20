@@ -5,9 +5,9 @@ namespace ClosedXML.Excel
     internal class XLFilteredColumn : IXLFilteredColumn
     {
         private readonly XLAutoFilter _autoFilter;
-        private readonly Int32 _column;
+        private readonly int _column;
 
-        public XLFilteredColumn(XLAutoFilter autoFilter, Int32 column)
+        public XLFilteredColumn(XLAutoFilter autoFilter, int column)
         {
             _autoFilter = autoFilter;
             _column = column;
@@ -17,9 +17,9 @@ namespace ClosedXML.Excel
 
         public IXLFilteredColumn AddFilter<T>(T value) where T : IComparable<T>
         {
-            Func<Object, Boolean> condition;
-            Boolean isText;
-            if (typeof(T) == typeof(String))
+            Func<object, bool> condition;
+            bool isText;
+            if (typeof(T) == typeof(string))
             {
                 condition = v => v.ToString().Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase);
                 isText = true;
@@ -40,7 +40,7 @@ namespace ClosedXML.Excel
 
             var rows = _autoFilter.Range.Rows(2, _autoFilter.Range.RowCount());
 
-            foreach (IXLRangeRow row in rows)
+            foreach (var row in rows)
             {
                 if ((isText && condition(row.Cell(_column).GetString())) ||
                     (!isText && row.Cell(_column).DataType == XLDataType.Number &&

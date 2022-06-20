@@ -22,15 +22,15 @@ namespace ClosedXML.Excel
         public XLSheetView(XLWorksheet worksheet, XLSheetView sheetView)
             : this(worksheet)
         {
-            this.SplitRow = sheetView.SplitRow;
-            this.SplitColumn = sheetView.SplitColumn;
-            this.FreezePanes = sheetView.FreezePanes;
-            this.TopLeftCellAddress = new XLAddress(this.Worksheet, sheetView.TopLeftCellAddress.RowNumber, sheetView.TopLeftCellAddress.ColumnNumber, sheetView.TopLeftCellAddress.FixedRow, sheetView.TopLeftCellAddress.FixedColumn);
+            SplitRow = sheetView.SplitRow;
+            SplitColumn = sheetView.SplitColumn;
+            FreezePanes = sheetView.FreezePanes;
+            TopLeftCellAddress = new XLAddress(Worksheet, sheetView.TopLeftCellAddress.RowNumber, sheetView.TopLeftCellAddress.ColumnNumber, sheetView.TopLeftCellAddress.FixedRow, sheetView.TopLeftCellAddress.FixedColumn);
         }
 
-        public Boolean FreezePanes { get; set; }
-        public Int32 SplitColumn { get; set; }
-        public Int32 SplitRow { get; set; }
+        public bool FreezePanes { get; set; }
+        public int SplitColumn { get; set; }
+        public int SplitRow { get; set; }
 
         IXLAddress IXLSheetView.TopLeftCellAddress { get => TopLeftCellAddress; set => TopLeftCellAddress = (XLAddress)value; }
 
@@ -39,8 +39,10 @@ namespace ClosedXML.Excel
             get => _topLeftCellAddress;
             set
             {
-                if (value.HasWorksheet && !value.Worksheet.Equals(this.Worksheet))
+                if (value.HasWorksheet && !value.Worksheet.Equals(Worksheet))
+                {
                     throw new ArgumentException($"The value should be on the same worksheet as the sheet view.");
+                }
 
                 _topLeftCellAddress = value;
             }
@@ -48,7 +50,7 @@ namespace ClosedXML.Excel
 
         public XLSheetViewOptions View { get; set; }
 
-        IXLWorksheet IXLSheetView.Worksheet { get => Worksheet; }
+        IXLWorksheet IXLSheetView.Worksheet => Worksheet;
         public XLWorksheet Worksheet { get; internal set; }
 
         public int ZoomScale
@@ -80,20 +82,20 @@ namespace ClosedXML.Excel
 
         public int ZoomScaleSheetLayoutView { get; set; }
 
-        public void Freeze(Int32 rows, Int32 columns)
+        public void Freeze(int rows, int columns)
         {
             SplitRow = rows;
             SplitColumn = columns;
             FreezePanes = true;
         }
 
-        public void FreezeColumns(Int32 columns)
+        public void FreezeColumns(int columns)
         {
             SplitColumn = columns;
             FreezePanes = true;
         }
 
-        public void FreezeRows(Int32 rows)
+        public void FreezeRows(int rows)
         {
             SplitRow = rows;
             FreezePanes = true;

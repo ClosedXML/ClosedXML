@@ -19,14 +19,14 @@ namespace ClosedXML.Excel
                 SharedNumberFormats = new Dictionary<int, NumberFormatInfo>();
                 SharedStyles = new Dictionary<XLStyleValue, StyleInfo>();
                 TableId = 0;
-                TableNames = new HashSet<String>();
+                TableNames = new HashSet<string>();
             }
 
-            public Dictionary<XLStyleValue, Int32> DifferentialFormats { get; private set; }
+            public Dictionary<XLStyleValue, int> DifferentialFormats { get; private set; }
             public IDictionary<Guid, PivotTableInfo> PivotTables { get; private set; }
             public RelIdGenerator RelIdGenerator { get; private set; }
             public Dictionary<XLFontValue, FontInfo> SharedFonts { get; private set; }
-            public Dictionary<Int32, NumberFormatInfo> SharedNumberFormats { get; private set; }
+            public Dictionary<int, NumberFormatInfo> SharedNumberFormats { get; private set; }
             public Dictionary<XLStyleValue, StyleInfo> SharedStyles { get; private set; }
             public uint TableId { get; set; }
             public HashSet<string> TableNames { get; private set; }
@@ -47,35 +47,35 @@ namespace ClosedXML.Excel
 
         internal sealed class RelIdGenerator
         {
-            private readonly Dictionary<RelType, List<String>> _relIds = new Dictionary<RelType, List<String>>();
+            private readonly Dictionary<RelType, List<string>> _relIds = new Dictionary<RelType, List<string>>();
 
-            public void AddValues(IEnumerable<String> values, RelType relType)
+            public void AddValues(IEnumerable<string> values, RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<String> list))
+                if (!_relIds.TryGetValue(relType, out var list))
                 {
-                    list = new List<String>();
+                    list = new List<string>();
                     _relIds.Add(relType, list);
                 }
                 list.AddRange(values.Where(v => !list.Contains(v)));
             }
 
-            public String GetNext()
+            public string GetNext()
             {
                 return GetNext(RelType.Workbook);
             }
 
-            public String GetNext(RelType relType)
+            public string GetNext(RelType relType)
             {
-                if (!_relIds.TryGetValue(relType, out List<String> list))
+                if (!_relIds.TryGetValue(relType, out var list))
                 {
-                    list = new List<String>();
+                    list = new List<string>();
                     _relIds.Add(relType, list);
                 }
 
-                Int32 id = list.Count + 1;
+                var id = list.Count + 1;
                 while (true)
                 {
-                    String relId = String.Concat("rId", id);
+                    var relId = string.Concat("rId", id);
                     if (!list.Contains(relId))
                     {
                         list.Add(relId);
@@ -88,7 +88,9 @@ namespace ClosedXML.Excel
             public void Reset(RelType relType)
             {
                 if (_relIds.ContainsKey(relType))
+                {
                     _relIds.Remove(relType);
+                }
             }
         }
 
@@ -99,7 +101,7 @@ namespace ClosedXML.Excel
         internal struct FontInfo
         {
             public XLFontValue Font;
-            public UInt32 FontId;
+            public uint FontId;
         };
 
         #endregion Nested type: FontInfo
@@ -109,7 +111,7 @@ namespace ClosedXML.Excel
         internal struct FillInfo
         {
             public XLFillValue Fill;
-            public UInt32 FillId;
+            public uint FillId;
         }
 
         #endregion Nested type: FillInfo
@@ -119,7 +121,7 @@ namespace ClosedXML.Excel
         internal struct BorderInfo
         {
             public XLBorderValue Border;
-            public UInt32 BorderId;
+            public uint BorderId;
         }
 
         #endregion Nested type: BorderInfo
@@ -129,7 +131,7 @@ namespace ClosedXML.Excel
         internal struct NumberFormatInfo
         {
             public XLNumberFormatValue NumberFormat;
-            public Int32 NumberFormatId;
+            public int NumberFormatId;
         }
 
         #endregion Nested type: NumberFormatInfo
@@ -138,13 +140,13 @@ namespace ClosedXML.Excel
 
         internal struct StyleInfo
         {
-            public UInt32 BorderId;
-            public UInt32 FillId;
-            public UInt32 FontId;
-            public Boolean IncludeQuotePrefix;
-            public Int32 NumberFormatId;
+            public uint BorderId;
+            public uint FillId;
+            public uint FontId;
+            public bool IncludeQuotePrefix;
+            public int NumberFormatId;
             public XLStyleValue Style;
-            public UInt32 StyleId;
+            public uint StyleId;
         }
 
         #endregion Nested type: StyleInfo
@@ -154,14 +156,14 @@ namespace ClosedXML.Excel
         internal struct PivotTableFieldInfo
         {
             public XLDataType DataType;
-            public Boolean MixedDataType;
-            public IEnumerable<Object> DistinctValues;
-            public Boolean IsTotallyBlankField;
+            public bool MixedDataType;
+            public IEnumerable<object> DistinctValues;
+            public bool IsTotallyBlankField;
         }
 
         internal struct PivotTableInfo
         {
-            public IDictionary<String, PivotTableFieldInfo> Fields;
+            public IDictionary<string, PivotTableFieldInfo> Fields;
             public Guid Guid;
         }
 

@@ -93,7 +93,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 if ((PatternType == XLFillPatternValues.None ||
                      PatternType == XLFillPatternValues.Solid)
@@ -108,7 +110,9 @@ namespace ClosedXML.Excel
                     });
                 }
                 else
+                {
                     Modify(k => { k.BackgroundColor = value.Key; return k; });
+                }
             }
         }
 
@@ -122,7 +126,9 @@ namespace ClosedXML.Excel
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentNullException(nameof(value), "Color cannot be null");
+                }
 
                 Modify(k => { k.PatternColor = value.Key; return k; });
             }
@@ -146,7 +152,9 @@ namespace ClosedXML.Excel
                     });
                 }
                 else
+                {
                     Modify(k => { k.PatternType = value; return k; });
+                }
             }
         }
 
@@ -179,9 +187,10 @@ namespace ClosedXML.Excel
 
         public bool Equals(IXLFill other)
         {
-            var otherF = other as XLFill;
-            if (otherF == null)
+            if (!(other is XLFill otherF))
+            {
                 return false;
+            }
 
             return Key == otherF.Key;
         }

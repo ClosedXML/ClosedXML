@@ -7,22 +7,22 @@ namespace ClosedXML.Excel
     public enum XLPhoneticType { FullWidthKatakana, HalfWidthKatakana, Hiragana, NoConversion }
     public interface IXLPhonetics : IXLFontBase, IEnumerable<IXLPhonetic>, IEquatable<IXLPhonetics>
     {
-        IXLPhonetics SetBold(); IXLPhonetics SetBold(Boolean value);
-        IXLPhonetics SetItalic(); IXLPhonetics SetItalic(Boolean value);
+        IXLPhonetics SetBold(); IXLPhonetics SetBold(bool value);
+        IXLPhonetics SetItalic(); IXLPhonetics SetItalic(bool value);
         IXLPhonetics SetUnderline(); IXLPhonetics SetUnderline(XLFontUnderlineValues value);
-        IXLPhonetics SetStrikethrough(); IXLPhonetics SetStrikethrough(Boolean value);
+        IXLPhonetics SetStrikethrough(); IXLPhonetics SetStrikethrough(bool value);
         IXLPhonetics SetVerticalAlignment(XLFontVerticalTextAlignmentValues value);
-        IXLPhonetics SetShadow(); IXLPhonetics SetShadow(Boolean value);
-        IXLPhonetics SetFontSize(Double value);
+        IXLPhonetics SetShadow(); IXLPhonetics SetShadow(bool value);
+        IXLPhonetics SetFontSize(double value);
         IXLPhonetics SetFontColor(XLColor value);
-        IXLPhonetics SetFontName(String value);
+        IXLPhonetics SetFontName(string value);
         IXLPhonetics SetFontFamilyNumbering(XLFontFamilyNumberingValues value);
         IXLPhonetics SetFontCharSet(XLFontCharSet value);
 
-        IXLPhonetics Add(String text, Int32 start, Int32 end);
+        IXLPhonetics Add(string text, int start, int end);
         IXLPhonetics ClearText();
         IXLPhonetics ClearFont();
-        Int32 Count { get; }
+        int Count { get; }
 
         XLPhoneticAlignment Alignment { get; set; }
         XLPhoneticType Type { get; set; }

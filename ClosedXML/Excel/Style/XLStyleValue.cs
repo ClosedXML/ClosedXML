@@ -35,7 +35,7 @@ namespace ClosedXML.Excel
 
         public XLFontValue Font { get; private set; }
 
-        public Boolean IncludeQuotePrefix { get; private set; }
+        public bool IncludeQuotePrefix { get; private set; }
 
         public XLNumberFormatValue NumberFormat { get; private set; }
 
@@ -57,7 +57,9 @@ namespace ClosedXML.Excel
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
+            {
                 return true;
+            }
 
             var cached = obj as XLStyleValue;
             return cached != null &&
@@ -67,7 +69,9 @@ namespace ClosedXML.Excel
         public override int GetHashCode()
         {
             if (_hashCode.HasValue)
+            {
                 return _hashCode.Value;
+            }
 
             _hashCode = -280332839 + Key.GetHashCode();
             return _hashCode.Value;
@@ -76,14 +80,26 @@ namespace ClosedXML.Excel
         public static bool operator ==(XLStyleValue left, XLStyleValue right)
         {
             if (ReferenceEquals(left, right))
+            {
                 return true;
-            if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+            }
+
+            if (left is null && right is null)
+            {
                 return true;
-            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            }
+
+            if (left is null || right is null)
+            {
                 return false;
+            }
+
             if (left._hashCode.HasValue && right._hashCode.HasValue &&
                 left._hashCode != right._hashCode)
+            {
                 return false;
+            }
+
             return left.Key.Equals(right.Key);
         }
 

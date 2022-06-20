@@ -46,9 +46,9 @@ namespace ClosedXML.Excel
 
         XLColor BottomBorderColor { get; set; }
 
-        Boolean DiagonalUp { get; set; }
+        bool DiagonalUp { get; set; }
 
-        Boolean DiagonalDown { get; set; }
+        bool DiagonalDown { get; set; }
 
         XLBorderStyleValues DiagonalBorder { get; set; }
 
@@ -78,9 +78,9 @@ namespace ClosedXML.Excel
 
         IXLStyle SetBottomBorderColor(XLColor value);
 
-        IXLStyle SetDiagonalUp(); IXLStyle SetDiagonalUp(Boolean value);
+        IXLStyle SetDiagonalUp(); IXLStyle SetDiagonalUp(bool value);
 
-        IXLStyle SetDiagonalDown(); IXLStyle SetDiagonalDown(Boolean value);
+        IXLStyle SetDiagonalDown(); IXLStyle SetDiagonalDown(bool value);
 
         IXLStyle SetDiagonalBorder(XLBorderStyleValues value);
 

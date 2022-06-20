@@ -21,9 +21,9 @@ namespace ClosedXML.Excel
 
         public XLProtectionKey Key { get; private set; }
 
-        public bool Locked { get { return Key.Locked; } }
+        public bool Locked => Key.Locked;
 
-        public bool Hidden { get { return Key.Hidden; } }
+        public bool Hidden => Key.Hidden;
 
         private XLProtectionValue(XLProtectionKey key)
         {
@@ -32,8 +32,7 @@ namespace ClosedXML.Excel
 
         public override bool Equals(object obj)
         {
-            var cached = obj as XLProtectionValue;
-            return cached != null &&
+            return obj is XLProtectionValue cached &&
                    Key.Equals(cached.Key);
         }
 

@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel
 {
-    using System.Linq;
-
-    internal class XLHeaderFooter: IXLHeaderFooter
+    internal class XLHeaderFooter : IXLHeaderFooter
     {
-
         public XLHeaderFooter(XLWorksheet worksheet)
         {
-            this.Worksheet = worksheet;
+            Worksheet = worksheet;
             Left = new XLHFItem(this);
             Right = new XLHFItem(this);
             Center = new XLHFItem(this);
@@ -19,7 +17,7 @@ namespace ClosedXML.Excel
 
         public XLHeaderFooter(XLHeaderFooter defaultHF, XLWorksheet worksheet)
         {
-            this.Worksheet = worksheet;
+            Worksheet = worksheet;
             defaultHF.innerTexts.ForEach(kp => innerTexts.Add(kp.Key, kp.Value));
             Left = new XLHFItem(defaultHF.Left as XLHFItem, this);
             Center = new XLHFItem(defaultHF.Center as XLHFItem, this);
@@ -33,35 +31,45 @@ namespace ClosedXML.Excel
         public IXLHFItem Center { get; private set; }
         public IXLHFItem Right { get; private set; }
 
-        public String GetText(XLHFOccurrence occurrence)
+        public string GetText(XLHFOccurrence occurrence)
         {
             //if (innerTexts.ContainsKey(occurrence)) return innerTexts[occurrence];
 
-            var retVal = String.Empty;
+            var retVal = string.Empty;
             var leftText = Left.GetText(occurrence);
             var centerText = Center.GetText(occurrence);
             var rightText = Right.GetText(occurrence);
-            retVal += leftText.Length > 0 ? "&L" + leftText : String.Empty;
-            retVal += centerText.Length > 0 ? "&C" + centerText : String.Empty;
-            retVal += rightText.Length > 0 ? "&R" + rightText : String.Empty;
+            retVal += leftText.Length > 0 ? "&L" + leftText : string.Empty;
+            retVal += centerText.Length > 0 ? "&C" + centerText : string.Empty;
+            retVal += rightText.Length > 0 ? "&R" + rightText : string.Empty;
             if (retVal.Length > 255)
+            {
                 throw new ArgumentOutOfRangeException("Headers and Footers cannot be longer than 255 characters (including style markups)");
+            }
+
             return retVal;
         }
 
-        private Dictionary<XLHFOccurrence, String> innerTexts = new Dictionary<XLHFOccurrence, String>();
-        internal void SetInnerText(XLHFOccurrence occurrence, String text)
+        private readonly Dictionary<XLHFOccurrence, string> innerTexts = new Dictionary<XLHFOccurrence, string>();
+
+        internal void SetInnerText(XLHFOccurrence occurrence, string text)
         {
             var parsedElements = ParseFormattedHeaderFooterText(text);
 
             if (parsedElements.Any(e => e.Position == 'L'))
-                this.Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'L').Select(e => e.Text).ToArray()), occurrence);
+            {
+                Left.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'L').Select(e => e.Text).ToArray()), occurrence);
+            }
 
             if (parsedElements.Any(e => e.Position == 'C'))
-                this.Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'C').Select(e => e.Text).ToArray()), occurrence);
+            {
+                Center.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'C').Select(e => e.Text).ToArray()), occurrence);
+            }
 
             if (parsedElements.Any(e => e.Position == 'R'))
-                this.Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'R').Select(e => e.Text).ToArray()), occurrence);
+            {
+                Right.AddText(string.Join("\r\n", parsedElements.Where(e => e.Position == 'R').Select(e => e.Text).ToArray()), occurrence);
+            }
 
             innerTexts[occurrence] = text;
         }
@@ -74,21 +82,27 @@ namespace ClosedXML.Excel
 
         private static IEnumerable<ParsedHeaderFooterElement> ParseFormattedHeaderFooterText(string text)
         {
-            Func<int, bool> IsAtPositionIndicator = i => i < text.Length - 1 && text[i] == '&' && (new char[] { 'L', 'C', 'R' }.Contains(text[i + 1]));
+            bool IsAtPositionIndicator(int i)
+            {
+                return i < text.Length - 1 && text[i] == '&' && new[] { 'L', 'C', 'R' }.Contains(text[i + 1]);
+            }
 
             var parsedElements = new List<ParsedHeaderFooterElement>();
             var currentPosition = 'L'; // default is LEFT
             var hfElement = "";
 
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 if (IsAtPositionIndicator(i))
                 {
-                    if (!string.IsNullOrEmpty(hfElement)) parsedElements.Add(new ParsedHeaderFooterElement()
+                    if (!string.IsNullOrEmpty(hfElement))
                     {
-                        Position = currentPosition,
-                        Text = hfElement
-                    });
+                        parsedElements.Add(new ParsedHeaderFooterElement()
+                        {
+                            Position = currentPosition,
+                            Text = hfElement
+                        });
+                    }
 
                     currentPosition = text[i + 1];
                     i += 2;
@@ -98,25 +112,33 @@ namespace ClosedXML.Excel
                 if (i < text.Length)
                 {
                     if (IsAtPositionIndicator(i))
+                    {
                         i--;
+                    }
                     else
+                    {
                         hfElement += text[i];
+                    }
                 }
             }
 
             if (!string.IsNullOrEmpty(hfElement))
+            {
                 parsedElements.Add(new ParsedHeaderFooterElement()
                 {
                     Position = currentPosition,
                     Text = hfElement
                 });
+            }
+
             return parsedElements;
         }
 
-        private Dictionary<XLHFOccurrence, String> _initialTexts;
+        private Dictionary<XLHFOccurrence, string> _initialTexts;
 
-        private Boolean _changed;
-        internal Boolean Changed
+        private bool _changed;
+
+        internal bool Changed
         {
             get
             {
@@ -133,7 +155,6 @@ namespace ClosedXML.Excel
                 _initialTexts.Add(o, GetText(o));
             }
         }
-
 
         public IXLHeaderFooter Clear(XLHFOccurrence occurrence = XLHFOccurrence.AllPages)
         {
