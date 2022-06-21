@@ -42,6 +42,8 @@ namespace ClosedXML.Excel
             return this;
         }
 
+        public IXLPivotField AddSubtotal(XLSubtotalFunction value) => SetSubtotal(value, true);
+
         public Boolean IncludeNewItemsInFilter { get; set; }
 
         public IXLPivotField SetIncludeNewItemsInFilter() { IncludeNewItemsInFilter = true; return this; }

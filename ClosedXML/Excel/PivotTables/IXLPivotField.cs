@@ -63,6 +63,9 @@ namespace ClosedXML.Excel
         /// <param name="enabled">Should the subtotal function be included in subtotals of the field or not.</param>
         IXLPivotField SetSubtotal(XLSubtotalFunction function, bool enabled);
 
+        [Obsolete("Use SetSubtotal method instead. This method will be removed in future releases.")]
+        IXLPivotField AddSubtotal(XLSubtotalFunction value);
+
         IXLPivotField SetIncludeNewItemsInFilter(); IXLPivotField SetIncludeNewItemsInFilter(Boolean value);
 
         IXLPivotField SetLayout(XLPivotLayout value);
