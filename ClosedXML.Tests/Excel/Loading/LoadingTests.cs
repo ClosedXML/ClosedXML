@@ -165,11 +165,8 @@ namespace ClosedXML.Tests.Excel
                 var ws = wb.Worksheet("PivotTableSubtotals");
                 var pt = ws.PivotTable("PivotTableSubtotals");
 
-                var subtotals = pt.RowLabels.Get("Group").Subtotals.ToArray();
-                Assert.AreEqual(3, subtotals.Length);
-                Assert.AreEqual(XLSubtotalFunction.Average, subtotals[0]);
-                Assert.AreEqual(XLSubtotalFunction.Count, subtotals[1]);
-                Assert.AreEqual(XLSubtotalFunction.Sum, subtotals[2]);
+                var subtotals = pt.RowLabels.Get("Group").Subtotals;
+                CollectionAssert.AreEqual(new[] { XLSubtotalFunction.Automatic, XLSubtotalFunction.Average, XLSubtotalFunction.Count, XLSubtotalFunction.Sum }, subtotals);
             }
         }
 
