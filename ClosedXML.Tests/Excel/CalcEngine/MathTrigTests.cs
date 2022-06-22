@@ -1064,14 +1064,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [DefaultFloatingPointTolerance(1e-12)]
         public double MRound(double number, double multiple)
         {
-            return (double)XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})");
+            return (double)XLWorkbook.EvaluateExpr(string.Format(CultureInfo.InvariantCulture, "MROUND({0}, {1})", number, multiple));
         }
 
         [TestCase(123456.123, -10)]
         [TestCase(-123456.123, 5)]
         public void MRoundExceptions(double number, double multiple)
         {
-            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr($"MROUND({number}, {multiple})"));
+            Assert.Throws<NumberException>(() => XLWorkbook.EvaluateExpr(string.Format(CultureInfo.InvariantCulture, "MROUND({0}, {1})", number, multiple)));
         }
 
         [TestCase(0, 1)]

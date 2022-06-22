@@ -109,7 +109,7 @@ namespace ClosedXML.Tests
             Assert.IsNull(cell.Clear().GetValue<double?>());
             Assert.AreEqual(1.5, cell.SetValue(1.5).GetValue<double?>());
             Assert.AreEqual(2, cell.SetValue(1.5).GetValue<int?>());
-            Assert.AreEqual(2.5, cell.SetValue("2.5").GetValue<double?>());
+            Assert.AreEqual(2.5, cell.SetValue(2.5.ToString(CultureInfo.CurrentCulture)).GetValue<double?>());
             Assert.Throws<FormatException>(() => cell.SetValue("text").GetValue<double?>());
         }
 
@@ -558,7 +558,7 @@ namespace ClosedXML.Tests
 
             ws.Cell("A1").Clear();
             ws.Cell("A2").SetValue(1.5);
-            ws.Cell("A3").SetValue("2.5");
+            ws.Cell("A3").SetValue(2.5.ToString(CultureInfo.CurrentCulture));
             ws.Cell("A4").SetValue("text");
 
             foreach (var cell in ws.Range("A1:A3").Cells())
