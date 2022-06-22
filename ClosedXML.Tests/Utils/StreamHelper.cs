@@ -136,8 +136,14 @@ namespace ClosedXML.Tests
         private static void Normalize(XDocument document)
         {
             // Turn empty elements into self closing ones.
-            foreach (var emptyElement in document.Descendants().Where(element => !element.IsEmpty && !element.Nodes().Any()))
+            foreach (var emptyElement in document.Descendants().Where(e => !e.IsEmpty && !e.Nodes().Any()))
                 emptyElement.RemoveNodes();
+
+            foreach (var element in document.Descendants().Where(e => e.Attributes().Any()))
+            {
+                var attrs = element.Attributes().OrderBy(a => a.Name.LocalName).ToList();
+                element.ReplaceAttributes(attrs);
+            }
         }
     }
 }
