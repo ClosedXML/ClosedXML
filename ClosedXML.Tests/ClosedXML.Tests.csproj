@@ -2,19 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net40;net46</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <Version>0.95.4</Version>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);NU1605</NoWarn>
-    <Configurations>Debug;Release;</Configurations>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <AssemblyName>ClosedXML.Tests</AssemblyName>
-    <RootNamespace>ClosedXML.Tests</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <DefineConstants>$(AppVeyor)</DefineConstants>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);NU1605;CS1591;CS1658;CS1584;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
