@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace ClosedXML.Tests
 {
@@ -11,54 +11,20 @@ namespace ClosedXML.Tests
     /// </summary>
     public static class StreamHelper
     {
-        /// <summary>
-        ///     Convert stream to byte array
-        /// </summary>
-        /// <param name="pStream">Stream</param>
-        /// <returns>Byte array</returns>
-        public static byte[] StreamToArray(Stream pStream)
+        private static readonly XName colTagName = XName.Get("col", @"http://schemas.openxmlformats.org/spreadsheetml/2006/main");
+        private static readonly XName widthAttrName = XName.Get("width");
+
+        private static readonly IEnumerable<(string PartSubstring, XName NodeName)> ignoredNodes = new List<(string PartSubstring, XName NodeName)>
         {
-            long iLength = pStream.Length;
-            var bytes = new byte[iLength];
-            for (int i = 0; i < iLength; i++)
-            {
-                bytes[i] = (byte)pStream.ReadByte();
-            }
-            pStream.Close();
-            return bytes;
-        }
+            ("/docProps/core.xml", XName.Get("created", @"http://purl.org/dc/terms/")),
+            ("/docProps/core.xml", XName.Get("modified", @"http://purl.org/dc/terms/")),
+            ("sheet", XName.Get("id", @"http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"))
+        };
 
-        /// <summary>
-        ///     Convert byte array to stream
-        /// </summary>
-        /// <param name="pBynaryArray">Byte array</param>
-        /// <param name="pStream">Open stream</param>
-        /// <returns></returns>
-        public static Stream ArrayToStreamAppend(byte[] pBynaryArray, Stream pStream)
+        private static readonly IEnumerable<(string PartSubstring, XName NodeName, XName AttrName)> ignoredAttributes = new List<(string PartSubstring, XName NodeName, XName AttrName)>
         {
-            #region Check params
-
-            if (ReferenceEquals(pBynaryArray, null))
-            {
-                throw new ArgumentNullException("pBynaryArray");
-            }
-            if (ReferenceEquals(pStream, null))
-            {
-                throw new ArgumentNullException("pStream");
-            }
-            if (!pStream.CanWrite)
-            {
-                throw new ArgumentException("Can't write to stream", "pStream");
-            }
-
-            #endregion Check params
-
-            foreach (byte b in pBynaryArray)
-            {
-                pStream.WriteByte(b);
-            }
-            return pStream;
-        }
+            ("sheet", XName.Get("cfRule", @"http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"), XName.Get("id"))
+        };
 
         public static void StreamToStreamAppend(Stream streamIn, Stream streamToWrite)
         {
@@ -110,91 +76,74 @@ namespace ClosedXML.Tests
         /// <summary>
         ///     Compare two streams by converting them to strings and comparing the strings
         /// </summary>
-        /// <param name="one"></param>
-        /// <param name="other"></param>
-        /// /// <param name="stripColumnWidths"></param>
-        /// <returns></returns>
-        public static bool Compare(Tuple<Uri, Stream> tuple1, Tuple<Uri, Stream> tuple2, bool stripColumnWidths)
+        public static bool Compare((string ContentType, Stream Stream) left, (string ContentType, Stream Stream) right, Uri partUri, bool stripColumnWidths)
         {
             #region Check
 
-            if (tuple1 == null || tuple1.Item1 == null || tuple1.Item2 == null)
+            if (left.ContentType == null || left.Stream == null)
             {
-                throw new ArgumentNullException("one");
+                throw new ArgumentNullException(nameof(left));
             }
-            if (tuple2 == null || tuple2.Item1 == null || tuple2.Item2 == null)
+            if (right.ContentType == null || right.Stream == null)
             {
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(right));
             }
-            if (tuple1.Item2.Position != 0)
+            if (left.Stream.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "one");
+                throw new ArgumentException("Must be in position 0", nameof(left));
             }
-            if (tuple2.Item2.Position != 0)
+            if (right.Stream.Position != 0)
             {
-                throw new ArgumentException("Must be in position 0", "other");
+                throw new ArgumentException("Must be in position 0", nameof(right));
+            }
+
+            if (left.ContentType != right.ContentType)
+            {
+                throw new ArgumentException("Different content types.");
             }
 
             #endregion Check
 
-            var stringOne = new StreamReader(tuple1.Item2).ReadToEnd().RemoveIgnoredParts(tuple1.Item1, stripColumnWidths, ignoreGuids: true);
-            var stringOther = new StreamReader(tuple2.Item2).ReadToEnd().RemoveIgnoredParts(tuple2.Item1, stripColumnWidths, ignoreGuids: true);
-            return stringOne == stringOther;
+            var leftString = new StreamReader(left.Stream).ReadToEnd();
+            var rightString = new StreamReader(right.Stream).ReadToEnd();
+
+            var isXmlContent = left.ContentType.EndsWith("+xml");
+            if (!isXmlContent)
+                return leftString == rightString;
+
+            var leftXml = XDocument.Parse(leftString);
+            RemoveIgnoredParts(leftXml, partUri, stripColumnWidths);
+            Normalize(leftXml);
+            var rightXml = XDocument.Parse(rightString);
+            RemoveIgnoredParts(rightXml, partUri, stripColumnWidths);
+            Normalize(rightXml);
+
+            return XNode.DeepEquals(leftXml, rightXml);
         }
 
-        private static string RemoveIgnoredParts(this string s, Uri uri, Boolean ignoreColumnWidths, Boolean ignoreGuids)
+        private static void RemoveIgnoredParts(XDocument document, Uri partUri, Boolean stripColumnWidths)
         {
-            foreach (var pair in uriSpecificIgnores.Where(p => p.Key.Equals(uri.OriginalString)))
-                s = pair.Value.Replace(s, "");
+            foreach (var ignoredNode in ignoredNodes.Where(i => partUri.OriginalString.Contains(i.PartSubstring)))
+                document.Descendants(ignoredNode.NodeName).Remove();
 
-            // Collapse empty xml elements
-            s = emptyXmlElementRegex.Replace(s, "<$1 />");
+            foreach (var ignoredAttr in ignoredAttributes.Where(i => partUri.OriginalString.Contains(i.PartSubstring)))
+                document.Descendants(ignoredAttr.NodeName).Attributes(ignoredAttr.AttrName).Remove();
 
-            if (ignoreColumnWidths)
-                s = RemoveColumnWidths(s);
-
-            if (ignoreGuids)
-                s = RemoveGuids(s);
-
-            return s;
+            if (stripColumnWidths)
+                document.Descendants(colTagName).Attributes(widthAttrName).Remove();
         }
 
-        private static IEnumerable<KeyValuePair<string, Regex>> uriSpecificIgnores = new List<KeyValuePair<string, Regex>>()
+        private static void Normalize(XDocument document)
         {
-            // Remove dcterms elements
-            new KeyValuePair<string, Regex>("/docProps/core.xml", new Regex(@"<dcterms:(\w+).*?<\/dcterms:\1>", RegexOptions.Compiled))
-        };
+            // Turn empty elements into self closing ones.
+            foreach (var emptyElement in document.Descendants().Where(e => !e.IsEmpty && !e.Nodes().Any()))
+                emptyElement.RemoveNodes();
 
-        private static Regex emptyXmlElementRegex = new Regex(@"<([\w:]+)><\/\1>", RegexOptions.Compiled);
-        private static Regex columnRegex = new Regex("<x:col.*?width=\"\\d+(\\.\\d+)?\".*?\\/>", RegexOptions.Compiled);
-        private static Regex widthRegex = new Regex("width=\"\\d+(\\.\\d+)?\"\\s+", RegexOptions.Compiled);
-
-        private static String RemoveColumnWidths(String s)
-        {
-            var replacements = new Dictionary<String, String>();
-
-            foreach (var m in columnRegex.Matches(s).OfType<Match>())
+            foreach (var element in document.Descendants().Where(e => e.Attributes().Any()))
             {
-                var original = m.Groups[0].Value;
-                var replacement = widthRegex.Replace(original, "");
-                replacements.Add(original, replacement);
+                var attrs = element.Attributes().OrderBy(a => a.Name.LocalName).ToList();
+                element.ReplaceAttributes(attrs);
             }
-
-            foreach (var r in replacements)
-            {
-                s = s.Replace(r.Key, r.Value);
-            }
-            return s;
-        }
-
-        private static Regex guidRegex = new Regex(@"{[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}}", RegexOptions.Compiled | RegexOptions.Multiline);
-
-        private static String RemoveGuids(String s)
-        {
-            return guidRegex.Replace(s, delegate (Match m)
-            {
-                return string.Empty;
-            });
         }
     }
 }
