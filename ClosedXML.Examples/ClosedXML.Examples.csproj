@@ -2,15 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net40;net46</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
     <OutputType>Exe</OutputType>
-    <Version>0.95.4</Version>
-    <NoWarn>$(NoWarn);NU1605</NoWarn>
-    <Configurations>Debug;Release</Configurations>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\ClosedXML.snk</AssemblyOriginatorKeyFile>
-    <AssemblyName>ClosedXML.Examples</AssemblyName>
-    <RootNamespace>ClosedXML.Examples</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
