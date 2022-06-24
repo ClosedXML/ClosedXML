@@ -13,7 +13,7 @@ namespace ClosedXML.Excel
         public XLPivotField(IXLPivotTable pivotTable, string sourceName)
         {
             _pivotTable = pivotTable;
-            _subtotals = new HashSet<XLSubtotalFunction>() { XLSubtotalFunction.Automatic };
+            _subtotals = new HashSet<XLSubtotalFunction>();
             SourceName = sourceName;
             SelectedValues = new List<Object>();
             SortType = XLPivotSortType.Default;

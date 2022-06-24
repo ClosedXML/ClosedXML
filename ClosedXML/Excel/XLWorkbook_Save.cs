@@ -2733,7 +2733,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                GeneratePivotFieldSubtotals(pt.Subtotals, xlpf, pf, fieldItems);               
+                GeneratePivotFieldSubtotals(pt, xlpf, pf, fieldItems);               
 
                 if (fieldItems.Any())
                 {
@@ -2937,9 +2937,16 @@ namespace ClosedXML.Excel
             pivotTablePart.PivotTableDefinition = pivotTableDefinition;
         }
 
-        private static void GeneratePivotFieldSubtotals(XLPivotSubtotals subtotals, IXLPivotField xlpf, PivotField pf, Items fieldItems)
+        private static void GeneratePivotFieldSubtotals(XLPivotTable pivotTable, IXLPivotField xlpf, PivotField pf, Items fieldItems)
         {
-            if (!xlpf.Subtotals.Any())
+            var canFieldHaveSubtotal = pivotTable.ImplementedFields.Any(x => x.CustomName == xlpf.CustomName);
+            if (!canFieldHaveSubtotal)
+            {
+                pf.DefaultSubtotal = null;
+                return;
+            }
+
+            if (!xlpf.Subtotals.Any() || pivotTable.Subtotals == XLPivotSubtotals.DoNotShow)
             {
                 pf.DefaultSubtotal = false;
                 return;
@@ -2951,6 +2958,7 @@ namespace ClosedXML.Excel
                 switch (subtotal)
                 {
                     case XLSubtotalFunction.Automatic:
+                        pf.DefaultSubtotal = null;
                         if (xlpf.Subtotals.Count() > 1)
                             continue;
                         itemType = ItemValues.Default;
@@ -3014,8 +3022,7 @@ namespace ClosedXML.Excel
                         throw new NotImplementedException();
                 }
 
-                if (subtotals != XLPivotSubtotals.DoNotShow)
-                    fieldItems.AppendChild(new Item { ItemType = itemType });
+                fieldItems.AppendChild(new Item { ItemType = itemType });
             }
         }
 
@@ -3048,6 +3055,9 @@ namespace ClosedXML.Excel
                 throw new ArgumentException($"Use {nameof(GeneratePivotTableFormat)} to populate grand total formats.");
 
             if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Value))
+                return;
+
+            if (target == XLPivotStyleFormatTarget.Subtotal && !pivotField.Subtotals.Any())
                 return;
 
             var format = new Format();

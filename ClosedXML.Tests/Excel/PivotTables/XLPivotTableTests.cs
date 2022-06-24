@@ -779,7 +779,7 @@ namespace ClosedXML.Tests
         [Test]
         public void CanOmitSubtotalForField()
         {
-            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\SubtotalsStyles\inputfile.xlsx")))
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\SubtotalsOmitted\inputfile.xlsx")))
                 TestHelper.CreateAndCompare(() =>
                 {
                     var wb = new XLWorkbook(stream);
@@ -789,23 +789,20 @@ namespace ClosedXML.Tests
 
                     pvt.SetSubtotals(XLPivotSubtotals.AtTop);
 
-                    var nameField = pvt.RowLabels.Add("Name")
+                    // Although name is the top field, it has no subtotal, but nested country has.
+                    pvt.RowLabels.Add("Name");
+                    var countryField = pvt.RowLabels.Add("Country")
                         .SetSubtotalsAtTop(false)
                         .SetSubtotal(XLSubtotalFunction.Sum, true)
                         .SetSubtotal(XLSubtotalFunction.Average, true)
-                        .SetSubtotal(XLSubtotalFunction.Variance, true);
-                    var countryField = pvt.RowLabels.Add("Country")
-                        .SetSubtotalsAtTop(false);
+                        .SetSubtotal(XLSubtotalFunction.Count, true);
                     pvt.RowLabels.Add("Month");
                     pvt.Values.Add("NumberOfOrders");
-
-                    nameField.StyleFormats.Subtotal.Style.Fill.BackgroundColor = XLColor.Orange;
-                    countryField.StyleFormats.Subtotal.Style.Fill.BackgroundColor = XLColor.LightGreen;
 
                     pvtSheet.Columns(1, 2).Width = 20;
 
                     return wb;
-                }, @"Other\PivotTableReferenceFiles\SubtotalsStyles\outputfile.xlsx");
+                }, @"Other\PivotTableReferenceFiles\SubtotalsOmitted\outputfile.xlsx");
         }
 
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)
