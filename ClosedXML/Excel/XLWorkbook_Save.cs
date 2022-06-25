@@ -2243,7 +2243,7 @@ namespace ClosedXML.Excel
                     xlpf.ShowBlankItems = field.ShowBlankItems;
                     xlpf.InsertPageBreaks = field.InsertPageBreaks;
                     xlpf.Collapsed = field.Collapsed;
-                    xlpf.Subtotals.AddRange(field.Subtotals);
+                    Enum.GetValues(typeof(XLSubtotalFunction)).Cast<XLSubtotalFunction>().ForEach(func => xlpf.SetSubtotal(func, field.Subtotals.Contains(func)));
                 }
 
                 var ptfi = new PivotTableFieldInfo
@@ -2733,76 +2733,7 @@ namespace ClosedXML.Excel
                     }
                 }
 
-                if (xlpf.Subtotals.Any())
-                {
-                    foreach (var subtotal in xlpf.Subtotals)
-                    {
-                        var itemSubtotal = new Item();
-                        switch (subtotal)
-                        {
-                            case XLSubtotalFunction.Average:
-                                pf.AverageSubTotal = true;
-                                itemSubtotal.ItemType = ItemValues.Average;
-                                break;
-
-                            case XLSubtotalFunction.Count:
-                                pf.CountASubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.CountA;
-                                break;
-
-                            case XLSubtotalFunction.CountNumbers:
-                                pf.CountSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.Count;
-                                break;
-
-                            case XLSubtotalFunction.Maximum:
-                                pf.MaxSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.Maximum;
-                                break;
-
-                            case XLSubtotalFunction.Minimum:
-                                pf.MinSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.Minimum;
-                                break;
-
-                            case XLSubtotalFunction.PopulationStandardDeviation:
-                                pf.ApplyStandardDeviationPInSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.StandardDeviationP;
-                                break;
-
-                            case XLSubtotalFunction.PopulationVariance:
-                                pf.ApplyVariancePInSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.VarianceP;
-                                break;
-
-                            case XLSubtotalFunction.Product:
-                                pf.ApplyProductInSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.Product;
-                                break;
-
-                            case XLSubtotalFunction.StandardDeviation:
-                                pf.ApplyStandardDeviationInSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.StandardDeviation;
-                                break;
-
-                            case XLSubtotalFunction.Sum:
-                                pf.SumSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.Sum;
-                                break;
-
-                            case XLSubtotalFunction.Variance:
-                                pf.ApplyVarianceInSubtotal = true;
-                                itemSubtotal.ItemType = ItemValues.Variance;
-                                break;
-                        }
-                        fieldItems.AppendChild(itemSubtotal);
-                    }
-                }
-                // If the field itself doesn't have subtotals, but the pivot table is set to show pivot tables, add the default item
-                else if (pt.Subtotals != XLPivotSubtotals.DoNotShow)
-                {
-                    fieldItems.AppendChild(new Item { ItemType = ItemValues.Default });
-                }
+                GeneratePivotFieldSubtotals(pt, xlpf, pf, fieldItems);               
 
                 if (fieldItems.Any())
                 {
@@ -3006,6 +2937,95 @@ namespace ClosedXML.Excel
             pivotTablePart.PivotTableDefinition = pivotTableDefinition;
         }
 
+        private static void GeneratePivotFieldSubtotals(XLPivotTable pivotTable, IXLPivotField xlpf, PivotField pf, Items fieldItems)
+        {
+            var canFieldHaveSubtotal = pivotTable.ImplementedFields.Any(x => x.CustomName == xlpf.CustomName);
+            if (!canFieldHaveSubtotal)
+            {
+                pf.DefaultSubtotal = null;
+                return;
+            }
+
+            if (!xlpf.Subtotals.Any() || pivotTable.Subtotals == XLPivotSubtotals.DoNotShow)
+            {
+                pf.DefaultSubtotal = false;
+                return;
+            }
+
+            foreach (var subtotal in xlpf.Subtotals)
+            {
+                ItemValues itemType;
+                switch (subtotal)
+                {
+                    case XLSubtotalFunction.Automatic:
+                        pf.DefaultSubtotal = null;
+                        if (xlpf.Subtotals.Count() > 1)
+                            continue;
+                        itemType = ItemValues.Default;
+                        break;
+                    case XLSubtotalFunction.Average:
+                        pf.AverageSubTotal = true;
+                        itemType = ItemValues.Average;
+                        break;
+
+                    case XLSubtotalFunction.Count:
+                        pf.CountASubtotal = true;
+                        itemType = ItemValues.CountA;
+                        break;
+
+                    case XLSubtotalFunction.CountNumbers:
+                        pf.CountSubtotal = true;
+                        itemType = ItemValues.Count;
+                        break;
+
+                    case XLSubtotalFunction.Maximum:
+                        pf.MaxSubtotal = true;
+                        itemType = ItemValues.Maximum;
+                        break;
+
+                    case XLSubtotalFunction.Minimum:
+                        pf.MinSubtotal = true;
+                        itemType = ItemValues.Minimum;
+                        break;
+
+                    case XLSubtotalFunction.PopulationStandardDeviation:
+                        pf.ApplyStandardDeviationPInSubtotal = true;
+                        itemType = ItemValues.StandardDeviationP;
+                        break;
+
+                    case XLSubtotalFunction.PopulationVariance:
+                        pf.ApplyVariancePInSubtotal = true;
+                        itemType = ItemValues.VarianceP;
+                        break;
+
+                    case XLSubtotalFunction.Product:
+                        pf.ApplyProductInSubtotal = true;
+                        itemType = ItemValues.Product;
+                        break;
+
+                    case XLSubtotalFunction.StandardDeviation:
+                        pf.ApplyStandardDeviationInSubtotal = true;
+                        itemType = ItemValues.StandardDeviation;
+                        break;
+
+                    case XLSubtotalFunction.Sum:
+                        pf.SumSubtotal = true;
+                        itemType = ItemValues.Sum;
+                        break;
+
+                    case XLSubtotalFunction.Variance:
+                        pf.ApplyVarianceInSubtotal = true;
+                        itemType = ItemValues.Variance;
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
+
+                fieldItems.AppendChild(new Item { ItemType = itemType });
+            }
+        }
+
         private static void GeneratePivotTableFormat(Boolean isRow, XLPivotStyleFormat styleFormat, PivotTableDefinition pivotTableDefinition, SaveContext context)
         {
             if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Value))
@@ -3035,6 +3055,9 @@ namespace ClosedXML.Excel
                 throw new ArgumentException($"Use {nameof(GeneratePivotTableFormat)} to populate grand total formats.");
 
             if (DefaultStyle.Equals(styleFormat.Style) || !context.DifferentialFormats.ContainsKey(((XLStyle)styleFormat.Style).Value))
+                return;
+
+            if (target == XLPivotStyleFormatTarget.Subtotal && !pivotField.Subtotals.Any())
                 return;
 
             var format = new Format();
@@ -3070,7 +3093,9 @@ namespace ClosedXML.Excel
                 && !styleFormat.FieldReferences.OfType<PivotLabelFieldReference>().Select(fr => fr.PivotField).Contains(pivotField))
             {
                 var fr = new PivotLabelFieldReference(pivotField);
-                fr.DefaultSubtotal = target == XLPivotStyleFormatTarget.Subtotal;
+                if (target == XLPivotStyleFormatTarget.Subtotal)
+                    fr.Subtotals.AddRange(pivotField.Subtotals);
+
                 styleFormat.FieldReferences.Insert(0, fr);
             }
 
@@ -3150,7 +3175,50 @@ namespace ClosedXML.Excel
         {
             var pivotAreaReference = new PivotAreaReference();
 
-            pivotAreaReference.DefaultSubtotal = OpenXmlHelper.GetBooleanValue(fieldReference.DefaultSubtotal, false);
+            foreach (var subtotal in fieldReference.Subtotals)
+            {
+                switch (subtotal)
+                {
+                    case XLSubtotalFunction.Automatic:
+                        pivotAreaReference.DefaultSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.Sum:
+                        pivotAreaReference.SumSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.Count:
+                        pivotAreaReference.CountSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.Average:
+                        pivotAreaReference.AverageSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.Minimum:
+                        pivotAreaReference.MinSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.Maximum:
+                        pivotAreaReference.MaxSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.Product:
+                        pivotAreaReference.ApplyProductInSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.CountNumbers:
+                        pivotAreaReference.CountASubtotal = true;
+                        break;
+                    case XLSubtotalFunction.StandardDeviation:
+                        pivotAreaReference.ApplyStandardDeviationInSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.PopulationStandardDeviation:
+                        pivotAreaReference.ApplyStandardDeviationPInSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.Variance:
+                        pivotAreaReference.ApplyVarianceInSubtotal = true;
+                        break;
+                    case XLSubtotalFunction.PopulationVariance:
+                        pivotAreaReference.ApplyVariancePInSubtotal = true;
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
             pivotAreaReference.Field = fieldReference.GetFieldOffset();
 
             var matchedOffsets = fieldReference.Match(context.PivotTables[pt.Guid], pt);

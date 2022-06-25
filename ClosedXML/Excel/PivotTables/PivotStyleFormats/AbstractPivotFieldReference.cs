@@ -6,7 +6,7 @@ namespace ClosedXML.Excel
 {
     internal abstract class AbstractPivotFieldReference
     {
-        public Boolean DefaultSubtotal { get; set; }
+        internal List<XLSubtotalFunction> Subtotals { get; private set; } = new List<XLSubtotalFunction>();
 
         internal abstract UInt32Value GetFieldOffset();
 

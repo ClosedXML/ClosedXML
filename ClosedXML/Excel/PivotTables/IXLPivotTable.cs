@@ -101,8 +101,19 @@ namespace ClosedXML.Excel
 
     public enum XLPivotSubtotals
     {
+        /// <summary>
+        /// Don't show subtotals for any field in the pivot table.
+        /// </summary>
         DoNotShow,
+
+        /// <summary>
+        /// If a pivot field has one subtotal, it will be displayed at the top of the field. If the field has more than once subtotal, it is displayed at the bottom of the field.
+        /// </summary>
         AtTop,
+
+        /// <summary>
+        /// Display pivot field subtotals at the bottom of the field.
+        /// </summary>
         AtBottom
     }
 

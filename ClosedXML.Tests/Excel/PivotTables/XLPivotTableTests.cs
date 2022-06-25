@@ -231,7 +231,7 @@ namespace ClosedXML.Tests
                     var namePivotField = pt.RowLabels.Add("Name")
                         .SetSubtotalCaption("Test caption")
                         .SetCustomName("Test name")
-                        .AddSubtotal(XLSubtotalFunction.Sum);
+                        .SetSubtotal(XLSubtotalFunction.Sum, true);
 
                     ptSheet.SetTabActive();
 
@@ -774,6 +774,35 @@ namespace ClosedXML.Tests
                     Assert.IsTrue(ws.Cell("D5").IsEmpty());
                 }
             }
+        }
+
+        [Test]
+        public void CanOmitSubtotalForField()
+        {
+            using (var stream = TestHelper.GetStreamFromResource(TestHelper.GetResourcePath(@"Other\PivotTableReferenceFiles\SubtotalsOmitted\inputfile.xlsx")))
+                TestHelper.CreateAndCompare(() =>
+                {
+                    var wb = new XLWorkbook(stream);
+                    var pastryTable = wb.Worksheets.Worksheet("PastrySalesData").Tables.Single();
+                    var pvtSheet = wb.Worksheets.Add("pvt");
+                    var pvt = pastryTable.CreatePivotTable(pvtSheet.FirstCell(), "PastryPvt");
+
+                    pvt.SetSubtotals(XLPivotSubtotals.AtTop);
+
+                    // Although name is the top field, it has no subtotal, but nested country has.
+                    pvt.RowLabels.Add("Name");
+                    var countryField = pvt.RowLabels.Add("Country")
+                        .SetSubtotalsAtTop(false)
+                        .SetSubtotal(XLSubtotalFunction.Sum, true)
+                        .SetSubtotal(XLSubtotalFunction.Average, true)
+                        .SetSubtotal(XLSubtotalFunction.Count, true);
+                    pvt.RowLabels.Add("Month");
+                    pvt.Values.Add("NumberOfOrders");
+
+                    pvtSheet.Columns(1, 2).Width = 20;
+
+                    return wb;
+                }, @"Other\PivotTableReferenceFiles\SubtotalsOmitted\outputfile.xlsx");
         }
 
         private static void SetFieldOptions(IXLPivotField field, bool withDefaults)

@@ -9,11 +9,12 @@ namespace ClosedXML.Excel
     internal class XLPivotField : IXLPivotField
     {
         private readonly IXLPivotTable _pivotTable;
+        private readonly HashSet<XLSubtotalFunction> _subtotals;
         public XLPivotField(IXLPivotTable pivotTable, string sourceName)
         {
-            this._pivotTable = pivotTable;
+            _pivotTable = pivotTable;
+            _subtotals = new HashSet<XLSubtotalFunction>();
             SourceName = sourceName;
-            Subtotals = new List<XLSubtotalFunction>();
             SelectedValues = new List<Object>();
             SortType = XLPivotSortType.Default;
             SetExcelDefaults();
@@ -30,9 +31,18 @@ namespace ClosedXML.Excel
 
         public IXLPivotField SetSubtotalCaption(String value) { SubtotalCaption = value; return this; }
 
-        public List<XLSubtotalFunction> Subtotals { get; private set; }
+        public IEnumerable<XLSubtotalFunction> Subtotals => _subtotals;
 
-        public IXLPivotField AddSubtotal(XLSubtotalFunction value) { Subtotals.Add(value); return this; }
+        public IXLPivotField SetSubtotal(XLSubtotalFunction function, bool enabled)
+        {
+            if (enabled)
+                _subtotals.Add(function);
+            else
+                _subtotals.Remove(function);
+            return this;
+        }
+
+        public IXLPivotField AddSubtotal(XLSubtotalFunction value) => SetSubtotal(value, true);
 
         public Boolean IncludeNewItemsInFilter { get; set; }
 

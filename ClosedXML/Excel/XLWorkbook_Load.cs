@@ -26,6 +26,21 @@ namespace ClosedXML.Excel
     public partial class XLWorkbook
     {
         private readonly Dictionary<String, Color> _colorList = new Dictionary<string, Color>();
+        private static readonly HashSet<ItemValues> _subtotalItemValues = new HashSet<ItemValues>
+        {
+            ItemValues.Default,
+            ItemValues.Sum,
+            ItemValues.CountA,
+            ItemValues.Average,
+            ItemValues.Maximum,
+            ItemValues.Minimum,
+            ItemValues.Product,
+            ItemValues.Count,
+            ItemValues.StandardDeviation,
+            ItemValues.StandardDeviationP,
+            ItemValues.Variance,
+            ItemValues.VarianceP
+        };
 
         private void Load(String file)
         {
@@ -641,13 +656,19 @@ namespace ClosedXML.Excel
                                 pt.ShowColumnStripes = OpenXmlHelper.GetBooleanValueAsBool(pivotTableStyle.ShowColumnStripes, false);
                             }
 
-                            // Subtotal configuration
-                            if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => (pf.DefaultSubtotal == null || pf.DefaultSubtotal.Value)
-                                                                                              && (pf.SubtotalTop == null || pf.SubtotalTop == true)))
-                                pt.SetSubtotals(XLPivotSubtotals.AtTop);
-                            else if (pivotTableDefinition.PivotFields.Cast<PivotField>().All(pf => (pf.DefaultSubtotal == null || pf.DefaultSubtotal.Value)
-                                                                                                   && (pf.SubtotalTop != null && pf.SubtotalTop.Value == false)))
-                                pt.SetSubtotals(XLPivotSubtotals.AtBottom);
+                            var someFieldHasSubtotal = pivotTableDefinition.PivotFields.Cast<PivotField>()
+                                    .Any(pf => pf.Items != null &&
+                                               pf.Items.Cast<Item>().Any(item => item.ItemType != null &&
+                                                                                 _subtotalItemValues.Contains(item.ItemType.Value)));
+                            if (someFieldHasSubtotal) {
+                                var subtotalAtBottom = pivotTableDefinition.PivotFields.Cast<PivotField>()
+                                    .Any(pf => (pf.Items != null && pf.Items.Cast<Item>().Any(item => item.ItemType != null && _subtotalItemValues.Contains(item.ItemType.Value))) &&
+                                                pf.SubtotalTop != null && pf.SubtotalTop == false);
+                                if (subtotalAtBottom)
+                                    pt.SetSubtotals(XLPivotSubtotals.AtBottom);
+                                else
+                                    pt.SetSubtotals(XLPivotSubtotals.AtTop);
+                            }
                             else
                                 pt.SetSubtotals(XLPivotSubtotals.DoNotShow);
 
@@ -912,7 +933,7 @@ namespace ClosedXML.Excel
                 else
                 {
                     Int32 fieldIndex;
-                    Boolean defaultSubtotal = false;
+                    Boolean someSubtotal = false;
 
                     if (pivotArea.Field != null)
                         fieldIndex = (Int32)pivotArea.Field;
@@ -924,7 +945,18 @@ namespace ClosedXML.Excel
                             continue;
 
                         fieldIndex = Convert.ToInt32((UInt32)r.Field);
-                        defaultSubtotal = OpenXmlHelper.GetBooleanValueAsBool(r.DefaultSubtotal, false);
+                        someSubtotal = OpenXmlHelper.GetBooleanValueAsBool(r.DefaultSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.SumSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.CountASubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.AverageSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.MaxSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.MinSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.ApplyProductInSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.CountSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.ApplyStandardDeviationInSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.ApplyStandardDeviationPInSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.ApplyVarianceInSubtotal, false) ||
+                                       OpenXmlHelper.GetBooleanValueAsBool(r.ApplyVariancePInSubtotal, false);
                     }
                     else
                         throw new NotImplementedException();
@@ -949,7 +981,7 @@ namespace ClosedXML.Excel
                             continue;
                     }
 
-                    if (defaultSubtotal)
+                    if (someSubtotal)
                     {
                         // Subtotal format
                         // Example:
@@ -1074,28 +1106,18 @@ namespace ClosedXML.Excel
 
         private static void LoadSubtotals(PivotField pf, IXLPivotField pivotField)
         {
-            if (pf.AverageSubTotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.Average);
-            if (pf.CountASubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.Count);
-            if (pf.CountSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.CountNumbers);
-            if (pf.MaxSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.Maximum);
-            if (pf.MinSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.Minimum);
-            if (pf.ApplyStandardDeviationPInSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.PopulationStandardDeviation);
-            if (pf.ApplyVariancePInSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.PopulationVariance);
-            if (pf.ApplyProductInSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.Product);
-            if (pf.ApplyStandardDeviationInSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.StandardDeviation);
-            if (pf.SumSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.Sum);
-            if (pf.ApplyVarianceInSubtotal != null)
-                pivotField.AddSubtotal(XLSubtotalFunction.Variance);
+            pivotField.SetSubtotal(XLSubtotalFunction.Automatic, OpenXmlHelper.GetBooleanValueAsBool(pf.DefaultSubtotal, true));
+            pivotField.SetSubtotal(XLSubtotalFunction.Average, OpenXmlHelper.GetBooleanValueAsBool(pf.AverageSubTotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.Count, OpenXmlHelper.GetBooleanValueAsBool(pf.CountASubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.CountNumbers, OpenXmlHelper.GetBooleanValueAsBool(pf.CountSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.Maximum, OpenXmlHelper.GetBooleanValueAsBool(pf.MaxSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.Minimum, OpenXmlHelper.GetBooleanValueAsBool(pf.MinSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.PopulationStandardDeviation, OpenXmlHelper.GetBooleanValueAsBool(pf.ApplyStandardDeviationPInSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.PopulationVariance, OpenXmlHelper.GetBooleanValueAsBool(pf.ApplyVariancePInSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.Product, OpenXmlHelper.GetBooleanValueAsBool(pf.ApplyProductInSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.StandardDeviation, OpenXmlHelper.GetBooleanValueAsBool(pf.ApplyStandardDeviationInSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.Sum, OpenXmlHelper.GetBooleanValueAsBool(pf.SumSubtotal, false));
+            pivotField.SetSubtotal(XLSubtotalFunction.Variance, OpenXmlHelper.GetBooleanValueAsBool(pf.ApplyVarianceInSubtotal, false));
 
             if (pf.Items?.Any() ?? false)
             {
