@@ -81,6 +81,55 @@ namespace ClosedXML.Tests.Excel
             }
         }
 
+        // https://github.com/ClosedXML/ClosedXML/issues/1813
+        [Test]
+        public void RowColors()
+        {
+            TestHelper.CreateAndCompare(() =>
+            {
+                var wb = new XLWorkbook();
+                {
+                    var ws = wb.Worksheets.Add("Row Settings 1");
+                    ws.Style.Fill.BackgroundColor = XLColor.Green;
+
+                    var row1 = ws.Row(2);
+                    row1.Style.Fill.BackgroundColor = XLColor.Red;
+                    row1.Height = 30;
+
+                    var row2 = ws.Row(4);
+                    row2.Style.Fill.BackgroundColor = XLColor.DarkOrange;
+                    row2.Height = 3;
+                }
+
+                {
+                    var ws = wb.Worksheets.Add("Row Settings 2");
+                    ws.Style.Fill.BackgroundColor = XLColor.Red;
+
+                    var row1 = ws.Row(2);
+                    row1.Style.Fill.BackgroundColor = XLColor.Red;
+
+                    var row2 = ws.Row(4);
+                    row2.Style.Fill.BackgroundColor = XLColor.DarkOrange;
+                    row2.Height = 3;
+                }
+
+                {
+                    var ws = wb.Worksheets.Add("Row Settings 3");
+                    ws.Style.Fill.BackgroundColor = XLColor.Red;
+
+                    var row1 = ws.Row(2);
+                    row1.Style.Fill.BackgroundColor = XLColor.Red;
+                    row1.Height = 30;
+
+                    var row2 = ws.Row(4);
+                    row2.Style.Fill.BackgroundColor = XLColor.DarkOrange;
+                    row2.Height = 3;
+                }
+
+                return wb;
+            }, @"Other\StyleReferenceFiles\RowColors\output.xlsx");
+        }
+
         private static IEnumerable<TestCaseData> StylizedEntities
         {
             get
