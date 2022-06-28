@@ -125,7 +125,9 @@ namespace ClosedXML.Excel
         String Name { get; set; }
         String Title { get; set; }
         String Description { get; set; }
-
+        String GrandTotalCaption { get; set; }
+        String DataCaption { get; set; }
+        
         String ColumnHeaderCaption { get; set; }
         String RowHeaderCaption { get; set; }
 
@@ -180,7 +182,8 @@ namespace ClosedXML.Excel
         IXLPivotTable SetTitle(String value);
 
         IXLPivotTable SetDescription(String value);
-
+        IXLPivotTable SetDataCaption(String value);
+        IXLPivotTable SetGrandTotalCaption(String value);
         IXLPivotTable SetMergeAndCenterWithLabels(); IXLPivotTable SetMergeAndCenterWithLabels(Boolean value);
 
         IXLPivotTable SetRowLabelIndent(Int32 value);

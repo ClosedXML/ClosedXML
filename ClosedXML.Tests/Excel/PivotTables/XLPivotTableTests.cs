@@ -111,6 +111,9 @@ namespace ClosedXML.Tests
                 pt.ShowColumnStripes = true;
                 pt.Theme = XLPivotTableTheme.PivotStyleDark13;
 
+                pt.DataCaption = "Test Caption Values";
+                pt.GrandTotalCaption = "Test Grand Total Caption";
+
                 using (var ms = new MemoryStream())
                 {
                     wb.SaveAs(ms, true);
@@ -160,6 +163,8 @@ namespace ClosedXML.Tests
                         Assert.AreEqual(false, ptassert.ShowColumnHeaders, "ShowColumnHeaders save failure");
                         Assert.AreEqual(true, ptassert.ShowRowStripes, "ShowRowStripes save failure");
                         Assert.AreEqual(true, ptassert.ShowColumnStripes, "ShowColumnStripes save failure");
+                        Assert.AreEqual("Test Caption Values", ptassert.DataCaption, "DataCaption save failure");
+                        Assert.AreEqual("Test Grand Total Caption", ptassert.GrandTotalCaption, "GrandTotalCaption save failure");
                     }
                 }
             }

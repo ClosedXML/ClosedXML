@@ -188,6 +188,8 @@ namespace ClosedXML.Excel
             newPivotTable.ShowRowStripes = ShowRowStripes;
             newPivotTable.ShowColumnStripes = ShowColumnStripes;
             newPivotTable.Theme = Theme;
+            newPivotTable.DataCaption = DataCaption;
+            newPivotTable.GrandTotalCaption = GrandTotalCaption;
             // TODO: Copy Styleformats
 
             return newPivotTable;
@@ -237,6 +239,20 @@ namespace ClosedXML.Excel
         public IXLPivotTable SetDescription(String value)
         {
             Description = value; return this;
+        }
+        
+        public string GrandTotalCaption { get; set; }
+
+        public IXLPivotTable SetGrandTotalCaption(String value)
+        {
+            GrandTotalCaption = value; return this;
+        }
+        
+        public string DataCaption { get; set; }
+
+        public IXLPivotTable SetDataCaption(String value)
+        {
+            DataCaption = value; return this;
         }
 
         public String ColumnHeaderCaption { get; set; }
