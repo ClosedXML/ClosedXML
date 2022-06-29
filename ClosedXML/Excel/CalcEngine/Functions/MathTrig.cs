@@ -97,37 +97,37 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static double ASinh(double x)
         {
-            return (Math.Log(x + Math.Sqrt(x * x + 1.0)));
+            return Math.Log(x + Math.Sqrt(x * x + 1.0));
         }
 
         public static double DegreesToGrads(double degrees)
         {
-            return (degrees / 9.0) * 10.0;
+            return degrees / 9.0 * 10.0;
         }
 
         public static double DegreesToRadians(double degrees)
         {
-            return (Math.PI / 180.0) * degrees;
+            return Math.PI / 180.0 * degrees;
         }
 
         public static double GradsToDegrees(double grads)
         {
-            return (grads / 10.0) * 9.0;
+            return grads / 10.0 * 9.0;
         }
 
         public static double GradsToRadians(double grads)
         {
-            return (grads / 200.0) * Math.PI;
+            return grads / 200.0 * Math.PI;
         }
 
         public static double RadiansToDegrees(double radians)
         {
-            return (180.0 / Math.PI) * radians;
+            return 180.0 / Math.PI * radians;
         }
 
         public static double RadiansToGrads(double radians)
         {
-            return (radians / Math.PI) * 200.0;
+            return radians / Math.PI * 200.0;
         }
 
         private static object Abs(List<Expression> p)
@@ -160,7 +160,7 @@ namespace ClosedXML.Excel.CalcEngine
             // Acot in Excel calculates the modulus of the function above.
             // as the % operator is not the modulus, but the remainder, we have to calculate the modulus by hand:
             while (x < 0)
-                x = x + Math.PI;
+                x += Math.PI;
 
             return x;
         }
@@ -192,10 +192,6 @@ namespace ClosedXML.Excel.CalcEngine
             catch (ArgumentOutOfRangeException)
             {
                 throw new CellValueException();
-            }
-            catch
-            {
-                throw;
             }
         }
 
@@ -360,7 +356,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Cot(List<Expression> p)
         {
-            var tan = (double)Math.Tan(p[0]);
+            var tan = Math.Tan(p[0]);
 
             if (tan == 0)
                 throw new DivisionByZeroException();
@@ -459,8 +455,13 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new NumberException();
 
             if (num > 1)
+            {
                 for (int i = 2; i <= num; i++)
+                {
                     fact *= i;
+                }
+            }
+
             return fact;
         }
 
@@ -480,7 +481,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (num > 1)
             {
                 var start = Math.Abs(num % 2) < XLHelper.Epsilon ? 2 : 1;
-                for (int i = start; i <= num; i = i + 2)
+                for (int i = start; i <= num; i += 2)
                     fact *= i;
             }
             return fact;
@@ -650,29 +651,38 @@ namespace ClosedXML.Excel.CalcEngine
             var multiple = (Double)p[1];
 
             if (Math.Sign(number) != Math.Sign(multiple))
-                throw new NumberException($"The Number and Multiple arguments must have the same sign.");
+                throw new NumberException("The Number and Multiple arguments must have the same sign.");
 
             return Math.Round(number / multiple, MidpointRounding.AwayFromZero) * multiple;
         }
 
         private static object Multinomial(List<Expression> p)
         {
-            return Multinomial(p.Select(v => (double)v).ToList());
+            return Multinomial(p.ConvertAll(v => (double)v));
         }
 
         private static double Multinomial(List<double> numbers)
         {
             double numbersSum = 0;
             foreach (var number in numbers)
+            {
                 numbersSum += number;
+            }
 
             double maxNumber = numbers.Max();
             var denomFactorPowers = new double[(uint)numbers.Max() + 1];
             foreach (var number in numbers)
+            {
                 for (int i = 2; i <= number; i++)
+                {
                     denomFactorPowers[i]++;
+                }
+            }
+
             for (int i = 2; i < denomFactorPowers.Length; i++)
-                denomFactorPowers[i]--; // reduce with nominator;
+            {
+                denomFactorPowers[i]--; // reduce with nominator
+            }
 
             int currentFactor = 2;
             double currentPower = 1;
@@ -752,7 +762,9 @@ namespace ClosedXML.Excel.CalcEngine
             if (p.Count == 1
                 || (Boolean.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
                 || (Int32.TryParse(p[1]._token.Value.ToString(), out int intTemp) && intTemp == 1))
+            {
                 return XLMath.ToRoman((int)p[0]);
+            }
 
             throw new ArgumentException("Can only support classic roman types.");
         }
@@ -814,20 +826,22 @@ namespace ClosedXML.Excel.CalcEngine
             var x = (Double)p[0];
             var n = (Double)p[1];
             var m = (Double)p[2];
-            var obj = p[3] as XObjectExpression;
-
-            if (obj == null)
-                return p[3] * Math.Pow(x, n);
-
-            Double total = 0;
-            Int32 i = 0;
-            foreach (var e in obj)
+            if (p[3] is XObjectExpression obj)
             {
-                total += (double)e * Math.Pow(x, n + i * m);
-                i++;
-            }
+                Double total = 0;
+                Int32 i = 0;
+                foreach (var e in obj)
+                {
+                    total += (double)e * Math.Pow(x, n + i * m);
+                    i++;
+                }
 
-            return total;
+                return total;
+            }
+            else
+            {
+                return p[3] * Math.Pow(x, n);
+            }
         }
 
         private static object Sign(List<Expression> p)
@@ -871,7 +885,7 @@ namespace ClosedXML.Excel.CalcEngine
                     return hasSubtotalInFormula(ue.Expression);
 
                 return false;
-            };
+            }
 
             IEnumerable<Expression> extractExpressionsWithoutSubtotal(CellRangeReference crr)
             {
@@ -887,10 +901,12 @@ namespace ClosedXML.Excel.CalcEngine
                             return !hasSubtotalInFormula(expression);
                         }
                         else
+                        {
                             return true;
+                        }
                     })
                     .Select(c => new XObjectExpression(new CellRangeReference(c.AsRange(), (XLCalcEngine)crr.CalcEngine)) as Expression);
-            };
+            }
 
             var expressions = p.Skip(1)
                 .SelectMany(e =>
@@ -902,44 +918,21 @@ namespace ClosedXML.Excel.CalcEngine
             var fId = (int)(Double)p[0];
             var tally = new Tally(expressions);
 
-            switch (fId)
+            return fId switch
             {
-                case 1:
-                    return tally.Average();
-
-                case 2:
-                    return tally.Count(true);
-
-                case 3:
-                    return tally.Count(false);
-
-                case 4:
-                    return tally.Max();
-
-                case 5:
-                    return tally.Min();
-
-                case 6:
-                    return tally.Product();
-
-                case 7:
-                    return tally.Std();
-
-                case 8:
-                    return tally.StdP();
-
-                case 9:
-                    return tally.Sum();
-
-                case 10:
-                    return tally.Var();
-
-                case 11:
-                    return tally.VarP();
-
-                default:
-                    throw new ArgumentException("Function not supported.");
-            }
+                1 => tally.Average(),
+                2 => tally.Count(true),
+                3 => tally.Count(false),
+                4 => tally.Max(),
+                5 => tally.Min(),
+                6 => tally.Product(),
+                7 => tally.Std(),
+                8 => tally.StdP(),
+                9 => tally.Sum(),
+                10 => tally.Var(),
+                11 => tally.VarP(),
+                _ => throw new ArgumentException("Function not supported."),
+            };
         }
 
         private static object Sum(List<Expression> p)
@@ -1001,17 +994,19 @@ namespace ClosedXML.Excel.CalcEngine
             var criteriaRanges = new Tuple<object, IList<object>>[numberOfCriteria];
             for (int criteriaPair = 0; criteriaPair < numberOfCriteria; criteriaPair++)
             {
-                var criteriaRange = p[criteriaPair * 2 + 1] as IEnumerable;
+                if (p[criteriaPair * 2 + 1] is IEnumerable criteriaRange)
+                {
+                    var criterion = p[criteriaPair * 2 + 2].Evaluate();
+                    var criteriaRangeValues = criteriaRange.Cast<Object>().ToList();
 
-                if (criteriaRange == null)
+                    criteriaRanges[criteriaPair] = new Tuple<object, IList<object>>(
+                        criterion,
+                        criteriaRangeValues);
+                }
+                else
+                {
                     throw new CellReferenceException($"Expected parameter {criteriaPair * 2 + 2} to be a range");
-
-                var criterion = p[criteriaPair * 2 + 2].Evaluate();
-                var criteriaRangeValues = criteriaRange.Cast<Object>().ToList();
-
-                criteriaRanges[criteriaPair] = new Tuple<object, IList<object>>(
-                    criterion,
-                    criteriaRangeValues);
+                }
             }
 
             for (var i = 0; i < sumRangeValues.Count; i++)
