@@ -532,23 +532,28 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static double[,] GetArray(Expression expression)
         {
-            var oExp1 = expression as XObjectExpression;
-            if (oExp1 == null) return new[,] { { (Double)expression } };
-
-            var range = (oExp1.Value as CellRangeReference).Range;
-            var rowCount = range.RowCount();
-            var columnCount = range.ColumnCount();
-            var arr = new double[rowCount, columnCount];
-
-            for (int row = 0; row < rowCount; row++)
+            if (expression is XObjectExpression objectExpression
+                && objectExpression.Value is CellRangeReference cellRangeReference)
             {
-                for (int column = 0; column < columnCount; column++)
-                {
-                    arr[row, column] = range.Cell(row + 1, column + 1).GetDouble();
-                }
-            }
+                var range = cellRangeReference.Range;
+                var rowCount = range.RowCount();
+                var columnCount = range.ColumnCount();
+                var arr = new double[rowCount, columnCount];
 
-            return arr;
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int column = 0; column < columnCount; column++)
+                    {
+                        arr[row, column] = range.Cell(row + 1, column + 1).GetDouble();
+                    }
+                }
+
+                return arr;
+            }
+            else
+            {
+                return new[,] { { (double)expression } };
+            }
         }
 
         private static object Int(List<Expression> p)
