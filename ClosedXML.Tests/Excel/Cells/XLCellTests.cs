@@ -61,7 +61,7 @@ namespace ClosedXML.Tests
             ws.SparklineGroups.Add("B2", "C3:E3");
             ws.SparklineGroups.Add("F5", "C4:E4");
 
-            var range = ws.RangeUsed(true).RangeAddress.ToString();
+            var range = ws.RangeUsed(XLCellsUsedOptions.All).RangeAddress.ToString();
             Assert.AreEqual("B2:F5", range);
         }
 

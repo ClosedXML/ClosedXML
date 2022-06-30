@@ -19,8 +19,6 @@ namespace ClosedXML.Excel
 
         #region IXLAutoFilter Members
 
-        [Obsolete("Use IsEnabled")]
-        public Boolean Enabled { get => IsEnabled; set => IsEnabled = value; }
         public IEnumerable<IXLRangeRow> HiddenRows { get => Range.Rows(r => r.WorksheetRow().IsHidden); }
         public Boolean IsEnabled { get; set; }
         public IXLRange Range { get; set; }

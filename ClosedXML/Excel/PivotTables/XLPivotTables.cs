@@ -42,16 +42,6 @@ namespace ClosedXML.Excel
             return pivotTable;
         }
 
-        public IXLPivotTable AddNew(string name, IXLCell targetCell, IXLRange range)
-        {
-            return Add(name, targetCell, range);
-        }
-
-        public IXLPivotTable AddNew(string name, IXLCell targetCell, IXLTable table)
-        {
-            return Add(name, targetCell, table);
-        }
-
         public Boolean Contains(String name)
         {
             return _pivotTables.ContainsKey(name);

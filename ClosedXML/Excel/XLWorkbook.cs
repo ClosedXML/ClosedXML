@@ -954,22 +954,6 @@ namespace ClosedXML.Excel
             }
         }
 
-        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows, String password)
-        {
-            var allowedElements = XLWorkbookProtectionElements.Everything;
-
-            var protection = Protection.Protect(password, DefaultProtectionAlgorithm, allowedElements);
-
-            if (lockStructure)
-                protection.DisallowElement(XLWorkbookProtectionElements.Structure);
-
-            if (lockWindows)
-                protection.DisallowElement(XLWorkbookProtectionElements.Windows);
-
-            return protection;
-        }
-
         public IXLWorkbookProtection Protect(Algorithm algorithm = DefaultProtectionAlgorithm)
         {
             return Protection.Protect(algorithm);
@@ -980,18 +964,6 @@ namespace ClosedXML.Excel
 
         public IXLWorkbookProtection Protect(Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
             => Protection.Protect(algorithm, allowedElements);
-
-        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        public IXLWorkbookProtection Protect(Boolean lockStructure)
-        {
-            return Protect(lockStructure, lockWindows: false, password: null);
-        }
-
-        [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
-        public IXLWorkbookProtection Protect(Boolean lockStructure, Boolean lockWindows)
-        {
-            return Protect(lockStructure, lockWindows, null);
-        }
 
         public IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
 
