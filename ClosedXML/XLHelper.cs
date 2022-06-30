@@ -103,7 +103,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="columnNumber">The column number to translate into a column letter.</param>
         /// <param name="trimToAllowed">if set to <c>true</c> the column letter will be restricted to the allowed range.</param>
-        /// <returns></returns>
         public static string GetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
             if (trimToAllowed) columnNumber = TrimColumnNumber(columnNumber);

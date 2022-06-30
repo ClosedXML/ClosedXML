@@ -635,7 +635,6 @@ namespace ClosedXML.Excel
         /// <param name="searchText">The search text.</param>
         /// <param name="compareOptions">The compare options.</param>
         /// <param name="searchFormulae">if set to <c>true</c> search formulae instead of cell values.</param>
-        /// <returns></returns>
         public IEnumerable<IXLCell> Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false)
         {
             foreach (var ws in WorksheetsInternal)

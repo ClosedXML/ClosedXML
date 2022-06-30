@@ -126,7 +126,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         /// <param name="predicate">The predicate to choose cells.</param>
-        /// <returns></returns>
         IXLRangeRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
 
         IXLRangeRow FirstRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
@@ -141,7 +140,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         /// <param name="predicate">The predicate to choose cells.</param>
-        /// <returns></returns>
         IXLRangeRow LastRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
 
         IXLRangeRow LastRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
@@ -160,7 +158,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="firstRow">The first row to return. 1-based row number relative to the first row of this range.</param>
         /// <param name="lastRow">The last row to return. 1-based row number relative to the first row of this range.</param>
-        /// <returns></returns>
         IXLRangeRows Rows(int firstRow, int lastRow);
 
         /// <summary>

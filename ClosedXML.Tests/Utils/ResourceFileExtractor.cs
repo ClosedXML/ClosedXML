@@ -208,7 +208,6 @@ namespace ClosedXML.Tests
         /// </summary>
         /// <param name="specificPath">Specific path</param>
         /// <param name="fileName">Read file name</param>
-        /// <returns></returns>
         public string ReadSpecificFileFromResource(string specificPath, string fileName)
         {
             ResourceFileExtractor _ext = new ResourceFileExtractor(Assembly, specificPath);
@@ -219,7 +218,6 @@ namespace ClosedXML.Tests
         /// Read file in current assembly by specific file name
         /// </summary>
         /// <param name="fileName"></param>
-        /// <returns></returns>
         /// <exception cref="ApplicationException"><c>ApplicationException</c>.</exception>
         public Stream ReadFileFromResourceToStream(string fileName)
         {
