@@ -197,14 +197,11 @@ namespace ClosedXML.Excel
 
             // For SetValue<T> we set the cell value directly to the parameter
             // as opposed to the other SetValue(object value) where we parse the string and try to deduce the value
-            var tuple = SetKnownTypedValue(value, style, acceptString: true);
-            var parsedValue = tuple.Item1;
-            var parsed = tuple.Item2;
 
             // If parsing was unsuccessful, we throw an ArgumentException
             // because we are using SetValue<T> (typed).
             // Only in SetValue(object value) to we try to fall back to a value of a different type
-            if (!parsed)
+            if (!TrySetInternallySupportedType(ConvertOtherSupportedTypes(value), style, out var parsedValue))
                 throw new ArgumentException($"Unable to set cell value to {value.ObjectToInvariantString()}");
 
             SetInternalCellValueString(parsedValue, validate: true, parseToCachedValue: false);
@@ -212,69 +209,78 @@ namespace ClosedXML.Excel
             return this;
         }
 
-        // TODO: Replace with (string, bool) ValueTuple later
-        private Tuple<string, bool> SetKnownTypedValue<T>(T value, XLStyleValue style, Boolean acceptString)
+        /// <summary>
+        /// This method converts a wider set up supported types to internal types
+        /// </summary>
+        /// <param name="value"></param>
+        internal static object ConvertOtherSupportedTypes(object value)
         {
-            string parsedValue;
-            bool parsed;
-            if (value is String && acceptString || value is char || value is Guid || value is Enum)
+            return value switch
             {
-                parsedValue = value.ObjectToInvariantString();
-                _dataType = XLDataType.Text;
-                if (parsedValue.Contains(Environment.NewLine) && !style.Alignment.WrapText)
-                    Style.Alignment.WrapText = true;
+                DBNull dbnull when dbnull.Equals(DBNull.Value) => string.Empty,
+                Guid _ or char _ or Enum _ => value.ObjectToInvariantString(),
+                _ => value,
+            };
+        }
 
-                parsed = true;
-            }
-            else if (value.Equals(DBNull.Value))
+        /// <summary>
+        /// This method accepts only values of the supported internal types: String, DateTime, TimeSpan, Boolean and Numbers.
+        /// Any other types should be converted with <see cref="ConvertOtherSupportedTypes(object)"/> first.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="style"></param>
+        /// <param name="internalValue"></param>
+        private bool TrySetInternallySupportedType<T>(T value, XLStyleValue style, out string internalValue)
+        {
+            internalValue = null;
+
+            switch (value)
             {
-                parsedValue = "";
-                _dataType = XLDataType.Text;
-                parsed = true;
-            }
-            else if (value is DateTime d && d >= BaseDate)
-            {
-                parsedValue = d.ToOADate().ToInvariantString();
-                parsed = true;
-                SetDateTimeFormat(style, d.Date == d);
-            }
-            else if (value is TimeSpan ts)
-            {
-                parsedValue = ts.TotalDays.ToInvariantString();
-                parsed = true;
-                SetTimeSpanFormat(style);
-            }
-            else if (value is Boolean b)
-            {
-                parsedValue = b ? "1" : "0";
-                _dataType = XLDataType.Boolean;
-                parsed = true;
-            }
-            else if (value.IsNumber())
-            {
-                if (
-                       (value is double d1 && (double.IsNaN(d1) || double.IsInfinity(d1)))
-                    || (value is float f && (float.IsNaN(f) || float.IsInfinity(f)))
-                   )
-                {
-                    parsedValue = value.ToString();
+                case string s:
+                    internalValue = s;
                     _dataType = XLDataType.Text;
-                    parsed = parsedValue.Length != 0;
-                }
-                else
-                {
-                    parsedValue = value.ObjectToInvariantString();
-                    _dataType = XLDataType.Number;
-                }
-                parsed = true;
-            }
-            else
-            {
-                parsed = false;
-                parsedValue = null;
-            }
+                    if (s.Contains(Environment.NewLine) && !style.Alignment.WrapText)
+                        Style.Alignment.WrapText = true;
 
-            return new Tuple<string, bool>(parsedValue, parsed);
+                    return true;
+
+                case DateTime d when d >= BaseDate:
+                    SetDateTimeFormat(style, d.Date == d);
+                    internalValue = d.ToOADate().ToInvariantString();
+                    return true;
+
+                case TimeSpan ts:
+                    SetTimeSpanFormat(style);
+                    internalValue = ts.TotalDays.ToInvariantString();
+                    return true;
+
+                case bool b:
+                    _dataType = XLDataType.Boolean;
+                    internalValue = b ? "1" : "0";
+                    return true;
+
+                default:
+                    if (value.IsNumber())
+                    {
+                        if (
+                            (value is double d1 && (double.IsNaN(d1) || double.IsInfinity(d1)))
+                            || (value is float f && (float.IsNaN(f) || float.IsInfinity(f)))
+                           )
+                        {
+                            _dataType = XLDataType.Text;
+                            internalValue = value.ToString();
+                            return true;
+                        }
+                        else
+                        {
+                            _dataType = XLDataType.Number;
+                            internalValue = value.ObjectToInvariantString();
+                            return true;
+                        }
+                    }
+                    return false;
+            }
         }
 
         private string DeduceCellValueByParsing(string value, XLStyleValue style)
@@ -2128,12 +2134,10 @@ namespace ClosedXML.Excel
 
                 parsed = true;
             }
-            else
+            // Don't accept strings, because we're going to try to parse them later
+            else if (value is not string _)
             {
-                // Don't accept strings, because we're going to try to parse them later
-                var tuple = SetKnownTypedValue(value, style, acceptString: false);
-                parsedValue = tuple.Item1;
-                parsed = tuple.Item2;
+                parsed = TrySetInternallySupportedType(ConvertOtherSupportedTypes(value), style, out parsedValue);
             }
 
             ////
@@ -2902,9 +2906,11 @@ namespace ClosedXML.Excel
 
         #endregion XLCell Right
 
-        public Boolean HasFormula { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
+        public Boolean HasFormula
+        { get { return !String.IsNullOrWhiteSpace(FormulaA1); } }
 
-        public Boolean HasArrayFormula { get { return FormulaA1.StartsWith("{"); } }
+        public Boolean HasArrayFormula
+        { get { return FormulaA1.StartsWith("{"); } }
 
         public IXLRangeAddress FormulaReference { get; set; }
 
