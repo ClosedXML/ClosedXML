@@ -1176,5 +1176,13 @@ namespace ClosedXML.Tests
 
             Assert.Throws<FormatException>(() => c.ToString("dummy"));
         }
+
+        [Test]
+        public void ConvertOtherSupportedTypes()
+        {
+            Assert.AreEqual("", XLCell.ConvertOtherSupportedTypes(DBNull.Value));
+            Assert.AreEqual("748bdf0c-3e7d-415e-967d-a875a27634ed", XLCell.ConvertOtherSupportedTypes(new Guid("748BDF0C-3E7D-415E-967D-A875A27634ED")));
+            Assert.AreEqual(DateTime.Today, XLCell.ConvertOtherSupportedTypes(DateTime.Today));
+        }
     }
 }
