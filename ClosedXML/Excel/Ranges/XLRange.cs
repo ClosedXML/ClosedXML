@@ -401,15 +401,6 @@ namespace ClosedXML.Excel
             return FirstColumnUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumn IXLRange.FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate)
-        {
-            return FirstColumnUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents,
-                predicate);
-        }
-
         IXLRangeColumn IXLRange.FirstColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate)
         {
             return FirstColumnUsed(options, predicate);
@@ -448,15 +439,6 @@ namespace ClosedXML.Excel
         internal XLRangeColumn LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null)
         {
             return LastColumnUsed(XLCellsUsedOptions.AllContents, predicate);
-        }
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumn IXLRange.LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate)
-        {
-            return LastColumnUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents,
-                predicate);
         }
 
         IXLRangeColumn IXLRange.LastColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate)
@@ -539,14 +521,6 @@ namespace ClosedXML.Excel
             return FirstRowUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRow IXLRange.FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate)
-        {
-            return FirstRowUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents, predicate);
-        }
-
         IXLRangeRow IXLRange.FirstRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate)
         {
             return FirstRowUsed(options, predicate);
@@ -589,14 +563,6 @@ namespace ClosedXML.Excel
             return LastRowUsed(XLCellsUsedOptions.AllContents, predicate);
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRow IXLRange.LastRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate)
-        {
-            return LastRowUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents, predicate);
-        }
-
         IXLRangeRow IXLRange.LastRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate)
         {
             return LastRowUsed(options, predicate);
@@ -627,14 +593,6 @@ namespace ClosedXML.Excel
             return null;
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRows IXLRange.RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate)
-        {
-            return RowsUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents, predicate);
-        }
-
         IXLRangeRows IXLRange.RowsUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate)
         {
             return RowsUsed(options, predicate);
@@ -663,13 +621,6 @@ namespace ClosedXML.Excel
         internal XLRangeRows RowsUsed(Func<IXLRangeRow, Boolean> predicate = null)
         {
             return RowsUsed(XLCellsUsedOptions.AllContents, predicate);
-        }
-
-        IXLRangeColumns IXLRange.ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate)
-        {
-            return ColumnsUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents, predicate);
         }
 
         IXLRangeColumns IXLRange.ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate)

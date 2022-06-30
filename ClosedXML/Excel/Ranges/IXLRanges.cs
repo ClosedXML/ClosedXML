@@ -111,10 +111,7 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Returns the collection of cells that have a value.
         /// </summary>
-        /// <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCells CellsUsed(Boolean includeFormats);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
         IXLCells CellsUsed(XLCellsUsedOptions options);
 
         /// <summary>

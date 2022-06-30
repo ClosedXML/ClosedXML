@@ -55,9 +55,6 @@ namespace ClosedXML.Excel
 
         IXLCells Cells(Boolean usedCellsOnly);
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCells Cells(Boolean usedCellsOnly, Boolean includeFormats);
-
         IXLCells Cells(Boolean usedCellsOnly, XLCellsUsedOptions options);
 
         IXLCells Cells(String cells);
@@ -70,18 +67,12 @@ namespace ClosedXML.Excel
         IXLCells CellsUsed();
 
         /// <summary>
-        ///   Returns the collection of cells that have a value.
+        /// Returns the collection of cells that have a value.
         /// </summary>
-        /// <param name = "includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCells CellsUsed(Boolean includeFormats);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
         IXLCells CellsUsed(XLCellsUsedOptions options);
 
         IXLCells CellsUsed(Func<IXLCell, Boolean> predicate);
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCells CellsUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
 
         IXLCells CellsUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate);
 
@@ -106,20 +97,18 @@ namespace ClosedXML.Excel
         IXLCell FirstCellUsed();
 
         /// <summary>
-        ///   Returns the first cell with a value of this range.
+        /// Returns the first cell with a value of this range.
         /// </summary>
-        /// <para>The cell's address is going to be ([First Row with a value], [First Column with a value])</para>
-        /// <param name = "includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCell FirstCellUsed(Boolean includeFormats);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
         IXLCell FirstCellUsed(XLCellsUsedOptions options);
 
         IXLCell FirstCellUsed(Func<IXLCell, Boolean> predicate);
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCell FirstCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
-
+        /// <summary>
+        /// Returns the first cell with a value of this range.
+        /// </summary>
+        /// <param name="options">The options to determine whether a cell is used.</param>
+        /// <param name="predicate">The predicate used to choose cells</param>
         IXLCell FirstCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate);
 
         /// <summary>
@@ -134,19 +123,12 @@ namespace ClosedXML.Excel
         IXLCell LastCellUsed();
 
         /// <summary>
-        ///   Returns the last cell with a value of this range.
+        /// Returns the last cell with a value of this range.
         /// </summary>
-        /// <para>The cell's address is going to be ([Last Row with a value], [Last Column with a value])</para>
-        /// <param name = "includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCell LastCellUsed(Boolean includeFormats);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
         IXLCell LastCellUsed(XLCellsUsedOptions options);
 
         IXLCell LastCellUsed(Func<IXLCell, Boolean> predicate);
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLCell LastCellUsed(Boolean includeFormats, Func<IXLCell, Boolean> predicate);
 
         IXLCell LastCellUsed(XLCellsUsedOptions options, Func<IXLCell, Boolean> predicate);
 
@@ -253,9 +235,6 @@ namespace ClosedXML.Excel
         Boolean IsMerged();
 
         Boolean IsEmpty();
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        Boolean IsEmpty(Boolean includeFormats);
 
         Boolean IsEmpty(XLCellsUsedOptions options);
 

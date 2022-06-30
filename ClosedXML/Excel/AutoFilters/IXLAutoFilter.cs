@@ -12,8 +12,6 @@ namespace ClosedXML.Excel
 
     public interface IXLAutoFilter
     {
-        [Obsolete("Use IsEnabled")]
-        Boolean Enabled { get; set; }
         IEnumerable<IXLRangeRow> HiddenRows { get; }
         Boolean IsEnabled { get; set; }
         IXLRange Range { get; set; }

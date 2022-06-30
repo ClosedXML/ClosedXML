@@ -16,7 +16,6 @@ namespace ClosedXML.Excel
         private IEnumerable<XLRow> _lazyEnumerable;
         private IEnumerable<XLRow> Rows => _lazyEnumerable ?? _rowsCollection.AsEnumerable();
 
-
         /// <summary>
         /// Create a new instance of <see cref="XLRows"/>.
         /// </summary>
@@ -185,14 +184,6 @@ namespace ClosedXML.Excel
             return cells;
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLCells CellsUsed(Boolean includeFormats)
-        {
-            return CellsUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents);
-        }
-
         public IXLCells CellsUsed(XLCellsUsedOptions options)
         {
             var cells = new XLCells(true, options);
@@ -211,6 +202,7 @@ namespace ClosedXML.Excel
         #endregion IXLRows Members
 
         #region IXLStylized Members
+
         protected override IEnumerable<XLStylizedBase> Children
         {
             get
@@ -241,7 +233,7 @@ namespace ClosedXML.Excel
                 }
             }
         }
-        
+
         public override IXLRanges RangesUsed
         {
             get

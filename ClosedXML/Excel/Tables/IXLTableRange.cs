@@ -9,9 +9,6 @@ namespace ClosedXML.Excel
 
         IXLTableRow FirstRow(Func<IXLTableRow, Boolean> predicate = null);
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLTableRow FirstRowUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate = null);
-
         IXLTableRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate = null);
 
         IXLTableRow FirstRowUsed(Func<IXLTableRow, Boolean> predicate = null);
@@ -21,9 +18,6 @@ namespace ClosedXML.Excel
         new IXLTableRows InsertRowsBelow(int numberOfRows);
 
         IXLTableRow LastRow(Func<IXLTableRow, Boolean> predicate = null);
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLTableRow LastRowUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate = null);
 
         IXLTableRow LastRowUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate = null);
 
@@ -47,9 +41,6 @@ namespace ClosedXML.Excel
         new IXLTableRows Rows(int firstRow, int lastRow);
 
         new IXLTableRows Rows(string rows);
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLTableRows RowsUsed(Boolean includeFormats, Func<IXLTableRow, Boolean> predicate = null);
 
         IXLTableRows RowsUsed(XLCellsUsedOptions options, Func<IXLTableRow, Boolean> predicate = null);
 

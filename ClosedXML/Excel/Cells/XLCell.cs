@@ -1136,14 +1136,6 @@ namespace ClosedXML.Excel
             return IsEmpty(XLCellsUsedOptions.AllContents);
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public Boolean IsEmpty(Boolean includeFormats)
-        {
-            return IsEmpty(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents);
-        }
-
         public Boolean IsEmpty(XLCellsUsedOptions options)
         {
             bool isValueEmpty;

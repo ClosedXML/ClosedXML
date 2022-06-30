@@ -21,14 +21,6 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.Between;
         }
 
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void Between(IXLRange minValue, IXLRange maxValue)
-        {
-            dataValidation.MinValue = minValue.RangeAddress.ToStringFixed();
-            dataValidation.MaxValue = maxValue.RangeAddress.ToStringFixed();
-            dataValidation.Operator = XLOperator.Between;
-        }
-
         public void Between(IXLCell minValue, IXLCell maxValue)
         {
             dataValidation.MinValue = minValue.Address.ToStringFixed();
@@ -39,13 +31,6 @@ namespace ClosedXML.Excel
         public void EqualOrGreaterThan(String value)
         {
             dataValidation.Value = value;
-            dataValidation.Operator = XLOperator.EqualOrGreaterThan;
-        }
-
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void EqualOrGreaterThan(IXLRange range)
-        {
-            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualOrGreaterThan;
         }
 
@@ -61,13 +46,6 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.EqualOrLessThan;
         }
 
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void EqualOrLessThan(IXLRange range)
-        {
-            dataValidation.Value = range.RangeAddress.ToStringFixed();
-            dataValidation.Operator = XLOperator.EqualOrLessThan;
-        }
-
         public void EqualOrLessThan(IXLCell cell)
         {
             dataValidation.Value = cell.Address.ToStringFixed();
@@ -77,13 +55,6 @@ namespace ClosedXML.Excel
         public void EqualTo(String value)
         {
             dataValidation.Value = value;
-            dataValidation.Operator = XLOperator.EqualTo;
-        }
-
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void EqualTo(IXLRange range)
-        {
-            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.EqualTo;
         }
 
@@ -99,13 +70,6 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.GreaterThan;
         }
 
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void GreaterThan(IXLRange range)
-        {
-            dataValidation.Value = range.RangeAddress.ToStringFixed();
-            dataValidation.Operator = XLOperator.GreaterThan;
-        }
-
         public void GreaterThan(IXLCell cell)
         {
             dataValidation.Value = cell.Address.ToStringFixed();
@@ -115,13 +79,6 @@ namespace ClosedXML.Excel
         public void LessThan(String value)
         {
             dataValidation.Value = value;
-            dataValidation.Operator = XLOperator.LessThan;
-        }
-
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void LessThan(IXLRange range)
-        {
-            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.LessThan;
         }
 
@@ -138,14 +95,6 @@ namespace ClosedXML.Excel
             dataValidation.Operator = XLOperator.NotBetween;
         }
 
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void NotBetween(IXLRange minValue, IXLRange maxValue)
-        {
-            dataValidation.MinValue = minValue.RangeAddress.ToStringFixed();
-            dataValidation.MaxValue = maxValue.RangeAddress.ToStringFixed();
-            dataValidation.Operator = XLOperator.NotBetween;
-        }
-
         public void NotBetween(IXLCell minValue, IXLCell maxValue)
         {
             dataValidation.MinValue = minValue.Address.ToStringFixed();
@@ -156,13 +105,6 @@ namespace ClosedXML.Excel
         public void NotEqualTo(String value)
         {
             dataValidation.Value = value;
-            dataValidation.Operator = XLOperator.NotEqualTo;
-        }
-
-        [Obsolete("Use the overload accepting IXLCell")]
-        public void NotEqualTo(IXLRange range)
-        {
-            dataValidation.Value = range.RangeAddress.ToStringFixed();
             dataValidation.Operator = XLOperator.NotEqualTo;
         }
 

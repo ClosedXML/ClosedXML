@@ -241,13 +241,6 @@ namespace ClosedXML.Excel
             return FirstRowUsed();
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRow IXLWorksheet.FirstRowUsed(Boolean includeFormats)
-        {
-            return FirstRowUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents);
-        }
 
         IXLRow IXLWorksheet.FirstRowUsed(XLCellsUsedOptions options)
         {
@@ -257,14 +250,6 @@ namespace ClosedXML.Excel
         IXLRow IXLWorksheet.LastRowUsed()
         {
             return LastRowUsed();
-        }
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRow IXLWorksheet.LastRowUsed(Boolean includeFormats)
-        {
-            return LastRowUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents);
         }
 
         IXLRow IXLWorksheet.LastRowUsed(XLCellsUsedOptions options)
@@ -297,14 +282,6 @@ namespace ClosedXML.Excel
             return FirstColumnUsed();
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLColumn IXLWorksheet.FirstColumnUsed(Boolean includeFormats)
-        {
-            return FirstColumnUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents);
-        }
-
         IXLColumn IXLWorksheet.FirstColumnUsed(XLCellsUsedOptions options)
         {
             return FirstColumnUsed(options);
@@ -313,14 +290,6 @@ namespace ClosedXML.Excel
         IXLColumn IXLWorksheet.LastColumnUsed()
         {
             return LastColumnUsed();
-        }
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLColumn IXLWorksheet.LastColumnUsed(Boolean includeFormats)
-        {
-            return LastColumnUsed(includeFormats
-                ? XLCellsUsedOptions.All
-                : XLCellsUsedOptions.AllContents);
         }
 
         IXLColumn IXLWorksheet.LastColumnUsed(XLCellsUsedOptions options)
@@ -961,15 +930,6 @@ namespace ClosedXML.Excel
             get { return AutoFilter; }
         }
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLRows RowsUsed(Boolean includeFormats, Func<IXLRow, Boolean> predicate = null)
-        {
-            return RowsUsed(includeFormats
-                    ? XLCellsUsedOptions.All
-                    : XLCellsUsedOptions.AllContents,
-                predicate);
-        }
-
         public IXLRows RowsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLRow, Boolean> predicate = null)
         {
             var rows = new XLRows(worksheet: null, StyleValue);
@@ -988,15 +948,6 @@ namespace ClosedXML.Excel
         public IXLRows RowsUsed(Func<IXLRow, Boolean> predicate = null)
         {
             return RowsUsed(XLCellsUsedOptions.AllContents, predicate);
-        }
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        public IXLColumns ColumnsUsed(Boolean includeFormats, Func<IXLColumn, Boolean> predicate = null)
-        {
-            return ColumnsUsed(includeFormats
-                    ? XLCellsUsedOptions.All
-                    : XLCellsUsedOptions.AllContents,
-                predicate);
         }
 
         public IXLColumns ColumnsUsed(XLCellsUsedOptions options = XLCellsUsedOptions.AllContents, Func<IXLColumn, Boolean> predicate = null)

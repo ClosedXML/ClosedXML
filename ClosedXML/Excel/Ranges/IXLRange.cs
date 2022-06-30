@@ -54,12 +54,12 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRangeColumn FirstColumn(Func<IXLRangeColumn, Boolean> predicate = null);
 
+
         /// <summary>
         /// Gets the first column of the range that contains a cell with a value.
         /// </summary>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumn FirstColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
+        /// <param name="predicate">The predicate to choose cells.</param>
         IXLRangeColumn FirstColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null);
 
         IXLRangeColumn FirstColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
@@ -69,12 +69,12 @@ namespace ClosedXML.Excel
         /// </summary>
         IXLRangeColumn LastColumn(Func<IXLRangeColumn, Boolean> predicate = null);
 
+
         /// <summary>
         /// Gets the last column of the range that contains a cell with a value.
         /// </summary>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumn LastColumnUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
+        /// <param name="predicate">The predicate to choose cells.</param>
         IXLRangeColumn LastColumnUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null);
 
         IXLRangeColumn LastColumnUsed(Func<IXLRangeColumn, Boolean> predicate = null);
@@ -124,9 +124,9 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the first row of the range that contains a cell with a value.
         /// </summary>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRow FirstRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
+        /// <param name="predicate">The predicate to choose cells.</param>
+        /// <returns></returns>
         IXLRangeRow FirstRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
 
         IXLRangeRow FirstRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
@@ -139,9 +139,9 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Gets the last row of the range that contains a cell with a value.
         /// </summary>
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRow LastRowUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
-
+        /// <param name="options">The options to determine whether a cell is used.</param>
+        /// <param name="predicate">The predicate to choose cells.</param>
+        /// <returns></returns>
         IXLRangeRow LastRowUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
 
         IXLRangeRow LastRowUsed(Func<IXLRangeRow, Boolean> predicate = null);
@@ -311,15 +311,9 @@ namespace ClosedXML.Excel
         /// <param name="clearOptions">Specify what you want to clear.</param>
         new IXLRange Clear(XLClearOptions clearOptions = XLClearOptions.All);
 
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeRows RowsUsed(Boolean includeFormats, Func<IXLRangeRow, Boolean> predicate = null);
-
         IXLRangeRows RowsUsed(XLCellsUsedOptions options, Func<IXLRangeRow, Boolean> predicate = null);
 
         IXLRangeRows RowsUsed(Func<IXLRangeRow, Boolean> predicate = null);
-
-        [Obsolete("Use the overload with XLCellsUsedOptions")]
-        IXLRangeColumns ColumnsUsed(Boolean includeFormats, Func<IXLRangeColumn, Boolean> predicate = null);
 
         IXLRangeColumns ColumnsUsed(XLCellsUsedOptions options, Func<IXLRangeColumn, Boolean> predicate = null);
 
