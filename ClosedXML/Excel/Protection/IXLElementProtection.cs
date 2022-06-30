@@ -21,16 +21,13 @@ namespace ClosedXML.Excel
         IXLElementProtection<T> AllowElement(T element, Boolean allowed = true);
 
         /// <summary>Allows all elements to be edited.</summary>
-        /// <returns></returns>
         IXLElementProtection<T> AllowEverything();
 
         /// <summary>Allows no elements to be edited. Protects all elements.</summary>
-        /// <returns></returns>
         IXLElementProtection<T> AllowNone();
 
         /// <summary>Copies all the protection settings from a different instance.</summary>
         /// <param name="protectable">The protectable.</param>
-        /// <returns></returns>
         IXLElementProtection<T> CopyFrom(IXLElementProtection<T> protectable);
 
         /// <summary>
@@ -48,16 +45,13 @@ namespace ClosedXML.Excel
         /// <summary>Protects this instance using the specified password and password hash algorithm.</summary>
         /// <param name="password">The password.</param>
         /// <param name="algorithm">The algorithm.</param>
-        /// <returns></returns>
         IXLElementProtection<T> Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm);
 
         /// <summary>Unprotects this instance without a password.</summary>
-        /// <returns></returns>
         IXLElementProtection<T> Unprotect();
 
         /// <summary>Unprotects this instance using the specified password.</summary>
         /// <param name="password">The password.</param>
-        /// <returns></returns>
         IXLElementProtection<T> Unprotect(String password);
     }
 

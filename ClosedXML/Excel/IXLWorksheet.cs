@@ -153,7 +153,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="firstRow">The first row to return.</param>
         /// <param name="lastRow">The last row to return.</param>
-        /// <returns></returns>
         IXLRows Rows(Int32 firstRow, Int32 lastRow);
 
         /// <summary>
@@ -327,7 +326,6 @@ namespace ClosedXML.Excel
         /// Copies the
         /// </summary>
         /// <param name="newSheetName"></param>
-        /// <returns></returns>
         IXLWorksheet CopyTo(String newSheetName);
 
         IXLWorksheet CopyTo(String newSheetName, Int32 position);

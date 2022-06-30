@@ -11,7 +11,6 @@ namespace ClosedXML.Excel
         /// Create address without worksheet. For calculation only!
         /// </summary>
         /// <param name="cellAddressString"></param>
-        /// <returns></returns>
         public static XLAddress Create(string cellAddressString)
         {
             return Create(null, cellAddressString);

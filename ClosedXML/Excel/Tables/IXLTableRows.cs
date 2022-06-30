@@ -27,7 +27,6 @@ namespace ClosedXML.Excel
         /// Returns the collection of cells that have a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
-        /// <returns></returns>
         IXLCells CellsUsed(XLCellsUsedOptions options);
 
         /// <summary>

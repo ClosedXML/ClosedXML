@@ -177,7 +177,6 @@ namespace ClosedXML.Tests.Excel
         /// </summary>
         /// <param name="columnNumber">The column number to translate into a column letter.</param>
         /// <param name="trimToAllowed">if set to <c>true</c> the column letter will be restricted to the allowed range.</param>
-        /// <returns></returns>
         private static string NaiveGetColumnLetterFromNumber(int columnNumber, bool trimToAllowed = false)
         {
             if (trimToAllowed) columnNumber = XLHelper.TrimColumnNumber(columnNumber);

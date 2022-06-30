@@ -65,7 +65,6 @@ namespace ClosedXML.Excel
         /// <param name="comment">The comment.</param>
         /// <param name="validateName">if set to <c>true</c> validates the name.</param>
         /// <param name="validateRangeAddress">if set to <c>true</c> range address will be checked for validity.</param>
-        /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
         /// <exception cref="ArgumentException">
         /// For named ranges in the workbook scope, specify the sheet name in the reference.

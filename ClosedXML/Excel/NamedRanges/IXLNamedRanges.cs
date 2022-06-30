@@ -16,7 +16,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rangeName">Name of the range to add.</param>
         /// <param name="rangeAddress">The range address to add.</param>
-        /// <returns></returns>
         IXLNamedRange Add(String rangeName, String rangeAddress);
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rangeName">Name of the range to add.</param>
         /// <param name="range">The range to add.</param>
-        /// <returns></returns>
         IXLNamedRange Add(String rangeName, IXLRange range);
 
         /// <summary>
@@ -32,7 +30,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="rangeName">Name of the range to add.</param>
         /// <param name="ranges">The ranges to add.</param>
-        /// <returns></returns>
         IXLNamedRange Add(String rangeName, IXLRanges ranges);
 
         /// <summary>

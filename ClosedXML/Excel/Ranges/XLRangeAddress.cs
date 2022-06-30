@@ -149,7 +149,6 @@ namespace ClosedXML.Excel
         /// Lead a range address to a normal form - when <see cref="FirstAddress"/> points to the top-left address and
         /// <see cref="LastAddress"/> points to the bottom-right address.
         /// </summary>
-        /// <returns></returns>
         public XLRangeAddress Normalize()
         {
             if (FirstAddress.RowNumber <= LastAddress.RowNumber &&

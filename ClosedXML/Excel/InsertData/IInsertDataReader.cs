@@ -27,7 +27,6 @@ namespace ClosedXML.Excel.InsertData
         /// <summary>
         /// Get the total number of records.
         /// </summary>
-        /// <returns></returns>
         int GetRecordsCount();
     }
 }

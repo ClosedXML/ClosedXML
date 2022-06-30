@@ -82,7 +82,6 @@ namespace ClosedXML.Excel
         /// <param name="searchText">The search text.</param>
         /// <param name="compareOptions">The compare options.</param>
         /// <param name="searchFormulae">if set to <c>true</c> search formulae instead of cell values.</param>
-        /// <returns></returns>
         IXLCells Search(String searchText, CompareOptions compareOptions = CompareOptions.Ordinal, Boolean searchFormulae = false);
 
         /// <summary>
@@ -297,7 +296,6 @@ namespace ClosedXML.Excel
         /// Grows this the current range by the specified number of cells to each side.
         /// </summary>
         /// <param name="growCount">The grow count.</param>
-        /// <returns></returns>
         IXLRangeBase Grow(Int32 growCount);
 
         /// <summary>
@@ -309,7 +307,6 @@ namespace ClosedXML.Excel
         /// Shrinks the current range by the specified number of cells from each side.
         /// </summary>
         /// <param name="shrinkCount">The shrink count.</param>
-        /// <returns></returns>
         IXLRangeBase Shrink(Int32 shrinkCount);
 
         /// <summary>
@@ -344,7 +341,6 @@ namespace ClosedXML.Excel
         /// <param name="otherRange">The other range.</param>
         /// <param name="thisRangePredicate">Predicate applied to this range's cells.</param>
         /// <param name="otherRangePredicate">Predicate applied to the other range's cells.</param>
-        /// <returns></returns>
         IXLCells Difference(IXLRangeBase otherRange, Func<IXLCell, Boolean> thisRangePredicate = null, Func<IXLCell, Boolean> otherRangePredicate = null);
 
         /// <summary>

@@ -120,21 +120,18 @@ namespace ClosedXML.Excel
         /// Resizes the table to the specified range address.
         /// </summary>
         /// <param name="range">The new table range.</param>
-        /// <returns></returns>
         IXLTable Resize(IXLRange range);
 
         /// <summary>
         /// Resizes the table to the specified range address.
         /// </summary>
         /// <param name="rangeAddress">The range boundaries.</param>
-        /// <returns></returns>
         IXLTable Resize(IXLRangeAddress rangeAddress);
 
         /// <summary>
         /// Resizes the table to the specified range address.
         /// </summary>
         /// <param name="rangeAddress">The range boundaries.</param>
-        /// <returns></returns>
         IXLTable Resize(string rangeAddress);
 
         /// <summary>
@@ -142,7 +139,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="firstCell">The first cell in the range.</param>
         /// <param name="lastCell">The last cell in the range.</param>
-        /// <returns></returns>
         IXLTable Resize(IXLCell firstCell, IXLCell lastCell);
 
         /// <summary>
@@ -150,7 +146,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="firstCellAddress">The first cell address in the worksheet.</param>
         /// <param name="lastCellAddress">The last cell address in the worksheet.</param>
-        /// <returns></returns>
         IXLTable Resize(string firstCellAddress, string lastCellAddress);
 
         /// <summary>
@@ -158,7 +153,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="firstCellAddress">The first cell address in the worksheet.</param>
         /// <param name="lastCellAddress">The last cell address in the worksheet.</param>
-        /// <returns></returns>
         IXLTable Resize(IXLAddress firstCellAddress, IXLAddress lastCellAddress);
 
         /// <summary>
@@ -168,7 +162,6 @@ namespace ClosedXML.Excel
         /// <param name="firstCellColumn">The first cell's column of the range to return.</param>
         /// <param name="lastCellRow">The last cell's row of the range to return.</param>
         /// <param name="lastCellColumn">The last cell's column of the range to return.</param>
-        /// <returns></returns>
         IXLTable Resize(int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn);
 
         new IXLAutoFilter SetAutoFilter();
@@ -206,13 +199,11 @@ namespace ClosedXML.Excel
         /// <summary>
         /// Converts the table to an enumerable of dynamic objects
         /// </summary>
-        /// <returns></returns>
         IEnumerable<dynamic> AsDynamicEnumerable();
 
         /// <summary>
         /// Converts the table to a standard .NET System.Data.DataTable
         /// </summary>
-        /// <returns></returns>
         DataTable AsNativeDataTable();
 
         IXLTable CopyTo(IXLWorksheet targetSheet);

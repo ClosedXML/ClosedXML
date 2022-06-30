@@ -376,7 +376,6 @@ namespace ClosedXML.Excel
         /// </summary>
         /// <param name="data">The IEnumerable data.</param>
         /// <param name="transpose">if set to <c>true</c> the data will be transposed before inserting.</param>
-        /// <returns></returns>
         IXLRange InsertData(IEnumerable data, Boolean transpose);
 
         /// <summary>
@@ -495,7 +494,6 @@ namespace ClosedXML.Excel
         /// Returns a string that represents the current state of the cell according to the format.
         /// </summary>
         /// <param name="format">A: address, F: formula, NF: number format, BG: background color, FG: foreground color, V: formatted value</param>
-        /// <returns></returns>
         string ToString(string format);
 
         IXLColumn WorksheetColumn();

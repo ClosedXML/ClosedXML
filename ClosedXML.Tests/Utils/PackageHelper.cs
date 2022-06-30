@@ -56,7 +56,6 @@ namespace ClosedXML.Tests
         /// </summary>
         /// <param name="package"></param>
         /// <param name="uri"></param>
-        /// <returns></returns>
         public static Stream ReadBinaryPart(Package package, Uri uri)
         {
             if (!package.PartExists(uri))
@@ -272,7 +271,6 @@ namespace ClosedXML.Tests
         /// <param name="compareToFirstDifference"></param>
         /// <param name="excludeMethod"></param>
         /// <param name="message"></param>
-        /// <returns></returns>
         public static bool Compare(Package left, Package right, bool compareToFirstDifference, out string message)
         {
             return Compare(left, right, compareToFirstDifference, null, out message);
@@ -286,7 +284,6 @@ namespace ClosedXML.Tests
         /// <param name="compareToFirstDifference"></param>
         /// <param name="excludeMethod"></param>
         /// <param name="message"></param>
-        /// <returns></returns>
         public static bool Compare(Package left, Package right, bool compareToFirstDifference,
             Func<Uri, bool> excludeMethod, out string message)
         {
