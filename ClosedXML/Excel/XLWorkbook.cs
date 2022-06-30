@@ -980,10 +980,16 @@ namespace ClosedXML.Excel
             return protection;
         }
 
-        public IXLWorkbookProtection Protect()
+        public IXLWorkbookProtection Protect(Algorithm algorithm = DefaultProtectionAlgorithm)
         {
-            return Protection.Protect();
+            return Protection.Protect(algorithm);
         }
+
+        public IXLWorkbookProtection Protect(XLWorkbookProtectionElements allowedElements)
+            => Protection.Protect(allowedElements);
+
+        public IXLWorkbookProtection Protect(Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
+            => Protection.Protect(algorithm, allowedElements);
 
         [Obsolete("Use Protect(String password, Algorithm algorithm, TElement allowedElements)")]
         public IXLWorkbookProtection Protect(Boolean lockStructure)
@@ -1008,15 +1014,24 @@ namespace ClosedXML.Excel
             return Protection.Protect(password, algorithm, allowedElements);
         }
 
-        IXLElementProtection IXLProtectable.Protect()
+        IXLElementProtection IXLProtectable.Protect(Algorithm algorithm)
         {
-            return Protect();
+            return Protect(algorithm);
         }
 
         IXLElementProtection IXLProtectable.Protect(string password, Algorithm algorithm)
         {
             return Protect(password, algorithm);
         }
+
+        IXLWorkbookProtection IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>.Protect(XLWorkbookProtectionElements allowedElements)
+            => Protect(allowedElements);
+
+        IXLWorkbookProtection IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>.Protect(Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
+            => Protect(algorithm, allowedElements);
+
+        IXLWorkbookProtection IXLProtectable<IXLWorkbookProtection, XLWorkbookProtectionElements>.Protect(string password, Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
+            => Protect(password, algorithm, allowedElements);
 
         public IXLWorkbookProtection Unprotect()
         {
