@@ -42,8 +42,8 @@ namespace ClosedXML.Excel
         IXLElementProtection<T> DisallowElement(T element);
 
         /// <summary>Protects this instance without a password.</summary>
-        /// <returns></returns>
-        IXLElementProtection<T> Protect();
+        /// <param name="algorithm">The algorithm.</param>
+        IXLElementProtection<T> Protect(Algorithm algorithm = DefaultProtectionAlgorithm);
 
         /// <summary>Protects this instance using the specified password and password hash algorithm.</summary>
         /// <param name="password">The password.</param>

@@ -78,10 +78,16 @@ namespace ClosedXML.Excel
             return AllowElement(element, allowed: false);
         }
 
-        public IXLWorkbookProtection Protect()
+        public IXLWorkbookProtection Protect(Algorithm algorithm = DefaultProtectionAlgorithm)
         {
-            return Protect(String.Empty);
+            return Protect(String.Empty, algorithm);
         }
+
+        public IXLWorkbookProtection Protect(XLWorkbookProtectionElements allowedElements)
+            => Protect(string.Empty, DefaultProtectionAlgorithm, allowedElements);
+
+        public IXLWorkbookProtection Protect(Algorithm algorithm, XLWorkbookProtectionElements allowedElements)
+            => Protect(string.Empty, algorithm, allowedElements);
 
         public IXLWorkbookProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm, XLWorkbookProtectionElements allowedElements = XLWorkbookProtectionElements.Windows)
         {
@@ -143,9 +149,15 @@ namespace ClosedXML.Excel
 
         IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.DisallowElement(XLWorkbookProtectionElements element) => DisallowElement(element);
 
-        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Protect() => Protect();
+        IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Protect(Algorithm algorithm) => Protect(algorithm);
 
         IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Protect(String password, Algorithm algorithm) => Protect(password, algorithm);
+
+        IXLWorkbookProtection IXLWorkbookProtection.Protect(XLWorkbookProtectionElements allowedElements) => Protect(allowedElements);
+
+        IXLWorkbookProtection IXLWorkbookProtection.Protect(Algorithm algorithm, XLWorkbookProtectionElements allowedElements) => Protect(algorithm, allowedElements);
+
+        IXLWorkbookProtection IXLWorkbookProtection.Protect(String password, Algorithm algorithm, XLWorkbookProtectionElements allowedElements) => Protect(password, algorithm, allowedElements);
 
         IXLElementProtection<XLWorkbookProtectionElements> IXLElementProtection<XLWorkbookProtectionElements>.Unprotect() => Unprotect();
 

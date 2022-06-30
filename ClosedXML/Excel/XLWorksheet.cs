@@ -689,10 +689,16 @@ namespace ClosedXML.Excel
             set => Protection = value as XLSheetProtection;
         }
 
-        public IXLSheetProtection Protect()
+        public IXLSheetProtection Protect(Algorithm algorithm = DefaultProtectionAlgorithm)
         {
-            return Protection.Protect();
+            return Protection.Protect(algorithm);
         }
+
+        public IXLSheetProtection Protect(XLSheetProtectionElements allowedElements)
+            => Protection.Protect(allowedElements);
+
+        public IXLSheetProtection Protect(Algorithm algorithm, XLSheetProtectionElements allowedElements)
+            => Protection.Protect(algorithm, allowedElements);
 
         public IXLSheetProtection Protect(String password, Algorithm algorithm = DefaultProtectionAlgorithm)
         {
@@ -704,9 +710,9 @@ namespace ClosedXML.Excel
             return Protection.Protect(password, algorithm, allowedElements);
         }
 
-        IXLElementProtection IXLProtectable.Protect()
+        IXLElementProtection IXLProtectable.Protect(Algorithm algorithm)
         {
-            return Protect();
+            return Protect(algorithm);
         }
 
         IXLElementProtection IXLProtectable.Protect(String password, Algorithm algorithm)

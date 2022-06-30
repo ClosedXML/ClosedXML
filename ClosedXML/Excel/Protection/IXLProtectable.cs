@@ -11,8 +11,17 @@ namespace ClosedXML.Excel
         TProtection Protection { get; set; }
 
         /// <summary>Protects this instance without a password.</summary>
+        TProtection Protect(TElement allowedElements);
+
+        /// <summary>Protects this instance without a password.</summary>
         /// <returns></returns>
-        new TProtection Protect();
+        new TProtection Protect(Algorithm algorithm = DefaultProtectionAlgorithm);
+
+        /// <summary>Protects this instance with the specified password, password hash algorithm and set elements that the user is allowed to change.</summary>
+        /// <param name="algorithm">The algorithm.</param>
+        /// <param name="allowedElements">The allowed elements.</param>
+        /// <returns></returns>
+        TProtection Protect(Algorithm algorithm, TElement allowedElements);
 
         /// <summary>Protects this instance using the specified password and password hash algorithm.</summary>
         /// <param name="password">The password.</param>
@@ -53,7 +62,7 @@ namespace ClosedXML.Excel
 
         /// <summary>Protects this instance without a password.</summary>
         /// <returns></returns>
-        IXLElementProtection Protect();
+        IXLElementProtection Protect(Algorithm algorithm = DefaultProtectionAlgorithm);
 
         /// <summary>Protects this instance using the specified password and password hash algorithm.</summary>
         /// <param name="password">The password.</param>
