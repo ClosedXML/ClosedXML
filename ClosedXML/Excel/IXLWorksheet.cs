@@ -51,13 +51,13 @@ namespace ClosedXML.Excel
         IXLRow FirstRow();
 
         /// <summary>
-        /// Gets the first row of the worksheet that contains a cell with a value.
+        /// Gets the first non-empty row of the worksheet that contains a cell with a value.
         /// <para>Formatted empty cells do not count.</para>
         /// </summary>
         IXLRow FirstRowUsed();
 
         /// <summary>
-        /// Gets the first row of the worksheet that contains a cell with a value.
+        /// Gets the first non-empty row of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         IXLRow FirstRowUsed(XLCellsUsedOptions options);
@@ -68,12 +68,12 @@ namespace ClosedXML.Excel
         IXLRow LastRow();
 
         /// <summary>
-        /// Gets the last row of the worksheet that contains a cell with a value.
+        /// Gets the last non-empty row of the worksheet that contains a cell with a value.
         /// </summary>
         IXLRow LastRowUsed();
 
         /// <summary>
-        /// Gets the last row of the worksheet that contains a cell with a value.
+        /// Gets the last non-empty row of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         IXLRow LastRowUsed(XLCellsUsedOptions options);
@@ -84,12 +84,12 @@ namespace ClosedXML.Excel
         IXLColumn FirstColumn();
 
         /// <summary>
-        /// Gets the first column of the worksheet that contains a cell with a value.
+        /// Gets the first non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
         IXLColumn FirstColumnUsed();
 
         /// <summary>
-        /// Gets the first column of the worksheet that contains a cell with a value.
+        /// Gets the first non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         IXLColumn FirstColumnUsed(XLCellsUsedOptions options);
@@ -100,12 +100,12 @@ namespace ClosedXML.Excel
         IXLColumn LastColumn();
 
         /// <summary>
-        /// Gets the last column of the worksheet that contains a cell with a value.
+        /// Gets the last non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
         IXLColumn LastColumnUsed();
 
         /// <summary>
-        /// Gets the last column of the worksheet that contains a cell with a value.
+        /// Gets the last non-empty column of the worksheet that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         IXLColumn LastColumnUsed(XLCellsUsedOptions options);

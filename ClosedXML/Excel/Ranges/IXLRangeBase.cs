@@ -90,13 +90,13 @@ namespace ClosedXML.Excel
         IXLCell FirstCell();
 
         /// <summary>
-        ///   Returns the first cell with a value of this range. Formats are ignored.
+        ///   Returns the first non-empty cell with a value of this range. Formats are ignored.
         ///   <para>The cell's address is going to be ([First Row with a value], [First Column with a value])</para>
         /// </summary>
         IXLCell FirstCellUsed();
 
         /// <summary>
-        /// Returns the first cell with a value of this range.
+        /// Returns the first non-empty cell with a value of this range.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         IXLCell FirstCellUsed(XLCellsUsedOptions options);
@@ -104,7 +104,7 @@ namespace ClosedXML.Excel
         IXLCell FirstCellUsed(Func<IXLCell, Boolean> predicate);
 
         /// <summary>
-        /// Returns the first cell with a value of this range.
+        /// Returns the first non-empty cell with a value of this range.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         /// <param name="predicate">The predicate used to choose cells</param>
@@ -116,13 +116,13 @@ namespace ClosedXML.Excel
         IXLCell LastCell();
 
         /// <summary>
-        ///   Returns the last cell with a value of this range. Formats are ignored.
+        ///   Returns the last non-empty cell with a value of this range. Formats are ignored.
         ///   <para>The cell's address is going to be ([Last Row with a value], [Last Column with a value])</para>
         /// </summary>
         IXLCell LastCellUsed();
 
         /// <summary>
-        /// Returns the last cell with a value of this range.
+        /// Returns the last non-empty cell with a value of this range.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         IXLCell LastCellUsed(XLCellsUsedOptions options);
