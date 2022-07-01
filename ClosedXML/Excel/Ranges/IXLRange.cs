@@ -56,7 +56,7 @@ namespace ClosedXML.Excel
 
 
         /// <summary>
-        /// Gets the first column of the range that contains a cell with a value.
+        /// Gets the first non-empty column of the range that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         /// <param name="predicate">The predicate to choose cells.</param>
@@ -71,7 +71,7 @@ namespace ClosedXML.Excel
 
 
         /// <summary>
-        /// Gets the last column of the range that contains a cell with a value.
+        /// Gets the last non-empty column of the range that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         /// <param name="predicate">The predicate to choose cells.</param>
@@ -122,7 +122,7 @@ namespace ClosedXML.Excel
         IXLRangeRow FirstRow(Func<IXLRangeRow, Boolean> predicate = null);
 
         /// <summary>
-        /// Gets the first row of the range that contains a cell with a value.
+        /// Gets the first non-empty row of the range that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         /// <param name="predicate">The predicate to choose cells.</param>
@@ -136,7 +136,7 @@ namespace ClosedXML.Excel
         IXLRangeRow LastRow(Func<IXLRangeRow, Boolean> predicate = null);
 
         /// <summary>
-        /// Gets the last row of the range that contains a cell with a value.
+        /// Gets the last non-empty row of the range that contains a cell with a value.
         /// </summary>
         /// <param name="options">The options to determine whether a cell is used.</param>
         /// <param name="predicate">The predicate to choose cells.</param>
