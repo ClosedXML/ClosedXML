@@ -160,7 +160,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             int end_date;
 
-            type = p[0]._token.Value.GetType();
+            type = p[0]._token.Value?.GetType();
             if (type == typeof(string))
                 end_date = (int)Datevalue(new List<Expression>() { p[0] });
             else
@@ -168,7 +168,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             int start_date;
 
-            type = p[1]._token.Value.GetType();
+            type = p[1]._token.Value?.GetType();
             if (type == typeof(string))
                 start_date = (int)Datevalue(new List<Expression>() { p[1] });
             else

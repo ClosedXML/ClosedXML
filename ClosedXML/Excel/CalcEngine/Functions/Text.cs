@@ -287,7 +287,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object T(List<Expression> p)
         {
-            if (p[0]._token.Value.GetType() == typeof(string))
+            if (p[0]._token.Value?.GetType() == typeof(string))
                 return (string)p[0];
             else
                 return "";

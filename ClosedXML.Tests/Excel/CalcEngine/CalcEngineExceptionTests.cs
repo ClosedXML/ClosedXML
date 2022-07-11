@@ -34,12 +34,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void InvalidFunction()
         {
             Exception ex;
-            ex = Assert.Throws<NameNotRecognizedException>(() => XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
-            Assert.That(ex.Message, Is.EqualTo("The identifier `XXX` was not recognised."));
+            ex = Assert.Throws<NotImplementedException>(() => XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
+            Assert.That(ex.Message, Is.EqualTo("Evaluation of custom functions is not implemented."));
 
             var ws = new XLWorkbook().AddWorksheet();
-            ex = Assert.Throws<NameNotRecognizedException>(() => ws.Evaluate("XXX(A1:A2)"));
-            Assert.That(ex.Message, Is.EqualTo("The identifier `XXX` was not recognised."));
+            ex = Assert.Throws<NotImplementedException>(() => ws.Evaluate("XXX(A1:A2)"));
+            Assert.That(ex.Message, Is.EqualTo("Evaluation of custom functions is not implemented."));
         }
 
         [Test]

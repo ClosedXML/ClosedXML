@@ -111,7 +111,11 @@ namespace ClosedXML.Excel.CalcEngine
                     return references;
                 }
 
-                return GetCellRangeReference(_ws.Range(identifier));
+                var range = _ws.Range(identifier);
+                if (range is null)
+                    throw new ArgumentOutOfRangeException("Not a range nor range.");
+
+                return GetCellRangeReference(range);
             }
             else if (XLHelper.IsValidRangeAddress(identifier))
                 return identifier;

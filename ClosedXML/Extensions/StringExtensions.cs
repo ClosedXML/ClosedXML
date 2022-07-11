@@ -83,5 +83,10 @@ namespace ClosedXML.Excel
                 .Trim('\'')
                 .Replace("''", "'");
         }
+
+        internal static string WithoutLast(this String value, int length)
+        {
+            return length < value.Length ? value.Substring(0, value.Length - length) : String.Empty;
+        }
     }
 }

@@ -26,6 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
         #region ** fields
 
         // members
+        private readonly FormulaParser _parser;
         private string _expr;                           // expression being parsed
 
         private int _len;                               // length of the expression being parsed
@@ -55,7 +56,8 @@ namespace ClosedXML.Excel.CalcEngine
             _fnTbl = GetFunctionTable();
             _vars = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             _cache = new ExpressionCache(this);
-            _optimize = true;
+            _optimize = false;
+            _parser = new FormulaParser(this, _fnTbl);
 #if DEBUG
             //this.Test();
 #endif
@@ -90,13 +92,7 @@ namespace ClosedXML.Excel.CalcEngine
                 _ptr++;
 
             // parse the expression
-            var expr = ParseExpression();
-
-            // check for errors
-            if (_currentToken.ID == TKID.OPEN)
-                Throw("Unknown function: " + expr.LastParseItem);
-            else if (_currentToken.ID != TKID.END)
-                Throw("Expected end of expression");
+            var expr = _parser.ParseToAst(_expr);
 
             // optimize expression
             if (_optimize)

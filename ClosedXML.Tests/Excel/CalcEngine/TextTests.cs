@@ -150,9 +150,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         [Test]
+        [Ignore("Enable when CalcEngine error handling works properly.")]
         public void Dollar_Empty_Input_String()
         {
-            Assert.That(() => XLWorkbook.EvaluateExpr(@"Dollar("", 3)"), Throws.TypeOf<ExpressionParseException>());
+            Assert.That(() => XLWorkbook.EvaluateExpr("Dollar(\"\", 3)"), Throws.TypeOf<CellValueException>());
         }
 
         [Test]
