@@ -59,5 +59,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             actual = XLWorkbook.EvaluateExpr(@"IF(""text""=""TEXT"", 1, 2)");
             Assert.AreEqual(1, actual);
         }
+
+        [Test]
+        public void If_Missing_Second_Value_Then_False()
+        {
+            Object actual = XLWorkbook.EvaluateExpr(@"IF(FALSE, 1,)");
+            Assert.AreEqual(false, actual);
+        }
     }
 }

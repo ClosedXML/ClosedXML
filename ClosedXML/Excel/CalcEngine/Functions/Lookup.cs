@@ -59,7 +59,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 throw new CellReferenceException("Row index has to be positive");
 
             IXLRangeColumn matching_column;
-            matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) == 0);
+            matching_column = range.FindColumn(c => !c.Cell(1).IsEmpty() && new ScalarNode(c.Cell(1).Value).CompareTo(lookup_value) == 0);
             if (range_lookup && matching_column == null)
             {
                 var first_column = range.FirstColumn().ColumnNumber();
@@ -68,9 +68,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 matching_column = range.FindColumn(c =>
                 {
                     var column_index_in_range = c.ColumnNumber() - first_column + 1;
-                    if (column_index_in_range < number_of_columns_in_range && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && !c.ColumnRight().Cell(1).IsEmpty() && new Expression(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    if (column_index_in_range < number_of_columns_in_range && !c.Cell(1).IsEmpty() && new ScalarNode(c.Cell(1).Value).CompareTo(lookup_value) <= 0 && !c.ColumnRight().Cell(1).IsEmpty() && new ScalarNode(c.ColumnRight().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (column_index_in_range == number_of_columns_in_range && !c.Cell(1).IsEmpty() && new Expression(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (column_index_in_range == number_of_columns_in_range && !c.Cell(1).IsEmpty() && new ScalarNode(c.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;
@@ -180,7 +180,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
             if (match_type == 0)
                 foundCell = range
-                    .CellsUsed(XLCellsUsedOptions.Contents, c => lookupPredicate.Invoke(new Expression(c.Value).CompareTo(lookup_value)))
+                    .CellsUsed(XLCellsUsedOptions.Contents, c => lookupPredicate.Invoke(new ScalarNode(c.Value).CompareTo(lookup_value)))
                     .FirstOrDefault();
             else
             {
@@ -189,12 +189,12 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     .CellsUsed(XLCellsUsedOptions.Contents)
                     .TakeWhile(c =>
                     {
-                        var currentCellExpression = new Expression(c.Value);
+                        var currentCellExpression = new ScalarNode(c.Value);
 
                         if (previousValue != null)
                         {
                             // When match_type != 0, we have to assume that the order of the items being search is ascending or descending
-                            var previousValueExpression = new Expression(previousValue);
+                            var previousValueExpression = new ScalarNode(previousValue);
                             if (!lookupPredicate.Invoke(previousValueExpression.CompareTo(currentCellExpression)))
                                 return false;
                         }
@@ -232,7 +232,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             IXLRangeRow matching_row;
             try
             {
-                matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) == 0);
+                matching_row = range.FindRow(r => !r.Cell(1).IsEmpty() && new ScalarNode(r.Cell(1).Value).CompareTo(lookup_value) == 0);
             }
             catch (Exception ex)
             {
@@ -246,9 +246,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 matching_row = range.FindRow(r =>
                 {
                     var row_index_in_range = r.RowNumber() - first_row + 1;
-                    if (row_index_in_range < number_of_rows_in_range && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && !r.RowBelow().Cell(1).IsEmpty() && new Expression(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
+                    if (row_index_in_range < number_of_rows_in_range && !r.Cell(1).IsEmpty() && new ScalarNode(r.Cell(1).Value).CompareTo(lookup_value) <= 0 && !r.RowBelow().Cell(1).IsEmpty() && new ScalarNode(r.RowBelow().Cell(1).Value).CompareTo(lookup_value) > 0)
                         return true;
-                    else if (row_index_in_range == number_of_rows_in_range && !r.Cell(1).IsEmpty() && new Expression(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
+                    else if (row_index_in_range == number_of_rows_in_range && !r.Cell(1).IsEmpty() && new ScalarNode(r.Cell(1).Value).CompareTo(lookup_value) <= 0)
                         return true;
                     else
                         return false;

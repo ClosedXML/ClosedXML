@@ -3,76 +3,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal abstract class ExpressionBase
+    /// <summary>
+    /// Base class for all AST nodes. All AST nodes must be immutable.
+    /// </summary>
+    internal abstract class AstNode
     {
-        public abstract string LastParseItem { get; }
+        /// <summary>
+        /// Method to accept a vistor (=call a method of visitor with correct type of the node).
+        /// </summary>
+        public abstract TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor);
     }
 
     /// <summary>
-    /// Base class that represents parsed expressions.
+    /// A base class for all AST nodes that can be evaluated to produce a value.
     /// </summary>
-    /// <remarks>
-    /// For example:
-    /// <code>
-    /// Expression expr = scriptEngine.Parse(strExpression);
-    /// object val = expr.Evaluate();
-    /// </code>
-    /// </remarks>
-    internal class Expression : ExpressionBase, IComparable<Expression>
+    internal abstract class Expression : AstNode, IComparable<Expression>
     {
-        //---------------------------------------------------------------------------
-
-        #region ** fields
-
-        internal readonly Token _token;
-
-        #endregion ** fields
-
-        //---------------------------------------------------------------------------
-
-        #region ** ctors
-
-        internal Expression()
-        {
-            _token = new Token(null, TKID.ATOM, TKTYPE.IDENTIFIER);
-        }
-
-        internal Expression(object value)
-        {
-            _token = new Token(value, TKID.ATOM, TKTYPE.LITERAL);
-        }
-
-        internal Expression(Token tk)
-        {
-            _token = tk;
-        }
-
-        #endregion ** ctors
-
-        //---------------------------------------------------------------------------
-
-        #region ** object model
-
-        public virtual object Evaluate()
-        {
-            if (_token.Type != TKTYPE.LITERAL)
-            {
-                throw new ArgumentException("Bad expression.");
-            }
-            return _token.Value;
-        }
-
-        public virtual Expression Optimize()
-        {
-            return this;
-        }
-
-        #endregion ** object model
+        public abstract object Evaluate();
 
         //---------------------------------------------------------------------------
 
@@ -254,17 +205,35 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         #endregion ** IComparable<Expression>
+    }
 
-        //---------------------------------------------------------------------------
+    /// <summary>
+    /// AST node that contains a number, text or a bool.
+    /// </summary>
+    internal class ScalarNode : Expression
+    {
+        private readonly object _value;
 
-        #region ** ExpressionBase
-
-        public override string LastParseItem
+        public ScalarNode(object value)
         {
-            get { return _token?.Value?.ToString() ?? "Unknown value"; }
+            _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        #endregion ** ExpressionBase
+        public override object Evaluate()
+        {
+            return _value;
+        }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
+
+    internal enum UnaryOp
+    {
+        Add,
+        Subtract,
+        Percentage,
+        SpillRange,
+        ImplicitIntersection
     }
 
     /// <summary>
@@ -272,40 +241,63 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class UnaryExpression : Expression
     {
-        // ** ctor
-        public UnaryExpression(Token tk, Expression expr) : base(tk)
+        public UnaryExpression(UnaryOp operation, Expression expr)
         {
+            Operation = operation;
             Expression = expr;
         }
+
+        public UnaryOp Operation { get; }
 
         public Expression Expression { get; private set; }
 
         // ** object model
         override public object Evaluate()
         {
-            switch (_token.ID)
+            switch (Operation)
             {
-                case TKID.ADD:
-                    return +(double)Expression;
+                case UnaryOp.Add:
+                    return Expression.Evaluate();
 
-                case TKID.SUB:
+                case UnaryOp.Subtract:
                     return -(double)Expression;
+
+                case UnaryOp.Percentage:
+                    return ((double)Expression) / 100.0;
+
+                case UnaryOp.SpillRange:
+                    throw new NotImplementedException("Evaluation of spill range operator is not implemented.");
+
+                case UnaryOp.ImplicitIntersection:
+                    throw new NotImplementedException("Evaluation of implicit intersection operator is not implemented.");
             }
             throw new ArgumentException("Bad expression.");
         }
 
-        public override Expression Optimize()
-        {
-            Expression = Expression.Optimize();
-            return Expression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
-                : this;
-        }
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
 
-        public override string LastParseItem
-        {
-            get { return Expression.LastParseItem; }
-        }
+    internal enum BinaryOp
+    {
+        // Text operators
+        Concat,
+        // Arithmetic
+        Add,
+        Sub,
+        Mult,
+        Div,
+        Exp,
+        // Comparison operators
+        Lt,
+        Lte,
+        Eq,
+        Neq,
+        Gte,
+        Gt,
+        // References operators
+        Range,
+        Union,
+        Intersection
     }
 
     /// <summary>
@@ -313,12 +305,27 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class BinaryExpression : Expression
     {
-        // ** ctor
-        public BinaryExpression(Token tk, Expression exprLeft, Expression exprRight) : base(tk)
+        private static readonly HashSet<BinaryOp> _comparisons = new HashSet<BinaryOp>
         {
+            BinaryOp.Lt,
+            BinaryOp.Lte,
+            BinaryOp.Eq,
+            BinaryOp.Neq,
+            BinaryOp.Gte,
+            BinaryOp.Gt
+        };
+
+        private readonly bool _isComparison;
+
+        public BinaryExpression(BinaryOp operation, Expression exprLeft, Expression exprRight)
+        {
+            _isComparison = _comparisons.Contains(operation);
+            Operation = operation;
             LeftExpression = exprLeft;
             RightExpression = exprRight;
         }
+
+        public BinaryOp Operation { get; }
 
         public Expression LeftExpression { get; private set; }
         public Expression RightExpression { get; private set; }
@@ -327,54 +334,42 @@ namespace ClosedXML.Excel.CalcEngine
         override public object Evaluate()
         {
             // handle comparisons
-            if (_token.Type == TKTYPE.COMPARE)
+            if (_isComparison)
             {
                 var cmp = LeftExpression.CompareTo(RightExpression);
-                switch (_token.ID)
+                switch (Operation)
                 {
-                    case TKID.GT: return cmp > 0;
-                    case TKID.LT: return cmp < 0;
-                    case TKID.GE: return cmp >= 0;
-                    case TKID.LE: return cmp <= 0;
-                    case TKID.EQ: return cmp == 0;
-                    case TKID.NE: return cmp != 0;
+                    case BinaryOp.Gt: return cmp > 0;
+                    case BinaryOp.Lt: return cmp < 0;
+                    case BinaryOp.Gte: return cmp >= 0;
+                    case BinaryOp.Lte: return cmp <= 0;
+                    case BinaryOp.Eq: return cmp == 0;
+                    case BinaryOp.Neq: return cmp != 0;
                 }
             }
 
             // handle everything else
-            switch (_token.ID)
+            switch (Operation)
             {
-                case TKID.CONCAT:
+                case BinaryOp.Concat:
                     return (string)LeftExpression + (string)RightExpression;
 
-                case TKID.ADD:
+                case BinaryOp.Add:
                     return (double)LeftExpression + (double)RightExpression;
 
-                case TKID.SUB:
+                case BinaryOp.Sub:
                     return (double)LeftExpression - (double)RightExpression;
 
-                case TKID.MUL:
+                case BinaryOp.Mult:
                     return (double)LeftExpression * (double)RightExpression;
 
-                case TKID.DIV:
+                case BinaryOp.Div:
                     if (Math.Abs((double)RightExpression) < double.Epsilon)
                         throw new DivisionByZeroException();
 
                     return (double)LeftExpression / (double)RightExpression;
 
-                case TKID.DIVINT:
-                    if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
-
-                    return (double)(int)((double)LeftExpression / (double)RightExpression);
-
-                case TKID.MOD:
-                    if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
-
-                    return (double)(int)((double)LeftExpression % (double)RightExpression);
-
-                case TKID.POWER:
+                case BinaryOp.Exp:
                     var a = (double)LeftExpression;
                     var b = (double)RightExpression;
                     if (b == 0.0) return 1.0;
@@ -384,23 +379,18 @@ namespace ClosedXML.Excel.CalcEngine
                     if (b == 3.0) return a * a * a;
                     if (b == 4.0) return a * a * a * a;
                     return Math.Pow((double)LeftExpression, (double)RightExpression);
+                case BinaryOp.Range:
+                    throw new NotImplementedException("Evaluation of binary range operator is not implemented.");
+                case BinaryOp.Union:
+                    throw new NotImplementedException("Evaluation of range union operator is not implemented.");
+                case BinaryOp.Intersection:
+                    throw new NotImplementedException("Evaluation of range intersection operator is not implemented.");
             }
+
             throw new ArgumentException("Bad expression.");
         }
 
-        public override Expression Optimize()
-        {
-            LeftExpression = LeftExpression.Optimize();
-            RightExpression = RightExpression.Optimize();
-            return LeftExpression._token.Type == TKTYPE.LITERAL && RightExpression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
-                : this;
-        }
-
-        public override string LastParseItem
-        {
-            get { return RightExpression.LastParseItem; }
-        }
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
@@ -408,12 +398,12 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FunctionExpression : Expression
     {
-        // ** ctor
-        internal FunctionExpression()
+        public FunctionExpression(FunctionDefinition function, List<Expression> parms) : this(null, function, parms)
         { }
 
-        public FunctionExpression(FunctionDefinition function, List<Expression> parms)
+        public FunctionExpression(PrefixNode prefix, FunctionDefinition function, List<Expression> parms)
         {
+            Prefix = prefix;
             FunctionDefinition = function;
             Parameters = parms;
         }
@@ -424,58 +414,13 @@ namespace ClosedXML.Excel.CalcEngine
             return FunctionDefinition.Function(Parameters);
         }
 
+        public PrefixNode Prefix { get; }
+
         public FunctionDefinition FunctionDefinition { get; }
+
         public List<Expression> Parameters { get; }
 
-        public override Expression Optimize()
-        {
-            bool allLits = true;
-            if (Parameters != null)
-            {
-                for (int i = 0; i < Parameters.Count; i++)
-                {
-                    var p = Parameters[i].Optimize();
-                    Parameters[i] = p;
-                    if (p._token.Type != TKTYPE.LITERAL)
-                    {
-                        allLits = false;
-                    }
-                }
-            }
-            return allLits
-                ? new Expression(this.Evaluate())
-                : this;
-        }
-
-        public override string LastParseItem
-        {
-            get { return Parameters.Last().LastParseItem; }
-        }
-    }
-
-    /// <summary>
-    /// Simple variable reference.
-    /// </summary>
-    internal class VariableExpression : Expression
-    {
-        private readonly Dictionary<string, object> _dct;
-        private readonly string _name;
-
-        public VariableExpression(Dictionary<string, object> dct, string name)
-        {
-            _dct = dct;
-            _name = name;
-        }
-
-        public override object Evaluate()
-        {
-            return _dct[_name];
-        }
-
-        public override string LastParseItem
-        {
-            get { return _name; }
-        }
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
@@ -524,10 +469,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public override string LastParseItem
-        {
-            get { return Value.ToString(); }
-        }
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
@@ -535,16 +477,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class EmptyValueExpression : Expression
     {
-        internal EmptyValueExpression()
-            // Ensures a token of type LITERAL, with value of null is created
-            : base(value: null) 
-        {
-        }
+        public override object Evaluate() => null;
 
-        public override string LastParseItem
-        {
-            get { return "<EMPTY VALUE>"; }
-        }
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     internal class ErrorExpression : Expression
@@ -560,19 +495,21 @@ namespace ClosedXML.Excel.CalcEngine
             NumberInvalid
         }
 
-        internal ErrorExpression(ExpressionErrorType eet)
-            : base(new Token(eet, TKID.ATOM, TKTYPE.ERROR))
-        { }
+        private readonly ExpressionErrorType _errorType;
+
+        internal ErrorExpression(ExpressionErrorType errorType)
+        {
+            _errorType = errorType;
+        }
 
         public override object Evaluate()
         {
-            return this._token.Value;
+            return _errorType;
         }
 
         public void ThrowApplicableException()
         {
-            var eet = (ExpressionErrorType)_token.Value;
-            switch (eet)
+            switch (_errorType)
             {
                 // TODO: include last token in exception message
                 case ExpressionErrorType.CellReference:
@@ -591,6 +528,148 @@ namespace ClosedXML.Excel.CalcEngine
                     throw new NumberException();
             }
         }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
+
+    /// <summary>
+    /// An placeholder node for AST nodes that are not yet supported in ClosedXML.
+    /// </summary>
+    internal class NotSupportedNode : Expression
+    {
+        private readonly string _featureText;
+
+        public NotSupportedNode(string featureText)
+        {
+            _featureText = featureText;
+        }
+
+        public override object Evaluate()
+        {
+            throw new NotImplementedException($"Evaluation of {_featureText} is not implemented.");
+        }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
+
+    /// <summary>
+    /// AST node for an reference to an external file in a formula.
+    /// </summary>
+    internal class FileNode : AstNode
+    {
+        /// <summary>
+        /// If the file is references indirectly, numeric identifier of a file.
+        /// </summary>
+        public int? Numeric { get; }
+
+        /// <summary>
+        /// If a file is referenced directly, a path to the file on the disc/UNC/web link, .
+        /// </summary>
+        public string Path { get; }
+
+        public FileNode(string path)
+        {
+            Path = path;
+        }
+
+        public FileNode(int numeric)
+        {
+            Numeric = numeric;
+        }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
+
+    /// <summary>
+    /// AST node for prefix of a reference in a formula. Prefix is a specification where to look for a reference.
+    /// <list type="bullet">
+    /// <item>Prefix specifies a <c>Sheet</c> - used for references in the local workbook.</item>
+    /// <item>Prefix specifies a <c>FirstSheet</c> and a <c>LastSheet</c> - 3D reference, references uses all sheets between first and last.</item>
+    /// <item>Prefix specifies a <c>File</c>, no sheet is specified - used for named ranges in external file.</item>
+    /// <item>Prefix specifies a <c>File</c> and a <c>Sheet</c> - references looks for its address in the sheet of the file.</item>
+    /// </list>
+    /// </summary>
+    internal class PrefixNode : AstNode
+    {
+        public PrefixNode(FileNode file, string sheet, string firstSheet, string lastSheet)
+        {
+            File = file;
+            Sheet = sheet;
+            FirstSheet = firstSheet;
+            LastSheet = lastSheet;
+        }
+
+        /// <summary>
+        /// If prefix references data from another file, can be empty.
+        /// </summary>
+        public FileNode File { get; }
+
+        /// <summary>
+        /// Name of the sheet, without ! or escaped quotes. Can be empty in some cases (e.g. reference to a named range in an another file).
+        /// </summary>
+        public string Sheet { get; }
+
+        /// <summary>
+        /// If the prefix is for 3D reference, name of first sheet. Empty otherwise.
+        /// </summary>
+        public string FirstSheet { get; }
+
+        /// <summary>
+        /// If the prefix is for 3D reference, name of the last sheet. Empty otherwise.
+        /// </summary>
+        public string LastSheet { get; }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
+
+    /// <summary>
+    /// AST node for a reference of an area in some sheet.
+    /// </summary>
+    internal class ReferenceNode : Expression
+    {
+        public ReferenceNode(PrefixNode prefix, ReferenceItemType type, string address)
+        {
+            Prefix = prefix;
+            Type = type;
+            Address = address;
+        }
+
+        /// <summary>
+        /// An optional prefix for reference item.
+        /// </summary>
+        public PrefixNode Prefix { get; }
+
+        public ReferenceItemType Type { get; }
+
+        /// <summary>
+        /// An address of a reference that corresponds to <see cref="Type"/>.
+        /// </summary>
+        public string Address { get; }
+
+        public override object Evaluate() => throw new NotImplementedException("Evaluation of reference is not implemented.");
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+    }
+
+    internal enum ReferenceItemType { Cell, NamedRange, VRange, HRange }
+
+    // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet suported and
+    // the SR grammar has changed in not-yet-released (after 1.5.2) version of XLParser
+    internal class StructuredReferenceNode : Expression
+    {
+        public StructuredReferenceNode(PrefixNode prefix)
+        {
+            Prefix = prefix;
+        }
+
+        /// <summary>
+        /// Can be empty if no prefix available.
+        /// </summary>
+        public PrefixNode Prefix { get; }
+
+        public override object Evaluate() => throw new NotImplementedException("Evaluation of structured references is not implemented.");
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
