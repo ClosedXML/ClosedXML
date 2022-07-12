@@ -169,19 +169,19 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateNumberNode(AstContext context, ParseTreeNode parseNode)
         {
             var value = parseNode.Token.Value is int intValue ? (double)intValue : (double)parseNode.Token.Value;
-            parseNode.AstNode = new Expression(value);
+            parseNode.AstNode = new ScalarNode(value);
         }
 
         private void CreateBoolNode(AstContext context, ParseTreeNode parseNode)
         {
             var valueString = parseNode.Token.ValueString;
             var boolValue = string.Equals(valueString, "TRUE", StringComparison.OrdinalIgnoreCase);
-            parseNode.AstNode = new Expression(boolValue);
+            parseNode.AstNode = new ScalarNode(boolValue);
         }
 
         private void CreateTextNode(AstContext context, ParseTreeNode parseNode)
         {
-            parseNode.AstNode = new Expression(parseNode.Token.ValueString);
+            parseNode.AstNode = new ScalarNode(parseNode.Token.ValueString);
         }
 
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)

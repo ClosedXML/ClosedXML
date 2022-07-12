@@ -70,7 +70,7 @@ namespace ClosedXML.Excel.CalcEngine
                 if (x is IEnumerable enumerable)
                 {
                     foreach (var i in enumerable)
-                        sb.Append((string)(new Expression(i)));
+                        sb.Append((string)(new ScalarNode(i)));
                 }
                 else
                     sb.Append((string)x);
@@ -287,8 +287,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object T(List<Expression> p)
         {
-            if (p[0]._token.Value?.GetType() == typeof(string))
-                return (string)p[0];
+            var value = p[0].Evaluate();
+            if (value is string)
+                return value;
             else
                 return "";
         }
@@ -462,7 +463,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static object Fixed(List<Expression> p)
         {
-            if (p[0]._token.Value.GetType() == typeof(string))
+            var numberToFormat = p[0].Evaluate();
+            if (numberToFormat is string)
                 throw new ApplicationException("Input type can't be string");
 
             Double value = p[0];

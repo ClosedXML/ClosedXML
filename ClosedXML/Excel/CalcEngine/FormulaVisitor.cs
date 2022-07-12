@@ -4,6 +4,8 @@
     {
         public TResult Visit(TContext context, Expression node);
 
+        public TResult Visit(TContext context, ScalarNode node);
+
         public TResult Visit(TContext context, UnaryExpression node);
 
         public TResult Visit(TContext context, BinaryExpression node);

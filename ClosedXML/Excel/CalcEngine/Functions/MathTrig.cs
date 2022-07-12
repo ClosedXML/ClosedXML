@@ -760,8 +760,8 @@ namespace ClosedXML.Excel.CalcEngine
         private static object Roman(List<Expression> p)
         {
             if (p.Count == 1
-                || (Boolean.TryParse(p[1]._token.Value.ToString(), out bool boolTemp) && boolTemp)
-                || (Int32.TryParse(p[1]._token.Value.ToString(), out int intTemp) && intTemp == 1))
+                || (Boolean.TryParse((string)p[1], out bool boolTemp) && boolTemp)
+                || (Int32.TryParse((string)p[1], out int intTemp) && intTemp == 1))
             {
                 return XLMath.ToRoman((int)p[0]);
             }

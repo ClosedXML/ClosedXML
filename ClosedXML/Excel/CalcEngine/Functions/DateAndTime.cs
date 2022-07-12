@@ -156,20 +156,16 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         private static object Days(List<Expression> p)
         {
-            Type type;
-
             int end_date;
-
-            type = p[0]._token.Value?.GetType();
-            if (type == typeof(string))
+            var endDateValue = p[0].Evaluate();
+            if (endDateValue is string)
                 end_date = (int)Datevalue(new List<Expression>() { p[0] });
             else
                 end_date = (int)p[0];
 
             int start_date;
-
-            type = p[1]._token.Value?.GetType();
-            if (type == typeof(string))
+            var startDateValue = p[1].Evaluate();
+            if (startDateValue is string)
                 start_date = (int)Datevalue(new List<Expression>() { p[1] });
             else
                 start_date = (int)p[1];

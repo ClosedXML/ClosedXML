@@ -47,6 +47,11 @@ namespace ClosedXML.Excel.CalcEngine
             return node;
         }
 
+        public virtual Expression Visit(TContext context, ScalarNode node)
+        {
+            return node;
+        }
+
         public virtual Expression Visit(TContext context, ErrorExpression node)
         {
             return node;

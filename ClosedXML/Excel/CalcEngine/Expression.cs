@@ -19,38 +19,15 @@ namespace ClosedXML.Excel.CalcEngine
     }
 
     /// <summary>
-    /// A node of AST that can be evaluated and produce a value.
+    /// A base class for all AST nodes that can be evaluated to produce a value.
     /// </summary>
-    internal class Expression : ExpressionBase, IComparable<Expression>
+    internal abstract class Expression : ExpressionBase, IComparable<Expression>
     {
-        internal Token _token;
 
-        public Expression()
-        {
-            _token = new Token(null, TKTYPE.IDENTIFIER);
-        }
 
-        internal Expression(object value)
-        {
-            _token = new Token(value, TKTYPE.LITERAL);
-        }
+        public abstract object Evaluate();
 
-        public virtual TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        //---------------------------------------------------------------------------
-
-        #region ** object model
-
-        public virtual object Evaluate()
-        {
-            if (_token.Type != TKTYPE.LITERAL)
-            {
-                throw new ArgumentException("Bad expression.");
-            }
-            return _token.Value;
-        }
-
-        #endregion ** object model
+        public abstract TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor);
 
         //---------------------------------------------------------------------------
 
@@ -232,6 +209,26 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         #endregion ** IComparable<Expression>
+    }
+
+    /// <summary>
+    /// AST node that contains a number, text or a bool.
+    /// </summary>
+    internal class ScalarNode : Expression
+    {
+        private readonly object _value;
+
+        public ScalarNode(object value)
+        {
+            _value = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        public override object Evaluate()
+        {
+            return _value;
+        }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
@@ -478,11 +475,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class EmptyValueExpression : Expression
     {
-        internal EmptyValueExpression()
-            // Ensures a token of type LITERAL, with value of null is created
-            : base(value: null)
-        {
-        }
+        public override object Evaluate() => null;
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -728,6 +721,8 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override object Evaluate() => throw new NotImplementedException("Evaluation of reference is not implemented.");
 
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+
         /// <summary>
         /// Reference AST node is significantly different from CST node. It takes Reference, ReferenceFunctionCall and ReferenceItem terms into a reference value
         /// that represent an area of a workbook (ReferenceNode, StructuredReferenceNode) and operations over these areas (BinaryOperation, UnaryOperation, FunctionExpression).
@@ -811,8 +806,6 @@ namespace ClosedXML.Excel.CalcEngine
 
             parseNode.AstNode = referenceNode;
         }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     internal enum ReferenceItemType { Cell, NamedRange, VRange, HRange }
@@ -833,12 +826,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         public override object Evaluate() => throw new NotImplementedException("Evaluation of structured references is not implemented.");
 
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+
         public static void CreateStructuredReferenceNode(AstContext context, ParseTreeNode parseNode)
         {
             parseNode.AstNode = new StructuredReferenceNode(null);
         }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
