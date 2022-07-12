@@ -112,7 +112,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 var range = _ws.Range(identifier);
                 if (range is null)
-                    throw new ArgumentOutOfRangeException("Not a range nor range.");
+                    throw new ArgumentOutOfRangeException("Not a range nor named range.");
 
                 return GetCellRangeReference(range);
             }

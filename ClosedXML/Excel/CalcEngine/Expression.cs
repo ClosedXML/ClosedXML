@@ -11,34 +11,20 @@ using XLParser;
 
 namespace ClosedXML.Excel.CalcEngine
 {
+    /// <summary>
+    /// Base class for all AST nodes.
+    /// </summary>
     internal abstract class ExpressionBase
     {
         public abstract string LastParseItem { get; }
     }
 
     /// <summary>
-    /// Base class that represents parsed expressions.
+    /// A node of AST that can be evaluated and produce a value.
     /// </summary>
-    /// <remarks>
-    /// For example:
-    /// <code>
-    /// Expression expr = scriptEngine.Parse(strExpression);
-    /// object val = expr.Evaluate();
-    /// </code>
-    /// </remarks>
     internal class Expression : ExpressionBase, IComparable<Expression>
     {
-        //---------------------------------------------------------------------------
-
-        #region ** fields
-
         internal Token _token;
-
-        #endregion ** fields
-
-        //---------------------------------------------------------------------------
-
-        #region ** ctors
 
         public Expression()
         {
@@ -50,12 +36,6 @@ namespace ClosedXML.Excel.CalcEngine
             _token = new Token(value, TKID.ATOM, TKTYPE.LITERAL);
         }
 
-        internal Expression(Token tk)
-        {
-            _token = tk;
-        }
-
-        #endregion ** ctors
         public virtual TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
 
         //---------------------------------------------------------------------------
@@ -276,23 +256,6 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class UnaryExpression : Expression
     {
-        public UnaryExpression(Token tk, Expression expr) : base(tk)
-        {
-            switch (tk.ID)
-            {
-                case TKID.ADD:
-                    Operation = "+";
-                    break;
-
-                case TKID.SUB:
-                    Operation = "-";
-                    break;
-                default:
-                    throw new ArgumentException($"Invalid unary operation {tk.ID}.");
-            }
-            Expression = expr;
-        }
-
         public UnaryExpression(string operation, Expression expr) : this(null, operation, expr)
         { }
 
@@ -384,14 +347,6 @@ namespace ClosedXML.Excel.CalcEngine
         };
 
         private readonly bool _isComparison;
-
-        public BinaryExpression(Token tk, Expression exprLeft, Expression exprRight) : base(tk)
-        {
-            _isComparison = _token.Type == TKTYPE.COMPARE;
-
-            LeftExpression = exprLeft;
-            RightExpression = exprRight;
-        }
 
         public BinaryExpression(BinaryOp operation, Expression exprLeft, Expression exprRight)
         {
@@ -624,19 +579,21 @@ namespace ClosedXML.Excel.CalcEngine
             NumberInvalid
         }
 
-        internal ErrorExpression(ExpressionErrorType eet)
-            : base(new Token(eet, TKID.ATOM, TKTYPE.ERROR))
-        { }
+        private readonly ExpressionErrorType _errorType;
+
+        internal ErrorExpression(ExpressionErrorType errorType)
+        {
+            _errorType = errorType;
+        }
 
         public override object Evaluate()
         {
-            return this._token.Value;
+            return _errorType;
         }
 
         public void ThrowApplicableException()
         {
-            var eet = (ExpressionErrorType)_token.Value;
-            switch (eet)
+            switch (_errorType)
             {
                 // TODO: include last token in exception message
                 case ExpressionErrorType.CellReference:
