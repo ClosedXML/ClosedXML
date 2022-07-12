@@ -306,6 +306,11 @@ namespace ClosedXML.Excel
         IXLSheetView SheetView { get; }
 
         /// <summary>
+        /// Gets an object to manage the ignored errors in the worksheet
+        /// </summary>
+        IXLIgnoredErrors IgnoredErrors { get; }
+
+        /// <summary>
         /// Gets the Excel table of the given index
         /// </summary>
         /// <param name="index">Index of the table to return</param>

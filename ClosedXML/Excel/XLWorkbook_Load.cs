@@ -293,6 +293,8 @@ namespace ClosedXML.Excel
                             LoadExtensions((WorksheetExtensionList)reader.LoadCurrentElement(), ws);
                         else if (reader.ElementType == typeof(LegacyDrawing))
                             ws.LegacyDrawingId = (reader.LoadCurrentElement() as LegacyDrawing).Id.Value;
+                        else if (reader.ElementType == typeof(IgnoredErrors))
+                            LoadIgnoredErrors((IgnoredErrors)reader.LoadCurrentElement(), ws);
                     }
                     reader.Close();
                 }
@@ -2707,6 +2709,18 @@ namespace ClosedXML.Excel
 
                 slg.Descendants<X14.Sparklines>().SelectMany(sls => sls.Descendants<X14.Sparkline>())
                     .ForEach(sl => xlSparklineGroup.Add(sl.ReferenceSequence?.Text, sl.Formula?.Text));
+            }
+        }
+
+        private static void LoadIgnoredErrors(IgnoredErrors ignoredErrors, XLWorksheet ws)
+        {
+            if (ignoredErrors == null)
+                return;
+
+            foreach (var ignoredError in ignoredErrors
+                .Descendants<IgnoredError>())
+            {
+                XLIgnoredErrorOpenXmlMapper.AddIgnoredErrorFromOpenXml(ws, ignoredError);
             }
         }
 
