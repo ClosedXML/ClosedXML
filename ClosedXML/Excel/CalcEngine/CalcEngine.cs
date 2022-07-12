@@ -17,13 +17,11 @@ namespace ClosedXML.Excel.CalcEngine
         protected ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
         private Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
-        private bool _optimize;                         // optimize expressions when parsing
 
         public CalcEngine()
         {
             _fnTbl = GetFunctionTable();
             _cache = new ExpressionCache(this);
-            _optimize = false;
             _parser = new FormulaParser(this, _fnTbl);
         }
 
@@ -34,14 +32,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
         public Expression Parse(string expression)
         {
-            var expr = _parser.ParseToAst(expression);
-
-            if (_optimize)
-            {
-                expr = expr.Optimize();
-            }
-
-            return expr;
+            return _parser.ParseToAst(expression);
         }
 
         /// <summary>

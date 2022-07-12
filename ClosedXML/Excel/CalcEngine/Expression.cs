@@ -50,11 +50,6 @@ namespace ClosedXML.Excel.CalcEngine
             return _token.Value;
         }
 
-        public virtual Expression Optimize()
-        {
-            return this;
-        }
-
         #endregion ** object model
 
         //---------------------------------------------------------------------------
@@ -280,14 +275,6 @@ namespace ClosedXML.Excel.CalcEngine
             throw new ArgumentException("Bad expression.");
         }
 
-        public override Expression Optimize()
-        {
-            Expression = Expression.Optimize();
-            return Expression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
-                : this;
-        }
-
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
@@ -404,15 +391,6 @@ namespace ClosedXML.Excel.CalcEngine
             throw new ArgumentException("Bad expression.");
         }
 
-        public override Expression Optimize()
-        {
-            LeftExpression = LeftExpression.Optimize();
-            RightExpression = RightExpression.Optimize();
-            return LeftExpression._token.Type == TKTYPE.LITERAL && RightExpression._token.Type == TKTYPE.LITERAL
-                ? new Expression(this.Evaluate())
-                : this;
-        }
-
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
@@ -442,26 +420,6 @@ namespace ClosedXML.Excel.CalcEngine
         public FunctionDefinition FunctionDefinition { get; }
 
         public List<Expression> Parameters { get; }
-
-        public override Expression Optimize()
-        {
-            bool allLits = true;
-            if (Parameters != null)
-            {
-                for (int i = 0; i < Parameters.Count; i++)
-                {
-                    var p = Parameters[i].Optimize();
-                    Parameters[i] = p;
-                    if (p._token.Type != TKTYPE.LITERAL)
-                    {
-                        allLits = false;
-                    }
-                }
-            }
-            return allLits
-                ? new Expression(this.Evaluate())
-                : this;
-        }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
