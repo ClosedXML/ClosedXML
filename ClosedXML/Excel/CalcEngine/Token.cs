@@ -9,16 +9,13 @@ namespace ClosedXML.Excel.CalcEngine
     internal class Token
     {
         // ** fields
-        public TKID ID;
-
         public TKTYPE Type;
         public object Value;
 
         // ** ctor
-        public Token(object value, TKID id, TKTYPE type)
+        public Token(object value, TKTYPE type)
         {
             Value = value;
-            ID = id;
             Type = type;
         }
     }
@@ -37,20 +34,5 @@ namespace ClosedXML.Excel.CalcEngine
         LITERAL,     // 123.32, "Hello", etc.
         IDENTIFIER,  // functions, external objects, bindings
         ERROR        // e.g. #REF!
-    }
-
-    /// <summary>
-    /// Token ID (used when evaluating expressions)
-    /// </summary>
-    internal enum TKID
-    {
-        GT, LT, GE, LE, EQ, NE, // COMPARE
-        ADD, SUB, // ADDSUB
-        MUL, DIV, DIVINT, MOD, // MULDIV
-        POWER, // POWER
-        DIV100, // MULTIV_UNARY
-        OPEN, CLOSE, END, COMMA, PERIOD, // GROUP
-        ATOM, // LITERAL, IDENTIFIER
-        CONCAT
     }
 }

@@ -28,12 +28,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         public Expression()
         {
-            _token = new Token(null, TKID.ATOM, TKTYPE.IDENTIFIER);
+            _token = new Token(null, TKTYPE.IDENTIFIER);
         }
 
         internal Expression(object value)
         {
-            _token = new Token(value, TKID.ATOM, TKTYPE.LITERAL);
+            _token = new Token(value, TKTYPE.LITERAL);
         }
 
         public virtual TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
