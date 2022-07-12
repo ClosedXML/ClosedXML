@@ -539,33 +539,6 @@ namespace ClosedXML.Excel.CalcEngine
     }
 
     /// <summary>
-    /// Simple variable reference.
-    /// </summary>
-    internal class VariableExpression : Expression
-    {
-        private readonly Dictionary<string, object> _dct;
-        private readonly string _name;
-
-        public VariableExpression(Dictionary<string, object> dct, string name)
-        {
-            _dct = dct;
-            _name = name;
-        }
-
-        public override object Evaluate()
-        {
-            return _dct[_name];
-        }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        public override string LastParseItem
-        {
-            get { return _name; }
-        }
-    }
-
-    /// <summary>
     /// Expression that represents an external object.
     /// </summary>
     internal class XObjectExpression : Expression, IEnumerable

@@ -36,7 +36,6 @@ namespace ClosedXML.Excel.CalcEngine
         private Token _nextToken;                       // next token being parsed. to be used by Peek
         private Dictionary<object, Token> _tkTbl;       // table with tokens (+, -, etc)
         private Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
-        private Dictionary<string, object> _vars;       // table with variables
         private object _dataContext;                    // object with properties
         private bool _optimize;                         // optimize expressions when parsing
         protected ExpressionCache _cache;               // cache with parsed expressions
@@ -54,7 +53,6 @@ namespace ClosedXML.Excel.CalcEngine
             CultureInfo = CultureInfo.InvariantCulture;
             _tkTbl = GetSymbolTable();
             _fnTbl = GetFunctionTable();
-            _vars = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             _cache = new ExpressionCache(this);
             _optimize = false;
             _parser = new FormulaParser(this, _fnTbl);
@@ -223,14 +221,6 @@ namespace ClosedXML.Excel.CalcEngine
         public Dictionary<string, FunctionDefinition> Functions
         {
             get { return _fnTbl; }
-        }
-
-        /// <summary>
-        /// Gets the dictionary that contains simple variables (not in the DataContext).
-        /// </summary>
-        public Dictionary<string, object> Variables
-        {
-            get { return _vars; }
         }
 
         /// <summary>
@@ -466,13 +456,6 @@ namespace ClosedXML.Excel.CalcEngine
                             Throw(string.Format("Too many parameters for function '{0}'.Expected a minimum of {1} and a maximum of {2}.", id, functionDefinition.ParmMin, functionDefinition.ParmMax));
                         }
                         x = new FunctionExpression(functionDefinition, p);
-                        break;
-                    }
-
-                    // look for simple variables (much faster than binding!)
-                    if (_vars.ContainsKey(id))
-                    {
-                        x = new VariableExpression(_vars, id);
                         break;
                     }
 

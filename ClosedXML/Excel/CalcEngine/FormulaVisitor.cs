@@ -10,8 +10,6 @@
 
         public TResult Visit(TContext context, FunctionExpression node);
 
-        public TResult Visit(TContext context, VariableExpression node);
-
         public TResult Visit(TContext context, XObjectExpression node);
 
         public TResult Visit(TContext context, EmptyValueExpression node);
