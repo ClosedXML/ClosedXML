@@ -15,7 +15,6 @@ namespace ClosedXML.Excel.CalcEngine
         public XLCalcEngine(XLWorkbook wb)
         {
             _wb = wb;
-            IdentifierChars = new char[] { '$', ':', '!' };
         }
 
         public XLCalcEngine(IXLWorksheet ws) : this(ws.Workbook)
