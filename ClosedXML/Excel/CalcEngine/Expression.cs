@@ -16,7 +16,6 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal abstract class ExpressionBase
     {
-        public abstract string LastParseItem { get; }
     }
 
     /// <summary>
@@ -238,17 +237,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         #endregion ** IComparable<Expression>
-
-        //---------------------------------------------------------------------------
-
-        #region ** ExpressionBase
-
-        public override string LastParseItem
-        {
-            get { return _token?.Value?.ToString() ?? "Unknown value"; }
-        }
-
-        #endregion ** ExpressionBase
     }
 
     /// <summary>
@@ -301,11 +289,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        public override string LastParseItem
-        {
-            get { return Expression.LastParseItem; }
-        }
     }
 
     internal enum BinaryOp
@@ -431,11 +414,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        public override string LastParseItem
-        {
-            get { return RightExpression.LastParseItem; }
-        }
     }
 
     /// <summary>
@@ -486,11 +464,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        public override string LastParseItem
-        {
-            get { return Parameters.Last().LastParseItem; }
-        }
     }
 
     /// <summary>
@@ -540,11 +513,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        public override string LastParseItem
-        {
-            get { return Value.ToString(); }
-        }
     }
 
     /// <summary>
@@ -559,11 +527,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        public override string LastParseItem
-        {
-            get { return "<EMPTY VALUE>"; }
-        }
     }
 
     internal class ErrorExpression : Expression
@@ -693,8 +656,6 @@ namespace ClosedXML.Excel.CalcEngine
             }
             parseNode.AstNode = fileNode;
         }
-
-        public override string LastParseItem => throw new NotImplementedException();
     }
 
     /// <summary>
@@ -781,8 +742,6 @@ namespace ClosedXML.Excel.CalcEngine
 
             static string RemoveExclamationMark(string sheetName) => sheetName.Substring(0, sheetName.Length - 1);
         }
-
-        public override string LastParseItem => throw new NotImplementedException();
     }
 
     /// <summary>
