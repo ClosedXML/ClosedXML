@@ -3,6 +3,7 @@ using Irony.Ast;
 using Irony.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using XLParser;
 using static ClosedXML.Excel.CalcEngine.ErrorExpression;
@@ -45,17 +46,16 @@ namespace ClosedXML.Excel.CalcEngine
             ["#NUM!"] = ExpressionErrorType.NumberInvalid
         };
 
+        private readonly Parser _parser;
         private readonly CalcEngine _engine;
         private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
         private readonly Dictionary<string, FunctionDefinition> _fnTbl; // table with constants and functions (pi, sin, etc)
-        private readonly Parser _parser;
 
         public FormulaParser(CalcEngine engine, Dictionary<string, FunctionDefinition> fnTbl)
         {
+            _parser = new Parser(GetGrammar());
             _engine = engine;
             _compatibilityVisitor = new CompatibilityFormulaVisitor(_engine);
-            var grammar = GetGrammar();
-            _parser = new Parser(grammar);
             _fnTbl = fnTbl;
         }
 
@@ -120,7 +120,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.HRange.SetFlag(TermFlags.NoAstNode);
             grammar.UDFunctionCall.AstConfig.NodeCreator = CreateUDFunctionNode;
             grammar.UDFName.SetFlag(TermFlags.NoAstNode);
-            grammar.StructuredReference.AstConfig.NodeCreator = StructuredReferenceNode.CreateStructuredReferenceNode;
+            grammar.StructuredReference.AstConfig.NodeCreator = CreateStructuredReferenceNode;
             grammar.StructuredReference.SetFlag(TermFlags.AstDelayChildren);
 
             grammar.ReferenceFunctionCall.AstConfig.NodeCreator = CreateReferenceFunctionCallNodeFactory();
@@ -135,7 +135,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.SheetQuotedToken.SetFlag(TermFlags.NoAstNode);
             grammar.MultipleSheetsToken.SetFlag(TermFlags.NoAstNode);
 
-            grammar.File.AstConfig.NodeCreator = FileNode.CreateFileNode;
+            grammar.File.AstConfig.NodeCreator = CreateFileNodeFactory();
             grammar.File.SetFlag(TermFlags.AstDelayChildren);
 
             grammar.LanguageFlags |= LanguageFlags.CreateAst;
@@ -402,6 +402,44 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
+        private AstNodeFactory CreateFileNodeFactory()
+        {
+            return new()
+            {
+                {
+                    For(GrammarNames.TokenFileNameNumeric),
+                    node =>
+                    {
+                        var numberInBrackets = node.ChildNodes[0].Token.Text;
+                        var fileNumericIndex = int.Parse(StripBrackets(numberInBrackets), NumberStyles.None);
+                        return new FileNode(fileNumericIndex);
+                    }
+                },
+                {
+                    For(GrammarNames.TokenFileNameEnclosedInBrackets),
+                    node => new FileNode(node.ChildNodes[0].Token.Text)
+                },
+                {
+                    For(GrammarNames.TokenFilePath, GrammarNames.TokenFileNameEnclosedInBrackets),
+                    node =>
+                    {
+                        var filePath = node.ChildNodes[0].Token.Text;
+                        var fileName = node.ChildNodes[1].Token.Text;
+                        return new FileNode(System.IO.Path.Combine(filePath, StripBrackets(fileName)));
+                    }
+                },
+                {
+                    For(GrammarNames.TokenFilePath, GrammarNames.TokenFileName),
+                    node =>
+                    {
+                        var filePath = node.ChildNodes[0].Token.Text;
+                        var fileName = node.ChildNodes[1].Token.Text;
+                        return new FileNode(System.IO.Path.Combine(filePath, StripBrackets(fileName)));
+                    }
+                }
+            };
+        }
+
         private void CreateUDFunctionNode(AstContext context, ParseTreeNode parseNode)
         {
             var functionName = parseNode.ChildNodes[0].ChildNodes.Single().Token.Text.WithoutLast(1);
@@ -466,7 +504,26 @@ namespace ClosedXML.Excel.CalcEngine
             parseNode.AstNode = new EmptyValueExpression();
         }
 
-        private static string RemoveExclamationMark(string sheetName) => sheetName.Substring(0, sheetName.Length - 1);
+        public void CreateStructuredReferenceNode(AstContext context, ParseTreeNode parseNode)
+        {
+            parseNode.AstNode = new StructuredReferenceNode(null);
+        }
+
+        private static string RemoveExclamationMark(string sheetName)
+        {
+            if (!sheetName.EndsWith("!"))
+                throw new ArgumentException($"'{sheetName}' doesn't end with !", nameof(sheetName));
+
+            return sheetName.Substring(0, sheetName.Length - 1);
+        }
+
+        private string StripBrackets(string fileName)
+        {
+            if (!fileName.StartsWith("[") || !fileName.EndsWith("]"))
+                throw new ArgumentException($"'{fileName}' isn't a text in []", nameof(fileName));
+
+            return fileName.Substring(1, fileName.Length - 2);
+        }
 
         private static NodePredicate[] For(params NodePredicate[] conditions) => conditions;
 

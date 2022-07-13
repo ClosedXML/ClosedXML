@@ -574,39 +574,6 @@ namespace ClosedXML.Excel.CalcEngine
             Numeric = numeric;
         }
 
-        public static void CreateFileNode(AstContext context, ParseTreeNode parseNode)
-        {
-            var filePath = string.Empty;
-            FileNode fileNode = null;
-            foreach (ParseTreeNode nt in parseNode.ChildNodes)
-            {
-                if (nt.Term.Name == GrammarNames.TokenFileNameNumeric)
-                {
-                    var numberInBrackets = nt.Token.ValueString;
-                    var fileNumericIndex = int.Parse(numberInBrackets.Substring(1, numberInBrackets.Length - 2), NumberStyles.None);
-                    fileNode = new FileNode(fileNumericIndex);
-                    break;
-                }
-
-                switch (nt.Term.Name)
-                {
-                    case GrammarNames.TokenFilePath:
-                        filePath = nt.Token.ValueString;
-                        break;
-                    case GrammarNames.TokenFileNameEnclosedInBrackets:
-                        fileNode = new FileNode(System.IO.Path.Combine(filePath, nt.Token.ValueString));
-                        break;
-                    case GrammarNames.TokenFileName:
-                        fileNode = new FileNode(System.IO.Path.Combine(filePath, nt.Token.ValueString));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException($"Unexpected term {nt.Term.Name}.");
-                }
-
-            }
-            parseNode.AstNode = fileNode;
-        }
-
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
@@ -694,11 +661,6 @@ namespace ClosedXML.Excel.CalcEngine
         public override object Evaluate() => throw new NotImplementedException("Evaluation of structured references is not implemented.");
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-
-        public static void CreateStructuredReferenceNode(AstContext context, ParseTreeNode parseNode)
-        {
-            parseNode.AstNode = new StructuredReferenceNode(null);
-        }
     }
 
     /// <summary>
