@@ -65,7 +65,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var tree = _parser.Parse(formula);
                 var root = (Expression)tree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
-                root = root.Accept(null, _compatibilityVisitor);
+                root = (Expression)root.Accept(null, _compatibilityVisitor);
                 return root;
             }
             catch (NullReferenceException ex) when (ex.StackTrace.StartsWith("   at Irony.Ast.AstBuilder.BuildAst(ParseTreeNode parseNode)"))

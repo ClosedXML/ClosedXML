@@ -5,17 +5,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using XLParser;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
-    /// Base class for all AST nodes.
+    /// Base class for all AST nodes. All AST nodes must be immutable.
     /// </summary>
     internal abstract class ExpressionBase
     {
+        /// <summary>
+        /// Method to accept a vistor (=call a method of visitor with correct type of the node).
+        /// </summary>
+        public abstract TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor);
     }
 
     /// <summary>
@@ -23,11 +26,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal abstract class Expression : ExpressionBase, IComparable<Expression>
     {
-
-
         public abstract object Evaluate();
-
-        public abstract TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor);
 
         //---------------------------------------------------------------------------
 
@@ -607,6 +606,8 @@ namespace ClosedXML.Excel.CalcEngine
             }
             parseNode.AstNode = fileNode;
         }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
@@ -641,6 +642,8 @@ namespace ClosedXML.Excel.CalcEngine
         /// If the prefix is for 3D reference, name of the last sheet. Empty otherwise.
         /// </summary>
         public string LastSheet { get; }
+
+        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>

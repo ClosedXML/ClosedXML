@@ -14,7 +14,7 @@
             _calcEngine = calcEngine;
         }
 
-        public override Expression Visit(object context, ReferenceNode referenceNode)
+        public override ExpressionBase Visit(object context, ReferenceNode referenceNode)
         {
             // Pattern: 'A1' or 'SomeNamedRange' or 'A:Z' or '1:14'
             if (referenceNode.Prefix is null)
@@ -31,7 +31,7 @@
             return base.Visit(context, referenceNode);
         }
 
-        public override Expression Visit(object context, BinaryExpression binaryNode)
+        public override ExpressionBase Visit(object context, BinaryExpression binaryNode)
         {
             if (binaryNode.Operation == BinaryOp.Range
                 && binaryNode.LeftExpression is ReferenceNode leftReference

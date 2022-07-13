@@ -5,71 +5,49 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// A default visitor that copies a formula.
     /// </summary>
-    internal class DefaultFormulaVisitor<TContext> : IFormulaVisitor<TContext, Expression>
+    internal class DefaultFormulaVisitor<TContext> : IFormulaVisitor<TContext, ExpressionBase>
     {
-        public virtual Expression Visit(TContext context, Expression node)
+        public virtual ExpressionBase Visit(TContext context, UnaryExpression node)
         {
-            return node;
-        }
-
-        public virtual Expression Visit(TContext context, UnaryExpression node)
-        {
-            var acceptedArgument = node.Expression.Accept(context, this);
+            var acceptedArgument = (Expression)node.Expression.Accept(context, this);
             return !ReferenceEquals(acceptedArgument, node.Expression)
                 ? new UnaryExpression(node.Operation, acceptedArgument)
                 : node;
         }
 
-        public virtual Expression Visit(TContext context, BinaryExpression node)
+        public virtual ExpressionBase Visit(TContext context, BinaryExpression node)
         {
-            var acceptedLeftArgument = node.LeftExpression.Accept(context, this);
-            var acceptedRightArgument = node.RightExpression.Accept(context, this);
+            var acceptedLeftArgument = (Expression)node.LeftExpression.Accept(context, this);
+            var acceptedRightArgument = (Expression)node.RightExpression.Accept(context, this);
             return !ReferenceEquals(acceptedLeftArgument, node.LeftExpression) || !ReferenceEquals(acceptedRightArgument, node.RightExpression)
                 ? new BinaryExpression(node.Operation, acceptedLeftArgument, acceptedRightArgument)
                 : node;
         }
 
-        public virtual Expression Visit(TContext context, FunctionExpression node)
+        public virtual ExpressionBase Visit(TContext context, FunctionExpression node)
         {
-            var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).ToList();
+            var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).Cast<Expression>().ToList();
             return node.Parameters.Zip(acceptedParameters, (param, acceptedParam) => !ReferenceEquals(param, acceptedParam)).Any()
                 ? new FunctionExpression(node.Prefix, node.FunctionDefinition, acceptedParameters)
                 : node;
         }
 
-        public virtual Expression Visit(TContext context, XObjectExpression node)
-        {
-            return node;
-        }
+        public virtual ExpressionBase Visit(TContext context, XObjectExpression node) => node;
 
-        public virtual Expression Visit(TContext context, EmptyValueExpression node)
-        {
-            return node;
-        }
+        public virtual ExpressionBase Visit(TContext context, EmptyValueExpression node) => node;
 
-        public virtual Expression Visit(TContext context, ScalarNode node)
-        {
-            return node;
-        }
+        public virtual ExpressionBase Visit(TContext context, ScalarNode node) => node;
 
-        public virtual Expression Visit(TContext context, ErrorExpression node)
-        {
-            return node;
-        }
+        public virtual ExpressionBase Visit(TContext context, ErrorExpression node) => node;
 
-        public virtual Expression Visit(TContext context, NotSupportedNode node)
-        {
-            return node;
-        }
+        public virtual ExpressionBase Visit(TContext context, NotSupportedNode node) => node;
 
-        public virtual Expression Visit(TContext context, ReferenceNode node)
-        {
-            return node;
-        }
+        public virtual ExpressionBase Visit(TContext context, ReferenceNode node) => node;
 
-        public virtual Expression Visit(TContext context, StructuredReferenceNode node)
-        {
-            return node;
-        }
+        public virtual ExpressionBase Visit(TContext context, StructuredReferenceNode node) => node;
+
+        public virtual ExpressionBase Visit(TContext context, PrefixNode node) => node;
+
+        public virtual ExpressionBase Visit(TContext context, FileNode node) => node;
     }
 }

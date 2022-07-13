@@ -2,8 +2,6 @@
 {
     internal interface IFormulaVisitor<TContext, TResult>
     {
-        public TResult Visit(TContext context, Expression node);
-
         public TResult Visit(TContext context, ScalarNode node);
 
         public TResult Visit(TContext context, UnaryExpression node);
@@ -23,5 +21,9 @@
         public TResult Visit(TContext context, ReferenceNode node);
 
         public TResult Visit(TContext context, StructuredReferenceNode node);
+
+        public TResult Visit(TContext context, PrefixNode node);
+
+        public TResult Visit(TContext context, FileNode node);
     }
 }
