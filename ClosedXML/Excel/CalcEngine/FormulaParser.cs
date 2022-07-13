@@ -80,109 +80,83 @@ namespace ClosedXML.Excel.CalcEngine
 
         private ExcelFormulaGrammar GetGrammar()
         {
-            // Keep AST configuration in same order as is the 'SomeTerm.Rule ='  in in ExcelFormulaGrammar for readability.
             var grammar = new ExcelFormulaGrammar();
             grammar.FormulaWithEq.AstConfig.NodeCreator = CreateCopyNode(1);
             grammar.Formula.AstConfig.NodeCreator = CreateCopyNode(0);
             grammar.ArrayFormula.AstConfig.NodeCreator = CreateNotImplementedNode("array formula");
+            grammar.ArrayFormula.SetFlag(TermFlags.AstDelayChildren);
 
             grammar.MultiRangeFormula.AstConfig.NodeCreator = CreateCopyNode(1);
             grammar.Union.AstConfig.NodeCreator = CreateUnionNode;
-            grammar.intersectop.AstConfig.NodeCreator = DontCreateNode;
+            grammar.intersectop.SetFlag(TermFlags.NoAstNode);
 
             grammar.Constant.AstConfig.NodeCreator = CreateCopyNode(0);
-            grammar.Number.AstConfig.NodeCreator = CreateCopyNode(0);
-            grammar.NumberToken.AstConfig.NodeCreator = CreateNumberNode;
+            grammar.Number.AstConfig.NodeCreator = CreateNumberNode;
+            grammar.Number.SetFlag(TermFlags.AstDelayChildren);
+            grammar.Bool.AstConfig.NodeCreator = CreateBoolNode;
+            grammar.Bool.SetFlag(TermFlags.AstDelayChildren);
+            grammar.Text.AstConfig.NodeCreator = CreateTextNode;
+            grammar.Text.SetFlag(TermFlags.AstDelayChildren);
             grammar.Error.AstConfig.NodeCreator = CreateErrorNode;
-            grammar.ErrorToken.AstConfig.NodeCreator = DontCreateNode;
-
-            // RefErrorToken is marked with NoAstToken
+            grammar.Error.SetFlag(TermFlags.AstDelayChildren);
             grammar.RefError.AstConfig.NodeCreator = CreateErrorNode;
-            grammar.RefErrorToken.AstConfig.NodeCreator = DontCreateNode;
-
+            grammar.RefError.SetFlag(TermFlags.AstDelayChildren);
             grammar.ConstantArray.AstConfig.NodeCreator = CreateNotImplementedNode("constant array");
-            grammar.ArrayColumns.AstConfig.NodeCreator = DontCreateNode;
-            grammar.ArrayRows.AstConfig.NodeCreator = DontCreateNode;
-            grammar.ArrayConstant.AstConfig.NodeCreator = DontCreateNode;
+            grammar.ConstantArray.SetFlag(TermFlags.AstDelayChildren);
 
             grammar.FunctionCall.AstConfig.NodeCreator = GetFunctionCallNodeFactory();
+            grammar.FunctionName.SetFlag(TermFlags.NoAstNode);
+            grammar.Arguments.AstConfig.NodeCreator = (_, _) => { }; // Irony shouldn't throw if no factory exist, but it does = use empty factory.
             grammar.Argument.AstConfig.NodeCreator = CreateCopyNode(0);
-            grammar.FunctionName.AstConfig.NodeCreator = DontCreateNode;
-            grammar.ExcelFunction.AstConfig.NodeCreator = DontCreateNode;
+            grammar.EmptyArgument.AstConfig.NodeCreator = CreateEmptyArgumentNode;
+            grammar.EmptyArgument.SetFlag(TermFlags.AstDelayChildren);
 
-            grammar.Arguments.AstConfig.NodeCreator = DontCreateNode;
-            grammar.EmptyArgument.AstConfig.NodeCreator = CreateCopyNode(0);
-            grammar.EmptyArgumentToken.AstConfig.NodeCreator = CreateEmptyArgumentNode;
-
-            grammar.Bool.AstConfig.NodeCreator = CreateCopyNode(0);
-            grammar.BoolToken.AstConfig.NodeCreator = CreateBoolNode;
-
-            grammar.Text.AstConfig.NodeCreator = CreateCopyNode(0);
-            grammar.TextToken.AstConfig.NodeCreator = CreateTextNode;
-
-            // TODO: this is placeholder
             grammar.Reference.AstConfig.NodeCreator = ReferenceNode.CreateReferenceNode;
-            grammar.Cell.AstConfig.NodeCreator = DontCreateNode;
-            grammar.CellToken.AstConfig.NodeCreator = DontCreateNode;
-            grammar.NamedRange.AstConfig.NodeCreator = DontCreateNode;
-            grammar.NameToken.AstConfig.NodeCreator = DontCreateNode;
-            grammar.NamedRangeCombinationToken.AstConfig.NodeCreator = DontCreateNode;
-            grammar.VRange.AstConfig.NodeCreator = DontCreateNode;
-            grammar.VRangeToken.AstConfig.NodeCreator = DontCreateNode;
-            grammar.HRange.AstConfig.NodeCreator = DontCreateNode;
-            grammar.HRangeToken.AstConfig.NodeCreator = DontCreateNode;
 
-            grammar.ReferenceFunctionCall.AstConfig.NodeCreator = CreateReferenceFunctionCallNodeFactory();
-            grammar.RefFunctionName.AstConfig.NodeCreator = DontCreateNode;
-            grammar.ExcelConditionalRefFunctionToken.AstConfig.NodeCreator = DontCreateNode;
-            grammar.ExcelRefFunctionToken.AstConfig.NodeCreator = DontCreateNode;
-
-            // Prefix is only used in Reference term together with ReferenceItem. It is taken care of in CreateReferenceFunctionCallNode.
-            grammar.Prefix.AstConfig.NodeCreator = PrefixNode.CreatePrefixNode;
-            grammar.SheetToken.AstConfig.NodeCreator = DontCreateNode;
-            grammar.SheetQuotedToken.AstConfig.NodeCreator = DontCreateNode;
-            grammar.MultipleSheetsToken.AstConfig.NodeCreator = DontCreateNode;
-
-            // DDE formula parsing in XLParser seems to be buggy. It can't parse few examples I have found.
-            grammar.DynamicDataExchange.AstConfig.NodeCreator = CreateNotImplementedNode("dynamic data exchange");
-            grammar.SingleQuotedStringToken.AstConfig.NodeCreator = DontCreateNode;
-
-            // File is only used in Reference and not directly, so don't use NotImplementedNode since it is never evaluated.
-            grammar.File.AstConfig.NodeCreator = FileNode.CreateFileNode;
-            grammar.File.SetFlag(TermFlags.AstDelayChildren);
-
+            // ReferenceItem term is transient - ReferenceNode will create AST nodes for Cell..HRange.
+            grammar.Cell.SetFlag(TermFlags.NoAstNode);
+            grammar.NamedRange.SetFlag(TermFlags.NoAstNode);
+            grammar.VRange.SetFlag(TermFlags.NoAstNode);
+            grammar.HRange.SetFlag(TermFlags.NoAstNode);
             grammar.UDFunctionCall.AstConfig.NodeCreator = CreateUDFunctionNode;
-            grammar.UDFName.AstConfig.NodeCreator = DontCreateNode;
-            grammar.UDFToken.AstConfig.NodeCreator = DontCreateNode;
-
+            grammar.UDFName.SetFlag(TermFlags.NoAstNode);
             grammar.StructuredReference.AstConfig.NodeCreator = StructuredReferenceNode.CreateStructuredReferenceNode;
             grammar.StructuredReference.SetFlag(TermFlags.AstDelayChildren);
 
-            // Irony has a few bugs. If it throws a NRE in BuildAst(parseNode), some node is missing a setting to create node for the term.
+            grammar.ReferenceFunctionCall.AstConfig.NodeCreator = CreateReferenceFunctionCallNodeFactory();
+            grammar.RefFunctionName.SetFlag(TermFlags.NoAstNode);
+
+            // DDE formula parsing in XLParser seems to be buggy. It can't parse any 'in-the-wild' examples I have found.
+            grammar.DynamicDataExchange.AstConfig.NodeCreator = CreateNotImplementedNode("dynamic data exchange");
+            grammar.DynamicDataExchange.SetFlag(TermFlags.AstDelayChildren);
+
+            grammar.Prefix.AstConfig.NodeCreator = PrefixNode.CreatePrefixNode;
+            grammar.SheetToken.SetFlag(TermFlags.NoAstNode);
+            grammar.SheetQuotedToken.SetFlag(TermFlags.NoAstNode);
+            grammar.MultipleSheetsToken.SetFlag(TermFlags.NoAstNode);
+
+            grammar.File.AstConfig.NodeCreator = FileNode.CreateFileNode;
+            grammar.File.SetFlag(TermFlags.AstDelayChildren);
+
             grammar.LanguageFlags |= LanguageFlags.CreateAst;
             return grammar;
         }
 
-        private void DontCreateNode(AstContext context, ParseTreeNode parseNode)
-        {
-            // Don't create an AST node for the parseNode. Its children will use their AstConfig to create their AST nodes.
-        }
-
         private void CreateNumberNode(AstContext context, ParseTreeNode parseNode)
         {
-            var value = parseNode.Token.Value is int intValue ? (double)intValue : (double)parseNode.Token.Value;
-            parseNode.AstNode = new ScalarNode(value);
+            var value = parseNode.ChildNodes.Single().Token.Value;
+            parseNode.AstNode = new ScalarNode(value is int intValue ? (double)intValue : (double)value);
         }
 
         private void CreateBoolNode(AstContext context, ParseTreeNode parseNode)
         {
-            var boolValue = string.Equals(parseNode.Token.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
+            var boolValue = string.Equals(parseNode.ChildNodes.Single().Token.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
             parseNode.AstNode = new ScalarNode(boolValue);
         }
 
         private void CreateTextNode(AstContext context, ParseTreeNode parseNode)
         {
-            parseNode.AstNode = new ScalarNode(parseNode.Token.ValueString);
+            parseNode.AstNode = new ScalarNode(parseNode.ChildNodes.Single().Token.ValueString);
         }
 
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)
@@ -215,7 +189,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // AST node created by this factory is mostly just copied upwards in the ReferenceNode factory.
-
         private AstNodeFactory CreateReferenceFunctionCallNodeFactory()
         {
             return new()
@@ -305,27 +278,18 @@ namespace ClosedXML.Excel.CalcEngine
             parseNode.AstNode = unionRangeNode;
         }
 
-        #region Old parser compatibility methods
-
         private void CreateEmptyArgumentNode(AstContext context, ParseTreeNode parseNode)
         {
             // TODO: This is useless for AST, but kept for compatibility reasons with old parser and some function that use it.
             parseNode.AstNode = new EmptyValueExpression();
         }
 
-        #endregion
-
-        private static bool HasMatchingChildren(ParseTreeNode node, params string[] termNames)
-        {
-            return node.ChildNodes.Select(c => c.Term.Name).SequenceEqual(termNames);
-        }
-
         private class AstNodeFactory : System.Collections.IEnumerable
         {
-            private readonly List<KeyValuePair<Condition[], Func<ParseTreeNode, ExpressionBase>>> _factories = new List<KeyValuePair<Condition[], Func<ParseTreeNode, ExpressionBase>>>();
+            private readonly List<KeyValuePair<NodePredicate[], Func<ParseTreeNode, ExpressionBase>>> _factories = new();
 
-            public void Add(Condition[] cstNodeConditions, Func<ParseTreeNode, ExpressionBase> astNodeFactory)
-                => _factories.Add(new KeyValuePair<Condition[], Func<ParseTreeNode, ExpressionBase>>(cstNodeConditions, astNodeFactory));
+            public void Add(NodePredicate[] cstNodeConditions, Func<ParseTreeNode, ExpressionBase> astNodeFactory)
+                => _factories.Add(new KeyValuePair<NodePredicate[], Func<ParseTreeNode, ExpressionBase>>(cstNodeConditions, astNodeFactory));
 
             public System.Collections.IEnumerator GetEnumerator() => throw new NotSupportedException();
 
@@ -349,17 +313,17 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        private class Condition
+        private class NodePredicate
         {
-            public Condition(Func<ParseTreeNode, bool> func) => Func = func;
+            public NodePredicate(Func<ParseTreeNode, bool> func) => Func = func;
 
             public Func<ParseTreeNode, bool> Func { get; }
 
-            public static implicit operator Condition(string termName) => new Condition(x => x.Term.Name == termName);
-            public static implicit operator Condition(string[] termNames) => new Condition(x => termNames.Contains(x.Term.Name));
-            public static implicit operator Condition(Type astNodeType) => new Condition(x => x.AstNode?.GetType() == astNodeType);
+            public static implicit operator NodePredicate(string termName) => new NodePredicate(x => x.Term.Name == termName);
+            public static implicit operator NodePredicate(string[] termNames) => new NodePredicate(x => termNames.Contains(x.Term.Name));
+            public static implicit operator NodePredicate(Type astNodeType) => new NodePredicate(x => x.AstNode?.GetType() == astNodeType);
         }
 
-        private static Condition[] For(params Condition[] conditions) => conditions;
+        private static NodePredicate[] For(params NodePredicate[] conditions) => conditions;
     }
 }
