@@ -614,7 +614,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class PrefixNode : ExpressionBase
     {
-        private PrefixNode(FileNode file, string sheet, string firstSheet, string lastSheet)
+        public PrefixNode(FileNode file, string sheet, string firstSheet, string lastSheet)
         {
             File = file;
             Sheet = sheet;
@@ -641,58 +641,6 @@ namespace ClosedXML.Excel.CalcEngine
         /// If the prefix is for 3D reference, name of the last sheet. Empty otherwise.
         /// </summary>
         public string LastSheet { get; }
-
-        public static void CreatePrefixNode(AstContext context, ParseTreeNode parseNode)
-        {
-            PrefixNode prefix = null;
-            FileNode fileNode = null;
-            foreach (var nt in parseNode.ChildNodes)
-            {
-                if (nt.AstNode is FileNode fn)
-                {
-                    fileNode = fn;
-                    continue;
-                }
-
-                switch (nt.Term.Name)
-                {
-                    case "'":
-                        // Quoted sheet name has a single quote ' as first term.
-                        continue;
-                    case GrammarNames.TokenSheet:
-                        var sheetName = RemoveExclamationMark(nt.Token.ValueString);
-                        prefix = new PrefixNode(fileNode, sheetName, null, null);
-                        break;
-
-                    case GrammarNames.TokenSheetQuoted:
-                        var quotedSheetName = RemoveExclamationMark("'" + nt.Token.ValueString);
-                        prefix = new PrefixNode(fileNode, quotedSheetName.UnescapeSheetName(), null, null);
-                        break;
-
-                    case GrammarNames.TokenRefError:
-                        // #REF! is a valid sheet name, Token.ValueString is lower case for some reason.
-                        prefix = new PrefixNode(fileNode, RemoveExclamationMark(nt.Token.Text), null, null);
-                        break;
-                    case GrammarNames.TokenMultipleSheets:
-                        var normalSheets = RemoveExclamationMark(nt.Token.Text).Split(':');
-                        prefix = new PrefixNode(fileNode, null, normalSheets[0], normalSheets[1]);
-                        break;
-                    case GrammarNames.TokenMultipleSheetsQuoted:
-                        var quotedSheets = RemoveExclamationMark(nt.Token.Text).Split(':');
-                        prefix = new PrefixNode(fileNode, null, quotedSheets[0], quotedSheets[1]);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException($"Unexpected term {nt.Term.Name}.");
-                }
-            }
-
-            if (prefix is null)
-                prefix = new PrefixNode(fileNode, null, null, null);
-
-            parseNode.AstNode = prefix;
-
-            static string RemoveExclamationMark(string sheetName) => sheetName.Substring(0, sheetName.Length - 1);
-        }
     }
 
     /// <summary>

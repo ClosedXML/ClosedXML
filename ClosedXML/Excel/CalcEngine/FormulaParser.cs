@@ -4,8 +4,8 @@ using Irony.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using XLParser;
+using static ClosedXML.Excel.CalcEngine.ErrorExpression;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -34,15 +34,15 @@ namespace ClosedXML.Excel.CalcEngine
             { "<=", BinaryOp.Lte },
         };
 
-        private static readonly IDictionary<string, ErrorExpression.ExpressionErrorType> ErrorMap = new Dictionary<string, ErrorExpression.ExpressionErrorType>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, ExpressionErrorType> ErrorMap = new(StringComparer.OrdinalIgnoreCase)
         {
-            ["#REF!"] = ErrorExpression.ExpressionErrorType.CellReference,
-            ["#VALUE!"] = ErrorExpression.ExpressionErrorType.CellValue,
-            ["#DIV/0!"] = ErrorExpression.ExpressionErrorType.DivisionByZero,
-            ["#NAME?"] = ErrorExpression.ExpressionErrorType.NameNotRecognized,
-            ["#N/A"] = ErrorExpression.ExpressionErrorType.NoValueAvailable,
-            ["#NULL!"] = ErrorExpression.ExpressionErrorType.NullValue,
-            ["#NUM!"] = ErrorExpression.ExpressionErrorType.NumberInvalid
+            ["#REF!"] = ExpressionErrorType.CellReference,
+            ["#VALUE!"] = ExpressionErrorType.CellValue,
+            ["#DIV/0!"] = ExpressionErrorType.DivisionByZero,
+            ["#NAME?"] = ExpressionErrorType.NameNotRecognized,
+            ["#N/A"] = ExpressionErrorType.NoValueAvailable,
+            ["#NULL!"] = ExpressionErrorType.NullValue,
+            ["#NUM!"] = ExpressionErrorType.NumberInvalid
         };
 
         private readonly CalcEngine _engine;
@@ -130,7 +130,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.DynamicDataExchange.AstConfig.NodeCreator = CreateNotImplementedNode("dynamic data exchange");
             grammar.DynamicDataExchange.SetFlag(TermFlags.AstDelayChildren);
 
-            grammar.Prefix.AstConfig.NodeCreator = PrefixNode.CreatePrefixNode;
+            grammar.Prefix.AstConfig.NodeCreator = GetPrefixNodeCreator();
             grammar.SheetToken.SetFlag(TermFlags.NoAstNode);
             grammar.SheetQuotedToken.SetFlag(TermFlags.NoAstNode);
             grammar.MultipleSheetsToken.SetFlag(TermFlags.NoAstNode);
@@ -212,13 +212,98 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     For(GrammarNames.Reference, "#"),
                     node => new UnaryExpression("#", (Expression)node.ChildNodes[0].AstNode)
-                },
-                {
-                    For(),
-                    node => null
-                },
+                }
             };
         }
+
+        private AstNodeFactory GetPrefixNodeCreator()
+            => new()
+            {
+                {
+                    For(GrammarNames.TokenSheet),
+                    node =>
+                    {
+                        var sheetName = RemoveExclamationMark(node.ChildNodes[0].Token.Text);
+                        return new PrefixNode(null, sheetName, null, null);
+                    }
+                },
+                {
+                    For("'", GrammarNames.TokenSheetQuoted),
+                    node =>
+                    {
+                        var quotedSheetName = RemoveExclamationMark("'" + node.ChildNodes[1].Token.Text);
+                        return new PrefixNode(null, quotedSheetName.UnescapeSheetName(), null, null);
+                    }
+                },
+                {
+                    For(typeof(FileNode), GrammarNames.TokenSheet),
+                    node =>
+                    {
+                        var fileNode = (FileNode)node.ChildNodes[0].AstNode;
+                        var sheetName = RemoveExclamationMark(node.ChildNodes[1].Token.Text);
+                        return new PrefixNode(fileNode, sheetName, null, null);
+                    }
+                },
+                {
+                    For("'", typeof(FileNode), GrammarNames.TokenSheetQuoted),
+                    node =>
+                    {
+                        var fileNode = (FileNode)node.ChildNodes[1].AstNode;
+                        var quotedSheetName = RemoveExclamationMark("'" + node.ChildNodes[2].Token.Text);
+                        return new PrefixNode(null, quotedSheetName.UnescapeSheetName(), null, null);
+                    }
+                },
+                {
+                    For(typeof(FileNode)),
+                    node =>
+                    {
+                        var fileNode = (FileNode)node.ChildNodes[0].AstNode;
+                        return new PrefixNode(fileNode, null, null, null);
+                    }
+                },
+                {
+                    For(GrammarNames.TokenMultipleSheets),
+                    node =>
+                    {
+                        var normalSheets = RemoveExclamationMark(node.ChildNodes[0].Token.Text).Split(':');
+                        return new PrefixNode(null, null, normalSheets[0], normalSheets[1]);
+                    }
+                },
+                {
+                    For("'", GrammarNames.TokenMultipleSheetsQuoted),
+                    node =>
+                    {
+                        var quotedSheets = RemoveExclamationMark(("'" + node.ChildNodes[1].Token.Text).UnescapeSheetName()).Split(':');
+                        return new PrefixNode(null, null, quotedSheets[0], quotedSheets[1]);
+                    }
+                },
+                {
+                    For(typeof(FileNode), GrammarNames.TokenMultipleSheets),
+                    node =>
+                    {
+                        var fileNode = (FileNode)node.ChildNodes[0].AstNode;
+                        var normalSheets = RemoveExclamationMark(node.ChildNodes[1].Token.Text).Split(':');
+                        return new PrefixNode(fileNode, null, normalSheets[0], normalSheets[1]);
+                    }
+                },
+                {
+                    For("'", typeof(FileNode), GrammarNames.TokenMultipleSheetsQuoted),
+                    node =>
+                    {
+                        var fileNode = (FileNode)node.ChildNodes[1].AstNode;
+                        var quotedSheets = RemoveExclamationMark(("'" + node.ChildNodes[2].Token.Text).UnescapeSheetName()).Split(':');
+                        return new PrefixNode(fileNode, null, quotedSheets[0], quotedSheets[1]);
+                    }
+                },
+                {
+                    For(GrammarNames.TokenRefError),
+                    node =>
+                    {
+                        // #REF! is a valid sheet name, Token.ValueString is lower case for some reason.
+                        return new PrefixNode(null, RemoveExclamationMark(node.ChildNodes[0].Token.Text), null, null);
+                    }
+                }
+            };
 
         private void CreateUDFunctionNode(AstContext context, ParseTreeNode parseNode)
         {
@@ -284,7 +369,11 @@ namespace ClosedXML.Excel.CalcEngine
             parseNode.AstNode = new EmptyValueExpression();
         }
 
-        private class AstNodeFactory : System.Collections.IEnumerable
+        private static string RemoveExclamationMark(string sheetName) => sheetName.Substring(0, sheetName.Length - 1);
+
+        private static NodePredicate[] For(params NodePredicate[] conditions) => conditions;
+
+        internal class AstNodeFactory : System.Collections.IEnumerable
         {
             private readonly List<KeyValuePair<NodePredicate[], Func<ParseTreeNode, ExpressionBase>>> _factories = new();
 
@@ -323,7 +412,5 @@ namespace ClosedXML.Excel.CalcEngine
             public static implicit operator NodePredicate(string[] termNames) => new NodePredicate(x => termNames.Contains(x.Term.Name));
             public static implicit operator NodePredicate(Type astNodeType) => new NodePredicate(x => x.AstNode?.GetType() == astNodeType);
         }
-
-        private static NodePredicate[] For(params NodePredicate[] conditions) => conditions;
     }
 }
