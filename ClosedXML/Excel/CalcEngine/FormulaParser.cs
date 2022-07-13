@@ -16,6 +16,24 @@ namespace ClosedXML.Excel.CalcEngine
     internal class FormulaParser
     {
         private const string defaultFunctionNameSpace = "_xlfn";
+
+        // Names for binary op terms don't have a const names in the grammar
+        private static readonly Dictionary<string, BinaryOp> BinaryOpMap = new()
+        {
+            { "^", BinaryOp.Exp },
+            { "*", BinaryOp.Mult },
+            { "/", BinaryOp.Div },
+            { "+", BinaryOp.Add },
+            { "-", BinaryOp.Sub },
+            { "&", BinaryOp.Concat},
+            { ">", BinaryOp.Gt},
+            { "=", BinaryOp.Eq },
+            { "<", BinaryOp.Lt },
+            { "<>", BinaryOp.Neq },
+            { ">=", BinaryOp.Gte },
+            { "<=", BinaryOp.Lte },
+        };
+
         private static readonly IDictionary<string, ErrorExpression.ExpressionErrorType> ErrorMap = new Dictionary<string, ErrorExpression.ExpressionErrorType>(StringComparer.OrdinalIgnoreCase)
         {
             ["#REF!"] = ErrorExpression.ExpressionErrorType.CellReference,
@@ -27,11 +45,9 @@ namespace ClosedXML.Excel.CalcEngine
             ["#NUM!"] = ErrorExpression.ExpressionErrorType.NumberInvalid
         };
 
-        // TODO: Remove later, we only need GetExternalObject method, extract it here.
         private readonly CalcEngine _engine;
         private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
         private readonly Dictionary<string, FunctionDefinition> _fnTbl; // table with constants and functions (pi, sin, etc)
-        private Dictionary<BnfTerm, BinaryOp> _binaryOpMap;
         private readonly Parser _parser;
 
         public FormulaParser(CalcEngine engine, Dictionary<string, FunctionDefinition> fnTbl)
@@ -39,20 +55,6 @@ namespace ClosedXML.Excel.CalcEngine
             _engine = engine;
             _compatibilityVisitor = new CompatibilityFormulaVisitor(_engine);
             var grammar = GetGrammar();
-            _binaryOpMap = new Dictionary<BnfTerm, BinaryOp> {
-                { grammar.expop, BinaryOp.Exp },
-                { grammar.mulop, BinaryOp.Mult },
-                { grammar.divop, BinaryOp.Div },
-                { grammar.plusop, BinaryOp.Add },
-                { grammar.minop, BinaryOp.Sub },
-                { grammar.concatop, BinaryOp.Concat},
-                { grammar.gtop, BinaryOp.Gt},
-                { grammar.eqop, BinaryOp.Eq },
-                { grammar.ltop, BinaryOp.Lt },
-                { grammar.neqop, BinaryOp.Neq },
-                { grammar.gteop, BinaryOp.Gte },
-                { grammar.lteop, BinaryOp.Lte },
-            };
             _parser = new Parser(grammar);
             _fnTbl = fnTbl;
         }
@@ -103,7 +105,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.ArrayRows.AstConfig.NodeCreator = DontCreateNode;
             grammar.ArrayConstant.AstConfig.NodeCreator = DontCreateNode;
 
-            grammar.FunctionCall.AstConfig.NodeCreator = CreateFunctionCallNode;
+            grammar.FunctionCall.AstConfig.NodeCreator = GetFunctionCallNodeFactory();
             grammar.Argument.AstConfig.NodeCreator = CreateCopyNode(0);
             grammar.FunctionName.AstConfig.NodeCreator = DontCreateNode;
             grammar.ExcelFunction.AstConfig.NodeCreator = DontCreateNode;
@@ -130,7 +132,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.HRange.AstConfig.NodeCreator = DontCreateNode;
             grammar.HRangeToken.AstConfig.NodeCreator = DontCreateNode;
 
-            grammar.ReferenceFunctionCall.AstConfig.NodeCreator = CreateReferenceFunctionCallNode;
+            grammar.ReferenceFunctionCall.AstConfig.NodeCreator = CreateReferenceFunctionCallNodeFactory();
             grammar.RefFunctionName.AstConfig.NodeCreator = DontCreateNode;
             grammar.ExcelConditionalRefFunctionToken.AstConfig.NodeCreator = DontCreateNode;
             grammar.ExcelRefFunctionToken.AstConfig.NodeCreator = DontCreateNode;
@@ -174,8 +176,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private void CreateBoolNode(AstContext context, ParseTreeNode parseNode)
         {
-            var valueString = parseNode.Token.ValueString;
-            var boolValue = string.Equals(valueString, "TRUE", StringComparison.OrdinalIgnoreCase);
+            var boolValue = string.Equals(parseNode.Token.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
             parseNode.AstNode = new ScalarNode(boolValue);
         }
 
@@ -186,83 +187,64 @@ namespace ClosedXML.Excel.CalcEngine
 
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)
         {
-            var errorType = ErrorMap[parseNode.ChildNodes.Single().Token.ValueString];
+            var errorType = ErrorMap[parseNode.ChildNodes.Single().Token.Text];
             parseNode.AstNode = new ErrorExpression(errorType);
         }
 
-        private void CreateFunctionCallNode(AstContext context, ParseTreeNode parseNode)
+        private AstNodeFactory GetFunctionCallNodeFactory()
         {
-            if (parseNode.ChildNodes.Count == 2)
+            return new()
             {
-                var firstTermName = parseNode.ChildNodes[0].Term.Name;
-                var secondTermName = parseNode.ChildNodes[1].Term.Name;
-                if ((firstTermName == "-" || firstTermName == "+" || firstTermName == "@") && secondTermName == GrammarNames.Formula)
                 {
-                    parseNode.AstNode = new UnaryExpression(firstTermName, (Expression)parseNode.ChildNodes[1].AstNode);
-                    return;
-                }
-                else if (firstTermName == GrammarNames.Formula && secondTermName == "%")
+                    For(new [] { "-", "+", "@" }, GrammarNames.Formula),
+                    node => new UnaryExpression(node.ChildNodes[0].Term.Name, (Expression)node.ChildNodes[1].AstNode)
+                },
                 {
-                    parseNode.AstNode = new UnaryExpression(secondTermName, (Expression)parseNode.ChildNodes[0].AstNode);
-                    return;
-                }
-                else if (firstTermName == GrammarNames.FunctionName
-                    && secondTermName == GrammarNames.Arguments)
+                    For(GrammarNames.Formula, "%"),
+                    node => new UnaryExpression("%", (Expression)node.ChildNodes[0].AstNode)
+                },
                 {
-                    parseNode.AstNode = CreateExcelFunctionCallExpression(parseNode.ChildNodes[0], parseNode.ChildNodes[1]);
-                    return;
-                }
-            }
-            else if (parseNode.ChildNodes.Count == 3)
-            {
-                var middleTerm = parseNode.ChildNodes[1].Term;
-
-                if (_binaryOpMap.TryGetValue(middleTerm, out var infixOp)
-                    && parseNode.ChildNodes[0].Term.Name == GrammarNames.Formula
-                    && parseNode.ChildNodes[2].Term.Name == GrammarNames.Formula)
+                    For(GrammarNames.FunctionName, GrammarNames.Arguments),
+                    node => CreateExcelFunctionCallExpression(node.ChildNodes[0], node.ChildNodes[1])
+                },
                 {
-                    parseNode.AstNode = new BinaryExpression(infixOp, (Expression)parseNode.ChildNodes[0].AstNode, (Expression)parseNode.ChildNodes[2].AstNode);
-                    return;
+                    For(GrammarNames.Formula, BinaryOpMap.Keys.ToArray(), GrammarNames.Formula),
+                    node => new BinaryExpression(BinaryOpMap[node.ChildNodes[1].Term.Name], (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
                 }
-            }
-
-            throw new ExpressionParseException(parseNode);
+            };
         }
 
         // AST node created by this factory is mostly just copied upwards in the ReferenceNode factory.
-        private void CreateReferenceFunctionCallNode(AstContext context, ParseTreeNode parseNode)
+
+        private AstNodeFactory CreateReferenceFunctionCallNodeFactory()
         {
-            if (HasMatchingChildren(parseNode, GrammarNames.Reference, ":", GrammarNames.Reference))
+            return new()
             {
-                parseNode.AstNode = new BinaryExpression(BinaryOp.Range, (Expression)parseNode.ChildNodes[0].AstNode, (Expression)parseNode.ChildNodes[2].AstNode);
-                return;
-            }
-
-            if (HasMatchingChildren(parseNode, GrammarNames.Reference, GrammarNames.TokenIntersect, GrammarNames.Reference))
-            {
-                parseNode.AstNode = new BinaryExpression(BinaryOp.Intersection, (Expression)parseNode.ChildNodes[0].AstNode, (Expression)parseNode.ChildNodes[2].AstNode);
-                return;
-            }
-
-            if (HasMatchingChildren(parseNode, GrammarNames.Union))
-            {
-                parseNode.AstNode = parseNode.ChildNodes.Single().AstNode;
-                return;
-            }
-
-            if (HasMatchingChildren(parseNode, GrammarNames.RefFunctionName, GrammarNames.Arguments))
-            {
-                parseNode.AstNode = CreateExcelFunctionCallExpression(parseNode.ChildNodes[0], parseNode.ChildNodes[1]);
-                return;
-            }
-
-            if (HasMatchingChildren(parseNode, GrammarNames.Reference, "#"))
-            {
-                parseNode.AstNode = new UnaryExpression("#", (Expression)parseNode.ChildNodes[0].AstNode);
-                return;
-            }
-
-            throw new NotSupportedException();
+                {
+                    For(GrammarNames.Reference, ":", GrammarNames.Reference),
+                    node => new BinaryExpression(BinaryOp.Range, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                },
+                {
+                    For(GrammarNames.Reference, GrammarNames.TokenIntersect, GrammarNames.Reference),
+                    node => new BinaryExpression(BinaryOp.Intersection, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                },
+                {
+                    For(GrammarNames.Union),
+                    node => (Expression)node.ChildNodes.Single().AstNode
+                },
+                {
+                    For(GrammarNames.RefFunctionName, GrammarNames.Arguments),
+                    node => CreateExcelFunctionCallExpression(node.ChildNodes[0], node.ChildNodes[1])
+                },
+                {
+                    For(GrammarNames.Reference, "#"),
+                    node => new UnaryExpression("#", (Expression)node.ChildNodes[0].AstNode)
+                },
+                {
+                    For(),
+                    node => null
+                },
+            };
         }
 
         private void CreateUDFunctionNode(AstContext context, ParseTreeNode parseNode)
@@ -337,5 +319,47 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return node.ChildNodes.Select(c => c.Term.Name).SequenceEqual(termNames);
         }
+
+        private class AstNodeFactory : System.Collections.IEnumerable
+        {
+            private readonly List<KeyValuePair<Condition[], Func<ParseTreeNode, ExpressionBase>>> _factories = new List<KeyValuePair<Condition[], Func<ParseTreeNode, ExpressionBase>>>();
+
+            public void Add(Condition[] cstNodeConditions, Func<ParseTreeNode, ExpressionBase> astNodeFactory)
+                => _factories.Add(new KeyValuePair<Condition[], Func<ParseTreeNode, ExpressionBase>>(cstNodeConditions, astNodeFactory));
+
+            public System.Collections.IEnumerator GetEnumerator() => throw new NotSupportedException();
+
+            public static implicit operator AstNodeCreator(AstNodeFactory factory) => factory.CreateNode;
+
+            private void CreateNode(AstContext context, ParseTreeNode parseNode)
+            {
+                foreach (var factory in _factories)
+                {
+                    var conditions = factory.Key;
+                    var conditionsSatisfied = parseNode.ChildNodes.Count == conditions.Length
+                        && parseNode.ChildNodes.Zip(conditions, (n, c) => c.Func(n)).All(x => x);
+                    if (conditionsSatisfied)
+                    {
+                        parseNode.AstNode = factory.Value(parseNode);
+                        return;
+                    }
+                }
+
+                throw new InvalidOperationException($"Failed to convert CST to AST for term {parseNode.Term.Name}.");
+            }
+        }
+
+        private class Condition
+        {
+            public Condition(Func<ParseTreeNode, bool> func) => Func = func;
+
+            public Func<ParseTreeNode, bool> Func { get; }
+
+            public static implicit operator Condition(string termName) => new Condition(x => x.Term.Name == termName);
+            public static implicit operator Condition(string[] termNames) => new Condition(x => termNames.Contains(x.Term.Name));
+            public static implicit operator Condition(Type astNodeType) => new Condition(x => x.AstNode?.GetType() == astNodeType);
+        }
+
+        private static Condition[] For(params Condition[] conditions) => conditions;
     }
 }
