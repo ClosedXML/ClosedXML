@@ -111,7 +111,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.EmptyArgument.AstConfig.NodeCreator = CreateEmptyArgumentNode;
             grammar.EmptyArgument.SetFlag(TermFlags.AstDelayChildren);
 
-            grammar.Reference.AstConfig.NodeCreator = ReferenceNode.CreateReferenceNode;
+            grammar.Reference.AstConfig.NodeCreator = CreateReferenceNodeFactory();
 
             // ReferenceItem term is transient - ReferenceNode will create AST nodes for Cell..HRange.
             grammar.Cell.SetFlag(TermFlags.NoAstNode);
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel.CalcEngine
             return new()
             {
                 {
-                    For(new [] { "-", "+", "@" }, GrammarNames.Formula),
+                    For(new[] { "-", "+", "@" }, GrammarNames.Formula),
                     node => new UnaryExpression(node.ChildNodes[0].Term.Name, (Expression)node.ChildNodes[1].AstNode)
                 },
                 {
@@ -184,6 +184,101 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     For(GrammarNames.Formula, BinaryOpMap.Keys.ToArray(), GrammarNames.Formula),
                     node => new BinaryExpression(BinaryOpMap[node.ChildNodes[1].Term.Name], (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                }
+            };
+        }
+
+        private static Dictionary<string, ReferenceItemType> RangeTermMap = new()
+        {
+            { GrammarNames.Cell, ReferenceItemType.Cell },
+            { GrammarNames.NamedRange, ReferenceItemType.NamedRange },
+            { GrammarNames.VerticalRange, ReferenceItemType.VRange },
+            { GrammarNames.HorizontalRange, ReferenceItemType.HRange }
+        };
+
+        /// <summary>
+        /// Reference AST node is significantly different from CST node. It takes Reference, ReferenceFunctionCall and ReferenceItem terms into a reference value
+        /// that represent an area of a workbook (ReferenceNode, StructuredReferenceNode) and operations over these areas (BinaryOperation, UnaryOperation, FunctionExpression).
+        /// </summary>
+        private AstNodeFactory CreateReferenceNodeFactory()
+        {
+            return new()
+            {
+                {
+                    // ReferenceItem is transient, so its rules are basically merged with Reference - Cell, NamedRange, VRange, HRange
+                    // Named range can be NameToken or NamedRangeCombinationToken. The second one is there only to detect names like A1A1.
+                    For(new[] { GrammarNames.Cell, GrammarNames.NamedRange, GrammarNames.VerticalRange, GrammarNames.HorizontalRange }),
+                    node => new ReferenceNode(null, RangeTermMap[node.ChildNodes[0].Term.Name], node.ChildNodes[0].ChildNodes.Single().Token.Text)
+                },
+                {
+                    // ReferenceItem:RefError. #REF! error is not grouped with other errors, but is a part of Reference term.
+                    For(typeof(ErrorExpression)),
+                    node => (ErrorExpression)node.ChildNodes[0].AstNode
+                },
+                {
+                    // ReferenceItem:UDFunctionCall
+                    For(GrammarNames.UDFunctionCall),
+                    node =>
+                    {
+                        var fn = (FunctionExpression)node.ChildNodes[0].AstNode;
+                        return new FunctionExpression(null, fn.FunctionDefinition, fn.Parameters);
+                    }
+                },
+                {
+                    // ReferenceItem:StructuredReference. TODO: Copy structured reference once implemented
+                    For(GrammarNames.StructuredReference),
+                    node => new StructuredReferenceNode(null)
+                },
+                {
+                    // ReferenceFunctionCall - Reference + colon + Reference
+                    // ReferenceFunctionCall - Reference + intersectop + Reference
+                    // ReferenceFunctionCall - Reference + Union + Reference
+                    For(typeof(BinaryExpression)),
+                    node => (BinaryExpression)node.ChildNodes[0].AstNode
+                },
+                {
+                    // ReferenceFunctionCall - RefFunctionName + Arguments + CloseParen
+                    For(typeof(FunctionExpression)),
+                    node => (FunctionExpression)node.ChildNodes[0].AstNode
+                },
+                {
+                    // ReferenceFunctionCall - Reference + hash
+                    For(typeof(UnaryExpression)),
+                    node => (UnaryExpression)node.ChildNodes[0].AstNode
+                },
+                {
+                    // OpenParen + Reference + CloseParen
+                    For(typeof(ReferenceNode)),
+                    node => (ReferenceNode)node.ChildNodes[0].AstNode
+                },
+                {
+                    // Prefix + ReferenceItem:Cell|NamedRange|VRange|HRange
+                    For(typeof(PrefixNode), new[] { GrammarNames.Cell, GrammarNames.NamedRange, GrammarNames.VerticalRange, GrammarNames.HorizontalRange }),
+                    node => new ReferenceNode((PrefixNode)node.ChildNodes[0].AstNode, RangeTermMap[node.ChildNodes[1].Term.Name], node.ChildNodes[1].ChildNodes.Single().Token.Text)
+                },
+                {
+                    // Prefix + ReferenceItem:RefError
+                    For(typeof(PrefixNode), typeof(ErrorExpression)),
+                    node =>
+                    {
+                        // I think =#REF!#REF! was evaluated to #REF! in Excel 2021.
+                        return (ErrorExpression)node.ChildNodes[1].AstNode;
+                    }
+                },
+                {
+                    // Prefix + ReferenceItem:UDFunctionCall
+                    For(typeof(PrefixNode), GrammarNames.UDFunctionCall),
+                    node =>
+                    {
+                        var prefix = (PrefixNode)node.ChildNodes[0].AstNode;
+                        var fn = (FunctionExpression)node.ChildNodes[1].AstNode;
+                        return new FunctionExpression(prefix, fn.FunctionDefinition, fn.Parameters);
+                    }
+                },
+                {
+                    // Prefix + ReferenceItem:StructuredReference. TODO: Copy structured reference once implemented
+                    For(typeof(PrefixNode), GrammarNames.StructuredReference),
+                    node => new StructuredReferenceNode(null)
                 }
             };
         }
@@ -217,7 +312,8 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         private AstNodeFactory GetPrefixNodeCreator()
-            => new()
+        {
+            return new()
             {
                 {
                     For(GrammarNames.TokenSheet),
@@ -304,6 +400,7 @@ namespace ClosedXML.Excel.CalcEngine
                     }
                 }
             };
+        }
 
         private void CreateUDFunctionNode(AstContext context, ParseTreeNode parseNode)
         {
@@ -373,7 +470,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static NodePredicate[] For(params NodePredicate[] conditions) => conditions;
 
-        internal class AstNodeFactory : System.Collections.IEnumerable
+        private class AstNodeFactory : System.Collections.IEnumerable
         {
             private readonly List<KeyValuePair<NodePredicate[], Func<ParseTreeNode, ExpressionBase>>> _factories = new();
 
@@ -386,6 +483,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             private void CreateNode(AstContext context, ParseTreeNode parseNode)
             {
+                // Sequential conditions are slower than binary switch, but it is readable.
                 foreach (var factory in _factories)
                 {
                     var conditions = factory.Key;
