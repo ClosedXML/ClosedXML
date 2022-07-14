@@ -47,34 +47,26 @@ namespace ClosedXML.Excel.CalcEngine
         };
 
         private readonly Parser _parser;
-        private readonly CalcEngine _engine;
-        private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
         private readonly Dictionary<string, FunctionDefinition> _fnTbl; // table with constants and functions (pi, sin, etc)
 
-        public FormulaParser(CalcEngine engine, Dictionary<string, FunctionDefinition> fnTbl)
+        public FormulaParser(Dictionary<string, FunctionDefinition> fnTbl)
         {
             _parser = new Parser(GetGrammar());
-            _engine = engine;
-            _compatibilityVisitor = new CompatibilityFormulaVisitor(_engine);
             _fnTbl = fnTbl;
         }
 
-        public Expression ParseToAst(string formula)
+        /// <summary>
+        /// Parse a tree into a CSt that also has AST.
+        /// </summary>
+        public ParseTree Parse(string formula)
         {
             try
             {
-                var tree = _parser.Parse(formula);
-                var root = (Expression)tree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
-                root = (Expression)root.Accept(null, _compatibilityVisitor);
-                return root;
+                return _parser.Parse(formula);
             }
             catch (NullReferenceException ex) when (ex.StackTrace.StartsWith("   at Irony.Ast.AstBuilder.BuildAst(ParseTreeNode parseNode)"))
             {
                 throw new InvalidOperationException($"Unable to parse formula '{formula}'. Some Irony grammar term is missing AST configuration.");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
         }
 

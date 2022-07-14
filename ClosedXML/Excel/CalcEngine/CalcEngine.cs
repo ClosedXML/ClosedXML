@@ -16,13 +16,15 @@ namespace ClosedXML.Excel.CalcEngine
     {
         protected ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
+        private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
         private Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
 
         public CalcEngine()
         {
             _fnTbl = GetFunctionTable();
             _cache = new ExpressionCache(this);
-            _parser = new FormulaParser(this, _fnTbl);
+            _parser = new FormulaParser(_fnTbl);
+            _compatibilityVisitor = new CompatibilityFormulaVisitor(this);
         }
 
         /// <summary>
@@ -32,7 +34,9 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
         public Expression Parse(string expression)
         {
-            return _parser.ParseToAst(expression);
+            var cstTree = _parser.Parse(expression);
+            var root = (Expression)cstTree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
+            return (Expression)root.Accept(null, _compatibilityVisitor);
         }
 
         /// <summary>
