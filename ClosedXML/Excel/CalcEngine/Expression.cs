@@ -1,19 +1,16 @@
 using ClosedXML.Excel.CalcEngine.Exceptions;
-using Irony.Ast;
-using Irony.Parsing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
-using XLParser;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
     /// Base class for all AST nodes. All AST nodes must be immutable.
     /// </summary>
-    internal abstract class ExpressionBase
+    internal abstract class AstNode
     {
         /// <summary>
         /// Method to accept a vistor (=call a method of visitor with correct type of the node).
@@ -24,7 +21,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// A base class for all AST nodes that can be evaluated to produce a value.
     /// </summary>
-    internal abstract class Expression : ExpressionBase, IComparable<Expression>
+    internal abstract class Expression : AstNode, IComparable<Expression>
     {
         public abstract object Evaluate();
 
@@ -552,7 +549,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// AST node for an reference to an external file in a formula.
     /// </summary>
-    internal class FileNode : ExpressionBase
+    internal class FileNode : AstNode
     {
         /// <summary>
         /// If the file is references indirectly, numeric identifier of a file.
@@ -580,7 +577,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// AST node for prefix of a reference in a formula. Prefix is a specification where to look for a reference.
     /// </summary>
-    internal class PrefixNode : ExpressionBase
+    internal class PrefixNode : AstNode
     {
         public PrefixNode(FileNode file, string sheet, string firstSheet, string lastSheet)
         {

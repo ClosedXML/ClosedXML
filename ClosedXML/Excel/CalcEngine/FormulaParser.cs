@@ -528,10 +528,10 @@ namespace ClosedXML.Excel.CalcEngine
 
         private class AstNodeFactory : System.Collections.IEnumerable
         {
-            private readonly List<KeyValuePair<NodePredicate[], Func<ParseTreeNode, ExpressionBase>>> _factories = new();
+            private readonly List<KeyValuePair<NodePredicate[], Func<ParseTreeNode, AstNode>>> _factories = new();
 
-            public void Add(NodePredicate[] cstNodeConditions, Func<ParseTreeNode, ExpressionBase> astNodeFactory)
-                => _factories.Add(new KeyValuePair<NodePredicate[], Func<ParseTreeNode, ExpressionBase>>(cstNodeConditions, astNodeFactory));
+            public void Add(NodePredicate[] cstNodeConditions, Func<ParseTreeNode, AstNode> astNodeFactory)
+                => _factories.Add(new KeyValuePair<NodePredicate[], Func<ParseTreeNode, AstNode>>(cstNodeConditions, astNodeFactory));
 
             public System.Collections.IEnumerator GetEnumerator() => throw new NotSupportedException();
 

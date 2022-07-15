@@ -5,9 +5,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// A default visitor that copies a formula.
     /// </summary>
-    internal class DefaultFormulaVisitor<TContext> : IFormulaVisitor<TContext, ExpressionBase>
+    internal class DefaultFormulaVisitor<TContext> : IFormulaVisitor<TContext, AstNode>
     {
-        public virtual ExpressionBase Visit(TContext context, UnaryExpression node)
+        public virtual AstNode Visit(TContext context, UnaryExpression node)
         {
             var acceptedArgument = (Expression)node.Expression.Accept(context, this);
             return !ReferenceEquals(acceptedArgument, node.Expression)
@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine
                 : node;
         }
 
-        public virtual ExpressionBase Visit(TContext context, BinaryExpression node)
+        public virtual AstNode Visit(TContext context, BinaryExpression node)
         {
             var acceptedLeftArgument = (Expression)node.LeftExpression.Accept(context, this);
             var acceptedRightArgument = (Expression)node.RightExpression.Accept(context, this);
@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
                 : node;
         }
 
-        public virtual ExpressionBase Visit(TContext context, FunctionExpression node)
+        public virtual AstNode Visit(TContext context, FunctionExpression node)
         {
             var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).Cast<Expression>().ToList();
             return node.Parameters.Zip(acceptedParameters, (param, acceptedParam) => !ReferenceEquals(param, acceptedParam)).Any()
@@ -32,17 +32,17 @@ namespace ClosedXML.Excel.CalcEngine
                 : node;
         }
 
-        public virtual ExpressionBase Visit(TContext context, XObjectExpression node) => node;
+        public virtual AstNode Visit(TContext context, XObjectExpression node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, EmptyValueExpression node) => node;
+        public virtual AstNode Visit(TContext context, EmptyValueExpression node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, ScalarNode node) => node;
+        public virtual AstNode Visit(TContext context, ScalarNode node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, ErrorExpression node) => node;
+        public virtual AstNode Visit(TContext context, ErrorExpression node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, NotSupportedNode node) => node;
+        public virtual AstNode Visit(TContext context, NotSupportedNode node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, ReferenceNode referenceNode)
+        public virtual AstNode Visit(TContext context, ReferenceNode referenceNode)
         {
             var acceptedPrefix = referenceNode.Prefix?.Accept(context, this);
             return !ReferenceEquals(acceptedPrefix, referenceNode.Prefix)
@@ -50,9 +50,9 @@ namespace ClosedXML.Excel.CalcEngine
                 : referenceNode;
         }
 
-        public virtual ExpressionBase Visit(TContext context, StructuredReferenceNode node) => node;
+        public virtual AstNode Visit(TContext context, StructuredReferenceNode node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, PrefixNode prefix)
+        public virtual AstNode Visit(TContext context, PrefixNode prefix)
         {
             var acceptedFile = prefix.File?.Accept(context, this);
             return !ReferenceEquals(acceptedFile, prefix.File)
@@ -60,6 +60,6 @@ namespace ClosedXML.Excel.CalcEngine
                 : prefix;
         }
 
-        public virtual ExpressionBase Visit(TContext context, FileNode node) => node;
+        public virtual AstNode Visit(TContext context, FileNode node) => node;
     }
 }

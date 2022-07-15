@@ -33,7 +33,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var linearizedCst = LinearizeCst(cst);
             CollectionAssert.AreEqual(expectedCst, linearizedCst);
 
-            var ast = (ExpressionBase)cst.Root.AstNode;
+            var ast = (AstNode)cst.Root.AstNode;
             var linearizedAst = LinearizeAst(ast);
             CollectionAssert.AreEqual(expectedAst, linearizedAst);
         }
@@ -43,10 +43,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Trees are serialized using standard tree linearization algorithm
             // non-null value - create a new child of current node and move to the child
             // null - go to parent of current node
-            // null at the end of traversal are omitted
+            // nulls at the end of traversal are omitted
 
-            // Keep order of test cases same as the order of tested rules ExcelFormulaGrammar. Complex ad hoc formulas should go to the end.
-            // A lot of test seem like duplicates, but keep them - goal is to have for each rule at least one test.
+            // Keep order of test cases same as the order of tested rules in the ExcelFormulaGrammar. Complex ad hoc formulas should go to the end.
+            // A lot of test seem like duplicates, but keep them - goal is to have at least one test for each rule .
             // During XLparser update, compare original grammar with new one and update these tests according to changes.
 
             // Test are in sync with XLParser 1.5.2
@@ -721,7 +721,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         private static readonly LinearizeVisitor _linearizeAstVisitor = new();
 
-        private static LinkedList<Type> LinearizeAst(ExpressionBase root)
+        private static LinkedList<Type> LinearizeAst(AstNode root)
         {
             var result = new LinkedList<Type>();
             root.Accept(result, _linearizeAstVisitor);
@@ -737,43 +737,43 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         private class LinearizeVisitor : DefaultFormulaVisitor<LinkedList<Type>>
         {
-            public override ExpressionBase Visit(LinkedList<Type> context, ScalarNode node)
+            public override AstNode Visit(LinkedList<Type> context, ScalarNode node)
                 => LinearizeNode(context, typeof(ScalarNode), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, UnaryExpression node)
+            public override AstNode Visit(LinkedList<Type> context, UnaryExpression node)
                 => LinearizeNode(context, typeof(UnaryExpression), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, BinaryExpression node)
+            public override AstNode Visit(LinkedList<Type> context, BinaryExpression node)
                 => LinearizeNode(context, typeof(BinaryExpression), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, FunctionExpression node)
+            public override AstNode Visit(LinkedList<Type> context, FunctionExpression node)
                 => LinearizeNode(context, typeof(FunctionExpression), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, XObjectExpression node)
+            public override AstNode Visit(LinkedList<Type> context, XObjectExpression node)
                 => LinearizeNode(context, typeof(XObjectExpression), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, EmptyValueExpression node)
+            public override AstNode Visit(LinkedList<Type> context, EmptyValueExpression node)
                 => LinearizeNode(context, typeof(EmptyValueExpression), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, ErrorExpression node)
+            public override AstNode Visit(LinkedList<Type> context, ErrorExpression node)
                 => LinearizeNode(context, typeof(ErrorExpression), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, NotSupportedNode node)
+            public override AstNode Visit(LinkedList<Type> context, NotSupportedNode node)
                 => LinearizeNode(context, typeof(NotSupportedNode), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, ReferenceNode node)
+            public override AstNode Visit(LinkedList<Type> context, ReferenceNode node)
                 => LinearizeNode(context, typeof(ReferenceNode), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, StructuredReferenceNode node)
+            public override AstNode Visit(LinkedList<Type> context, StructuredReferenceNode node)
                 => LinearizeNode(context, typeof(StructuredReferenceNode), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, PrefixNode node)
+            public override AstNode Visit(LinkedList<Type> context, PrefixNode node)
                 => LinearizeNode(context, typeof(PrefixNode), () => base.Visit(context, node));
 
-            public override ExpressionBase Visit(LinkedList<Type> context, FileNode node)
+            public override AstNode Visit(LinkedList<Type> context, FileNode node)
                 => LinearizeNode(context, typeof(FileNode), () => base.Visit(context, node));
 
-            private ExpressionBase LinearizeNode(LinkedList<Type> context, Type nodeType, Func<ExpressionBase> func)
+            private AstNode LinearizeNode(LinkedList<Type> context, Type nodeType, Func<AstNode> func)
             {
                 context.AddLast(nodeType);
                 var result = func();
