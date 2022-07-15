@@ -77,6 +77,8 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.Formula.AstConfig.NodeCreator = CreateCopyNode(0);
             grammar.ArrayFormula.AstConfig.NodeCreator = CreateNotImplementedNode("array formula");
             grammar.ArrayFormula.SetFlag(TermFlags.AstDelayChildren);
+            grammar.ReservedName.AstConfig.NodeCreator = CreateNotImplementedNode("reserved name");
+            grammar.ReservedName.SetFlag(TermFlags.AstDelayChildren);
 
             grammar.MultiRangeFormula.AstConfig.NodeCreator = CreateCopyNode(1);
             grammar.Union.AstConfig.NodeCreator = CreateUnionNode;
@@ -126,6 +128,7 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.SheetToken.SetFlag(TermFlags.NoAstNode);
             grammar.SheetQuotedToken.SetFlag(TermFlags.NoAstNode);
             grammar.MultipleSheetsToken.SetFlag(TermFlags.NoAstNode);
+            grammar.MultipleSheetsQuotedToken.SetFlag(TermFlags.NoAstNode);
 
             grammar.File.AstConfig.NodeCreator = CreateFileNodeFactory();
             grammar.File.SetFlag(TermFlags.AstDelayChildren);
@@ -271,6 +274,10 @@ namespace ClosedXML.Excel.CalcEngine
                     // Prefix + ReferenceItem:StructuredReference. TODO: Copy structured reference once implemented
                     For(typeof(PrefixNode), GrammarNames.StructuredReference),
                     node => new StructuredReferenceNode(null)
+                },
+                {
+                    For(GrammarNames.DynamicDataExchange),
+                    node => new NotSupportedNode("dynamic data exchange")
                 }
             };
         }
@@ -338,11 +345,11 @@ namespace ClosedXML.Excel.CalcEngine
                     {
                         var fileNode = (FileNode)node.ChildNodes[1].AstNode;
                         var quotedSheetName = RemoveExclamationMark("'" + node.ChildNodes[2].Token.Text);
-                        return new PrefixNode(null, quotedSheetName.UnescapeSheetName(), null, null);
+                        return new PrefixNode(fileNode, quotedSheetName.UnescapeSheetName(), null, null);
                     }
                 },
                 {
-                    For(typeof(FileNode)),
+                    For(typeof(FileNode), "!"),
                     node =>
                     {
                         var fileNode = (FileNode)node.ChildNodes[0].AstNode;
@@ -426,7 +433,7 @@ namespace ClosedXML.Excel.CalcEngine
                     {
                         var filePath = node.ChildNodes[0].Token.Text;
                         var fileName = node.ChildNodes[1].Token.Text;
-                        return new FileNode(System.IO.Path.Combine(filePath, StripBrackets(fileName)));
+                        return new FileNode(System.IO.Path.Combine(filePath, fileName));
                     }
                 }
             };

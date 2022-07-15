@@ -42,11 +42,23 @@ namespace ClosedXML.Excel.CalcEngine
 
         public virtual ExpressionBase Visit(TContext context, NotSupportedNode node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, ReferenceNode node) => node;
+        public virtual ExpressionBase Visit(TContext context, ReferenceNode referenceNode)
+        {
+            var acceptedPrefix = referenceNode.Prefix?.Accept(context, this);
+            return !ReferenceEquals(acceptedPrefix, referenceNode.Prefix)
+                ? new ReferenceNode((PrefixNode)acceptedPrefix, referenceNode.Type, referenceNode.Address)
+                : referenceNode;
+        }
 
         public virtual ExpressionBase Visit(TContext context, StructuredReferenceNode node) => node;
 
-        public virtual ExpressionBase Visit(TContext context, PrefixNode node) => node;
+        public virtual ExpressionBase Visit(TContext context, PrefixNode prefix)
+        {
+            var acceptedFile = prefix.File?.Accept(context, this);
+            return !ReferenceEquals(acceptedFile, prefix.File)
+                ? new PrefixNode((FileNode)acceptedFile, prefix.Sheet, prefix.FirstSheet, prefix.LastSheet)
+                : prefix;
+        }
 
         public virtual ExpressionBase Visit(TContext context, FileNode node) => node;
     }
