@@ -18,8 +18,15 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private const string defaultFunctionNameSpace = "_xlfn";
 
-        // Names for binary op terms don't have a const names in the grammar
-        private static readonly Dictionary<string, BinaryOp> BinaryOpMap = new()
+        // Names for unary/binary op terms don't have a const names in the grammar
+        private static readonly Dictionary<string, UnaryOp> PrefixOpMap = new(StringComparer.OrdinalIgnoreCase)
+        {
+            {  "+", UnaryOp.Add },
+            {  "-", UnaryOp.Subtract },
+            {  "@", UnaryOp.ImplicitIntersection }
+        };
+
+        private static readonly Dictionary<string, BinaryOp> BinaryOpMap = new(StringComparer.OrdinalIgnoreCase)
         {
             { "^", BinaryOp.Exp },
             { "*", BinaryOp.Mult },
@@ -165,12 +172,12 @@ namespace ClosedXML.Excel.CalcEngine
             return new()
             {
                 {
-                    For(new[] { "-", "+", "@" }, GrammarNames.Formula),
-                    node => new UnaryExpression(node.ChildNodes[0].Term.Name, (Expression)node.ChildNodes[1].AstNode)
+                    For(PrefixOpMap.Keys.ToArray(), GrammarNames.Formula),
+                    node => new UnaryExpression(PrefixOpMap[node.ChildNodes[0].Term.Name], (Expression)node.ChildNodes[1].AstNode)
                 },
                 {
                     For(GrammarNames.Formula, "%"),
-                    node => new UnaryExpression("%", (Expression)node.ChildNodes[0].AstNode)
+                    node => new UnaryExpression(UnaryOp.Percentage, (Expression)node.ChildNodes[0].AstNode)
                 },
                 {
                     For(GrammarNames.FunctionName, GrammarNames.Arguments),
@@ -305,7 +312,7 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     For(GrammarNames.Reference, "#"),
-                    node => new UnaryExpression("#", (Expression)node.ChildNodes[0].AstNode)
+                    node => new UnaryExpression(UnaryOp.SpillRange, (Expression)node.ChildNodes[0].AstNode)
                 }
             };
         }

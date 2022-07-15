@@ -227,24 +227,27 @@ namespace ClosedXML.Excel.CalcEngine
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
+    internal enum UnaryOp
+    {
+        Add,
+        Subtract,
+        Percentage,
+        SpillRange,
+        ImplicitIntersection
+    }
+
     /// <summary>
     /// Unary expression, e.g. +123
     /// </summary>
     internal class UnaryExpression : Expression
     {
-        public UnaryExpression(string operation, Expression expr) : this(null, operation, expr)
-        { }
-
-        public UnaryExpression(PrefixNode prefix, string operation, Expression expr)
+        public UnaryExpression(UnaryOp operation, Expression expr)
         {
-            Prefix = prefix;
             Operation = operation;
             Expression = expr;
         }
 
-        public PrefixNode Prefix { get; }
-
-        public string Operation { get; }
+        public UnaryOp Operation { get; }
 
         public Expression Expression { get; private set; }
 
@@ -253,17 +256,20 @@ namespace ClosedXML.Excel.CalcEngine
         {
             switch (Operation)
             {
-                case "+":
+                case UnaryOp.Add:
                     return Expression.Evaluate();
 
-                case "-":
+                case UnaryOp.Subtract:
                     return -(double)Expression;
 
-                case "%":
+                case UnaryOp.Percentage:
                     return ((double)Expression) / 100.0;
 
-                case "#":
+                case UnaryOp.SpillRange:
                     throw new NotImplementedException("Evaluation of spill range operator is not implemented.");
+
+                case UnaryOp.ImplicitIntersection:
+                    throw new NotImplementedException("Evaluation of implicit intersection operator is not implemented.");
             }
             throw new ArgumentException("Bad expression.");
         }
@@ -576,6 +582,12 @@ namespace ClosedXML.Excel.CalcEngine
 
     /// <summary>
     /// AST node for prefix of a reference in a formula. Prefix is a specification where to look for a reference.
+    /// <list type="bullet">
+    /// <item>Prefix specifies a <c>Sheet</c> - used for references in the local workbook.</item>
+    /// <item>Prefix specifies a <c>FirstSheet</c> and a <c>LastSheet</c> - 3D reference, references uses all sheets between first and last.</item>
+    /// <item>Prefix specifies a <c>File</c>, no sheet is specified - used for named ranges in external file.</item>
+    /// <item>Prefix specifies a <c>File</c> and a <c>Sheet</c> - references looks for its address in the sheet of the file.</item>
+    /// </list>
     /// </summary>
     internal class PrefixNode : AstNode
     {
