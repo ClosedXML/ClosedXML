@@ -19,22 +19,22 @@ namespace ClosedXML.Excel.CalcEngine
         private const string defaultFunctionNameSpace = "_xlfn";
 
         // Names for unary/binary op terms don't have a const names in the grammar
-        private static readonly Dictionary<string, UnaryOp> PrefixOpMap = new(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, UnaryOp> PrefixOpMap = new(StringComparer.Ordinal)
         {
             {  "+", UnaryOp.Add },
             {  "-", UnaryOp.Subtract },
             {  "@", UnaryOp.ImplicitIntersection }
         };
 
-        private static readonly Dictionary<string, BinaryOp> BinaryOpMap = new(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, BinaryOp> BinaryOpMap = new(StringComparer.Ordinal)
         {
             { "^", BinaryOp.Exp },
             { "*", BinaryOp.Mult },
             { "/", BinaryOp.Div },
             { "+", BinaryOp.Add },
             { "-", BinaryOp.Sub },
-            { "&", BinaryOp.Concat},
-            { ">", BinaryOp.Gt},
+            { "&", BinaryOp.Concat },
+            { ">", BinaryOp.Gt },
             { "=", BinaryOp.Eq },
             { "<", BinaryOp.Lt },
             { "<>", BinaryOp.Neq },
@@ -51,6 +51,14 @@ namespace ClosedXML.Excel.CalcEngine
             ["#N/A"] = ExpressionErrorType.NoValueAvailable,
             ["#NULL!"] = ExpressionErrorType.NullValue,
             ["#NUM!"] = ExpressionErrorType.NumberInvalid
+        };
+
+        private static readonly Dictionary<string, ReferenceItemType> RangeTermMap = new(StringComparer.Ordinal)
+        {
+            { GrammarNames.Cell, ReferenceItemType.Cell },
+            { GrammarNames.NamedRange, ReferenceItemType.NamedRange },
+            { GrammarNames.VerticalRange, ReferenceItemType.VRange },
+            { GrammarNames.HorizontalRange, ReferenceItemType.HRange }
         };
 
         private readonly Parser _parser;
@@ -189,14 +197,6 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             };
         }
-
-        private static Dictionary<string, ReferenceItemType> RangeTermMap = new()
-        {
-            { GrammarNames.Cell, ReferenceItemType.Cell },
-            { GrammarNames.NamedRange, ReferenceItemType.NamedRange },
-            { GrammarNames.VerticalRange, ReferenceItemType.VRange },
-            { GrammarNames.HorizontalRange, ReferenceItemType.HRange }
-        };
 
         /// <summary>
         /// Reference AST node is significantly different from CST node. It takes Reference, ReferenceFunctionCall and ReferenceItem terms into a reference value
@@ -481,7 +481,6 @@ namespace ClosedXML.Excel.CalcEngine
             return new FunctionExpression(functionDefinition, arguments);
         }
 
-
         private static AstNodeCreator CreateCopyNode(int childIndex)
         {
             return (context, parseNode) =>
@@ -569,9 +568,9 @@ namespace ClosedXML.Excel.CalcEngine
 
             public Func<ParseTreeNode, bool> Func { get; }
 
-            public static implicit operator NodePredicate(string termName) => new NodePredicate(x => x.Term.Name == termName);
-            public static implicit operator NodePredicate(string[] termNames) => new NodePredicate(x => termNames.Contains(x.Term.Name));
-            public static implicit operator NodePredicate(Type astNodeType) => new NodePredicate(x => x.AstNode?.GetType() == astNodeType);
+            public static implicit operator NodePredicate(string termName) => new(x => x.Term.Name == termName);
+            public static implicit operator NodePredicate(string[] termNames) => new(x => termNames.Contains(x.Term.Name));
+            public static implicit operator NodePredicate(Type astNodeType) => new(x => x.AstNode?.GetType() == astNodeType);
         }
     }
 }

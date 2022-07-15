@@ -1,6 +1,4 @@
-﻿using Irony.Parsing;
-using System;
-using System.Text;
+﻿using System;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -16,11 +14,6 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="message">The message that describes the error.</param>
         public ExpressionParseException(string message)
             : base(message)
-        {
-        }
-
-        internal ExpressionParseException(ParseTreeNode parseNode)
-            : base($"Parser error at node {parseNode.Term.Name}, location: {parseNode.Span.Location.Line}:{parseNode.Span.Location.Position}-{parseNode.Span.EndPosition}")
         {
         }
     }
