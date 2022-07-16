@@ -482,19 +482,19 @@ namespace ClosedXML.Excel.CalcEngine
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
+    internal enum ExpressionErrorType
+    {
+        CellReference,
+        CellValue,
+        DivisionByZero,
+        NameNotRecognized,
+        NoValueAvailable,
+        NullValue,
+        NumberInvalid
+    }
+
     internal class ErrorExpression : Expression
     {
-        internal enum ExpressionErrorType
-        {
-            CellReference,
-            CellValue,
-            DivisionByZero,
-            NameNotRecognized,
-            NoValueAvailable,
-            NullValue,
-            NumberInvalid
-        }
-
         private readonly ExpressionErrorType _errorType;
 
         internal ErrorExpression(ExpressionErrorType errorType)
