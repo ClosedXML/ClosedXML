@@ -246,7 +246,7 @@ namespace ClosedXML.Excel.CalcEngine
 
     internal class Reference1 : IEnumerable<AnyValue>
     {
-        public Reference1(params Area[] areas)
+        public Reference1(params XLRangeAddress[] areas)
         {
             if (!areas.Any())
                 throw new ArgumentException("Reference must have at least one area", nameof(areas));
@@ -255,8 +255,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         // Areas ordered by 
         //  * sheet - leftmost to rightmost
-        //  * top left corner, from highest to lowest, from leftmost to rightmost
-        internal IReadOnlyList<Area> Areas { get; }
+        //  * top left corner, from highest to lowest, from leftmost to rightmost.
+        // All normalized, all with worksheet.
+        internal IReadOnlyList<XLRangeAddress> Areas { get; }
 
         // If not a single area, error
         public OneOf<Array, Error1> ToArray()
@@ -312,8 +313,13 @@ namespace ClosedXML.Excel.CalcEngine
             Height = height;
         }
 
+        
+
         public XLWorksheet Worksheet { get; }
 
+        /// <summary>
+        /// 1 based
+        /// </summary>
         public int Column { get; }
 
         public int Row { get; }

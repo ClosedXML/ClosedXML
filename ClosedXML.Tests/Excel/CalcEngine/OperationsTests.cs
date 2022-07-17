@@ -2,6 +2,7 @@
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference1>;
 using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
@@ -95,5 +96,60 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var c = (ConstArray)resultArray.AsT4;
             Assert.AreEqual(b, c._data);*/
         }
+
+        [Test]
+        public void callFuncTest()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var calcContext = new CalcContext(ws, System.Globalization.CultureInfo.InvariantCulture);
+
+            var dict = new Dictionary<string, FormulaFunction>();
+            TestFuncRegistry.Register(dict);
+            var f = dict["TYPE"];
+            var result = f.CallFunction(calcContext, new Number1(5));
+            Assert.AreEqual(AnyValue.FromT1(new Number1(2)), result);
+        }
+
+
+        [Test]
+        public void CalcFunctionPrimitive()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            var calcContext = new CalcContext(ws, System.Globalization.CultureInfo.InvariantCulture);
+
+            var dict = new Dictionary<string, FormulaFunction>();
+            TestFuncRegistry.Register(dict);
+            var f = dict["SIN"];
+            var result = f.CallFunction(calcContext, new Number1(System.Math.PI / 2));
+            Assert.AreEqual(AnyValue.FromT1(new Number1(1)), result);
+        }
+
+        internal static class TestFuncRegistry
+        {
+            public static void Register(Dictionary<string, FormulaFunction> reg)
+            {
+                reg.Add("TYPE", new FormulaFunction(typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static), typeof(AnyValue)));
+                reg.Add("SIN", new FormulaFunction(typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static), typeof(Number1)));
+            }
+
+            private static AnyValue Type1(CalcContext ctx, AnyValue value)
+            {
+                return value.Match<Number1>(
+                    logical => 1,
+                    number => 2,
+                    text => 4,
+                    error => 16,
+                    array => 64,
+                    reference => 64);
+            }
+
+            private static AnyValue Sin(CalcContext ctx, Number1 value)
+            {
+                return new Number1(System.Math.Sin(value));
+            }
+        }
+
     }
 }

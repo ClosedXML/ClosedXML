@@ -1,12 +1,15 @@
-﻿using System.Globalization;
+﻿using ClosedXML.Excel.CalcEngine.Exceptions;
+using System.Globalization;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalcContext
     {
+        private readonly IXLWorksheet _worksheet;
+
         public CalcContext(IXLWorksheet worksheet, CultureInfo culture)
         {
-            Worksheet = worksheet;
+            _worksheet = worksheet;
             Culture = culture;
             Converter = new ValueConverter(culture);
         }
@@ -14,7 +17,12 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Worksheet of the cell the formula is calculating.
         /// </summary>
-        public IXLWorksheet Worksheet { get; }
+        public IXLWorksheet Worksheet => _worksheet ?? throw new MissingContextException();
+
+        /// <summary>
+        /// Address of the calculated formula.
+        /// </summary>
+        public IXLAddress FormulaAddress => throw new MissingContextException();
 
         public ValueConverter Converter { get; }
 

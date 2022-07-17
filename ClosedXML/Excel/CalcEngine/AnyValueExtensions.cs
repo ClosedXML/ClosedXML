@@ -8,6 +8,91 @@ using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
 {
+    /// <summary>
+    /// Reference operations.
+    /// </summary>
+    internal static class RefExt
+    {
+        public static AnyValue ImplicitIntersection(this AnyValue value, CalcContext context)
+        {
+            return value.Match(
+                logical => logical,
+                number => number,
+                text => text,
+                logical => logical,
+                array => array[0, 0].ToAnyValue(),
+                reference =>
+                {
+                    // TODO: Check how it actually works in Excel 2021, this is for 2016
+                    if (reference.Areas.Count != 1)
+                        return Error1.CellValue;
+
+                    var area = reference.Areas.Single();
+                    if (area.RowSpan == 1 && area.ColumnSpan == 1)
+                        throw new NotImplementedException($"Return a value from cell at {area.FirstAddress}.");
+
+                    var ws = context.FormulaAddress.Worksheet;
+                    var column = context.FormulaAddress.ColumnNumber;
+                    var row = context.FormulaAddress.RowNumber;
+
+                    if (area.ColumnSpan == 1 && area.FirstAddress.RowNumber <= row && row <= area.LastAddress.RowNumber)
+                        throw new NotImplementedException($"Return a value from cell at {area.FirstAddress.ColumnLetter}{row}.");
+
+                    if (area.RowSpan == 1 && area.FirstAddress.ColumnNumber <= column && column <= area.LastAddress.ColumnNumber)
+                        throw new NotImplementedException($"Return a value from cell at {XLHelper.GetColumnLetterFromNumber(column)}{area.FirstAddress.RowNumber}.");
+
+                    return Error1.CellValue;
+                });
+        }
+
+        public static AnyValue ReferenceRange(this AnyValue left, AnyValue right)
+        {
+            var leftConversionResult = ConvertToReference(left);
+            if (!leftConversionResult.TryPickT0(out var leftReference, out var leftError))
+                return leftError;
+
+            var rightConversionResult = ConvertToReference(right);
+            if (!rightConversionResult.TryPickT0(out var rightReference, out var rightError))
+                return rightError;
+
+            var sheets = leftReference.Areas.Select(a => a.Worksheet).Concat(rightReference.Areas.Select(a => a.Worksheet)).Distinct().ToList();
+            if (sheets.Count != 1)
+                return Error1.CellValue;
+
+            var minCol = XLHelper.MaxColumnNumber;
+            var maxCol = 1;
+            var minRow = XLHelper.MaxRowNumber;
+            var maxRow = 1;
+            foreach (var area in leftReference.Areas.Concat(rightReference.Areas))
+            {
+                // Areas are normalized, so I don't have to check opposite corners
+                minRow = Math.Min(minRow, area.FirstAddress.RowNumber);
+                maxRow = Math.Max(maxRow, area.LastAddress.RowNumber);
+                minCol = Math.Min(minCol, area.FirstAddress.ColumnNumber);
+                maxCol = Math.Max(maxCol, area.LastAddress.ColumnNumber);
+            }
+
+            var sheet = sheets.Single();
+            return new Reference1(new XLRangeAddress(new XLAddress(sheet, minRow, minCol, true, true), new XLAddress(sheet, maxRow, maxCol, true, true)));
+        }
+
+        public static AnyValue ReferenceUnion(this AnyValue left, AnyValue right)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static OneOf<Reference1, Error1> ConvertToReference(AnyValue left)
+        {
+            return left.Match<OneOf<Reference1, Error1>>(
+                logical => Error1.CellValue,
+                number => Error1.CellValue,
+                text => Error1.CellValue,
+                error => error,
+                array => Error1.CellValue,
+                reference => reference);
+        }
+    }
+
     internal static class AnyValueExtensions
     {
         #region Type conversion functions
@@ -53,8 +138,6 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue UnaryPercent(this AnyValue value, CalcContext context) => UnaryOperation(value, x => x / 100.0, context);
 
-        public static AnyValue UnaryImplicitIntersection(this AnyValue value, CalcContext context) => throw new NotImplementedException();
-
         private static AnyValue UnaryOperation(AnyValue value, Func<Number1, Number1> f, CalcContext context)
         {
             if (value.TryPickScalar(out var scalar, out var aggregate))
@@ -82,15 +165,17 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error1.CellValue;
 
             var area = reference.Areas.Single();
-            var width = area.Width;
-            var height = area.Height;
+            var width = area.ColumnSpan;
+            var height = area.RowSpan;
+            var startColumn = area.FirstAddress.ColumnNumber;
+            var startRow = area.FirstAddress.RowNumber;
             var data = new ScalarValue[width, height];
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
                 {
-                    var row = area.Row + y;
-                    var column = area.Column + x;
+                    var row = startRow + y;
+                    var column = startColumn + x;
                     var cellValue = GetCellValue(area, row, column);
                     data[y, x] = op(cellValue);
                 }
@@ -337,7 +422,7 @@ namespace ClosedXML.Excel.CalcEngine
                 leftError => leftError);
         }
 
-        private static ScalarValue GetCellValue(Area area, int row, int column)
+        private static ScalarValue GetCellValue(XLRangeAddress area, int row, int column)
         {
             var value = area.Worksheet.GetCellValue(row, column);
             if (value is bool boolValue)
