@@ -27,5 +27,6 @@
     <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
     <PackageReference Include="System.IO.Packaging" Version="4.7.0" />
     <PackageReference Include="XLParser" Version="1.5.2" />
+    <PackageReference Include="OneOf" Version="3.0.223" />
   </ItemGroup>
 </Project>
