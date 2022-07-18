@@ -22,7 +22,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var calcContext = new CalcContext(ws, System.Globalization.CultureInfo.InvariantCulture);
+            var calcContext = new CalcContext(System.Globalization.CultureInfo.InvariantCulture, (XLWorksheet)ws);
 
             // Logical is converted 
             AnyValue logical = new Logical(true);
@@ -55,7 +55,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var calcContext = new CalcContext(ws, System.Globalization.CultureInfo.InvariantCulture);
+            var calcContext = new CalcContext(System.Globalization.CultureInfo.InvariantCulture, (XLWorksheet)ws);
 
             // Logical is converted 
             AnyValue logical = new Logical(true);
@@ -102,7 +102,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var calcContext = new CalcContext(ws, System.Globalization.CultureInfo.InvariantCulture);
+            var calcContext = new CalcContext(System.Globalization.CultureInfo.InvariantCulture, (XLWorksheet)ws);
 
             var dict = new Dictionary<string, FormulaFunction>();
             TestFuncRegistry.Register(dict);
@@ -117,7 +117,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
-            var calcContext = new CalcContext(ws, System.Globalization.CultureInfo.InvariantCulture);
+            var calcContext = new CalcContext(System.Globalization.CultureInfo.InvariantCulture, (XLWorksheet)ws);
 
             var dict = new Dictionary<string, FormulaFunction>();
             TestFuncRegistry.Register(dict);
@@ -131,7 +131,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             public static void Register(Dictionary<string, FormulaFunction> reg)
             {
                 reg.Add("TYPE", new FormulaFunction(typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static), typeof(AnyValue)));
-                reg.Add("SIN", new FormulaFunction(typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static), typeof(Number1)));
+                reg.Add("SIN", new FormulaFunction(typeof(TestFuncRegistry).GetMethod(nameof(Sin), BindingFlags.NonPublic | BindingFlags.Static), typeof(Number1)));
             }
 
             private static AnyValue Type1(CalcContext ctx, AnyValue value)

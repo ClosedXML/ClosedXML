@@ -15,12 +15,12 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public static AnyValue ImplicitIntersection(this AnyValue value, CalcContext context)
         {
-            return value.Match(
+            return value.Match<AnyValue>(
                 logical => logical,
                 number => number,
                 text => text,
                 logical => logical,
-                array => array[0, 0].ToAnyValue(),
+                array => array,
                 reference =>
                 {
                     // TODO: Check how it actually works in Excel 2021, this is for 2016
@@ -29,17 +29,17 @@ namespace ClosedXML.Excel.CalcEngine
 
                     var area = reference.Areas.Single();
                     if (area.RowSpan == 1 && area.ColumnSpan == 1)
-                        throw new NotImplementedException($"Return a value from cell at {area.FirstAddress}.");
+                        return AnyValueExtensions.GetCellValue(area, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber, context).ToAnyValue();
 
                     var ws = context.FormulaAddress.Worksheet;
                     var column = context.FormulaAddress.ColumnNumber;
                     var row = context.FormulaAddress.RowNumber;
 
                     if (area.ColumnSpan == 1 && area.FirstAddress.RowNumber <= row && row <= area.LastAddress.RowNumber)
-                        throw new NotImplementedException($"Return a value from cell at {area.FirstAddress.ColumnLetter}{row}.");
+                        return AnyValueExtensions.GetCellValue(area, row, area.FirstAddress.ColumnNumber, context).ToAnyValue();
 
                     if (area.RowSpan == 1 && area.FirstAddress.ColumnNumber <= column && column <= area.LastAddress.ColumnNumber)
-                        throw new NotImplementedException($"Return a value from cell at {XLHelper.GetColumnLetterFromNumber(column)}{area.FirstAddress.RowNumber}.");
+                        return AnyValueExtensions.GetCellValue(area, area.FirstAddress.RowNumber, column, context).ToAnyValue();
 
                     return Error1.CellValue;
                 });
@@ -124,6 +124,13 @@ namespace ClosedXML.Excel.CalcEngine
                 error => AnyValue.FromT3(error));
         }
 
+        public static AnyValue ToAnyValue(this AggregateValue aggregate)
+        {
+            return aggregate.Match(
+                array => AnyValue.FromT4(array),
+                reference => AnyValue.FromT5(reference));
+        }
+
         #endregion
 
         #region Arithmetic unary operations
@@ -147,7 +154,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return aggregate.Match(
                 array => ApplyOnArray(array, arrayConst => UnaryArithmeticOp(arrayConst, f, context.Converter)),
-                reference => ApplyOnReference(reference, cellValue => UnaryArithmeticOp(cellValue, f, context.Converter)));
+                reference => ApplyOnReference(reference, cellValue => UnaryArithmeticOp(cellValue, f, context.Converter), context));
         }
 
         private static AnyValue ApplyOnArray(Array array, Func<ScalarValue, ScalarValue> op)
@@ -159,7 +166,7 @@ namespace ClosedXML.Excel.CalcEngine
             return AnyValue.FromT4(new ConstArray(data));
         }
 
-        private static AnyValue ApplyOnReference(Reference1 reference, Func<ScalarValue, ScalarValue> op)
+        private static AnyValue ApplyOnReference(Reference1 reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
         {
             if (reference.Areas.Count != 1)
                 return Error1.CellValue;
@@ -176,7 +183,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     var row = startRow + y;
                     var column = startColumn + x;
-                    var cellValue = GetCellValue(area, row, column);
+                    var cellValue = GetCellValue(area, row, column, context);
                     data[y, x] = op(cellValue);
                 }
             }
@@ -298,6 +305,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (isLeftScalar && isRightScalar)
                 return func(leftScalar, rightScalar).ToAnyValue();
 
+            // This is for dynamic arrays
             if (isLeftScalar)
             {
                 return rightAggregate.Match(
@@ -305,17 +313,31 @@ namespace ClosedXML.Excel.CalcEngine
                         new ScalarArray(leftScalar, array.Width, array.Height),
                         array,
                         func),
-                    reference => throw new NotImplementedException());
+                    rightReference =>
+                    {
+                        var referenceArrayResult = rightReference.ToArray(context);
+                        if (!referenceArrayResult.TryPickT0(out var rightRefArray, out var rightError))
+                            return rightError;
+
+                        return ApplyOnArray(new ScalarArray(leftScalar, rightRefArray.Width, rightRefArray.Height), rightRefArray, func);
+                    });
             }
 
             if (isRightScalar)
             {
                 return leftAggregate.Match(
-                    array => ApplyOnArray(
-                        array,
-                        new ScalarArray(rightScalar, array.Width, array.Height),
+                    leftArray => ApplyOnArray(
+                        leftArray,
+                        new ScalarArray(rightScalar, leftArray.Width, leftArray.Height),
                         func),
-                    reference => throw new NotImplementedException());
+                    leftReference =>
+                    {
+                        var referenceArrayResult = leftReference.ToArray(context);
+                        if (!referenceArrayResult.TryPickT0(out var leftRefArray, out var leftError))
+                            return leftError;
+
+                        return ApplyOnArray(leftRefArray, new ScalarArray(rightScalar, leftRefArray.Width, leftRefArray.Height), func);
+                    });
             }
 
             // Both are aggregates
@@ -333,6 +355,18 @@ namespace ClosedXML.Excel.CalcEngine
                         rightReference => throw new NotImplementedException()),
                 leftReference => throw new NotImplementedException());
         }
+
+        // If not a single area, error
+        public static OneOf<Array, Error1> ToArray(this Reference1 reference, CalcContext context)
+        {
+            if (reference.Areas.Count != 1)
+                throw new NotImplementedException();
+
+            var area = reference.Areas.Single();
+
+            return new ReferenceArray(area, context);
+        }
+
 
         private static AnyValue ApplyOnArray(Array leftArray, Array rightArray, BinaryFunc func)
         {
@@ -398,7 +432,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="culture">Culture to use for comparison.</param>
         /// <returns>
         ///     Return -1 (negative)  if left less than right
-        ///     Return 1 (positive) if right greater than left
+        ///     Return 1 (positive) if left greater than left
         ///     Return 0 if both operands are considered equal.
         /// </returns>
         private static OneOf<int, Error1> CompareValues(ScalarValue lhs, ScalarValue rhs, CultureInfo culture)
@@ -416,15 +450,16 @@ namespace ClosedXML.Excel.CalcEngine
                         rightError => rightError),
                 leftText => rhs.Match<OneOf<int, Error1>>(
                         rightLogical => 1,
-                        rightNumber => -1,
+                        rightNumber => 1,
                         rightText => string.Compare(leftText.Value, rightText.Value, culture, CompareOptions.IgnoreCase),
                         rightError => rightError),
                 leftError => leftError);
         }
 
-        private static ScalarValue GetCellValue(XLRangeAddress area, int row, int column)
+        public static ScalarValue GetCellValue(XLRangeAddress area, int row, int column, CalcContext ctx)
         {
-            var value = area.Worksheet.GetCellValue(row, column);
+            var worksheet = area.Worksheet ?? ctx.Worksheet;
+            var value = worksheet.GetCellValue(row, column);
             if (value is bool boolValue)
                 return ScalarValue.FromT0(new Logical(boolValue));
             if (value is double numberValue)

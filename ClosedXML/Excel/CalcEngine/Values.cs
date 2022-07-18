@@ -91,7 +91,14 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public static readonly Error1 NoValueAvailable = new(ExpressionErrorType.NoValueAvailable);
 
+        /// <summary>
+        /// #REF!
+        /// </summary>
+        public static readonly Error1 Ref = new(ExpressionErrorType.CellReference);
+
+
         public Error1(ExpressionErrorType type) => Type = type;
+
         public ExpressionErrorType Type { get; }
 
         public override string ToString() => Type.ToString();
@@ -244,6 +251,35 @@ namespace ClosedXML.Excel.CalcEngine
         }
     }
 
+    internal class ReferenceArray : Array
+    {
+        private readonly XLRangeAddress _area;
+        private readonly CalcContext _context;
+
+        public ReferenceArray(XLRangeAddress area, CalcContext context)
+        {
+            _area = area;
+            _context = context;
+        }
+
+        public override ScalarValue this[int y, int x]
+        {
+            get
+            {
+                return AnyValueExtensions.GetCellValue(_area, y + 1, x + 1, _context);
+            }
+        }
+
+        public override int Width => _area.ColumnSpan;
+
+        public override int Height => _area.RowSpan;
+
+        public override IEnumerator<ScalarValue> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class Reference1 : IEnumerable<AnyValue>
     {
         public Reference1(params XLRangeAddress[] areas)
@@ -258,13 +294,6 @@ namespace ClosedXML.Excel.CalcEngine
         //  * top left corner, from highest to lowest, from leftmost to rightmost.
         // All normalized, all with worksheet.
         internal IReadOnlyList<XLRangeAddress> Areas { get; }
-
-        // If not a single area, error
-        public OneOf<Array, Error1> ToArray()
-        {
-            // TODO: Instead of allocating 
-            throw new NotImplementedException();
-        }
 
         // Iterate over all nonblank cells of the reference
         public IEnumerator<AnyValue> GetEnumerator()
@@ -313,7 +342,7 @@ namespace ClosedXML.Excel.CalcEngine
             Height = height;
         }
 
-        
+
 
         public XLWorksheet Worksheet { get; }
 

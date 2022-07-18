@@ -212,6 +212,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class ScalarNode : Expression
     {
+        // TODO: Add some kind of indication of allowable values, so I don't have to guess. OneOf? NoBox?
         private readonly object _value;
 
         public ScalarNode(object value)
@@ -415,6 +416,8 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         public PrefixNode Prefix { get; }
+
+        public string Name { get; }
 
         public FunctionDefinition FunctionDefinition { get; }
 
