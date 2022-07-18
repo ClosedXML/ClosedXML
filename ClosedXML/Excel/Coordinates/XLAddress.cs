@@ -402,6 +402,11 @@ namespace ClosedXML.Excel
             return new XLAddress(RowNumber, ColumnNumber, FixedRow, FixedColumn);
         }
 
+        internal XLAddress WithWorksheet(XLWorksheet worksheet)
+        {
+            return new XLAddress(worksheet, RowNumber, ColumnNumber, FixedRow, FixedColumn);
+        }
+
         public String ToStringFixed(XLReferenceStyle referenceStyle)
         {
             return ToStringFixed(referenceStyle, false);

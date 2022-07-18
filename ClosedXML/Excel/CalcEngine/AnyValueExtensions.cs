@@ -15,34 +15,15 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public static AnyValue ImplicitIntersection(this AnyValue value, CalcContext context)
         {
-            return value.Match<AnyValue>(
+            return value.Match(
                 logical => logical,
                 number => number,
                 text => text,
                 logical => logical,
                 array => array,
-                reference =>
-                {
-                    // TODO: Check how it actually works in Excel 2021, this is for 2016
-                    if (reference.Areas.Count != 1)
-                        return Error1.CellValue;
-
-                    var area = reference.Areas.Single();
-                    if (area.RowSpan == 1 && area.ColumnSpan == 1)
-                        return AnyValueExtensions.GetCellValue(area, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber, context).ToAnyValue();
-
-                    var ws = context.FormulaAddress.Worksheet;
-                    var column = context.FormulaAddress.ColumnNumber;
-                    var row = context.FormulaAddress.RowNumber;
-
-                    if (area.ColumnSpan == 1 && area.FirstAddress.RowNumber <= row && row <= area.LastAddress.RowNumber)
-                        return AnyValueExtensions.GetCellValue(area, row, area.FirstAddress.ColumnNumber, context).ToAnyValue();
-
-                    if (area.RowSpan == 1 && area.FirstAddress.ColumnNumber <= column && column <= area.LastAddress.ColumnNumber)
-                        return AnyValueExtensions.GetCellValue(area, area.FirstAddress.RowNumber, column, context).ToAnyValue();
-
-                    return Error1.CellValue;
-                });
+                reference => reference.ImplicitIntersection(context).Match(
+                    scalar => scalar.ToAnyValue(),
+                    error => AnyValue.FromT3(error)));
         }
 
         public static AnyValue ReferenceRange(this AnyValue left, AnyValue right)

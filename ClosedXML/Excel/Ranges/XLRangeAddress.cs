@@ -224,6 +224,13 @@ namespace ClosedXML.Excel
                 LastAddress.WithoutWorksheet());
         }
 
+        internal IXLRangeAddress WithWorksheet(XLWorksheet worksheet)
+        {
+            return new XLRangeAddress(
+                FirstAddress.WithWorksheet(worksheet),
+                LastAddress.WithWorksheet(worksheet));
+        }
+
         internal bool Contains(in XLAddress address)
         {
             return FirstAddress.RowNumber <= address.RowNumber &&

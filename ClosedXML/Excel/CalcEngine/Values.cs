@@ -101,6 +101,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public static readonly Error1 Name = new(ExpressionErrorType.NameNotRecognized);
 
+        /// <summary>
+        /// #NULL!
+        /// </summary>
+        public static readonly Error1 Null = new(ExpressionErrorType.NullValue);
 
         public Error1(ExpressionErrorType type) => Type = type;
 
