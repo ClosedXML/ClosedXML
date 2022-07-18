@@ -478,7 +478,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (functionDefinition.ParmMax != -1 && arguments.Count > functionDefinition.ParmMax)
                 throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {functionDefinition.ParmMin} and a maximum of {functionDefinition.ParmMax}.");
 
-            return new FunctionExpression(functionDefinition, arguments);
+            return new FunctionExpression(functionDefinition, arguments, functionName);
         }
 
         private static AstNodeCreator CreateCopyNode(int childIndex)

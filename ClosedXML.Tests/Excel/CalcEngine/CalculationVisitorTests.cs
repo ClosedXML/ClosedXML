@@ -19,9 +19,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 { "RAND", new FunctionDefinition(0, 0, x => null) },
                 { "IF", new FunctionDefinition(0, 3, x => null) },
                 { "INDEX", new FunctionDefinition(1, 3, x => null) },
+                { "COS", new FunctionDefinition(1, 1, x => null) },
             };
 
-        [TestCase("=A1:A3+0")]
+        [TestCase("=COS(0)")]
         public void DevTest(string formula)
         {
             using var wb = new XLWorkbook();
@@ -34,7 +35,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ast = (AstNode)cst.Root.AstNode;
 
             var context = new CalcContext(CultureInfo.InvariantCulture, (XLWorksheet)ws, new XLAddress((XLWorksheet)ws, 2, 5, true, true));
-            var func = new Dictionary<string, FormulaFunction>();
+            var func = new FunctionRegistry();
             OperationsTests.TestFuncRegistry.Register(func);
 
             var visitor = new CalculationVisitor(func);
@@ -44,7 +45,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             {
                 result = result.AsT4[0, 0].ToAnyValue();
             }
-            Assert.AreEqual(AnyValue.FromT1(new Number1(10)), result);
+            Assert.AreEqual(AnyValue.FromT1(new Number1(1)), result);
         }
 
         [Test]

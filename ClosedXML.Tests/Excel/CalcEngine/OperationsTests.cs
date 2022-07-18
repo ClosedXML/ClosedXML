@@ -104,9 +104,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             var calcContext = new CalcContext(System.Globalization.CultureInfo.InvariantCulture, (XLWorksheet)ws);
 
-            var dict = new Dictionary<string, FormulaFunction>();
+            var dict = new FunctionRegistry();
             TestFuncRegistry.Register(dict);
-            var f = dict["TYPE"];
+            dict.TryGetFunc("TYPE", out var f);
             var result = f.CallFunction(calcContext, new Number1(5));
             Assert.AreEqual(AnyValue.FromT1(new Number1(2)), result);
         }
@@ -119,19 +119,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var ws = wb.AddWorksheet();
             var calcContext = new CalcContext(System.Globalization.CultureInfo.InvariantCulture, (XLWorksheet)ws);
 
-            var dict = new Dictionary<string, FormulaFunction>();
+            var dict = new FunctionRegistry();
             TestFuncRegistry.Register(dict);
-            var f = dict["SIN"];
+            dict.TryGetFunc("SIN", out var f);
             var result = f.CallFunction(calcContext, new Number1(System.Math.PI / 2));
             Assert.AreEqual(AnyValue.FromT1(new Number1(1)), result);
         }
 
         internal static class TestFuncRegistry
         {
-            public static void Register(Dictionary<string, FormulaFunction> reg)
+            public static void Register(FunctionRegistry registry)
             {
-                reg.Add("TYPE", new FormulaFunction(typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static), typeof(AnyValue)));
-                reg.Add("SIN", new FormulaFunction(typeof(TestFuncRegistry).GetMethod(nameof(Sin), BindingFlags.NonPublic | BindingFlags.Static), typeof(Number1)));
+                registry.RegisterFunction("TYPE", typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static));
+                registry.RegisterFunction("SIN", typeof(TestFuncRegistry).GetMethod(nameof(Sin), BindingFlags.NonPublic | BindingFlags.Static));
+                registry.RegisterFunction("COS", typeof(TestFuncRegistry).GetMethod(nameof(Cos), BindingFlags.NonPublic | BindingFlags.Static));
             }
 
             private static AnyValue Type1(CalcContext ctx, AnyValue value)
@@ -148,6 +149,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             private static AnyValue Sin(CalcContext ctx, Number1 value)
             {
                 return new Number1(System.Math.Sin(value));
+            }
+
+            private static AnyValue Cos(CalcContext ctx, Number1 value)
+            {
+                return new Number1(System.Math.Cos(value));
             }
         }
 

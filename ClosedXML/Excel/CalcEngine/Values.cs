@@ -96,6 +96,11 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public static readonly Error1 Ref = new(ExpressionErrorType.CellReference);
 
+        /// <summary>
+        /// #NAME?
+        /// </summary>
+        public static readonly Error1 Name = new(ExpressionErrorType.NameNotRecognized);
+
 
         public Error1(ExpressionErrorType type) => Type = type;
 

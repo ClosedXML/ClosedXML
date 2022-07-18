@@ -402,6 +402,12 @@ namespace ClosedXML.Excel.CalcEngine
         public FunctionExpression(FunctionDefinition function, List<Expression> parms) : this(null, function, parms)
         { }
 
+        // TODO: Improve parser, node should have store a name, not a delegate
+        public FunctionExpression(FunctionDefinition function, List<Expression> parms, string name) : this(null, function, parms)
+        {
+            Name = name;
+        }
+
         public FunctionExpression(PrefixNode prefix, FunctionDefinition function, List<Expression> parms)
         {
             Prefix = prefix;

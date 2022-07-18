@@ -34,10 +34,16 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly MethodInfo _method;
         private readonly Type[] _parameters;
 
-        public FormulaFunction(MethodInfo method, params Type[] parameters)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="parmMin">Minimum amount of parameters, useful only for variable number of parameters function.</param>
+        /// <param name="parmMax">Minimum amount of parameters, useful only for variable number of parameters function.</param>
+        public FormulaFunction(MethodInfo method, int parmMin, int parmMax)
         {
             _method = method;
-            _parameters = parameters;
+            _parameters = method.GetParameters().Select(p => p.ParameterType).ToArray();
         }
 
         public AnyValue CallFunction(CalcContext ctx, params AnyValue[] args)
@@ -46,7 +52,7 @@ namespace ClosedXML.Excel.CalcEngine
             convertedArgs[0] = ctx;
             for (var argIdx = 0; argIdx < args.Length; ++argIdx)
             {
-                var conversionResult = ConvertArgument<AnyValue>(args[argIdx]);
+                var conversionResult = ConvertArgument<Number1>(args[argIdx]);
                 if (!conversionResult.TryPickT0(out var convertedArg, out var error))
                 {
                     return error;
@@ -88,7 +94,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (paramType == argType)
             {
                 // No idea how to say - they are of same type so just use it as the target type without boxing.
-                return OneOf<TParamType, Error1>.FromT0((TParamType)(object)arg);
+                var castedArgValue = (TParamType)arg.Value;
+                return OneOf<TParamType, Error1>.FromT0(castedArgValue);
             }
 
             // Parameter can be simply the type of value or can be OneOf<T0, T1,...> with the types in generic arguments.

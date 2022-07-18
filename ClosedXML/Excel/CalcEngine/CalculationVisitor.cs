@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference1>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalculationVisitor : IFormulaVisitor<CalcContext, AnyValue>
     {
-        private readonly Dictionary<string, FormulaFunction> _functions;
+        private readonly FunctionRegistry _functions;
 
-        public CalculationVisitor(Dictionary<string, FormulaFunction> functions)
+        public CalculationVisitor(FunctionRegistry functions)
         {
             _functions = functions;
         }
@@ -84,8 +83,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, FunctionExpression node)
         {
-            _functions
-            throw new NotImplementedException();
+            if (!_functions.TryGetFunc(node.Name, out var function))
+                return Error1.Name;
+
+            var args = new AnyValue[node.Parameters.Count];
+            for (var i = 0; i < node.Parameters.Count; ++i)
+            {
+                args[i] = node.Parameters[i].Accept(context, this);
+            }
+
+            return function.CallFunction(context, args);
         }
 
         public AnyValue Visit(CalcContext context, XObjectExpression node)
