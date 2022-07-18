@@ -70,5 +70,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(1, result);
         }
 
+        [Test]
+        public void EvaluationCanCallFunctionWithReference()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = Math.PI;
+
+            var result = ws.Evaluate("=SIN(A1)");
+            Assert.That(result, Is.EqualTo(0.0).Within(1e-10));
+        }
     }
 }

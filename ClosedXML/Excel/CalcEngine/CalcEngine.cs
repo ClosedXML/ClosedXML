@@ -38,13 +38,14 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var cstTree = _parser.Parse(expression);
             var root = (Expression)cstTree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
-            return (Expression)root.Accept(null, _compatibilityVisitor);
+            return root;//(Expression)root.Accept(null, _compatibilityVisitor);
         }
 
         /// <summary>
         /// Evaluates an expression.
         /// </summary>
         /// <param name="expression">Expression to evaluate.</param>
+        /// <param name="ws">Worksheet where is formula being evaluated.</param>
         /// <returns>The value of the expression.</returns>
         /// <remarks>
         /// If you are going to evaluate the same expression several times,
@@ -52,13 +53,13 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        public object Evaluate(string expression)
+        public object Evaluate(string expression, XLWorksheet ws = null)
         {
             var x = _cache != null
                     ? _cache[expression]
                     : Parse(expression);
 
-            var ctx = new CalcContext(_culture, null);
+            var ctx = new CalcContext(_culture, ws);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
             var result = x.Accept(ctx, calculatingVisitor);
             if (ctx.UseImplicitIntersection && result.IsT4)
