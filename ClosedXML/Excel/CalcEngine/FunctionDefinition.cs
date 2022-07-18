@@ -10,11 +10,14 @@ namespace ClosedXML.Excel.CalcEngine
         public CalcEngineFunction Function;
 
         // ** ctor
-        public FunctionDefinition(int parmMin, int parmMax, CalcEngineFunction function)
+        public FunctionDefinition(string name, int parmMin, int parmMax, CalcEngineFunction function)
         {
+            Name = name;
             ParmMin = parmMin;
             ParmMax = parmMax;
             Function = function;
         }
+
+        public string Name { get; }
     }
 }

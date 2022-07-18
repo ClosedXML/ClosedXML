@@ -103,9 +103,9 @@ namespace ClosedXML.Excel.CalcEngine
 
                 // This creates a some of overhead, but all legacy functions will be migrated in near future
                 var adaptedArgs = new List<Expression>(args.Length);
-                for (var i = 0; i < args.Length; ++i)
+                foreach (var arg in args)
                 {
-                    adaptedArgs[i] = args[i].Match<Expression>(
+                    var adaptedArg = arg.Match<Expression>(
                         logical => new AdapterExpression(logical.Value),
                         number => new AdapterExpression(number.Value),
                         text => new AdapterExpression(text.Value),
@@ -119,6 +119,7 @@ namespace ClosedXML.Excel.CalcEngine
                             var area = range.Areas.Single();
                             return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area), context.CalcEngine));
                         });
+                    adaptedArgs.Add(adaptedArg);
                 }
                 try
                 {

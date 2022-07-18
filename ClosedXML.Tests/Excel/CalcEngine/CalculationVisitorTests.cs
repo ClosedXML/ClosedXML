@@ -62,5 +62,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var result = XLWorkbook.EvaluateExpr("=1+2");
             Assert.AreEqual(3, result);
         }
+
+        [Test]
+        public void EvaluationCanCallFunction()
+        {
+            var result = XLWorkbook.EvaluateExpr("=COS(0)");
+            Assert.AreEqual(1, result);
+        }
+
     }
 }

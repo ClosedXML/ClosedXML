@@ -456,7 +456,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            var udfFunction = new FunctionDefinition(-1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."));
+            var udfFunction = new FunctionDefinition(functionName , - 1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."));
             var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<Expression>().ToList();
             parseNode.AstNode = new FunctionExpression(udfFunction, arguments); ;
         }
@@ -478,7 +478,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (functionDefinition.ParmMax != -1 && arguments.Count > functionDefinition.ParmMax)
                 throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {functionDefinition.ParmMin} and a maximum of {functionDefinition.ParmMax}.");
 
-            return new FunctionExpression(functionDefinition, arguments, functionName);
+            return new FunctionExpression(functionDefinition, arguments);
         }
 
         private static AstNodeCreator CreateCopyNode(int childIndex)

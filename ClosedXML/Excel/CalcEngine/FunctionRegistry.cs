@@ -33,7 +33,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn)
         {
-            _legacyFunc.Add(functionName, new FunctionDefinition(parmMin, parmMax, fn));
+            _legacyFunc.Add(functionName, new FunctionDefinition(functionName, parmMin, parmMax, fn));
         }
 
         public bool TryGetFunc(string name, out FunctionDefinition func)
