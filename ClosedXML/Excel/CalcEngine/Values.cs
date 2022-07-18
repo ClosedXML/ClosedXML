@@ -74,7 +74,8 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// #VALUE!
         /// </summary>
-        public static readonly Error1 CellValue = new(ExpressionErrorType.CellValue);
+        /// <remarks>Intended to indicate when an incompatible type argument is passed to a function, or an incompatible type operand is used with an operator.</remarks>
+        public static readonly Error1 Value = new(ExpressionErrorType.CellValue);
 
         /// <summary>
         /// #DIV/0!

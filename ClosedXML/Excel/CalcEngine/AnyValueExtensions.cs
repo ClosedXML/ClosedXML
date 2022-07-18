@@ -48,11 +48,11 @@ namespace ClosedXML.Excel.CalcEngine
         private static OneOf<Range, Error1> ConvertToReference(AnyValue left)
         {
             return left.Match<OneOf<Range, Error1>>(
-                logical => Error1.CellValue,
-                number => Error1.CellValue,
-                text => Error1.CellValue,
+                logical => Error1.Value,
+                number => Error1.Value,
+                text => Error1.Value,
                 error => error,
-                array => Error1.CellValue,
+                array => Error1.Value,
                 reference => reference);
         }
     }
@@ -133,7 +133,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static AnyValue ApplyOnReference(Range reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
         {
             if (reference.Areas.Count != 1)
-                return Error1.CellValue;
+                return Error1.Value;
 
             var area = reference.Areas.Single();
             var width = area.ColumnSpan;
@@ -202,7 +202,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue BinaryExp(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => lhs == 0 && rhs == 0 ? Error1.CellValue : new Number1(Math.Pow(lhs, rhs));
+            BinaryNumberFunc f = (lhs, rhs) => lhs == 0 && rhs == 0 ? Error1.Value : new Number1(Math.Pow(lhs, rhs));
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }

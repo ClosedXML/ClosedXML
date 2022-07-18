@@ -18,7 +18,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return double.TryParse(text.Value, NumberStyles.Float, _culture, out var number)
                 ? new Number1(number)
-                : Error1.CellValue;
+                : Error1.Value;
         }
     }
 }

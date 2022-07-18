@@ -71,7 +71,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(AnyValue.FromT1(new Number1(0.75)), resultWithBothConversions);
 
             var oneConversionFailsResult = logical.BinaryMinus(nonNumberText, calcContext);
-            Assert.AreEqual(AnyValue.FromT3(Error1.CellValue), oneConversionFailsResult);
+            Assert.AreEqual(AnyValue.FromT3(Error1.Value), oneConversionFailsResult);
 
             var array2x1 = new ConstArray(new ScalarValue[,] { { ScalarValue.FromT1(new Number1(1)), ScalarValue.FromT3(Error1.DivZero) } });
 

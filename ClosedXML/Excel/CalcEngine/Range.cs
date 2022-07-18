@@ -59,7 +59,7 @@ namespace ClosedXML.Excel.CalcEngine
                 .Where(a => a.Worksheet is not null).Distinct().ToList();
             if (sheets.Count > 1)
             {
-                return Error1.CellValue;
+                return Error1.Value;
             }
 
             var minCol = XLHelper.MaxColumnNumber;
@@ -90,9 +90,7 @@ namespace ClosedXML.Excel.CalcEngine
                 .Concat(rhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet))
                 .Distinct().ToList();
             if (sheets.Count != 1)
-            {
-                return Error1.CellValue;
-            }
+                return Error1.Value;
 
             var sheet = sheets.Single();
             var intersections = new List<XLRangeAddress>();
@@ -103,14 +101,11 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     intersectedArea = intersectedArea.Intersection(rightArea.WithWorksheet(sheet));
                     if (!intersectedArea.IsValid)
-                    {
                         break;
-                    }
                 }
+
                 if (intersectedArea.IsValid)
-                {
                     intersections.Add((XLRangeAddress)intersectedArea);
-                }
             }
 
             return intersections.Any() ? new Range(intersections) : Error1.Null;
@@ -119,7 +114,7 @@ namespace ClosedXML.Excel.CalcEngine
         public OneOf<ScalarValue, Error1> ImplicitIntersection(CalcContext ctx)
         {
             if (Areas.Count != 1)
-                return Error1.CellValue;
+                return Error1.Value;
 
             var area = Areas.Single();
             if (area.RowSpan == 1 && area.ColumnSpan == 1)
@@ -134,7 +129,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (area.RowSpan == 1 && area.FirstAddress.ColumnNumber <= column && column <= area.LastAddress.ColumnNumber)
                 return ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, column);
 
-            return Error1.CellValue;
+            return Error1.Value;
         }
     }
 }
