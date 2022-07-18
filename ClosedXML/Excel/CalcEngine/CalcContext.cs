@@ -27,6 +27,9 @@ namespace ClosedXML.Excel.CalcEngine
             Converter = new ValueConverter(culture);
         }
 
+        // TODO: Remove once legacy functions are migrated
+        internal XLCalcEngine CalcEngine { get; }
+
         /// <summary>
         /// Worksheet of the cell the formula is calculating.
         /// </summary>

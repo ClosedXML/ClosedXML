@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Information
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             //TODO: Add documentation
             ce.RegisterFunction("ERRORTYPE", 1, ErrorType);

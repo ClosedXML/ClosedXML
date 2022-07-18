@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class Statistical
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
             ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average); // Returns the average (arithmetic mean) of the arguments

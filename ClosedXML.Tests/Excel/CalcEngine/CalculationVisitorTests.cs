@@ -12,16 +12,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [TestFixture]
     public class CalculationVisitorTests
     {
-        private readonly static Dictionary<string, FunctionDefinition> dummyFunctions = new Dictionary<string, FunctionDefinition>()
-            {
-                { "SUM", new FunctionDefinition(0, 255, x => null) },
-                { "SIN", new FunctionDefinition(1, 1, x => null) },
-                { "RAND", new FunctionDefinition(0, 0, x => null) },
-                { "IF", new FunctionDefinition(0, 3, x => null) },
-                { "INDEX", new FunctionDefinition(1, 3, x => null) },
-                { "COS", new FunctionDefinition(1, 1, x => null) },
-            };
-
         [TestCase("=COS(0)")]
         public void DevTest(string formula)
         {
@@ -30,7 +20,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A1").Value = 1;
             ws.Cell("A2").Value = 10;
             ws.Cell("A3").Value = 100;
-            var parser = new FormulaParser(dummyFunctions);
+            var parser = new FormulaParser(CreateRegistry());
             var cst = parser.Parse(formula);
             var ast = (AstNode)cst.Root.AstNode;
 
@@ -52,6 +42,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void ScalarNode_ReturnsLogicalValue()
         {
             Assert.Fail();
+        }
+
+        private FunctionRegistry CreateRegistry()
+        {
+            var dummyFunctions = new FunctionRegistry();
+            dummyFunctions.RegisterFunction("SUM", 0, 255, x => null);
+            dummyFunctions.RegisterFunction("SIN", 1, 1, x => null);
+            dummyFunctions.RegisterFunction("RAND", 0, 0, x => null);
+            dummyFunctions.RegisterFunction("IF", 0, 3, x => null);
+            dummyFunctions.RegisterFunction("INDEX", 1, 3, x => null);
+            dummyFunctions.RegisterFunction("COS", 1, 1, x => null);
+            return dummyFunctions;
+        }
+
+        [Test]
+        public void EvaluationWithoutWorksheet()
+        {
+            var result = XLWorkbook.EvaluateExpr("=1+2");
+            Assert.AreEqual(3, result);
         }
     }
 }

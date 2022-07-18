@@ -6,7 +6,7 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class Financial
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             // ACCRINT Returns the accrued interest for a security that pays periodic interest
             // ACCRINTM Returns the accrued interest for a security that pays interest at maturity

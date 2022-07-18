@@ -62,12 +62,12 @@ namespace ClosedXML.Excel.CalcEngine
         };
 
         private readonly Parser _parser;
-        private readonly Dictionary<string, FunctionDefinition> _fnTbl; // table with constants and functions (pi, sin, etc)
+        private readonly FunctionRegistry _fnTbl;
 
-        public FormulaParser(Dictionary<string, FunctionDefinition> fnTbl)
+        public FormulaParser(FunctionRegistry functionRegistry)
         {
             _parser = new Parser(GetGrammar());
-            _fnTbl = fnTbl;
+            _fnTbl = functionRegistry;
         }
 
         /// <summary>
@@ -464,9 +464,9 @@ namespace ClosedXML.Excel.CalcEngine
         private FunctionExpression CreateExcelFunctionCallExpression(ParseTreeNode nameNode, ParseTreeNode argumentsNode)
         {
             var functionName = nameNode.ChildNodes.Single().Token.Text.WithoutLast(1);
-            var foundFunction = _fnTbl.TryGetValue(functionName, out FunctionDefinition functionDefinition);
+            var foundFunction = _fnTbl.TryGetFunc(functionName, out FunctionDefinition functionDefinition);
             if (!foundFunction && functionName.StartsWith($"{defaultFunctionNameSpace}."))
-                foundFunction = _fnTbl.TryGetValue(functionName.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
+                foundFunction = _fnTbl.TryGetFunc(functionName.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
 
             if (!foundFunction)
                 throw new NameNotRecognizedException($"The function `{functionName}` was not recognised.");

@@ -15,7 +15,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region Register
 
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("ABS", 1, Abs);
             ce.RegisterFunction("ACOS", 1, Acos);

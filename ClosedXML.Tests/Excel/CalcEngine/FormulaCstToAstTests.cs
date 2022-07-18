@@ -19,14 +19,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCaseSource(nameof(FormulaWithCstAndAst))]
         public void FormulaProducesCorrectCstAndAst(string formula, string[] expectedCst, Type[] expectedAst)
         {
-            var dummyFunctions = new Dictionary<string, FunctionDefinition>()
-            {
-                { "SUM", new FunctionDefinition(0, 255, x => null) },
-                { "SIN", new FunctionDefinition(1, 1, x => null) },
-                { "RAND", new FunctionDefinition(0, 0, x => null) },
-                { "IF", new FunctionDefinition(0, 3, x => null) },
-                { "INDEX", new FunctionDefinition(1, 3, x => null) },
-            };
+            var dummyFunctions = new FunctionRegistry();
+            dummyFunctions.RegisterFunction("SUM", 0, 255, x => null);
+            dummyFunctions.RegisterFunction("SIN", 1, 1, x => null);
+            dummyFunctions.RegisterFunction("RAND", 0, 0, x => null);
+            dummyFunctions.RegisterFunction("IF", 0, 3, x => null);
+            dummyFunctions.RegisterFunction("INDEX", 1, 3, x => null);
             var parser = new FormulaParser(dummyFunctions);
 
             var cst = parser.Parse(formula);
@@ -274,7 +272,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             // Reference.Rule = ReferenceFunctionCall
             yield return new TestCaseData(
                 "A1:D5",
-                new[] { Formula, Reference, ReferenceFunctionCall, Reference, Cell, TokenCell, null, null, null, ":", null,Reference, Cell, TokenCell },
+                new[] { Formula, Reference, ReferenceFunctionCall, Reference, Cell, TokenCell, null, null, null, ":", null, Reference, Cell, TokenCell },
                 new[] { typeof(BinaryExpression), typeof(ReferenceNode), null, typeof(ReferenceNode) });
 
             // ReferenceFunctionCall.Rule = Reference + intersectop + Reference

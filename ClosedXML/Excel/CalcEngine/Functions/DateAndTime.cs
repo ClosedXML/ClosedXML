@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class DateAndTime
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("DATE", 3, Date); // Returns the serial number of a particular date
             ce.RegisterFunction("DATEDIF", 3, Datedif); // Calculates the number of days, months, or years between two dates

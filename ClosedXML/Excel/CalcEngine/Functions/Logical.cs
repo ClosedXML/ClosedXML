@@ -5,7 +5,7 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class LogicalFunctions
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("AND", 1, int.MaxValue, And);
             ce.RegisterFunction("OR", 1, int.MaxValue, Or);

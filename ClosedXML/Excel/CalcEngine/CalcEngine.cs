@@ -1,6 +1,7 @@
 using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -14,16 +15,17 @@ namespace ClosedXML.Excel.CalcEngine
     /// </remarks>
     internal class CalcEngine
     {
+        protected readonly CultureInfo _culture;
         protected ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
         private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
-        private Dictionary<string, FunctionDefinition> _fnTbl;      // table with constants and functions (pi, sin, etc)
+        private readonly FunctionRegistry _funcRegistry;      // table with constants and functions (pi, sin, etc)
 
         public CalcEngine()
         {
-            _fnTbl = GetFunctionTable();
+            _funcRegistry = GetFunctionTable();
             _cache = new ExpressionCache(this);
-            _parser = new FormulaParser(_fnTbl);
+            _parser = new FormulaParser(_funcRegistry);
             _compatibilityVisitor = new CompatibilityFormulaVisitor(this);
         }
 
@@ -55,7 +57,24 @@ namespace ClosedXML.Excel.CalcEngine
             var x = _cache != null
                     ? _cache[expression]
                     : Parse(expression);
-            return x.Evaluate();
+
+            var ctx = new CalcContext(_culture, null);
+            var calculatingVisitor = new CalculationVisitor(_funcRegistry);
+            var result = x.Accept(ctx, calculatingVisitor);
+            if (ctx.UseImplicitIntersection && result.IsT4)
+            {
+                result = result.AsT4[0, 0].ToAnyValue();
+            }
+
+            // TODO exception
+            return result.Match<object>(logical => logical.Value,
+                number => number.Value,
+                text => text.Value,
+                error => throw new NotImplementedException("Pick correct excetion"),
+                array => throw new InvalidOperationException("Array shouldn't be present currently"),
+                reference => throw new NotImplementedException("WTF with this?")); 
+
+            //return x.Evaluate();
         }
 
         /// <summary>
@@ -77,29 +96,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Registers a function that can be evaluated by this <see cref="CalcEngine"/>.
-        /// </summary>
-        /// <param name="functionName">Function name.</param>
-        /// <param name="parmMin">Minimum parameter count.</param>
-        /// <param name="parmMax">Maximum parameter count.</param>
-        /// <param name="fn">Delegate that evaluates the function.</param>
-        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn)
-        {
-            _fnTbl.Add(functionName, new FunctionDefinition(parmMin, parmMax, fn));
-        }
-
-        /// <summary>
-        /// Registers a function that can be evaluated by this <see cref="CalcEngine"/>.
-        /// </summary>
-        /// <param name="functionName">Function name.</param>
-        /// <param name="parmCount">Parameter count.</param>
-        /// <param name="fn">Delegate that evaluates the function.</param>
-        public void RegisterFunction(string functionName, int parmCount, CalcEngineFunction fn)
-        {
-            RegisterFunction(functionName, parmCount, parmCount, fn);
-        }
-
-        /// <summary>
         /// Gets an external object based on an identifier.
         /// </summary>
         /// <remarks>
@@ -114,25 +110,22 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // build/get static keyword table
-        private Dictionary<string, FunctionDefinition> GetFunctionTable()
+        private FunctionRegistry GetFunctionTable()
         {
-            if (_fnTbl == null)
-            {
-                // create table
-                _fnTbl = new Dictionary<string, FunctionDefinition>(StringComparer.InvariantCultureIgnoreCase);
+            var fr = new FunctionRegistry();
 
-                // register built-in functions (and constants)
-                Engineering.Register(this);
-                Information.Register(this);
-                LogicalFunctions.Register(this);
-                Lookup.Register(this);
-                MathTrig.Register(this);
-                TextFunctions.Register(this);
-                Statistical.Register(this);
-                DateAndTime.Register(this);
-                Financial.Register(this);
-            }
-            return _fnTbl;
+            // register built-in functions (and constants)
+            Engineering.Register(fr);
+            Information.Register(fr);
+            LogicalFunctions.Register(fr);
+            Lookup.Register(fr);
+            MathTrig.Register(fr);
+            TextFunctions.Register(fr);
+            Statistical.Register(fr);
+            DateAndTime.Register(fr);
+            Financial.Register(fr);
+
+            return fr;
         }
     }
 

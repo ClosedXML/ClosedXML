@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Lookup
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("ADDRESS", , Address); // Returns a reference as text to a single cell in a worksheet
             //ce.RegisterFunction("AREAS", , Areas); // Returns the number of areas in a reference

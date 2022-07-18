@@ -12,7 +12,7 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal static class TextFunctions
     {
-        public static void Register(CalcEngine ce)
+        public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("ASC", 1, Asc); // Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters
             //ce.RegisterFunction("BAHTTEXT	Converts a number to text, using the ß (baht) currency format

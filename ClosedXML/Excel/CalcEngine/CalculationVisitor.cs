@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ClosedXML.Excel.CalcEngine.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -89,13 +92,50 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, FunctionExpression node)
         {
-            if (!_functions.TryGetFunc(node.Name, out var function))
-                return Error1.Name;
-
             var args = new AnyValue[node.Parameters.Count];
             for (var i = 0; i < node.Parameters.Count; ++i)
-            {
                 args[i] = node.Parameters[i].Accept(context, this);
+
+            if (!_functions.TryGetFunc(node.Name, out FormulaFunction function))
+            {
+                if (!_functions.TryGetFunc(node.Name, out FunctionDefinition legacyFunction))
+                    return Error1.Name;
+
+                // This creates a some of overhead, but all legacy functions will be migrated in near future
+                var adaptedArgs = new List<Expression>(args.Length);
+                for (var i = 0; i < args.Length; ++i)
+                {
+                    adaptedArgs[i] = args[i].Match<Expression>(
+                        logical => new AdapterExpression(logical.Value),
+                        number => new AdapterExpression(number.Value),
+                        text => new AdapterExpression(text.Value),
+                        error => new ErrorExpression(error.Type),
+                        array => throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter."),
+                        range =>
+                        {
+                            if (range.Areas.Count != 1)
+                                throw new NotSupportedException($"Legacy XObjectExpression could only work with single area, reference has {range.Areas.Count}.");
+
+                            var area = range.Areas.Single();
+                            return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area), context.CalcEngine));
+                        });
+                }
+                try
+                {
+                    var result = legacyFunction.Function(adaptedArgs);
+                    return result switch
+                    {
+                        bool logic => AnyValue.FromT0(new Logical(logic)),
+                        double number => AnyValue.FromT1(new Number1(number)),
+                        string text => AnyValue.FromT2(new Text(text)),
+                        _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
+                    };
+                }
+                catch (CalcEngineException)
+                {
+                    //TODO: Map errors
+                    throw;
+                }
             }
 
             return function.CallFunction(context, args);
@@ -137,6 +177,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         #region Never visited nodes
+
         public AnyValue Visit(CalcContext context, PrefixNode node) => throw new InvalidOperationException();
 
         public AnyValue Visit(CalcContext context, FileNode node) => throw new NotImplementedException();
@@ -144,15 +185,22 @@ namespace ClosedXML.Excel.CalcEngine
         public AnyValue Visit(CalcContext context, XObjectExpression node) => throw new InvalidOperationException();
 
         public AnyValue Visit(CalcContext context, EmptyValueExpression node) => throw new InvalidOperationException();
+
         #endregion
 
-        private static XObjectExpression ConvertToXObjectExpression(Range reference)
+        private class AdapterExpression : Expression
         {
-            if (!reference.Areas.Count == 1)
+            private readonly object _value;
+
+            public AdapterExpression(object value)
             {
-                throw new NotImplementedException(@"Unable to convert refernce to legacy {}");
+                _value = value;
             }
-            es
+
+            public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor)
+                => throw new InvalidOperationException("The node should never be used in visitor.");
+
+            public override object Evaluate() => _value;
         }
     }
 }

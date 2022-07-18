@@ -106,7 +106,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             var dict = new FunctionRegistry();
             TestFuncRegistry.Register(dict);
-            dict.TryGetFunc("TYPE", out var f);
+            dict.TryGetFunc("TYPE", out FormulaFunction f);
             var result = f.CallFunction(calcContext, new Number1(5));
             Assert.AreEqual(AnyValue.FromT1(new Number1(2)), result);
         }
@@ -121,7 +121,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             var dict = new FunctionRegistry();
             TestFuncRegistry.Register(dict);
-            dict.TryGetFunc("SIN", out var f);
+            dict.TryGetFunc("SIN", out FormulaFunction f);
             var result = f.CallFunction(calcContext, new Number1(System.Math.PI / 2));
             Assert.AreEqual(AnyValue.FromT1(new Number1(1)), result);
         }
