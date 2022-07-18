@@ -1,5 +1,5 @@
 ﻿using System;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference1>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -27,16 +27,26 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
+        public AnyValue Visit(CalcContext context, ErrorExpression node)
+        {
+            throw new NotImplementedException();
+        }
+
         public AnyValue Visit(CalcContext context, UnaryExpression node)
         {
             var arg = node.Expression.Accept(context, this);
+            if (context.UseImplicitIntersection)
+            {
+                arg = arg.ImplicitIntersection(context);
+            }
+
             return node.Operation switch
             {
                 UnaryOp.Add => arg.UnaryPlus(),
                 UnaryOp.Subtract => arg.UnaryMinus(context),
                 UnaryOp.Percentage => arg.UnaryPercent(context),
                 UnaryOp.SpillRange => throw new NotImplementedException(),
-                UnaryOp.ImplicitIntersection => throw new NotImplementedException("E2016 implicit intersection is different from @ intersection of E2019+"), // arg.ImplicitIntersection(context),
+                UnaryOp.ImplicitIntersection => throw new NotImplementedException("Excel 2016 implicit intersection is different from @ intersection of E2019+"),
                 _ => throw new NotSupportedException($"Unknown operator {node.Operation}.")
             };
         }
@@ -46,7 +56,6 @@ namespace ClosedXML.Excel.CalcEngine
             var leftArg = node.LeftExpression.Accept(context, this);
             var rightArg = node.RightExpression.Accept(context, this);
 
-            // References operators
             switch (node.Operation)
             {
                 case BinaryOp.Range: return leftArg.ReferenceRange(rightArg);
@@ -62,15 +71,12 @@ namespace ClosedXML.Excel.CalcEngine
 
             return node.Operation switch
             {
-                // Text operators
                 BinaryOp.Concat => throw new NotImplementedException(),
-                // Arithmetic
                 BinaryOp.Add => leftArg.BinaryPlus(rightArg, context),
                 BinaryOp.Sub => leftArg.BinaryMinus(rightArg, context),
                 BinaryOp.Mult => leftArg.BinaryMult(rightArg, context),
                 BinaryOp.Div => leftArg.BinaryDiv(rightArg, context),
                 BinaryOp.Exp => leftArg.BinaryExp(rightArg, context),
-                // Comparison operators
                 BinaryOp.Lt => leftArg.IsLessThan(rightArg, context),
                 BinaryOp.Lte => leftArg.IsLessThanOrEqual(rightArg, context),
                 BinaryOp.Eq => leftArg.IsEqual(rightArg, context),
@@ -95,26 +101,6 @@ namespace ClosedXML.Excel.CalcEngine
             return function.CallFunction(context, args);
         }
 
-        public AnyValue Visit(CalcContext context, XObjectExpression node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AnyValue Visit(CalcContext context, EmptyValueExpression node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AnyValue Visit(CalcContext context, ErrorExpression node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AnyValue Visit(CalcContext context, NotSupportedNode node)
-        {
-            throw new NotImplementedException();
-        }
-
         public AnyValue Visit(CalcContext context, ReferenceNode node)
         {
             XLWorksheet worksheet;
@@ -134,25 +120,39 @@ namespace ClosedXML.Excel.CalcEngine
             else
             {
                 // FIXME: This is bad, it won't work with other sheets
-                worksheet = (XLWorksheet)context.Worksheet;
+                worksheet = context.Worksheet;
             }
 
-            return new Reference1(new XLRangeAddress(worksheet, node.Address));
+            return new Range(new XLRangeAddress(worksheet, node.Address));
+        }
+
+        public AnyValue Visit(CalcContext context, NotSupportedNode node)
+        {
+            throw new NotImplementedException($"Evaluation of {node.FeatureName} is not implemented.");
         }
 
         public AnyValue Visit(CalcContext context, StructuredReferenceNode node)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException($"Evaluation of structured references is not implemented.");
         }
 
-        public AnyValue Visit(CalcContext context, PrefixNode node)
-        {
-            throw new NotImplementedException();
-        }
+        #region Never visited nodes
+        public AnyValue Visit(CalcContext context, PrefixNode node) => throw new InvalidOperationException();
 
-        public AnyValue Visit(CalcContext context, FileNode node)
+        public AnyValue Visit(CalcContext context, FileNode node) => throw new NotImplementedException();
+
+        public AnyValue Visit(CalcContext context, XObjectExpression node) => throw new InvalidOperationException();
+
+        public AnyValue Visit(CalcContext context, EmptyValueExpression node) => throw new InvalidOperationException();
+        #endregion
+
+        private static XObjectExpression ConvertToXObjectExpression(Range reference)
         {
-            throw new NotImplementedException();
+            if (!reference.Areas.Count == 1)
+            {
+                throw new NotImplementedException(@"Unable to convert refernce to legacy {}");
+            }
+            es
         }
     }
 }

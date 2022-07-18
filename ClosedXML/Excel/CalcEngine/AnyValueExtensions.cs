@@ -1,9 +1,9 @@
 ﻿using OneOf;
 using System;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference1>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
 using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
-using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference1>;
+using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
 using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -55,25 +55,8 @@ namespace ClosedXML.Excel.CalcEngine
             if (!rightConversionResult.TryPickT0(out var rightReference, out var rightError))
                 return rightError;
 
-            var sheets = leftReference.Areas.Select(a => a.Worksheet).Concat(rightReference.Areas.Select(a => a.Worksheet)).Distinct().ToList();
-            if (sheets.Count != 1)
-                return Error1.CellValue;
-
-            var minCol = XLHelper.MaxColumnNumber;
-            var maxCol = 1;
-            var minRow = XLHelper.MaxRowNumber;
-            var maxRow = 1;
-            foreach (var area in leftReference.Areas.Concat(rightReference.Areas))
-            {
-                // Areas are normalized, so I don't have to check opposite corners
-                minRow = Math.Min(minRow, area.FirstAddress.RowNumber);
-                maxRow = Math.Max(maxRow, area.LastAddress.RowNumber);
-                minCol = Math.Min(minCol, area.FirstAddress.ColumnNumber);
-                maxCol = Math.Max(maxCol, area.LastAddress.ColumnNumber);
-            }
-
-            var sheet = sheets.Single();
-            return new Reference1(new XLRangeAddress(new XLAddress(sheet, minRow, minCol, true, true), new XLAddress(sheet, maxRow, maxCol, true, true)));
+            return Range.RangeOp(leftReference, rightReference)
+                .Match<AnyValue>(range => range, error => error);
         }
 
         public static AnyValue ReferenceUnion(this AnyValue left, AnyValue right)
@@ -81,9 +64,9 @@ namespace ClosedXML.Excel.CalcEngine
             throw new NotImplementedException();
         }
 
-        private static OneOf<Reference1, Error1> ConvertToReference(AnyValue left)
+        private static OneOf<Range, Error1> ConvertToReference(AnyValue left)
         {
-            return left.Match<OneOf<Reference1, Error1>>(
+            return left.Match<OneOf<Range, Error1>>(
                 logical => Error1.CellValue,
                 number => Error1.CellValue,
                 text => Error1.CellValue,
@@ -166,7 +149,7 @@ namespace ClosedXML.Excel.CalcEngine
             return AnyValue.FromT4(new ConstArray(data));
         }
 
-        private static AnyValue ApplyOnReference(Reference1 reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
+        private static AnyValue ApplyOnReference(Range reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
         {
             if (reference.Areas.Count != 1)
                 return Error1.CellValue;
@@ -357,7 +340,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // If not a single area, error
-        public static OneOf<Array, Error1> ToArray(this Reference1 reference, CalcContext context)
+        public static OneOf<Array, Error1> ToArray(this Range reference, CalcContext context)
         {
             if (reference.Areas.Count != 1)
                 throw new NotImplementedException();

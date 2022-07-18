@@ -1,6 +1,6 @@
 ﻿using OneOf;
 using System;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference1>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
 using System.Linq;
 using System.Reflection;
 
@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FormulaFunction
     {
-        private static readonly Type[] ValueTypes = new[] { typeof(Logical), typeof(Number1), typeof(Text), typeof(Error1), typeof(Array), typeof(Reference1) };
+        private static readonly Type[] ValueTypes = new[] { typeof(Logical), typeof(Number1), typeof(Text), typeof(Error1), typeof(Array), typeof(Range) };
         private readonly MethodInfo _method;
         private readonly Type[] _parameters;
 
@@ -87,7 +87,7 @@ namespace ClosedXML.Excel.CalcEngine
                 text => typeof(Text),
                 error => typeof(Error1),
                 array => typeof(Array),
-                reference => typeof(Reference1));
+                reference => typeof(Range));
 
             // What is the range of type we should convert the value to?
             Type paramType = typeof(TParamType);

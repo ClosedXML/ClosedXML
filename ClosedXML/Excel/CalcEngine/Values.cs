@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference1>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
 using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -280,48 +280,6 @@ namespace ClosedXML.Excel.CalcEngine
         public override int Height => _area.RowSpan;
 
         public override IEnumerator<ScalarValue> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class Reference1 : IEnumerable<AnyValue>
-    {
-        public Reference1(params XLRangeAddress[] areas)
-        {
-            if (!areas.Any())
-                throw new ArgumentException("Reference must have at least one area", nameof(areas));
-            Areas = areas.ToList();
-        }
-
-        // Areas ordered by 
-        //  * sheet - leftmost to rightmost
-        //  * top left corner, from highest to lowest, from leftmost to rightmost.
-        // All normalized, all with worksheet.
-        internal IReadOnlyList<XLRangeAddress> Areas { get; }
-
-        // Iterate over all nonblank cells of the reference
-        public IEnumerator<AnyValue> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-
-        // Union
-        public static Reference1 Union(Reference1 lhs, Reference1 rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        // Intersection
-        public static Reference1 Intersection(Reference1 lhs, Reference1 rhs)
-        {
-            throw new NotImplementedException();
-        }
-
-        // Intersection
-        public static Reference1 Range(Reference1 lhs, Reference1 rhs)
         {
             throw new NotImplementedException();
         }

@@ -546,16 +546,16 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class NotSupportedNode : Expression
     {
-        private readonly string _featureText;
-
-        public NotSupportedNode(string featureText)
+        public NotSupportedNode(string featureName)
         {
-            _featureText = featureText;
+            FeatureName = featureName;
         }
+
+        public string FeatureName { get; }
 
         public override object Evaluate()
         {
-            throw new NotImplementedException($"Evaluation of {_featureText} is not implemented.");
+            throw new NotImplementedException($"Evaluation of {FeatureName} is not implemented.");
         }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
