@@ -101,6 +101,22 @@ namespace ClosedXML.Excel.CalcEngine
                 if (!_functions.TryGetFunc(node.Name, out FunctionDefinition legacyFunction))
                     return Error1.Name;
 
+                var rangeFunctions = new Dictionary<string, List<int>>()
+                {
+                    { "AND" , new List<int>{ 0 } }
+                };
+                rangeFunctions.TryGetValue(node.Name, out var ignoreIdx);
+                for (var i = 0; i < args.Length; ++i)
+                {
+                    if (ignoreIdx is not null && ignoreIdx.Contains(i))
+                    {
+                    }
+                    else
+                    {
+                        args[i] = args[i].ImplicitIntersection(context);
+                    }
+                }
+
                 // This creates a some of overhead, but all legacy functions will be migrated in near future
                 var adaptedArgs = new List<Expression>(args.Length);
                 foreach (var arg in args)

@@ -80,5 +80,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var result = ws.Evaluate("=SIN(A1)");
             Assert.That(result, Is.EqualTo(0.0).Within(1e-10));
         }
+
+        [Test]
+        public void Evaluation_works_with_implicit_intersection()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("A1").Value = 1;
+            ws.Cell("A2").Value = Math.PI/2.0;
+            ws.Cell("A3").Value = 3;
+            ws.Cell("B2").FormulaA1 = "=SIN(A1:A3)";
+
+            var result = ws.Cell("B2").Value;
+            Assert.That(result, Is.EqualTo(1).Within(1e-10));
+        }
+
     }
 }

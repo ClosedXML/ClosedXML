@@ -453,7 +453,7 @@ namespace ClosedXML.Excel
                         return referenceCell.Value;
                 }
 
-                retVal = Worksheet.Evaluate(fA1);
+                retVal = Worksheet.CalcEngine.Evaluate(fA1, Worksheet, Address);
             }
             finally
             {
