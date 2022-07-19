@@ -56,7 +56,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static OneOf<Reference, Error1> RangeOp(Reference lhs, Reference rhs)
         {
             var sheets = lhs.Areas.Select(a => a.Worksheet).Concat(rhs.Areas.Select(a => a.Worksheet))
-                .Where(a => a.Worksheet is not null).Distinct().ToList();
+                .Where(ws => ws is not null).Distinct().ToList();
             if (sheets.Count > 1)
             {
                 return Error1.Value;
@@ -75,7 +75,7 @@ namespace ClosedXML.Excel.CalcEngine
                 maxCol = Math.Max(maxCol, area.LastAddress.ColumnNumber);
             }
 
-            var sheet = sheets.Single();
+            var sheet = sheets.SingleOrDefault();
             return new Reference(new XLRangeAddress(new XLAddress(sheet, minRow, minCol, true, true), new XLAddress(sheet, maxRow, maxCol, true, true)));
         }
 

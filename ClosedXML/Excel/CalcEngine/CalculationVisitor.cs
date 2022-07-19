@@ -82,15 +82,8 @@ namespace ClosedXML.Excel.CalcEngine
             };
         }
 
-        public AnyValue Visit(CalcContext context, FunctionExpression node)
-        {
-            var args = new AnyValue?[node.Parameters.Count];
-            for (var i = 0; i < node.Parameters.Count; ++i)
-                args[i] = node.Parameters[i].Accept(context, this);
-
-
-            // null - all args
-            var rangeFunctions = new Dictionary<string, IReadOnlyList<int>>(StringComparer.OrdinalIgnoreCase)
+        // Value is which args can be range, from 0. null - all args
+        private static readonly Dictionary<string, IReadOnlyList<int>> rangeFunctions = new(StringComparer.OrdinalIgnoreCase)
             {
                 { "AND" , null },
                 { "NETWORKDAYS", new List<int> { 2 } },
@@ -99,8 +92,20 @@ namespace ClosedXML.Excel.CalcEngine
                 { "AVERAGEA", null },
                 { "COUNT", null },
                 { "COUNTA", null },
-                { "DEVSQ", null }
+                { "COUNTBLANK", null},
+                { "COUNTIF", new List<int>{ 0 } },
+                { "COUNTIFs", new[] { 0}.Concat(Enumerable.Range(1, 255).Where(x => x % 2 == 1)).ToList() },
+                { "DEVSQ", null },
+                { "SUMIF", new List<int>{ 0, 2 } }
             };
+
+
+        public AnyValue Visit(CalcContext context, FunctionExpression node)
+        {
+            var args = new AnyValue?[node.Parameters.Count];
+            for (var i = 0; i < node.Parameters.Count; ++i)
+                args[i] = node.Parameters[i].Accept(context, this);
+
             var hasRangeParam = rangeFunctions.TryGetValue(node.Name, out var rangeParamIdx);
             for (var i = 0; i < args.Length; ++i)
             {
@@ -152,6 +157,7 @@ namespace ClosedXML.Excel.CalcEngine
                         double number => AnyValue.FromT1(new Number1(number)),
                         string text => AnyValue.FromT2(new Text(text)),
                         int number => AnyValue.FromT1(new Number1(number)), /* date mostly */
+                        long number => AnyValue.FromT1(new Number1(number)),
                         DateTime date => AnyValue.FromT1(new Number1(date.ToOADate())),
                         TimeSpan time => AnyValue.FromT1(new Number1(time.ToSerialDateTime())),
                         _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
@@ -185,8 +191,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
             else
             {
-                // FIXME: This is bad, it won't work with other sheets
-                worksheet = context.Worksheet;
+                worksheet = null;
             }
 
             return new Reference(new XLRangeAddress(worksheet, node.Address));

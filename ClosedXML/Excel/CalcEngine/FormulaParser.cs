@@ -470,10 +470,10 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new NameNotRecognizedException($"The function `{functionName}` was not recognised.");
 
             var arguments = argumentsNode.ChildNodes.Select(treeNode => treeNode.AstNode).Cast<ValueNode>().ToList();
-            if (parmMin < 0 && arguments.Count < parmMin)
+            if (parmMin != -1 && arguments.Count < parmMin)
                 throw new ExpressionParseException($"Too few parameters for function '{functionName}'. Expected a minimum of {parmMin} and a maximum of {parmMax}.");
 
-            if (parmMax < 0 && arguments.Count > parmMax)
+            if (parmMax != -1 && arguments.Count > parmMax)
                 throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {parmMin} and a maximum of {parmMax}.");
 
             return new FunctionExpression(functionName, arguments);
