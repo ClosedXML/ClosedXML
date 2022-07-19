@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -27,14 +28,12 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class ScalarNode : ValueNode
     {
-
-        public ScalarNode(object value)
+        public ScalarNode(AnyValue value)
         {
-            Value = value ?? throw new ArgumentNullException(nameof(value));
+            Value = value;
         }
 
-        // TODO: Add some kind of indication of allowable values, so I don't have to guess. OneOf? NoBox?
-        public object Value { get; }
+        public AnyValue Value { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }

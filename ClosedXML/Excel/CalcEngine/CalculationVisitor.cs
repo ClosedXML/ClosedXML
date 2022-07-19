@@ -19,17 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ScalarNode node)
         {
-            switch (node.Value)
-            {
-                case double number:
-                    return new Number1(number);
-                case bool logical:
-                    return new Logical(logical);
-                case string text:
-                    return new Text(text);
-                default:
-                    throw new InvalidOperationException();
-            }
+            return node.Value;
         }
 
         public AnyValue Visit(CalcContext context, ErrorExpression node)

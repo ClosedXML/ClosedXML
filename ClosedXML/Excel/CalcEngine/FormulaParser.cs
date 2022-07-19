@@ -154,18 +154,18 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateNumberNode(AstContext context, ParseTreeNode parseNode)
         {
             var value = parseNode.ChildNodes.Single().Token.Value;
-            parseNode.AstNode = new ScalarNode(value is int intValue ? (double)intValue : (double)value);
+            parseNode.AstNode = new ScalarNode(new Number1(value is int intValue ? (double)intValue : (double)value));
         }
 
         private void CreateBoolNode(AstContext context, ParseTreeNode parseNode)
         {
             var boolValue = string.Equals(parseNode.ChildNodes.Single().Token.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
-            parseNode.AstNode = new ScalarNode(boolValue);
+            parseNode.AstNode = new ScalarNode(new Logical(boolValue));
         }
 
         private void CreateTextNode(AstContext context, ParseTreeNode parseNode)
         {
-            parseNode.AstNode = new ScalarNode(parseNode.ChildNodes.Single().Token.ValueString);
+            parseNode.AstNode = new ScalarNode(new Text(parseNode.ChildNodes.Single().Token.ValueString));
         }
 
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)
