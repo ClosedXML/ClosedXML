@@ -39,5 +39,10 @@ namespace ClosedXML.Excel
 
             return previousDate;
         }
+
+        public static double ToSerialDateTime(this TimeSpan time)
+        {
+            return ((time.Hours % 24) + (time.Minutes % 60) / 60.0 + (time.Seconds % 60) / 3600.0) / 24.0;
+        }
     }
 }

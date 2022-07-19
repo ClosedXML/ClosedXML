@@ -69,7 +69,8 @@ namespace ClosedXML.Excel.CalcEngine
                 string text => text == string.Empty
                     ? null
                     : ScalarValue.FromT2(new Text(text)),
-                _ => throw new NotImplementedException("Not sure how to get error from a cell.")
+                DateTime date => ScalarValue.FromT1(new Number1(date.ToOADate())),
+                _ => throw new NotImplementedException($"Not sure how to get error from a cell (type {value?.GetType().Name}, value {value}).")
             };
         }
 

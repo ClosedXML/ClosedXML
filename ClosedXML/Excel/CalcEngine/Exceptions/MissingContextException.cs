@@ -1,4 +1,6 @@
-﻿namespace ClosedXML.Excel.CalcEngine.Exceptions
+﻿using System;
+
+namespace ClosedXML.Excel.CalcEngine.Exceptions
 {
     /// <summary>
     /// Evaluation of the formula needs an information that wasn't available. That can happen if the formula
@@ -6,7 +8,7 @@
     /// needs an address of the formula cell. Various methods in ClosedXML are missing different information, e.g.
     /// <see cref="IXLWorksheet.Evaluate(string)"/> has worksheet, but no cell address (=ranges will work, other things won't).
     /// </summary>
-    public class MissingContextException : CalcEngineException
+    public class MissingContextException : Exception
     {
     }
 }

@@ -89,10 +89,12 @@ namespace ClosedXML.Excel.CalcEngine
                 args[i] = node.Parameters[i].Accept(context, this);
 
 
-            var rangeFunctions = new Dictionary<string, List<int>>()
-                {
-                    { "AND" , new List<int>{ 0 } }
-                };
+            var rangeFunctions = new Dictionary<string, List<int>>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "AND" , new List<int> { 0 } },
+                { "NETWORKDAYS", new List<int> { 2 } },
+                { "WORKDAY", new List<int> { 2 } }
+            };
             rangeFunctions.TryGetValue(node.Name, out var ignoreIdx);
             for (var i = 0; i < args.Length; ++i)
             {
@@ -136,6 +138,9 @@ namespace ClosedXML.Excel.CalcEngine
                         bool logic => AnyValue.FromT0(new Logical(logic)),
                         double number => AnyValue.FromT1(new Number1(number)),
                         string text => AnyValue.FromT2(new Text(text)),
+                        int number => AnyValue.FromT1(new Number1(number)), /* date mostly */
+                        DateTime date => AnyValue.FromT1(new Number1(date.ToOADate())),
+                        TimeSpan time => AnyValue.FromT1(new Number1(time.ToSerialDateTime())),
                         _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
                     };
                 }

@@ -151,42 +151,42 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void EDate_Negative1()
         {
             Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/1/2008\", -1)");
-            Assert.AreEqual(new DateTime(2008, 2, 1), actual);
+            Assert.AreEqual(new DateTime(2008, 2, 1).ToOADate(), actual);
         }
 
         [Test]
         public void EDate_Negative2()
         {
             Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/31/2008\", -1)");
-            Assert.AreEqual(new DateTime(2008, 2, 29), actual);
+            Assert.AreEqual(new DateTime(2008, 2, 29).ToOADate(), actual);
         }
 
         [Test]
         public void EDate_Positive1()
         {
             Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/1/2008\", 1)");
-            Assert.AreEqual(new DateTime(2008, 4, 1), actual);
+            Assert.AreEqual(new DateTime(2008, 4, 1).ToOADate(), actual);
         }
 
         [Test]
         public void EDate_Positive2()
         {
             Object actual = XLWorkbook.EvaluateExpr("EDate(\"3/31/2008\", 1)");
-            Assert.AreEqual(new DateTime(2008, 4, 30), actual);
+            Assert.AreEqual(new DateTime(2008, 4, 30).ToOADate(), actual);
         }
 
         [Test]
         public void EOMonth_Negative()
         {
             Object actual = XLWorkbook.EvaluateExpr("EOMonth(\"3/1/2008\", -1)");
-            Assert.AreEqual(new DateTime(2008, 2, 29), actual);
+            Assert.AreEqual(new DateTime(2008, 2, 29).ToOADate(), actual);
         }
 
         [Test]
         public void EOMonth_Positive()
         {
             Object actual = XLWorkbook.EvaluateExpr("EOMonth(\"3/31/2008\", 1)");
-            Assert.AreEqual(new DateTime(2008, 4, 30), actual);
+            Assert.AreEqual(new DateTime(2008, 4, 30).ToOADate(), actual);
         }
 
         [Test]
@@ -270,7 +270,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Time()
         {
             Object actual = XLWorkbook.EvaluateExpr("Time(1,2,3)");
-            Assert.AreEqual(new TimeSpan(1, 2, 3), actual);
+            Assert.AreEqual(0.043090277777778, (double)actual, XLHelper.Epsilon);
         }
 
         [Test]
@@ -291,7 +291,7 @@ namespace ClosedXML.Tests.Excel.DataValidations
         public void Today()
         {
             Object actual = XLWorkbook.EvaluateExpr("Today()");
-            Assert.AreEqual(DateTime.Now.Date, actual);
+            Assert.AreEqual(DateTime.Now.Date.ToOADate(), actual);
         }
 
         [Test]
@@ -461,24 +461,24 @@ namespace ClosedXML.Tests.Excel.DataValidations
                 .CellBelow().SetValue(new DateTime(2008, 12, 4))
                 .CellBelow().SetValue(new DateTime(2009, 1, 21));
             Object actual = ws.Evaluate("Workday(A2,A3,A4:A6)");
-            Assert.AreEqual(new DateTime(2009, 5, 5), actual);
+            Assert.AreEqual(new DateTime(2009, 5, 5).ToOADate(), actual);
         }
 
         [Test]
         public void Workdays_NoHolidaysGiven()
         {
             Object actual = XLWorkbook.EvaluateExpr("Workday(\"10/01/2008\", 151)");
-            Assert.AreEqual(new DateTime(2009, 4, 30), actual);
+            Assert.AreEqual(new DateTime(2009, 4, 30).ToOADate(), actual);
 
             actual = XLWorkbook.EvaluateExpr("Workday(\"2016-01-01\", -10)");
-            Assert.AreEqual(new DateTime(2015, 12, 18), actual);
+            Assert.AreEqual(new DateTime(2015, 12, 18).ToOADate(), actual);
         }
 
         [Test]
         public void Workdays_OneHolidaysGiven()
         {
             Object actual = XLWorkbook.EvaluateExpr("Workday(\"10/01/2008\", 152, \"11/26/2008\")");
-            Assert.AreEqual(new DateTime(2009, 5, 4), actual);
+            Assert.AreEqual(new DateTime(2009, 5, 4).ToOADate(), actual);
         }
 
         [Test]
