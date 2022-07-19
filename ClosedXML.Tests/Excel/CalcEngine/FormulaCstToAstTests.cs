@@ -231,7 +231,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 new[] { Formula, FunctionCall, FunctionName, ExcelFunction, null, null, Arguments,
                     Argument, EmptyArgument, TokenEmptyArgument, null, null, null,
                     Argument, EmptyArgument, TokenEmptyArgument },
-                new[] { typeof(FunctionExpression), typeof(EmptyValueExpression), null, typeof(EmptyValueExpression) });
+                new[] { typeof(FunctionExpression), typeof(EmptyArgumentNode), null, typeof(EmptyArgumentNode) });
 
             // Argument.Rule = Formula | EmptyArgument;
             yield return new TestCaseData(
@@ -240,7 +240,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     Argument, EmptyArgument, TokenEmptyArgument, null, null, null,
                     Argument, Formula, Constant, Number, TokenNumber , null, null, null, null, null,
                     Argument, EmptyArgument, TokenEmptyArgument },
-                new[] { typeof(FunctionExpression), typeof(EmptyValueExpression), null, typeof(ScalarNode), null, typeof(EmptyValueExpression) });
+                new[] { typeof(FunctionExpression), typeof(EmptyArgumentNode), null, typeof(ScalarNode), null, typeof(EmptyArgumentNode) });
 
             // PrefixOp.Rule = ImplyPrecedenceHere(Precedence.UnaryPreFix) + plusop | ImplyPrecedenceHere(Precedence.UnaryPreFix) + minop | ImplyPrecedenceHere(Precedence.UnaryPreFix) + at;
             yield return new TestCaseData(
@@ -747,11 +747,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             public override AstNode Visit(LinkedList<Type> context, FunctionExpression node)
                 => LinearizeNode(context, typeof(FunctionExpression), () => base.Visit(context, node));
 
-            public override AstNode Visit(LinkedList<Type> context, XObjectExpression node)
-                => LinearizeNode(context, typeof(XObjectExpression), () => base.Visit(context, node));
-
-            public override AstNode Visit(LinkedList<Type> context, EmptyValueExpression node)
-                => LinearizeNode(context, typeof(EmptyValueExpression), () => base.Visit(context, node));
+            public override AstNode Visit(LinkedList<Type> context, EmptyArgumentNode node)
+                => LinearizeNode(context, typeof(EmptyArgumentNode), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, ErrorExpression node)
                 => LinearizeNode(context, typeof(ErrorExpression), () => base.Visit(context, node));

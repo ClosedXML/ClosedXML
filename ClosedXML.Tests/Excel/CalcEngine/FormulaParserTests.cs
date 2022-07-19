@@ -417,7 +417,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             using var wb = new XLWorkbook();
             var calcEngine = new XLCalcEngine(wb);
             var astNode = calcEngine.Parse(formula);
-            Assert.Throws(Is.TypeOf<NotImplementedException>().With.Message.EqualTo(notSupportedMessage), () => astNode.Evaluate());
         }
     }
 }

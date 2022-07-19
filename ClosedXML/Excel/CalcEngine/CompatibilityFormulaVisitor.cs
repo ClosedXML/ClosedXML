@@ -1,5 +1,6 @@
 ﻿namespace ClosedXML.Excel.CalcEngine
 {
+    /*
     /// <summary>
     /// Old parser was using <see cref="XObjectExpression"/> for references. AST represents references through
     /// other nodes. The visitor replaces a subset of <see cref="ReferenceNode"/> patterns with <see cref="XObjectExpression"/>
@@ -73,5 +74,5 @@
 
             return base.Visit(context, binaryNode);
         }
-    }
+    }*/
 }

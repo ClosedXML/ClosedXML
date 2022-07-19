@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using XLParser;
-using static ClosedXML.Excel.CalcEngine.ErrorExpression;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -181,11 +180,11 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 {
                     For(PrefixOpMap.Keys.ToArray(), GrammarNames.Formula),
-                    node => new UnaryExpression(PrefixOpMap[node.ChildNodes[0].Term.Name], (Expression)node.ChildNodes[1].AstNode)
+                    node => new UnaryExpression(PrefixOpMap[node.ChildNodes[0].Term.Name], (ValueNode)node.ChildNodes[1].AstNode)
                 },
                 {
                     For(GrammarNames.Formula, "%"),
-                    node => new UnaryExpression(UnaryOp.Percentage, (Expression)node.ChildNodes[0].AstNode)
+                    node => new UnaryExpression(UnaryOp.Percentage, (ValueNode)node.ChildNodes[0].AstNode)
                 },
                 {
                     For(GrammarNames.FunctionName, GrammarNames.Arguments),
@@ -193,7 +192,7 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     For(GrammarNames.Formula, BinaryOpMap.Keys.ToArray(), GrammarNames.Formula),
-                    node => new BinaryExpression(BinaryOpMap[node.ChildNodes[1].Term.Name], (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                    node => new BinaryExpression(BinaryOpMap[node.ChildNodes[1].Term.Name], (ValueNode)node.ChildNodes[0].AstNode, (ValueNode)node.ChildNodes[2].AstNode)
                 }
             };
         }
@@ -296,15 +295,15 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 {
                     For(GrammarNames.Reference, ":", GrammarNames.Reference),
-                    node => new BinaryExpression(BinaryOp.Range, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                    node => new BinaryExpression(BinaryOp.Range, (ValueNode)node.ChildNodes[0].AstNode, (ValueNode)node.ChildNodes[2].AstNode)
                 },
                 {
                     For(GrammarNames.Reference, GrammarNames.TokenIntersect, GrammarNames.Reference),
-                    node => new BinaryExpression(BinaryOp.Intersection, (Expression)node.ChildNodes[0].AstNode, (Expression)node.ChildNodes[2].AstNode)
+                    node => new BinaryExpression(BinaryOp.Intersection, (ValueNode)node.ChildNodes[0].AstNode, (ValueNode)node.ChildNodes[2].AstNode)
                 },
                 {
                     For(GrammarNames.Union),
-                    node => (Expression)node.ChildNodes.Single().AstNode
+                    node => (ValueNode)node.ChildNodes.Single().AstNode
                 },
                 {
                     For(GrammarNames.RefFunctionName, GrammarNames.Arguments),
@@ -312,7 +311,7 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     For(GrammarNames.Reference, "#"),
-                    node => new UnaryExpression(UnaryOp.SpillRange, (Expression)node.ChildNodes[0].AstNode)
+                    node => new UnaryExpression(UnaryOp.SpillRange, (ValueNode)node.ChildNodes[0].AstNode)
                 }
             };
         }
@@ -457,7 +456,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             var udfFunction = new FunctionDefinition(functionName , - 1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."));
-            var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<Expression>().ToList();
+            var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<ValueNode>().ToList();
             parseNode.AstNode = new FunctionExpression(udfFunction, arguments); ;
         }
 
@@ -471,7 +470,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!foundFunction)
                 throw new NameNotRecognizedException($"The function `{functionName}` was not recognised.");
 
-            var arguments = argumentsNode.ChildNodes.Select(treeNode => treeNode.AstNode).Cast<Expression>().ToList();
+            var arguments = argumentsNode.ChildNodes.Select(treeNode => treeNode.AstNode).Cast<ValueNode>().ToList();
             if (functionDefinition.ParmMin != -1 && arguments.Count < functionDefinition.ParmMin)
                 throw new ExpressionParseException($"Too few parameters for function '{functionName}'. Expected a minimum of {functionDefinition.ParmMin} and a maximum of {functionDefinition.ParmMax}.");
 
@@ -497,16 +496,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         private void CreateUnionNode(AstContext context, ParseTreeNode parseNode)
         {
-            var unionRangeNode = (Expression)parseNode.ChildNodes[0].AstNode;
+            var unionRangeNode = (ValueNode)parseNode.ChildNodes[0].AstNode;
             foreach (var referenceNode in parseNode.ChildNodes.Skip(1))
-                unionRangeNode = new BinaryExpression(BinaryOp.Union, unionRangeNode, (Expression)referenceNode.AstNode);
+                unionRangeNode = new BinaryExpression(BinaryOp.Union, unionRangeNode, (ValueNode)referenceNode.AstNode);
             parseNode.AstNode = unionRangeNode;
         }
 
         private void CreateEmptyArgumentNode(AstContext context, ParseTreeNode parseNode)
         {
             // TODO: This is useless for AST, but kept for compatibility reasons with old parser and some function that use it.
-            parseNode.AstNode = new EmptyValueExpression();
+            parseNode.AstNode = new EmptyArgumentNode();
         }
 
         public void CreateStructuredReferenceNode(AstContext context, ParseTreeNode parseNode)

@@ -18,7 +18,6 @@ namespace ClosedXML.Excel.CalcEngine
         protected readonly CultureInfo _culture;
         protected ExpressionCache _cache;               // cache with parsed expressions
         private readonly FormulaParser _parser;
-        private readonly CompatibilityFormulaVisitor _compatibilityVisitor;
         private readonly FunctionRegistry _funcRegistry;      // table with constants and functions (pi, sin, etc)
 
         public CalcEngine()
@@ -26,7 +25,6 @@ namespace ClosedXML.Excel.CalcEngine
             _funcRegistry = GetFunctionTable();
             _cache = new ExpressionCache(this);
             _parser = new FormulaParser(_funcRegistry);
-            _compatibilityVisitor = new CompatibilityFormulaVisitor(this);
         }
 
         /// <summary>
@@ -34,10 +32,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="expression">String to parse.</param>
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
-        public Expression Parse(string expression)
+        public ValueNode Parse(string expression)
         {
             var cstTree = _parser.Parse(expression);
-            var root = (Expression)cstTree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
+            var root = (ValueNode)cstTree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
             return root;//(Expression)root.Accept(null, _compatibilityVisitor);
         }
 

@@ -1,9 +1,6 @@
-using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -21,209 +18,23 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// A base class for all AST nodes that can be evaluated to produce a value.
     /// </summary>
-    internal abstract class Expression : AstNode, IComparable<Expression>
+    internal abstract class ValueNode : AstNode
     {
-        public abstract object Evaluate();
-
-        //---------------------------------------------------------------------------
-
-        #region ** implicit converters
-
-        public static implicit operator string(Expression x)
-        {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            var v = x.Evaluate();
-
-            if (v == null)
-                return string.Empty;
-
-            if (v is bool b)
-                return b.ToString().ToUpper();
-
-            return v.ToString();
-        }
-
-        public static implicit operator double(Expression x)
-        {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle doubles
-            if (v is double dbl)
-            {
-                return dbl;
-            }
-
-            // handle booleans
-            if (v is bool b)
-            {
-                return b ? 1 : 0;
-            }
-
-            // handle dates
-            if (v is DateTime dt)
-            {
-                return dt.ToOADate();
-            }
-
-            if (v is TimeSpan ts)
-            {
-                return ts.TotalDays;
-            }
-
-            // handle string
-            if (v is string s && double.TryParse(s, out var doubleValue))
-            {
-                return doubleValue;
-            }
-
-            // handle nulls
-            if (v == null || v is string)
-            {
-                return 0;
-            }
-
-            // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
-            return (double)Convert.ChangeType(v, typeof(double), _ci);
-        }
-
-        public static implicit operator bool(Expression x)
-        {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle booleans
-            if (v is bool b)
-            {
-                return b;
-            }
-
-            // handle nulls
-            if (v == null)
-            {
-                return false;
-            }
-
-            // handle doubles
-            if (v is double dbl)
-            {
-                return dbl != 0;
-            }
-
-            // handle everything else
-            return (double)Convert.ChangeType(v, typeof(double)) != 0;
-        }
-
-        public static implicit operator DateTime(Expression x)
-        {
-            if (x is ErrorExpression)
-                (x as ErrorExpression).ThrowApplicableException();
-
-            // evaluate
-            var v = x.Evaluate();
-
-            // handle dates
-            if (v is DateTime dt)
-            {
-                return dt;
-            }
-
-            if (v is TimeSpan ts)
-            {
-                return new DateTime().Add(ts);
-            }
-
-            // handle numbers
-            if (v.IsNumber())
-            {
-                return DateTime.FromOADate((double)x);
-            }
-
-            // handle everything else
-            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
-            return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
-        }
-
-        #endregion ** implicit converters
-
-        //---------------------------------------------------------------------------
-
-        #region ** IComparable<Expression>
-
-        public int CompareTo(Expression other)
-        {
-            // get both values
-            var c1 = this.Evaluate() as IComparable;
-            var c2 = other.Evaluate() as IComparable;
-
-            // handle nulls
-            if (c1 == null && c2 == null)
-            {
-                return 0;
-            }
-            if (c2 == null)
-            {
-                return -1;
-            }
-            if (c1 == null)
-            {
-                return +1;
-            }
-
-            // make sure types are the same
-            if (c1.GetType() != c2.GetType())
-            {
-                try
-                {
-                    if (c1 is DateTime)
-                        c2 = ((DateTime)other);
-                    else if (c2 is DateTime)
-                        c1 = ((DateTime)this);
-                    else
-                        c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
-                }
-                catch (InvalidCastException) { return -1; }
-                catch (FormatException) { return -1; }
-                catch (OverflowException) { return -1; }
-                catch (ArgumentNullException) { return -1; }
-            }
-
-            // String comparisons should be case insensitive
-            if (c1 is string s1 && c2 is string s2)
-                return StringComparer.OrdinalIgnoreCase.Compare(s1, s2);
-            else
-                return c1.CompareTo(c2);
-        }
-
-        #endregion ** IComparable<Expression>
     }
 
     /// <summary>
     /// AST node that contains a number, text or a bool.
     /// </summary>
-    internal class ScalarNode : Expression
+    internal class ScalarNode : ValueNode
     {
-        // TODO: Add some kind of indication of allowable values, so I don't have to guess. OneOf? NoBox?
-        private readonly object _value;
 
         public ScalarNode(object value)
         {
-            _value = value ?? throw new ArgumentNullException(nameof(value));
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public override object Evaluate()
-        {
-            return _value;
-        }
+        // TODO: Add some kind of indication of allowable values, so I don't have to guess. OneOf? NoBox?
+        public object Value { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -240,9 +51,9 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Unary expression, e.g. +123
     /// </summary>
-    internal class UnaryExpression : Expression
+    internal class UnaryExpression : ValueNode
     {
-        public UnaryExpression(UnaryOp operation, Expression expr)
+        public UnaryExpression(UnaryOp operation, ValueNode expr)
         {
             Operation = operation;
             Expression = expr;
@@ -250,30 +61,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public UnaryOp Operation { get; }
 
-        public Expression Expression { get; private set; }
-
-        // ** object model
-        override public object Evaluate()
-        {
-            switch (Operation)
-            {
-                case UnaryOp.Add:
-                    return Expression.Evaluate();
-
-                case UnaryOp.Subtract:
-                    return -(double)Expression;
-
-                case UnaryOp.Percentage:
-                    return ((double)Expression) / 100.0;
-
-                case UnaryOp.SpillRange:
-                    throw new NotImplementedException("Evaluation of spill range operator is not implemented.");
-
-                case UnaryOp.ImplicitIntersection:
-                    throw new NotImplementedException("Evaluation of implicit intersection operator is not implemented.");
-            }
-            throw new ArgumentException("Bad expression.");
-        }
+        public ValueNode Expression { get; private set; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -304,7 +92,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Binary expression, e.g. 1+2
     /// </summary>
-    internal class BinaryExpression : Expression
+    internal class BinaryExpression : ValueNode
     {
         private static readonly HashSet<BinaryOp> _comparisons = new HashSet<BinaryOp>
         {
@@ -318,7 +106,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private readonly bool _isComparison;
 
-        public BinaryExpression(BinaryOp operation, Expression exprLeft, Expression exprRight)
+        public BinaryExpression(BinaryOp operation, ValueNode exprLeft, ValueNode exprRight)
         {
             _isComparison = _comparisons.Contains(operation);
             Operation = operation;
@@ -328,68 +116,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         public BinaryOp Operation { get; }
 
-        public Expression LeftExpression { get; private set; }
-        public Expression RightExpression { get; private set; }
+        public ValueNode LeftExpression { get; private set; }
 
-        // ** object model
-        override public object Evaluate()
-        {
-            // handle comparisons
-            if (_isComparison)
-            {
-                var cmp = LeftExpression.CompareTo(RightExpression);
-                switch (Operation)
-                {
-                    case BinaryOp.Gt: return cmp > 0;
-                    case BinaryOp.Lt: return cmp < 0;
-                    case BinaryOp.Gte: return cmp >= 0;
-                    case BinaryOp.Lte: return cmp <= 0;
-                    case BinaryOp.Eq: return cmp == 0;
-                    case BinaryOp.Neq: return cmp != 0;
-                }
-            }
-
-            // handle everything else
-            switch (Operation)
-            {
-                case BinaryOp.Concat:
-                    return (string)LeftExpression + (string)RightExpression;
-
-                case BinaryOp.Add:
-                    return (double)LeftExpression + (double)RightExpression;
-
-                case BinaryOp.Sub:
-                    return (double)LeftExpression - (double)RightExpression;
-
-                case BinaryOp.Mult:
-                    return (double)LeftExpression * (double)RightExpression;
-
-                case BinaryOp.Div:
-                    if (Math.Abs((double)RightExpression) < double.Epsilon)
-                        throw new DivisionByZeroException();
-
-                    return (double)LeftExpression / (double)RightExpression;
-
-                case BinaryOp.Exp:
-                    var a = (double)LeftExpression;
-                    var b = (double)RightExpression;
-                    if (b == 0.0) return 1.0;
-                    if (b == 0.5) return Math.Sqrt(a);
-                    if (b == 1.0) return a;
-                    if (b == 2.0) return a * a;
-                    if (b == 3.0) return a * a * a;
-                    if (b == 4.0) return a * a * a * a;
-                    return Math.Pow((double)LeftExpression, (double)RightExpression);
-                case BinaryOp.Range:
-                    throw new NotImplementedException("Evaluation of binary range operator is not implemented.");
-                case BinaryOp.Union:
-                    throw new NotImplementedException("Evaluation of range union operator is not implemented.");
-                case BinaryOp.Intersection:
-                    throw new NotImplementedException("Evaluation of range intersection operator is not implemented.");
-            }
-
-            throw new ArgumentException("Bad expression.");
-        }
+        public ValueNode RightExpression { get; private set; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -397,24 +126,18 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// Function call expression, e.g. sin(0.5)
     /// </summary>
-    internal class FunctionExpression : Expression
+    internal class FunctionExpression : ValueNode
     {
         // TODO: Improve parser, node should have store a name, not a delegate
-        public FunctionExpression(FunctionDefinition function, List<Expression> parms) : this(null, function, parms)
+        public FunctionExpression(FunctionDefinition function, List<ValueNode> parms) : this(null, function, parms)
         {
         }
 
-        public FunctionExpression(PrefixNode prefix, FunctionDefinition function, List<Expression> parms)
+        public FunctionExpression(PrefixNode prefix, FunctionDefinition function, List<ValueNode> parms)
         {
             Prefix = prefix;
             FunctionDefinition = function;
             Parameters = parms;
-        }
-
-        // ** object model
-        override public object Evaluate()
-        {
-            return FunctionDefinition.Function(Parameters);
         }
 
         public PrefixNode Prefix { get; }
@@ -426,7 +149,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public FunctionDefinition FunctionDefinition { get; }
 
-        public List<Expression> Parameters { get; }
+        public List<ValueNode> Parameters { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -439,7 +162,7 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly object _value;
 
         // ** ctor
-        internal XObjectExpression(object value)
+        internal XObjectExpression(object value) : base(value)
         {
             _value = value;
         }
@@ -476,17 +199,13 @@ namespace ClosedXML.Excel.CalcEngine
                 yield return _value;
             }
         }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
     /// Expression that represents an omitted parameter.
     /// </summary>
-    internal class EmptyValueExpression : Expression
+    internal class EmptyArgumentNode : ValueNode
     {
-        public override object Evaluate() => null;
-
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
@@ -501,7 +220,7 @@ namespace ClosedXML.Excel.CalcEngine
         NumberInvalid
     }
 
-    internal class ErrorExpression : Expression
+    internal class ErrorExpression : ValueNode
     {
         private readonly ExpressionErrorType _errorType;
 
@@ -510,40 +229,13 @@ namespace ClosedXML.Excel.CalcEngine
             _errorType = errorType;
         }
 
-        public override object Evaluate()
-        {
-            return _errorType;
-        }
-
-        public void ThrowApplicableException()
-        {
-            switch (_errorType)
-            {
-                // TODO: include last token in exception message
-                case ExpressionErrorType.CellReference:
-                    throw new CellReferenceException();
-                case ExpressionErrorType.CellValue:
-                    throw new CellValueException();
-                case ExpressionErrorType.DivisionByZero:
-                    throw new DivisionByZeroException();
-                case ExpressionErrorType.NameNotRecognized:
-                    throw new NameNotRecognizedException();
-                case ExpressionErrorType.NoValueAvailable:
-                    throw new NoValueAvailableException();
-                case ExpressionErrorType.NullValue:
-                    throw new NullValueException();
-                case ExpressionErrorType.NumberInvalid:
-                    throw new NumberException();
-            }
-        }
-
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
     /// An placeholder node for AST nodes that are not yet supported in ClosedXML.
     /// </summary>
-    internal class NotSupportedNode : Expression
+    internal class NotSupportedNode : ValueNode
     {
         public NotSupportedNode(string featureName)
         {
@@ -551,11 +243,6 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         public string FeatureName { get; }
-
-        public override object Evaluate()
-        {
-            throw new NotImplementedException($"Evaluation of {FeatureName} is not implemented.");
-        }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -633,7 +320,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// <summary>
     /// AST node for a reference of an area in some sheet.
     /// </summary>
-    internal class ReferenceNode : Expression
+    internal class ReferenceNode : ValueNode
     {
         public ReferenceNode(PrefixNode prefix, ReferenceItemType type, string address)
         {
@@ -654,8 +341,6 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         public string Address { get; }
 
-        public override object Evaluate() => throw new NotImplementedException("Evaluation of reference is not implemented.");
-
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
@@ -663,7 +348,7 @@ namespace ClosedXML.Excel.CalcEngine
 
     // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet suported and
     // the SR grammar has changed in not-yet-released (after 1.5.2) version of XLParser
-    internal class StructuredReferenceNode : Expression
+    internal class StructuredReferenceNode : ValueNode
     {
         public StructuredReferenceNode(PrefixNode prefix)
         {
@@ -674,8 +359,6 @@ namespace ClosedXML.Excel.CalcEngine
         /// Can be empty if no prefix available.
         /// </summary>
         public PrefixNode Prefix { get; }
-
-        public override object Evaluate() => throw new NotImplementedException("Evaluation of structured references is not implemented.");
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }

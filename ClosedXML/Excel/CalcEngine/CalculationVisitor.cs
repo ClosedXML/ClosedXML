@@ -1,7 +1,9 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -17,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ScalarNode node)
         {
-            switch (node.Evaluate())
+            switch (node.Value)
             {
                 case double number:
                     return new Number1(number);
@@ -92,7 +94,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, FunctionExpression node)
         {
-            var args = new AnyValue[node.Parameters.Count];
+            var args = new AnyValue?[node.Parameters.Count];
             for (var i = 0; i < node.Parameters.Count; ++i)
                 args[i] = node.Parameters[i].Accept(context, this);
 
@@ -108,12 +110,9 @@ namespace ClosedXML.Excel.CalcEngine
                 rangeFunctions.TryGetValue(node.Name, out var ignoreIdx);
                 for (var i = 0; i < args.Length; ++i)
                 {
-                    if (ignoreIdx is not null && ignoreIdx.Contains(i))
+                    if (ignoreIdx is null || !ignoreIdx.Contains(i))
                     {
-                    }
-                    else
-                    {
-                        args[i] = args[i].ImplicitIntersection(context);
+                        args[i] = args[i]?.ImplicitIntersection(context);
                     }
                 }
 
@@ -121,11 +120,11 @@ namespace ClosedXML.Excel.CalcEngine
                 var adaptedArgs = new List<Expression>(args.Length);
                 foreach (var arg in args)
                 {
-                    var adaptedArg = arg.Match<Expression>(
-                        logical => new AdapterExpression(logical.Value),
-                        number => new AdapterExpression(number.Value),
-                        text => new AdapterExpression(text.Value),
-                        error => new ErrorExpression(error.Type),
+                    Expression adaptedArg = arg.HasValue ? arg.Value.Match(
+                        logical => new Expression(logical.Value),
+                        number => new Expression(number.Value),
+                        text => new Expression(text.Value),
+                        error => new Expression(error.Type),
                         array => throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter."),
                         range =>
                         {
@@ -134,7 +133,8 @@ namespace ClosedXML.Excel.CalcEngine
 
                             var area = range.Areas.Single();
                             return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area), context.CalcEngine));
-                        });
+                        })
+                        : new EmptyValueExpression();
                     adaptedArgs.Add(adaptedArg);
                 }
                 try
@@ -155,7 +155,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
 
-            return function.CallFunction(context, args);
+            return function.CallFunction(context, args.Select(a => a.Value).ToArray());
         }
 
         public AnyValue Visit(CalcContext context, ReferenceNode node)
@@ -199,25 +199,240 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, FileNode node) => throw new NotImplementedException();
 
-        public AnyValue Visit(CalcContext context, XObjectExpression node) => throw new InvalidOperationException();
-
-        public AnyValue Visit(CalcContext context, EmptyValueExpression node) => throw new InvalidOperationException();
+        public AnyValue Visit(CalcContext context, EmptyArgumentNode node) => throw new InvalidOperationException();
 
         #endregion
 
-        private class AdapterExpression : Expression
-        {
-            private readonly object _value;
+    }
 
-            public AdapterExpression(object value)
+    /// <summary>
+    /// An adapter for legacy function implementations.
+    /// </summary>
+    internal class Expression : IComparable<Expression>
+    {
+        private readonly object _value;
+
+        public Expression(object value)
+        {
+            _value = value;
+        }
+
+        public virtual object Evaluate() => _value;
+
+
+        //---------------------------------------------------------------------------
+
+        #region ** implicit converters
+
+        public static implicit operator string(Expression x)
+        {
+            if (x._value is ExpressionErrorType error)
+                ThrowApplicableException(error);
+
+            var v = x.Evaluate();
+
+            if (v == null)
+                return string.Empty;
+
+            if (v is bool b)
+                return b.ToString().ToUpper();
+
+            return v.ToString();
+        }
+
+        public static implicit operator double(Expression x)
+        {
+            if (x._value is ExpressionErrorType error)
+                ThrowApplicableException(error);
+
+            // evaluate
+            var v = x.Evaluate();
+
+            // handle doubles
+            if (v is double dbl)
             {
-                _value = value;
+                return dbl;
             }
 
-            public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor)
-                => throw new InvalidOperationException("The node should never be used in visitor.");
+            // handle booleans
+            if (v is bool b)
+            {
+                return b ? 1 : 0;
+            }
 
-            public override object Evaluate() => _value;
+            // handle dates
+            if (v is DateTime dt)
+            {
+                return dt.ToOADate();
+            }
+
+            if (v is TimeSpan ts)
+            {
+                return ts.TotalDays;
+            }
+
+            // handle string
+            if (v is string s && double.TryParse(s, out var doubleValue))
+            {
+                return doubleValue;
+            }
+
+            // handle nulls
+            if (v == null || v is string)
+            {
+                return 0;
+            }
+
+            // handle everything else
+            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
+            return (double)Convert.ChangeType(v, typeof(double), _ci);
+        }
+
+        public static implicit operator bool(Expression x)
+        {
+            if (x._value is ExpressionErrorType error)
+                ThrowApplicableException(error);
+
+            // evaluate
+            var v = x.Evaluate();
+
+            // handle booleans
+            if (v is bool b)
+            {
+                return b;
+            }
+
+            // handle nulls
+            if (v == null)
+            {
+                return false;
+            }
+
+            // handle doubles
+            if (v is double dbl)
+            {
+                return dbl != 0;
+            }
+
+            // handle everything else
+            return (double)Convert.ChangeType(v, typeof(double)) != 0;
+        }
+
+        public static implicit operator DateTime(Expression x)
+        {
+            if (x._value is ExpressionErrorType error)
+                ThrowApplicableException(error);
+
+            // evaluate
+            var v = x.Evaluate();
+
+            // handle dates
+            if (v is DateTime dt)
+            {
+                return dt;
+            }
+
+            if (v is TimeSpan ts)
+            {
+                return new DateTime().Add(ts);
+            }
+
+            // handle numbers
+            if (v.IsNumber())
+            {
+                return DateTime.FromOADate((double)x);
+            }
+
+            // handle everything else
+            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
+            return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
+        }
+
+        #endregion ** implicit converters
+
+        //---------------------------------------------------------------------------
+
+        #region ** IComparable<Expression>
+
+        public int CompareTo(Expression other)
+        {
+            // get both values
+            var c1 = this.Evaluate() as IComparable;
+            var c2 = other.Evaluate() as IComparable;
+
+            // handle nulls
+            if (c1 == null && c2 == null)
+            {
+                return 0;
+            }
+            if (c2 == null)
+            {
+                return -1;
+            }
+            if (c1 == null)
+            {
+                return +1;
+            }
+
+            // make sure types are the same
+            if (c1.GetType() != c2.GetType())
+            {
+                try
+                {
+                    if (c1 is DateTime)
+                        c2 = ((DateTime)other);
+                    else if (c2 is DateTime)
+                        c1 = ((DateTime)this);
+                    else
+                        c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
+                }
+                catch (InvalidCastException) { return -1; }
+                catch (FormatException) { return -1; }
+                catch (OverflowException) { return -1; }
+                catch (ArgumentNullException) { return -1; }
+            }
+
+            // String comparisons should be case insensitive
+            if (c1 is string s1 && c2 is string s2)
+                return StringComparer.OrdinalIgnoreCase.Compare(s1, s2);
+            else
+                return c1.CompareTo(c2);
+        }
+
+        #endregion ** IComparable<Expression>
+
+
+        private static void ThrowApplicableException(ExpressionErrorType errorType)
+        {
+            switch (errorType)
+            {
+                // TODO: include last token in exception message
+                case ExpressionErrorType.CellReference:
+                    throw new CellReferenceException();
+                case ExpressionErrorType.CellValue:
+                    throw new CellValueException();
+                case ExpressionErrorType.DivisionByZero:
+                    throw new DivisionByZeroException();
+                case ExpressionErrorType.NameNotRecognized:
+                    throw new NameNotRecognizedException();
+                case ExpressionErrorType.NoValueAvailable:
+                    throw new NoValueAvailableException();
+                case ExpressionErrorType.NullValue:
+                    throw new NullValueException();
+                case ExpressionErrorType.NumberInvalid:
+                    throw new NumberException();
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Expression that represents an omitted parameter.
+    /// </summary>
+    internal class EmptyValueExpression : Expression
+    {
+        public EmptyValueExpression() : base(null)
+        {
         }
     }
 }
