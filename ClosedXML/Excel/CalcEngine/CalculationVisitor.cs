@@ -88,23 +88,24 @@ namespace ClosedXML.Excel.CalcEngine
             for (var i = 0; i < node.Parameters.Count; ++i)
                 args[i] = node.Parameters[i].Accept(context, this);
 
+
+            var rangeFunctions = new Dictionary<string, List<int>>()
+                {
+                    { "AND" , new List<int>{ 0 } }
+                };
+            rangeFunctions.TryGetValue(node.Name, out var ignoreIdx);
+            for (var i = 0; i < args.Length; ++i)
+            {
+                if (ignoreIdx is null || !ignoreIdx.Contains(i))
+                {
+                    args[i] = args[i]?.ImplicitIntersection(context);
+                }
+            }
+
             if (!_functions.TryGetFunc(node.Name, out FormulaFunction function))
             {
                 if (!_functions.TryGetFunc(node.Name, out FunctionDefinition legacyFunction))
                     return Error1.Name;
-
-                var rangeFunctions = new Dictionary<string, List<int>>()
-                {
-                    { "AND" , new List<int>{ 0 } }
-                };
-                rangeFunctions.TryGetValue(node.Name, out var ignoreIdx);
-                for (var i = 0; i < args.Length; ++i)
-                {
-                    if (ignoreIdx is null || !ignoreIdx.Contains(i))
-                    {
-                        args[i] = args[i]?.ImplicitIntersection(context);
-                    }
-                }
 
                 // This creates a some of overhead, but all legacy functions will be migrated in near future
                 var adaptedArgs = new List<Expression>(args.Length);
@@ -145,7 +146,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
 
-            return function.CallFunction(context, args.Select(a => a.Value).ToArray());
+            return function.CallFunction(context, args);
         }
 
         public AnyValue Visit(CalcContext context, ReferenceNode node)

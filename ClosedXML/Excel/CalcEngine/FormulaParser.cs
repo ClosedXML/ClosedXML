@@ -222,7 +222,7 @@ namespace ClosedXML.Excel.CalcEngine
                     node =>
                     {
                         var fn = (FunctionExpression)node.ChildNodes[0].AstNode;
-                        return new FunctionExpression(null, fn.FunctionDefinition, fn.Parameters);
+                        return new FunctionExpression(null, fn.Name, fn.Parameters);
                     }
                 },
                 {
@@ -273,7 +273,7 @@ namespace ClosedXML.Excel.CalcEngine
                     {
                         var prefix = (PrefixNode)node.ChildNodes[0].AstNode;
                         var fn = (FunctionExpression)node.ChildNodes[1].AstNode;
-                        return new FunctionExpression(prefix, fn.FunctionDefinition, fn.Parameters);
+                        return new FunctionExpression(prefix, fn.Name, fn.Parameters);
                     }
                 },
                 {
@@ -455,29 +455,28 @@ namespace ClosedXML.Excel.CalcEngine
                 return;
             }
 
-            var udfFunction = new FunctionDefinition(functionName , - 1, -1, p => throw new NotImplementedException("Evaluation of custom functions is not implemented."));
             var arguments = parseNode.ChildNodes[1].ChildNodes.Select(treeNode => treeNode.AstNode).Cast<ValueNode>().ToList();
-            parseNode.AstNode = new FunctionExpression(udfFunction, arguments); ;
+            parseNode.AstNode = new FunctionExpression(functionName, arguments); ;
         }
 
         private FunctionExpression CreateExcelFunctionCallExpression(ParseTreeNode nameNode, ParseTreeNode argumentsNode)
         {
             var functionName = nameNode.ChildNodes.Single().Token.Text.WithoutLast(1);
-            var foundFunction = _fnTbl.TryGetFunc(functionName, out FunctionDefinition functionDefinition);
+            var foundFunction = _fnTbl.TryGetFunc(functionName, out var parmMin, out var parmMax);
             if (!foundFunction && functionName.StartsWith($"{defaultFunctionNameSpace}."))
-                foundFunction = _fnTbl.TryGetFunc(functionName.Substring(defaultFunctionNameSpace.Length + 1), out functionDefinition);
+                foundFunction = _fnTbl.TryGetFunc(functionName.Substring(defaultFunctionNameSpace.Length + 1), out parmMin, out parmMax);
 
             if (!foundFunction)
                 throw new NameNotRecognizedException($"The function `{functionName}` was not recognised.");
 
             var arguments = argumentsNode.ChildNodes.Select(treeNode => treeNode.AstNode).Cast<ValueNode>().ToList();
-            if (functionDefinition.ParmMin != -1 && arguments.Count < functionDefinition.ParmMin)
-                throw new ExpressionParseException($"Too few parameters for function '{functionName}'. Expected a minimum of {functionDefinition.ParmMin} and a maximum of {functionDefinition.ParmMax}.");
+            if (parmMin < 0 && arguments.Count < parmMin)
+                throw new ExpressionParseException($"Too few parameters for function '{functionName}'. Expected a minimum of {parmMin} and a maximum of {parmMax}.");
 
-            if (functionDefinition.ParmMax != -1 && arguments.Count > functionDefinition.ParmMax)
-                throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {functionDefinition.ParmMin} and a maximum of {functionDefinition.ParmMax}.");
+            if (parmMax < 0 && arguments.Count > parmMax)
+                throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {parmMin} and a maximum of {parmMax}.");
 
-            return new FunctionExpression(functionDefinition, arguments);
+            return new FunctionExpression(functionName, arguments);
         }
 
         private static AstNodeCreator CreateCopyNode(int childIndex)

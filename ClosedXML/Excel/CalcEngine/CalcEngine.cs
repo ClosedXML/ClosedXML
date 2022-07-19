@@ -2,6 +2,7 @@ using ClosedXML.Excel.CalcEngine.Functions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -129,11 +130,13 @@ namespace ClosedXML.Excel.CalcEngine
         }
     }
 
+    internal delegate AnyValue CalcEngineFunction(CalcContext ctx, Span<AnyValue?> arg);
+
     /// <summary>
     /// Delegate that represents CalcEngine functions.
     /// </summary>
     /// <param name="parms">List of <see cref="Expression"/> objects that represent the
     /// parameters to be used in the function call.</param>
     /// <returns>The function result.</returns>
-    internal delegate object CalcEngineFunction(List<Expression> parms);
+    internal delegate object LegacyCalcEngineFunction(List<Expression> parms);
 }

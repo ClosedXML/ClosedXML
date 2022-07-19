@@ -130,12 +130,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             public static void Register(FunctionRegistry registry)
             {
-                registry.RegisterFunction("TYPE", typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static));
-                registry.RegisterFunction("SIN", typeof(TestFuncRegistry).GetMethod(nameof(Sin), BindingFlags.NonPublic | BindingFlags.Static));
-                registry.RegisterFunction("COS", typeof(TestFuncRegistry).GetMethod(nameof(Cos), BindingFlags.NonPublic | BindingFlags.Static));
+                //                registry.RegisterFunction("TYPE", typeof(TestFuncRegistry).GetMethod(nameof(Type1), BindingFlags.NonPublic | BindingFlags.Static));
+                //                registry.RegisterFunction("SIN", typeof(TestFuncRegistry).GetMethod(nameof(Sin), BindingFlags.NonPublic | BindingFlags.Static));
+                //                registry.RegisterFunction("COS", typeof(TestFuncRegistry).GetMethod(nameof(Cos), BindingFlags.NonPublic | BindingFlags.Static));
             }
-
-            private static AnyValue Type1(CalcContext ctx, AnyValue value)
+            /*
+            private static AnyValue Type1(CalcContext ctx, System.Span<AnyValue?> value)
             {
                 return value.Match<Number1>(
                     logical => 1,
@@ -154,8 +154,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             private static AnyValue Cos(CalcContext ctx, Number1 value)
             {
                 return new Number1(System.Math.Cos(value));
-            }
+            }*/
         }
-
     }
 }

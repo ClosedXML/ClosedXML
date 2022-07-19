@@ -1,6 +1,8 @@
 ﻿using OneOf;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -15,6 +17,7 @@ namespace ClosedXML.Excel.CalcEngine
         };
 
         private readonly CultureInfo _culture;
+
         public ValueConverter(CultureInfo culture) => _culture = culture;
 
 
@@ -28,6 +31,20 @@ namespace ClosedXML.Excel.CalcEngine
             return double.TryParse(text.Value, NumberStyles.Float, _culture, out var number)
                 ? new Number1(number)
                 : Error1.Value;
+        }
+
+        internal OneOf<Number1, Error1> ToNumber(AnyValue? value)
+        {
+            if (!value.HasValue)
+                return Error1.Value;
+
+            return value.Value.Match(
+                    logical => ToNumber(logical),
+                    number => number,
+                    text => ToNumber(text),
+                    error => error,
+                    array => throw new NotImplementedException("Not sure what to do with it."),
+                    reference => throw new NotImplementedException("Not sure what to do with it."));
         }
     }
 }

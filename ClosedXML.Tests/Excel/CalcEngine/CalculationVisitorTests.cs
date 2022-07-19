@@ -87,12 +87,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
             ws.Cell("A1").Value = 1;
-            ws.Cell("A2").Value = Math.PI/2.0;
+            ws.Cell("A2").Value = -Math.PI/2.0;
             ws.Cell("A3").Value = 3;
-            ws.Cell("B2").FormulaA1 = "=SIN(A1:A3)";
+            ws.Cell("B2").FormulaA1 = "=ABS(A1:A3)";
 
             var result = ws.Cell("B2").Value;
-            Assert.That(result, Is.EqualTo(1).Within(1e-10));
+            Assert.That(result, Is.EqualTo(Math.PI / 2.0).Within(1e-10));
         }
 
     }

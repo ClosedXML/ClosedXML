@@ -128,14 +128,14 @@ namespace ClosedXML.Excel.CalcEngine
     internal class FunctionExpression : ValueNode
     {
         // TODO: Improve parser, node should have store a name, not a delegate
-        public FunctionExpression(FunctionDefinition function, List<ValueNode> parms) : this(null, function, parms)
+        public FunctionExpression(string name, List<ValueNode> parms) : this(null, name, parms)
         {
         }
 
-        public FunctionExpression(PrefixNode prefix, FunctionDefinition function, List<ValueNode> parms)
+        public FunctionExpression(PrefixNode prefix, string name, List<ValueNode> parms)
         {
             Prefix = prefix;
-            FunctionDefinition = function;
+            Name = name;
             Parameters = parms;
         }
 
@@ -144,9 +144,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Name of the function.
         /// </summary>
-        public string Name => FunctionDefinition.Name;
-
-        public FunctionDefinition FunctionDefinition { get; }
+        public string Name { get; }
 
         public List<ValueNode> Parameters { get; }
 

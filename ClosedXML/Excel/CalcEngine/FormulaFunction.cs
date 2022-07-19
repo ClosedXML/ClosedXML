@@ -31,8 +31,7 @@ namespace ClosedXML.Excel.CalcEngine
     internal class FormulaFunction
     {
         private static readonly Type[] ValueTypes = new[] { typeof(Logical), typeof(Number1), typeof(Text), typeof(Error1), typeof(Array), typeof(Reference) };
-        private readonly MethodInfo _method;
-        private readonly Type[] _parameters;
+        private readonly CalcEngineFunction _method;
 
         /// <summary>
         /// 
@@ -40,14 +39,21 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="method"></param>
         /// <param name="parmMin">Minimum amount of parameters, useful only for variable number of parameters function.</param>
         /// <param name="parmMax">Minimum amount of parameters, useful only for variable number of parameters function.</param>
-        public FormulaFunction(MethodInfo method, int parmMin, int parmMax)
+        public FormulaFunction(CalcEngineFunction method, int parmMin, int parmMax)
         {
             _method = method;
-            _parameters = method.GetParameters().Select(p => p.ParameterType).ToArray();
+            ParmMin = parmMin;
+            ParmMax = parmMax;
         }
 
-        public AnyValue CallFunction(CalcContext ctx, params AnyValue[] args)
+        public int ParmMin { get; }
+        public int ParmMax { get; }
+
+        public AnyValue CallFunction(CalcContext ctx, params AnyValue?[] args)
         {
+            return _method(ctx, args);
+
+            /*
             var convertedArgs = new object[args.Length + 1];
             convertedArgs[0] = ctx;
             for (var argIdx = 0; argIdx < args.Length; ++argIdx)
@@ -69,7 +75,7 @@ namespace ClosedXML.Excel.CalcEngine
             catch (Exception ex)
             {
                 throw ex;
-            }
+            }*/
         }
 
         /// <summary>

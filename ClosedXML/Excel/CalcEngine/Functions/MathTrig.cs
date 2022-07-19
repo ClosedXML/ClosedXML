@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -15,9 +16,17 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region Register
 
+        private static CalcEngineFunction Adapt(Func<Number1, AnyValue> f)
+        {
+            return (ctx, args) => ctx.Converter.ToNumber(args[0]).Match(
+                    number => f(number),
+                    error => error);
+        }
+
+
         public static void Register(FunctionRegistry ce)
         {
-            ce.RegisterFunction("ABS", 1, Abs);
+            ce.RegisterFunction("ABS", Adapt(Abs), 1, 1);
             ce.RegisterFunction("ACOS", 1, Acos);
             ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ACOT", 1, Acot);
@@ -130,9 +139,9 @@ namespace ClosedXML.Excel.CalcEngine
             return radians / Math.PI * 200.0;
         }
 
-        private static object Abs(List<Expression> p)
+        private static AnyValue Abs(Number1 number)
         {
-            return Math.Abs(p[0]);
+            return new Number1(Math.Abs(number));
         }
 
         private static object Acos(List<Expression> p)

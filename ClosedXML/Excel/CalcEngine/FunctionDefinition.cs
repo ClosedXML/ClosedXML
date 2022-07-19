@@ -7,10 +7,10 @@ namespace ClosedXML.Excel.CalcEngine
     {
         // ** fields
         public int ParmMin, ParmMax;
-        public CalcEngineFunction Function;
+        public LegacyCalcEngineFunction Function;
 
         // ** ctor
-        public FunctionDefinition(string name, int parmMin, int parmMax, CalcEngineFunction function)
+        public FunctionDefinition(string name, int parmMin, int parmMax, LegacyCalcEngineFunction function)
         {
             Name = name;
             ParmMin = parmMin;

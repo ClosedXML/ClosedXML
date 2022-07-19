@@ -28,7 +28,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var acceptedParameters = node.Parameters.Select(p => p.Accept(context, this)).Cast<ValueNode>().ToList();
             return node.Parameters.Zip(acceptedParameters, (param, acceptedParam) => !ReferenceEquals(param, acceptedParam)).Any()
-                ? new FunctionExpression(node.Prefix, node.FunctionDefinition, acceptedParameters)
+                ? new FunctionExpression(node.Prefix, node.Name, acceptedParameters)
                 : node;
         }
 
