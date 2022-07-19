@@ -44,6 +44,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// Evaluates an expression.
         /// </summary>
         /// <param name="expression">Expression to evaluate.</param>
+        /// <param name="wb">Workbook where is formula being evaluated.</param>
         /// <param name="ws">Worksheet where is formula being evaluated.</param>
         /// <param name="address">Address of formula.</param>
         /// <returns>The value of the expression.</returns>
@@ -53,13 +54,13 @@ namespace ClosedXML.Excel.CalcEngine
         /// method and then using the Expression.Evaluate method to evaluate
         /// the parsed expression.
         /// </remarks>
-        public object Evaluate(string expression, XLWorksheet ws = null, IXLAddress address = null)
+        public object Evaluate(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
         {
             var x = _cache != null
                     ? _cache[expression]
                     : Parse(expression);
 
-            var ctx = new CalcContext(_culture, ws, address);
+            var ctx = new CalcContext(_culture, wb, ws, address);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
             var result = x.Accept(ctx, calculatingVisitor);
             if (ctx.UseImplicitIntersection && result.IsT4)

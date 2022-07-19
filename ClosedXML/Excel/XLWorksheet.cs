@@ -1744,7 +1744,7 @@ namespace ClosedXML.Excel
 
         public Object Evaluate(String expression)
         {
-            return CalcEngine.Evaluate(expression, this);
+            return CalcEngine.Evaluate(expression, Workbook, this);
         }
 
         /// <summary>

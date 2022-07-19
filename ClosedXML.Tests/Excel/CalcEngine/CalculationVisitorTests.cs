@@ -24,7 +24,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var cst = parser.Parse(formula);
             var ast = (AstNode)cst.Root.AstNode;
 
-            var context = new CalcContext(CultureInfo.InvariantCulture, (XLWorksheet)ws, new XLAddress((XLWorksheet)ws, 2, 5, true, true));
+            var context = new CalcContext(CultureInfo.InvariantCulture, wb, (XLWorksheet)ws, new XLAddress((XLWorksheet)ws, 2, 5, true, true));
             var func = new FunctionRegistry();
             OperationsTests.TestFuncRegistry.Register(func);
 

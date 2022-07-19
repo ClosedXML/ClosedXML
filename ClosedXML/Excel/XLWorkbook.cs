@@ -877,7 +877,7 @@ namespace ClosedXML.Excel
 
         public Object Evaluate(String expression)
         {
-            return CalcEngine.Evaluate(expression);
+            return CalcEngine.Evaluate(expression, this);
         }
 
         /// <summary>

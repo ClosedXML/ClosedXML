@@ -9,6 +9,7 @@ namespace ClosedXML.Excel.CalcEngine
 {
     internal class CalcContext
     {
+        private readonly XLWorkbook _workbook;
         private readonly XLWorksheet _worksheet;
         private readonly IXLAddress _formulaAddress;
 
@@ -19,8 +20,9 @@ namespace ClosedXML.Excel.CalcEngine
             Converter = new ValueConverter(culture);
         }
 
-        public CalcContext(CultureInfo culture, XLWorksheet worksheet, IXLAddress formulaAddress)
+        public CalcContext(CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
         {
+            _workbook = workbook;
             _worksheet = worksheet;
             _formulaAddress = formulaAddress;
             Culture = culture;
@@ -29,6 +31,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         // TODO: Remove once legacy functions are migrated
         internal XLCalcEngine CalcEngine { get; }
+
+        /// <summary>
+        /// Worksheet of the cell the formula is calculating.
+        /// </summary>
+        public XLWorkbook Workbook => _workbook ?? throw new MissingContextException();
 
         /// <summary>
         /// Worksheet of the cell the formula is calculating.

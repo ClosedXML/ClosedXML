@@ -89,16 +89,22 @@ namespace ClosedXML.Excel.CalcEngine
                 args[i] = node.Parameters[i].Accept(context, this);
 
 
-            var rangeFunctions = new Dictionary<string, List<int>>(StringComparer.OrdinalIgnoreCase)
+            // null - all args
+            var rangeFunctions = new Dictionary<string, IReadOnlyList<int>>(StringComparer.OrdinalIgnoreCase)
             {
-                { "AND" , new List<int> { 0 } },
+                { "AND" , null },
                 { "NETWORKDAYS", new List<int> { 2 } },
-                { "WORKDAY", new List<int> { 2 } }
+                { "WORKDAY", new List<int> { 2 } },
+                { "AVERAGE", null },
+                { "AVERAGEA", null },
+                { "COUNT", null },
+                { "COUNTA", null },
+                { "DEVSQ", null }
             };
-            rangeFunctions.TryGetValue(node.Name, out var ignoreIdx);
+            var hasRangeParam = rangeFunctions.TryGetValue(node.Name, out var rangeParamIdx);
             for (var i = 0; i < args.Length; ++i)
             {
-                if (ignoreIdx is null || !ignoreIdx.Contains(i))
+                if (!hasRangeParam || (rangeParamIdx is not null && !rangeParamIdx.Contains(i)))
                 {
                     args[i] = args[i]?.ImplicitIntersection(context);
                 }
@@ -125,7 +131,14 @@ namespace ClosedXML.Excel.CalcEngine
                                 throw new NotSupportedException($"Legacy XObjectExpression could only work with single area, reference has {range.Areas.Count}.");
 
                             var area = range.Areas.Single();
-                            return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area), context.CalcEngine));
+                            if (area.Worksheet is not null)
+                            {
+                                return new XObjectExpression(new CellRangeReference(area.Worksheet.Range(area), context.CalcEngine));
+                            }
+                            else
+                            {
+                                return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area), context.CalcEngine));
+                            }
                         })
                         : new EmptyValueExpression();
                     adaptedArgs.Add(adaptedArg);
@@ -166,7 +179,7 @@ namespace ClosedXML.Excel.CalcEngine
                     throw new NotImplementedException("3D references are not yet implemented.");
 
                 var sheet = node.Prefix.Sheet;
-                if (!context.Worksheet.Workbook.TryGetWorksheet(sheet, out var worksheet1))
+                if (!context.Workbook.TryGetWorksheet(sheet, out var worksheet1))
                     return Error1.Ref;
                 worksheet = (XLWorksheet)worksheet1;
             }
