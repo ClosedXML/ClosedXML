@@ -80,6 +80,5 @@ namespace ClosedXML.Excel.CalcEngine
                 _ => throw new NotImplementedException($"Not sure how to get error from a cell (type {value?.GetType().Name}, value {value}).")
             };
         }
-
     }
 }

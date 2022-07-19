@@ -66,7 +66,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return node.Operation switch
             {
-                BinaryOp.Concat => throw new NotImplementedException(),
+                BinaryOp.Concat => leftArg.Concat(rightArg, context),
                 BinaryOp.Add => leftArg.BinaryPlus(rightArg, context),
                 BinaryOp.Sub => leftArg.BinaryMinus(rightArg, context),
                 BinaryOp.Mult => leftArg.BinaryMult(rightArg, context),

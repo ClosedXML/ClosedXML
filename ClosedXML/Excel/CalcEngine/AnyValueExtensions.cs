@@ -261,6 +261,18 @@ namespace ClosedXML.Excel.CalcEngine
 
         #endregion
 
+        public static AnyValue Concat(this AnyValue left, AnyValue right, CalcContext context)
+        {
+            BinaryFunc g = (lhs, rhs) =>
+            {
+                return context.Converter.ToText(lhs).Match(
+                    leftText => context.Converter.ToText(rhs).Match<OneOf<Text, Error1>>(rightText => new Text(leftText + rightText), rightError => rightError),
+                    leftError => leftError).Match<ScalarValue>(text => text, error => error);
+            };
+
+            return BinaryOperation(left, right, g, context);
+        }
+
         private static AnyValue BinaryOperation(AnyValue left, AnyValue right, BinaryFunc func, CalcContext context)
         {
             var isLeftScalar = left.TryPickScalar(out var leftScalar, out var leftAggregate);

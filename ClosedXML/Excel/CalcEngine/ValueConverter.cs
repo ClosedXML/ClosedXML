@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -45,6 +46,20 @@ namespace ClosedXML.Excel.CalcEngine
                     error => error,
                     array => throw new NotImplementedException("Not sure what to do with it."),
                     reference => throw new NotImplementedException("Not sure what to do with it."));
+        }
+
+        internal string ToExcelString(Number1 rightNumber)
+        {
+            return rightNumber.Value.ToString(_culture);
+        }
+
+        internal OneOf<Text, Error1> ToText(ScalarValue lhs)
+        {
+            return lhs.Match<OneOf<Text, Error1>>(
+                logical => new Text(logical ? "TRUE" : "FALSE"),
+                number => new Text(number.Value.ToString(_culture)),
+                text => text,
+                error => error);
         }
     }
 }
