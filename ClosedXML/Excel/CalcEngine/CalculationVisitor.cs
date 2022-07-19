@@ -84,20 +84,37 @@ namespace ClosedXML.Excel.CalcEngine
 
         // Value is which args can be range, from 0. null - all args
         private static readonly Dictionary<string, IReadOnlyList<int>> rangeFunctions = new(StringComparer.OrdinalIgnoreCase)
-            {
-                { "AND" , null },
-                { "NETWORKDAYS", new List<int> { 2 } },
-                { "WORKDAY", new List<int> { 2 } },
-                { "AVERAGE", null },
-                { "AVERAGEA", null },
-                { "COUNT", null },
-                { "COUNTA", null },
-                { "COUNTBLANK", null},
-                { "COUNTIF", new List<int>{ 0 } },
-                { "COUNTIFs", new[] { 0}.Concat(Enumerable.Range(1, 255).Where(x => x % 2 == 1)).ToList() },
-                { "DEVSQ", null },
-                { "SUMIF", new List<int>{ 0, 2 } }
-            };
+        {
+            { "AND" , null },
+            { "NETWORKDAYS", new List<int> { 2 } },
+            { "WORKDAY", new List<int> { 2 } },
+            { "AVERAGE", null },
+            { "AVERAGEA", null },
+            { "COUNT", null },
+            { "COUNTA", null },
+            { "COUNTBLANK", null},
+            { "COUNTIF", new List<int>{ 0 } },
+            { "COUNTIFs", Enumerable.Range(0, 255).Where(x => x % 2 == 0).ToList() },
+            { "DEVSQ", null },
+            { "GEOMEAN", null },
+            { "MAX", null },
+            { "MAXA", null },
+            { "MEDIAN", null },
+            { "MIN", null },
+            { "MINA", null },
+            { "MINVERSE", null },
+            { "STDEV", null },
+            { "STDEVA", null },
+            { "STDEVP", null },
+            { "STDEVPA", null },
+            { "SUM", null },
+            { "SUMIF", new List<int> { 0, 2 } },
+            { "SUMIFS", new List<int> { 0,1,3,5,7,9} },
+            { "VAR", null },
+            { "VARA", null },
+            { "VARP", null },
+            { "VARPA", null }
+        };
 
 
         public AnyValue Visit(CalcContext context, FunctionExpression node)
