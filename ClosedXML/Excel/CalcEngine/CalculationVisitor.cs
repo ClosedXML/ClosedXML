@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -180,7 +180,7 @@ namespace ClosedXML.Excel.CalcEngine
                 worksheet = context.Worksheet;
             }
 
-            return new Range(new XLRangeAddress(worksheet, node.Address));
+            return new Reference(new XLRangeAddress(worksheet, node.Address));
         }
 
         public AnyValue Visit(CalcContext context, NotSupportedNode node)

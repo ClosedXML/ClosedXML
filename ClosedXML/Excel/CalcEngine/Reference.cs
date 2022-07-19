@@ -7,12 +7,12 @@ using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Ex
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
-    /// Range is an area of cells in the workbook. It's used in formula evaluation.
-    /// Every range has at least one cell.
+    /// Reference is a collection of cells in the workbook. It's used in formula evaluation.
+    /// Every reference has at least one cell.
     /// </summary>
-    internal class Range
+    internal class Reference
     {
-        public Range(XLRangeAddress area)
+        public Reference(XLRangeAddress area)
         {
             if (!area.IsNormalized)
                 throw new ArgumentException();
@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine
             Areas = new List<XLRangeAddress>(1) { area };
         }
 
-        private Range(List<XLRangeAddress> areas)
+        private Reference(List<XLRangeAddress> areas)
         {
             Areas = areas;
         }
@@ -53,7 +53,7 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public static OneOf<Range, Error1> RangeOp(Range lhs, Range rhs)
+        public static OneOf<Reference, Error1> RangeOp(Reference lhs, Reference rhs)
         {
             var sheets = lhs.Areas.Select(a => a.Worksheet).Concat(rhs.Areas.Select(a => a.Worksheet))
                 .Where(a => a.Worksheet is not null).Distinct().ToList();
@@ -76,15 +76,15 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             var sheet = sheets.Single();
-            return new Range(new XLRangeAddress(new XLAddress(sheet, minRow, minCol, true, true), new XLAddress(sheet, maxRow, maxCol, true, true)));
+            return new Reference(new XLRangeAddress(new XLAddress(sheet, minRow, minCol, true, true), new XLAddress(sheet, maxRow, maxCol, true, true)));
         }
 
-        public static Range UnionOp(Range lhs, Range rhs)
+        public static Reference UnionOp(Reference lhs, Reference rhs)
         {
-            return new Range(lhs.Areas.Concat(rhs.Areas).ToList());
+            return new Reference(lhs.Areas.Concat(rhs.Areas).ToList());
         }
 
-        public static OneOf<Range, Error1> Intersect(Range lhs, Range rhs, CalcContext ctx)
+        public static OneOf<Reference, Error1> Intersect(Reference lhs, Reference rhs, CalcContext ctx)
         {
             var sheets = lhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet)
                 .Concat(rhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet))
@@ -108,7 +108,7 @@ namespace ClosedXML.Excel.CalcEngine
                     intersections.Add((XLRangeAddress)intersectedArea);
             }
 
-            return intersections.Any() ? new Range(intersections) : Error1.Null;
+            return intersections.Any() ? new Reference(intersections) : Error1.Null;
         }
 
         public OneOf<ScalarValue, Error1> ImplicitIntersection(CalcContext ctx)

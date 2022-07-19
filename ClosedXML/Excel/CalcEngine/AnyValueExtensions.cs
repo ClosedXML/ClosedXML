@@ -1,9 +1,9 @@
 ﻿using OneOf;
 using System;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
-using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Range>;
+using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -36,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!rightConversionResult.TryPickT0(out var rightReference, out var rightError))
                 return rightError;
 
-            return Range.RangeOp(leftReference, rightReference)
+            return Reference.RangeOp(leftReference, rightReference)
                 .Match<AnyValue>(range => range, error => error);
         }
 
@@ -45,9 +45,9 @@ namespace ClosedXML.Excel.CalcEngine
             throw new NotImplementedException();
         }
 
-        private static OneOf<Range, Error1> ConvertToReference(AnyValue left)
+        private static OneOf<Reference, Error1> ConvertToReference(AnyValue left)
         {
-            return left.Match<OneOf<Range, Error1>>(
+            return left.Match<OneOf<Reference, Error1>>(
                 logical => Error1.Value,
                 number => Error1.Value,
                 text => Error1.Value,
@@ -130,7 +130,7 @@ namespace ClosedXML.Excel.CalcEngine
             return AnyValue.FromT4(new ConstArray(data));
         }
 
-        private static AnyValue ApplyOnReference(Range reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
+        private static AnyValue ApplyOnReference(Reference reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
         {
             if (reference.Areas.Count != 1)
                 return Error1.Value;
@@ -321,7 +321,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // If not a single area, error
-        public static OneOf<Array, Error1> ToArray(this Range reference, CalcContext context)
+        public static OneOf<Array, Error1> ToArray(this Reference reference, CalcContext context)
         {
             if (reference.Areas.Count != 1)
                 throw new NotImplementedException();
