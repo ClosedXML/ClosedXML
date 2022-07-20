@@ -157,7 +157,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("MCMLXXXIII ", 1983)]
         public void Arabic_ReturnsCorrectNumber(string roman, int arabic)
         {
-            var actual = (int)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format($"ARABIC(\"{roman}\")"));
             Assert.AreEqual(arabic, actual);
         }
 
@@ -582,7 +582,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Combina_CalculatesCorrectValues(int number, int chosen, int expectedResult)
         {
             var actualResult = XLWorkbook.EvaluateExpr($"COMBINA({number}, {chosen})");
-            Assert.AreEqual(expectedResult, (long)actualResult);
+            Assert.AreEqual(expectedResult, (double)actualResult);
         }
 
         [Theory]
@@ -613,7 +613,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 number.ToString(CultureInfo.InvariantCulture),
                 chosen.ToString(CultureInfo.InvariantCulture)));
 
-            Assert.AreEqual(expectedResult, (long)actualResult);
+            Assert.AreEqual(expectedResult, (double)actualResult);
         }
 
         [TestCase(0, 1)]
@@ -875,9 +875,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase(-1, -2)]
         [TestCase(0, 0)]
         [TestCase(Math.PI, 4)]
-        public void Even_ReturnsCorrectResults(double input, int expectedResult)
+        public void Even_ReturnsCorrectResults(double input, double expectedResult)
         {
-            var actual = (int)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
+            var actual = (double)XLWorkbook.EvaluateExpr(string.Format(@"EVEN({0})", input.ToString(CultureInfo.InvariantCulture)));
             Assert.AreEqual(expectedResult, actual);
         }
 
