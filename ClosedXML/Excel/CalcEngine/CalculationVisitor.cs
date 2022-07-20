@@ -103,6 +103,7 @@ namespace ClosedXML.Excel.CalcEngine
             { "MIN", null },
             { "MINA", null },
             { "MINVERSE", null },
+            { "SERIESSUM", new List<int>{ 3 } }, // Yay, this function is part of ECMA-376, but isn't in the list of functions that allow range.
             { "STDEV", null },
             { "STDEVA", null },
             { "STDEVP", null },
