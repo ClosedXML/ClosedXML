@@ -90,6 +90,8 @@ namespace ClosedXML.Excel.CalcEngine
             { "WORKDAY", new List<int> { 2 } },
             { "AVERAGE", null },
             { "AVERAGEA", null },
+            { "CONCAT", null },
+            { "CONCATENATE", null }, // TODO: Remove after switch to new engine. This function actually doesn't acccept ranges, but it's legacy implementation has a check and there is a test.
             { "COUNT", null },
             { "COUNTA", null },
             { "COUNTBLANK", null},
@@ -97,6 +99,9 @@ namespace ClosedXML.Excel.CalcEngine
             { "COUNTIFs", Enumerable.Range(0, 255).Where(x => x % 2 == 0).ToList() },
             { "DEVSQ", null },
             { "GEOMEAN", null },
+            { "HLOOKUP", new List<int>{ 1 } },
+            { "INDEX", new List<int> { 0, 1 } },
+            { "MATCH", new List<int> { 1 } },
             { "MAX", null },
             { "MAXA", null },
             { "MEDIAN", null },
@@ -111,10 +116,13 @@ namespace ClosedXML.Excel.CalcEngine
             { "SUM", null },
             { "SUMIF", new List<int> { 0, 2 } },
             { "SUMIFS", new List<int> { 0,1,3,5,7,9} },
+            { "SUMPRODUCT", null },
+            { "TEXTJOIN", Enumerable.Range(2, 253).ToList() },
             { "VAR", null },
             { "VARA", null },
             { "VARP", null },
-            { "VARPA", null }
+            { "VARPA", null },
+            { "VLOOKUP", new List<int>{ 1 } },
         };
 
 
@@ -122,7 +130,13 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var args = new AnyValue?[node.Parameters.Count];
             for (var i = 0; i < node.Parameters.Count; ++i)
+            {
+                var paramNode = node.Parameters[i];
+                if (paramNode is not EmptyArgumentNode)
                 args[i] = node.Parameters[i].Accept(context, this);
+                else
+                    args[i] = null;
+            }
 
             var hasRangeParam = rangeFunctions.TryGetValue(node.Name, out var rangeParamIdx);
             for (var i = 0; i < args.Length; ++i)
