@@ -20,8 +20,9 @@ namespace ClosedXML.Excel.CalcEngine
             Converter = new ValueConverter(culture);
         }
 
-        public CalcContext(CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
+        public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
         {
+            CalcEngine = calcEngine;
             _workbook = workbook;
             _worksheet = worksheet;
             _formulaAddress = formulaAddress;

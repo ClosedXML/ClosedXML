@@ -233,19 +233,24 @@ namespace ClosedXML.Excel.CalcEngine
 
             var rangeName = node.Address;
             worksheet ??= context.Worksheet;
-            var found = worksheet.NamedRanges.TryGetValue(rangeName, out var namedRange)
-                    || context.Workbook.NamedRanges.TryGetValue(rangeName, out namedRange);
-            if (!found)
+            if (!TryGetNamedRange(worksheet, rangeName, out var namedRange))
                 return Error1.Name;
 
+            // This is rather horrible, but basically copy from XLCalcEngine.GetExternalObject
+            // It's hard to count all things that are wrong with this, from hand parsing operator range union by XLNamedRange to recursion.
             if (!namedRange.IsValid)
                 return Error1.Ref;
 
-            if (namedRange.Ranges.Count != 1)
-                throw new NotImplementedException("Range to reference conversion not implemented.");
+            var rangeResult = context.CalcEngine.EvaluateExpression(namedRange.ToString(), context.Workbook, context.Worksheet);
+            return rangeResult;
 
-            var range = namedRange.Ranges.Single();
-            return new Reference((XLRangeAddress)range.RangeAddress);
+            static bool TryGetNamedRange(IXLWorksheet ws, string name, out XLNamedRange range)
+            {
+                var found = ws.NamedRanges.TryGetValue(name, out var namedRange)
+                                    || ws.Workbook.NamedRanges.TryGetValue(name, out namedRange);
+                range = (XLNamedRange)namedRange;
+                return found;
+            };
         }
 
         public AnyValue Visit(CalcContext context, NotSupportedNode node)

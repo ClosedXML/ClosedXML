@@ -57,10 +57,10 @@ namespace ClosedXML.Excel.CalcEngine
         public object Evaluate(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
         {
             var x = _cache != null
-                    ? _cache[expression]
-                    : Parse(expression);
+                ? _cache[expression]
+                : Parse(expression);
 
-            var ctx = new CalcContext(_culture, wb, ws, address);
+            var ctx = new CalcContext((XLCalcEngine)this, _culture, wb, ws, address);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
             var result = x.Accept(ctx, calculatingVisitor);
             if (ctx.UseImplicitIntersection && result.IsT4)
@@ -74,9 +74,21 @@ namespace ClosedXML.Excel.CalcEngine
                 text => text.Value,
                 error => error,
                 array => throw new InvalidOperationException("Array shouldn't be present currently"),
-                reference => throw new NotImplementedException("WTF with this?")); 
+                reference => throw new NotImplementedException("WTF with this?"));
 
             //return x.Evaluate();
+        }
+
+        internal AnyValue EvaluateExpression(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)
+        {
+            // Yay, copy pasta.
+            var x = _cache != null
+                    ? _cache[expression]
+                    : Parse(expression);
+
+            var ctx = new CalcContext((XLCalcEngine)this, _culture, wb, ws, address);
+            var calculatingVisitor = new CalculationVisitor(_funcRegistry);
+            return x.Accept(ctx, calculatingVisitor);
         }
 
         /// <summary>
