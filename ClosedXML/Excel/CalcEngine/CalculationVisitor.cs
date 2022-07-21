@@ -248,7 +248,9 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error1.Ref;
 
             // union is one of nodes that can't be in the root. Enclose in braces to make parser happy
-            var namedRangeFormula = "=(" + namedRange.ToString() + ")";
+            // TODO: Shoudl it always start with equal or never?
+            var namedRangeFormula = namedRange.ToString();
+            namedRangeFormula = !namedRangeFormula.StartsWith("=") ? "=(" + namedRange.ToString() + ")" : namedRangeFormula;
             var rangeResult = context.CalcEngine.EvaluateExpression(namedRangeFormula, context.Workbook, context.Worksheet);
             return rangeResult;
 

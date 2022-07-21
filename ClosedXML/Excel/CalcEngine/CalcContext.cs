@@ -69,7 +69,14 @@ namespace ClosedXML.Excel.CalcEngine
         internal ScalarValue? GetCellValueOrBlank(XLWorksheet worksheet, int rowNumber, int columnNumber)
         {
             worksheet ??= _worksheet;
-            var value = worksheet.GetCellValue(rowNumber, columnNumber);
+            var cell = worksheet.GetCell(rowNumber, columnNumber);
+            if (cell is null)
+                return ScalarValue.FromT1(new Number1(0));
+
+            if (cell.IsEvaluating)
+                throw new InvalidOperationException("Circular reference");
+
+            var value = cell.Value;
             return value switch
             {
                 bool logical => ScalarValue.FromT0(new Logical(logical)),

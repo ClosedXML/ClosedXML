@@ -1109,7 +1109,7 @@ namespace ClosedXML.Tests
         }
 
         [Test]
-        public void TryGetValueFormulaEvaluation()
+        public void TryGetValueFormula_EvaluationFail_ReturnFalse()
         {
             using (var wb = new XLWorkbook())
             {
