@@ -166,7 +166,13 @@ namespace ClosedXML.Excel.CalcEngine
                         range =>
                         {
                             if (range.Areas.Count != 1)
-                                throw new NotSupportedException($"Legacy XObjectExpression could only work with single area, reference has {range.Areas.Count}.");
+                            {
+                                // This sucks. Who ever though it was a good idea to not have reasonable typing system?
+                                var references = range.Areas.Select(area =>
+                                    new CellRangeReference(area.Worksheet.Range(area), context.CalcEngine));
+                                return new XObjectExpression(references);
+                                //throw new NotSupportedException($"Legacy XObjectExpression could only work with single area, reference has {range.Areas.Count}.");
+                            }
 
                             var area = range.Areas.Single();
                             if (area.Worksheet is not null)
@@ -241,7 +247,9 @@ namespace ClosedXML.Excel.CalcEngine
             if (!namedRange.IsValid)
                 return Error1.Ref;
 
-            var rangeResult = context.CalcEngine.EvaluateExpression(namedRange.ToString(), context.Workbook, context.Worksheet);
+            // union is one of nodes that can't be in the root. Enclose in braces to make parser happy
+            var namedRangeFormula = "=(" + namedRange.ToString() + ")";
+            var rangeResult = context.CalcEngine.EvaluateExpression(namedRangeFormula, context.Workbook, context.Worksheet);
             return rangeResult;
 
             static bool TryGetNamedRange(IXLWorksheet ws, string name, out XLNamedRange range)

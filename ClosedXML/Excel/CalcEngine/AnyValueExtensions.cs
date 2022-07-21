@@ -28,6 +28,16 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue ReferenceRange(this AnyValue left, AnyValue right)
         {
+            return ReferenceOp(left, right, Reference.RangeOp);
+        }
+
+        public static AnyValue ReferenceUnion(this AnyValue left, AnyValue right)
+        {
+            return ReferenceOp(left, right, (leftRef, rightRef) => Reference.UnionOp(leftRef, rightRef));
+        }
+
+        private static AnyValue ReferenceOp(AnyValue left, AnyValue right, Func<Reference, Reference, OneOf<Reference, Error1>> fn)
+        {
             var leftConversionResult = ConvertToReference(left);
             if (!leftConversionResult.TryPickT0(out var leftReference, out var leftError))
                 return leftError;
@@ -36,13 +46,9 @@ namespace ClosedXML.Excel.CalcEngine
             if (!rightConversionResult.TryPickT0(out var rightReference, out var rightError))
                 return rightError;
 
-            return Reference.RangeOp(leftReference, rightReference)
-                .Match<AnyValue>(range => range, error => error);
-        }
-
-        public static AnyValue ReferenceUnion(this AnyValue left, AnyValue right)
-        {
-            throw new NotImplementedException();
+            return fn(leftReference, rightReference).Match<AnyValue>(
+                reference => reference,
+                error => error);
         }
 
         private static OneOf<Reference, Error1> ConvertToReference(AnyValue left)
