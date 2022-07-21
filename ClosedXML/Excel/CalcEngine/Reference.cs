@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿
+using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,6 +121,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (area.RowSpan == 1 && area.ColumnSpan == 1)
                 return ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber);
 
+            // TODO: Check Sheet of formula address if more than one sheet.
             var column = ctx.FormulaAddress.ColumnNumber;
             var row = ctx.FormulaAddress.RowNumber;
 

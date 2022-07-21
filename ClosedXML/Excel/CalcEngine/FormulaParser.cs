@@ -464,7 +464,10 @@ namespace ClosedXML.Excel.CalcEngine
             var functionName = nameNode.ChildNodes.Single().Token.Text.WithoutLast(1);
             var foundFunction = _fnTbl.TryGetFunc(functionName, out var parmMin, out var parmMax);
             if (!foundFunction && functionName.StartsWith($"{defaultFunctionNameSpace}."))
-                foundFunction = _fnTbl.TryGetFunc(functionName.Substring(defaultFunctionNameSpace.Length + 1), out parmMin, out parmMax);
+            {
+                functionName = functionName.Substring(defaultFunctionNameSpace.Length + 1);
+                foundFunction = _fnTbl.TryGetFunc(functionName, out parmMin, out parmMax);
+            }
 
             if (!foundFunction)
                 throw new NameNotRecognizedException($"The function `{functionName}` was not recognised.");

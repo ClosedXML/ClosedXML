@@ -95,11 +95,13 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// #REF!
         /// </summary>
+        /// <remarks>When unable to find a sheet or a cell.</remarks>
         public static readonly Error1 Ref = new(ExpressionErrorType.CellReference);
 
         /// <summary>
         /// #NAME?
         /// </summary>
+        /// <remarks>When unable to find a named range (but not a sheet!)</remarks>
         public static readonly Error1 Name = new(ExpressionErrorType.NameNotRecognized);
 
         /// <summary>
@@ -222,6 +224,27 @@ namespace ClosedXML.Excel.CalcEngine
         public override int Height => _data.GetLength(0);
 
         public override IEnumerator<ScalarValue> GetEnumerator() => _data.Cast<ScalarValue>().GetEnumerator();
+    }
+
+    /// <summary>
+    /// A special case of an array that is actually only numbers.
+    /// </summary>
+    internal class NumberArray : Array
+    {
+        private readonly double[,] _data;
+
+        public NumberArray(double[,] data)
+        {
+            _data = data;
+        }
+
+        public override ScalarValue this[int y, int x] => new Number1(_data[y, x]);
+
+        public override int Width => _data.GetLength(1);
+
+        public override int Height => _data.GetLength(0);
+
+        public override IEnumerator<ScalarValue> GetEnumerator() => throw new NotImplementedException();
     }
 
     /// <summary>

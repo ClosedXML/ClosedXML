@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
@@ -98,10 +99,10 @@ namespace ClosedXML.Tests.Excel
                 ws = wb.AddWorksheet("Sheet2");
 
                 ws.Cell("A1").FormulaA1 = "=SUM(Sheet1!A1:Sheet2!A50)";
-                Assert.That(() => ws.Cell("A1").Value, Throws.InstanceOf<ArgumentOutOfRangeException>());
+                Assert.That(() => ws.Cell("A1").Value, Throws.InstanceOf<CellValueException>());
 
-                ws.Cell("B1").FormulaA1 = "=SUM(Sheet1!A1:UnknownSheet!A50)";
-                Assert.That(() => ws.Cell("B1").Value, Throws.InstanceOf<ArgumentOutOfRangeException>());
+                ws.Cell("B1").FormulaA1 = "=SUM(UnknownSheet!A50)";
+                Assert.That(() => ws.Cell("B1").Value, Throws.InstanceOf<CellReferenceException>());
             }
         }
 

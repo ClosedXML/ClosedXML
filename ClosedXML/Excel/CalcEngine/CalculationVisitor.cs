@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ErrorExpression node)
         {
-            throw new NotImplementedException();
+            return new Error1(node.ErrorType);
         }
 
         public AnyValue Visit(CalcContext context, UnaryExpression node)
@@ -108,6 +108,7 @@ namespace ClosedXML.Excel.CalcEngine
             { "MIN", null },
             { "MINA", null },
             { "MINVERSE", null },
+            { "MMULT", null },
             { "SERIESSUM", new List<int>{ 3 } }, // Yay, this function is part of ECMA-376, but isn't in the list of functions that allow range.
             { "STDEV", null },
             { "STDEVA", null },
@@ -133,7 +134,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 var paramNode = node.Parameters[i];
                 if (paramNode is not EmptyArgumentNode)
-                args[i] = node.Parameters[i].Accept(context, this);
+                    args[i] = node.Parameters[i].Accept(context, this);
                 else
                     args[i] = null;
             }
@@ -192,6 +193,7 @@ namespace ClosedXML.Excel.CalcEngine
                         long number => AnyValue.FromT1(new Number1(number)),
                         DateTime date => AnyValue.FromT1(new Number1(date.ToOADate())),
                         TimeSpan time => AnyValue.FromT1(new Number1(time.ToSerialDateTime())),
+                        double[,] array => AnyValue.FromT4(new NumberArray(array)),
                         _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
                     };
                 }
@@ -226,7 +228,24 @@ namespace ClosedXML.Excel.CalcEngine
                 worksheet = null;
             }
 
-            return new Reference(new XLRangeAddress(worksheet, node.Address));
+            if (node.Type == ReferenceItemType.Cell || node.Type == ReferenceItemType.HRange || node.Type == ReferenceItemType.VRange)
+                return new Reference(new XLRangeAddress(worksheet, node.Address));
+
+            var rangeName = node.Address;
+            worksheet ??= context.Worksheet;
+            var found = worksheet.NamedRanges.TryGetValue(rangeName, out var namedRange)
+                    || context.Workbook.NamedRanges.TryGetValue(rangeName, out namedRange);
+            if (!found)
+                return Error1.Name;
+
+            if (!namedRange.IsValid)
+                return Error1.Ref;
+
+            if (namedRange.Ranges.Count != 1)
+                throw new NotImplementedException("Range to reference conversion not implemented.");
+
+            var range = namedRange.Ranges.Single();
+            return new Reference((XLRangeAddress)range.RangeAddress);
         }
 
         public AnyValue Visit(CalcContext context, NotSupportedNode node)
@@ -263,7 +282,12 @@ namespace ClosedXML.Excel.CalcEngine
             _value = value;
         }
 
-        public virtual object Evaluate() => _value;
+        public virtual object Evaluate()
+        {
+            if (_value is ExpressionErrorType error)
+                ThrowApplicableException(error);
+            return _value;
+        }
 
 
         //---------------------------------------------------------------------------

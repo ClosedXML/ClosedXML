@@ -72,7 +72,7 @@ namespace ClosedXML.Excel.CalcEngine
             return result.Match<object>(logical => logical.Value,
                 number => number.Value,
                 text => text.Value,
-                error => throw new NotImplementedException("Pick correct excetion"),
+                error => error,
                 array => throw new InvalidOperationException("Array shouldn't be present currently"),
                 reference => throw new NotImplementedException("WTF with this?")); 
 

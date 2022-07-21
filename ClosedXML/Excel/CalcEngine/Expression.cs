@@ -219,12 +219,12 @@ namespace ClosedXML.Excel.CalcEngine
 
     internal class ErrorExpression : ValueNode
     {
-        private readonly ExpressionErrorType _errorType;
-
         internal ErrorExpression(ExpressionErrorType errorType)
         {
-            _errorType = errorType;
+            ErrorType = errorType;
         }
+
+        public ExpressionErrorType ErrorType { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
@@ -334,7 +334,7 @@ namespace ClosedXML.Excel.CalcEngine
         public ReferenceItemType Type { get; }
 
         /// <summary>
-        /// An address of a reference that corresponds to <see cref="Type"/>.
+        /// An address of a reference that corresponds to <see cref="Type"/> or a name of named range.
         /// </summary>
         public string Address { get; }
 

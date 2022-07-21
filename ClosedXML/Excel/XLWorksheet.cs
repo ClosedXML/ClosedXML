@@ -1742,9 +1742,10 @@ namespace ClosedXML.Excel
             get { return _calcEngine ?? (_calcEngine = new XLCalcEngine(this)); }
         }
 
-        public Object Evaluate(String expression)
+        public Object Evaluate(String expression, string formulaAddress = null)
         {
-            return CalcEngine.Evaluate(expression, Workbook, this);
+            IXLAddress address = formulaAddress is not null ? XLAddress.Create(formulaAddress) : null;
+            return CalcEngine.Evaluate(expression, Workbook, this, address);
         }
 
         /// <summary>
