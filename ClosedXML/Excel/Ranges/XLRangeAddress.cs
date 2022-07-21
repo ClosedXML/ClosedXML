@@ -224,7 +224,7 @@ namespace ClosedXML.Excel
                 LastAddress.WithoutWorksheet());
         }
 
-        internal IXLRangeAddress WithWorksheet(XLWorksheet worksheet)
+        internal XLRangeAddress WithWorksheet(XLWorksheet worksheet)
         {
             return new XLRangeAddress(
                 FirstAddress.WithWorksheet(worksheet),

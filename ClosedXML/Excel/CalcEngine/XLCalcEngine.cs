@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OneOf;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -48,13 +49,29 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public IEnumerable<IXLCell> GetPrecedentCells(string expression)
+        /// <summary>
+        /// Get cells that could be used as input of a formula, that could affect the calculated value.
+        /// </summary>
+        /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
+        /// <param name="expression">Formula analyzed for precedent cells.</param>
+        /// <returns></returns>
+        public IEnumerable<IXLCell> GetPrecedentCells(XLWorksheet worksheet, string expression)
         {
             if (!String.IsNullOrWhiteSpace(expression))
             {
-                var ranges = GetPrecedentRanges(expression);
+                var node = Parse(expression);
+                var ranges = new List<Reference>();
+                node.Accept(new KeyValuePair<XLWorksheet, List<Reference>>(worksheet, ranges), FormulaRangesVisitor.Default);
+
+                var wb = worksheet.Workbook;
                 var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
-                var cells = ranges.SelectMany(range => range.Cells()).Distinct();
+
+                // TODO: Change semantic of this function so we only return used cells, much more performant
+                // I guess I should use some XLCellsUserOptions, but I have no idea which one and conditions are not there anyway.
+                var cells = new XLCells(usedCellsOnly: false, XLCellsUsedOptions.Contents);
+                foreach (var usedRange in ranges.SelectMany(r => r.Areas))
+                    cells.Add(usedRange.Worksheet is null ? usedRange.WithWorksheet(worksheet) : usedRange);
+
                 foreach (var cell in cells)
                 {
                     if (!visitedCells.Contains(cell.Address))
@@ -136,6 +153,120 @@ namespace ClosedXML.Excel.CalcEngine
             var res = new CellRangeReference(range, this);
             _cellRanges?.Add(res.Range);
             return res;
+        }
+
+        /// <summary>
+        /// Get all ranges in the formula. Note that just because range
+        /// is in the formula, it doesn't mean it is actually used during evaluation.
+        /// Because named ranges can change, the result might change between visits.
+        /// </summary>
+        private class FormulaRangesVisitor : IFormulaVisitor<KeyValuePair<XLWorksheet, List<Reference>>, OneOf<Reference, Error1>>
+        {
+            public readonly static FormulaRangesVisitor Default = new();
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, ReferenceNode node)
+            {
+                if (node.Type == ReferenceItemType.NamedRange)
+                    throw new NotImplementedException("Getting named range for formula is not yet implemented.");
+
+                var sheetName = node.Prefix?.Sheet;
+                var rangeAddress = sheetName is not null && context.Key.Workbook.TryGetWorksheet(sheetName, out var ws)
+                    ? new XLRangeAddress((XLWorksheet)ws, node.Address)
+                    : new XLRangeAddress(null, node.Address);
+
+                return new Reference(rangeAddress);
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, BinaryExpression node)
+            {
+                var leftArg = node.LeftExpression.Accept(context, this);
+
+                var rightArg = node.RightExpression.Accept(context, this);
+
+                var isLeftReference = leftArg.TryPickT0(out var leftReference, out var leftError);
+                var isRightReference = rightArg.TryPickT0(out var rightReference, out var rightError);
+
+                if (!isLeftReference && !isRightReference)
+                    return Error1.Ref;
+
+                if (isLeftReference && !isRightReference)
+                {
+                    context.Value.Add(leftReference);
+                    return rightError;
+                }
+
+                if (!isLeftReference && isRightReference)
+                {
+                    context.Value.Add(rightReference);
+                    return leftError;
+                }
+
+                // Only result store the place where reference would change to error. Some ranges have many operations A1:B5:C3
+                switch (node.Operation)
+                {
+                    case BinaryOp.Range: return Reference.RangeOp(leftReference, rightReference);
+                    case BinaryOp.Union: return Reference.UnionOp(leftReference, rightReference);
+                    case BinaryOp.Intersection: throw new NotImplementedException();
+                };
+
+                // Binary operation on reference arguments
+                return Error1.Ref;
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, ScalarNode node)
+            {
+                return Error1.Ref;
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, UnaryExpression node)
+            {
+                var value = node.Expression.Accept(context, this);
+                if (!value.TryPickT0(out var reference, out var error))
+                    return error;
+                context.Value.Add(reference);
+                return Error1.Ref;
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, FunctionExpression node)
+            {
+                foreach (var param in node.Parameters)
+                {
+                    var paramResult = param.Accept(context, this);
+                    if (paramResult.TryPickT0(out var reference, out var _))
+                        context.Value.Add(reference);
+                }
+                return Error1.Ref;
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, EmptyArgumentNode node)
+            {
+                return Error1.Ref;
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, ErrorExpression node)
+            {
+                return Error1.Ref;
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, NotSupportedNode node)
+            {
+                return Error1.Ref;
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, StructuredReferenceNode node)
+            {
+                throw new NotImplementedException("Shouldn't be visited.");
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, PrefixNode node)
+            {
+                throw new InvalidOperationException("Shouldn't be visited.");
+            }
+
+            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, FileNode node)
+            {
+                throw new InvalidOperationException("Shouldn't be visited.");
+            }
         }
     }
 }

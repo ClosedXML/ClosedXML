@@ -66,7 +66,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     var expectedAtSheet2 = new string[]
                         { "B1", "C1", "B2", "C2", "B3", "C3" };
 
-                    var cells = sheet1.CalcEngine.GetPrecedentCells(formula);
+                    var cells = sheet1.CalcEngine.GetPrecedentCells(sheet1, formula).ToList();
 
                     Assert.AreEqual(15, cells.Count());
                     foreach (var address in expectedAtSheet1)
@@ -92,7 +92,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var ws2 = wb.AddWorksheet("Worksheet!");
                 var expectedCell = ws2.Cell("B2");
 
-                var cells = ws1.CalcEngine.GetPrecedentCells("='Worksheet!'!B2*2");
+                var cells = ws1.CalcEngine.GetPrecedentCells(ws1, "='Worksheet!'!B2*2");
                 Assert.AreSame(expectedCell, cells.Single());
             }
         }
