@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine
             Converter = new ValueConverter(culture);
         }
 
-        public CalcContext(XLCalcEngine calcEngine, CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
+        public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
         {
             CalcEngine = calcEngine;
             _workbook = workbook;
@@ -31,7 +31,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // TODO: Remove once legacy functions are migrated
-        internal XLCalcEngine CalcEngine { get; }
+        internal CalcEngine CalcEngine { get; }
 
         /// <summary>
         /// Worksheet of the cell the formula is calculating.
@@ -85,6 +85,8 @@ namespace ClosedXML.Excel.CalcEngine
                     ? null
                     : ScalarValue.FromT2(new Text(text)),
                 DateTime date => ScalarValue.FromT1(new Number1(date.ToOADate())),
+                // TODO: What is new semantic of XLCell.Value?
+                Error1 error => ScalarValue.FromT3(error), 
                 _ => throw new NotImplementedException($"Not sure how to get error from a cell (type {value?.GetType().Name}, value {value}).")
             };
         }

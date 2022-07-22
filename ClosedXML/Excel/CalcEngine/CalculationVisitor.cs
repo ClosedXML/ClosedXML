@@ -169,7 +169,7 @@ namespace ClosedXML.Excel.CalcEngine
                             {
                                 // This sucks. Who ever though it was a good idea to not have reasonable typing system?
                                 var references = range.Areas.Select(area =>
-                                    new CellRangeReference(area.Worksheet.Range(area), context.CalcEngine));
+                                    new CellRangeReference(area.Worksheet.Range(area)));
                                 return new XObjectExpression(references);
                                 //throw new NotSupportedException($"Legacy XObjectExpression could only work with single area, reference has {range.Areas.Count}.");
                             }
@@ -177,11 +177,11 @@ namespace ClosedXML.Excel.CalcEngine
                             var area = range.Areas.Single();
                             if (area.Worksheet is not null)
                             {
-                                return new XObjectExpression(new CellRangeReference(area.Worksheet.Range(area), context.CalcEngine));
+                                return new XObjectExpression(new CellRangeReference(area.Worksheet.Range(area)));
                             }
                             else
                             {
-                                return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area), context.CalcEngine));
+                                return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area)));
                             }
                         })
                         : new EmptyValueExpression();

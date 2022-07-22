@@ -148,7 +148,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (range == null)
                 return null;
 
-            return new CellRangeReference(range, this);
+            return new CellRangeReference(range);
         }
 
         /// <summary>

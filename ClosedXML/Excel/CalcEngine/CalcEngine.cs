@@ -60,7 +60,7 @@ namespace ClosedXML.Excel.CalcEngine
                 ? _cache[expression]
                 : Parse(expression);
 
-            var ctx = new CalcContext((XLCalcEngine)this, _culture, wb, ws, address);
+            var ctx = new CalcContext(this, _culture, wb, ws, address);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
             var result = x.Accept(ctx, calculatingVisitor);
             if (ctx.UseImplicitIntersection && result.IsT4)
@@ -106,7 +106,7 @@ namespace ClosedXML.Excel.CalcEngine
                     ? _cache[expression]
                     : Parse(expression);
 
-            var ctx = new CalcContext((XLCalcEngine)this, _culture, wb, ws, address);
+            var ctx = new CalcContext(this, _culture, wb, ws, address);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
             return x.Accept(ctx, calculatingVisitor);
         }
