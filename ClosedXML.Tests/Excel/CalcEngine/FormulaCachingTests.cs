@@ -353,7 +353,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
                 Assert.AreEqual(11, ws.Evaluate("LEN(B2)"));
 
-                Assert.Throws(Is.TypeOf<NotImplementedException>().And.Message.EqualTo("Evaluation of reference is not implemented."), () => wb.RecalculateAllFormulas());
+                Assert.Throws(Is.TypeOf<NotImplementedException>().And.Message.EqualTo("References from other files are not yet implemented."), () => wb.RecalculateAllFormulas());
             }
         }
 

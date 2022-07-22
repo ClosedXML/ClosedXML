@@ -104,6 +104,7 @@ namespace ClosedXML.Excel.CalcEngine
             { "MATCH", new List<int> { 1 } },
             { "MAX", null },
             { "MAXA", null },
+            { "MDETERM", new List<int>{ 0 } },
             { "MEDIAN", null },
             { "MIN", null },
             { "MINA", null },
@@ -114,6 +115,7 @@ namespace ClosedXML.Excel.CalcEngine
             { "STDEVA", null },
             { "STDEVP", null },
             { "STDEVPA", null },
+            { "SUBTOTAL", Enumerable.Range(1,255).ToList() },
             { "SUM", null },
             { "SUMIF", new List<int> { 0, 2 } },
             { "SUMIFS", new List<int> { 0,1,3,5,7,9} },
@@ -162,7 +164,20 @@ namespace ClosedXML.Excel.CalcEngine
                         number => new Expression(number.Value),
                         text => new Expression(text.Value),
                         error => new Expression(error.Type),
-                        array => throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter."),
+                        array =>
+                        { //throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter.")
+                          // Mostly for SUM
+                            var castedArray = new double[array.Height,array.Width];
+                            for (var row = 0; row < array.Height; ++row )
+                                for (var col = 0; col < array.Width; ++col)
+                                    castedArray[row, col] = array[row, col].Match<double>(
+                                        logical => logical ? 1.0 : 0.0,
+                                        number => number,
+                                        text => throw new NotImplementedException(),
+                                        error => throw new NotImplementedException());
+
+                             return new XObjectExpression(castedArray);
+                        },
                         range =>
                         {
                             if (range.Areas.Count != 1)

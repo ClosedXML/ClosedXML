@@ -32,6 +32,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }
         }
 
+        // TODO: Root and functions
         [Test]
         public void GetPrecedentRangesDealsWithNamedRanges()
         {
@@ -51,8 +52,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }
         }
 
-        [Test]
-        public void GetPrecedentCells()
+        // TODO: Implement root and functions
+        [TestCase("=A1", new[] { "A1" }, new string [] { })]
+        [TestCase("=A1:IF(Sheet2!A1,B1,C1)", new[] { "A1", "C1" }, new string[] { "A1" })]
+        [TestCase(
+            "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2",
+            new[] { "A2", "B2", "C2", "D2", "E2", "B1", "C1", "B3", "C3" },
+            new[] { "B1", "C1", "B2", "C2", "B3", "C3" })]
+        public void GetPrecedentCells(string formula, string[] expectedAtSheet1, string[] expectedAtSheet2)
         {
             using (var ms = new MemoryStream())
             {
@@ -60,15 +67,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 {
                     var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
                     var sheet2 = wb.AddWorksheet("Sheet2");
-                    var formula = "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2";
-                    var expectedAtSheet1 = new string[]
-                        { "A2", "B2", "C2", "D2", "E2", "B1", "C1", "B3", "C3" };
-                    var expectedAtSheet2 = new string[]
-                        { "B1", "C1", "B2", "C2", "B3", "C3" };
 
                     var cells = sheet1.CalcEngine.GetPrecedentCells(sheet1, formula).ToList();
 
-                    Assert.AreEqual(15, cells.Count());
+                    Assert.AreEqual(expectedAtSheet1.Length + expectedAtSheet2.Length, cells.Count());
                     foreach (var address in expectedAtSheet1)
                     {
                         Assert.IsTrue(cells.Any(cell => cell.Address.Worksheet.Name == sheet1.Name && cell.Address.ToString() == address),
