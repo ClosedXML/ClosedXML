@@ -162,7 +162,7 @@ namespace ClosedXML.Excel.CalcEngine
             var node = Parse(expression);
             var ctx = new PrecedentAreasContext(worksheet);
             var rootValue = node.Accept(ctx, FormulaRangesVisitor.Default);
-            if (ctx.HasReferenceErrors || ctx.UsesNamedRanges)
+            if (ctx.HasReferenceErrors/* || ctx.UsesNamedRanges */)
             {
                 precedentAreas = null;
                 return false;

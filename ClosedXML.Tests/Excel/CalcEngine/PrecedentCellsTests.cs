@@ -29,9 +29,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             }
         }
 
-        // TODO: Root
         [Test]
-        public void GetPrecedentRangesDealsWithNamedRanges()
+        public void GetPrecedentCellsDealsWithNamedRanges()
         {
             using (XLWorkbook wb = new XLWorkbook())
             {
@@ -39,10 +38,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 sheet1.NamedRanges.Add("NAMED_RANGE", sheet1.Range("A2:B3"));
                 var formula = "=SUM(NAMED_RANGE)";
 
-                var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula, sheet1).ToList();
+                var reliable = sheet1.CalcEngine.TryGetPrecedentCells(formula, sheet1, out var cells);
 
-                Assert.AreEqual(1, ranges.Count);
-                Assert.AreEqual("$A$2:$B$3", ranges.Single().ToString());
+                Assert.AreEqual(4, cells.Count);
+                Assert.AreEqual(new[] { "A2", "B2", "A3", "B3" }, cells.Select(x => x.Address.ToString()));
             }
         }
 
@@ -88,19 +87,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 Assert.True(remotelyReliable);
                 Assert.AreSame(expectedCell, cells.Single());
             }
-        }
-
-        [Test]
-        public void NamedRangesMeanNonreliablePrecedentCells()
-        {
-            using var wb = new XLWorkbook();
-            var ws = (XLWorksheet)wb.AddWorksheet();
-            var remotelyReliable = ws.CalcEngine.TryGetPrecedentCells("=IF(A1, SomeRange, 1)", ws, out var cells);
-            Assert.False(remotelyReliable);
-
-            ws.Range("B1").AddToNamed("ExistingRange");
-            remotelyReliable = ws.CalcEngine.TryGetPrecedentCells("=ExistingRange", ws, out cells);
-            Assert.False(remotelyReliable);
         }
 
         [Test]
