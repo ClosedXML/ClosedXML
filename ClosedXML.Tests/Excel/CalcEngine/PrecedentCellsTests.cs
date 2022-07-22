@@ -58,8 +58,9 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var sheet1 = wb.AddWorksheet("Sheet1") as XLWorksheet;
                 var sheet2 = wb.AddWorksheet("Sheet2");
 
-                var cells = sheet1.CalcEngine.GetPrecedentCells(formula, sheet1).ToList();
+                var remotelyReliable = sheet1.CalcEngine.TryGetPrecedentCells(formula, sheet1, out var cells);
 
+                Assert.True(remotelyReliable);
                 Assert.AreEqual(expectedAtSheet1.Length + expectedAtSheet2.Length, cells.Count());
                 foreach (var address in expectedAtSheet1)
                 {
@@ -83,9 +84,32 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var ws2 = wb.AddWorksheet("Worksheet!");
                 var expectedCell = ws2.Cell("B2");
 
-                var cells = ws1.CalcEngine.GetPrecedentCells("='Worksheet!'!B2*2", ws1);
+                var remotelyReliable = ws1.CalcEngine.TryGetPrecedentCells("='Worksheet!'!B2*2", ws1, out var cells);
+                Assert.True(remotelyReliable);
                 Assert.AreSame(expectedCell, cells.Single());
             }
+        }
+
+        [Test]
+        public void NamedRangesMeanNonreliablePrecedentCells()
+        {
+            using var wb = new XLWorkbook();
+            var ws = (XLWorksheet)wb.AddWorksheet();
+            var remotelyReliable = ws.CalcEngine.TryGetPrecedentCells("=IF(A1, SomeRange, 1)", ws, out var cells);
+            Assert.False(remotelyReliable);
+
+            ws.Range("B1").AddToNamed("ExistingRange");
+            remotelyReliable = ws.CalcEngine.TryGetPrecedentCells("=ExistingRange", ws, out cells);
+            Assert.False(remotelyReliable);
+        }
+
+        [Test]
+        public void NonexistentSheetsMeanUnreliablePrecednetCells()
+        {
+            using var wb = new XLWorkbook();
+            var ws = (XLWorksheet)wb.AddWorksheet();
+            var remotelyReliable = ws.CalcEngine.TryGetPrecedentCells("=Sheet2!A1", ws, out var cells);
+            Assert.False(remotelyReliable);
         }
     }
 }

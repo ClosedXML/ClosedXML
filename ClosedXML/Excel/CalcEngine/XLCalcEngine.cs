@@ -32,7 +32,8 @@ namespace ClosedXML.Excel.CalcEngine
         /// <returns>Collection of range addresses that are referenced in the formula. All addresses have specified worksheet.</returns>
         public IEnumerable<IXLRangeAddress> GetPrecedentRanges(string expression, XLWorksheet worksheet)
         {
-            var referencedAreas = GetPrecedentAreas(expression, worksheet);
+            // TODO: Unused function... delete?
+            var remotelyReliable = TryGetPrecedentAreas(expression, worksheet, out var referencedAreas);
             var visitedRanges = new HashSet<IXLRangeAddress>(new XLRangeAddressComparer(true));
             foreach (var referenceArea in referencedAreas)
             {
@@ -50,28 +51,40 @@ namespace ClosedXML.Excel.CalcEngine
         /// <remarks>Doesn't work for ranges determined by reference functions and reference operators, e.g. <c>A1:IF(SomeCondition,B1,C1)</c>.</remarks>
         /// <param name="expression">Formula to analyze.</param>
         /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
-        /// <returns>All cells (including blank ones) that are referenced in the formula.</returns>
-        public IEnumerable<IXLCell> GetPrecedentCells(string expression, XLWorksheet worksheet)
+        /// <param name="uniqueCells">All cells (including newly created blank ones) that are referenced in the formula.</param>
+        /// <returns>.</returns>
+        public bool TryGetPrecedentCells(string expression, XLWorksheet worksheet, out ICollection<XLCell> uniqueCells)
         {
-            if (!String.IsNullOrWhiteSpace(expression))
+            // This sucks and doesn't work for adding/removing named ranges/worksheets. Also, it creates new cells for all found ranges.
+            if (string.IsNullOrWhiteSpace(expression))
             {
-                var areas = GetPrecedentAreas(expression, worksheet);
-                var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
+                uniqueCells = System.Array.Empty<XLCell>();
+                return true;
+            }
 
-                // TODO: Change semantic of this function so we only return used cells, much more performant
-                var cells = new XLCells(usedCellsOnly: false, XLCellsUsedOptions.Contents);
-                foreach (var usedRange in areas)
-                    cells.Add(usedRange);
+            var remotelyReliable = TryGetPrecedentAreas(expression, worksheet, out var precedentAreas);
+            if (!remotelyReliable)
+            {
+                uniqueCells = null;
+                return false;
+            }
+            var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
 
-                foreach (var cell in cells)
+            var precedentCells = new XLCells(usedCellsOnly: false, XLCellsUsedOptions.Contents);
+            foreach (var precedentArea in precedentAreas)
+                precedentCells.Add(precedentArea);
+
+            uniqueCells = new List<XLCell>();
+            foreach (var cell in precedentCells)
+            {
+                if (!visitedCells.Contains(cell.Address))
                 {
-                    if (!visitedCells.Contains(cell.Address))
-                    {
-                        visitedCells.Add(cell.Address);
-                        yield return cell;
-                    }
+                    visitedCells.Add(cell.Address);
+                    uniqueCells.Add(cell);
                 }
             }
+
+            return true;
         }
 
         public override object GetExternalObject(string identifier)
@@ -144,21 +157,46 @@ namespace ClosedXML.Excel.CalcEngine
             return new CellRangeReference(range);
         }
 
-        private IEnumerable<XLRangeAddress> GetPrecedentAreas(string expression, XLWorksheet worksheet)
+        private bool TryGetPrecedentAreas(string expression, XLWorksheet worksheet, out ICollection<XLRangeAddress> precedentAreas)
         {
             var node = Parse(expression);
-            var references = new List<Reference>();
-            var rootValue = node.Accept(new KeyValuePair<XLWorksheet, List<Reference>>(worksheet, references), FormulaRangesVisitor.Default);
-            if (rootValue.TryPickT0(out var rootReference, out var _))
-                references.Add(rootReference);
-
-            foreach (var referenceArea in references.SelectMany(x => x.Areas))
+            var ctx = new PrecedentAreasContext(worksheet);
+            var rootValue = node.Accept(ctx, FormulaRangesVisitor.Default);
+            if (ctx.HasReferenceErrors || ctx.UsesNamedRanges)
             {
-                var completeArea = referenceArea.Worksheet is null
-                    ? referenceArea.WithWorksheet(worksheet)
-                    : referenceArea;
-                yield return completeArea;
+                precedentAreas = null;
+                return false;
             }
+
+            if (rootValue.TryPickT0(out var rootReference, out var _))
+                ctx.AddReference(rootReference);
+
+            precedentAreas = ctx.FoundReferences
+                .SelectMany(x => x.Areas)
+                .Select(referenceArea => referenceArea.Worksheet is null
+                    ? referenceArea.WithWorksheet(worksheet)
+                    : referenceArea)
+                .ToList();
+            return true;
+        }
+
+        private class PrecedentAreasContext
+        {
+            public PrecedentAreasContext(XLWorksheet worksheet)
+            {
+                Worksheet = worksheet;
+                FoundReferences = new List<Reference>();
+            }
+
+            public XLWorksheet Worksheet { get; }
+
+            public List<Reference> FoundReferences { get; }
+
+            public bool HasReferenceErrors { get; set; }
+
+            public bool UsesNamedRanges { get; set; }
+
+            public void AddReference(Reference reference) => FoundReferences.Add(reference);
         }
 
         /// <summary>
@@ -166,20 +204,27 @@ namespace ClosedXML.Excel.CalcEngine
         /// is in the formula, it doesn't mean it is actually used during evaluation.
         /// Because named ranges can change, the result might change between visits.
         /// </summary>
-        private class FormulaRangesVisitor : IFormulaVisitor<KeyValuePair<XLWorksheet, List<Reference>>, OneOf<Reference, Error1>>
+        private class FormulaRangesVisitor : IFormulaVisitor<PrecedentAreasContext, OneOf<Reference, Error1>>
         {
             public readonly static FormulaRangesVisitor Default = new();
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, ReferenceNode node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, ReferenceNode node)
             {
                 if (node.Type == ReferenceItemType.NamedRange)
                 {
+                    ctx.UsesNamedRanges = true;
+
                     // TODO: Cleanup and error checking
-                    if (!TryGetNamedRange(node.Address, context.Key, out var namedRange))
+                    if (!TryGetNamedRange(node.Address, ctx.Worksheet, out var namedRange))
+                    {
                         return Error1.Name;
+                    }
 
                     if (!namedRange.IsValid)
+                    {
+                        ctx.HasReferenceErrors = true;
                         return Error1.Ref;
+                    }
 
                     var rangeAddresses = namedRange.Ranges.Select(r => r.RangeAddress).Cast<XLRangeAddress>().ToList();
                     if (rangeAddresses.Count < 1)
@@ -190,8 +235,11 @@ namespace ClosedXML.Excel.CalcEngine
                 var sheetName = node.Prefix?.Sheet;
                 if (sheetName is not null)
                 {
-                    if (!context.Key.Workbook.TryGetWorksheet(sheetName, out var ws))
+                    if (!ctx.Worksheet.Workbook.TryGetWorksheet(sheetName, out var ws))
+                    {
+                        ctx.HasReferenceErrors = true;
                         return Error1.Ref;
+                    }
 
                     return new Reference(new XLRangeAddress((XLWorksheet)ws, node.Address));
                 }
@@ -199,11 +247,11 @@ namespace ClosedXML.Excel.CalcEngine
                 return new Reference(new XLRangeAddress(null, node.Address));
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, BinaryExpression node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, BinaryExpression node)
             {
-                var leftArg = node.LeftExpression.Accept(context, this);
+                var leftArg = node.LeftExpression.Accept(ctx, this);
 
-                var rightArg = node.RightExpression.Accept(context, this);
+                var rightArg = node.RightExpression.Accept(ctx, this);
 
                 var isLeftReference = leftArg.TryPickT0(out var leftReference, out var leftError);
                 var isRightReference = rightArg.TryPickT0(out var rightReference, out var rightError);
@@ -213,13 +261,13 @@ namespace ClosedXML.Excel.CalcEngine
 
                 if (isLeftReference && !isRightReference)
                 {
-                    context.Value.Add(leftReference);
+                    ctx.AddReference(leftReference);
                     return rightError;
                 }
 
                 if (!isLeftReference && isRightReference)
                 {
-                    context.Value.Add(rightReference);
+                    ctx.AddReference(rightReference);
                     return leftError;
                 }
 
@@ -235,57 +283,57 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error1.Ref;
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, ScalarNode node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, ScalarNode node)
             {
                 return Error1.Ref;
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, UnaryExpression node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, UnaryExpression node)
             {
-                var value = node.Expression.Accept(context, this);
+                var value = node.Expression.Accept(ctx, this);
                 if (!value.TryPickT0(out var reference, out var error))
                     return error;
-                context.Value.Add(reference);
+                ctx.AddReference(reference);
                 return Error1.Ref;
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, FunctionExpression node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, FunctionExpression node)
             {
                 foreach (var param in node.Parameters)
                 {
-                    var paramResult = param.Accept(context, this);
+                    var paramResult = param.Accept(ctx, this);
                     if (paramResult.TryPickT0(out var reference, out var _))
-                        context.Value.Add(reference);
+                        ctx.AddReference(reference);
                 }
                 return Error1.Ref;
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, EmptyArgumentNode node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, EmptyArgumentNode node)
             {
                 return Error1.Ref;
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, ErrorExpression node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, ErrorExpression node)
             {
                 return Error1.Ref;
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, NotSupportedNode node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, NotSupportedNode node)
             {
                 return Error1.Ref;
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, StructuredReferenceNode node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, StructuredReferenceNode node)
             {
                 throw new NotImplementedException("Shouldn't be visited.");
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, PrefixNode node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, PrefixNode node)
             {
                 throw new InvalidOperationException("Shouldn't be visited.");
             }
 
-            public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, FileNode node)
+            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, FileNode node)
             {
                 throw new InvalidOperationException("Shouldn't be visited.");
             }

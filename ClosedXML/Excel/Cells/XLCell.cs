@@ -1194,10 +1194,16 @@ namespace ClosedXML.Excel
                 if (NeedsRecalculationEvaluatedAtVersion == Worksheet.Workbook.RecalculationCounter)
                     return _recalculationNeededLastValue;
 
-                bool res = EvaluatedAtVersion < ModifiedAtVersion ||                                       // the cell itself was modified
-                           GetAffectingCells().Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
-                                                           cell.EvaluatedAtVersion > EvaluatedAtVersion || // the affecting cell was evaluated after this one (normally this should not happen)
-                                                           cell.NeedsRecalculation);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
+                bool cellWasModified = EvaluatedAtVersion < ModifiedAtVersion;
+                if (cellWasModified)
+                    return NeedsRecalculation = true;
+
+                if (!Worksheet.CalcEngine.TryGetPrecedentCells(_formulaA1, Worksheet, out var precedentCells))
+                    return NeedsRecalculation = true;
+
+                var res = precedentCells.Any(cell => cell.ModifiedAtVersion > EvaluatedAtVersion ||  // the affecting cell was modified after this one was evaluated
+                                                     cell.EvaluatedAtVersion > EvaluatedAtVersion || // the affecting cell was evaluated after this one (normally this should not happen)
+                                                     cell.NeedsRecalculation);                       // the affecting cell needs recalculation (recursion to walk through dependencies)
 
                 NeedsRecalculation = res;
                 return res;
@@ -1207,11 +1213,6 @@ namespace ClosedXML.Excel
                 _recalculationNeededLastValue = value;
                 NeedsRecalculationEvaluatedAtVersion = Worksheet.Workbook.RecalculationCounter;
             }
-        }
-
-        private IEnumerable<XLCell> GetAffectingCells()
-        {
-            return Worksheet.CalcEngine.GetPrecedentCells(_formulaA1, Worksheet).Cast<XLCell>();
         }
 
         /// <summary>
