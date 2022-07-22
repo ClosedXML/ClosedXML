@@ -21,8 +21,11 @@ namespace ClosedXML.Excel.CalcEngine
             Areas = new List<XLRangeAddress>(1) { area };
         }
 
-        private Reference(List<XLRangeAddress> areas)
+        public Reference(List<XLRangeAddress> areas)
         {
+            if (areas.Count < 1)
+                throw new ArgumentException();
+
             Areas = areas;
         }
 
@@ -77,7 +80,10 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             var sheet = sheets.SingleOrDefault();
-            return new Reference(new XLRangeAddress(new XLAddress(sheet, minRow, minCol, true, true), new XLAddress(sheet, maxRow, maxCol, true, true)));
+            // Shoudl I use fixed or not? Kind of confusing. For basic A1:B5 or A1:
+            return new Reference(new XLRangeAddress(
+                new XLAddress(sheet, minRow, minCol, false, false),
+                new XLAddress(sheet, maxRow, maxCol, false, false)));
         }
 
         public static Reference UnionOp(Reference lhs, Reference rhs)

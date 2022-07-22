@@ -19,15 +19,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     var sheet2 = wb.AddWorksheet("Sheet2");
                     var formula = "=MAX(A2:E2)/COUNTBLANK(A2:E2)*MAX(B1:C3)+SUM(Sheet2!B1:C3)+SUM($A$2:$E$2)+A2+B$2+$C$2";
 
-                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula);
+                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(sheet1, formula).ToList();
 
-                    Assert.AreEqual(6, ranges.Count());
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "A2:E2"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "B1:C3"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet2" && r.RangeAddress.ToString() == "B1:C3"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "A2:A2"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "B$2:B$2"));
-                    Assert.IsTrue(ranges.Any(r => r.RangeAddress.Worksheet.Name == "Sheet1" && r.RangeAddress.ToString() == "$C$2:$C$2"));
+                    Assert.AreEqual(6, ranges.Count);
+                    Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "A2:E2"));
+                    Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "B1:C3"));
+                    Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet2" && r.ToString() == "B1:C3"));
+                    Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "A2:A2"));
+                    Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "B$2:B$2"));
+                    Assert.IsTrue(ranges.Any(r => r.Worksheet.Name == "Sheet1" && r.ToString() == "$C$2:$C$2"));
                 }
             }
         }
@@ -43,10 +43,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                     sheet1.NamedRanges.Add("NAMED_RANGE", sheet1.Range("A2:B3"));
                     var formula = "=SUM(NAMED_RANGE)";
 
-                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(formula);
+                    var ranges = sheet1.CalcEngine.GetPrecedentRanges(sheet1, formula).ToList();
 
-                    Assert.AreEqual(1, ranges.Count());
-                    Assert.AreEqual("$A$2:$B$3", ranges.First().RangeAddress.ToString());
+                    Assert.AreEqual(1, ranges.Count);
+                    Assert.AreEqual("$A$2:$B$3", ranges.Single().ToString());
                 }
             }
         }

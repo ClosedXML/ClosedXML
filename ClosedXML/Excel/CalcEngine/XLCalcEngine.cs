@@ -23,28 +23,26 @@ namespace ClosedXML.Excel.CalcEngine
             _ws = ws;
         }
 
-        private IList<IXLRange> _cellRanges;
-
-        public ExpressionCache ExpressionCache => this._cache;
-
         /// <summary>
         /// Get a collection of cell ranges included into the expression. Order is not preserved.
         /// </summary>
-        /// <param name="expression">Formula to parse.</param>
-        /// <returns>Collection of ranges included into the expression.</returns>
-        public IEnumerable<IXLRange> GetPrecedentRanges(string expression)
+        /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
+        /// <param name="expression">Formula to analyze.</param>
+        /// <returns>Collection of ranges included into the expression. Each range address has worksheet.</returns>
+        public IEnumerable<IXLRangeAddress> GetPrecedentRanges(XLWorksheet worksheet, string expression)
         {
-            _cellRanges = new List<IXLRange>();
-            Parse(expression);
-            var ranges = _cellRanges;
-            _cellRanges = null;
+            var node = Parse(expression);
+            var references = new List<Reference>();
+            node.Accept(new KeyValuePair<XLWorksheet, List<Reference>>(worksheet, references), FormulaRangesVisitor.Default);
+
             var visitedRanges = new HashSet<IXLRangeAddress>(new XLRangeAddressComparer(true));
-            foreach (var range in ranges)
+            foreach (var referenceArea in references.SelectMany(x => x.Areas))
             {
-                if (!visitedRanges.Contains(range.RangeAddress))
+                var area = referenceArea.Worksheet is null ? referenceArea.WithWorksheet(worksheet) : referenceArea;
+                if (!visitedRanges.Contains(area))
                 {
-                    visitedRanges.Add(range.RangeAddress);
-                    yield return range;
+                    visitedRanges.Add(area);
+                    yield return area;
                 }
             }
         }
@@ -53,7 +51,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// Get cells that could be used as input of a formula, that could affect the calculated value.
         /// </summary>
         /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
-        /// <param name="expression">Formula analyzed for precedent cells.</param>
+        /// <param name="expression">Formula to analyze.</param>
         /// <returns></returns>
         public IEnumerable<IXLCell> GetPrecedentCells(XLWorksheet worksheet, string expression)
         {
@@ -139,7 +137,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return null;
         }
 
-        private bool TryGetNamedRange(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)
+        private static bool TryGetNamedRange(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)
         {
             return worksheet.NamedRanges.TryGetValue(identifier, out namedRange) ||
                    worksheet.Workbook.NamedRanges.TryGetValue(identifier, out namedRange);
@@ -150,9 +148,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (range == null)
                 return null;
 
-            var res = new CellRangeReference(range, this);
-            _cellRanges?.Add(res.Range);
-            return res;
+            return new CellRangeReference(range, this);
         }
 
         /// <summary>
@@ -167,7 +163,19 @@ namespace ClosedXML.Excel.CalcEngine
             public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, ReferenceNode node)
             {
                 if (node.Type == ReferenceItemType.NamedRange)
-                    throw new NotImplementedException("Getting named range for formula is not yet implemented.");
+                {
+                    // TODO: Cleanup and error checking
+                    if (!TryGetNamedRange(node.Address, context.Key, out var namedRange))
+                        return Error1.Name;
+
+                    if (!namedRange.IsValid)
+                        return Error1.Ref;
+
+                    var rangeAddresses = namedRange.Ranges.Select(r => r.RangeAddress).Cast<XLRangeAddress>().ToList();
+                    if (rangeAddresses.Count < 1)
+                        throw new NotImplementedException("I guess return error?");
+                    return new Reference(rangeAddresses);
+                }
 
                 var sheetName = node.Prefix?.Sheet;
                 var rangeAddress = sheetName is not null && context.Key.Workbook.TryGetWorksheet(sheetName, out var ws)
