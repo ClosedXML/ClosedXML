@@ -131,6 +131,92 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, FunctionExpression node)
         {
+            if (!_functions.TryGetFunc(node.Name, out FormulaFunction function))
+            {
+                if (!_functions.TryGetFunc(node.Name, out FunctionDefinition legacyFunction))
+                    return Error1.Name;
+                return ExecuteLegacy(context, node, legacyFunction);
+            }
+
+            AnyValue?[] args = GetArgs(context, node);
+            return function.CallFunction(context, args);
+        }
+
+        private AnyValue ExecuteLegacy(CalcContext context, FunctionExpression node, FunctionDefinition legacyFunction)
+        {
+            AnyValue?[] args = GetArgs(context, node);
+            // This creates a some of overhead, but all legacy functions will be migrated in near future
+            var adaptedArgs = new List<Expression>(args.Length);
+            foreach (var arg in args)
+            {
+                Expression adaptedArg = arg.HasValue ? arg.Value.Match(
+                    logical => new Expression(logical.Value),
+                    number => new Expression(number.Value),
+                    text => new Expression(text.Value),
+                    error => new Expression(error.Type),
+                    array =>
+                    { //throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter.")
+                      // Mostly for SUM
+                        var castedArray = new double[array.Height, array.Width];
+                        for (var row = 0; row < array.Height; ++row)
+                            for (var col = 0; col < array.Width; ++col)
+                                castedArray[row, col] = array[row, col].Match<double>(
+                                    logical => logical ? 1.0 : 0.0,
+                                    number => number,
+                                    text => throw new NotImplementedException(),
+                                    error => throw new NotImplementedException());
+
+                        return new XObjectExpression(castedArray);
+                    },
+                    range =>
+                    {
+                        if (range.Areas.Count != 1)
+                        {
+                            // This sucks. Who ever though it was a good idea to not have reasonable typing system?
+                            var references = range.Areas.Select(area =>
+                                new CellRangeReference(area.Worksheet.Range(area)));
+                            return new XObjectExpression(references);
+                            //throw new NotSupportedException($"Legacy XObjectExpression could only work with single area, reference has {range.Areas.Count}.");
+                        }
+
+                        var area = range.Areas.Single();
+                        if (area.Worksheet is not null)
+                        {
+                            return new XObjectExpression(new CellRangeReference(area.Worksheet.Range(area)));
+                        }
+                        else
+                        {
+                            return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area)));
+                        }
+                    })
+                    : new EmptyValueExpression();
+                adaptedArgs.Add(adaptedArg);
+            }
+            try
+            {
+                var result = legacyFunction.Function(adaptedArgs);
+                return result switch
+                {
+                    bool logic => AnyValue.FromT0(new Logical(logic)),
+                    double number => AnyValue.FromT1(new Number1(number)),
+                    string text => AnyValue.FromT2(new Text(text)),
+                    int number => AnyValue.FromT1(new Number1(number)), /* date mostly */
+                    long number => AnyValue.FromT1(new Number1(number)),
+                    DateTime date => AnyValue.FromT1(new Number1(date.ToOADate())),
+                    TimeSpan time => AnyValue.FromT1(new Number1(time.ToSerialDateTime())),
+                    double[,] array => AnyValue.FromT4(new NumberArray(array)),
+                    _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
+                };
+            }
+            catch (CalcEngineException)
+            {
+                //TODO: Map errors
+                throw;
+            }
+        }
+
+        private AnyValue?[] GetArgs(CalcContext context, FunctionExpression node)
+        {
             var args = new AnyValue?[node.Parameters.Count];
             for (var i = 0; i < node.Parameters.Count; ++i)
             {
@@ -150,82 +236,7 @@ namespace ClosedXML.Excel.CalcEngine
                 }
             }
 
-            if (!_functions.TryGetFunc(node.Name, out FormulaFunction function))
-            {
-                if (!_functions.TryGetFunc(node.Name, out FunctionDefinition legacyFunction))
-                    return Error1.Name;
-
-                // This creates a some of overhead, but all legacy functions will be migrated in near future
-                var adaptedArgs = new List<Expression>(args.Length);
-                foreach (var arg in args)
-                {
-                    Expression adaptedArg = arg.HasValue ? arg.Value.Match(
-                        logical => new Expression(logical.Value),
-                        number => new Expression(number.Value),
-                        text => new Expression(text.Value),
-                        error => new Expression(error.Type),
-                        array =>
-                        { //throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter.")
-                          // Mostly for SUM
-                            var castedArray = new double[array.Height,array.Width];
-                            for (var row = 0; row < array.Height; ++row )
-                                for (var col = 0; col < array.Width; ++col)
-                                    castedArray[row, col] = array[row, col].Match<double>(
-                                        logical => logical ? 1.0 : 0.0,
-                                        number => number,
-                                        text => throw new NotImplementedException(),
-                                        error => throw new NotImplementedException());
-
-                             return new XObjectExpression(castedArray);
-                        },
-                        range =>
-                        {
-                            if (range.Areas.Count != 1)
-                            {
-                                // This sucks. Who ever though it was a good idea to not have reasonable typing system?
-                                var references = range.Areas.Select(area =>
-                                    new CellRangeReference(area.Worksheet.Range(area)));
-                                return new XObjectExpression(references);
-                                //throw new NotSupportedException($"Legacy XObjectExpression could only work with single area, reference has {range.Areas.Count}.");
-                            }
-
-                            var area = range.Areas.Single();
-                            if (area.Worksheet is not null)
-                            {
-                                return new XObjectExpression(new CellRangeReference(area.Worksheet.Range(area)));
-                            }
-                            else
-                            {
-                                return new XObjectExpression(new CellRangeReference(context.Worksheet.Range(area)));
-                            }
-                        })
-                        : new EmptyValueExpression();
-                    adaptedArgs.Add(adaptedArg);
-                }
-                try
-                {
-                    var result = legacyFunction.Function(adaptedArgs);
-                    return result switch
-                    {
-                        bool logic => AnyValue.FromT0(new Logical(logic)),
-                        double number => AnyValue.FromT1(new Number1(number)),
-                        string text => AnyValue.FromT2(new Text(text)),
-                        int number => AnyValue.FromT1(new Number1(number)), /* date mostly */
-                        long number => AnyValue.FromT1(new Number1(number)),
-                        DateTime date => AnyValue.FromT1(new Number1(date.ToOADate())),
-                        TimeSpan time => AnyValue.FromT1(new Number1(time.ToSerialDateTime())),
-                        double[,] array => AnyValue.FromT4(new NumberArray(array)),
-                        _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
-                    };
-                }
-                catch (CalcEngineException)
-                {
-                    //TODO: Map errors
-                    throw;
-                }
-            }
-
-            return function.CallFunction(context, args);
+            return args;
         }
 
         public AnyValue Visit(CalcContext context, ReferenceNode node)

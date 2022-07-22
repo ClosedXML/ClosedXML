@@ -1211,7 +1211,7 @@ namespace ClosedXML.Excel
 
         private IEnumerable<XLCell> GetAffectingCells()
         {
-            return Worksheet.CalcEngine.GetPrecedentCells(Worksheet, _formulaA1).Cast<XLCell>();
+            return Worksheet.CalcEngine.GetPrecedentCells(_formulaA1, Worksheet).Cast<XLCell>();
         }
 
         /// <summary>

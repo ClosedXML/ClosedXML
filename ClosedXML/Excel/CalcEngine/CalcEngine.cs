@@ -68,35 +68,7 @@ namespace ClosedXML.Excel.CalcEngine
                 result = result.AsT4[0, 0].ToAnyValue();
             }
 
-            // TODO exception
-            return result.Match<object>(logical => logical.Value,
-                number => number.Value,
-                text => text.Value,
-                error => error,
-                array => throw new InvalidOperationException("Array shouldn't be present currently"),
-                reference =>
-                {
-                    // TODO: I am really not sure about this. I should return a reference, but since the value is directly stuffed into a cell
-                    // in most cases, just do implicit intersion. I think this should return a value. If we want other stuff, there is EvaluateExpression
-                    // for that
-
-                    if (ctx.UseImplicitIntersection)
-                    {
-                        var intersectedValue = reference.ImplicitIntersection(ctx);
-                        if (!intersectedValue.TryPickT0(out var inter, out var err))
-                            return err;
-
-                        return inter.Match<object>(
-                            intersectedLogical => intersectedLogical.Value,
-                            intersectedNumber => intersectedNumber.Value,
-                            intersectedText => intersectedText.Value,
-                            intersectedError => intersectedError);
-                    }
-
-                    throw new NotImplementedException("WTF with this?");
-                });
-
-            //return x.Evaluate();
+            return result.ToCellContentValue(ctx);
         }
 
         internal AnyValue EvaluateExpression(string expression, XLWorkbook wb = null, XLWorksheet ws = null, IXLAddress address = null)

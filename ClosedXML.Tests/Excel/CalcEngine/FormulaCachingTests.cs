@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -304,12 +305,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 sheet1_a1.FormulaA1 = "Sheet2!A1";
                 sheet2_a1.Value = "TestValue";
 
-                var val1 = sheet1_a1.Value;
+                var valueBeforeDeletion = sheet1_a1.Value;
                 sheet2.Delete();
-                var getValue = new TestDelegate(() => { var val2 = sheet1_a1.Value; });
+                var valueAfterDeletion = sheet1_a1.Value;
 
-                Assert.AreEqual("TestValue", val1.ToString());
-                Assert.Throws(typeof(ArgumentOutOfRangeException), getValue);
+                Assert.AreEqual("TestValue", valueBeforeDeletion.ToString());
+                Assert.AreEqual(ExpressionErrorType.CellReference, valueAfterDeletion);
             }
         }
 

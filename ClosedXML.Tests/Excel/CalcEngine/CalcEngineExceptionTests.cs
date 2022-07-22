@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 using System;
@@ -26,20 +27,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void DivisionByZero()
         {
-            Assert.Throws<DivisionByZeroException>(() => XLWorkbook.EvaluateExpr("0/0"));
-            Assert.Throws<DivisionByZeroException>(() => new XLWorkbook().AddWorksheet().Evaluate("0/0"));
+            Assert.AreEqual(ExpressionErrorType.DivisionByZero, XLWorkbook.EvaluateExpr("0/0"));
+            Assert.AreEqual(ExpressionErrorType.DivisionByZero, new XLWorkbook().AddWorksheet().Evaluate("0/0"));
         }
 
         [Test]
         public void InvalidFunction()
         {
             Exception ex;
-            ex = Assert.Throws<NotImplementedException>(() => XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
-            Assert.That(ex.Message, Is.EqualTo("Evaluation of custom functions is not implemented."));
+            Assert.AreEqual(ExpressionErrorType.NameNotRecognized, XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
 
             var ws = new XLWorkbook().AddWorksheet();
-            ex = Assert.Throws<NotImplementedException>(() => ws.Evaluate("XXX(A1:A2)"));
-            Assert.That(ex.Message, Is.EqualTo("Evaluation of custom functions is not implemented."));
+            Assert.AreEqual(ExpressionErrorType.NameNotRecognized, ws.Evaluate("XXX(A1:A2)"));
         }
 
         [Test]

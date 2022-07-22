@@ -459,5 +459,35 @@ namespace ClosedXML.Excel.CalcEngine
         private delegate ScalarValue BinaryFunc(ScalarValue lhs, ScalarValue rhs);
 
         private delegate OneOf<Number1, Error1> BinaryNumberFunc(Number1 lhs, Number1 rhs);
+
+        /// <summary>
+        /// Convert any kind of formula value to value returned as a content of a cell.
+        /// <list type="bullet">
+        ///    <item><c>bool</c> - represents a logical value.</item>
+        ///    <item><c>double</c> - represents a number and also date/time as serial date-time.</item>
+        ///    <item><c>string</c> - represents a text value.</item>
+        ///    <item><see cref="ExpressionErrorType" /> - represents a formula calculation error.</item>
+        /// </list>
+        /// </summary>
+        public static object ToCellContentValue(this AnyValue value, CalcContext ctx)
+        {
+            if (value.TryPickScalar(out var scalar, out var collection))
+                return scalar.ToCellContentValue();
+
+            return collection.Match(
+                array => array[0, 0].ToCellContentValue(),
+                reference => reference.ImplicitIntersection(ctx).Match<object>(
+                    scalarValue => scalarValue.ToCellContentValue(),
+                    error => error.Type));
+        }
+
+        public static object ToCellContentValue(this ScalarValue value)
+        {
+            return value.Match<object>(
+                logical => logical.Value,
+                number => number.Value,
+                text => text.Value,
+                error => error.Type);
+        }
     }
 }

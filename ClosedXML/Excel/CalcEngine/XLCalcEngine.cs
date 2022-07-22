@@ -24,25 +24,22 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Get a collection of cell ranges included into the expression. Order is not preserved.
+        /// Get a best guess of collection of cell ranges in the formula. Order is not preserved.
         /// </summary>
+        /// <remarks>Doesn't work for ranges determined by reference functions and reference operators, e.g. <c>A1:IF(SomeCondition,B1,C1)</c>.</remarks>
         /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
         /// <param name="expression">Formula to analyze.</param>
-        /// <returns>Collection of ranges included into the expression. Each range address has worksheet.</returns>
-        public IEnumerable<IXLRangeAddress> GetPrecedentRanges(XLWorksheet worksheet, string expression)
+        /// <returns>Collection of range addresses that are referenced in the formula. All addresses have specified worksheet.</returns>
+        public IEnumerable<IXLRangeAddress> GetPrecedentRanges(string expression, XLWorksheet worksheet)
         {
-            var node = Parse(expression);
-            var references = new List<Reference>();
-            node.Accept(new KeyValuePair<XLWorksheet, List<Reference>>(worksheet, references), FormulaRangesVisitor.Default);
-
+            var referencedAreas = GetPrecedentAreas(expression, worksheet);
             var visitedRanges = new HashSet<IXLRangeAddress>(new XLRangeAddressComparer(true));
-            foreach (var referenceArea in references.SelectMany(x => x.Areas))
+            foreach (var referenceArea in referencedAreas)
             {
-                var area = referenceArea.Worksheet is null ? referenceArea.WithWorksheet(worksheet) : referenceArea;
-                if (!visitedRanges.Contains(area))
+                if (!visitedRanges.Contains(referenceArea))
                 {
-                    visitedRanges.Add(area);
-                    yield return area;
+                    visitedRanges.Add(referenceArea);
+                    yield return referenceArea;
                 }
             }
         }
@@ -50,25 +47,21 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Get cells that could be used as input of a formula, that could affect the calculated value.
         /// </summary>
-        /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
+        /// <remarks>Doesn't work for ranges determined by reference functions and reference operators, e.g. <c>A1:IF(SomeCondition,B1,C1)</c>.</remarks>
         /// <param name="expression">Formula to analyze.</param>
-        /// <returns></returns>
-        public IEnumerable<IXLCell> GetPrecedentCells(XLWorksheet worksheet, string expression)
+        /// <param name="worksheet">Worksheet used for ranges without sheet.</param>
+        /// <returns>All cells (including blank ones) that are referenced in the formula.</returns>
+        public IEnumerable<IXLCell> GetPrecedentCells(string expression, XLWorksheet worksheet)
         {
             if (!String.IsNullOrWhiteSpace(expression))
             {
-                var node = Parse(expression);
-                var ranges = new List<Reference>();
-                node.Accept(new KeyValuePair<XLWorksheet, List<Reference>>(worksheet, ranges), FormulaRangesVisitor.Default);
-
-                var wb = worksheet.Workbook;
+                var areas = GetPrecedentAreas(expression, worksheet);
                 var visitedCells = new HashSet<IXLAddress>(new XLAddressComparer(true));
 
                 // TODO: Change semantic of this function so we only return used cells, much more performant
-                // I guess I should use some XLCellsUserOptions, but I have no idea which one and conditions are not there anyway.
                 var cells = new XLCells(usedCellsOnly: false, XLCellsUsedOptions.Contents);
-                foreach (var usedRange in ranges.SelectMany(r => r.Areas))
-                    cells.Add(usedRange.Worksheet is null ? usedRange.WithWorksheet(worksheet) : usedRange);
+                foreach (var usedRange in areas)
+                    cells.Add(usedRange);
 
                 foreach (var cell in cells)
                 {
@@ -151,6 +144,23 @@ namespace ClosedXML.Excel.CalcEngine
             return new CellRangeReference(range);
         }
 
+        private IEnumerable<XLRangeAddress> GetPrecedentAreas(string expression, XLWorksheet worksheet)
+        {
+            var node = Parse(expression);
+            var references = new List<Reference>();
+            var rootValue = node.Accept(new KeyValuePair<XLWorksheet, List<Reference>>(worksheet, references), FormulaRangesVisitor.Default);
+            if (rootValue.TryPickT0(out var rootReference, out var _))
+                references.Add(rootReference);
+
+            foreach (var referenceArea in references.SelectMany(x => x.Areas))
+            {
+                var completeArea = referenceArea.Worksheet is null
+                    ? referenceArea.WithWorksheet(worksheet)
+                    : referenceArea;
+                yield return completeArea;
+            }
+        }
+
         /// <summary>
         /// Get all ranges in the formula. Note that just because range
         /// is in the formula, it doesn't mean it is actually used during evaluation.
@@ -178,11 +188,15 @@ namespace ClosedXML.Excel.CalcEngine
                 }
 
                 var sheetName = node.Prefix?.Sheet;
-                var rangeAddress = sheetName is not null && context.Key.Workbook.TryGetWorksheet(sheetName, out var ws)
-                    ? new XLRangeAddress((XLWorksheet)ws, node.Address)
-                    : new XLRangeAddress(null, node.Address);
+                if (sheetName is not null)
+                {
+                    if (!context.Key.Workbook.TryGetWorksheet(sheetName, out var ws))
+                        return Error1.Ref;
 
-                return new Reference(rangeAddress);
+                    return new Reference(new XLRangeAddress((XLWorksheet)ws, node.Address));
+                }
+
+                return new Reference(new XLRangeAddress(null, node.Address));
             }
 
             public OneOf<Reference, Error1> Visit(KeyValuePair<XLWorksheet, List<Reference>> context, BinaryExpression node)

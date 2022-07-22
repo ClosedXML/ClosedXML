@@ -86,7 +86,8 @@ namespace ClosedXML.Excel.CalcEngine
                     : ScalarValue.FromT2(new Text(text)),
                 DateTime date => ScalarValue.FromT1(new Number1(date.ToOADate())),
                 // TODO: What is new semantic of XLCell.Value?
-                Error1 error => ScalarValue.FromT3(error), 
+                Error1 error => ScalarValue.FromT3(error),
+                ExpressionErrorType errorType => ScalarValue.FromT3(new Error1(errorType)),
                 _ => throw new NotImplementedException($"Not sure how to get error from a cell (type {value?.GetType().Name}, value {value}).")
             };
         }
