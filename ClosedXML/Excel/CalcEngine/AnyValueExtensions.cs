@@ -21,9 +21,9 @@ namespace ClosedXML.Excel.CalcEngine
                 text => text,
                 logical => logical,
                 array => array,
-                reference => reference.ImplicitIntersection(context).Match(
-                    scalar => scalar.ToAnyValue(),
-                    error => AnyValue.FromT3(error)));
+                reference => reference.ImplicitIntersection(context.FormulaAddress).Match<AnyValue>(
+                    singleCellReference => singleCellReference,
+                    error => error));
         }
 
         public static AnyValue ReferenceRange(this AnyValue left, AnyValue right)
@@ -476,9 +476,28 @@ namespace ClosedXML.Excel.CalcEngine
 
             return collection.Match(
                 array => array[0, 0].ToCellContentValue(),
-                reference => reference.ImplicitIntersection(ctx).Match<object>(
-                    scalarValue => scalarValue.ToCellContentValue(),
-                    error => error.Type));
+                reference =>
+                {
+                    if (reference.IsSingleCell())
+                    {
+                        // TODO: Better API
+                        var a = reference.Areas.Single();
+                        var cellValue = ctx.GetCellValue(a.Worksheet, a.FirstAddress.RowNumber, a.FirstAddress.ColumnNumber);
+                        return cellValue.ToCellContentValue();
+                    }
+
+                    return reference
+                        .ImplicitIntersection(ctx.FormulaAddress)
+                        .Match<object>(
+                            singleCellReference =>
+                            {
+                                var cellArea = singleCellReference.Areas.Single();
+                                var cellAddress = cellArea.FirstAddress;
+                                var cellValue = ctx.GetCellValue(cellArea.Worksheet, cellAddress.RowNumber, cellAddress.ColumnNumber);
+                                return cellValue.ToCellContentValue();
+                            },
+                            error => error.Type);
+                });
         }
 
         public static object ToCellContentValue(this ScalarValue value)

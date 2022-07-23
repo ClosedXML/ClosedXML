@@ -118,26 +118,41 @@ namespace ClosedXML.Excel.CalcEngine
             return intersections.Any() ? new Reference(intersections) : Error1.Null;
         }
 
-        public OneOf<ScalarValue, Error1> ImplicitIntersection(CalcContext ctx)
+        /// <summary>
+        /// Do an implicit intersection of an address.
+        /// </summary>
+        /// <param name="formulaAddress"></param>
+        /// <returns>An address of the intersection or error if intersection failed.</returns>
+        public OneOf<Reference, Error1> ImplicitIntersection(IXLAddress formulaAddress)
         {
             if (Areas.Count != 1)
                 return Error1.Value;
 
             var area = Areas.Single();
             if (area.RowSpan == 1 && area.ColumnSpan == 1)
-                return ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber);
+                return this;
 
-            // TODO: Check Sheet of formula address if more than one sheet.
-            var column = ctx.FormulaAddress.ColumnNumber;
-            var row = ctx.FormulaAddress.RowNumber;
+            var column = formulaAddress.ColumnNumber;
+            var row = formulaAddress.RowNumber;
 
             if (area.ColumnSpan == 1 && area.FirstAddress.RowNumber <= row && row <= area.LastAddress.RowNumber)
-                return ctx.GetCellValue(area.Worksheet, row, area.FirstAddress.ColumnNumber);
+            {
+                var intersection = new XLAddress(area.Worksheet, row, area.FirstAddress.ColumnNumber, false, false);
+                return new Reference(new XLRangeAddress(intersection, intersection));
+            }
 
             if (area.RowSpan == 1 && area.FirstAddress.ColumnNumber <= column && column <= area.LastAddress.ColumnNumber)
-                return ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, column);
+            {
+                var intersection = new XLAddress(area.Worksheet, area.FirstAddress.RowNumber, column, false, false);
+                return new Reference(new XLRangeAddress(intersection, intersection));
+            }
 
             return Error1.Value;
+        }
+
+        internal bool IsSingleCell()
+        {
+            return Areas.Count == 1 && Areas[0].IsSingleCell();
         }
     }
 }

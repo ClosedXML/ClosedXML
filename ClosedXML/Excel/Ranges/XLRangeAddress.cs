@@ -384,6 +384,13 @@ namespace ClosedXML.Excel
                    LastAddress == other.LastAddress;
         }
 
+        public bool IsSingleCell()
+        {
+            return IsValid
+                && FirstAddress.RowNumber == LastAddress.RowNumber
+                && FirstAddress.ColumnNumber == LastAddress.ColumnNumber;
+        }
+
         public bool IsEntireColumn()
         {
             return IsValid

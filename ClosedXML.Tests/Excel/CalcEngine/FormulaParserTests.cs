@@ -121,8 +121,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("#NUM!", ExpressionErrorType.NumberInvalid)]
         public void Constant_can_be_error(string formula, object expectedError)
         {
-            var error = (Error1)XLWorkbook.EvaluateExpr(formula);
-            Assert.AreEqual(expectedError, error.Type);
+            var error = (ExpressionErrorType)XLWorkbook.EvaluateExpr(formula);
+            Assert.AreEqual(expectedError, error);
         }
         #endregion
 
