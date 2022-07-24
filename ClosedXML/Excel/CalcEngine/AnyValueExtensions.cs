@@ -307,6 +307,13 @@ namespace ClosedXML.Excel.CalcEngine
                         func),
                     rightReference =>
                     {
+                        if (rightReference.IsSingleCell())
+                        {
+                            var rightArea = rightReference.Areas.Single();
+                            var rightCellValue = context.GetCellValue(rightArea.Worksheet, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber);
+                            return func(rightCellValue, rightScalar).ToAnyValue();
+                        }
+
                         var referenceArrayResult = rightReference.ToArray(context);
                         if (!referenceArrayResult.TryPickT0(out var rightRefArray, out var rightError))
                             return rightError;
@@ -324,6 +331,13 @@ namespace ClosedXML.Excel.CalcEngine
                         func),
                     leftReference =>
                     {
+                        if (leftReference.IsSingleCell())
+                        {
+                            var leftArea = leftReference.Areas.Single();
+                            var leftCellValue = context.GetCellValue(leftArea.Worksheet, leftArea.FirstAddress.RowNumber, leftArea.FirstAddress.ColumnNumber);
+                            return func(leftCellValue, rightScalar).ToAnyValue();
+                        }
+
                         var referenceArrayResult = leftReference.ToArray(context);
                         if (!referenceArrayResult.TryPickT0(out var leftRefArray, out var leftError))
                             return leftError;
@@ -487,6 +501,7 @@ namespace ClosedXML.Excel.CalcEngine
                 throw new InvalidOperationException("Formula has a circular reference");
 
             var value = cell.Value;
+            // TODO: Replace with a conversion, like ctx
             if (value is bool boolValue)
                 return ScalarValue.FromT0(new Logical(boolValue));
             if (value is double numberValue)
