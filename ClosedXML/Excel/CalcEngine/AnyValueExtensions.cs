@@ -344,8 +344,36 @@ namespace ClosedXML.Excel.CalcEngine
                                 new ResizedArray(rightArray, width, height),
                                 func);
                         },
-                        rightReference => throw new NotImplementedException()),
-                leftReference => throw new NotImplementedException());
+                        rightReference =>
+                        {
+                            throw new NotImplementedException();
+                        }),
+                leftReference => rightAggregate.Match(
+                        rightArray =>
+                        {
+                            throw new NotImplementedException();
+                        },
+                        rightReference =>
+                        {
+                            if (leftReference.Areas.Count > 1 || rightReference.Areas.Count > 1)
+                                return Error1.Value;
+
+                            var leftArea = leftReference.Areas.Single();
+                            var rightArea = rightReference.Areas.Single();
+                            var colSpan = Math.Max(leftArea.ColumnSpan, rightArea.ColumnSpan);
+                            var rowSpan = Math.Max(leftArea.RowSpan, rightArea.RowSpan);
+                            if (colSpan == 1 && rowSpan == 1)
+                            {
+                                var leftCellValue = GetCellValue(leftArea, leftArea.FirstAddress.RowNumber, leftArea.FirstAddress.ColumnNumber, context);
+                                var rightCellValue = GetCellValue(rightArea, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber, context);
+                                return func(leftCellValue, rightCellValue).ToAnyValue();
+                            }
+
+                            return ApplyOnArray(
+                                new ResizedArray(new ReferenceArray(leftArea, context), colSpan, rowSpan),
+                                new ResizedArray(new ReferenceArray(rightArea, context), colSpan, rowSpan),
+                                func);
+                        }));
         }
 
         // If not a single area, error

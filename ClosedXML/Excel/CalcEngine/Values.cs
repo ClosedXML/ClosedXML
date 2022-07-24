@@ -288,18 +288,23 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private readonly XLRangeAddress _area;
         private readonly CalcContext _context;
+        private readonly int _offsetColumn;
+        private readonly int _offsetRow;
 
         public ReferenceArray(XLRangeAddress area, CalcContext context)
         {
             _area = area;
             _context = context;
+            _offsetColumn = _area.FirstAddress.ColumnNumber;
+            _offsetRow = area.FirstAddress.RowNumber;
+
         }
 
         public override ScalarValue this[int y, int x]
         {
             get
             {
-                return AnyValueExtensions.GetCellValue(_area, y + 1, x + 1, _context);
+                return AnyValueExtensions.GetCellValue(_area, y + _offsetRow, x + _offsetColumn, _context);
             }
         }
 
