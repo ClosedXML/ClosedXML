@@ -50,7 +50,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var ws = wb.AddWorksheet("Sheet");
                 ws.Cell("A1").Value = "1";
                 ws.Cell("A3").Value = "1";
-                var actual = ws.Evaluate("=IsBlank(A1:A3)", "A2");
+                var actual = ws.Evaluate("=IsBlank(A1:A3)", "A3");
                 Assert.AreEqual(false, actual);
             }
         }
