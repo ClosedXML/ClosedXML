@@ -21,9 +21,19 @@ namespace ClosedXML.Excel.CalcEngine
                 text => text,
                 logical => logical,
                 array => array,
-                reference => reference.ImplicitIntersection(context.FormulaAddress).Match<AnyValue>(
-                    singleCellReference => singleCellReference,
-                    error => error));
+                reference =>
+                {
+                    if (reference.IsSingleCell())
+                    {
+                        return reference;
+                    }
+
+                    return reference
+                        .ImplicitIntersection(context.FormulaAddress)
+                        .Match<AnyValue>(
+                            singleCellReference => singleCellReference,
+                            error => error);
+                });
         }
 
         public static AnyValue ReferenceRange(this AnyValue left, AnyValue right)
@@ -441,7 +451,14 @@ namespace ClosedXML.Excel.CalcEngine
         public static ScalarValue GetCellValue(XLRangeAddress area, int row, int column, CalcContext ctx)
         {
             var worksheet = area.Worksheet ?? ctx.Worksheet;
-            var value = worksheet.GetCellValue(row, column);
+            var cell = worksheet.GetCell(row, column);
+            if (cell is null)
+                return Number1.Zero;
+
+            if (cell.IsEvaluating)
+                throw new InvalidOperationException("Formula has a circular reference");
+
+            var value = cell.Value;
             if (value is bool boolValue)
                 return ScalarValue.FromT0(new Logical(boolValue));
             if (value is double numberValue)

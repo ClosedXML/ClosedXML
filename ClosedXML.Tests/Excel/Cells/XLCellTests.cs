@@ -1056,14 +1056,12 @@ namespace ClosedXML.Tests
                 A1.FormulaA1 = "A2 + 1";
                 A2.FormulaA1 = "A1 + 1";
 
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    var _ = A1.Value;
-                });
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    var _ = A2.Value;
-                });
+                Assert.Throws(
+                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("circular"),
+                    () => _ = A1.Value);
+                Assert.Throws(
+                    Is.TypeOf<InvalidOperationException>().And.Message.Contains("circular"),
+                    () => _ = A2.Value);
             }
         }
 

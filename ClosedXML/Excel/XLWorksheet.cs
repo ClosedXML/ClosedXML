@@ -1851,6 +1851,7 @@ namespace ClosedXML.Excel
             if (cell is null)
                 return string.Empty;
 
+            // LEGACY: This is deeply suspicious, this only exists so the legacy formulas can get cell value
             if (cell.IsEvaluating)
                 return string.Empty;
 
