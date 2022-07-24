@@ -37,7 +37,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             var cstTree = _parser.Parse(expression);
             var root = (ValueNode)cstTree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
-            return root;//(Expression)root.Accept(null, _compatibilityVisitor);
+            return root;
         }
 
         /// <summary>

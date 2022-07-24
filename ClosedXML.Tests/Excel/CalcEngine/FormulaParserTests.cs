@@ -348,7 +348,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_item_can_be_ref_error()
         {
-            Assert.AreEqual(Error1.Ref, XLWorkbook.EvaluateExpr("#REF!"));
+            Assert.AreEqual(ExpressionErrorType.CellReference, XLWorkbook.EvaluateExpr("#REF!"));
         }
 
         [TestCase]

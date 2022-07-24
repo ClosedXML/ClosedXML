@@ -71,7 +71,11 @@ namespace ClosedXML.Excel.CalcEngine
         {
             try
             {
-                return p[0].Evaluate();
+                var value = p[0].Evaluate();
+                if (value is ExpressionErrorType)
+                    return p[1].Evaluate();
+
+                return value;
             }
             catch (ArgumentException)
             {
