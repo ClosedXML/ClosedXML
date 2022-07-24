@@ -378,8 +378,8 @@ namespace ClosedXML.Excel.CalcEngine
                             var rowSpan = Math.Max(leftArea.RowSpan, rightArea.RowSpan);
                             if (colSpan == 1 && rowSpan == 1)
                             {
-                                var leftCellValue = GetCellValue(leftArea, leftArea.FirstAddress.RowNumber, leftArea.FirstAddress.ColumnNumber, context);
-                                var rightCellValue = GetCellValue(rightArea, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber, context);
+                                var leftCellValue = context.GetCellValue(leftArea.Worksheet, leftArea.FirstAddress.RowNumber, leftArea.FirstAddress.ColumnNumber);
+                                var rightCellValue = context.GetCellValue(rightArea.Worksheet, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber);
                                 return func(leftCellValue, rightCellValue).ToAnyValue();
                             }
 
