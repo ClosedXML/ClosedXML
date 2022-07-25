@@ -25,6 +25,8 @@
     <RepositoryUrl>https://github.com/ClosedXML/ClosedXML</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
+    <!-- Sourcelink: https://github.com/dotnet/sourcelink/ -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
 
