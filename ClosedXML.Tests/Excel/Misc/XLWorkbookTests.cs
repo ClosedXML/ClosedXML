@@ -440,10 +440,6 @@ namespace ClosedXML.Tests.Excel
             }
         }
 
-#if NET40
-        [Ignore(".NET 40 does not support Janitor.Fody")]
-#endif
-
         [Test]
         public void AccessDisposedWorkbookThrowsException()
         {

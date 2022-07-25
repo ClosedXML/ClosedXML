@@ -14,12 +14,6 @@
     <tags>ClosedXML</tags>
   </metadata>
   <files>
-    <file src="bin\Release\net40\ClosedXML.dll" target="lib\net40\ClosedXML.dll" />
-    <file src="bin\Release\net40\ClosedXML.pdb" target="lib\net40\ClosedXML.pdb" />
-    <file src="bin\Release\net40\ClosedXML.xml" target="lib\net40\ClosedXML.xml" />
-    <file src="bin\Release\net46\ClosedXML.dll" target="lib\net46\ClosedXML.dll" />
-    <file src="bin\Release\net46\ClosedXML.pdb" target="lib\net46\ClosedXML.pdb" />
-    <file src="bin\Release\net46\ClosedXML.xml" target="lib\net46\ClosedXML.xml" />
     <file src="bin\Release\netstandard2.0\ClosedXML.dll" target="lib\netstandard2.0\ClosedXML.dll" />
     <file src="bin\Release\netstandard2.0\ClosedXML.pdb" target="lib\netstandard2.0\ClosedXML.pdb" />
     <file src="bin\Release\netstandard2.0\ClosedXML.xml" target="lib\netstandard2.0\ClosedXML.xml" />
