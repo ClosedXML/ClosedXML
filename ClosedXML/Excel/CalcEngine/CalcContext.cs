@@ -74,7 +74,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return ScalarValue.FromT1(new Number1(0));
 
             if (cell.IsEvaluating)
-                throw new InvalidOperationException("Circular reference");
+                throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
 
             var value = cell.Value;
             return value switch

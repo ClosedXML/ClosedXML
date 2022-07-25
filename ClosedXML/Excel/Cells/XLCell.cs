@@ -399,7 +399,7 @@ namespace ClosedXML.Excel
                 return null;
 
             if (IsEvaluating)
-                throw new InvalidOperationException("Circular Reference");
+                throw new InvalidOperationException($"Cell {Address} is a part of circular reference.");
 
             if (fA1[0] == '{')
                 fA1 = fA1.Substring(1, fA1.Length - 2);

@@ -311,7 +311,7 @@ namespace ClosedXML.Excel.CalcEngine
                         {
                             var rightArea = rightReference.Areas.Single();
                             var rightCellValue = context.GetCellValue(rightArea.Worksheet, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber);
-                            return func(rightCellValue, rightScalar).ToAnyValue();
+                            return func(leftScalar, rightCellValue).ToAnyValue();
                         }
 
                         var referenceArrayResult = rightReference.ToArray(context);
