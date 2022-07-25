@@ -31,21 +31,9 @@ namespace ClosedXML.Excel
             MergedRanges.RemoveAll();
         }
 
-#if NET40
-
         public void Dispose()
         {
-            // net40 doesn't support Janitor.Fody, so let's dispose manually
-            DisposeManaged();
+            // Leave this empty so that Janitor.Fody can do its work
         }
-
-#else
-
-        public void Dispose()
-        {
-            // Leave this empty (for non net40 targets) so that Janitor.Fody can do its work
-        }
-
-#endif
     }
 }
