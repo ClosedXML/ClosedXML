@@ -29,21 +29,21 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static IDictionary<Error, int> errorTypes = new Dictionary<Error, int>()
         {
-            [Excel.CalcEngine.Error.NullValue] = 1,
-            [Excel.CalcEngine.Error.DivisionByZero] = 2,
-            [Excel.CalcEngine.Error.CellValue] = 3,
-            [Excel.CalcEngine.Error.CellReference] = 4,
-            [Excel.CalcEngine.Error.NameNotRecognized] = 5,
-            [Excel.CalcEngine.Error.NumberInvalid] = 6,
-            [Excel.CalcEngine.Error.NoValueAvailable] = 7
+            [Error.NullValue] = 1,
+            [Error.DivisionByZero] = 2,
+            [Error.CellValue] = 3,
+            [Error.CellReference] = 4,
+            [Error.NameNotRecognized] = 5,
+            [Error.NumberInvalid] = 6,
+            [Error.NoValueAvailable] = 7
         };
 
         static object ErrorType(List<Expression> p)
         {
             var v = p[0].Evaluate();
 
-            if (v is Error)
-                return errorTypes[(Error)v];
+            if (v is Error error)
+                return errorTypes[error];
             else
                 throw new NoValueAvailableException();
         }
@@ -66,8 +66,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             var v = p[0].Evaluate();
 
-            return v is Error
-                && ((Error)v) != Excel.CalcEngine.Error.NoValueAvailable;
+            return v is Error error && error != Error.NoValueAvailable;
         }
 
         static object IsError(List<Expression> p)
@@ -107,7 +106,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             try
             {
                 var v = p[0].Evaluate();
-                return v is Error type && type == Excel.CalcEngine.Error.NoValueAvailable;
+                return v is Error error && error == Error.NoValueAvailable;
             }
             catch (NoValueAvailableException)
             {
@@ -194,7 +193,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
         static object NA(List<Expression> p)
         {
-            return Excel.CalcEngine.Error.NoValueAvailable;
+            return Error.NoValueAvailable;
         }
 
         static object Type(List<Expression> p)

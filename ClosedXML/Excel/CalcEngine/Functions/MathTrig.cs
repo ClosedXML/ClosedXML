@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -15,34 +16,6 @@ namespace ClosedXML.Excel.CalcEngine
         private static readonly Random _rnd = new Random();
 
         #region Register
-
-        private static CalcEngineFunction Adapt(Func<double, AnyValue> f)
-        {
-            return (ctx, args) => ctx.Converter.ToNumber(args[0]).Match(
-                    number => f(number),
-                    error => error);
-        }
-
-
-        private static CalcEngineFunction Adapt(Func<CalcContext, double, List<Reference>, AnyValue> f)
-        {
-            return (ctx, args) =>
-            {
-                if (!ctx.Converter.ToNumber(args[0] ?? 0).TryPickT0(out var number, out var error))
-                    return error;
-
-                var references = new List<Reference>();
-                for (var i = 1; i < args.Length; ++i)
-                {
-                    if (!(args[i] ?? 0).TryPickT5(out var reference, out var rest))
-                        return Error.CellValue;
-
-                    references.Add(reference);
-                }
-
-                return f(ctx, number, references);
-            };
-        }
 
         public static void Register(FunctionRegistry ce)
         {
@@ -914,7 +887,7 @@ namespace ClosedXML.Excel.CalcEngine
             var fId = (int)number;
             var tally = new Tally(cellsWitoutSubtotal);
 
-            var val = fId switch
+            return fId switch
             {
                 1 => tally.Average(),
                 2 => tally.Count(true),
@@ -929,8 +902,6 @@ namespace ClosedXML.Excel.CalcEngine
                 11 => tally.VarP(),
                 _ => throw new ArgumentException("Function not supported."),
             };
-
-            return val;
         }
 
         private static object Sum(List<Expression> p)

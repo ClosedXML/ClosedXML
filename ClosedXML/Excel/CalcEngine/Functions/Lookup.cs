@@ -4,22 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Lookup
     {
-        public static CalcEngineFunction Adapt(Func<CalcContext, string, AnyValue?, AnyValue> f)
-        {
-            return (ctx, args) =>
-            {
-                if (!ctx.Converter.ToText(args[0] ?? AnyValue.FromT1(0)).TryPickT0(out var arg0, out var error))
-                    return error;
-
-                return f(ctx, arg0, args.Length > 1 ? args[1] : null);
-            };
-        }
-
         public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("ADDRESS", , Address); // Returns a reference as text to a single cell in a worksheet

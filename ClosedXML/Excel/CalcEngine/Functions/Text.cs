@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal static class TextFunctions
+    internal static class Text
     {
         public static void Register(FunctionRegistry ce)
         {

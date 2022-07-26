@@ -123,10 +123,10 @@ namespace ClosedXML.Excel.CalcEngine
             // register built-in functions (and constants)
             Engineering.Register(fr);
             Information.Register(fr);
-            LogicalFunctions.Register(fr);
+            Logical.Register(fr);
             Lookup.Register(fr);
             MathTrig.Register(fr);
-            TextFunctions.Register(fr);
+            Text.Register(fr);
             Statistical.Register(fr);
             DateAndTime.Register(fr);
             Financial.Register(fr);

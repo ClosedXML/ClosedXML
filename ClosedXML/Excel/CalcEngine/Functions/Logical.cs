@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal static class LogicalFunctions
+    internal static class Logical
     {
         public static void Register(FunctionRegistry ce)
         {
