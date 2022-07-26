@@ -1,9 +1,7 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -30,11 +28,7 @@ namespace ClosedXML.Excel.CalcEngine
         public AnyValue Visit(CalcContext context, UnaryExpression node)
         {
             var arg = node.Expression.Accept(context, this);
-            if (context.UseImplicitIntersection)
-            {
-                arg = arg.ImplicitIntersection(context);
-            }
-
+           
             return node.Operation switch
             {
                 UnaryOp.Add => arg.UnaryPlus(),
@@ -51,21 +45,11 @@ namespace ClosedXML.Excel.CalcEngine
             var leftArg = node.LeftExpression.Accept(context, this);
             var rightArg = node.RightExpression.Accept(context, this);
 
-            switch (node.Operation)
-            {
-                case BinaryOp.Range: return leftArg.ReferenceRange(rightArg);
-                case BinaryOp.Union: return leftArg.ReferenceUnion(rightArg);
-                case BinaryOp.Intersection: throw new NotImplementedException();
-            };
-
-            if (context.UseImplicitIntersection)
-            {
-                leftArg = leftArg.ImplicitIntersection(context);
-                rightArg = rightArg.ImplicitIntersection(context);
-            }
-
             return node.Operation switch
             {
+                BinaryOp.Range => leftArg.ReferenceRange(rightArg),
+                BinaryOp.Union => leftArg.ReferenceUnion(rightArg),
+                BinaryOp.Intersection => throw new NotImplementedException(),
                 BinaryOp.Concat => leftArg.Concat(rightArg, context),
                 BinaryOp.Add => leftArg.BinaryPlus(rightArg, context),
                 BinaryOp.Sub => leftArg.BinaryMinus(rightArg, context),
