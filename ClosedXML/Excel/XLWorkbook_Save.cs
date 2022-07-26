@@ -4560,6 +4560,9 @@ namespace ClosedXML.Excel
             }
 
             var allSharedNumberFormats = new Dictionary<XLNumberFormatValue, NumberFormatInfo>();
+            // Fetch the max id which "workbookStylesPart.Stylesheet.NumberingFormats" to prevent id clashes.
+            // This scenario can occur when there are different formats with same ids.
+            var max_id = workbookStylesPart.Stylesheet.NumberingFormats.Select(_ => _ as NumberingFormat).Max(_ => _.NumberFormatId);
             foreach (var numberFormatInfo in sharedNumberFormats.Values.Where(nf => nf.NumberFormatId != defaultFormatId))
             {
                 var numberingFormatId = XLConstants.NumberOfBuiltInStyles; // 0-based
@@ -4572,22 +4575,23 @@ namespace ClosedXML.Excel
                         numberingFormatId = (Int32)nf.NumberFormatId.Value;
                         break;
                     }
-                    numberingFormatId++;
                 }
+                uint formatId = (uint)numberingFormatId;
                 if (!foundOne)
                 {
                     var numberingFormat = new NumberingFormat
                     {
-                        NumberFormatId = (UInt32)numberingFormatId,
+                        NumberFormatId = ++max_id,
                         FormatCode = numberFormatInfo.NumberFormat.Format
                     };
+                    formatId = max_id;
                     workbookStylesPart.Stylesheet.NumberingFormats.AppendChild(numberingFormat);
                 }
                 allSharedNumberFormats.Add(numberFormatInfo.NumberFormat,
                     new NumberFormatInfo
                     {
                         NumberFormat = numberFormatInfo.NumberFormat,
-                        NumberFormatId = numberingFormatId
+                        NumberFormatId = (int)formatId
                     });
             }
             workbookStylesPart.Stylesheet.NumberingFormats.Count =
