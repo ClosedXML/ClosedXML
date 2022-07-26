@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -16,7 +16,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         #region Register
 
-        private static CalcEngineFunction Adapt(Func<Number1, AnyValue> f)
+        private static CalcEngineFunction Adapt(Func<double, AnyValue> f)
         {
             return (ctx, args) => ctx.Converter.ToNumber(args[0]).Match(
                     number => f(number),
@@ -24,17 +24,17 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
 
-        private static CalcEngineFunction Adapt(Func<CalcContext, Number1, List<Reference>, AnyValue> f)
+        private static CalcEngineFunction Adapt(Func<CalcContext, double, List<Reference>, AnyValue> f)
         {
             return (ctx, args) =>
             {
-                if (!ctx.Converter.ToNumber(args[0] ?? Number1.Zero).TryPickT0(out var number, out var error))
+                if (!ctx.Converter.ToNumber(args[0] ?? 0).TryPickT0(out var number, out var error))
                     return error;
 
                 var references = new List<Reference>();
                 for (var i = 1; i < args.Length; ++i)
                 {
-                    if (!(args[i] ?? Number1.Zero).TryPickT5(out var reference, out var rest))
+                    if (!(args[i] ?? 0).TryPickT5(out var reference, out var rest))
                         return Error1.Value;
 
                     references.Add(reference);
@@ -159,9 +159,9 @@ namespace ClosedXML.Excel.CalcEngine
             return radians / Math.PI * 200.0;
         }
 
-        private static AnyValue Abs(Number1 number)
+        private static AnyValue Abs(double number)
         {
-            return new Number1(Math.Abs(number));
+            return Math.Abs(number);
         }
 
         private static object Acos(List<Expression> p)
@@ -899,7 +899,7 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sqrt(Math.PI * num);
         }
 
-        private static AnyValue Subtotal(CalcContext ctx, Number1 number, List<Reference> p)
+        private static AnyValue Subtotal(CalcContext ctx, double number, List<Reference> p)
         {
             var cellsWitoutSubtotal = p.SelectMany(reference => ctx.GetNonBlankCells(reference))
                 .Where(cell =>
@@ -911,7 +911,7 @@ namespace ClosedXML.Excel.CalcEngine
                 })
                 .Select(cell => new Expression(cell.Value));
 
-            var fId = (int)number.Value;
+            var fId = (int)number;
             var tally = new Tally(cellsWitoutSubtotal);
 
             var val = fId switch
@@ -930,7 +930,7 @@ namespace ClosedXML.Excel.CalcEngine
                 _ => throw new ArgumentException("Function not supported."),
             };
 
-            return new Number1(val);
+            return val;
         }
 
         private static object Sum(List<Expression> p)

@@ -166,7 +166,7 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateNumberNode(AstContext context, ParseTreeNode parseNode)
         {
             var value = parseNode.ChildNodes.Single().Token.Value;
-            parseNode.AstNode = new ScalarNode(new Number1(value is int intValue ? (double)intValue : (double)value));
+            parseNode.AstNode = new ScalarNode(value is int intValue ? (double)intValue : (double)value);
         }
 
         private void CreateBoolNode(AstContext context, ParseTreeNode parseNode)

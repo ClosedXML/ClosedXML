@@ -2,30 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal readonly struct Number1
-    {
-        public static readonly Number1 Zero = new(0.0);
-        public static readonly Number1 One = new(1.0);
-
-        public Number1(double value) => Value = value;
-
-        public double Value { get; }
-
-        public static implicit operator double(Number1 number) => number.Value;
-        public static implicit operator Number1(double value) => new Number1(value);
-
-        public override string ToString() => Value.ToString();
-
-        public static Number1 Plus(Number1 lhs, Number1 rhs)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     // There is no downside to have custom type, we can add more info, if we want (like text)
     internal readonly struct Error1
     {
@@ -196,7 +176,7 @@ namespace ClosedXML.Excel.CalcEngine
             _data = data;
         }
 
-        public override ScalarValue this[int y, int x] => new Number1(_data[y, x]);
+        public override ScalarValue this[int y, int x] => _data[y, x];
 
         public override int Width => _data.GetLength(1);
 

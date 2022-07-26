@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -151,7 +151,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 Expression adaptedArg = arg.HasValue ? arg.Value.Match(
                     logical => new Expression(logical),
-                    number => new Expression(number.Value),
+                    number => new Expression(number),
                     text => new Expression(text),
                     error => new Expression(error.Type),
                     array =>
@@ -198,12 +198,12 @@ namespace ClosedXML.Excel.CalcEngine
                 return result switch
                 {
                     bool logic => AnyValue.FromT0(logic),
-                    double number => AnyValue.FromT1(new Number1(number)),
+                    double number => AnyValue.FromT1(number),
                     string text => AnyValue.FromT2(text),
-                    int number => AnyValue.FromT1(new Number1(number)), /* date mostly */
-                    long number => AnyValue.FromT1(new Number1(number)),
-                    DateTime date => AnyValue.FromT1(new Number1(date.ToOADate())),
-                    TimeSpan time => AnyValue.FromT1(new Number1(time.ToSerialDateTime())),
+                    int number => AnyValue.FromT1(number), /* date mostly */
+                    long number => AnyValue.FromT1(number),
+                    DateTime date => AnyValue.FromT1(date.ToOADate()),
+                    TimeSpan time => AnyValue.FromT1(time.ToSerialDateTime()),
                     double[,] array => AnyValue.FromT4(new NumberArray(array)),
                     _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
                 };

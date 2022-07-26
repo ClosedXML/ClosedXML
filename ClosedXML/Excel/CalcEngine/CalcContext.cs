@@ -1,7 +1,7 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Globalization;
-using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -63,7 +63,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal ScalarValue GetCellValue(XLWorksheet worksheet, int rowNumber, int columnNumber)
         {
-            return GetCellValueOrBlank(worksheet, rowNumber, columnNumber) ?? ScalarValue.FromT1(new Number1(0));
+            return GetCellValueOrBlank(worksheet, rowNumber, columnNumber) ?? ScalarValue.FromT1(0);
         }
 
         internal ScalarValue? GetCellValueOrBlank(XLWorksheet worksheet, int rowNumber, int columnNumber)
@@ -71,7 +71,7 @@ namespace ClosedXML.Excel.CalcEngine
             worksheet ??= _worksheet;
             var cell = worksheet.GetCell(rowNumber, columnNumber);
             if (cell is null)
-                return ScalarValue.FromT1(new Number1(0));
+                return ScalarValue.FromT1(0);
 
             if (cell.IsEvaluating)
                 throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
@@ -80,11 +80,11 @@ namespace ClosedXML.Excel.CalcEngine
             return value switch
             {
                 bool logical => ScalarValue.FromT0(logical),
-                double number => ScalarValue.FromT1(new Number1(number)),
+                double number => ScalarValue.FromT1(number),
                 string text => text == string.Empty
                     ? null
                     : ScalarValue.FromT2(text),
-                DateTime date => ScalarValue.FromT1(new Number1(date.ToOADate())),
+                DateTime date => ScalarValue.FromT1(date.ToOADate()),
                 // TODO: What is new semantic of XLCell.Value?
                 Error1 error => ScalarValue.FromT3(error),
                 ExpressionErrorType errorType => ScalarValue.FromT3(new Error1(errorType)),

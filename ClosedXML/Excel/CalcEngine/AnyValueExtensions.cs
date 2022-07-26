@@ -1,8 +1,8 @@
 ﻿using OneOf;
 using System;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
 using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Linq;
 
@@ -125,7 +125,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue UnaryPercent(this AnyValue value, CalcContext context) => UnaryOperation(value, x => x / 100.0, context);
 
-        private static AnyValue UnaryOperation(AnyValue value, Func<Number1, Number1> f, CalcContext context)
+        private static AnyValue UnaryOperation(AnyValue value, Func<double, double> f, CalcContext context)
         {
             if (value.TryPickScalar(out var scalar, out var aggregate))
             {
@@ -170,7 +170,7 @@ namespace ClosedXML.Excel.CalcEngine
             return AnyValue.FromT4(new ConstArray(data));
         }
 
-        private static ScalarValue UnaryArithmeticOp(ScalarValue value, Func<Number1, Number1> op, ValueConverter converter)
+        private static ScalarValue UnaryArithmeticOp(ScalarValue value, Func<double, double> op, ValueConverter converter)
         {
             var conversionResult = value.Match(
                 logical => converter.ToNumber(logical),
@@ -190,35 +190,35 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue BinaryPlus(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => new Number1(lhs + rhs);
+            BinaryNumberFunc f = (lhs, rhs) => lhs + rhs;
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }
 
         public static AnyValue BinaryMinus(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => new Number1(lhs - rhs);
+            BinaryNumberFunc f = (lhs, rhs) => lhs - rhs;
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }
 
         public static AnyValue BinaryMult(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => new Number1(lhs * rhs);
+            BinaryNumberFunc f = (lhs, rhs) => lhs * rhs;
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }
 
         public static AnyValue BinaryDiv(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => rhs == 0.0 ? Error1.DivZero : new Number1(lhs / rhs);
+            BinaryNumberFunc f = (lhs, rhs) => rhs == 0.0 ? Error1.DivZero : lhs / rhs;
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }
 
         public static AnyValue BinaryExp(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => lhs == 0 && rhs == 0 ? Error1.Value : new Number1(Math.Pow(lhs, rhs));
+            BinaryNumberFunc f = (lhs, rhs) => lhs == 0 && rhs == 0 ? Error1.Value : Math.Pow(lhs, rhs);
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }
@@ -437,7 +437,7 @@ namespace ClosedXML.Excel.CalcEngine
                 error => ScalarValue.FromT3(error));
         }
 
-        private static OneOf<Number1, Error1> CovertToNumber(this ScalarValue value, ValueConverter converter)
+        private static OneOf<double, Error1> CovertToNumber(this ScalarValue value, ValueConverter converter)
         {
             return value.Match(
                 logical => converter.ToNumber(logical),
@@ -479,7 +479,7 @@ namespace ClosedXML.Excel.CalcEngine
                         rightError => rightError),
                 leftNumber => rhs.Match<OneOf<int, Error1>>(
                         rightLogical => 1,
-                        rightNumber => leftNumber.Value.CompareTo(rightNumber.Value),
+                        rightNumber => leftNumber.CompareTo(rightNumber),
                         rightText => 1,
                         rightError => rightError),
                 leftText => rhs.Match<OneOf<int, Error1>>(
@@ -495,7 +495,7 @@ namespace ClosedXML.Excel.CalcEngine
             var worksheet = area.Worksheet ?? ctx.Worksheet;
             var cell = worksheet.GetCell(row, column);
             if (cell is null)
-                return Number1.Zero;
+                return 0;
 
             if (cell.IsEvaluating)
                 throw new InvalidOperationException("Formula has a circular reference");
@@ -505,11 +505,11 @@ namespace ClosedXML.Excel.CalcEngine
             if (value is bool boolValue)
                 return ScalarValue.FromT0(boolValue);
             if (value is double numberValue)
-                return ScalarValue.FromT1(new Number1(numberValue));
+                return ScalarValue.FromT1(numberValue);
             if (value is string stringValue)
             {
                 return stringValue == string.Empty
-                    ? ScalarValue.FromT1(new Number1(0))
+                    ? ScalarValue.FromT1(0)
                     : ScalarValue.FromT2(stringValue);
             }
 
@@ -518,7 +518,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private delegate ScalarValue BinaryFunc(ScalarValue lhs, ScalarValue rhs);
 
-        private delegate OneOf<Number1, Error1> BinaryNumberFunc(Number1 lhs, Number1 rhs);
+        private delegate OneOf<double, Error1> BinaryNumberFunc(double lhs, double rhs);
 
         /// <summary>
         /// Convert any kind of formula value to value returned as a content of a cell.
@@ -564,7 +564,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return value.Match<object>(
                 logical => logical,
-                number => number.Value,
+                number => number,
                 text => text,
                 error => error.Type);
         }

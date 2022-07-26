@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -11,9 +11,9 @@ namespace ClosedXML.Excel.CalcEngine
     {
         private static readonly Dictionary<System.Type, List<System.Type>> a = new Dictionary<System.Type, List<System.Type>>()
         {
-            { typeof(bool), new List<System.Type>() { typeof(Number1), typeof(string) } },
-            { typeof(Number1), new List<System.Type>() { typeof(bool), typeof(string) } },
-            { typeof(string), new List<System.Type>() { typeof(Number1) } },
+            { typeof(bool), new List<System.Type>() { typeof(double), typeof(string) } },
+            { typeof(double), new List<System.Type>() { typeof(bool), typeof(string) } },
+            { typeof(string), new List<System.Type>() { typeof(double) } },
             { typeof(Error1), new List<System.Type>() }
         };
 
@@ -22,19 +22,19 @@ namespace ClosedXML.Excel.CalcEngine
         public ValueConverter(CultureInfo culture) => _culture = culture;
 
 
-        internal Number1 ToNumber(bool logical)
+        internal double ToNumber(bool logical)
         {
-            return logical ? Number1.One : Number1.Zero;
+            return logical ? 1 : 0;
         }
 
-        internal OneOf<Number1, Error1> ToNumber(string text)
+        internal OneOf<double, Error1> ToNumber(string text)
         {
             return double.TryParse(text, NumberStyles.Float, _culture, out var number)
-                ? new Number1(number)
+                ? number
                 : Error1.Value;
         }
 
-        internal OneOf<Number1, Error1> ToNumber(AnyValue? value)
+        internal OneOf<double, Error1> ToNumber(AnyValue? value)
         {
             if (!value.HasValue)
                 return Error1.Value;
@@ -48,16 +48,16 @@ namespace ClosedXML.Excel.CalcEngine
                     reference => throw new NotImplementedException("Not sure what to do with it."));
         }
 
-        internal string ToExcelString(Number1 rightNumber)
+        internal string ToExcelString(double rightNumber)
         {
-            return rightNumber.Value.ToString(_culture);
+            return rightNumber.ToString(_culture);
         }
 
         internal OneOf<string, Error1> ToText(ScalarValue lhs)
         {
             return lhs.Match<OneOf<string, Error1>>(
                 logical => logical ? "TRUE" : "FALSE",
-                number => number.Value.ToString(_culture),
+                number => number.ToString(_culture),
                 text => text,
                 error => error);
         }

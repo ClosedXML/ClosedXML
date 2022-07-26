@@ -3,7 +3,7 @@ using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
 
 namespace ClosedXML.Excel.CalcEngine
 {

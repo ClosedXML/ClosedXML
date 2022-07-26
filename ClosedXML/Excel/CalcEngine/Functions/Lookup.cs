@@ -3,7 +3,7 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -13,7 +13,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
         {
             return (ctx, args) =>
             {
-                if (!ctx.Converter.ToText(args[0] ?? AnyValue.FromT1(Number1.Zero)).TryPickT0(out var arg0, out var error))
+                if (!ctx.Converter.ToText(args[0] ?? AnyValue.FromT1(0)).TryPickT0(out var arg0, out var error))
                     return error;
 
                 return f(ctx, arg0, args.Length > 1 ? args[1] : null);
