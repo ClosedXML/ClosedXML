@@ -6,6 +6,8 @@ using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
+    #region Compatibility object for legacy calculation
+
     /// <summary>
     /// An adapter for legacy function implementations.
     /// </summary>
@@ -278,6 +280,16 @@ namespace ClosedXML.Excel.CalcEngine
     }
 
     /// <summary>
+    /// Expression that represents an omitted parameter.
+    /// </summary>
+    internal class EmptyValueExpression : Expression
+    {
+        public EmptyValueExpression() : base(null)
+        {
+        }
+    }
+
+    /// <summary>
     /// Interface supported by external objects that have to return a value
     /// other than themselves (e.g. a cell range object should return the
     /// cell content instead of the range itself).
@@ -286,4 +298,6 @@ namespace ClosedXML.Excel.CalcEngine
     {
         object GetValue();
     }
+
+    #endregion
 }

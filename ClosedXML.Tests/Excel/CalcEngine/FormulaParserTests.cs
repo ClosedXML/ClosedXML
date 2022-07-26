@@ -2,7 +2,7 @@
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System;
-using static ClosedXML.Excel.CalcEngine.ErrorExpression;
+using static ClosedXML.Excel.CalcEngine.ErrorNode;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {

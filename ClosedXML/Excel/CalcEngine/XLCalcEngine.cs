@@ -313,7 +313,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error.CellReference;
             }
 
-            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, ErrorExpression node)
+            public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, ErrorNode node)
             {
                 return Error.CellReference;
             }

@@ -12,7 +12,7 @@
 
         public TResult Visit(TContext context, EmptyArgumentNode node);
 
-        public TResult Visit(TContext context, ErrorExpression node);
+        public TResult Visit(TContext context, ErrorNode node);
 
         public TResult Visit(TContext context, NotSupportedNode node);
 

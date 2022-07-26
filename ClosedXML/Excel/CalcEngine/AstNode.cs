@@ -143,9 +143,10 @@ namespace ClosedXML.Excel.CalcEngine
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
-    internal class ErrorExpression : ValueNode
+    // TODO: Merge with ScalarNode
+    internal class ErrorNode : ValueNode
     {
-        internal ErrorExpression(Error error)
+        internal ErrorNode(Error error)
         {
             Error = error;
         }

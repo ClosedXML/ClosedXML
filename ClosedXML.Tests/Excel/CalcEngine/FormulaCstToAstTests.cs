@@ -155,7 +155,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#DIV/0!",
                 new[] { Formula, Constant, GrammarNames.Error, TokenError },
-                new[] { typeof(ErrorExpression) });
+                new[] { typeof(ErrorNode) });
 
             // Text.Rule = TextToken;
             yield return new TestCaseData(
@@ -179,13 +179,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#VALUE!",
                 new[] { Formula, Constant, GrammarNames.Error, TokenError },
-                new[] { typeof(ErrorExpression) });
+                new[] { typeof(ErrorNode) });
 
             // RefError.Rule = RefErrorToken;
             yield return new TestCaseData(
                 "#REF!",
                 new[] { Formula, GrammarNames.Reference, RefError, TokenRefError },
-                new[] { typeof(ErrorExpression) });
+                new[] { typeof(ErrorNode) });
 
             // FunctionCall.Rule = FunctionName + Arguments + CloseParen
             yield return new TestCaseData(
@@ -349,7 +349,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#REF!",
                 new[] { Formula, GrammarNames.Reference, RefError, TokenRefError },
-                new[] { typeof(ErrorExpression) });
+                new[] { typeof(ErrorNode) });
 
             // ReferenceItem.Rule = UDFunctionCall
             yield return new TestCaseData(
@@ -489,7 +489,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             yield return new TestCaseData(
                 "#REF!",
                 new[] { Formula, GrammarNames.Reference, RefError, TokenRefError },
-                new[] { typeof(ErrorExpression) });
+                new[] { typeof(ErrorNode) });
 
             // StructuredReferenceElement.Rule = OpenSquareParen + SRColumnToken + CloseSquareParen
             // BUG in XLParser 1.5.2, FileNameEnclosedInBracketsToken will always take preference, this can never happen. Square parenthesis are transient
@@ -750,8 +750,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             public override AstNode Visit(LinkedList<Type> context, EmptyArgumentNode node)
                 => LinearizeNode(context, typeof(EmptyArgumentNode), () => base.Visit(context, node));
 
-            public override AstNode Visit(LinkedList<Type> context, ErrorExpression node)
-                => LinearizeNode(context, typeof(ErrorExpression), () => base.Visit(context, node));
+            public override AstNode Visit(LinkedList<Type> context, ErrorNode node)
+                => LinearizeNode(context, typeof(ErrorNode), () => base.Visit(context, node));
 
             public override AstNode Visit(LinkedList<Type> context, NotSupportedNode node)
                 => LinearizeNode(context, typeof(NotSupportedNode), () => base.Visit(context, node));

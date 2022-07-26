@@ -183,7 +183,7 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)
         {
             var errorType = ErrorMap[parseNode.ChildNodes.Single().Token.Text];
-            parseNode.AstNode = new ErrorExpression(errorType);
+            parseNode.AstNode = new ErrorNode(errorType);
         }
 
         private AstNodeFactory GetFunctionCallNodeFactory()
@@ -225,8 +225,8 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     // ReferenceItem:RefError. #REF! error is not grouped with other errors, but is a part of Reference term.
-                    For(typeof(ErrorExpression)),
-                    node => (ErrorExpression)node.ChildNodes[0].AstNode
+                    For(typeof(ErrorNode)),
+                    node => (ErrorNode)node.ChildNodes[0].AstNode
                 },
                 {
                     // ReferenceItem:UDFunctionCall
@@ -271,11 +271,11 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     // Prefix + ReferenceItem:RefError
-                    For(typeof(PrefixNode), typeof(ErrorExpression)),
+                    For(typeof(PrefixNode), typeof(ErrorNode)),
                     node =>
                     {
                         // I think =#REF!#REF! was evaluated to #REF! in Excel 2021.
-                        return (ErrorExpression)node.ChildNodes[1].AstNode;
+                        return (ErrorNode)node.ChildNodes[1].AstNode;
                     }
                 },
                 {
