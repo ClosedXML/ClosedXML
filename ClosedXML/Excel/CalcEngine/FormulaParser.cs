@@ -69,19 +69,32 @@ namespace ClosedXML.Excel.CalcEngine
             _fnTbl = functionRegistry;
         }
 
-        /// <summary>
-        /// Parse a tree into a CSt that also has AST.
-        /// </summary>
-        public ParseTree Parse(string formula)
+        internal ParseTree ParseCst(string formulaText)
         {
             try
             {
-                return _parser.Parse(formula);
+                return _parser.Parse(formulaText);
             }
             catch (NullReferenceException ex) when (ex.StackTrace.StartsWith("   at Irony.Ast.AstBuilder.BuildAst(ParseTreeNode parseNode)"))
             {
-                throw new InvalidOperationException($"Unable to parse formula '{formula}'. Some Irony grammar term is missing AST configuration.");
+                throw new InvalidOperationException($"Unable to parse formula '{formulaText}'. Some Irony grammar term is missing AST configuration.");
             }
+        }
+
+        /// <summary>
+        /// Parse a tree into a CSt that also has AST.
+        /// </summary>
+        public Formula1 ConvertToAst(ParseTree cst)
+        {
+            var astContext = new AstContext(_parser.Language);
+            var astBuilder = new AstBuilder(astContext);
+            astBuilder.BuildAst(cst);
+            var root = (ValueNode)cst.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
+
+            var flags = astContext.Values.ContainsKey(FormulaFlags.HasSubtotal)
+                ? FormulaFlags.HasSubtotal
+                : FormulaFlags.None;
+            return new Formula1(cst.SourceText, root, flags);
         }
 
         private ExcelFormulaGrammar GetGrammar()
@@ -147,7 +160,6 @@ namespace ClosedXML.Excel.CalcEngine
             grammar.File.AstConfig.NodeCreator = CreateFileNodeFactory();
             grammar.File.SetFlag(TermFlags.AstDelayChildren);
 
-            grammar.LanguageFlags |= LanguageFlags.CreateAst;
             return grammar;
         }
 
@@ -188,7 +200,7 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     For(GrammarNames.FunctionName, GrammarNames.Arguments),
-                    node => CreateExcelFunctionCallExpression(node.ChildNodes[0], node.ChildNodes[1])
+                    (node, ctx) => CreateExcelFunctionCallExpression(ctx, node.ChildNodes[0], node.ChildNodes[1])
                 },
                 {
                     For(GrammarNames.Formula, BinaryOpMap.Keys.ToArray(), GrammarNames.Formula),
@@ -307,7 +319,7 @@ namespace ClosedXML.Excel.CalcEngine
                 },
                 {
                     For(GrammarNames.RefFunctionName, GrammarNames.Arguments),
-                    node => CreateExcelFunctionCallExpression(node.ChildNodes[0], node.ChildNodes[1])
+                    (node, ctx) => CreateExcelFunctionCallExpression(ctx, node.ChildNodes[0], node.ChildNodes[1])
                 },
                 {
                     For(GrammarNames.Reference, "#"),
@@ -451,7 +463,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (functionName.StartsWith($"{defaultFunctionNameSpace}."))
             {
-                parseNode.AstNode = CreateExcelFunctionCallExpression(parseNode.ChildNodes[0], parseNode.ChildNodes[1]);
+                parseNode.AstNode = CreateExcelFunctionCallExpression(context, parseNode.ChildNodes[0], parseNode.ChildNodes[1]);
                 return;
             }
 
@@ -459,7 +471,7 @@ namespace ClosedXML.Excel.CalcEngine
             parseNode.AstNode = new FunctionExpression(functionName, arguments); ;
         }
 
-        private FunctionExpression CreateExcelFunctionCallExpression(ParseTreeNode nameNode, ParseTreeNode argumentsNode)
+        private FunctionExpression CreateExcelFunctionCallExpression(AstContext ctx, ParseTreeNode nameNode, ParseTreeNode argumentsNode)
         {
             var functionName = nameNode.ChildNodes.Single().Token.Text.WithoutLast(1);
             var foundFunction = _fnTbl.TryGetFunc(functionName, out var parmMin, out var parmMax);
@@ -478,6 +490,9 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (parmMax != -1 && arguments.Count > parmMax)
                 throw new ExpressionParseException($"Too many parameters for function '{functionName}'.Expected a minimum of {parmMin} and a maximum of {parmMax}.");
+
+            if (string.Equals(functionName, @"SUBTOTAL", StringComparison.OrdinalIgnoreCase))
+                ctx.Values[FormulaFlags.HasSubtotal] = true;
 
             return new FunctionExpression(functionName, arguments);
         }
@@ -535,10 +550,13 @@ namespace ClosedXML.Excel.CalcEngine
 
         private class AstNodeFactory : System.Collections.IEnumerable
         {
-            private readonly List<KeyValuePair<NodePredicate[], Func<ParseTreeNode, AstNode>>> _factories = new();
+            private readonly List<KeyValuePair<NodePredicate[], Func<ParseTreeNode, AstContext, AstNode>>> _factories = new();
 
             public void Add(NodePredicate[] cstNodeConditions, Func<ParseTreeNode, AstNode> astNodeFactory)
-                => _factories.Add(new KeyValuePair<NodePredicate[], Func<ParseTreeNode, AstNode>>(cstNodeConditions, astNodeFactory));
+                => _factories.Add(new KeyValuePair<NodePredicate[], Func<ParseTreeNode, AstContext, AstNode>>(cstNodeConditions, (node, _) => astNodeFactory(node)));
+
+            public void Add(NodePredicate[] cstNodeConditions, Func<ParseTreeNode, AstContext, AstNode> astNodeFactory)
+                => _factories.Add(new KeyValuePair<NodePredicate[], Func<ParseTreeNode, AstContext, AstNode>>(cstNodeConditions, astNodeFactory));
 
             public System.Collections.IEnumerator GetEnumerator() => throw new NotSupportedException();
 
@@ -554,7 +572,7 @@ namespace ClosedXML.Excel.CalcEngine
                         && parseNode.ChildNodes.Zip(conditions, (n, c) => c.Func(n)).All(x => x);
                     if (conditionsSatisfied)
                     {
-                        parseNode.AstNode = factory.Value(parseNode);
+                        parseNode.AstNode = factory.Value(parseNode, context);
                         return;
                     }
                 }

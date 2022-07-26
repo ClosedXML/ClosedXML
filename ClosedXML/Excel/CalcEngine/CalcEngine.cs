@@ -1,4 +1,5 @@
 using ClosedXML.Excel.CalcEngine.Functions;
+using Irony.Ast;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -33,11 +34,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="expression">String to parse.</param>
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
-        public ValueNode Parse(string expression)
+        public Formula1 Parse(string expression)
         {
-            var cstTree = _parser.Parse(expression);
-            var root = (ValueNode)cstTree.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");
-            return root;
+            var cst = _parser.ParseCst(expression);
+            return _parser.ConvertToAst(cst);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             var ctx = new CalcContext(this, _culture, wb, ws, address);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
-            var result = x.Accept(ctx, calculatingVisitor);
+            var result = x.AstRoot.Accept(ctx, calculatingVisitor);
             if (ctx.UseImplicitIntersection && result.IsT4)
             {
                 result = result.AsT4[0, 0].ToAnyValue();
@@ -80,7 +80,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             var ctx = new CalcContext(this, _culture, wb, ws, address);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
-            return x.Accept(ctx, calculatingVisitor);
+            return x.AstRoot.Accept(ctx, calculatingVisitor);
         }
 
         /// <summary>

@@ -159,9 +159,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         private bool TryGetPrecedentAreas(string expression, XLWorksheet worksheet, out ICollection<XLRangeAddress> precedentAreas)
         {
-            var node = Parse(expression);
+            var formula = Parse(expression);
             var ctx = new PrecedentAreasContext(worksheet);
-            var rootValue = node.Accept(ctx, FormulaRangesVisitor.Default);
+            var rootValue = formula.AstRoot.Accept(ctx, FormulaRangesVisitor.Default);
             if (ctx.HasReferenceErrors/* || ctx.UsesNamedRanges */)
             {
                 precedentAreas = null;

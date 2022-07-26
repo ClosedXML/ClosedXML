@@ -21,15 +21,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("A2").Value = 10;
             ws.Cell("A3").Value = 100;
             var parser = new FormulaParser(CreateRegistry());
-            var cst = parser.Parse(formula);
-            var ast = (AstNode)cst.Root.AstNode;
+            var cst = parser.ParseCst(formula);
+            var ast = parser.ConvertToAst(cst);
 
             var context = new CalcContext(null, CultureInfo.InvariantCulture, wb, (XLWorksheet)ws, new XLAddress((XLWorksheet)ws, 2, 5, true, true));
             var func = new FunctionRegistry();
             OperationsTests.TestFuncRegistry.Register(func);
 
             var visitor = new CalculationVisitor(func);
-            var result = ast.Accept(context, visitor);
+            var result = ast.AstRoot.Accept(context, visitor);
 
             if (context.UseImplicitIntersection && result.IsT4)
             {

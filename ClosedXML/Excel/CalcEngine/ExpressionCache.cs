@@ -12,25 +12,25 @@ namespace ClosedXML.Excel.CalcEngine
     /// </remarks>
     class ExpressionCache
     {
-        Dictionary<string, WeakReference> _dct;
+        Dictionary<string, WeakReference<Formula1>> _dct;
         CalcEngine _ce;
         int _hitCount;
 
         public ExpressionCache(CalcEngine ce)
         {
             _ce = ce;
-            _dct = new Dictionary<string, WeakReference>();
+            _dct = new Dictionary<string, WeakReference<Formula1>>();
         }
 
         // gets the parsed version of a string expression
-        public ValueNode this[string expression]
+        public Formula1 this[string expression]
         {
             get
             {
-                ValueNode x;
-                if (_dct.TryGetValue(expression, out WeakReference wr) && wr.IsAlive)
+                Formula1 x;
+                if (_dct.TryGetValue(expression, out WeakReference<Formula1> wr) && wr.TryGetTarget(out var formula))
                 {
-                    x = wr.Target as ValueNode;
+                    x = formula;
                 }
                 else
                 {
@@ -43,7 +43,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                     // store this expression
                     x = _ce.Parse(expression);
-                    _dct[expression] = new WeakReference(x);
+                    _dct[expression] = new WeakReference<Formula1>(x);
                 }
                 return x;
             }
@@ -57,7 +57,7 @@ namespace ClosedXML.Excel.CalcEngine
                 done = true;
                 foreach (var k in _dct.Keys)
                 {
-                    if (!_dct[k].IsAlive)
+                    if (!_dct[k].TryGetTarget(out var _))
                     {
                         _dct.Remove(k);
                         done = false;

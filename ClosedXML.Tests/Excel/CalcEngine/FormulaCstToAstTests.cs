@@ -27,12 +27,12 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             dummyFunctions.RegisterFunction("INDEX", 1, 3, x => null);
             var parser = new FormulaParser(dummyFunctions);
 
-            var cst = parser.Parse(formula);
+            var cst = parser.ParseCst(formula);
             var linearizedCst = LinearizeCst(cst);
             CollectionAssert.AreEqual(expectedCst, linearizedCst);
 
-            var ast = (AstNode)cst.Root.AstNode;
-            var linearizedAst = LinearizeAst(ast);
+            var ast = parser.ConvertToAst(cst);
+            var linearizedAst = LinearizeAst(ast.AstRoot);
             CollectionAssert.AreEqual(expectedAst, linearizedAst);
         }
 

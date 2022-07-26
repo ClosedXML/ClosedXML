@@ -4,6 +4,8 @@ using System;
 using System.Globalization;
 using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
 using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -90,6 +92,28 @@ namespace ClosedXML.Excel.CalcEngine
                 ExpressionErrorType errorType => ScalarValue.FromT3(new Error1(errorType)),
                 _ => throw new NotImplementedException($"Not sure how to get error from a cell (type {value?.GetType().Name}, value {value}).")
             };
+        }
+
+        /// <summary>
+        /// Get cells with a value for a reference.
+        /// </summary>
+        /// <param name="reference">Reference for which to return cells.</param>
+        /// <returns>A lazy (non-materialized) enumerable of cells with a value for the reference.</returns>
+        internal IEnumerable<XLCell> GetNonBlankCells(Reference reference)
+        {
+            // XLCells is not suitable here, e.g. it doesn't count a cell twice if it is in multiple areas
+            var nonBlankCells = Enumerable.Empty<XLCell>();
+            foreach (var area in reference.Areas)
+            {
+                var areaCells = Worksheet.Internals.CellsCollection
+                    .GetCells(
+                        area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber,
+                        area.LastAddress.RowNumber, area.LastAddress.ColumnNumber,
+                        cell => !cell.IsEmpty());
+                nonBlankCells = nonBlankCells.Concat(areaCells);
+            }
+
+            return nonBlankCells;
         }
     }
 }

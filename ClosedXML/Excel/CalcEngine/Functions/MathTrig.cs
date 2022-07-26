@@ -24,6 +24,26 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
 
+        private static CalcEngineFunction Adapt(Func<CalcContext, Number1, List<Reference>, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                if (!ctx.Converter.ToNumber(args[0] ?? Number1.Zero).TryPickT0(out var number, out var error))
+                    return error;
+
+                var references = new List<Reference>();
+                for (var i = 1; i < args.Length; ++i)
+                {
+                    if (!(args[i] ?? Number1.Zero).TryPickT5(out var reference, out var rest))
+                        return Error1.Value;
+
+                    references.Add(reference);
+                }
+
+                return f(ctx, number, references);
+            };
+        }
+
         public static void Register(FunctionRegistry ce)
         {
             ce.RegisterFunction("ABS", Adapt(Abs), 1, 1);
@@ -88,7 +108,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SINH", 1, Sinh);
             ce.RegisterFunction("SQRT", 1, Sqrt);
             ce.RegisterFunction("SQRTPI", 1, SqrtPi);
-            ce.RegisterFunction("SUBTOTAL", 2, 255, Subtotal);
+            ce.RegisterFunction("SUBTOTAL", Adapt(Subtotal), 2, 255);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf);
             ce.RegisterFunction("SUMIFS", 3, 255, SumIfs);
@@ -879,13 +899,22 @@ namespace ClosedXML.Excel.CalcEngine
             return Math.Sqrt(Math.PI * num);
         }
 
-        private static object Subtotal(List<Expression> p)
+        private static AnyValue Subtotal(CalcContext ctx, Number1 number, List<Reference> p)
         {
-            // TODO: Use AST visitor to check for the nested SUBTOTAL in referenced cells, check only directly referenced cells from reference
-            var fId = (int)(Double)p[0];
-            var tally = new Tally(p.Skip(1));
+            var cellsWitoutSubtotal = p.SelectMany(reference => ctx.GetNonBlankCells(reference))
+                .Where(cell =>
+                {
+                    if (!cell.HasFormula)
+                        return true;
 
-            return fId switch
+                    return !ctx.CalcEngine.Parse(cell.FormulaA1).Flags.HasFlag(FormulaFlags.HasSubtotal);
+                })
+                .Select(cell => new Expression(cell.Value));
+
+            var fId = (int)number.Value;
+            var tally = new Tally(cellsWitoutSubtotal);
+
+            var val = fId switch
             {
                 1 => tally.Average(),
                 2 => tally.Count(true),
@@ -900,6 +929,8 @@ namespace ClosedXML.Excel.CalcEngine
                 11 => tally.VarP(),
                 _ => throw new ArgumentException("Function not supported."),
             };
+
+            return new Number1(val);
         }
 
         private static object Sum(List<Expression> p)
