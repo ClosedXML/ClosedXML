@@ -154,5 +154,18 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return Areas.Count == 1 && Areas[0].IsSingleCell();
         }
+
+        internal bool TryGetSingleCellValue(out ScalarValue value, CalcContext ctx)
+        {
+            if (!IsSingleCell())
+            {
+                value = default;
+                return false;
+            }
+
+            var area = Areas.Single();
+            value = ctx.GetCellValue(area.Worksheet, area.FirstAddress.RowNumber, area.FirstAddress.ColumnNumber);
+            return true;
+        }
     }
 }

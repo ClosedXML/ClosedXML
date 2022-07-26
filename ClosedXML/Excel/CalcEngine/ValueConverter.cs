@@ -22,7 +22,7 @@ namespace ClosedXML.Excel.CalcEngine
         public ValueConverter(CultureInfo culture) => _culture = culture;
 
 
-        internal double ToNumber(bool logical)
+        internal static double ToNumber(bool logical)
         {
             return logical ? 1 : 0;
         }

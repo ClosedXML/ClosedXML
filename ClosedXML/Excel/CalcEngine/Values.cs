@@ -194,7 +194,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             get
             {
-                return AnyValueExtensions.GetCellValue(_area, y + _offsetRow, x + _offsetColumn, _context);
+                return _context.GetCellValue(_area.Worksheet, y + _offsetRow, x + _offsetColumn);
             }
         }
 

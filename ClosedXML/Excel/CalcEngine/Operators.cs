@@ -1,18 +1,24 @@
 ﻿using OneOf;
 using System;
 using System.Globalization;
+using System.Linq;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
-using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using System.Linq;
+using CollectionValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
-    /// Reference operations.
+    /// Implementation of reference, arithmetic, text and comparison operators on AnyValue that use Excel semantic.
     /// </summary>
-    internal static class RefExt
+    internal static class OperatorExtensions
     {
+        #region Reference operators
+
+        /// <summary>
+        /// Implicit intersection for arguments of functions that don't accept range as a parameter (Excel 2016).
+        /// </summary>
+        /// <returns>Unchanged value for anything other than reference. Reference is changed into a single cell/#VALUE!</returns>
         public static AnyValue ImplicitIntersection(this AnyValue value, CalcContext context)
         {
             return value.Match(
@@ -20,13 +26,11 @@ namespace ClosedXML.Excel.CalcEngine
                 number => number,
                 text => text,
                 logical => logical,
-                array => array,
+                array => array, // Yup, array is unaffected by implicit intersection for operands - MMULT(COS({0,0});COS({0;0})) = 2
                 reference =>
                 {
                     if (reference.IsSingleCell())
-                    {
                         return reference;
-                    }
 
                     return reference
                         .ImplicitIntersection(context.FormulaAddress)
@@ -36,17 +40,24 @@ namespace ClosedXML.Excel.CalcEngine
                 });
         }
 
+        /// <summary>
+        /// Create a new reference that has one area that contains both operands.
+        /// </summary>
         public static AnyValue ReferenceRange(this AnyValue left, AnyValue right)
         {
             return ReferenceOp(left, right, Reference.RangeOp);
         }
 
+        /// <summary>
+        /// Create a new reference by combining areas of both arguments. Areas of the new reference can overlap = some overlapping
+        /// cells might be counted multiple times (<c>SUM((A1;A1)) = 2</c> if <c>A1</c> is <c>1</c>).
+        /// </summary>
         public static AnyValue ReferenceUnion(this AnyValue left, AnyValue right)
         {
             return ReferenceOp(left, right, (leftRef, rightRef) => Reference.UnionOp(leftRef, rightRef));
         }
 
-        private static AnyValue ReferenceOp(AnyValue left, AnyValue right, Func<Reference, Reference, OneOf<Reference, Error>> fn)
+        private static AnyValue ReferenceOp(AnyValue left, AnyValue right, Func<Reference, Reference, OneOf<Reference, Error>> operatorFn)
         {
             var leftConversionResult = ConvertToReference(left);
             if (!leftConversionResult.TryPickT0(out var leftReference, out var leftError))
@@ -56,7 +67,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!rightConversionResult.TryPickT0(out var rightReference, out var rightError))
                 return rightError;
 
-            return fn(leftReference, rightReference).Match<AnyValue>(
+            return operatorFn(leftReference, rightReference).Match<AnyValue>(
                 reference => reference,
                 error => error);
         }
@@ -70,45 +81,6 @@ namespace ClosedXML.Excel.CalcEngine
                 error => error,
                 array => Error.CellValue,
                 reference => reference);
-        }
-    }
-
-    internal static class AnyValueExtensions
-    {
-        #region Type conversion functions
-        public static bool TryPickScalar(this AnyValue value, out ScalarValue scalar, out AggregateValue aggregate)
-        {
-            scalar = value.Index switch
-            {
-                0 => value.AsT0,
-                1 => value.AsT1,
-                2 => value.AsT2,
-                3 => value.AsT3,
-                _ => default
-            };
-            aggregate = value.Index switch
-            {
-                4 => value.AsT4,
-                5 => value.AsT5,
-                _ => default
-            };
-            return value.Index <= 3;
-        }
-
-        public static AnyValue ToAnyValue(this ScalarValue scalar)
-        {
-            return scalar.Match(
-                logical => AnyValue.FromT0(logical),
-                number => AnyValue.FromT1(number),
-                text => AnyValue.FromT2(text),
-                error => AnyValue.FromT3(error));
-        }
-
-        public static AnyValue ToAnyValue(this AggregateValue aggregate)
-        {
-            return aggregate.Match(
-                array => AnyValue.FromT4(array),
-                reference => AnyValue.FromT5(reference));
         }
 
         #endregion
@@ -125,16 +97,14 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue UnaryPercent(this AnyValue value, CalcContext context) => UnaryOperation(value, x => x / 100.0, context);
 
-        private static AnyValue UnaryOperation(AnyValue value, Func<double, double> f, CalcContext context)
+        private static AnyValue UnaryOperation(AnyValue value, Func<double, double> operatorFn, CalcContext context)
         {
-            if (value.TryPickScalar(out var scalar, out var aggregate))
-            {
-                return UnaryArithmeticOp(scalar, f, context.Converter).ToAnyValue();
-            }
+            if (value.TryPickScalar(out var scalar, out var collection))
+                return UnaryArithmeticOp(scalar, operatorFn, context.Converter).ToAnyValue();
 
-            return aggregate.Match(
-                array => ApplyOnArray(array, arrayConst => UnaryArithmeticOp(arrayConst, f, context.Converter)),
-                reference => ApplyOnReference(reference, cellValue => UnaryArithmeticOp(cellValue, f, context.Converter), context));
+            return collection.Match(
+                array => ApplyOnArray(array, arrayConst => UnaryArithmeticOp(arrayConst, operatorFn, context.Converter)),
+                reference => ApplyOnReference(reference, cellValue => UnaryArithmeticOp(cellValue, operatorFn, context.Converter), context));
         }
 
         private static AnyValue ApplyOnArray(Array array, Func<ScalarValue, ScalarValue> op)
@@ -143,7 +113,8 @@ namespace ClosedXML.Excel.CalcEngine
             for (int y = 0; y < array.Height; ++y)
                 for (int x = 0; x < array.Width; ++x)
                     data[y, x] = op(array[y, x]);
-            return AnyValue.FromT4(new ConstArray(data));
+
+            return new ConstArray(data);
         }
 
         private static AnyValue ApplyOnReference(Reference reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
@@ -163,11 +134,11 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     var row = startRow + y;
                     var column = startColumn + x;
-                    var cellValue = GetCellValue(area, row, column, context);
+                    var cellValue = context.GetCellValue(area.Worksheet, row, column);
                     data[y, x] = op(cellValue);
                 }
             }
-            return AnyValue.FromT4(new ConstArray(data));
+            return new ConstArray(data);
         }
 
         private static ScalarValue UnaryArithmeticOp(ScalarValue value, Func<double, double> op, ValueConverter converter)
@@ -190,37 +161,42 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue BinaryPlus(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => lhs + rhs;
-            BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
-            return BinaryOperation(left, right, g, context);
+            return BinaryOperation(left, right, Plus, context);
+
+            ScalarValue Plus(ScalarValue leftItem, ScalarValue rightItem)
+                => BinaryArithmeticOp(leftItem, rightItem, (lhs, rhs) => lhs + rhs, context.Converter);
         }
 
         public static AnyValue BinaryMinus(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => lhs - rhs;
-            BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
-            return BinaryOperation(left, right, g, context);
+            return BinaryOperation(left, right, Minus, context);
+
+            ScalarValue Minus(ScalarValue leftItem, ScalarValue rightItem)
+                => BinaryArithmeticOp(leftItem, rightItem, (lhs, rhs) => lhs - rhs, context.Converter);
         }
 
         public static AnyValue BinaryMult(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => lhs * rhs;
-            BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
-            return BinaryOperation(left, right, g, context);
+            return BinaryOperation(left, right, Mult, context);
+
+            ScalarValue Mult(ScalarValue leftItem, ScalarValue rightItem)
+                => BinaryArithmeticOp(leftItem, rightItem, (lhs, rhs) => lhs * rhs, context.Converter);
         }
 
         public static AnyValue BinaryDiv(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => rhs == 0.0 ? Error.DivisionByZero : lhs / rhs;
-            BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
-            return BinaryOperation(left, right, g, context);
+            return BinaryOperation(left, right, Div, context);
+
+            ScalarValue Div(ScalarValue leftItem, ScalarValue rightItem)
+                => BinaryArithmeticOp(leftItem, rightItem, (lhs, rhs) => rhs == 0.0 ? Error.DivisionByZero : lhs / rhs, context.Converter);
         }
 
         public static AnyValue BinaryExp(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => lhs == 0 && rhs == 0 ? Error.CellValue : Math.Pow(lhs, rhs);
-            BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
-            return BinaryOperation(left, right, g, context);
+            return BinaryOperation(left, right, Exp, context);
+
+            ScalarValue Exp(ScalarValue leftItem, ScalarValue rightItem)
+                => BinaryArithmeticOp(leftItem, rightItem, (lhs, rhs) => lhs == 0 && rhs == 0 ? Error.CellValue : Math.Pow(lhs, rhs), context.Converter);
         }
 
         #endregion
@@ -291,28 +267,23 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static AnyValue BinaryOperation(AnyValue left, AnyValue right, BinaryFunc func, CalcContext context)
         {
-            var isLeftScalar = left.TryPickScalar(out var leftScalar, out var leftAggregate);
-            var isRightScalar = right.TryPickScalar(out var rightScalar, out var rightAggregate);
+            var isLeftScalar = left.TryPickScalar(out var leftScalar, out var leftCollection);
+            var isRightScalar = right.TryPickScalar(out var rightScalar, out var rightCollection);
 
             if (isLeftScalar && isRightScalar)
                 return func(leftScalar, rightScalar).ToAnyValue();
 
-            // This is for dynamic arrays
             if (isLeftScalar)
             {
-                return rightAggregate.Match(
+                return rightCollection.Match(
                     array => ApplyOnArray(
                         new ScalarArray(leftScalar, array.Width, array.Height),
                         array,
                         func),
                     rightReference =>
                     {
-                        if (rightReference.IsSingleCell())
-                        {
-                            var rightArea = rightReference.Areas.Single();
-                            var rightCellValue = context.GetCellValue(rightArea.Worksheet, rightArea.FirstAddress.RowNumber, rightArea.FirstAddress.ColumnNumber);
+                        if (rightReference.TryGetSingleCellValue(out var rightCellValue, context))
                             return func(leftScalar, rightCellValue).ToAnyValue();
-                        }
 
                         var referenceArrayResult = rightReference.ToArray(context);
                         if (!referenceArrayResult.TryPickT0(out var rightRefArray, out var rightError))
@@ -324,19 +295,15 @@ namespace ClosedXML.Excel.CalcEngine
 
             if (isRightScalar)
             {
-                return leftAggregate.Match(
+                return leftCollection.Match(
                     leftArray => ApplyOnArray(
                         leftArray,
                         new ScalarArray(rightScalar, leftArray.Width, leftArray.Height),
                         func),
                     leftReference =>
                     {
-                        if (leftReference.IsSingleCell())
-                        {
-                            var leftArea = leftReference.Areas.Single();
-                            var leftCellValue = context.GetCellValue(leftArea.Worksheet, leftArea.FirstAddress.RowNumber, leftArea.FirstAddress.ColumnNumber);
+                        if (leftReference.TryGetSingleCellValue(out var leftCellValue, context))
                             return func(leftCellValue, rightScalar).ToAnyValue();
-                        }
 
                         var referenceArrayResult = leftReference.ToArray(context);
                         if (!referenceArrayResult.TryPickT0(out var leftRefArray, out var leftError))
@@ -347,8 +314,8 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             // Both are aggregates
-            return leftAggregate.Match(
-                leftArray => rightAggregate.Match(
+            return leftCollection.Match(
+                leftArray => rightCollection.Match(
                         rightArray =>
                         {
                             var width = Math.Max(leftArray.Width, rightArray.Width);
@@ -362,7 +329,7 @@ namespace ClosedXML.Excel.CalcEngine
                         {
                             throw new NotImplementedException();
                         }),
-                leftReference => rightAggregate.Match(
+                leftReference => rightCollection.Match(
                         rightArray =>
                         {
                             throw new NotImplementedException();
@@ -390,8 +357,7 @@ namespace ClosedXML.Excel.CalcEngine
                         }));
         }
 
-        // If not a single area, error
-        public static OneOf<Array, Error> ToArray(this Reference reference, CalcContext context)
+        private static OneOf<Array, Error> ToArray(this Reference reference, CalcContext context)
         {
             if (reference.Areas.Count != 1)
                 throw new NotImplementedException();
@@ -400,7 +366,6 @@ namespace ClosedXML.Excel.CalcEngine
 
             return new ReferenceArray(area, context);
         }
-
 
         private static AnyValue ApplyOnArray(Array leftArray, Array rightArray, BinaryFunc func)
         {
@@ -415,26 +380,26 @@ namespace ClosedXML.Excel.CalcEngine
                     var rightItem = rightArray[y, x];
                     data[y, x] = func(leftItem, rightItem);
                 }
-            return AnyValue.FromT4(new ConstArray(data));
+            return new ConstArray(data);
         }
 
-        private static ScalarValue BinaryArithmeticOp(ScalarValue lhs, ScalarValue rhs, BinaryNumberFunc func, ValueConverter converter)
+        private static ScalarValue BinaryArithmeticOp(ScalarValue left, ScalarValue right, BinaryNumberFunc func, ValueConverter converter)
         {
-            var leftConversionResult = lhs.CovertToNumber(converter);
+            var leftConversionResult = left.CovertToNumber(converter);
             if (!leftConversionResult.TryPickT0(out var leftNumber, out var leftError))
             {
                 return leftError;
             }
 
-            var rightConversionResult = rhs.CovertToNumber(converter);
+            var rightConversionResult = right.CovertToNumber(converter);
             if (!rightConversionResult.TryPickT0(out var rightNumber, out var rightError))
             {
                 return rightError;
             }
 
-            return func(leftNumber, rightNumber).Match(
-                number => ScalarValue.FromT1(number),
-                error => ScalarValue.FromT3(error));
+            return func(leftNumber, rightNumber).Match<ScalarValue>(
+                number => number,
+                error => error);
         }
 
         private static OneOf<double, Error> CovertToNumber(this ScalarValue value, ValueConverter converter)
@@ -461,28 +426,28 @@ namespace ClosedXML.Excel.CalcEngine
         ///     </item>
         /// </list>
         /// </summary>
-        /// <param name="lhs">Left hand operand of the comparison.</param>
-        /// <param name="rhs">Right hand operand of the comparison.</param>
+        /// <param name="left">Left hand operand of the comparison.</param>
+        /// <param name="right">Right hand operand of the comparison.</param>
         /// <param name="culture">Culture to use for comparison.</param>
         /// <returns>
         ///     Return -1 (negative)  if left less than right
         ///     Return 1 (positive) if left greater than left
         ///     Return 0 if both operands are considered equal.
         /// </returns>
-        private static OneOf<int, Error> CompareValues(ScalarValue lhs, ScalarValue rhs, CultureInfo culture)
+        private static OneOf<int, Error> CompareValues(ScalarValue left, ScalarValue right, CultureInfo culture)
         {
-            return lhs.Match(
-                leftLogical => rhs.Match<OneOf<int, Error>>(
+            return left.Match(
+                leftLogical => right.Match<OneOf<int, Error>>(
                         rightLogical => leftLogical.CompareTo(rightLogical),
                         rightNumber => -1,
                         rightText => -1,
                         rightError => rightError),
-                leftNumber => rhs.Match<OneOf<int, Error>>(
+                leftNumber => right.Match<OneOf<int, Error>>(
                         rightLogical => 1,
                         rightNumber => leftNumber.CompareTo(rightNumber),
                         rightText => 1,
                         rightError => rightError),
-                leftText => rhs.Match<OneOf<int, Error>>(
+                leftText => right.Match<OneOf<int, Error>>(
                         rightLogical => 1,
                         rightNumber => 1,
                         rightText => string.Compare(leftText, rightText, culture, CompareOptions.IgnoreCase),
@@ -490,35 +455,39 @@ namespace ClosedXML.Excel.CalcEngine
                 leftError => leftError);
         }
 
-        public static ScalarValue GetCellValue(XLRangeAddress area, int row, int column, CalcContext ctx)
-        {
-            var worksheet = area.Worksheet ?? ctx.Worksheet;
-            var cell = worksheet.GetCell(row, column);
-            if (cell is null)
-                return 0;
-
-            if (cell.IsEvaluating)
-                throw new InvalidOperationException("Formula has a circular reference");
-
-            var value = cell.Value;
-            // TODO: Replace with a conversion, like ctx
-            if (value is bool boolValue)
-                return ScalarValue.FromT0(boolValue);
-            if (value is double numberValue)
-                return ScalarValue.FromT1(numberValue);
-            if (value is string stringValue)
-            {
-                return stringValue == string.Empty
-                    ? ScalarValue.FromT1(0)
-                    : ScalarValue.FromT2(stringValue);
-            }
-
-            throw new NotImplementedException("Not sure how to get error from a cell.");
-        }
-
         private delegate ScalarValue BinaryFunc(ScalarValue lhs, ScalarValue rhs);
 
         private delegate OneOf<double, Error> BinaryNumberFunc(double lhs, double rhs);
+
+        #region Type conversion functions
+
+        public static bool TryPickScalar(this AnyValue value, out ScalarValue scalar, out CollectionValue collection)
+        {
+            scalar = value.Index switch
+            {
+                0 => value.AsT0,
+                1 => value.AsT1,
+                2 => value.AsT2,
+                3 => value.AsT3,
+                _ => default
+            };
+            collection = value.Index switch
+            {
+                4 => value.AsT4,
+                5 => value.AsT5,
+                _ => default
+            };
+            return value.Index <= 3;
+        }
+
+        public static AnyValue ToAnyValue(this ScalarValue scalar)
+        {
+            return scalar.Match<AnyValue>(
+                logical => logical,
+                number => number,
+                text => text,
+                error => error);
+        }
 
         /// <summary>
         /// Convert any kind of formula value to value returned as a content of a cell.
@@ -538,22 +507,17 @@ namespace ClosedXML.Excel.CalcEngine
                 array => array[0, 0].ToCellContentValue(),
                 reference =>
                 {
-                    if (reference.IsSingleCell())
-                    {
-                        // TODO: Better API
-                        var a = reference.Areas.Single();
-                        var cellValue = ctx.GetCellValue(a.Worksheet, a.FirstAddress.RowNumber, a.FirstAddress.ColumnNumber);
+                    if (reference.TryGetSingleCellValue(out var cellValue, ctx))
                         return cellValue.ToCellContentValue();
-                    }
 
                     return reference
                         .ImplicitIntersection(ctx.FormulaAddress)
                         .Match<object>(
                             singleCellReference =>
                             {
-                                var cellArea = singleCellReference.Areas.Single();
-                                var cellAddress = cellArea.FirstAddress;
-                                var cellValue = ctx.GetCellValue(cellArea.Worksheet, cellAddress.RowNumber, cellAddress.ColumnNumber);
+                                if (!singleCellReference.TryGetSingleCellValue(out var cellValue, ctx))
+                                    throw new InvalidOperationException();
+
                                 return cellValue.ToCellContentValue();
                             },
                             error => error);
@@ -568,5 +532,7 @@ namespace ClosedXML.Excel.CalcEngine
                 text => text,
                 error => error);
         }
+
+        #endregion
     }
 }
