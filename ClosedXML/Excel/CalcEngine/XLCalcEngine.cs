@@ -87,76 +87,6 @@ namespace ClosedXML.Excel.CalcEngine
             return true;
         }
 
-        public override object GetExternalObject(string identifier)
-        {
-            if (identifier.Contains("!") && _wb != null)
-            {
-                var referencedSheetNames = identifier.Split(':')
-                    .Select(part =>
-                    {
-                        if (part.Contains("!"))
-                            return part.Substring(0, part.LastIndexOf('!')).ToLower();
-                        else
-                            return null;
-                    })
-                    .Where(sheet => sheet != null)
-                    .Distinct()
-                    .ToList();
-
-                if (referencedSheetNames.Count == 0)
-                    return GetCellRangeReference(_ws.Range(identifier));
-                else if (referencedSheetNames.Count > 1)
-                    throw new ArgumentOutOfRangeException(referencedSheetNames.Last(), "Cross worksheet references may references no more than 1 other worksheet");
-                else
-                {
-                    if (!_wb.TryGetWorksheet(referencedSheetNames.Single(), out IXLWorksheet worksheet))
-                        throw new ArgumentOutOfRangeException(referencedSheetNames.Single(), "The required worksheet cannot be found");
-
-                    identifier = identifier.ToLower().Replace(string.Format("{0}!", worksheet.Name.ToLower()), "");
-
-                    return GetCellRangeReference(worksheet.Range(identifier));
-                }
-            }
-            else if (_ws != null)
-            {
-                if (TryGetNamedRange(identifier, _ws, out IXLNamedRange namedRange))
-                {
-                    var references = (namedRange as XLNamedRange).RangeList.Select(r =>
-                        XLHelper.IsValidRangeAddress(r)
-                            ? GetCellRangeReference(_ws.Workbook.Range(r))
-                            : new XLCalcEngine(_ws).Evaluate(r.ToString())
-                        );
-                    if (references.Count() == 1)
-                        return references.Single();
-                    return references;
-                }
-
-                var range = _ws.Range(identifier);
-                if (range is null)
-                    throw new ArgumentOutOfRangeException("Not a range nor named range.");
-
-                return GetCellRangeReference(range);
-            }
-            else if (XLHelper.IsValidRangeAddress(identifier))
-                return identifier;
-            else
-                return null;
-        }
-
-        private static bool TryGetNamedRange(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)
-        {
-            return worksheet.NamedRanges.TryGetValue(identifier, out namedRange) ||
-                   worksheet.Workbook.NamedRanges.TryGetValue(identifier, out namedRange);
-        }
-
-        private CellRangeReference GetCellRangeReference(IXLRange range)
-        {
-            if (range == null)
-                return null;
-
-            return new CellRangeReference(range);
-        }
-
         private bool TryGetPrecedentAreas(string expression, XLWorksheet worksheet, out ICollection<XLRangeAddress> precedentAreas)
         {
             var formula = Parse(expression);
@@ -336,6 +266,12 @@ namespace ClosedXML.Excel.CalcEngine
             public OneOf<Reference, Error> Visit(PrecedentAreasContext ctx, FileNode node)
             {
                 throw new InvalidOperationException("Shouldn't be visited.");
+            }
+
+            private static bool TryGetNamedRange(string identifier, IXLWorksheet worksheet, out IXLNamedRange namedRange)
+            {
+                return worksheet.NamedRanges.TryGetValue(identifier, out namedRange) ||
+                       worksheet.Workbook.NamedRanges.TryGetValue(identifier, out namedRange);
             }
         }
     }

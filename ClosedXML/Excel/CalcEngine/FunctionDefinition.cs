@@ -1,5 +1,7 @@
 namespace ClosedXML.Excel.CalcEngine
 {
+    // TODO: Unify with FormulaFunction
+
     /// <summary>
     /// Function definition class (keeps function name, parameter counts, and delegate).
     /// </summary>

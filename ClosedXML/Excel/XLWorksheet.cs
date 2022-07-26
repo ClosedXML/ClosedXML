@@ -1858,6 +1858,9 @@ namespace ClosedXML.Excel
             return cell.Value;
         }
 
+        /// <summary>
+        /// Get cell or null, if cell doesn't exist.
+        /// </summary>
         internal XLCell GetCell(int ro, int co)
         {
             if (Internals.CellsCollection.MaxRowUsed < ro ||

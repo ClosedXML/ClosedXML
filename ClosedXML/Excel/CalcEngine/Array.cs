@@ -207,40 +207,4 @@ namespace ClosedXML.Excel.CalcEngine
             throw new NotImplementedException();
         }
     }
-
-    // 2D area on a worksheet that is a part of Reference
-    internal class Area
-    {
-        /// <summary>Columna and row are global</summary>
-        public Area(XLWorksheet worksheet, int column, int row, int width, int height)
-        {
-            if (worksheet is null)
-                throw new ArgumentNullException(nameof(worksheet));
-            if (column < 1 || column > XLConstants.MaxColumns)
-                throw new ArgumentOutOfRangeException(nameof(column));
-            if (row < 1 || row > XLConstants.MaxRows)
-                throw new ArgumentOutOfRangeException(nameof(row));
-
-            Worksheet = worksheet;
-            Column = column;
-            Row = row;
-            Width = width;
-            Height = height;
-        }
-
-
-
-        public XLWorksheet Worksheet { get; }
-
-        /// <summary>
-        /// 1 based
-        /// </summary>
-        public int Column { get; }
-
-        public int Row { get; }
-
-        public int Width { get; }
-
-        public int Height { get; }
-    }
 }

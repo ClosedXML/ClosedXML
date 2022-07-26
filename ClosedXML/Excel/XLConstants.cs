@@ -6,9 +6,6 @@ namespace ClosedXML.Excel
     {
         internal const int NumberOfBuiltInStyles = 164; // But they are stored as 0-based (0 - 163)
 
-        internal static int MaxColumns = 16384;
-        internal static int MaxRows = 1048576;
-
         #region Pivot Table constants
 
         public static class PivotTable

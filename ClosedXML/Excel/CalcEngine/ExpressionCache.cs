@@ -23,14 +23,14 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // gets the parsed version of a string expression
-        public Formula1 this[string expression]
+        public Formula this[string expression]
         {
             get
             {
-                Formula1 x;
+                Formula x;
                 if (_dct.TryGetValue(expression, out WeakReference wr) && wr.IsAlive)
                 {
-                    x = (Formula1)wr.Target;
+                    x = (Formula)wr.Target;
                 }
                 else
                 {

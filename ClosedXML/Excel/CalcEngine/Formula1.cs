@@ -1,9 +1,9 @@
 ﻿namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>A non-state representation of a formula that can be used by many cells.</summary>
-    internal class Formula1
+    internal class Formula
     {
-        public Formula1(string text, ValueNode root, FormulaFlags flags)
+        public Formula(string text, ValueNode root, FormulaFlags flags)
         {
             AstRoot = root;
             Text = text;

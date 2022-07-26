@@ -34,7 +34,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="expression">String to parse.</param>
         /// <returns>An <see cref="Expression"/> object that can be evaluated.</returns>
-        public Formula1 Parse(string expression)
+        public Formula Parse(string expression)
         {
             var cst = _parser.ParseCst(expression);
             return _parser.ConvertToAst(cst);
@@ -99,20 +99,6 @@ namespace ClosedXML.Excel.CalcEngine
                         : null;
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets an external object based on an identifier.
-        /// </summary>
-        /// <remarks>
-        /// This method is useful when the engine needs to create objects dynamically.
-        /// For example, a spreadsheet calc engine would use this method to dynamically create cell
-        /// range objects based on identifiers that cannot be enumerated at design time
-        /// (such as "AB12", "A1:AB12", etc.)
-        /// </remarks>
-        public virtual object GetExternalObject(string identifier)
-        {
-            return null;
         }
 
         // build/get static keyword table

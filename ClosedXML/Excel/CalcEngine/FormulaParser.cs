@@ -84,7 +84,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Parse a tree into a CSt that also has AST.
         /// </summary>
-        public Formula1 ConvertToAst(ParseTree cst)
+        public Formula ConvertToAst(ParseTree cst)
         {
             var astContext = new AstContext(_parser.Language);
             var astBuilder = new AstBuilder(astContext);
@@ -94,7 +94,7 @@ namespace ClosedXML.Excel.CalcEngine
             var flags = astContext.Values.ContainsKey(FormulaFlags.HasSubtotal)
                 ? FormulaFlags.HasSubtotal
                 : FormulaFlags.None;
-            return new Formula1(cst.SourceText, root, flags);
+            return new Formula(cst.SourceText, root, flags);
         }
 
         private ExcelFormulaGrammar GetGrammar()
