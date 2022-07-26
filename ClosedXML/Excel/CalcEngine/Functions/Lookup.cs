@@ -3,11 +3,23 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Lookup
     {
+        public static CalcEngineFunction Adapt(Func<CalcContext, Text, AnyValue?, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                if (!ctx.Converter.ToText(args[0] ?? AnyValue.FromT1(Number1.Zero)).TryPickT0(out var arg0, out var error))
+                    return error;
+
+                return f(ctx, arg0, args.Length > 1 ? args[1] : null);
+            };
+        }
+
         public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("ADDRESS", , Address); // Returns a reference as text to a single cell in a worksheet
@@ -18,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
             ce.RegisterFunction("HLOOKUP", 3, 4, Hlookup); // Looks in the top row of an array and returns the value of the indicated cell
-            ce.RegisterFunction("HYPERLINK", 1, 2, Hyperlink); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
+            ce.RegisterFunction("HYPERLINK", Adapt(Hyperlink), 1, 2); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
             ce.RegisterFunction("INDEX", 2, 4, Index); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
@@ -85,11 +97,15 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 .Value;
         }
 
-        private static object Hyperlink(List<Expression> p)
+        private static AnyValue Hyperlink(CalcContext ctx, Text linkLocation, AnyValue? friendlyName)
         {
-            String address = p[0];
-            String toolTip = p.Count == 2 ? p[1] : String.Empty;
-            return new XLHyperlink(address, toolTip);
+            var link = friendlyName is not null && ctx.Converter.ToText(friendlyName.Value).TryPickT0(out var name, out var _)
+                ? new XLHyperlink(linkLocation, name)
+                : new XLHyperlink(linkLocation);
+            var cell = ctx.Worksheet.Cell(ctx.FormulaAddress);
+            cell.SetHyperlink(link);
+
+            return friendlyName ?? linkLocation;
         }
 
         private static object Index(List<Expression> p)

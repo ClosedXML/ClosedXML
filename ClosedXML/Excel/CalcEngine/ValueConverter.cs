@@ -61,5 +61,16 @@ namespace ClosedXML.Excel.CalcEngine
                 text => text,
                 error => error);
         }
+
+        internal OneOf<Text, Error1> ToText(AnyValue value)
+        {
+            if (value.TryPickScalar(out var scalar, out var collection))
+                return ToText(scalar);
+
+            if (collection.TryPickT0(out var array, out var _))
+                return ToText(array[0, 0]);
+
+            throw new NotImplementedException();
+        }
     }
 }
