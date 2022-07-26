@@ -2,58 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    // There is no downside to have custom type, we can add more info, if we want (like text)
-    internal readonly struct Error1
-    {
-        /// <summary>
-        /// #VALUE!
-        /// </summary>
-        /// <remarks>Intended to indicate when an incompatible type argument is passed to a function, or an incompatible type operand is used with an operator.</remarks>
-        public static readonly Error1 Value = new(ExpressionErrorType.CellValue);
-
-        /// <summary>
-        /// #DIV/0!
-        /// </summary>
-        public static readonly Error1 DivZero = new(ExpressionErrorType.DivisionByZero);
-
-        /// <summary>
-        /// #NUM!
-        /// </summary>
-        public static readonly Error1 NumberInvalid = new(ExpressionErrorType.NumberInvalid);
-
-        /// <summary>
-        /// #N/A
-        /// </summary>
-        public static readonly Error1 NoValueAvailable = new(ExpressionErrorType.NoValueAvailable);
-
-        /// <summary>
-        /// #REF!
-        /// </summary>
-        /// <remarks>When unable to find a sheet or a cell.</remarks>
-        public static readonly Error1 Ref = new(ExpressionErrorType.CellReference);
-
-        /// <summary>
-        /// #NAME?
-        /// </summary>
-        /// <remarks>When unable to find a named range (but not a sheet!)</remarks>
-        public static readonly Error1 Name = new(ExpressionErrorType.NameNotRecognized);
-
-        /// <summary>
-        /// #NULL!
-        /// </summary>
-        public static readonly Error1 Null = new(ExpressionErrorType.NullValue);
-
-        public Error1(ExpressionErrorType type) => Type = type;
-
-        public ExpressionErrorType Type { get; }
-
-        public override string ToString() => Type.ToString();
-    }
-
     // 2D array of values, always at least 1x1
     internal abstract class Array : IEnumerable<ScalarValue>
     {
@@ -211,7 +163,7 @@ namespace ClosedXML.Excel.CalcEngine
             get
             {
                 if (x >= _original.Width || y >= _original.Height)
-                    return ScalarValue.FromT3(Error1.NoValueAvailable);
+                    return ScalarValue.FromT3(ExpressionErrorType.NoValueAvailable);
 
                 return _original[y, x];
             }

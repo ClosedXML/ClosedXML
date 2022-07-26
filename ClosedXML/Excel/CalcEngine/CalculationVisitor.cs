@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ErrorExpression node)
         {
-            return new Error1(node.ErrorType);
+            return node.ErrorType;
         }
 
         public AnyValue Visit(CalcContext context, UnaryExpression node)
@@ -134,7 +134,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!_functions.TryGetFunc(node.Name, out FormulaFunction function))
             {
                 if (!_functions.TryGetFunc(node.Name, out FunctionDefinition legacyFunction))
-                    return Error1.Name;
+                    return ExpressionErrorType.NameNotRecognized;
                 return ExecuteLegacy(context, node, legacyFunction);
             }
 
@@ -153,7 +153,7 @@ namespace ClosedXML.Excel.CalcEngine
                     logical => new Expression(logical),
                     number => new Expression(number),
                     text => new Expression(text),
-                    error => new Expression(error.Type),
+                    error => new Expression(error),
                     array =>
                     { //throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter.")
                       // Mostly for SUM
@@ -252,7 +252,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 var sheet = node.Prefix.Sheet;
                 if (!context.Workbook.TryGetWorksheet(sheet, out var worksheet1))
-                    return Error1.Ref;
+                    return ExpressionErrorType.CellReference;
                 worksheet = (XLWorksheet)worksheet1;
             }
             else
@@ -266,12 +266,12 @@ namespace ClosedXML.Excel.CalcEngine
             var rangeName = node.Address;
             worksheet ??= context.Worksheet;
             if (!TryGetNamedRange(worksheet, rangeName, out var namedRange))
-                return Error1.Name;
+                return ExpressionErrorType.NameNotRecognized;
 
             // This is rather horrible, but basically copy from XLCalcEngine.GetExternalObject
             // It's hard to count all things that are wrong with this, from hand parsing operator range union by XLNamedRange to recursion.
             if (!namedRange.IsValid)
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
 
             // union is one of nodes that can't be in the root. Enclose in braces to make parser happy
             // TODO: Shoudl it always start with equal or never?

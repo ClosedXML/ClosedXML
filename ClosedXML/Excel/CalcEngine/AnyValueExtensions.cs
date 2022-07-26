@@ -1,8 +1,8 @@
 ﻿using OneOf;
 using System;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType>;
 using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Linq;
 
@@ -46,7 +46,7 @@ namespace ClosedXML.Excel.CalcEngine
             return ReferenceOp(left, right, (leftRef, rightRef) => Reference.UnionOp(leftRef, rightRef));
         }
 
-        private static AnyValue ReferenceOp(AnyValue left, AnyValue right, Func<Reference, Reference, OneOf<Reference, Error1>> fn)
+        private static AnyValue ReferenceOp(AnyValue left, AnyValue right, Func<Reference, Reference, OneOf<Reference, ExpressionErrorType>> fn)
         {
             var leftConversionResult = ConvertToReference(left);
             if (!leftConversionResult.TryPickT0(out var leftReference, out var leftError))
@@ -61,14 +61,14 @@ namespace ClosedXML.Excel.CalcEngine
                 error => error);
         }
 
-        private static OneOf<Reference, Error1> ConvertToReference(AnyValue left)
+        private static OneOf<Reference, ExpressionErrorType> ConvertToReference(AnyValue left)
         {
-            return left.Match<OneOf<Reference, Error1>>(
-                logical => Error1.Value,
-                number => Error1.Value,
-                text => Error1.Value,
+            return left.Match<OneOf<Reference, ExpressionErrorType>>(
+                logical => ExpressionErrorType.CellValue,
+                number => ExpressionErrorType.CellValue,
+                text => ExpressionErrorType.CellValue,
                 error => error,
-                array => Error1.Value,
+                array => ExpressionErrorType.CellValue,
                 reference => reference);
         }
     }
@@ -149,7 +149,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static AnyValue ApplyOnReference(Reference reference, Func<ScalarValue, ScalarValue> op, CalcContext context)
         {
             if (reference.Areas.Count != 1)
-                return Error1.Value;
+                return ExpressionErrorType.CellValue;
 
             var area = reference.Areas.Single();
             var width = area.ColumnSpan;
@@ -211,14 +211,14 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static AnyValue BinaryDiv(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => rhs == 0.0 ? Error1.DivZero : lhs / rhs;
+            BinaryNumberFunc f = (lhs, rhs) => rhs == 0.0 ? ExpressionErrorType.DivisionByZero : lhs / rhs;
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }
 
         public static AnyValue BinaryExp(this AnyValue left, AnyValue right, CalcContext context)
         {
-            BinaryNumberFunc f = (lhs, rhs) => lhs == 0 && rhs == 0 ? Error1.Value : Math.Pow(lhs, rhs);
+            BinaryNumberFunc f = (lhs, rhs) => lhs == 0 && rhs == 0 ? ExpressionErrorType.CellValue : Math.Pow(lhs, rhs);
             BinaryFunc g = (leftItem, rightItem) => BinaryArithmeticOp(leftItem, rightItem, f, context.Converter);
             return BinaryOperation(left, right, g, context);
         }
@@ -282,7 +282,7 @@ namespace ClosedXML.Excel.CalcEngine
             BinaryFunc g = (lhs, rhs) =>
             {
                 return context.Converter.ToText(lhs).Match(
-                    leftText => context.Converter.ToText(rhs).Match<OneOf<string, Error1>>(rightText => leftText + rightText, rightError => rightError),
+                    leftText => context.Converter.ToText(rhs).Match<OneOf<string, ExpressionErrorType>>(rightText => leftText + rightText, rightError => rightError),
                     leftError => leftError).Match<ScalarValue>(text => text, error => error);
             };
 
@@ -370,7 +370,7 @@ namespace ClosedXML.Excel.CalcEngine
                         rightReference =>
                         {
                             if (leftReference.Areas.Count > 1 || rightReference.Areas.Count > 1)
-                                return Error1.Value;
+                                return ExpressionErrorType.CellValue;
 
                             var leftArea = leftReference.Areas.Single();
                             var rightArea = rightReference.Areas.Single();
@@ -391,7 +391,7 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         // If not a single area, error
-        public static OneOf<Array, Error1> ToArray(this Reference reference, CalcContext context)
+        public static OneOf<Array, ExpressionErrorType> ToArray(this Reference reference, CalcContext context)
         {
             if (reference.Areas.Count != 1)
                 throw new NotImplementedException();
@@ -437,7 +437,7 @@ namespace ClosedXML.Excel.CalcEngine
                 error => ScalarValue.FromT3(error));
         }
 
-        private static OneOf<double, Error1> CovertToNumber(this ScalarValue value, ValueConverter converter)
+        private static OneOf<double, ExpressionErrorType> CovertToNumber(this ScalarValue value, ValueConverter converter)
         {
             return value.Match(
                 logical => converter.ToNumber(logical),
@@ -469,20 +469,20 @@ namespace ClosedXML.Excel.CalcEngine
         ///     Return 1 (positive) if left greater than left
         ///     Return 0 if both operands are considered equal.
         /// </returns>
-        private static OneOf<int, Error1> CompareValues(ScalarValue lhs, ScalarValue rhs, CultureInfo culture)
+        private static OneOf<int, ExpressionErrorType> CompareValues(ScalarValue lhs, ScalarValue rhs, CultureInfo culture)
         {
             return lhs.Match(
-                leftLogical => rhs.Match<OneOf<int, Error1>>(
+                leftLogical => rhs.Match<OneOf<int, ExpressionErrorType>>(
                         rightLogical => leftLogical.CompareTo(rightLogical),
                         rightNumber => -1,
                         rightText => -1,
                         rightError => rightError),
-                leftNumber => rhs.Match<OneOf<int, Error1>>(
+                leftNumber => rhs.Match<OneOf<int, ExpressionErrorType>>(
                         rightLogical => 1,
                         rightNumber => leftNumber.CompareTo(rightNumber),
                         rightText => 1,
                         rightError => rightError),
-                leftText => rhs.Match<OneOf<int, Error1>>(
+                leftText => rhs.Match<OneOf<int, ExpressionErrorType>>(
                         rightLogical => 1,
                         rightNumber => 1,
                         rightText => string.Compare(leftText, rightText, culture, CompareOptions.IgnoreCase),
@@ -518,7 +518,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private delegate ScalarValue BinaryFunc(ScalarValue lhs, ScalarValue rhs);
 
-        private delegate OneOf<double, Error1> BinaryNumberFunc(double lhs, double rhs);
+        private delegate OneOf<double, ExpressionErrorType> BinaryNumberFunc(double lhs, double rhs);
 
         /// <summary>
         /// Convert any kind of formula value to value returned as a content of a cell.
@@ -556,7 +556,7 @@ namespace ClosedXML.Excel.CalcEngine
                                 var cellValue = ctx.GetCellValue(cellArea.Worksheet, cellAddress.RowNumber, cellAddress.ColumnNumber);
                                 return cellValue.ToCellContentValue();
                             },
-                            error => error.Type);
+                            error => error);
                 });
         }
 
@@ -566,7 +566,7 @@ namespace ClosedXML.Excel.CalcEngine
                 logical => logical,
                 number => number,
                 text => text,
-                error => error.Type);
+                error => error);
         }
     }
 }

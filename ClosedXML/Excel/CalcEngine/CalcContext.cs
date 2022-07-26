@@ -1,7 +1,7 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Globalization;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error1>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType>;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -86,8 +86,7 @@ namespace ClosedXML.Excel.CalcEngine
                     : ScalarValue.FromT2(text),
                 DateTime date => ScalarValue.FromT1(date.ToOADate()),
                 // TODO: What is new semantic of XLCell.Value?
-                Error1 error => ScalarValue.FromT3(error),
-                ExpressionErrorType errorType => ScalarValue.FromT3(new Error1(errorType)),
+                ExpressionErrorType errorType => ScalarValue.FromT3(errorType),
                 _ => throw new NotImplementedException($"Not sure how to get error from a cell (type {value?.GetType().Name}, value {value}).")
             };
         }

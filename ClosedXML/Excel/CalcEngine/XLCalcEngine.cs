@@ -204,11 +204,11 @@ namespace ClosedXML.Excel.CalcEngine
         /// is in the formula, it doesn't mean it is actually used during evaluation.
         /// Because named ranges can change, the result might change between visits.
         /// </summary>
-        private class FormulaRangesVisitor : IFormulaVisitor<PrecedentAreasContext, OneOf<Reference, Error1>>
+        private class FormulaRangesVisitor : IFormulaVisitor<PrecedentAreasContext, OneOf<Reference, ExpressionErrorType>>
         {
             public readonly static FormulaRangesVisitor Default = new();
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, ReferenceNode node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, ReferenceNode node)
             {
                 if (node.Type == ReferenceItemType.NamedRange)
                 {
@@ -217,13 +217,13 @@ namespace ClosedXML.Excel.CalcEngine
                     // TODO: Cleanup and error checking
                     if (!TryGetNamedRange(node.Address, ctx.Worksheet, out var namedRange))
                     {
-                        return Error1.Name;
+                        return ExpressionErrorType.NameNotRecognized;
                     }
 
                     if (!namedRange.IsValid)
                     {
                         ctx.HasReferenceErrors = true;
-                        return Error1.Ref;
+                        return ExpressionErrorType.CellReference;
                     }
 
                     var rangeAddresses = namedRange.Ranges.Select(r => r.RangeAddress).Cast<XLRangeAddress>().ToList();
@@ -238,7 +238,7 @@ namespace ClosedXML.Excel.CalcEngine
                     if (!ctx.Worksheet.Workbook.TryGetWorksheet(sheetName, out var ws))
                     {
                         ctx.HasReferenceErrors = true;
-                        return Error1.Ref;
+                        return ExpressionErrorType.CellReference;
                     }
 
                     return new Reference(new XLRangeAddress((XLWorksheet)ws, node.Address));
@@ -247,7 +247,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new Reference(new XLRangeAddress(null, node.Address));
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, BinaryExpression node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, BinaryExpression node)
             {
                 var leftArg = node.LeftExpression.Accept(ctx, this);
 
@@ -257,7 +257,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var isRightReference = rightArg.TryPickT0(out var rightReference, out var rightError);
 
                 if (!isLeftReference && !isRightReference)
-                    return Error1.Ref;
+                    return ExpressionErrorType.CellReference;
 
                 if (isLeftReference && !isRightReference)
                 {
@@ -280,24 +280,24 @@ namespace ClosedXML.Excel.CalcEngine
                 };
 
                 // Binary operation on reference arguments
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, ScalarNode node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, ScalarNode node)
             {
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, UnaryExpression node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, UnaryExpression node)
             {
                 var value = node.Expression.Accept(ctx, this);
                 if (!value.TryPickT0(out var reference, out var error))
                     return error;
                 ctx.AddReference(reference);
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, FunctionExpression node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, FunctionExpression node)
             {
                 foreach (var param in node.Parameters)
                 {
@@ -305,35 +305,35 @@ namespace ClosedXML.Excel.CalcEngine
                     if (paramResult.TryPickT0(out var reference, out var _))
                         ctx.AddReference(reference);
                 }
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, EmptyArgumentNode node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, EmptyArgumentNode node)
             {
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, ErrorExpression node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, ErrorExpression node)
             {
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, NotSupportedNode node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, NotSupportedNode node)
             {
-                return Error1.Ref;
+                return ExpressionErrorType.CellReference;
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, StructuredReferenceNode node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, StructuredReferenceNode node)
             {
                 throw new NotImplementedException("Shouldn't be visited.");
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, PrefixNode node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, PrefixNode node)
             {
                 throw new InvalidOperationException("Shouldn't be visited.");
             }
 
-            public OneOf<Reference, Error1> Visit(PrecedentAreasContext ctx, FileNode node)
+            public OneOf<Reference, ExpressionErrorType> Visit(PrecedentAreasContext ctx, FileNode node)
             {
                 throw new InvalidOperationException("Shouldn't be visited.");
             }
