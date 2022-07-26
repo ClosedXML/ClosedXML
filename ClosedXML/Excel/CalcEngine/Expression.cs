@@ -1,154 +1,233 @@
+﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using System.Globalization;
+using System.Threading;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
-    /// Base class for all AST nodes. All AST nodes must be immutable.
+    /// An adapter for legacy function implementations.
     /// </summary>
-    internal abstract class AstNode
+    internal class Expression : IComparable<Expression>
     {
-        /// <summary>
-        /// Method to accept a vistor (=call a method of visitor with correct type of the node).
-        /// </summary>
-        public abstract TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor);
-    }
+        private readonly object _value;
 
-    /// <summary>
-    /// A base class for all AST nodes that can be evaluated to produce a value.
-    /// </summary>
-    internal abstract class ValueNode : AstNode
-    {
-    }
-
-    /// <summary>
-    /// AST node that contains a number, text or a bool.
-    /// </summary>
-    internal class ScalarNode : ValueNode
-    {
-        public ScalarNode(AnyValue value)
+        public Expression(object value)
         {
-            Value = value;
+            _value = value;
         }
 
-        public AnyValue Value { get; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    internal enum UnaryOp
-    {
-        Add,
-        Subtract,
-        Percentage,
-        SpillRange,
-        ImplicitIntersection
-    }
-
-    /// <summary>
-    /// Unary expression, e.g. +123
-    /// </summary>
-    internal class UnaryExpression : ValueNode
-    {
-        public UnaryExpression(UnaryOp operation, ValueNode expr)
+        public virtual object Evaluate()
         {
-            Operation = operation;
-            Expression = expr;
+            if (_value is Error error)
+                ThrowApplicableException(error);
+            return _value;
         }
 
-        public UnaryOp Operation { get; }
 
-        public ValueNode Expression { get; private set; }
+        //---------------------------------------------------------------------------
 
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
+        #region ** implicit converters
 
-    internal enum BinaryOp
-    {
-        // Text operators
-        Concat,
-        // Arithmetic
-        Add,
-        Sub,
-        Mult,
-        Div,
-        Exp,
-        // Comparison operators
-        Lt,
-        Lte,
-        Eq,
-        Neq,
-        Gte,
-        Gt,
-        // References operators
-        Range,
-        Union,
-        Intersection
-    }
-
-    /// <summary>
-    /// Binary expression, e.g. 1+2
-    /// </summary>
-    internal class BinaryExpression : ValueNode
-    {
-        private static readonly HashSet<BinaryOp> _comparisons = new HashSet<BinaryOp>
+        public static implicit operator string(Expression x)
         {
-            BinaryOp.Lt,
-            BinaryOp.Lte,
-            BinaryOp.Eq,
-            BinaryOp.Neq,
-            BinaryOp.Gte,
-            BinaryOp.Gt
-        };
+            if (x._value is Error error)
+                ThrowApplicableException(error);
 
-        private readonly bool _isComparison;
+            var v = x.Evaluate();
 
-        public BinaryExpression(BinaryOp operation, ValueNode exprLeft, ValueNode exprRight)
-        {
-            _isComparison = _comparisons.Contains(operation);
-            Operation = operation;
-            LeftExpression = exprLeft;
-            RightExpression = exprRight;
+            if (v == null)
+                return string.Empty;
+
+            if (v is bool b)
+                return b.ToString().ToUpper();
+
+            return v.ToString();
         }
 
-        public BinaryOp Operation { get; }
-
-        public ValueNode LeftExpression { get; private set; }
-
-        public ValueNode RightExpression { get; private set; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    /// <summary>
-    /// Function call expression, e.g. sin(0.5)
-    /// </summary>
-    internal class FunctionExpression : ValueNode
-    {
-        // TODO: Improve parser, node should have store a name, not a delegate
-        public FunctionExpression(string name, List<ValueNode> parms) : this(null, name, parms)
+        public static implicit operator double(Expression x)
         {
+            if (x._value is Error error)
+                ThrowApplicableException(error);
+
+            // evaluate
+            var v = x.Evaluate();
+
+            // handle doubles
+            if (v is double dbl)
+            {
+                return dbl;
+            }
+
+            // handle booleans
+            if (v is bool b)
+            {
+                return b ? 1 : 0;
+            }
+
+            // handle dates
+            if (v is DateTime dt)
+            {
+                return dt.ToOADate();
+            }
+
+            if (v is TimeSpan ts)
+            {
+                return ts.TotalDays;
+            }
+
+            // handle string
+            if (v is string s && double.TryParse(s, out var doubleValue))
+            {
+                return doubleValue;
+            }
+
+            // handle nulls
+            if (v == null || v is string)
+            {
+                return 0;
+            }
+
+            // handle everything else
+            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
+            return (double)Convert.ChangeType(v, typeof(double), _ci);
         }
 
-        public FunctionExpression(PrefixNode prefix, string name, List<ValueNode> parms)
+        public static implicit operator bool(Expression x)
         {
-            Prefix = prefix;
-            Name = name;
-            Parameters = parms;
+            if (x._value is Error error)
+                ThrowApplicableException(error);
+
+            // evaluate
+            var v = x.Evaluate();
+
+            // handle booleans
+            if (v is bool b)
+            {
+                return b;
+            }
+
+            // handle nulls
+            if (v == null)
+            {
+                return false;
+            }
+
+            // handle doubles
+            if (v is double dbl)
+            {
+                return dbl != 0;
+            }
+
+            // handle everything else
+            return (double)Convert.ChangeType(v, typeof(double)) != 0;
         }
 
-        public PrefixNode Prefix { get; }
+        public static implicit operator DateTime(Expression x)
+        {
+            if (x._value is Error error)
+                ThrowApplicableException(error);
 
-        /// <summary>
-        /// Name of the function.
-        /// </summary>
-        public string Name { get; }
+            // evaluate
+            var v = x.Evaluate();
 
-        public List<ValueNode> Parameters { get; }
+            // handle dates
+            if (v is DateTime dt)
+            {
+                return dt;
+            }
 
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
+            if (v is TimeSpan ts)
+            {
+                return new DateTime().Add(ts);
+            }
+
+            // handle numbers
+            if (v.IsNumber())
+            {
+                return DateTime.FromOADate((double)x);
+            }
+
+            // handle everything else
+            CultureInfo _ci = Thread.CurrentThread.CurrentCulture;
+            return (DateTime)Convert.ChangeType(v, typeof(DateTime), _ci);
+        }
+
+        #endregion ** implicit converters
+
+        //---------------------------------------------------------------------------
+
+        #region ** IComparable<Expression>
+
+        public int CompareTo(Expression other)
+        {
+            // get both values
+            var c1 = this.Evaluate() as IComparable;
+            var c2 = other.Evaluate() as IComparable;
+
+            // handle nulls
+            if (c1 == null && c2 == null)
+            {
+                return 0;
+            }
+            if (c2 == null)
+            {
+                return -1;
+            }
+            if (c1 == null)
+            {
+                return +1;
+            }
+
+            // make sure types are the same
+            if (c1.GetType() != c2.GetType())
+            {
+                try
+                {
+                    if (c1 is DateTime)
+                        c2 = ((DateTime)other);
+                    else if (c2 is DateTime)
+                        c1 = ((DateTime)this);
+                    else
+                        c2 = Convert.ChangeType(c2, c1.GetType()) as IComparable;
+                }
+                catch (InvalidCastException) { return -1; }
+                catch (FormatException) { return -1; }
+                catch (OverflowException) { return -1; }
+                catch (ArgumentNullException) { return -1; }
+            }
+
+            // String comparisons should be case insensitive
+            if (c1 is string s1 && c2 is string s2)
+                return StringComparer.OrdinalIgnoreCase.Compare(s1, s2);
+            else
+                return c1.CompareTo(c2);
+        }
+
+        #endregion ** IComparable<Expression>
+
+
+        private static void ThrowApplicableException(Error errorType)
+        {
+            switch (errorType)
+            {
+                case Error.CellReference:
+                    throw new CellReferenceException();
+                case Error.CellValue:
+                    throw new CellValueException();
+                case Error.DivisionByZero:
+                    throw new DivisionByZeroException();
+                case Error.NameNotRecognized:
+                    throw new NameNotRecognizedException();
+                case Error.NoValueAvailable:
+                    throw new NoValueAvailableException();
+                case Error.NullValue:
+                    throw new NullValueException();
+                case Error.NumberInvalid:
+                    throw new NumberException();
+            }
+        }
     }
 
     /// <summary>
@@ -196,157 +275,6 @@ namespace ClosedXML.Excel.CalcEngine
                 yield return _value;
             }
         }
-    }
-
-    /// <summary>
-    /// Expression that represents an omitted parameter.
-    /// </summary>
-    internal class EmptyArgumentNode : ValueNode
-    {
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    internal class ErrorExpression : ValueNode
-    {
-        internal ErrorExpression(Error error)
-        {
-            Error = error;
-        }
-
-        public Error Error { get; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    /// <summary>
-    /// An placeholder node for AST nodes that are not yet supported in ClosedXML.
-    /// </summary>
-    internal class NotSupportedNode : ValueNode
-    {
-        public NotSupportedNode(string featureName)
-        {
-            FeatureName = featureName;
-        }
-
-        public string FeatureName { get; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    /// <summary>
-    /// AST node for an reference to an external file in a formula.
-    /// </summary>
-    internal class FileNode : AstNode
-    {
-        /// <summary>
-        /// If the file is references indirectly, numeric identifier of a file.
-        /// </summary>
-        public int? Numeric { get; }
-
-        /// <summary>
-        /// If a file is referenced directly, a path to the file on the disc/UNC/web link, .
-        /// </summary>
-        public string Path { get; }
-
-        public FileNode(string path)
-        {
-            Path = path;
-        }
-
-        public FileNode(int numeric)
-        {
-            Numeric = numeric;
-        }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    /// <summary>
-    /// AST node for prefix of a reference in a formula. Prefix is a specification where to look for a reference.
-    /// <list type="bullet">
-    /// <item>Prefix specifies a <c>Sheet</c> - used for references in the local workbook.</item>
-    /// <item>Prefix specifies a <c>FirstSheet</c> and a <c>LastSheet</c> - 3D reference, references uses all sheets between first and last.</item>
-    /// <item>Prefix specifies a <c>File</c>, no sheet is specified - used for named ranges in external file.</item>
-    /// <item>Prefix specifies a <c>File</c> and a <c>Sheet</c> - references looks for its address in the sheet of the file.</item>
-    /// </list>
-    /// </summary>
-    internal class PrefixNode : AstNode
-    {
-        public PrefixNode(FileNode file, string sheet, string firstSheet, string lastSheet)
-        {
-            File = file;
-            Sheet = sheet;
-            FirstSheet = firstSheet;
-            LastSheet = lastSheet;
-        }
-
-        /// <summary>
-        /// If prefix references data from another file, can be empty.
-        /// </summary>
-        public FileNode File { get; }
-
-        /// <summary>
-        /// Name of the sheet, without ! or escaped quotes. Can be empty in some cases (e.g. reference to a named range in an another file).
-        /// </summary>
-        public string Sheet { get; }
-
-        /// <summary>
-        /// If the prefix is for 3D reference, name of first sheet. Empty otherwise.
-        /// </summary>
-        public string FirstSheet { get; }
-
-        /// <summary>
-        /// If the prefix is for 3D reference, name of the last sheet. Empty otherwise.
-        /// </summary>
-        public string LastSheet { get; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    /// <summary>
-    /// AST node for a reference of an area in some sheet.
-    /// </summary>
-    internal class ReferenceNode : ValueNode
-    {
-        public ReferenceNode(PrefixNode prefix, ReferenceItemType type, string address)
-        {
-            Prefix = prefix;
-            Type = type;
-            Address = address;
-        }
-
-        /// <summary>
-        /// An optional prefix for reference item.
-        /// </summary>
-        public PrefixNode Prefix { get; }
-
-        public ReferenceItemType Type { get; }
-
-        /// <summary>
-        /// An address of a reference that corresponds to <see cref="Type"/> or a name of named range.
-        /// </summary>
-        public string Address { get; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
-    }
-
-    internal enum ReferenceItemType { Cell, NamedRange, VRange, HRange }
-
-    // TODO: The AST node doesn't have any stuff from StructuredReference term because structured reference is not yet suported and
-    // the SR grammar has changed in not-yet-released (after 1.5.2) version of XLParser
-    internal class StructuredReferenceNode : ValueNode
-    {
-        public StructuredReferenceNode(PrefixNode prefix)
-        {
-            Prefix = prefix;
-        }
-
-        /// <summary>
-        /// Can be empty if no prefix available.
-        /// </summary>
-        public PrefixNode Prefix { get; }
-
-        public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
     /// <summary>
