@@ -2,31 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    internal readonly struct Logical
-    {
-        public static readonly Logical True = new(true);
-        public static readonly Logical False = new(false);
-
-        public Logical(bool value) => Value = value;
-
-        public bool Value { get; }
-
-        public static implicit operator bool(Logical logical) => logical.Value;
-        public static implicit operator Logical(bool value) => new(value);
-
-        public override string ToString() => Value.ToString();
-
-        public static Logical And(Logical lhs, Logical rhs)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal readonly struct Number1
     {
         public static readonly Number1 Zero = new(0.0);

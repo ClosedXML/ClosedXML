@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -150,7 +150,7 @@ namespace ClosedXML.Excel.CalcEngine
             foreach (var arg in args)
             {
                 Expression adaptedArg = arg.HasValue ? arg.Value.Match(
-                    logical => new Expression(logical.Value),
+                    logical => new Expression(logical),
                     number => new Expression(number.Value),
                     text => new Expression(text),
                     error => new Expression(error.Type),
@@ -197,7 +197,7 @@ namespace ClosedXML.Excel.CalcEngine
                 var result = legacyFunction.Function(adaptedArgs);
                 return result switch
                 {
-                    bool logic => AnyValue.FromT0(new Logical(logic)),
+                    bool logic => AnyValue.FromT0(logic),
                     double number => AnyValue.FromT1(new Number1(number)),
                     string text => AnyValue.FromT2(text),
                     int number => AnyValue.FromT1(new Number1(number)), /* date mostly */

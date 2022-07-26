@@ -1,8 +1,8 @@
 ﻿using OneOf;
 using System;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
 using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Linq;
 
@@ -230,7 +230,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static AnyValue IsEqual(this AnyValue left, AnyValue right, CalcContext context)
         {
             BinaryFunc g = (leftItem, rightItem) => CompareValues(leftItem, rightItem, context.Culture).Match<ScalarValue>(
-                cmp => cmp == 0 ? Logical.True : Logical.False,
+                cmp => cmp == 0,
                 error => error);
             return BinaryOperation(left, right, g, context);
         }
@@ -238,7 +238,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static AnyValue IsNotEqual(this AnyValue left, AnyValue right, CalcContext context)
         {
             BinaryFunc g = (leftItem, rightItem) => CompareValues(leftItem, rightItem, context.Culture).Match<ScalarValue>(
-                cmp => cmp != 0 ? Logical.True : Logical.False,
+                cmp => cmp != 0,
                 error => error);
             return BinaryOperation(left, right, g, context);
         }
@@ -246,7 +246,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static AnyValue IsGreaterThan(this AnyValue left, AnyValue right, CalcContext context)
         {
             BinaryFunc g = (leftItem, rightItem) => CompareValues(leftItem, rightItem, context.Culture).Match<ScalarValue>(
-                cmp => cmp > 0 ? Logical.True : Logical.False,
+                cmp => cmp > 0,
                 error => error);
             return BinaryOperation(left, right, g, context);
         }
@@ -254,7 +254,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static AnyValue IsGreaterThanOrEqual(this AnyValue left, AnyValue right, CalcContext context)
         {
             BinaryFunc g = (leftItem, rightItem) => CompareValues(leftItem, rightItem, context.Culture).Match<ScalarValue>(
-                cmp => cmp >= 0 ? Logical.True : Logical.False,
+                cmp => cmp >= 0,
                 error => error);
             return BinaryOperation(left, right, g, context);
         }
@@ -262,7 +262,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static AnyValue IsLessThan(this AnyValue left, AnyValue right, CalcContext context)
         {
             BinaryFunc g = (leftItem, rightItem) => CompareValues(leftItem, rightItem, context.Culture).Match<ScalarValue>(
-                cmp => cmp < 0 ? Logical.True : Logical.False,
+                cmp => cmp < 0,
                 error => error);
             return BinaryOperation(left, right, g, context);
         }
@@ -270,7 +270,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static AnyValue IsLessThanOrEqual(this AnyValue left, AnyValue right, CalcContext context)
         {
             BinaryFunc g = (leftItem, rightItem) => CompareValues(leftItem, rightItem, context.Culture).Match<ScalarValue>(
-                cmp => cmp <= 0 ? Logical.True : Logical.False,
+                cmp => cmp <= 0,
                 error => error);
             return BinaryOperation(left, right, g, context);
         }
@@ -473,7 +473,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             return lhs.Match(
                 leftLogical => rhs.Match<OneOf<int, Error1>>(
-                        rightLogical => leftLogical.Value.CompareTo(rightLogical.Value),
+                        rightLogical => leftLogical.CompareTo(rightLogical),
                         rightNumber => -1,
                         rightText => -1,
                         rightError => rightError),
@@ -503,7 +503,7 @@ namespace ClosedXML.Excel.CalcEngine
             var value = cell.Value;
             // TODO: Replace with a conversion, like ctx
             if (value is bool boolValue)
-                return ScalarValue.FromT0(new Logical(boolValue));
+                return ScalarValue.FromT0(boolValue);
             if (value is double numberValue)
                 return ScalarValue.FromT1(new Number1(numberValue));
             if (value is string stringValue)
@@ -563,7 +563,7 @@ namespace ClosedXML.Excel.CalcEngine
         public static object ToCellContentValue(this ScalarValue value)
         {
             return value.Match<object>(
-                logical => logical.Value,
+                logical => logical,
                 number => number.Value,
                 text => text,
                 error => error.Type);

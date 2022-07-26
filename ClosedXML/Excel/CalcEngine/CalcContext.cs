@@ -1,9 +1,7 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
-using OneOf;
 using System;
 using System.Globalization;
-using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -81,7 +79,7 @@ namespace ClosedXML.Excel.CalcEngine
             var value = cell.Value;
             return value switch
             {
-                bool logical => ScalarValue.FromT0(new Logical(logical)),
+                bool logical => ScalarValue.FromT0(logical),
                 double number => ScalarValue.FromT1(new Number1(number)),
                 string text => text == string.Empty
                     ? null

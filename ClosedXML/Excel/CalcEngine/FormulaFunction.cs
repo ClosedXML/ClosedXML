@@ -1,6 +1,6 @@
 ﻿using OneOf;
 using System;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Linq;
 using System.Reflection;
 
@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FormulaFunction
     {
-        private static readonly Type[] ValueTypes = new[] { typeof(Logical), typeof(Number1), typeof(string), typeof(Error1), typeof(Array), typeof(Reference) };
+        private static readonly Type[] ValueTypes = new[] { typeof(bool), typeof(Number1), typeof(string), typeof(Error1), typeof(Array), typeof(Reference) };
         private readonly CalcEngineFunction _method;
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             // What is the type of actual value we want to pass to function.
             Type argType = arg.Match(
-                logical => typeof(Logical),
+                logical => typeof(bool),
                 number => typeof(Number1),
                 text => typeof(string),
                 error => typeof(Error1),

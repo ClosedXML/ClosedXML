@@ -172,7 +172,7 @@ namespace ClosedXML.Excel.CalcEngine
         private void CreateBoolNode(AstContext context, ParseTreeNode parseNode)
         {
             var boolValue = string.Equals(parseNode.ChildNodes.Single().Token.Text, "TRUE", StringComparison.OrdinalIgnoreCase);
-            parseNode.AstNode = new ScalarNode(new Logical(boolValue));
+            parseNode.AstNode = new ScalarNode(boolValue);
         }
 
         private void CreateTextNode(AstContext context, ParseTreeNode parseNode)
