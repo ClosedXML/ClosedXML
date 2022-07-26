@@ -113,15 +113,15 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         // #REF! is coverted by a different rule, so it is not here.
-        [TestCase("#VALUE!", ExpressionErrorType.CellValue)]
-        [TestCase("#DIV/0!", ExpressionErrorType.DivisionByZero)]
-        [TestCase("#NAME?", ExpressionErrorType.NameNotRecognized)]
-        [TestCase("#N/A", ExpressionErrorType.NoValueAvailable)]
-        [TestCase("#NULL!", ExpressionErrorType.NullValue)]
-        [TestCase("#NUM!", ExpressionErrorType.NumberInvalid)]
+        [TestCase("#VALUE!", Error.CellValue)]
+        [TestCase("#DIV/0!", Error.DivisionByZero)]
+        [TestCase("#NAME?", Error.NameNotRecognized)]
+        [TestCase("#N/A", Error.NoValueAvailable)]
+        [TestCase("#NULL!", Error.NullValue)]
+        [TestCase("#NUM!", Error.NumberInvalid)]
         public void Constant_can_be_error(string formula, object expectedError)
         {
-            var error = (ExpressionErrorType)XLWorkbook.EvaluateExpr(formula);
+            var error = (Error)XLWorkbook.EvaluateExpr(formula);
             Assert.AreEqual(expectedError, error);
         }
         #endregion
@@ -348,7 +348,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase]
         public void Reference_item_can_be_ref_error()
         {
-            Assert.AreEqual(ExpressionErrorType.CellReference, XLWorkbook.EvaluateExpr("#REF!"));
+            Assert.AreEqual(Error.CellReference, XLWorkbook.EvaluateExpr("#REF!"));
         }
 
         [TestCase]

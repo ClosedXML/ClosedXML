@@ -1,6 +1,6 @@
 ﻿using OneOf;
 using System;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Linq;
 using System.Reflection;
 
@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
     /// </summary>
     internal class FormulaFunction
     {
-        private static readonly Type[] ValueTypes = new[] { typeof(bool), typeof(double), typeof(string), typeof(ExpressionErrorType), typeof(Array), typeof(Reference) };
+        private static readonly Type[] ValueTypes = new[] { typeof(bool), typeof(double), typeof(string), typeof(Error), typeof(Array), typeof(Reference) };
         private readonly CalcEngineFunction _method;
 
         /// <summary>
@@ -84,14 +84,14 @@ namespace ClosedXML.Excel.CalcEngine
         /// <typeparam name="TParamType">Type of parameter expected by function (=target of conversion).</typeparam>
         /// <param name="arg">Value of argument from formula evaluation.</param>
         /// <returns><paramref name="arg"/> converted to <typeparamref name="TParamType"/> or <c>#VALUE!</c>.</returns>
-        private OneOf<TParamType, ExpressionErrorType> ConvertArgument<TParamType>(AnyValue arg)
+        private OneOf<TParamType, Error> ConvertArgument<TParamType>(AnyValue arg)
         {
             // What is the type of actual value we want to pass to function.
             Type argType = arg.Match(
                 logical => typeof(bool),
                 number => typeof(double),
                 text => typeof(string),
-                error => typeof(ExpressionErrorType),
+                error => typeof(Error),
                 array => typeof(Array),
                 reference => typeof(Reference));
 
@@ -101,7 +101,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 // No idea how to say - they are of same type so just use it as the target type without boxing.
                 var castedArgValue = (TParamType)arg.Value;
-                return OneOf<TParamType, ExpressionErrorType>.FromT0(castedArgValue);
+                return OneOf<TParamType, Error>.FromT0(castedArgValue);
             }
 
             // Parameter can be simply the type of value or can be OneOf<T0, T1,...> with the types in generic arguments.

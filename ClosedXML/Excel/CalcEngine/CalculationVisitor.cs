@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -24,7 +24,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public AnyValue Visit(CalcContext context, ErrorExpression node)
         {
-            return node.ErrorType;
+            return node.Error;
         }
 
         public AnyValue Visit(CalcContext context, UnaryExpression node)
@@ -134,7 +134,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (!_functions.TryGetFunc(node.Name, out FormulaFunction function))
             {
                 if (!_functions.TryGetFunc(node.Name, out FunctionDefinition legacyFunction))
-                    return ExpressionErrorType.NameNotRecognized;
+                    return Error.NameNotRecognized;
                 return ExecuteLegacy(context, node, legacyFunction);
             }
 
@@ -252,7 +252,7 @@ namespace ClosedXML.Excel.CalcEngine
 
                 var sheet = node.Prefix.Sheet;
                 if (!context.Workbook.TryGetWorksheet(sheet, out var worksheet1))
-                    return ExpressionErrorType.CellReference;
+                    return Error.CellReference;
                 worksheet = (XLWorksheet)worksheet1;
             }
             else
@@ -266,12 +266,12 @@ namespace ClosedXML.Excel.CalcEngine
             var rangeName = node.Address;
             worksheet ??= context.Worksheet;
             if (!TryGetNamedRange(worksheet, rangeName, out var namedRange))
-                return ExpressionErrorType.NameNotRecognized;
+                return Error.NameNotRecognized;
 
             // This is rather horrible, but basically copy from XLCalcEngine.GetExternalObject
             // It's hard to count all things that are wrong with this, from hand parsing operator range union by XLNamedRange to recursion.
             if (!namedRange.IsValid)
-                return ExpressionErrorType.CellReference;
+                return Error.CellReference;
 
             // union is one of nodes that can't be in the root. Enclose in braces to make parser happy
             // TODO: Shoudl it always start with equal or never?
@@ -325,7 +325,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public virtual object Evaluate()
         {
-            if (_value is ExpressionErrorType error)
+            if (_value is Error error)
                 ThrowApplicableException(error);
             return _value;
         }
@@ -337,7 +337,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator string(Expression x)
         {
-            if (x._value is ExpressionErrorType error)
+            if (x._value is Error error)
                 ThrowApplicableException(error);
 
             var v = x.Evaluate();
@@ -353,7 +353,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator double(Expression x)
         {
-            if (x._value is ExpressionErrorType error)
+            if (x._value is Error error)
                 ThrowApplicableException(error);
 
             // evaluate
@@ -401,7 +401,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator bool(Expression x)
         {
-            if (x._value is ExpressionErrorType error)
+            if (x._value is Error error)
                 ThrowApplicableException(error);
 
             // evaluate
@@ -431,7 +431,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static implicit operator DateTime(Expression x)
         {
-            if (x._value is ExpressionErrorType error)
+            if (x._value is Error error)
                 ThrowApplicableException(error);
 
             // evaluate
@@ -513,24 +513,24 @@ namespace ClosedXML.Excel.CalcEngine
         #endregion ** IComparable<Expression>
 
 
-        private static void ThrowApplicableException(ExpressionErrorType errorType)
+        private static void ThrowApplicableException(Error errorType)
         {
             switch (errorType)
             {
                 // TODO: include last token in exception message
-                case ExpressionErrorType.CellReference:
+                case Error.CellReference:
                     throw new CellReferenceException();
-                case ExpressionErrorType.CellValue:
+                case Error.CellValue:
                     throw new CellValueException();
-                case ExpressionErrorType.DivisionByZero:
+                case Error.DivisionByZero:
                     throw new DivisionByZeroException();
-                case ExpressionErrorType.NameNotRecognized:
+                case Error.NameNotRecognized:
                     throw new NameNotRecognizedException();
-                case ExpressionErrorType.NoValueAvailable:
+                case Error.NoValueAvailable:
                     throw new NoValueAvailableException();
-                case ExpressionErrorType.NullValue:
+                case Error.NullValue:
                     throw new NullValueException();
-                case ExpressionErrorType.NumberInvalid:
+                case Error.NumberInvalid:
                     throw new NumberException();
             }
         }

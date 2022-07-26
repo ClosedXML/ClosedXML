@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -206,55 +206,14 @@ namespace ClosedXML.Excel.CalcEngine
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }
 
-    internal enum ExpressionErrorType
-    {
-        /// <summary>
-        /// #REF!
-        /// </summary>
-        /// <remarks>When unable to find a sheet or a cell.</remarks>
-        CellReference,
-
-        /// <summary>
-        /// #VALUE!
-        /// </summary>
-        /// <remarks>Intended to indicate when an incompatible type argument is passed to a function, or an incompatible type operand is used with an operator.</remarks>
-        CellValue,
-
-        /// <summary>
-        /// #DIV/0!
-        /// </summary>
-        DivisionByZero,
-
-        /// <summary>
-        /// #NAME?
-        /// </summary>
-        /// <remarks>When unable to find a named range (but not a sheet!)</remarks>
-        NameNotRecognized,
-
-        /// <summary>
-        /// #N/A
-        /// </summary>
-        NoValueAvailable,
-
-        /// <summary>
-        /// #NULL!
-        /// </summary>
-        NullValue,
-
-        /// <summary>
-        /// #NUM!
-        /// </summary>
-        NumberInvalid
-    }
-
     internal class ErrorExpression : ValueNode
     {
-        internal ErrorExpression(ExpressionErrorType errorType)
+        internal ErrorExpression(Error error)
         {
-            ErrorType = errorType;
+            Error = error;
         }
 
-        public ExpressionErrorType ErrorType { get; }
+        public Error Error { get; }
 
         public override TResult Accept<TContext, TResult>(TContext context, IFormulaVisitor<TContext, TResult> visitor) => visitor.Visit(context, this);
     }

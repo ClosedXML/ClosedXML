@@ -3,7 +3,7 @@ using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -57,13 +57,13 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public static OneOf<Reference, ExpressionErrorType> RangeOp(Reference lhs, Reference rhs)
+        public static OneOf<Reference, Error> RangeOp(Reference lhs, Reference rhs)
         {
             var sheets = lhs.Areas.Select(a => a.Worksheet).Concat(rhs.Areas.Select(a => a.Worksheet))
                 .Where(ws => ws is not null).Distinct().ToList();
             if (sheets.Count > 1)
             {
-                return ExpressionErrorType.CellValue;
+                return Error.CellValue;
             }
 
             var minCol = XLHelper.MaxColumnNumber;
@@ -91,13 +91,13 @@ namespace ClosedXML.Excel.CalcEngine
             return new Reference(lhs.Areas.Concat(rhs.Areas).ToList());
         }
 
-        public static OneOf<Reference, ExpressionErrorType> Intersect(Reference lhs, Reference rhs, CalcContext ctx)
+        public static OneOf<Reference, Error> Intersect(Reference lhs, Reference rhs, CalcContext ctx)
         {
             var sheets = lhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet)
                 .Concat(rhs.Areas.Select(a => a.Worksheet ?? ctx.Worksheet))
                 .Distinct().ToList();
             if (sheets.Count != 1)
-                return ExpressionErrorType.CellValue;
+                return Error.CellValue;
 
             var sheet = sheets.Single();
             var intersections = new List<XLRangeAddress>();
@@ -115,7 +115,7 @@ namespace ClosedXML.Excel.CalcEngine
                     intersections.Add(intersectedArea);
             }
 
-            return intersections.Any() ? new Reference(intersections) : ExpressionErrorType.NullValue;
+            return intersections.Any() ? new Reference(intersections) : Error.NullValue;
         }
 
         /// <summary>
@@ -123,10 +123,10 @@ namespace ClosedXML.Excel.CalcEngine
         /// </summary>
         /// <param name="formulaAddress"></param>
         /// <returns>An address of the intersection or error if intersection failed.</returns>
-        public OneOf<Reference, ExpressionErrorType> ImplicitIntersection(IXLAddress formulaAddress)
+        public OneOf<Reference, Error> ImplicitIntersection(IXLAddress formulaAddress)
         {
             if (Areas.Count != 1)
-                return ExpressionErrorType.CellValue;
+                return Error.CellValue;
 
             var area = Areas.Single();
             if (area.RowSpan == 1 && area.ColumnSpan == 1)
@@ -147,7 +147,7 @@ namespace ClosedXML.Excel.CalcEngine
                 return new Reference(new XLRangeAddress(intersection, intersection));
             }
 
-            return ExpressionErrorType.CellValue;
+            return Error.CellValue;
         }
 
         internal bool IsSingleCell()

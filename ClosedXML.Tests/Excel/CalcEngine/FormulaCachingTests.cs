@@ -310,7 +310,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 var valueAfterDeletion = sheet1_a1.Value;
 
                 Assert.AreEqual("TestValue", valueBeforeDeletion.ToString());
-                Assert.AreEqual(ExpressionErrorType.CellReference, valueAfterDeletion);
+                Assert.AreEqual(Error.CellReference, valueAfterDeletion);
             }
         }
 

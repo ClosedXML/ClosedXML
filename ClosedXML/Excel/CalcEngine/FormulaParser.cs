@@ -41,15 +41,15 @@ namespace ClosedXML.Excel.CalcEngine
             { "<=", BinaryOp.Lte },
         };
 
-        private static readonly Dictionary<string, ExpressionErrorType> ErrorMap = new(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, Error> ErrorMap = new(StringComparer.OrdinalIgnoreCase)
         {
-            ["#REF!"] = ExpressionErrorType.CellReference,
-            ["#VALUE!"] = ExpressionErrorType.CellValue,
-            ["#DIV/0!"] = ExpressionErrorType.DivisionByZero,
-            ["#NAME?"] = ExpressionErrorType.NameNotRecognized,
-            ["#N/A"] = ExpressionErrorType.NoValueAvailable,
-            ["#NULL!"] = ExpressionErrorType.NullValue,
-            ["#NUM!"] = ExpressionErrorType.NumberInvalid
+            ["#REF!"] = Error.CellReference,
+            ["#VALUE!"] = Error.CellValue,
+            ["#DIV/0!"] = Error.DivisionByZero,
+            ["#NAME?"] = Error.NameNotRecognized,
+            ["#N/A"] = Error.NoValueAvailable,
+            ["#NULL!"] = Error.NullValue,
+            ["#NUM!"] = Error.NumberInvalid
         };
 
         private static readonly Dictionary<string, ReferenceItemType> RangeTermMap = new(StringComparer.Ordinal)

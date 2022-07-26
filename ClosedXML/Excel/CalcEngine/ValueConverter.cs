@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -14,7 +14,7 @@ namespace ClosedXML.Excel.CalcEngine
             { typeof(bool), new List<System.Type>() { typeof(double), typeof(string) } },
             { typeof(double), new List<System.Type>() { typeof(bool), typeof(string) } },
             { typeof(string), new List<System.Type>() { typeof(double) } },
-            { typeof(ExpressionErrorType), new List<System.Type>() }
+            { typeof(Error), new List<System.Type>() }
         };
 
         private readonly CultureInfo _culture;
@@ -27,17 +27,17 @@ namespace ClosedXML.Excel.CalcEngine
             return logical ? 1 : 0;
         }
 
-        internal OneOf<double, ExpressionErrorType> ToNumber(string text)
+        internal OneOf<double, Error> ToNumber(string text)
         {
             return double.TryParse(text, NumberStyles.Float, _culture, out var number)
                 ? number
-                : ExpressionErrorType.CellValue;
+                : Error.CellValue;
         }
 
-        internal OneOf<double, ExpressionErrorType> ToNumber(AnyValue? value)
+        internal OneOf<double, Error> ToNumber(AnyValue? value)
         {
             if (!value.HasValue)
-                return ExpressionErrorType.CellValue;
+                return Error.CellValue;
 
             return value.Value.Match(
                     logical => ToNumber(logical),
@@ -53,16 +53,16 @@ namespace ClosedXML.Excel.CalcEngine
             return rightNumber.ToString(_culture);
         }
 
-        internal OneOf<string, ExpressionErrorType> ToText(ScalarValue lhs)
+        internal OneOf<string, Error> ToText(ScalarValue lhs)
         {
-            return lhs.Match<OneOf<string, ExpressionErrorType>>(
+            return lhs.Match<OneOf<string, Error>>(
                 logical => logical ? "TRUE" : "FALSE",
                 number => number.ToString(_culture),
                 text => text,
                 error => error);
         }
 
-        internal OneOf<string, ExpressionErrorType> ToText(AnyValue value)
+        internal OneOf<string, Error> ToText(AnyValue value)
         {
             if (value.TryPickScalar(out var scalar, out var collection))
                 return ToText(scalar);

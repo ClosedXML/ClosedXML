@@ -27,18 +27,18 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void DivisionByZero()
         {
-            Assert.AreEqual(ExpressionErrorType.DivisionByZero, XLWorkbook.EvaluateExpr("0/0"));
-            Assert.AreEqual(ExpressionErrorType.DivisionByZero, new XLWorkbook().AddWorksheet().Evaluate("0/0"));
+            Assert.AreEqual(Error.DivisionByZero, XLWorkbook.EvaluateExpr("0/0"));
+            Assert.AreEqual(Error.DivisionByZero, new XLWorkbook().AddWorksheet().Evaluate("0/0"));
         }
 
         [Test]
         public void InvalidFunction()
         {
             Exception ex;
-            Assert.AreEqual(ExpressionErrorType.NameNotRecognized, XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
+            Assert.AreEqual(Error.NameNotRecognized, XLWorkbook.EvaluateExpr("XXX(A1:A2)"));
 
             var ws = new XLWorkbook().AddWorksheet();
-            Assert.AreEqual(ExpressionErrorType.NameNotRecognized, ws.Evaluate("XXX(A1:A2)"));
+            Assert.AreEqual(Error.NameNotRecognized, ws.Evaluate("XXX(A1:A2)"));
         }
 
         [Test]

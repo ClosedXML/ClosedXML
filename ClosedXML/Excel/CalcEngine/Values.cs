@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -163,7 +163,7 @@ namespace ClosedXML.Excel.CalcEngine
             get
             {
                 if (x >= _original.Width || y >= _original.Height)
-                    return ScalarValue.FromT3(ExpressionErrorType.NoValueAvailable);
+                    return ScalarValue.FromT3(Error.NoValueAvailable);
 
                 return _original[y, x];
             }

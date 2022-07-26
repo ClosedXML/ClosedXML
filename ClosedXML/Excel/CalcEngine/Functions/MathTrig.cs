@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.ExpressionErrorType, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -35,7 +35,7 @@ namespace ClosedXML.Excel.CalcEngine
                 for (var i = 1; i < args.Length; ++i)
                 {
                     if (!(args[i] ?? 0).TryPickT5(out var reference, out var rest))
-                        return ExpressionErrorType.CellValue;
+                        return Error.CellValue;
 
                     references.Add(reference);
                 }
