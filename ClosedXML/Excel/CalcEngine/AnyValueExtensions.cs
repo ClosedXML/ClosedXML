@@ -1,8 +1,8 @@
 ﻿using OneOf;
 using System;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
 using AggregateValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Linq;
 
@@ -282,7 +282,7 @@ namespace ClosedXML.Excel.CalcEngine
             BinaryFunc g = (lhs, rhs) =>
             {
                 return context.Converter.ToText(lhs).Match(
-                    leftText => context.Converter.ToText(rhs).Match<OneOf<Text, Error1>>(rightText => new Text(leftText + rightText), rightError => rightError),
+                    leftText => context.Converter.ToText(rhs).Match<OneOf<string, Error1>>(rightText => leftText + rightText, rightError => rightError),
                     leftError => leftError).Match<ScalarValue>(text => text, error => error);
             };
 
@@ -485,7 +485,7 @@ namespace ClosedXML.Excel.CalcEngine
                 leftText => rhs.Match<OneOf<int, Error1>>(
                         rightLogical => 1,
                         rightNumber => 1,
-                        rightText => string.Compare(leftText.Value, rightText.Value, culture, CompareOptions.IgnoreCase),
+                        rightText => string.Compare(leftText, rightText, culture, CompareOptions.IgnoreCase),
                         rightError => rightError),
                 leftError => leftError);
         }
@@ -510,7 +510,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 return stringValue == string.Empty
                     ? ScalarValue.FromT1(new Number1(0))
-                    : ScalarValue.FromT2(new Text(stringValue));
+                    : ScalarValue.FromT2(stringValue);
             }
 
             throw new NotImplementedException("Not sure how to get error from a cell.");
@@ -565,7 +565,7 @@ namespace ClosedXML.Excel.CalcEngine
             return value.Match<object>(
                 logical => logical.Value,
                 number => number.Value,
-                text => text.Value,
+                text => text,
                 error => error.Type);
         }
     }

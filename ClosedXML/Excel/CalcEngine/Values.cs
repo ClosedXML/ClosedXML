@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -42,27 +42,6 @@ namespace ClosedXML.Excel.CalcEngine
         public override string ToString() => Value.ToString();
 
         public static Number1 Plus(Number1 lhs, Number1 rhs)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal readonly struct Text
-    {
-        public Text(string value)
-        {
-            if (value is null) throw new ArgumentNullException(nameof(value));
-            Value = value;
-        }
-
-        public string Value { get; }
-
-        public static implicit operator string(Text text) => text.Value;
-        public static implicit operator Text(string value) => new(value);
-
-        public override string ToString() => Value.ToString();
-
-        public static Text Concat(Text lhs, Text rhs)
         {
             throw new NotImplementedException();
         }

@@ -177,7 +177,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private void CreateTextNode(AstContext context, ParseTreeNode parseNode)
         {
-            parseNode.AstNode = new ScalarNode(new Text(parseNode.ChildNodes.Single().Token.ValueString));
+            parseNode.AstNode = new ScalarNode(parseNode.ChildNodes.Single().Token.ValueString);
         }
 
         private void CreateErrorNode(AstContext context, ParseTreeNode parseNode)

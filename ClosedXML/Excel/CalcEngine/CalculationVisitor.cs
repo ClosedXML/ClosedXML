@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -152,7 +152,7 @@ namespace ClosedXML.Excel.CalcEngine
                 Expression adaptedArg = arg.HasValue ? arg.Value.Match(
                     logical => new Expression(logical.Value),
                     number => new Expression(number.Value),
-                    text => new Expression(text.Value),
+                    text => new Expression(text),
                     error => new Expression(error.Type),
                     array =>
                     { //throw new NotSupportedException("Legacy CalcEngine couldn't work with arrays and neither will adapter.")
@@ -199,7 +199,7 @@ namespace ClosedXML.Excel.CalcEngine
                 {
                     bool logic => AnyValue.FromT0(new Logical(logic)),
                     double number => AnyValue.FromT1(new Number1(number)),
-                    string text => AnyValue.FromT2(new Text(text)),
+                    string text => AnyValue.FromT2(text),
                     int number => AnyValue.FromT1(new Number1(number)), /* date mostly */
                     long number => AnyValue.FromT1(new Number1(number)),
                     DateTime date => AnyValue.FromT1(new Number1(date.ToOADate())),

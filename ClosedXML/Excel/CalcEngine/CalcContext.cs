@@ -2,8 +2,8 @@
 using OneOf;
 using System;
 using System.Globalization;
-using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1>;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -85,7 +85,7 @@ namespace ClosedXML.Excel.CalcEngine
                 double number => ScalarValue.FromT1(new Number1(number)),
                 string text => text == string.Empty
                     ? null
-                    : ScalarValue.FromT2(new Text(text)),
+                    : ScalarValue.FromT2(text),
                 DateTime date => ScalarValue.FromT1(new Number1(date.ToOADate())),
                 // TODO: What is new semantic of XLCell.Value?
                 Error1 error => ScalarValue.FromT3(error),

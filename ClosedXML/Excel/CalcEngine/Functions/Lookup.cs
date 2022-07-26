@@ -3,13 +3,13 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, ClosedXML.Excel.CalcEngine.Text, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using AnyValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Logical, ClosedXML.Excel.CalcEngine.Number1, string, ClosedXML.Excel.CalcEngine.Error1, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
     internal static class Lookup
     {
-        public static CalcEngineFunction Adapt(Func<CalcContext, Text, AnyValue?, AnyValue> f)
+        public static CalcEngineFunction Adapt(Func<CalcContext, string, AnyValue?, AnyValue> f)
         {
             return (ctx, args) =>
             {
@@ -97,7 +97,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 .Value;
         }
 
-        private static AnyValue Hyperlink(CalcContext ctx, Text linkLocation, AnyValue? friendlyName)
+        private static AnyValue Hyperlink(CalcContext ctx, string linkLocation, AnyValue? friendlyName)
         {
             var link = friendlyName is not null && ctx.Converter.ToText(friendlyName.Value).TryPickT0(out var name, out var _)
                 ? new XLHyperlink(linkLocation, name)
