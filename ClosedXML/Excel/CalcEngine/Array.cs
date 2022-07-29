@@ -1,12 +1,13 @@
-﻿using OneOf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
-    // 2D array of values, always at least 1x1
+    /// <summary>
+    /// A base class for an 2D array. Every array is at least 1x1.
+    /// </summary>
     internal abstract class Array : IEnumerable<ScalarValue>
     {
         /// <summary>
@@ -26,14 +27,22 @@ namespace ClosedXML.Excel.CalcEngine
         /// <param name="x">Uses 0-based notation.</param>
         public abstract ScalarValue this[int y, int x] { get; }
 
-        // get iterator over all elements of an array, from top to bottom, from left to right.
-        public abstract IEnumerator<ScalarValue> GetEnumerator();
+        /// <summary>
+        /// An iterator over all elements of an array, from top to bottom, from left to right.
+        /// </summary>
+        public virtual IEnumerator<ScalarValue> GetEnumerator() => FlattenArray().GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public static Array Plus(Array lhs, Array rhs)
+        protected IEnumerable<ScalarValue> FlattenArray()
         {
-            throw new NotImplementedException();
+            for (int row = 0; row < Width; row++)
+            {
+                for (int col = 0; col < Height; col++)
+                {
+                    yield return this[row, col];
+                }
+            }
         }
     }
 
@@ -84,18 +93,22 @@ namespace ClosedXML.Excel.CalcEngine
         {
             get
             {
-                if (x < 0 || x >= _width) throw new IndexOutOfRangeException();
-                if (y < 0 || y >= _height) throw new IndexOutOfRangeException();
+                if (x < 0 || x >= _width || y < 0 || y >= _height)
+                    throw new IndexOutOfRangeException();
+
                 return _value;
             }
         }
 
         public override IEnumerator<ScalarValue> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return Enumerable.Range(0, _width * _height).Select(_ => _value).GetEnumerator();
         }
     }
 
+    /// <summary>
+    /// An array of scalar values.
+    /// </summary>
     internal class ConstArray : Array
     {
         internal readonly ScalarValue[,] _data;
@@ -112,8 +125,6 @@ namespace ClosedXML.Excel.CalcEngine
         public override int Width => _data.GetLength(1);
 
         public override int Height => _data.GetLength(0);
-
-        public override IEnumerator<ScalarValue> GetEnumerator() => _data.Cast<ScalarValue>().GetEnumerator();
     }
 
     /// <summary>
@@ -133,12 +144,10 @@ namespace ClosedXML.Excel.CalcEngine
         public override int Width => _data.GetLength(1);
 
         public override int Height => _data.GetLength(0);
-
-        public override IEnumerator<ScalarValue> GetEnumerator() => throw new NotImplementedException();
     }
 
     /// <summary>
-    /// An array that is enlarged
+    /// An array that is resized to a different size. Items outside of original array have a value of <c>#N/A</c>.
     /// </summary>
     internal class ResizedArray : Array
     {
@@ -163,17 +172,16 @@ namespace ClosedXML.Excel.CalcEngine
             get
             {
                 if (x >= _original.Width || y >= _original.Height)
-                    return ScalarValue.FromT3(Error.NoValueAvailable);
+                    return Error.NoValueAvailable;
 
                 return _original[y, x];
             }
         }
-        public override IEnumerator<ScalarValue> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
     }
 
+    /// <summary>
+    /// An array that retrieves its value directly from the worksheet without allocating extra memory.
+    /// </summary>
     internal class ReferenceArray : Array
     {
         private readonly XLRangeAddress _area;
@@ -187,24 +195,12 @@ namespace ClosedXML.Excel.CalcEngine
             _context = context;
             _offsetColumn = _area.FirstAddress.ColumnNumber;
             _offsetRow = area.FirstAddress.RowNumber;
-
         }
 
-        public override ScalarValue this[int y, int x]
-        {
-            get
-            {
-                return _context.GetCellValue(_area.Worksheet, y + _offsetRow, x + _offsetColumn);
-            }
-        }
+        public override ScalarValue this[int y, int x] => _context.GetCellValue(_area.Worksheet, y + _offsetRow, x + _offsetColumn);
 
         public override int Width => _area.ColumnSpan;
 
         public override int Height => _area.RowSpan;
-
-        public override IEnumerator<ScalarValue> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

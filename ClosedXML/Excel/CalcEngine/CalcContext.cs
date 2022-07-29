@@ -30,7 +30,7 @@ namespace ClosedXML.Excel.CalcEngine
             Converter = new ValueConverter(culture);
         }
 
-        // TODO: Remove once legacy functions are migrated
+        // LEGACY: Remove once legacy functions are migrated
         internal CalcEngine CalcEngine { get; }
 
         /// <summary>

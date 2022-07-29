@@ -93,9 +93,11 @@ namespace ClosedXML.Excel.CalcEngine
             return value;
         }
 
-        public static AnyValue UnaryMinus(this AnyValue value, CalcContext context) => UnaryOperation(value, x => -x, context);
+        public static AnyValue UnaryMinus(this AnyValue value, CalcContext context)
+            => UnaryOperation(value, x => -x, context);
 
-        public static AnyValue UnaryPercent(this AnyValue value, CalcContext context) => UnaryOperation(value, x => x / 100.0, context);
+        public static AnyValue UnaryPercent(this AnyValue value, CalcContext context)
+            => UnaryOperation(value, x => x / 100.0, context);
 
         private static AnyValue UnaryOperation(AnyValue value, Func<double, double> operatorFn, CalcContext context)
         {
