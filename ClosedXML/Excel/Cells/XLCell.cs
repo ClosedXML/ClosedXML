@@ -305,6 +305,8 @@ namespace ClosedXML.Excel
                 this.Style.SetIncludeQuotePrefix();
             }
             else if (!string.Equals(value.Trim(), "NaN", StringComparison.OrdinalIgnoreCase) &&
+                     !string.Equals(value.Trim(), "Infinity", StringComparison.OrdinalIgnoreCase) &&
+                     !string.Equals(value.Trim(), "-Infinity", StringComparison.OrdinalIgnoreCase) &&
                      Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
                 _dataType = XLDataType.Number;
             else if (TimeSpan.TryParse(value, out TimeSpan ts))
