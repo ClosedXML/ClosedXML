@@ -255,7 +255,7 @@ namespace ClosedXML.Excel.CalcEngine
                         {
                             // This sucks. Who ever though it was a good idea to not have reasonable typing system?
                             var references = range.Areas.Select(area =>
-                                new CellRangeReference(area.Worksheet.Range(area)));
+                                new CellRangeReference((area.Worksheet ?? context.Worksheet).Range(area)));
                             return new XObjectExpression(references);
                         }
 

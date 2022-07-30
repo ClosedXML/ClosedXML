@@ -178,14 +178,43 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("Other!A1:(Other!B2,C3)")] // C3 is taken from current worksheet since multiple areas on rhs
         [TestCase("(Other!A1,A5):Other!B2")] // A5 is taken from current worksheet since multiple areas on lhs
         [TestCase("(Current!A1):Other!B2")]
-        // [TestCase("Other!A5:(B5)")] This causes #VALUE! in Excel, but it shouldn't. It's likely there is a "Fast path for simple sheet areas" and "Full path" for complicated operands and they behave inconsistenly
+        // [TestCase("Other!A5:(B5)")] This causes #VALUE! in Excel, but it shouldn't. It's likely there is a "Fast parser for simple sheet areas" and "Full path" for complicated operands and they behave inconsistenly
         public void Range_UnificationAcrossSheetsResultsInValueError(string referenceFormula)
         {
             using var wb = new XLWorkbook();
             var formulaSheet = wb.AddWorksheet("Current");
             var otherSheet = wb.AddWorksheet("Other");
 
+            // SUM is still legacy, so exception galore!
             Assert.Throws<CellValueException>(() => formulaSheet.Evaluate($"SUM({referenceFormula})"));
+        }
+
+        #endregion
+
+        #region Reference union
+
+        [TestCase("A1,A2", 2)]
+        [TestCase("A1:A3,B1", 4)]
+        [TestCase("A1,B1:B3", 4)]
+        [TestCase("Other!A1,Current!A1", 11)]
+        [TestCase("A1,Other!A1", 11)]
+        [TestCase("B2:D3,B2:D3", 12)] // Full overlap
+        [TestCase("A1:B3,B1:C3", 12)] // Partial overlap
+        [TestCase("Current!A1:B3,Other!B1:C3", 66)]
+        [TestCase("A1,Other!A1,Current!A1", 10 + 1 + 1)]
+        [TestCase("A1:B2,Other!A1:B2,B2:C3,Other!E5:Other!F6", 4 + 40 + 4 + 40)]
+        public void Union_CanJoinAnyTwoRanges(string formula, int expectedSum)
+        {
+            using var wb = new XLWorkbook();
+            var currentSheet = wb.AddWorksheet("Current");
+            currentSheet.Cells("A1:F10").Value = 1;
+            var otherSheet = wb.AddWorksheet("Other");
+            otherSheet.Cells("A1:F10").Value = 10;
+
+            // Not extra braces, so the comma is interpreted as union and not an extra argument
+            var value = currentSheet.Evaluate($"SUM(({formula}))");
+
+            Assert.AreEqual(expectedSum, value);
         }
 
         #endregion
