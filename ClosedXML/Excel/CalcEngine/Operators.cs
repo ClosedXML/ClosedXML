@@ -43,21 +43,7 @@ namespace ClosedXML.Excel.CalcEngine
         /// <summary>
         /// Create a new reference that has one area that contains both operands.
         /// </summary>
-        public static AnyValue ReferenceRange(this AnyValue left, AnyValue right)
-        {
-            return ReferenceOp(left, right, Reference.RangeOp);
-        }
-
-        /// <summary>
-        /// Create a new reference by combining areas of both arguments. Areas of the new reference can overlap = some overlapping
-        /// cells might be counted multiple times (<c>SUM((A1;A1)) = 2</c> if <c>A1</c> is <c>1</c>).
-        /// </summary>
-        public static AnyValue ReferenceUnion(this AnyValue left, AnyValue right)
-        {
-            return ReferenceOp(left, right, (leftRef, rightRef) => Reference.UnionOp(leftRef, rightRef));
-        }
-
-        private static AnyValue ReferenceOp(AnyValue left, AnyValue right, Func<Reference, Reference, OneOf<Reference, Error>> operatorFn)
+        public static AnyValue ReferenceRange(this AnyValue left, AnyValue right, CalcContext ctx)
         {
             var leftConversionResult = ConvertToReference(left);
             if (!leftConversionResult.TryPickT0(out var leftReference, out var leftError))
@@ -67,9 +53,26 @@ namespace ClosedXML.Excel.CalcEngine
             if (!rightConversionResult.TryPickT0(out var rightReference, out var rightError))
                 return rightError;
 
-            return operatorFn(leftReference, rightReference).Match<AnyValue>(
+            return Reference.RangeOp(leftReference, rightReference, ctx.Worksheet).Match<AnyValue>(
                 reference => reference,
                 error => error);
+        }
+
+        /// <summary>
+        /// Create a new reference by combining areas of both arguments. Areas of the new reference can overlap = some overlapping
+        /// cells might be counted multiple times (<c>SUM((A1;A1)) = 2</c> if <c>A1</c> is <c>1</c>).
+        /// </summary>
+        public static AnyValue ReferenceUnion(this AnyValue left, AnyValue right)
+        {
+            var leftConversionResult = ConvertToReference(left);
+            if (!leftConversionResult.TryPickT0(out var leftReference, out var leftError))
+                return leftError;
+
+            var rightConversionResult = ConvertToReference(right);
+            if (!rightConversionResult.TryPickT0(out var rightReference, out var rightError))
+                return rightError;
+
+            return Reference.UnionOp(leftReference, rightReference);
         }
 
         private static OneOf<Reference, Error> ConvertToReference(AnyValue left)

@@ -97,7 +97,7 @@ namespace ClosedXML.Excel.CalcEngine
 
             return node.Operation switch
             {
-                BinaryOp.Range => leftArg.ReferenceRange(rightArg),
+                BinaryOp.Range => leftArg.ReferenceRange(rightArg, context),
                 BinaryOp.Union => leftArg.ReferenceUnion(rightArg),
                 BinaryOp.Intersection => throw new NotImplementedException(),
                 BinaryOp.Concat => leftArg.Concat(rightArg, context),

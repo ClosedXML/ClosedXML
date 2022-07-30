@@ -10,14 +10,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
     [TestFixture]
     public class LookupTests
     {
-        private XLWorkbook workbook;
+        private IXLWorksheet ws;
 
         #region Setup and teardown
 
         [OneTimeTearDown]
         public void Dispose()
         {
-            workbook.Dispose();
+            ws.Workbook.Dispose();
         }
 
         [SetUp]
@@ -25,10 +25,10 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             // Make sure tests run on a deterministic culture
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-            workbook = SetupWorkbook();
+            ws = SetupWorkbook();
         }
 
-        private XLWorkbook SetupWorkbook()
+        private IXLWorksheet SetupWorkbook()
         {
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet("Data");
@@ -83,7 +83,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 .CellRight()
                 .InsertTable(data);
 
-            return wb;
+            return ws;
         }
 
         #endregion Setup and teardown
@@ -92,7 +92,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Hlookup()
         {
             // Range lookup false
-            var value = workbook.Evaluate(@"=HLOOKUP(""Total"",Data!$B$2:$I$71,4,FALSE)");
+            var value = ws.Evaluate(@"=HLOOKUP(""Total"",Data!$B$2:$I$71,4,FALSE)");
             Assert.AreEqual(179.64, value);
         }
 
@@ -121,7 +121,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Index()
         {
-            var ws = workbook.Worksheets.First();
             Assert.AreEqual("Kivell", ws.Evaluate(@"=INDEX(B2:J12, 3, 4)"));
 
             // We don't support optional parameter fully here yet.
@@ -141,7 +140,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Index_Exceptions()
         {
-            var ws = workbook.Worksheets.First();
             Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I10, 20, 1)"));
             Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I10, 1, 10)"));
             Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"INDEX(B2:I2, 10)"));
@@ -155,8 +153,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Match()
         {
-            var ws = workbook.Worksheets.First();
-
             Object value;
             value = ws.Evaluate(@"=MATCH(""Rep"", B2:I2, 0)");
             Assert.AreEqual(4, value);
@@ -204,7 +200,6 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Match_Exceptions()
         {
-            var ws = workbook.Worksheets.First();
             Assert.Throws<CellValueException>(() => ws.Evaluate(@"=MATCH(""Rep"", B2:I5)"));
             Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(""Dummy"", B2:I2, 0)"));
             Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=MATCH(4.5,B3:B45,-1)"));
@@ -214,44 +209,44 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void Vlookup()
         {
             // Range lookup false
-            var value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,3,FALSE)");
+            var value = ws.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,3,FALSE)");
             Assert.AreEqual("Central", value);
 
-            value = workbook.Evaluate("=VLOOKUP(DATE(2015,5,22),Data!C:I,7,FALSE)");
+            value = ws.Evaluate("=VLOOKUP(DATE(2015,5,22),Data!C:I,7,FALSE)");
             Assert.AreEqual(63.68, value);
 
-            value = workbook.Evaluate(@"=VLOOKUP(""Central"",Data!D:E,2,FALSE)");
+            value = ws.Evaluate(@"=VLOOKUP(""Central"",Data!D:E,2,FALSE)");
             Assert.AreEqual("Kivell", value);
 
             // Case insensitive lookup
-            value = workbook.Evaluate(@"=VLOOKUP(""central"",Data!D:E,2,FALSE)");
+            value = ws.Evaluate(@"=VLOOKUP(""central"",Data!D:E,2,FALSE)");
             Assert.AreEqual("Kivell", value);
 
             // Range lookup true
-            value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,TRUE)");
+            value = ws.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,TRUE)");
             Assert.AreEqual(179.64, value);
 
-            value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8)");
+            value = ws.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8)");
             Assert.AreEqual(179.64, value);
 
-            value = workbook.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,)");
+            value = ws.Evaluate("=VLOOKUP(3,Data!$B$2:$I$71,8,)");
             Assert.AreEqual(179.64, value);
 
-            value = workbook.Evaluate("=VLOOKUP(14.5,Data!$B$2:$I$71,8,TRUE)");
+            value = ws.Evaluate("=VLOOKUP(14.5,Data!$B$2:$I$71,8,TRUE)");
             Assert.AreEqual(174.65, value);
 
-            value = workbook.Evaluate("=VLOOKUP(50,Data!$B$2:$I$71,8,TRUE)");
+            value = ws.Evaluate("=VLOOKUP(50,Data!$B$2:$I$71,8,TRUE)");
             Assert.AreEqual(139.72, value);
         }
 
         [Test]
         public void Vlookup_Exceptions()
         {
-            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=VLOOKUP("""",Data!$B$2:$I$71,3,FALSE)"));
-            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=VLOOKUP(50,Data!$B$2:$I$71,3,FALSE)"));
-            Assert.Throws<NoValueAvailableException>(() => workbook.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
+            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=VLOOKUP("""",Data!$B$2:$I$71,3,FALSE)"));
+            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=VLOOKUP(50,Data!$B$2:$I$71,3,FALSE)"));
+            Assert.Throws<NoValueAvailableException>(() => ws.Evaluate(@"=VLOOKUP(-1,Data!$B$2:$I$71,2,TRUE)"));
 
-            Assert.Throws<CellReferenceException>(() => workbook.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
+            Assert.Throws<CellReferenceException>(() => ws.Evaluate(@"=VLOOKUP(20,Data!$B$2:$I$71,9,FALSE)"));
         }
     }
 }

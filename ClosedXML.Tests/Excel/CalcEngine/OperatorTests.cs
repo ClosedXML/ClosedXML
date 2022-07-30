@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
+using ClosedXML.Excel.CalcEngine.Exceptions;
 using NUnit.Framework;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
@@ -145,6 +146,8 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [TestCase("Sheet1!A1:Sheet1!B2", 4)]
         [TestCase("A1:Sheet1!B2", 4)]
         [TestCase("Sheet1!B2:C5:Sheet1!D3", 12)]
+        [TestCase("(Sheet1!A1,A5):B5", 10)]
+        [TestCase("B5:(Sheet1!A1,A5)", 10)]
         public void Range_UnifiesReferencesIntoSingleAreas(string referenceFormula, int expectedCellCount)
         {
             using var wb = new XLWorkbook();
@@ -153,6 +156,36 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             var referenceCells = ws.Evaluate($"SUM({referenceFormula})");
             Assert.AreEqual(expectedCellCount, referenceCells);
+        }
+
+        [TestCase("Sheet1!A1:C5")]
+        [TestCase("Sheet1!A1:B3:C5")]
+        [TestCase("Sheet1!A1:B3:C4:Sheet1!B5:C5")]
+        public void Range_LeftSideDeterminesSheetIfRightOmitted(string formula)
+        {
+            using var wb = new XLWorkbook();
+            var firstSheet = wb.AddWorksheet("Sheet1");
+            firstSheet.Cells("A1:C5").Value = 1;
+            var secondSheet = wb.AddWorksheet("Sheet2");
+            secondSheet.Cell("A1").FormulaA1 = $"=SUM({formula})";
+
+            Assert.AreEqual(15, secondSheet.Cell("A1").Value);
+        }
+
+        [TestCase("Current!A1:Other!B2")]
+        [TestCase("A1:Other!B2")]
+        [TestCase("A1:(Other!B2,C3)")]
+        [TestCase("Other!A1:(Other!B2,C3)")] // C3 is taken from current worksheet since multiple areas on rhs
+        [TestCase("(Other!A1,A5):Other!B2")] // A5 is taken from current worksheet since multiple areas on lhs
+        [TestCase("(Current!A1):Other!B2")]
+        // [TestCase("Other!A5:(B5)")] This causes #VALUE! in Excel, but it shouldn't. It's likely there is a "Fast path for simple sheet areas" and "Full path" for complicated operands and they behave inconsistenly
+        public void Range_UnificationAcrossSheetsResultsInValueError(string referenceFormula)
+        {
+            using var wb = new XLWorkbook();
+            var formulaSheet = wb.AddWorksheet("Current");
+            var otherSheet = wb.AddWorksheet("Other");
+
+            Assert.Throws<CellValueException>(() => formulaSheet.Evaluate($"SUM({referenceFormula})"));
         }
 
         #endregion

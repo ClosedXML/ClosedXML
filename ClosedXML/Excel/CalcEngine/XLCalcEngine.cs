@@ -204,7 +204,7 @@ namespace ClosedXML.Excel.CalcEngine
                 // Only result store the place where reference would change to error. Some ranges have many operations A1:B5:C3
                 switch (node.Operation)
                 {
-                    case BinaryOp.Range: return Reference.RangeOp(leftReference, rightReference);
+                    case BinaryOp.Range: return Reference.RangeOp(leftReference, rightReference, ctx.Worksheet);
                     case BinaryOp.Union: return Reference.UnionOp(leftReference, rightReference);
                     case BinaryOp.Intersection: throw new NotImplementedException();
                 };

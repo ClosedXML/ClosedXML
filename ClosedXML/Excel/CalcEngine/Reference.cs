@@ -57,13 +57,28 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
-        public static OneOf<Reference, Error> RangeOp(Reference lhs, Reference rhs)
+        public static OneOf<Reference, Error> RangeOp(Reference lhs, Reference rhs, XLWorksheet contextWorksheet)
         {
-            var sheets = lhs.Areas.Select(a => a.Worksheet).Concat(rhs.Areas.Select(a => a.Worksheet))
-                .Where(ws => ws is not null).Distinct().ToList();
-            if (sheets.Count > 1)
-            {
+            var lhsWorksheets = lhs.Areas.Count == 1
+                ? lhs.Areas.Select(a => a.Worksheet).Where(ws => ws is not null).ToList()
+                : lhs.Areas.Select(a => a.Worksheet ?? contextWorksheet).Where(ws => ws is not null).Distinct().ToList();
+            if (lhsWorksheets.Count() > 1)
                 return Error.CellValue;
+
+            var lhsWorksheet = lhsWorksheets.SingleOrDefault();
+
+            var rhsWorksheets = rhs.Areas.Count == 1
+                ? rhs.Areas.Select(a => a.Worksheet).Where(ws => ws is not null).ToList()
+                : rhs.Areas.Select(a => a.Worksheet ?? contextWorksheet).Where(ws => ws is not null).Distinct().ToList();
+            if (rhsWorksheets.Count() > 1)
+                return Error.CellValue;
+
+            var rhsWorksheet = rhsWorksheets.SingleOrDefault();
+
+            if (rhsWorksheet is not null)
+            {
+                if ((lhsWorksheet ?? contextWorksheet) != rhsWorksheet)
+                    return Error.CellValue;
             }
 
             var minCol = XLHelper.MaxColumnNumber;
@@ -79,8 +94,7 @@ namespace ClosedXML.Excel.CalcEngine
                 maxCol = Math.Max(maxCol, area.LastAddress.ColumnNumber);
             }
 
-            var sheet = sheets.SingleOrDefault();
-            // Shoudl I use fixed or not? Kind of confusing. For basic A1:B5 or A1:
+            var sheet = lhsWorksheet ?? rhsWorksheet;
             return new Reference(new XLRangeAddress(
                 new XLAddress(sheet, minRow, minCol, false, false),
                 new XLAddress(sheet, maxRow, maxCol, false, false)));
