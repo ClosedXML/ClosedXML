@@ -83,6 +83,66 @@ namespace ClosedXML.Tests
             Assert.AreEqual(CultureInfo.CurrentCulture.NumberFormat.PositiveInfinitySymbol, cell.Value);
         }
 
+        /// <summary>
+        /// Checks that a cell with the value of the string <c>Infinity</c>
+        /// is assigned the data type <see cref="XLDataType.Text"/>.
+        /// </summary>
+        [Test]
+        public void CellValueOfStringInfinityStoredAsTextDataType()
+        {
+            using var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add();
+            const string infinity = "Infinity";
+            var cell = sheet.Cell("A1");
+            cell.Value = infinity;
+            Assert.That(cell.DataType, Is.EqualTo(XLDataType.Text));
+        }
+
+        /// <summary>
+        /// Checks that a cell with the value of the string <c>Infinity</c>
+        /// has the correct value.
+        /// </summary>
+        [Test]
+        public void CellValueOfStringInfinityStoredCorrectly()
+        {
+            using var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add();
+            const string infinity = "Infinity";
+            var cell = sheet.Cell("A1");
+            cell.Value = infinity;
+            Assert.That(cell.Value, Is.EqualTo(infinity));
+        }
+
+        /// <summary>
+        /// Checks that a cell with the value of the string <c>-Infinity</c>
+        /// is assigned the data type <see cref="XLDataType.Text"/>.
+        /// </summary>
+        [Test]
+        public void CellValueOfStringNegativeInfinityStoredAsTextDataType()
+        {
+            using var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add();
+            const string negativeInfinity = "-Infinity";
+            var cell = sheet.Cell("A1");
+            cell.Value = negativeInfinity;
+            Assert.That(cell.DataType, Is.EqualTo(XLDataType.Text));
+        }
+
+        /// <summary>
+        /// Checks that a cell with the value of the string <c>-Infinity</c>
+        /// has the correct value.
+        /// </summary>
+        [Test]
+        public void CellValueOfStringNegativeInfinityStoredCorrectly()
+        {
+            using var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add();
+            const string negativeInfinity = "-Infinity";
+            var cell = sheet.Cell("A1");
+            cell.Value = negativeInfinity;
+            Assert.That(cell.Value, Is.EqualTo(negativeInfinity));
+        }
+
         [Test]
         public void Double_NaN_is_a_string()
         {
