@@ -60,5 +60,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         #endregion
+
+        #region Implicit intersection
+
+        [Test]
+        public void ImplicitIntersection_TakesReferenceFromHorizontalLine()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = -1;
+            ws.Cell("D3").FormulaA1 = "ABS(B1:B10)";
+
+            Assert.AreEqual(1, ws.Cell("D3").Value);
+        }
+
+        #endregion
     }
 }

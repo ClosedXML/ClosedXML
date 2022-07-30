@@ -18,9 +18,13 @@ namespace ClosedXML.Excel.CalcEngine
         };
 
         private readonly CultureInfo _culture;
+        private readonly CalcContext _ctx;
 
-        public ValueConverter(CultureInfo culture) => _culture = culture;
-
+        public ValueConverter(CultureInfo culture, CalcContext ctx)
+        {
+            _culture = culture;
+            _ctx = ctx;
+        }
 
         internal static double ToNumber(bool logical)
         {
@@ -39,13 +43,27 @@ namespace ClosedXML.Excel.CalcEngine
             if (!value.HasValue)
                 return Error.CellValue;
 
-            return value.Value.Match(
-                    logical => ToNumber(logical),
-                    number => number,
-                    text => ToNumber(text),
-                    error => error,
+            if (value.Value.TryPickScalar(out var scalar, out var collection))
+                return ToNumber(scalar);
+
+            return collection.Match(
                     array => throw new NotImplementedException("Not sure what to do with it."),
-                    reference => throw new NotImplementedException("Not sure what to do with it."));
+                    reference =>
+                    {
+                        if (reference.TryGetSingleCellValue(out var scalarValue, _ctx))
+                            return ToNumber(scalarValue);
+
+                        throw new NotImplementedException("Not sure what to do with it.");
+                    });
+
+            static OneOf<double, Error> ToNumber(ScalarValue value)
+            {
+                return value.Match(
+                        logical => ToNumber(logical),
+                        number => number,
+                        text => ToNumber(text),
+                        error => error);
+            }
         }
 
         internal string ToExcelString(double rightNumber)

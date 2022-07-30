@@ -17,7 +17,7 @@ namespace ClosedXML.Excel.CalcEngine
         {
             _worksheet = worksheet;
             Culture = culture;
-            Converter = new ValueConverter(culture);
+            Converter = new ValueConverter(culture, this);
         }
 
         public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
@@ -27,7 +27,7 @@ namespace ClosedXML.Excel.CalcEngine
             _worksheet = worksheet;
             _formulaAddress = formulaAddress;
             Culture = culture;
-            Converter = new ValueConverter(culture);
+            Converter = new ValueConverter(culture, this);
         }
 
         // LEGACY: Remove once legacy functions are migrated
