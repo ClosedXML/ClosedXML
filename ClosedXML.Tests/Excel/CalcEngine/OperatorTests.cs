@@ -252,6 +252,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         [TestCase("1%", 0.01)]
         [TestCase("100%", 1.0)]
+        [TestCase("25.7%", 0.257)]
         [TestCase("125.45%", 1.2545)]
         [TestCase("\"1\"%", 0.01)]
         [TestCase("TRUE%", 0.01)]
@@ -265,6 +266,26 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion
 
+        #region Exponentiation
+
+        [TestCase("1^1", 1.0)]
+        [TestCase("0^0", Error.NumberInvalid)]
+        [TestCase("10^0", 1.0)]
+        [TestCase("4^0.5", 2.0)]
+        [TestCase("2^0.5", 1.4142135623730951)]
+        [TestCase("2^-2", 0.25)]
+        [TestCase("\"5\"^\"3\"", 125)]
+        [TestCase("5^TRUE", 5)]
+        [TestCase("5^FALSE", 1)]
+        [TestCase("#VALUE!^1", Error.CellValue)]
+        [TestCase("1^#REF!", Error.CellReference)]
+        [TestCase("#DIV/0!^#REF!", Error.DivisionByZero)]
+        public void Exponentiation_CanWorkWithScalars(string formula, object expectedValue)
+        {
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue).Within(XLHelper.Epsilon));
+        }
+
+        #endregion
 
     }
 }

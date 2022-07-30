@@ -196,7 +196,7 @@ namespace ClosedXML.Excel.CalcEngine
             return BinaryOperation(left, right, Exp, context);
 
             ScalarValue Exp(ScalarValue leftItem, ScalarValue rightItem)
-                => BinaryArithmeticOp(leftItem, rightItem, (lhs, rhs) => lhs == 0 && rhs == 0 ? Error.CellValue : Math.Pow(lhs, rhs), context.Converter);
+                => BinaryArithmeticOp(leftItem, rightItem, (lhs, rhs) => lhs == 0 && rhs == 0 ? Error.NumberInvalid : Math.Pow(lhs, rhs), context.Converter);
         }
 
         #endregion
