@@ -9,12 +9,7 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly Dictionary<string, FormulaFunction> _func = new(StringComparer.InvariantCultureIgnoreCase);
         private readonly Dictionary<string, FunctionDefinition> _legacyFunc = new(StringComparer.InvariantCultureIgnoreCase);
 
-        public void RegisterFunction(string functionName, CalcEngineFunction fn)
-        {
-            _func.Add(functionName, new FormulaFunction(fn, 0, int.MaxValue));
-        }
-
-        public void RegisterFunction(string functionName, CalcEngineFunction fn, int parmMin, int parmMax)
+        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn)
         {
             _func.Add(functionName, new FormulaFunction(fn, parmMin, parmMax));
         }

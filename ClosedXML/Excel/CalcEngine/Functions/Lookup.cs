@@ -20,7 +20,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
             //ce.RegisterFunction("FORMULATEXT", , Formulatext); // Returns the formula at the given reference as text
             //ce.RegisterFunction("GETPIVOTDATA", , Getpivotdata); // Returns data stored in a PivotTable report
             ce.RegisterFunction("HLOOKUP", 3, 4, Hlookup); // Looks in the top row of an array and returns the value of the indicated cell
-            ce.RegisterFunction("HYPERLINK", Adapt(Hyperlink), 1, 2); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
+            ce.RegisterFunction("HYPERLINK", 1, 2, Adapt(Hyperlink)); // Creates a shortcut or jump that opens a document stored on a network server, an intranet, or the Internet
             ce.RegisterFunction("INDEX", 2, 4, Index); // Uses an index to choose a value from a reference or array
             //ce.RegisterFunction("INDIRECT", , Indirect); // Returns a reference indicated by a text value
             //ce.RegisterFunction("LOOKUP", , Lookup); // Looks up values in a vector or array
