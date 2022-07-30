@@ -1,9 +1,6 @@
 ﻿using ClosedXML.Excel;
 using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
@@ -72,6 +69,67 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cell("D3").FormulaA1 = "ABS(B1:B10)";
 
             Assert.AreEqual(1, ws.Cell("D3").Value);
+        }
+
+        [Test]
+        public void ImplicitIntersection_TakesReferenceFromVerticalLine()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = -1;
+            ws.Cell("B5").FormulaA1 = "ABS(A3:Z3)";
+
+            Assert.AreEqual(1, ws.Cell("B5").Value);
+        }
+
+        [Test]
+        public void ImplicitIntersection_TakesReferenceEvenFromIntersectionEvenFromDifferentSheet()
+        {
+            using var wb = new XLWorkbook();
+            var sheet1 = wb.AddWorksheet("Sheet1");
+            sheet1.Cell("B3").Value = -1;
+
+            var sheet2 = wb.AddWorksheet("Sheet2");
+            sheet2.Cell("D3").FormulaA1 = "ABS(Sheet1!B1:B10)";
+
+            Assert.AreEqual(1, sheet2.Cell("D3").Value);
+        }
+
+        [Test]
+        public void ImplicitIntersection_WithoutIntersectionResultsInValueError()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = -1;
+            ws.Cell("D5").FormulaA1 = "ABS(B1:B4)";
+
+            Assert.AreEqual(Error.CellValue, ws.Cell("D5").Value);
+        }
+
+        [Test] 
+        public void ImplicitIntersection_CanWorkOnlyWithOneArea()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = -1;
+            ws.Cell("D3").FormulaA1 = "ABS((B1:B2,B3:B5))"; // A continous range made of two areas
+
+            Assert.AreEqual(Error.CellValue, ws.Cell("D3").Value);
+        }
+
+        [Test]
+        public void ImplicitIntersection_IntersectionMustHaveSpanOfOneCell()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = -1;
+            var horizontalIntersectionCell = ws.Cell("D3");
+            horizontalIntersectionCell.FormulaA1 = "ABS(A1:B5)";
+            Assert.AreEqual(Error.CellValue, horizontalIntersectionCell.Value);
+
+            var verticalIntersectionCell = ws.Cell("B5");
+            verticalIntersectionCell.FormulaA1 = "ABS(A3:C4)";
+            Assert.AreEqual(Error.CellValue, verticalIntersectionCell.Value);
         }
 
         #endregion
