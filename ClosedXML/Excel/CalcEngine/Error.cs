@@ -3,7 +3,7 @@
     /// <summary>
     /// A formula error.
     /// </summary>
-    internal enum Error
+    public enum Error
     {
         /// <summary>
         /// #REF!
