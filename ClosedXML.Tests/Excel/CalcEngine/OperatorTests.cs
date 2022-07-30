@@ -218,5 +218,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         #endregion
+
+        #region Unary plus
+
+        [TestCase("+1", 1)]
+        [TestCase("+\"1\"", "1")]
+        [TestCase("+TRUE", true)]
+        [TestCase("+FALSE", false)]
+        [TestCase("+#DIV/0!", Error.DivisionByZero)]
+        public void UnaryPlus_IsNonOpThatKeepsValueAndType(string formula, object expectedValue)
+        {
+            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+        }
+
+        #endregion
     }
 }
