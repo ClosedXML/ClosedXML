@@ -8,7 +8,7 @@ namespace ClosedXML.Excel.CalcEngine.Exceptions
     /// needs an address of the formula cell. Various methods in ClosedXML are missing different information, e.g.
     /// <see cref="IXLWorksheet.Evaluate(string, string)"/> has worksheet, but no cell address (=ranges will work, other things won't).
     /// </summary>
-    public class MissingContextException : Exception
+    internal class MissingContextException : InvalidOperationException
     {
     }
 }
