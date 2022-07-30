@@ -439,16 +439,16 @@ namespace ClosedXML.Excel.CalcEngine
             return left.Match(
                 leftLogical => right.Match<OneOf<int, Error>>(
                         rightLogical => leftLogical.CompareTo(rightLogical),
-                        rightNumber => -1,
-                        rightText => -1,
-                        rightError => rightError),
-                leftNumber => right.Match<OneOf<int, Error>>(
-                        rightLogical => 1,
-                        rightNumber => leftNumber.CompareTo(rightNumber),
+                        rightNumber => 1,
                         rightText => 1,
                         rightError => rightError),
+                leftNumber => right.Match<OneOf<int, Error>>(
+                        rightLogical => -1,
+                        rightNumber => leftNumber.CompareTo(rightNumber),
+                        rightText => -1,
+                        rightError => rightError),
                 leftText => right.Match<OneOf<int, Error>>(
-                        rightLogical => 1,
+                        rightLogical => -1,
                         rightNumber => 1,
                         rightText => string.Compare(leftText, rightText, culture, CompareOptions.IgnoreCase),
                         rightError => rightError),
