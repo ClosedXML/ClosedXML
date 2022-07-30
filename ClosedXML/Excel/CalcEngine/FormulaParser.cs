@@ -87,6 +87,9 @@ namespace ClosedXML.Excel.CalcEngine
         public Formula ConvertToAst(ParseTree cst)
         {
             var astContext = new AstContext(_parser.Language);
+            if (cst.HasErrors())
+                throw new ExpressionParseException($"Unable to parse formula '{cst.SourceText}':\n" + string.Join("\n", cst.ParserMessages.Select(c => $"Location {c.Location.Line}:{c.Location.Column} - {c.Message}")));
+
             var astBuilder = new AstBuilder(astContext);
             astBuilder.BuildAst(cst);
             var root = (ValueNode)cst.Root.AstNode ?? throw new InvalidOperationException("Formula doesn't have AST root.");

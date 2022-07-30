@@ -106,7 +106,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(Error.CellValue, ws.Cell("D5").Value);
         }
 
-        [Test] 
+        [Test]
         public void ImplicitIntersection_CanWorkOnlyWithOneArea()
         {
             using var wb = new XLWorkbook();
@@ -130,6 +130,29 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var verticalIntersectionCell = ws.Cell("B5");
             verticalIntersectionCell.FormulaA1 = "ABS(A3:C4)";
             Assert.AreEqual(Error.CellValue, verticalIntersectionCell.Value);
+        }
+
+        #endregion
+
+        #region Reference range operator
+
+        [TestCase("A1:B2", 4)]
+        [TestCase("A1:B5:C3", 3 * 5)]
+        [TestCase("A1:C3:B5", 3 * 5)]
+        [TestCase("A1:C3:B2", 3 * 3)]
+        [TestCase("Sheet1!A1:B2", 4)]
+        [TestCase("Sheet1!A1:Sheet1!B2", 4)]
+        [TestCase("Sheet1!A1:Sheet1!B2", 4)]
+        [TestCase("A1:Sheet1!B2", 4)]
+        [TestCase("Sheet1!B2:C5:Sheet1!D3", 12)]
+        public void Range_UnifiesReferencesIntoSingleAreas(string referenceFormula, int expectedCellCount)
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet("Sheet1");
+            ws.Cells("A1:Z100").Value = 1;
+
+            var referenceCells = ws.Evaluate($"SUM({referenceFormula})");
+            Assert.AreEqual(expectedCellCount, referenceCells);
         }
 
         #endregion
