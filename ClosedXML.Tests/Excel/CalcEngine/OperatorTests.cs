@@ -287,5 +287,82 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
         #endregion
 
+        #region Multiplication
+
+        [TestCase("1+1", 2.0)]
+        [TestCase("0*0", 0.0)]
+        [TestCase("10*0", 0.0)]
+        [TestCase("2*1.5", 3.0)]
+        [TestCase("2.5*2.5", 6.25)]
+        [TestCase("2*-2", -4)]
+        [TestCase("\"5\" * \"3\"", 15)]
+        [TestCase("5*TRUE", 5)]
+        [TestCase("5*FALSE", 0)]
+        [TestCase("#VALUE!*1", Error.CellValue)]
+        [TestCase("1*#REF!", Error.CellReference)]
+        [TestCase("#DIV/0!*#REF!", Error.DivisionByZero)]
+        public void Multiplication_CanWorkWithScalars(string formula, object expectedValue)
+        {
+            Assert.That(XLWorkbook.EvaluateExpr(formula), Is.EqualTo(expectedValue).Within(XLHelper.Epsilon));
+        }
+
+        #endregion
+
+        #region Division
+
+        [TestCase("1/1", 1.0)]
+        [TestCase("5/2", 2.5)]
+        [TestCase("14.5/2.5", 5.8)]
+        [TestCase("10/0", Error.DivisionByZero)]
+        [TestCase("0/0", Error.DivisionByZero)]
+        [TestCase("2.5/-0.5", -5)]
+        [TestCase("\"10\" / \"4\"", 2.5)]
+        [TestCase("5/TRUE", 5)]
+        [TestCase("5/FALSE", Error.DivisionByZero)]
+        [TestCase("#VALUE!/1", Error.CellValue)]
+        [TestCase("1/#REF!", Error.CellReference)]
+        [TestCase("#DIV/0!/#REF!", Error.DivisionByZero)]
+        public void Division_CanWorkWithScalars(string formula, object expectedValue)
+        {
+            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+        }
+
+        #endregion
+
+        #region Addition
+
+        [TestCase("1+1", 2.0)]
+        [TestCase("5+2.5", 7.5)]
+        [TestCase("10+0", 10.0)]
+        [TestCase("\"10\" + \"4\"", 14.0)]
+        [TestCase("5+TRUE", 6.0)]
+        [TestCase("5+FALSE", 5.0)]
+        [TestCase("#VALUE! + 1", Error.CellValue)]
+        [TestCase("1 + #REF!", Error.CellReference)]
+        [TestCase("#DIV/0! + #REF!", Error.DivisionByZero)]
+        public void Addition_CanWorkWithScalars(string formula, object expectedValue)
+        {
+            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+        }
+
+        #endregion
+
+        #region Subtraction
+
+        [TestCase("1-1", 0.0)]
+        [TestCase("2.5-7.8", -5.3)]
+        [TestCase("10-0", 10.0)]
+        [TestCase("\"10\" - \"4\"", 6.0)]
+        [TestCase("5-TRUE", 4.0)]
+        [TestCase("5-FALSE", 5.0)]
+        [TestCase("#VALUE! - 1", Error.CellValue)]
+        [TestCase("1 - #REF!", Error.CellReference)]
+        [TestCase("#DIV/0! - #REF!", Error.DivisionByZero)]
+        public void Subtraction_CanWorkWithScalars(string formula, object expectedValue)
+        {
+            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+        }
+
+        #endregion
     }
 }
