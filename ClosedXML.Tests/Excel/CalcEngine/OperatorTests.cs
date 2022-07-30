@@ -246,8 +246,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
         }
 
+        #endregion
+
+        #region Unary minus
+
+        [TestCase("1%", 0.01)]
+        [TestCase("100%", 1.0)]
+        [TestCase("125.45%", 1.2545)]
+        [TestCase("\"1\"%", 0.01)]
+        [TestCase("TRUE%", 0.01)]
+        [TestCase("FALSE%", 0)]
+        [TestCase("#NAME?%", Error.NameNotRecognized)]
+        [TestCase("(1/0)%", Error.DivisionByZero)]
+        public void UnaryPercent_ConvertsArgumentBeforePercenting(string formula, object expectedValue)
+        {
+            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+        }
 
         #endregion
+
 
     }
 }
