@@ -26,11 +26,6 @@ namespace ClosedXML.Excel.CalcEngine
             _ctx = ctx;
         }
 
-        internal static double ToNumber(bool logical)
-        {
-            return logical ? 1 : 0;
-        }
-
         internal OneOf<double, Error> ToNumber(string text)
         {
             return double.TryParse(text, NumberStyles.Float, _culture, out var number)

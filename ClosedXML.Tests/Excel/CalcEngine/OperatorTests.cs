@@ -232,5 +232,22 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         }
 
         #endregion
+
+        #region Unary minus
+
+        [TestCase("-1", -1)]
+        [TestCase("-125.45", -125.45)]
+        [TestCase("-\"1\"", -1)]
+        [TestCase("-TRUE", -1)]
+        [TestCase("-FALSE", 0)]
+        [TestCase("-#DIV/0!", Error.DivisionByZero)]
+        public void UnaryMinus_ConvertsArgumentBeforeNegating(string formula, object expectedValue)
+        {
+            Assert.AreEqual(expectedValue, XLWorkbook.EvaluateExpr(formula));
+        }
+
+
+        #endregion
+
     }
 }

@@ -148,12 +148,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static ScalarValue UnaryArithmeticOp(ScalarValue value, Func<double, double> op, ValueConverter converter)
         {
-            var conversionResult = value.Match(
-                logical => converter.ToNumber(logical),
-                number => number,
-                text => converter.ToNumber(text),
-                error => error);
-
+            var conversionResult = CovertToNumber(value, converter);
             if (!conversionResult.TryPickT0(out var number, out var error))
                 return error;
 
@@ -410,7 +405,7 @@ namespace ClosedXML.Excel.CalcEngine
         private static OneOf<double, Error> CovertToNumber(this ScalarValue value, ValueConverter converter)
         {
             return value.Match(
-                logical => converter.ToNumber(logical),
+                logical => logical ? 1 : 0,
                 number => number,
                 text => converter.ToNumber(text),
                 error => error);
