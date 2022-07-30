@@ -13,13 +13,6 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly XLWorksheet _worksheet;
         private readonly IXLAddress _formulaAddress;
 
-        public CalcContext(CultureInfo culture, XLWorksheet worksheet)
-        {
-            _worksheet = worksheet;
-            Culture = culture;
-            Converter = new ValueConverter(culture, this);
-        }
-
         public CalcContext(CalcEngine calcEngine, CultureInfo culture, XLWorkbook workbook, XLWorksheet worksheet, IXLAddress formulaAddress)
         {
             CalcEngine = calcEngine;
