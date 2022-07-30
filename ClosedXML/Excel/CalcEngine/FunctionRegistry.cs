@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -9,9 +8,9 @@ namespace ClosedXML.Excel.CalcEngine
         private readonly Dictionary<string, FormulaFunction> _func = new(StringComparer.InvariantCultureIgnoreCase);
         private readonly Dictionary<string, FunctionDefinition> _legacyFunc = new(StringComparer.InvariantCultureIgnoreCase);
 
-        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn)
+        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn, FunctionFlags flags)
         {
-            _func.Add(functionName, new FormulaFunction(fn, parmMin, parmMax));
+            _func.Add(functionName, new FormulaFunction(fn, parmMin, parmMax, flags));
         }
 
         public bool TryGetFunc(string name, out FormulaFunction func)

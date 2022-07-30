@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
-    /// Flags that contain some useful information about a formula.
+    /// Flags that contain some useful information about a formula (mostly derived from flags in functions).
     /// </summary>
     [Flags]
     internal enum FormulaFlags : byte
     {
         /// <summary>
-        /// Basic formula that takes an input and returns output that is determined solely by the input.
+        /// Basic formula that takes an input and returns output that is determined solely by the input. No sideffects.
         /// </summary>
         None = 0,
 

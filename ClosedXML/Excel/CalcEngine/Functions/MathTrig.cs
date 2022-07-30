@@ -19,7 +19,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public static void Register(FunctionRegistry ce)
         {
-            ce.RegisterFunction("ABS", 1, 1, Adapt(Abs));
+            ce.RegisterFunction("ABS", 1, 1, Adapt(Abs), FunctionFlags.Scalar);
             ce.RegisterFunction("ACOS", 1, Acos);
             ce.RegisterFunction("ACOSH", 1, Acosh);
             ce.RegisterFunction("ACOT", 1, Acot);
@@ -81,7 +81,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SINH", 1, Sinh);
             ce.RegisterFunction("SQRT", 1, Sqrt);
             ce.RegisterFunction("SQRTPI", 1, SqrtPi);
-            ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal));
+            ce.RegisterFunction("SUBTOTAL", 2, 255, Adapt(Subtotal), FunctionFlags.Range);
             ce.RegisterFunction("SUM", 1, int.MaxValue, Sum);
             ce.RegisterFunction("SUMIF", 2, 3, SumIf);
             ce.RegisterFunction("SUMIFS", 3, 255, SumIfs);
