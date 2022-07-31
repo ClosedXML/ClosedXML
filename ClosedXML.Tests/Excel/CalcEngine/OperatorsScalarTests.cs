@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
     [TestFixture]
-    public class OperatorTests
+    public class OperatorsScalarTests
     {
         #region Concat text operator
 

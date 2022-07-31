@@ -327,11 +327,39 @@ namespace ClosedXML.Excel.CalcEngine
                         },
                         rightReference =>
                         {
+                            if (rightReference.TryGetSingleCellValue(out var rightCellValue, context))
+                                return ApplyOnArray(leftArray, new ScalarArray(rightCellValue, leftArray.Width, leftArray.Height), func);
+
+                            if (rightReference.Areas.Count == 1)
+                            {
+                                var area = rightReference.Areas[0];
+                                var width = Math.Max(leftArray.Width, area.ColumnSpan);
+                                var height = Math.Max(leftArray.Height, area.RowSpan);
+                                return ApplyOnArray(
+                                    new ResizedArray(leftArray, width, height),
+                                    new ResizedArray(new ReferenceArray(area, context), width, height),
+                                    func);
+                            }
+
                             throw new NotImplementedException();
                         }),
                 leftReference => rightCollection.Match(
                         rightArray =>
                         {
+                            if (leftReference.TryGetSingleCellValue(out var leftCellValue, context))
+                                return ApplyOnArray(new ScalarArray(leftCellValue, rightArray.Width, rightArray.Height), rightArray, func);
+
+                            if (leftReference.Areas.Count == 1)
+                            {
+                                var area = leftReference.Areas[0];
+                                var width = Math.Max(area.ColumnSpan, rightArray.Width);
+                                var height = Math.Max(area.RowSpan, rightArray.Height);
+                                return ApplyOnArray(
+                                    new ResizedArray(new ReferenceArray(area, context), width, height),
+                                    new ResizedArray(rightArray, width, height),
+                                    func);
+                            }
+
                             throw new NotImplementedException();
                         },
                         rightReference =>

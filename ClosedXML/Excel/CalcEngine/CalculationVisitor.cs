@@ -241,7 +241,7 @@ namespace ClosedXML.Excel.CalcEngine
                         var castedArray = new double[array.Height, array.Width];
                         for (var row = 0; row < array.Height; ++row)
                             for (var col = 0; col < array.Width; ++col)
-                                castedArray[row, col] = array[row, col].Match<double>(
+                                castedArray[row, col] = array[row, col].Match(
                                     logical => logical ? 1.0 : 0.0,
                                     number => number,
                                     text => throw new NotImplementedException(),
