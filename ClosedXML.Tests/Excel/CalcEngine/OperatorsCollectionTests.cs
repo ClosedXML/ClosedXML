@@ -259,5 +259,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(2, result.Height);
             result.ForEach(value => Assert.AreEqual((ScalarValue)1, value));
         }
+
+        [Test]
+        public void UnaryOperatorOnMultiAreaReference_TurnsIntoSingleErrorValue()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet() as XLWorksheet;
+            AnyValue reference = new Reference(new List<XLRangeAddress> { new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("B1")), new XLRangeAddress(XLAddress.Create("C1"), XLAddress.Create("D1")) });
+
+            var result = reference.UnaryPercent(new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null));
+            Assert.AreEqual((AnyValue)Error.CellValue, result);
+        }
     }
 }
