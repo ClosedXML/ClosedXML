@@ -222,5 +222,28 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual(2, singleAreaOperandMultiArea.Height);
             singleAreaOperandMultiArea.ForEach(x => Assert.AreEqual(x, (ScalarValue)Error.CellValue));
         }
+
+        [Test]
+        public void UnaryOperatorOnArray()
+        {
+            AnyValue allTypes = new ConstArray(new ScalarValue[2, 2] { { true, -5 }, { "2", "one" } });
+            var result = allTypes.UnaryMinus(new CalcContext(null, CultureInfo.InvariantCulture, null, null, null)).AsT4;
+            Assert.AreEqual(2, result.Width);
+            Assert.AreEqual(2, result.Height);
+            Assert.AreEqual((ScalarValue)(-1), result[0, 0]);
+            Assert.AreEqual((ScalarValue)5, result[0, 1]);
+            Assert.AreEqual((ScalarValue)(-2), result[1, 0]);
+            Assert.AreEqual((ScalarValue)Error.CellValue, result[1, 1]);
+        }
+
+        [Test]
+        public void UnaryOperatorOnSingleCellReference()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = 4;
+            var result = ws.Evaluate("-B3:B3");
+            Assert.AreEqual(-4, result);
+        }
     }
 }

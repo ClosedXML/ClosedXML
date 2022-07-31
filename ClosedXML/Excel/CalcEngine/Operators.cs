@@ -132,7 +132,7 @@ namespace ClosedXML.Excel.CalcEngine
             var height = area.RowSpan;
             var startColumn = area.FirstAddress.ColumnNumber;
             var startRow = area.FirstAddress.RowNumber;
-            var data = new ScalarValue[width, height];
+            var data = new ScalarValue[height, width];
             for (int y = 0; y < height; ++y)
             {
                 for (int x = 0; x < width; ++x)
@@ -364,8 +364,14 @@ namespace ClosedXML.Excel.CalcEngine
                         },
                         rightReference =>
                         {
-                            if (leftReference.Areas.Count > 1 || rightReference.Areas.Count > 1)
+                            if (leftReference.Areas.Count > 1 && rightReference.Areas.Count > 1)
                                 return Error.CellValue;
+
+                            if (leftReference.Areas.Count > 1)
+                                return new ScalarArray(Error.CellValue, rightReference.Areas[0].ColumnSpan, rightReference.Areas[0].RowSpan);
+
+                            if (rightReference.Areas.Count > 1)
+                                return new ScalarArray(Error.CellValue, leftReference.Areas[0].ColumnSpan, leftReference.Areas[0].RowSpan);
 
                             var leftArea = leftReference.Areas.Single();
                             var rightArea = rightReference.Areas.Single();
