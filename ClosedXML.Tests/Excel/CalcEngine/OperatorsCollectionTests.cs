@@ -245,5 +245,19 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var result = ws.Evaluate("-B3:B3");
             Assert.AreEqual(-4, result);
         }
+
+        [Test]
+        public void UnaryOperatorOnAreaReference()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet() as XLWorksheet;
+            ws.Cells("B3:D4").Value = 100;
+            AnyValue areaReference = new Reference(new XLRangeAddress(XLAddress.Create("B3"), XLAddress.Create("D4")));
+
+            var result = areaReference.UnaryPercent(new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            Assert.AreEqual(3, result.Width);
+            Assert.AreEqual(2, result.Height);
+            result.ForEach(value => Assert.AreEqual((ScalarValue)1, value));
+        }
     }
 }

@@ -62,7 +62,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal ScalarValue? GetCellValueOrBlank(XLWorksheet worksheet, int rowNumber, int columnNumber)
         {
-            worksheet ??= _worksheet;
+            worksheet ??= Worksheet;
             var cell = worksheet.GetCell(rowNumber, columnNumber);
             if (cell is null)
                 return null;

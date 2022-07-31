@@ -36,9 +36,9 @@ namespace ClosedXML.Excel.CalcEngine
 
         protected IEnumerable<ScalarValue> FlattenArray()
         {
-            for (int row = 0; row < Width; row++)
+            for (int row = 0; row < Height; row++)
             {
-                for (int col = 0; col < Height; col++)
+                for (int col = 0; col < Width; col++)
                 {
                     yield return this[row, col];
                 }
@@ -120,7 +120,7 @@ namespace ClosedXML.Excel.CalcEngine
             _data = data;
         }
 
-        public override ScalarValue this[int x, int y] => _data[x, y];
+        public override ScalarValue this[int y, int x] => _data[y, x];
 
         public override int Width => _data.GetLength(1);
 
