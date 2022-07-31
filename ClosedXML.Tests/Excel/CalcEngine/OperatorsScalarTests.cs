@@ -62,6 +62,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         #region Implicit intersection
 
         [Test]
+        public void ImplicitIntersection_DoesNotAffectSingleCellReference()
+        {
+            using var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet();
+            ws.Cell("B3").Value = -1;
+            ws.Cell("D5").FormulaA1 = "ABS(B3:B3)";
+
+            Assert.AreEqual(1, ws.Cell("D5").Value);
+        }
+
+        [Test]
         public void ImplicitIntersection_TakesReferenceFromHorizontalLine()
         {
             using var wb = new XLWorkbook();
@@ -183,10 +194,23 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         {
             using var wb = new XLWorkbook();
             var formulaSheet = wb.AddWorksheet("Current");
-            var otherSheet = wb.AddWorksheet("Other");
+            wb.AddWorksheet("Other");
 
             // SUM is still legacy, so exception galore!
             Assert.Throws<CellValueException>(() => formulaSheet.Evaluate($"SUM({referenceFormula})"));
+        }
+
+        [TestCase("A1:IF(TRUE,1,)")]
+        [TestCase("IF(TRUE,1,):A1")]
+        [TestCase("IF(TRUE,\"text\"):A1")]
+        [TestCase("IF(TRUE,FALSE):A1")]
+        public void Range_OnlyReferencesCanBeRange(string referenceFormula)
+        {
+            using var wb = new XLWorkbook();
+            var sheet = wb.AddWorksheet();
+
+            // SUM is still legacy, so exception galore!
+            Assert.Throws<CellValueException>(() => sheet.Evaluate($"SUM({referenceFormula})"));
         }
 
         #endregion

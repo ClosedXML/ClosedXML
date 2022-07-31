@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Globalization;
@@ -160,14 +159,16 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 2]);
         }
 
-        [Test]
-        public void SingleCellReferecenOperandSingleCellReference_UsesScalarsInCells()
+        [TestCase("A1:A1*B2:B2")]
+        [TestCase("A1:A1*2")]
+        [TestCase("10*B2")]
+        public void SingleCellReferenceOperandSingleCellReference_UsesScalarsInCells(string formula)
         {
             var wb = new XLWorkbook();
             var ws = wb.AddWorksheet() as XLWorksheet;
             ws.Cell("A1").Value = 10;
             ws.Cell("B2").Value = 2;
-            var result = ws.Evaluate("A1:A1*B2:B2");
+            var result = ws.Evaluate(formula);
             Assert.AreEqual(20, result);
         }
 
