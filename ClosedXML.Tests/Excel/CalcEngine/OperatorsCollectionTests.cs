@@ -1,7 +1,7 @@
 ﻿using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Globalization;
@@ -158,6 +158,69 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 0]);
             Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 1]);
             Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 2]);
+        }
+
+        [Test]
+        public void SingleCellReferecenOperandSingleCellReference_UsesScalarsInCells()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet() as XLWorksheet;
+            ws.Cell("A1").Value = 10;
+            ws.Cell("B2").Value = 2;
+            var result = ws.Evaluate("A1:A1*B2:B2");
+            Assert.AreEqual(20, result);
+        }
+
+        [Test]
+        public void AreaReferenceOperandAreaReference_BehavesAsArrays()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet() as XLWorksheet;
+            ws.Cell("A1").Value = 1;
+            ws.Cell("B1").Value = 2;
+            ws.Cell("C5").Value = 10;
+            ws.Cell("E5").Value = 30;
+
+            AnyValue leftReference = new Reference(new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("B1")));
+            AnyValue rightReference = new Reference(new XLRangeAddress(XLAddress.Create("C5"), XLAddress.Create("E5")));
+            var result = leftReference.BinaryPlus(rightReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            Assert.AreEqual(3, result.Width);
+            Assert.AreEqual(1, result.Height);
+            Assert.AreEqual((ScalarValue)11, result[0, 0]);
+            Assert.AreEqual((ScalarValue)2, result[0, 1]);
+            Assert.AreEqual((ScalarValue)Error.NoValueAvailable, result[0, 2]);
+        }
+
+        [Test]
+        public void BothAreasMultiAreaReferences_TurnsIntoSingleErrorValue()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet() as XLWorksheet;
+            AnyValue multiAreaReference = new Reference(new List<XLRangeAddress> { new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("B1")), new XLRangeAddress(XLAddress.Create("C1"), XLAddress.Create("D1")) });
+            var result = multiAreaReference.BinaryPlus(multiAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null));
+
+            Assert.AreEqual((AnyValue)Error.CellValue, result);
+        }
+
+        [Test]
+        public void AreaReferenceOperandMultiAreaReferences_TurnsIntoArrayOfErrors()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet() as XLWorksheet;
+            AnyValue multiAreaReference = new Reference(new List<XLRangeAddress> { new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("B1")), new XLRangeAddress(XLAddress.Create("C1"), XLAddress.Create("D1")) });
+            AnyValue singleAreaReference = new Reference(new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("E2")));
+
+            var multiAreaOperandSingleArea = multiAreaReference.BinaryPlus(singleAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+
+            Assert.AreEqual(5, multiAreaOperandSingleArea.Width);
+            Assert.AreEqual(2, multiAreaOperandSingleArea.Height);
+            multiAreaOperandSingleArea.ForEach(x => Assert.AreEqual(x, (ScalarValue)Error.CellValue));
+
+            var singleAreaOperandMultiArea = singleAreaReference.BinaryPlus(multiAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+
+            Assert.AreEqual(5, singleAreaOperandMultiArea.Width);
+            Assert.AreEqual(2, singleAreaOperandMultiArea.Height);
+            singleAreaOperandMultiArea.ForEach(x => Assert.AreEqual(x, (ScalarValue)Error.CellValue));
         }
     }
 }
