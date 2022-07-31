@@ -62,6 +62,11 @@ namespace ClosedXML.Excel
 
         private static readonly Regex utfPattern = new Regex(@"(?<!_x005F)_x(?!005F)([0-9A-F]{4})_", RegexOptions.Compiled);
 
+        /// <summary>
+        /// Collection of values that should not be parsed to a number.
+        /// </summary>
+        private static readonly string[] DisallowedDoubleValues = new string[] { "NaN", "Infinity", "-Infinity" };
+
         #region Fields
 
         private string _cellValue = String.Empty;
@@ -284,6 +289,27 @@ namespace ClosedXML.Excel
             }
         }
 
+        /// <summary>
+        /// Tests if <paramref name="value"/> should be allowed to be parsed as a <see cref="double"/>.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="double.Parse(string)"/> (and similar methods) parse values like
+        /// <c>Infinity</c> as valid numbers; however, Excel doesn't have a representation
+        /// for some of them. Converting a value to a number should only be done if it is
+        /// a candidate for a number.
+        /// </remarks>
+        /// <param name="value">The value to test.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="value"/> is a candidate
+        /// for a number, <see langword="false"/> otherwise.
+        /// </returns>
+        private static bool ValueIsCandidateForNumber(string value)
+        {
+            // Trim the value once so it isn't done every time.
+            var valueTrimmed = value.Trim();
+            return DisallowedDoubleValues.All(disallowedValue => !string.Equals(valueTrimmed, disallowedValue, StringComparison.OrdinalIgnoreCase));
+        }
+
         private string DeduceCellValueByParsing(string value, XLStyleValue style)
         {
             if (String.IsNullOrEmpty(value))
@@ -304,9 +330,7 @@ namespace ClosedXML.Excel
 
                 this.Style.SetIncludeQuotePrefix();
             }
-            else if (!string.Equals(value.Trim(), "NaN", StringComparison.OrdinalIgnoreCase) &&
-                     !string.Equals(value.Trim(), "Infinity", StringComparison.OrdinalIgnoreCase) &&
-                     !string.Equals(value.Trim(), "-Infinity", StringComparison.OrdinalIgnoreCase) &&
+            else if (ValueIsCandidateForNumber(value) &&
                      Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
                 _dataType = XLDataType.Number;
             else if (TimeSpan.TryParse(value, out TimeSpan ts))
