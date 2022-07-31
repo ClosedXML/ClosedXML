@@ -133,5 +133,31 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual((ScalarValue)5, areaMultArray[0, 1]);
             Assert.AreEqual((ScalarValue)Error.NoValueAvailable, areaMultArray[0, 2]);
         }
+
+        [Test]
+        public void ArrayOperandReferenceWithMultipleAreas_ReferenceBehavesAsArrayFullOfValueErrors()
+        {
+            var wb = new XLWorkbook();
+            var ws = wb.AddWorksheet() as XLWorksheet;
+            ws.Cell("A1").Value = "5";
+            ws.Cell("B1").Value = 1;
+            ws.Cell("C1").Value = 2;
+            AnyValue array = new ConstArray(new ScalarValue[1, 3] { { Error.DivisionByZero, 10, 5 } });
+            AnyValue multiAreaReference = new Reference(new List<XLRangeAddress>() { new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("A1")), new XLRangeAddress(XLAddress.Create("B1"), XLAddress.Create("C1")) });
+
+            var arrayMultReference = array.BinaryMult(multiAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            Assert.AreEqual(3, arrayMultReference.Width);
+            Assert.AreEqual(1, arrayMultReference.Height);
+            Assert.AreEqual((ScalarValue)Error.DivisionByZero, arrayMultReference[0, 0]);
+            Assert.AreEqual((ScalarValue)Error.CellValue, arrayMultReference[0, 1]);
+            Assert.AreEqual((ScalarValue)Error.CellValue, arrayMultReference[0, 2]);
+
+            var referenceMultArray = multiAreaReference.BinaryMult(array, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            Assert.AreEqual(3, referenceMultArray.Width);
+            Assert.AreEqual(1, referenceMultArray.Height);
+            Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 0]);
+            Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 1]);
+            Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 2]);
+        }
     }
 }

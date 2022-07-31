@@ -65,7 +65,7 @@ namespace ClosedXML.Excel.CalcEngine
             worksheet ??= _worksheet;
             var cell = worksheet.GetCell(rowNumber, columnNumber);
             if (cell is null)
-                return ScalarValue.FromT1(0);
+                return null;
 
             if (cell.IsEvaluating)
                 throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");

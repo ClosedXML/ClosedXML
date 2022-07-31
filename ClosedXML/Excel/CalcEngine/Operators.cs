@@ -341,7 +341,7 @@ namespace ClosedXML.Excel.CalcEngine
                                     func);
                             }
 
-                            throw new NotImplementedException();
+                            return ApplyOnArray(leftArray, new ScalarArray(Error.CellValue, leftArray.Width, leftArray.Height), func);
                         }),
                 leftReference => rightCollection.Match(
                         rightArray =>
@@ -360,7 +360,7 @@ namespace ClosedXML.Excel.CalcEngine
                                     func);
                             }
 
-                            throw new NotImplementedException();
+                            return ApplyOnArray(new ScalarArray(Error.CellValue, rightArray.Width, rightArray.Height), rightArray, func);
                         },
                         rightReference =>
                         {
