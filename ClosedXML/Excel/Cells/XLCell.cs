@@ -299,15 +299,25 @@ namespace ClosedXML.Excel
         /// a candidate for a number.
         /// </remarks>
         /// <param name="value">The value to test.</param>
-        /// <returns>
-        /// <see langword="true"/> if <paramref name="value"/> is a candidate
-        /// for a number, <see langword="false"/> otherwise.
-        /// </returns>
+        /// <returns><see langword="true"/> if <paramref name="value"/> is a candidate for a number, <see langword="false"/> otherwise.</returns>
         private static bool ValueIsCandidateForNumber(string value)
         {
             // Trim the value once so it isn't done every time.
             var valueTrimmed = value.Trim();
-            return DisallowedDoubleValues.All(disallowedValue => !string.Equals(valueTrimmed, disallowedValue, StringComparison.OrdinalIgnoreCase));
+            return !DisallowedDoubleValues.Any(disallowedValue => string.Equals(valueTrimmed, disallowedValue, StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Tries to parse <paramref name="value"/> as a <see cref="double"/>.
+        /// </summary>
+        /// <param name="value">The value to parse.</param>
+        /// <param name="parsed">The parsed value or <see langword="default"/> for <see cref="double"/> if <paramref name="value"/> cannot be parsed.</param>
+        /// <returns><see langword="true"/> if <paramref name="value"/> was successfully parsed, <see langword="false"/> otherwise.</returns>
+        private static bool TryParseDouble(string value, out double parsed)
+        {
+            parsed = default;
+            return ValueIsCandidateForNumber(value)
+                   && double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out parsed);
         }
 
         private string DeduceCellValueByParsing(string value, XLStyleValue style)
@@ -330,8 +340,7 @@ namespace ClosedXML.Excel
 
                 this.Style.SetIncludeQuotePrefix();
             }
-            else if (ValueIsCandidateForNumber(value) &&
-                     Double.TryParse(value, XLHelper.NumberStyle, XLHelper.ParseCulture, out Double _))
+            else if (TryParseDouble(value, out _))
                 _dataType = XLDataType.Number;
             else if (TimeSpan.TryParse(value, out TimeSpan ts))
             {
