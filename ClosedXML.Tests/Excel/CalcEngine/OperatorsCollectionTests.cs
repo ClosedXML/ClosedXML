@@ -8,7 +8,7 @@ using ClosedXML.Excel;
 
 namespace ClosedXML.Tests.Excel.CalcEngine
 {
-    // TODO: Once array formulas are supported, remove internal API and replace with workbook formulas.
+    // TODO: Once array/dynamic array formulas are supported, remove internal API and replace with workbook formulas.
     /// <summary>
     /// Tests for arrays and reference operators.
     /// </summary>
@@ -31,7 +31,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var typesPerRow = new ConstArray(new ScalarValue[5, 5]
             {
                 { true, true, true, true, true },
-                { 2,2,2,2,2 },
+                { 2, 2, 2, 2, 2 },
                 { "2", "2", "2", "2", "2"},
                 { "two", "two", "two", "two", "two"},
                 { Error.NumberInvalid, Error.NumberInvalid, Error.NumberInvalid, Error.NumberInvalid, Error.NumberInvalid }
@@ -85,7 +85,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void ArrayOperandSingleCellReference_ReferencedCellValueUpscaledToArray()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet() as XLWorksheet;
             ws.Cell("A1").Value = "5";
             AnyValue array = new ConstArray(new ScalarValue[1, 2] { { 10, 5 } });

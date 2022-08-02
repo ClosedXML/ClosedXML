@@ -99,23 +99,20 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         [Test]
         public void Hyperlink()
         {
-            var wb = new XLWorkbook();
+            using var wb = new XLWorkbook();
             var ws = wb.AddWorksheet();
 
-            var retVal = ws.Evaluate("HYPERLINK(\"http://github.com/ClosedXML/ClosedXML\")", "B3");
-
-            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", retVal);
             var cell = ws.Cell("B3");
+            cell.FormulaA1 = "HYPERLINK(\"http://github.com/ClosedXML/ClosedXML\")";
+            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", cell.Value);
             Assert.True(cell.HasHyperlink);
-            var hyperlink = cell.GetHyperlink();
-            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", hyperlink.ExternalAddress.ToString());
+            Assert.AreEqual("http://github.com/ClosedXML/ClosedXML", cell.GetHyperlink().ExternalAddress.ToString());
 
-            retVal = ws.Evaluate("HYPERLINK(\"mailto:jsmith@github.com\", \"jsmith@github.com\")", "B4");
-            Assert.AreEqual("jsmith@github.com", retVal);
             cell = ws.Cell("B4");
+            cell.FormulaA1 = "HYPERLINK(\"mailto:jsmith@github.com\", \"jsmith@github.com\")";
+            Assert.AreEqual("jsmith@github.com", cell.Value);
             Assert.True(cell.HasHyperlink);
-            hyperlink = cell.GetHyperlink();
-            Assert.AreEqual("mailto:jsmith@github.com", hyperlink.ExternalAddress.ToString());
+            Assert.AreEqual("mailto:jsmith@github.com", cell.GetHyperlink().ExternalAddress.ToString());
         }
 
         [Test]

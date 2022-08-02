@@ -32,7 +32,7 @@ namespace ClosedXML.Excel.CalcEngine
                 UnaryOp.Add => arg.UnaryPlus(),
                 UnaryOp.Subtract => arg.UnaryMinus(context),
                 UnaryOp.Percentage => arg.UnaryPercent(context),
-                UnaryOp.SpillRange => throw new NotImplementedException(),
+                UnaryOp.SpillRange => throw new NotImplementedException("Evaluation of spill range operator is not implemented."),
                 UnaryOp.ImplicitIntersection => throw new NotImplementedException("Excel 2016 implicit intersection is different from @ intersection of E2019+"),
                 _ => throw new NotSupportedException($"Unknown operator {node.Operation}.")
             };
@@ -47,7 +47,7 @@ namespace ClosedXML.Excel.CalcEngine
             {
                 BinaryOp.Range => leftArg.ReferenceRange(rightArg, context),
                 BinaryOp.Union => leftArg.ReferenceUnion(rightArg),
-                BinaryOp.Intersection => throw new NotImplementedException(),
+                BinaryOp.Intersection => throw new NotImplementedException("Evaluation of range intersection operator is not implemented."),
                 BinaryOp.Concat => leftArg.Concat(rightArg, context),
                 BinaryOp.Add => leftArg.BinaryPlus(rightArg, context),
                 BinaryOp.Sub => leftArg.BinaryMinus(rightArg, context),

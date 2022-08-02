@@ -20,11 +20,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void FormulaProducesCorrectCstAndAst(string formula, string[] expectedCst, Type[] expectedAst)
         {
             var dummyFunctions = new FunctionRegistry();
-            dummyFunctions.RegisterFunction("SUM", 0, 255, x => null);
-            dummyFunctions.RegisterFunction("SIN", 1, 1, x => null);
-            dummyFunctions.RegisterFunction("RAND", 0, 0, x => null);
-            dummyFunctions.RegisterFunction("IF", 0, 3, x => null);
-            dummyFunctions.RegisterFunction("INDEX", 1, 3, x => null);
+            dummyFunctions.RegisterFunction("SUM", 0, 255, x => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("SIN", 1, 1, x => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("RAND", 0, 0, x => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("IF", 0, 3, x => throw new InvalidOperationException());
+            dummyFunctions.RegisterFunction("INDEX", 1, 3, x => throw new InvalidOperationException());
             var parser = new FormulaParser(dummyFunctions);
 
             var cst = parser.ParseCst(formula);

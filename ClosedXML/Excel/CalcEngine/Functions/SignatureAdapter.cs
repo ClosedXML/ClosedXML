@@ -73,9 +73,9 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                     if (!reference.TryGetSingleCellValue(out var scalar, ctx))
                         return scalar;
 
-                        // This should never happen:
-                        // * Param is a scalar and arg is a multi-cell range - implicit intersection turns it to single-cell reference/error
-                        // * Param is a range and arg is a multi-cell range and the Adapt calls this function that converts to range to scalar - doesn't make sense.
+                    // This should never happen:
+                    // * Param is a scalar and arg is a multi-cell range - implicit intersection turns it to single-cell reference/error
+                    // * Param is a range and arg is a multi-cell range and the Adapt calls this function that converts to range to scalar - doesn't make sense.
                     throw new InvalidOperationException("Trying to convert multi-cell reference to a scalar has unknown semantic.");
                 });
         }
