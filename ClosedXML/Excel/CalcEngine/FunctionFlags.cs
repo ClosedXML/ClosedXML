@@ -21,7 +21,7 @@ namespace ClosedXML.Excel.CalcEngine
         Range = 1,
 
         /// <summary>
-        /// Function has sideffects, e.g. it changes something.
+        /// Function has side effects, e.g. it changes something.
         /// </summary>
         /// <example>HYPERLINK</example>
         SideEffect = 2

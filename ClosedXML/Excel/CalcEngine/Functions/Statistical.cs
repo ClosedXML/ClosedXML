@@ -10,8 +10,8 @@ namespace ClosedXML.Excel.CalcEngine
         public static void Register(FunctionRegistry ce)
         {
             //ce.RegisterFunction("AVEDEV", AveDev, 1, int.MaxValue);
-            ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average); // Returns the average (arithmetic mean) of the arguments
-            ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA);
+            ce.RegisterFunction("AVERAGE", 1, int.MaxValue, Average, AllowRange.All); // Returns the average (arithmetic mean) of the arguments
+            ce.RegisterFunction("AVERAGEA", 1, int.MaxValue, AverageA, AllowRange.All);
             //BETADIST	Returns the beta cumulative distribution function
             //BETAINV	Returns the inverse of the cumulative distribution function for a specified beta distribution
             //BINOMDIST	Returns the individual term binomial distribution probability
@@ -20,14 +20,14 @@ namespace ClosedXML.Excel.CalcEngine
             //CHITEST	Returns the test for independence
             //CONFIDENCE	Returns the confidence interval for a population mean
             //CORREL	Returns the correlation coefficient between two data sets
-            ce.RegisterFunction("COUNT", 1, int.MaxValue, Count);
-            ce.RegisterFunction("COUNTA", 1, int.MaxValue, CountA);
-            ce.RegisterFunction("COUNTBLANK", 1, CountBlank);
-            ce.RegisterFunction("COUNTIF", 2, CountIf);
-            ce.RegisterFunction("COUNTIFS", 2, 144, CountIfs);
+            ce.RegisterFunction("COUNT", 1, int.MaxValue, Count, AllowRange.All);
+            ce.RegisterFunction("COUNTA", 1, int.MaxValue, CountA, AllowRange.All);
+            ce.RegisterFunction("COUNTBLANK", 1, CountBlank, AllowRange.All);
+            ce.RegisterFunction("COUNTIF", 2, CountIf, AllowRange.Only, 0);
+            ce.RegisterFunction("COUNTIFS", 2, 255, CountIfs, AllowRange.Only, Enumerable.Range(0, 128).Select(x => x * 2).ToArray());
             //COVAR	Returns covariance, the average of the products of paired deviations
             //CRITBINOM	Returns the smallest value for which the cumulative binomial distribution is less than or equal to a criterion value
-            ce.RegisterFunction("DEVSQ", 1, 255, DevSq); // Returns the sum of squares of deviations
+            ce.RegisterFunction("DEVSQ", 1, 255, DevSq, AllowRange.All); // Returns the sum of squares of deviations
             //EXPONDIST	Returns the exponential distribution
             //FDIST	Returns the F probability distribution
             //FINV	Returns the inverse of the F probability distribution
@@ -39,7 +39,7 @@ namespace ClosedXML.Excel.CalcEngine
             //GAMMADIST	Returns the gamma distribution
             //GAMMAINV	Returns the inverse of the gamma cumulative distribution
             //GAMMALN	Returns the natural logarithm of the gamma function, Γ(x)
-            ce.RegisterFunction("GEOMEAN", 1, 255, Geomean); // Returns the geometric mean
+            ce.RegisterFunction("GEOMEAN", 1, 255, Geomean, AllowRange.All); // Returns the geometric mean
             //GROWTH	Returns values along an exponential trend
             //HARMEAN	Returns the harmonic mean
             //HYPGEOMDIST	Returns the hypergeometric distribution
@@ -50,11 +50,11 @@ namespace ClosedXML.Excel.CalcEngine
             //LOGEST	Returns the parameters of an exponential trend
             //LOGINV	Returns the inverse of the lognormal distribution
             //LOGNORMDIST	Returns the cumulative lognormal distribution
-            ce.RegisterFunction("MAX", 1, int.MaxValue, Max);
-            ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA);
-            ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median);
-            ce.RegisterFunction("MIN", 1, int.MaxValue, Min);
-            ce.RegisterFunction("MINA", 1, int.MaxValue, MinA);
+            ce.RegisterFunction("MAX", 1, int.MaxValue, Max, AllowRange.All);
+            ce.RegisterFunction("MAXA", 1, int.MaxValue, MaxA, AllowRange.All);
+            ce.RegisterFunction("MEDIAN", 1, int.MaxValue, Median, AllowRange.All);
+            ce.RegisterFunction("MIN", 1, int.MaxValue, Min, AllowRange.All);
+            ce.RegisterFunction("MINA", 1, int.MaxValue, MinA, AllowRange.All);
             //MODE	Returns the most common value in a data set
             //NEGBINOMDIST	Returns the negative binomial distribution
             //NORMDIST	Returns the normal cumulative distribution
@@ -74,10 +74,10 @@ namespace ClosedXML.Excel.CalcEngine
             //SLOPE	Returns the slope of the linear regression line
             //SMALL	Returns the k-th smallest value in a data set
             //STANDARDIZE	Returns a normalized value
-            ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev);
-            ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA);
-            ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP);
-            ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA);
+            ce.RegisterFunction("STDEV", 1, int.MaxValue, StDev, AllowRange.All);
+            ce.RegisterFunction("STDEVA", 1, int.MaxValue, StDevA, AllowRange.All);
+            ce.RegisterFunction("STDEVP", 1, int.MaxValue, StDevP, AllowRange.All);
+            ce.RegisterFunction("STDEVPA", 1, int.MaxValue, StDevPA, AllowRange.All);
             ce.RegisterFunction("STDEV.S", 1, int.MaxValue, StDev);
             ce.RegisterFunction("STDEV.P", 1, int.MaxValue, StDevP);
             //STEYX	Returns the standard error of the predicted y-value for each x in the regression
@@ -86,10 +86,10 @@ namespace ClosedXML.Excel.CalcEngine
             //TREND	Returns values along a linear trend
             //TRIMMEAN	Returns the mean of the interior of a data set
             //TTEST	Returns the probability associated with a Student's t-test
-            ce.RegisterFunction("VAR", 1, int.MaxValue, Var);
-            ce.RegisterFunction("VARA", 1, int.MaxValue, VarA);
-            ce.RegisterFunction("VARP", 1, int.MaxValue, VarP);
-            ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA);
+            ce.RegisterFunction("VAR", 1, int.MaxValue, Var, AllowRange.All);
+            ce.RegisterFunction("VARA", 1, int.MaxValue, VarA, AllowRange.All);
+            ce.RegisterFunction("VARP", 1, int.MaxValue, VarP, AllowRange.All);
+            ce.RegisterFunction("VARPA", 1, int.MaxValue, VarPA, AllowRange.All);
             ce.RegisterFunction("VAR.S", 1, int.MaxValue, Var);
             ce.RegisterFunction("VAR.P", 1, int.MaxValue, VarP);
             //WEIBULL	Returns the Weibull distribution

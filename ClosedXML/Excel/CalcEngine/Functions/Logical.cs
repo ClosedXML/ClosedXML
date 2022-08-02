@@ -7,7 +7,7 @@ namespace ClosedXML.Excel.CalcEngine
     {
         public static void Register(FunctionRegistry ce)
         {
-            ce.RegisterFunction("AND", 1, int.MaxValue, And);
+            ce.RegisterFunction("AND", 1, int.MaxValue, And, AllowRange.All);
             ce.RegisterFunction("OR", 1, int.MaxValue, Or);
             ce.RegisterFunction("NOT", 1, Not);
             ce.RegisterFunction("IF", 2, 3, If);

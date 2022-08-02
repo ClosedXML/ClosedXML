@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
+using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -45,6 +46,38 @@ namespace ClosedXML.Excel.CalcEngine.Functions
 
                 return f(ctx, number, references);
             };
+        }
+
+        public static CalcEngineFunction Adapt(Func<CalcContext, ScalarValue?, AnyValue> f)
+        {
+            return (ctx, args) =>
+            {
+                var arg0 = args[0];
+                var convertedArg0 = arg0.HasValue
+                    ? ConvertToScalar(ctx, arg0.Value)
+                    : null;
+
+                return f(ctx, convertedArg0);
+            };
+        }
+
+        private static ScalarValue ConvertToScalar(CalcContext ctx, AnyValue val)
+        {
+            if (val.TryPickScalar(out var scalar, out var collection))
+                return scalar;
+
+            return collection.Match(
+                array => array[0, 0],
+                reference =>
+                {
+                    if (!reference.TryGetSingleCellValue(out var scalar, ctx))
+                        return scalar;
+
+                        // This should never happen:
+                        // * Param is a scalar and arg is a multi-cell range - implicit intersection turns it to single-cell reference/error
+                        // * Param is a range and arg is a multi-cell range and the Adapt calls this function that converts to range to scalar - doesn't make sense.
+                    throw new InvalidOperationException("Trying to convert multi-cell reference to a scalar has unknown semantic.");
+                });
         }
     }
 }

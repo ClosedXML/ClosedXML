@@ -3,52 +3,52 @@ using System.Collections.Generic;
 
 namespace ClosedXML.Excel.CalcEngine
 {
+    /// <summary>Which parameters of a function allow ranges. That is important for implicit intersection.</summary>
+    internal enum AllowRange
+    {
+        /// <summary>None of parameters allow ranges.</summary>
+        None,
+
+        /// <summary>All parameters allow ranges.</summary>
+        All,
+
+        /// <summary>All parameters except marked ones allow ranges.</summary>
+        Except,
+
+        /// <summary>Only marked parameters allow ranges.</summary>
+        Only,
+    }
+
     internal class FunctionRegistry
     {
-        private readonly Dictionary<string, FormulaFunction> _func = new(StringComparer.InvariantCultureIgnoreCase);
-        private readonly Dictionary<string, FunctionDefinition> _legacyFunc = new(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, FunctionDefinition> _func = new(StringComparer.InvariantCultureIgnoreCase);
 
-        public void RegisterFunction(string functionName, int parmMin, int parmMax, CalcEngineFunction fn, FunctionFlags flags)
+        public void RegisterFunction(string functionName, int minParams, int maxParams, CalcEngineFunction fn, FunctionFlags flags, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
         {
-            _func.Add(functionName, new FormulaFunction(fn, parmMin, parmMax, flags));
-        }
-
-        public bool TryGetFunc(string name, out FormulaFunction func)
-        {
-            return _func.TryGetValue(name, out func);
+            _func.Add(functionName, new FunctionDefinition(functionName, minParams, maxParams, fn, flags, allowRanges, markedParams));
         }
 
         public bool TryGetFunc(string name, out FunctionDefinition func)
         {
-            return _legacyFunc.TryGetValue(name, out func);
+            return _func.TryGetValue(name, out func);
         }
 
-
-        #region Legacy registration
-
-        public void RegisterFunction(string functionName, int parmCount, LegacyCalcEngineFunction fn)
+        public void RegisterFunction(string functionName, int paramCount, LegacyCalcEngineFunction fn, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
         {
-            RegisterFunction(functionName, parmCount, parmCount, fn);
+            RegisterFunction(functionName, paramCount, paramCount, fn, allowRanges, markedParams);
         }
 
-        public void RegisterFunction(string functionName, int parmMin, int parmMax, LegacyCalcEngineFunction fn)
+        public void RegisterFunction(string functionName, int minParams, int maxParams, LegacyCalcEngineFunction fn, AllowRange allowRanges = AllowRange.None, params int[] markedParams)
         {
-            _legacyFunc.Add(functionName, new FunctionDefinition(functionName, parmMin, parmMax, fn));
+            _func.Add(functionName, new FunctionDefinition(functionName, minParams, maxParams, fn, allowRanges, markedParams));
         }
 
         public bool TryGetFunc(string name, out int paramMin, out int paramMax)
-        {
-            if (_func.TryGetValue(name, out var funcDef))
+        {            
+            if (_func.TryGetValue(name, out var func))
             {
-                paramMin = funcDef.ParmMin;
-                paramMax = funcDef.ParmMax;
-                return true;
-            }
-
-            if (_legacyFunc.TryGetValue(name, out var func))
-            {
-                paramMin = func.ParmMin;
-                paramMax = func.ParmMax;
+                paramMin = func.MinParams;
+                paramMax = func.MaxParams;
                 return true;
             }
 
@@ -56,7 +56,5 @@ namespace ClosedXML.Excel.CalcEngine
             paramMax = -1;
             return false;
         }
-
-        #endregion
     }
 }

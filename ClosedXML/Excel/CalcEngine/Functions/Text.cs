@@ -19,8 +19,10 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("CHAR", 1, _Char); // Returns the character specified by the code number
             ce.RegisterFunction("CLEAN", 1, Clean); //	Removes all nonprintable characters from text
             ce.RegisterFunction("CODE", 1, Code); // Returns a numeric code for the first character in a text string
-            ce.RegisterFunction("CONCAT", 1, int.MaxValue, Concat); //	Joins several text items into one text item
-            ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concatenate); //	Joins several text items into one text item
+            ce.RegisterFunction("CONCAT", 1, int.MaxValue, Concat, AllowRange.All); //	Joins several text items into one text item
+
+            // LEGACY: Remove after switch to new engine. CONCATENATE function doesn't actually accept ranges, but it's legacy implementation has a check and there is a test.
+            ce.RegisterFunction("CONCATENATE", 1, int.MaxValue, Concatenate, AllowRange.All); //	Joins several text items into one text item
             ce.RegisterFunction("DOLLAR", 1, 2, Dollar); // Converts a number to text, using the $ (dollar) currency format
             ce.RegisterFunction("EXACT", 2, Exact); // Checks to see if two text values are identical
             ce.RegisterFunction("FIND", 2, 3, Find); //Finds one text value within another (case-sensitive)
@@ -40,7 +42,7 @@ namespace ClosedXML.Excel.CalcEngine
             ce.RegisterFunction("SUBSTITUTE", 3, 4, Substitute); // Substitutes new text for old text in a text string
             ce.RegisterFunction("T", 1, T); // Converts its arguments to text
             ce.RegisterFunction("TEXT", 2, _Text); // Formats a number and converts it to text
-            ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin); // Joins text via delimiter
+            ce.RegisterFunction("TEXTJOIN", 3, 254, TextJoin, AllowRange.Except, 0, 1); // Joins text via delimiter
             ce.RegisterFunction("TRIM", 1, Trim); // Removes spaces from text
             ce.RegisterFunction("UPPER", 1, Upper); // Converts text to uppercase
             ce.RegisterFunction("VALUE", 1, Value); // Converts a text argument to a number
