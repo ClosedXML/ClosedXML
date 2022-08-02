@@ -65,23 +65,27 @@ namespace ClosedXML.Excel.CalcEngine
                     adaptedArgs.Add(ConvertAnyValueToLegacyExpression(ctx, arg));
 
                 var result = LegacyFunction(adaptedArgs);
-                return result switch
-                {
-                    // TODO: Duplicated with logic from CalcEngine
-                    bool logic => AnyValue.FromT0(logic),
-                    double number => AnyValue.FromT1(number),
-                    string text => AnyValue.FromT2(text),
-                    int number => AnyValue.FromT1(number), /* date mostly */
-                    long number => AnyValue.FromT1(number),
-                    DateTime date => AnyValue.FromT1(date.ToOADate()),
-                    TimeSpan time => AnyValue.FromT1(time.ToSerialDateTime()),
-                    double[,] array => AnyValue.FromT4(new NumberArray(array)),
-                    _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
-                };
-
+                return ConvertLegacyFormulaValueToAnyValue(result);
             }
 
             return Function(ctx, args);
+        }
+
+        public static AnyValue ConvertLegacyFormulaValueToAnyValue(object result)
+        {
+            return result switch
+            {
+                bool logic => AnyValue.FromT0(logic),
+                double number => AnyValue.FromT1(number),
+                string text => AnyValue.FromT2(text),
+                int number => AnyValue.FromT1(number), /* int represents a date in most cases (legacy functions, e.g. SECOND), number are double */
+                long number => AnyValue.FromT1(number),
+                DateTime date => AnyValue.FromT1(date.ToOADate()),
+                TimeSpan time => AnyValue.FromT1(time.ToSerialDateTime()),
+                Error errorType => AnyValue.FromT3(errorType),
+                double[,] array => AnyValue.FromT4(new NumberArray(array)),
+                _ => throw new NotImplementedException($"Got a result from some function type {result?.GetType().Name ?? "null"} with value {result}.")
+            };
         }
 
         private static Expression ConvertAnyValueToLegacyExpression(CalcContext context, AnyValue? arg)

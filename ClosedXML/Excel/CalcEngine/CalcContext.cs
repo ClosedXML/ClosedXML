@@ -70,19 +70,7 @@ namespace ClosedXML.Excel.CalcEngine
             if (cell.IsEvaluating)
                 throw new InvalidOperationException($"Cell {cell.Address} is a part of circular reference.");
 
-            var value = cell.Value;
-            return value switch
-            {
-                bool logical => ScalarValue.FromT0(logical),
-                double number => ScalarValue.FromT1(number),
-                string text => text == string.Empty
-                    ? null
-                    : ScalarValue.FromT2(text),
-                DateTime date => ScalarValue.FromT1(date.ToOADate()),
-                // TODO: What is new semantic of XLCell.Value?
-                Error errorType => ScalarValue.FromT3(errorType),
-                _ => throw new NotImplementedException($"Not sure how to get error from a cell (type {value?.GetType().Name}, value {value}).")
-            };
+            return ConvertLegacyCellValueToScalarValue(cell);
         }
 
         /// <summary>
@@ -105,6 +93,23 @@ namespace ClosedXML.Excel.CalcEngine
             }
 
             return nonBlankCells;
+        }
+
+        public static ScalarValue ConvertLegacyCellValueToScalarValue(XLCell cell)
+        {
+            // Blank cells should be 0 in Excel semantic, but cell value can't really represent it
+            var value = cell.Value;
+            return value switch
+            {
+                bool logical => ScalarValue.FromT0(logical),
+                double number => ScalarValue.FromT1(number),
+                string text => text == string.Empty && !cell.HasFormula
+                    ? ScalarValue.FromT1(0)
+                    : ScalarValue.FromT2(text),
+                DateTime date => ScalarValue.FromT1(date.ToOADate()),
+                Error errorType => ScalarValue.FromT3(errorType),
+                _ => throw new NotImplementedException($"Not sure how to get convert value {value} (type {value?.GetType().Name}) to AnyValue.")
+            };
         }
     }
 }
