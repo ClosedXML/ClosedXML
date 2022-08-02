@@ -1,8 +1,6 @@
-﻿using OneOf;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
-using CollectionValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {

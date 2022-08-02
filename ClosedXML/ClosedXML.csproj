@@ -10,11 +10,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <NoWarn>$(NoWarn);NU1605;CS1591;CS8002</NoWarn>
+    <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <NoWarn>$(NoWarn);NU1605;CS1591;CS8002</NoWarn>
+    <NoWarn>$(NoWarn);NU1605;CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +36,5 @@
     <PackageReference Include="System.IO.Packaging" Version="4.7.0" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="XLParser" Version="1.5.2" />
-    <PackageReference Include="OneOf" Version="3.0.223" />
   </ItemGroup>
 </Project>

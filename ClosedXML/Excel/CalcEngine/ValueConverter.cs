@@ -1,20 +1,10 @@
-﻿using OneOf;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 
 namespace ClosedXML.Excel.CalcEngine
 {
     internal class ValueConverter
     {
-        private static readonly Dictionary<System.Type, List<System.Type>> a = new Dictionary<System.Type, List<System.Type>>()
-        {
-            { typeof(bool), new List<System.Type>() { typeof(double), typeof(string) } },
-            { typeof(double), new List<System.Type>() { typeof(bool), typeof(string) } },
-            { typeof(string), new List<System.Type>() { typeof(double) } },
-            { typeof(Error), new List<System.Type>() }
-        };
-
         private readonly CultureInfo _culture;
         private readonly CalcContext _ctx;
 
