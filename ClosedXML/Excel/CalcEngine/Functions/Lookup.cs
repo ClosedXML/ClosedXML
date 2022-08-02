@@ -3,7 +3,6 @@ using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine.Functions

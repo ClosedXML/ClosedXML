@@ -2,7 +2,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using CollectionValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -493,34 +492,6 @@ namespace ClosedXML.Excel.CalcEngine
         private delegate OneOf<double, Error> BinaryNumberFunc(double lhs, double rhs);
 
         #region Type conversion functions
-
-        public static bool TryPickScalar(this AnyValue value, out ScalarValue scalar, out CollectionValue collection)
-        {
-            scalar = value.Index switch
-            {
-                0 => value.AsT0,
-                1 => value.AsT1,
-                2 => value.AsT2,
-                3 => value.AsT3,
-                _ => default
-            };
-            collection = value.Index switch
-            {
-                4 => value.AsT4,
-                5 => value.AsT5,
-                _ => default
-            };
-            return value.Index <= 3;
-        }
-
-        public static AnyValue ToAnyValue(this ScalarValue scalar)
-        {
-            return scalar.Match<AnyValue>(
-                logical => logical,
-                number => number,
-                text => text,
-                error => error);
-        }
 
         /// <summary>
         /// Convert any kind of formula value to value returned as a content of a cell.

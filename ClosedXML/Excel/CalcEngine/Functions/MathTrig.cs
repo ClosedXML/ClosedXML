@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using static ClosedXML.Excel.CalcEngine.Functions.SignatureAdapter;
 
 namespace ClosedXML.Excel.CalcEngine

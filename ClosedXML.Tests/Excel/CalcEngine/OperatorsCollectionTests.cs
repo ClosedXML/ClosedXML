@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Globalization;
 using ClosedXML.Excel;
 
@@ -35,7 +34,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
                 { "two", "two", "two", "two", "two"},
                 { Error.NumberInvalid, Error.NumberInvalid, Error.NumberInvalid, Error.NumberInvalid, Error.NumberInvalid }
             });
-            var result = ((AnyValue)typesPerColumn).Concat(typesPerRow, Ctx).AsT4;
+            var result = ToArray(((AnyValue)typesPerColumn).Concat(typesPerRow, Ctx));
 
             for (var row = 0; row < 5; ++row)
             {
@@ -56,7 +55,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AnyValue lhs = new ConstArray(new ScalarValue[2, 1] { { 1 }, { 2 } });
             AnyValue rhs = new ConstArray(new ScalarValue[1, 2] { { 3, 4 } });
 
-            var result = lhs.BinaryPlus(rhs, Ctx).AsT4;
+            var result = ToArray(lhs.BinaryPlus(rhs, Ctx));
 
             Assert.AreEqual(result.Width, 2);
             Assert.AreEqual(result.Height, 2);
@@ -72,11 +71,11 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AnyValue array = new ConstArray(new ScalarValue[1, 2] { { 1, 2 } });
             AnyValue scalar = ScalarValue.FromT0(true).ToAnyValue();
 
-            var arrayPlusScalarResult = array.BinaryPlus(scalar, Ctx).AsT4;
+            var arrayPlusScalarResult = ToArray(array.BinaryPlus(scalar, Ctx));
             Assert.AreEqual(arrayPlusScalarResult[0, 0], ScalarValue.FromT1(2));
             Assert.AreEqual(arrayPlusScalarResult[0, 1], ScalarValue.FromT1(3));
 
-            var scalarPlusArrayResult = scalar.BinaryPlus(array, Ctx).AsT4;
+            var scalarPlusArrayResult = ToArray(scalar.BinaryPlus(array, Ctx));
             Assert.AreEqual(scalarPlusArrayResult[0, 0], ScalarValue.FromT1(2));
             Assert.AreEqual(scalarPlusArrayResult[0, 1], ScalarValue.FromT1(3));
         }
@@ -91,13 +90,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AnyValue singleCellReference = new Reference(new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("A1")));
             var ctx = new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null);
 
-            var arrayDividedByReference = array.BinaryDiv(singleCellReference, ctx).AsT4;
+            var arrayDividedByReference = ToArray(array.BinaryDiv(singleCellReference, ctx));
             Assert.AreEqual(2, arrayDividedByReference.Width);
             Assert.AreEqual(1, arrayDividedByReference.Height);
             Assert.AreEqual(arrayDividedByReference[0, 0], ScalarValue.FromT1(2));
             Assert.AreEqual(arrayDividedByReference[0, 1], ScalarValue.FromT1(1));
 
-            var referenceDividedByArray = singleCellReference.BinaryDiv(array, ctx).AsT4;
+            var referenceDividedByArray = ToArray(singleCellReference.BinaryDiv(array, ctx));
             Assert.AreEqual(2, referenceDividedByArray.Width);
             Assert.AreEqual(1, referenceDividedByArray.Height);
             Assert.AreEqual(referenceDividedByArray[0, 0], ScalarValue.FromT1(0.5));
@@ -115,7 +114,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AnyValue array = new ConstArray(new ScalarValue[1, 2] { { 10, 5 } });
             AnyValue areaReference = new Reference(new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("C1")));
 
-            var arrayMultArea = array.BinaryMult(areaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var arrayMultArea = ToArray(array.BinaryMult(areaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
 
             Assert.AreEqual(3, arrayMultArea.Width);
             Assert.AreEqual(1, arrayMultArea.Height);
@@ -123,7 +122,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             Assert.AreEqual((ScalarValue)5, arrayMultArea[0, 1]);
             Assert.AreEqual((ScalarValue)Error.NoValueAvailable, arrayMultArea[0, 2]);
 
-            var areaMultArray = areaReference.BinaryMult(array, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var areaMultArray = ToArray(areaReference.BinaryMult(array, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
 
             Assert.AreEqual(3, areaMultArray.Width);
             Assert.AreEqual(1, areaMultArray.Height);
@@ -143,14 +142,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AnyValue array = new ConstArray(new ScalarValue[1, 3] { { Error.DivisionByZero, 10, 5 } });
             AnyValue multiAreaReference = new Reference(new List<XLRangeAddress>() { new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("A1")), new XLRangeAddress(XLAddress.Create("B1"), XLAddress.Create("C1")) });
 
-            var arrayMultReference = array.BinaryMult(multiAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var arrayMultReference = ToArray(array.BinaryMult(multiAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
             Assert.AreEqual(3, arrayMultReference.Width);
             Assert.AreEqual(1, arrayMultReference.Height);
             Assert.AreEqual((ScalarValue)Error.DivisionByZero, arrayMultReference[0, 0]);
             Assert.AreEqual((ScalarValue)Error.CellValue, arrayMultReference[0, 1]);
             Assert.AreEqual((ScalarValue)Error.CellValue, arrayMultReference[0, 2]);
 
-            var referenceMultArray = multiAreaReference.BinaryMult(array, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var referenceMultArray = ToArray(multiAreaReference.BinaryMult(array, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
             Assert.AreEqual(3, referenceMultArray.Width);
             Assert.AreEqual(1, referenceMultArray.Height);
             Assert.AreEqual((ScalarValue)Error.CellValue, referenceMultArray[0, 0]);
@@ -183,7 +182,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             AnyValue leftReference = new Reference(new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("B1")));
             AnyValue rightReference = new Reference(new XLRangeAddress(XLAddress.Create("C5"), XLAddress.Create("E5")));
-            var result = leftReference.BinaryPlus(rightReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var result = ToArray(leftReference.BinaryPlus(rightReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
             Assert.AreEqual(3, result.Width);
             Assert.AreEqual(1, result.Height);
             Assert.AreEqual((ScalarValue)11, result[0, 0]);
@@ -210,13 +209,13 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             AnyValue multiAreaReference = new Reference(new List<XLRangeAddress> { new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("B1")), new XLRangeAddress(XLAddress.Create("C1"), XLAddress.Create("D1")) });
             AnyValue singleAreaReference = new Reference(new XLRangeAddress(XLAddress.Create("A1"), XLAddress.Create("E2")));
 
-            var multiAreaOperandSingleArea = multiAreaReference.BinaryPlus(singleAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var multiAreaOperandSingleArea = ToArray(multiAreaReference.BinaryPlus(singleAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
 
             Assert.AreEqual(5, multiAreaOperandSingleArea.Width);
             Assert.AreEqual(2, multiAreaOperandSingleArea.Height);
             multiAreaOperandSingleArea.ForEach(x => Assert.AreEqual(x, (ScalarValue)Error.CellValue));
 
-            var singleAreaOperandMultiArea = singleAreaReference.BinaryPlus(multiAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var singleAreaOperandMultiArea = ToArray(singleAreaReference.BinaryPlus(multiAreaReference, new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
 
             Assert.AreEqual(5, singleAreaOperandMultiArea.Width);
             Assert.AreEqual(2, singleAreaOperandMultiArea.Height);
@@ -227,7 +226,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
         public void UnaryOperatorOnArray()
         {
             AnyValue allTypes = new ConstArray(new ScalarValue[2, 2] { { true, -5 }, { "2", "one" } });
-            var result = allTypes.UnaryMinus(new CalcContext(null, CultureInfo.InvariantCulture, null, null, null)).AsT4;
+            var result = ToArray(allTypes.UnaryMinus(new CalcContext(null, CultureInfo.InvariantCulture, null, null, null)));
             Assert.AreEqual(2, result.Width);
             Assert.AreEqual(2, result.Height);
             Assert.AreEqual((ScalarValue)(-1), result[0, 0]);
@@ -254,7 +253,7 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             ws.Cells("B3:D4").Value = 100;
             AnyValue areaReference = new Reference(new XLRangeAddress(XLAddress.Create("B3"), XLAddress.Create("D4")));
 
-            var result = areaReference.UnaryPercent(new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)).AsT4;
+            var result = ToArray(areaReference.UnaryPercent(new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null)));
             Assert.AreEqual(3, result.Width);
             Assert.AreEqual(2, result.Height);
             result.ForEach(value => Assert.AreEqual((ScalarValue)1, value));
@@ -269,6 +268,17 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             var result = reference.UnaryPercent(new CalcContext(null, CultureInfo.InvariantCulture, wb, ws, null));
             Assert.AreEqual((AnyValue)Error.CellValue, result);
+        }
+
+        private static Array ToArray(AnyValue value)
+        {
+            return value.Match(
+                logical => throw new System.InvalidOperationException(),
+                number => throw new System.InvalidOperationException(),
+                text => throw new System.InvalidOperationException(),
+                error => throw new System.InvalidOperationException(),
+                array => array,
+                reference => throw new System.InvalidOperationException());
         }
     }
 }

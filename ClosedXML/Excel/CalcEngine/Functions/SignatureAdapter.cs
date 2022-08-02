@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine.Functions
 {
@@ -37,7 +36,7 @@ namespace ClosedXML.Excel.CalcEngine.Functions
                 var references = new List<Reference>();
                 for (var i = 1; i < args.Length; ++i)
                 {
-                    if (!(args[i] ?? 0).TryPickT5(out var reference, out var rest))
+                    if (!(args[i] ?? 0).TryPickReference(out var reference))
                         return Error.CellValue;
 
                     references.Add(reference);

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {

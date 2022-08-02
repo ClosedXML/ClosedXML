@@ -3,7 +3,6 @@ using Irony.Ast;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -63,9 +62,15 @@ namespace ClosedXML.Excel.CalcEngine
             var ctx = new CalcContext(this, _culture, wb, ws, address);
             var calculatingVisitor = new CalculationVisitor(_funcRegistry);
             var result = x.AstRoot.Accept(ctx, calculatingVisitor);
-            if (ctx.UseImplicitIntersection && result.IsT4)
+            if (ctx.UseImplicitIntersection)
             {
-                result = result.AsT4[0, 0].ToAnyValue();
+                result = result.Match(
+                    logical => logical,
+                    number => number,
+                    text => text,
+                    error => error,
+                    array => array[0,0].ToAnyValue(),
+                    reference => reference);
             }
 
             return result.ToCellContentValue(ctx);

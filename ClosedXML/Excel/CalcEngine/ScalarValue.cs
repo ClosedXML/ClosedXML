@@ -87,5 +87,14 @@ namespace ClosedXML.Excel.CalcEngine
                 _ => throw new InvalidOperationException()
             };
         }
+
+        public AnyValue ToAnyValue()
+        {
+            return Match<AnyValue>(
+                logical => logical,
+                number => number,
+                text => text,
+                error => error);
+        }
     }
 }
