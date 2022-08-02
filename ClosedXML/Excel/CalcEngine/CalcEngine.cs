@@ -23,6 +23,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         public CalcEngine()
         {
+            _culture = CultureInfo.CurrentCulture;
             _funcRegistry = GetFunctionTable();
             _cache = new ExpressionCache(this);
             _parser = new FormulaParser(_funcRegistry);
