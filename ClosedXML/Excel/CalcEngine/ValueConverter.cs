@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 
 namespace ClosedXML.Excel.CalcEngine
 {
@@ -28,7 +27,12 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal OneOf<double, Error> ToNumber(string text)
         {
-            return double.TryParse(text, NumberStyles.Float, _culture, out var number)
+            return TextToNumber(_culture, text);
+        }
+
+        private static  OneOf<double, Error> TextToNumber(CultureInfo culture, string text)
+        {
+            return double.TryParse(text, NumberStyles.Float, culture, out var number)
                 ? number
                 : Error.CellValue;
         }
@@ -39,25 +43,25 @@ namespace ClosedXML.Excel.CalcEngine
                 return Error.CellValue;
 
             if (value.Value.TryPickScalar(out var scalar, out var collection))
-                return ToNumber(scalar);
+                return ScalarToNumber(scalar, _culture);
 
             return collection.Match(
                     array => throw new NotImplementedException("Not sure what to do with it."),
                     reference =>
                     {
                         if (reference.TryGetSingleCellValue(out var scalarValue, _ctx))
-                            return ToNumber(scalarValue);
+                            return ScalarToNumber(scalarValue, _culture);
 
                         throw new NotImplementedException("Not sure what to do with it.");
                     });
 
-            static OneOf<double, Error> ToNumber(ScalarValue value)
+            static OneOf<double, Error> ScalarToNumber(ScalarValue value, CultureInfo culture)
             {
-                return value.Match(
-                        logical => ToNumber(logical),
-                        number => number,
-                        text => ToNumber(text),
-                        error => error);
+                return value.Match(culture,
+                        (logical, _) => logical ? 1.0 : 0.0,
+                        (number, _) => number,
+                        (text, culture) => TextToNumber(culture, text),
+                        (error, _) => error);
             }
         }
 
@@ -68,11 +72,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal OneOf<string, Error> ToText(ScalarValue lhs)
         {
-            return lhs.Match<OneOf<string, Error>>(
-                logical => logical ? "TRUE" : "FALSE",
-                number => number.ToString(_culture),
-                text => text,
-                error => error);
+            return lhs.Match<OneOf<string, Error>, CultureInfo>(_culture,
+                (logical, _) => logical ? "TRUE" : "FALSE",
+                (number, culture) => number.ToString(culture),
+                (text, _) => text,
+                (error, _) => error);
         }
 
         internal OneOf<string, Error> ToText(AnyValue value)

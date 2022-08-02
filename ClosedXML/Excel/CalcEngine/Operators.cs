@@ -3,7 +3,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 using CollectionValue = OneOf.OneOf<ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 
 namespace ClosedXML.Excel.CalcEngine
@@ -438,11 +437,11 @@ namespace ClosedXML.Excel.CalcEngine
 
         private static OneOf<double, Error> CovertToNumber(this ScalarValue value, ValueConverter converter)
         {
-            return value.Match(
-                logical => logical ? 1 : 0,
-                number => number,
-                text => converter.ToNumber(text),
-                error => error);
+            return value.Match(converter,
+                (logical, _) => logical ? 1 : 0,
+                (number, _) => number,
+                (text, conv) => conv.ToNumber(text),
+                (error, _) => error);
         }
 
         /// <summary>
@@ -470,23 +469,23 @@ namespace ClosedXML.Excel.CalcEngine
         /// </returns>
         private static OneOf<int, Error> CompareValues(ScalarValue left, ScalarValue right, CultureInfo culture)
         {
-            return left.Match(
-                leftLogical => right.Match<OneOf<int, Error>>(
-                        rightLogical => leftLogical.CompareTo(rightLogical),
-                        rightNumber => 1,
-                        rightText => 1,
-                        rightError => rightError),
-                leftNumber => right.Match<OneOf<int, Error>>(
-                        rightLogical => -1,
-                        rightNumber => leftNumber.CompareTo(rightNumber),
-                        rightText => -1,
-                        rightError => rightError),
-                leftText => right.Match<OneOf<int, Error>>(
-                        rightLogical => -1,
-                        rightNumber => 1,
-                        rightText => string.Compare(leftText, rightText, culture, CompareOptions.IgnoreCase),
-                        rightError => rightError),
-                leftError => leftError);
+            return left.Match(culture,
+                (leftLogical, _) => right.Match<OneOf<int, Error>, bool>(leftLogical,
+                        (rightLogical, leftLogical) => leftLogical.CompareTo(rightLogical),
+                        (rightNumber, _) => 1,
+                        (rightText, _) => 1,
+                        (rightError, _) => rightError),
+                (leftNumber, _) => right.Match<OneOf<int, Error>, double>(leftNumber,
+                        (rightLogical, _) => -1,
+                        (rightNumber, leftNumber) => leftNumber.CompareTo(rightNumber),
+                        (rightText, _) => -1,
+                        (rightError, _) => rightError),
+                (leftText, culture) => right.Match<OneOf<int, Error>, string, CultureInfo>(leftText, culture,
+                        (rightLogical, _, _) => -1,
+                        (rightNumber, _, _) => 1,
+                        (rightText, leftText, culture) => string.Compare(leftText, rightText, culture, CompareOptions.IgnoreCase),
+                        (rightError, _, _) => rightError),
+                (leftError, _) => leftError);
         }
 
         private delegate ScalarValue BinaryFunc(ScalarValue lhs, ScalarValue rhs);

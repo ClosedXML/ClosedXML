@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel.CalcEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 using AnyValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error, ClosedXML.Excel.CalcEngine.Array, ClosedXML.Excel.CalcEngine.Reference>;
 using System.Globalization;
 using ClosedXML.Excel;

@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel.CalcEngine.Exceptions;
 using System;
 using System.Globalization;
-using ScalarValue = OneOf.OneOf<bool, double, string, ClosedXML.Excel.CalcEngine.Error>;
 using System.Collections.Generic;
 using System.Linq;
 
