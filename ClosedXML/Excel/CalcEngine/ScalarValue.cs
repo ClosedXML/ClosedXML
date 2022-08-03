@@ -30,11 +30,11 @@ namespace ClosedXML.Excel.CalcEngine
             _error = error;
         }
 
-        public static ScalarValue FromT0(bool logical) => new(0, logical, default, default, default);
+        public static ScalarValue From(bool logical) => new(0, logical, default, default, default);
 
-        public static ScalarValue FromT1(double number) => new(1, default, number, default, default);
+        public static ScalarValue From(double number) => new(1, default, number, default, default);
 
-        public static ScalarValue FromT2(string text)
+        public static ScalarValue From(string text)
         {
             if (text is null)
                 throw new ArgumentNullException();
@@ -42,15 +42,15 @@ namespace ClosedXML.Excel.CalcEngine
             return new ScalarValue(2, default, default, text, default);
         }
 
-        public static ScalarValue FromT3(Error error) => new(3, default, default, default, error);
+        public static ScalarValue From(Error error) => new(3, default, default, default, error);
 
-        public static implicit operator ScalarValue(bool logical) => FromT0(logical);
+        public static implicit operator ScalarValue(bool logical) => From(logical);
 
-        public static implicit operator ScalarValue(double number) => FromT1(number);
+        public static implicit operator ScalarValue(double number) => From(number);
 
-        public static implicit operator ScalarValue(string text) => FromT2(text);
+        public static implicit operator ScalarValue(string text) => From(text);
 
-        public static implicit operator ScalarValue(Error error) => FromT3(error);
+        public static implicit operator ScalarValue(Error error) => From(error);
 
         public TResult Match<TResult>(Func<bool, TResult> transformLogical, Func<double, TResult> transformNumber, Func<string, TResult> transformText, Func<Error, TResult> transformError)
         {

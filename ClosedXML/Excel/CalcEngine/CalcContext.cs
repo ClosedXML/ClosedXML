@@ -56,7 +56,7 @@ namespace ClosedXML.Excel.CalcEngine
 
         internal ScalarValue GetCellValue(XLWorksheet worksheet, int rowNumber, int columnNumber)
         {
-            return GetCellValueOrBlank(worksheet, rowNumber, columnNumber) ?? ScalarValue.FromT1(0);
+            return GetCellValueOrBlank(worksheet, rowNumber, columnNumber) ?? ScalarValue.From((double)0);
         }
 
         internal ScalarValue? GetCellValueOrBlank(XLWorksheet worksheet, int rowNumber, int columnNumber)
@@ -100,13 +100,13 @@ namespace ClosedXML.Excel.CalcEngine
             var value = cell.Value;
             return value switch
             {
-                bool logical => ScalarValue.FromT0(logical),
-                double number => ScalarValue.FromT1(number),
+                bool logical => ScalarValue.From(logical),
+                double number => ScalarValue.From(number),
                 string text => text == string.Empty && !cell.HasFormula
-                    ? ScalarValue.FromT1(0)
-                    : ScalarValue.FromT2(text),
-                DateTime date => ScalarValue.FromT1(date.ToOADate()),
-                Error errorType => ScalarValue.FromT3(errorType),
+                    ? ScalarValue.From((double)0)
+                    : ScalarValue.From(text),
+                DateTime date => ScalarValue.From(date.ToOADate()),
+                Error errorType => ScalarValue.From(errorType),
                 _ => throw new NotImplementedException($"Not sure how to get convert value {value} (type {value?.GetType().Name}) to AnyValue.")
             };
         }

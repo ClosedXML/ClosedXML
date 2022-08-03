@@ -59,25 +59,25 @@ namespace ClosedXML.Tests.Excel.CalcEngine
 
             Assert.AreEqual(result.Width, 2);
             Assert.AreEqual(result.Height, 2);
-            Assert.AreEqual(result[0, 0], ScalarValue.FromT1(4));
-            Assert.AreEqual(result[0, 1], ScalarValue.FromT3(Error.NoValueAvailable));
-            Assert.AreEqual(result[1, 0], ScalarValue.FromT3(Error.NoValueAvailable));
-            Assert.AreEqual(result[1, 1], ScalarValue.FromT3(Error.NoValueAvailable));
+            Assert.AreEqual(result[0, 0], ScalarValue.From(4));
+            Assert.AreEqual(result[0, 1], ScalarValue.From(Error.NoValueAvailable));
+            Assert.AreEqual(result[1, 0], ScalarValue.From(Error.NoValueAvailable));
+            Assert.AreEqual(result[1, 1], ScalarValue.From(Error.NoValueAvailable));
         }
 
         [Test]
         public void ArrayOperandScalar_ScalarUpscaledToArray()
         {
             AnyValue array = new ConstArray(new ScalarValue[1, 2] { { 1, 2 } });
-            AnyValue scalar = ScalarValue.FromT0(true).ToAnyValue();
+            AnyValue scalar = ScalarValue.From(true).ToAnyValue();
 
             var arrayPlusScalarResult = ToArray(AnyValue.BinaryPlus(array, scalar, Ctx));
-            Assert.AreEqual(arrayPlusScalarResult[0, 0], ScalarValue.FromT1(2));
-            Assert.AreEqual(arrayPlusScalarResult[0, 1], ScalarValue.FromT1(3));
+            Assert.AreEqual(arrayPlusScalarResult[0, 0], ScalarValue.From(2));
+            Assert.AreEqual(arrayPlusScalarResult[0, 1], ScalarValue.From(3));
 
             var scalarPlusArrayResult = ToArray(AnyValue.BinaryPlus(scalar, array, Ctx));
-            Assert.AreEqual(scalarPlusArrayResult[0, 0], ScalarValue.FromT1(2));
-            Assert.AreEqual(scalarPlusArrayResult[0, 1], ScalarValue.FromT1(3));
+            Assert.AreEqual(scalarPlusArrayResult[0, 0], ScalarValue.From(2));
+            Assert.AreEqual(scalarPlusArrayResult[0, 1], ScalarValue.From(3));
         }
 
         [Test]
@@ -93,14 +93,14 @@ namespace ClosedXML.Tests.Excel.CalcEngine
             var arrayDividedByReference = ToArray(AnyValue.BinaryDiv(array, singleCellReference, ctx));
             Assert.AreEqual(2, arrayDividedByReference.Width);
             Assert.AreEqual(1, arrayDividedByReference.Height);
-            Assert.AreEqual(arrayDividedByReference[0, 0], ScalarValue.FromT1(2));
-            Assert.AreEqual(arrayDividedByReference[0, 1], ScalarValue.FromT1(1));
+            Assert.AreEqual(arrayDividedByReference[0, 0], ScalarValue.From(2));
+            Assert.AreEqual(arrayDividedByReference[0, 1], ScalarValue.From(1));
 
             var referenceDividedByArray = ToArray(AnyValue.BinaryDiv(singleCellReference, array, ctx));
             Assert.AreEqual(2, referenceDividedByArray.Width);
             Assert.AreEqual(1, referenceDividedByArray.Height);
-            Assert.AreEqual(referenceDividedByArray[0, 0], ScalarValue.FromT1(0.5));
-            Assert.AreEqual(referenceDividedByArray[0, 1], ScalarValue.FromT1(1));
+            Assert.AreEqual(referenceDividedByArray[0, 0], ScalarValue.From(0.5));
+            Assert.AreEqual(referenceDividedByArray[0, 1], ScalarValue.From(1));
         }
 
         [Test]
