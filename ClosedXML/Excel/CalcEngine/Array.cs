@@ -44,6 +44,9 @@ namespace ClosedXML.Excel.CalcEngine
             }
         }
 
+        /// <summary>
+        /// Return a new array that was created by applying a function to each element of the array.
+        /// </summary>
         public Array Apply(Func<ScalarValue, ScalarValue> op)
         {
             var data = new ScalarValue[Height, Width];
@@ -55,7 +58,8 @@ namespace ClosedXML.Excel.CalcEngine
         }
 
         /// <summary>
-        /// Perform an operation on two arrasy and return a result. Arrays can have different size. Missing values are replaced by <c>#N/A</c>.
+        /// Return a new array that was created by applying a function to each element of the left and right array.
+        /// Arrays can have different size and missing values are replaced by <c>#N/A</c>.
         /// </summary>
         public Array Apply(Array rightArray, BinaryFunc func)
         {
@@ -72,34 +76,14 @@ namespace ClosedXML.Excel.CalcEngine
                     data[y, x] = func(leftItem, rightItem);
                 }
             }
+
             return new ConstArray(data);
         }
     }
 
     /// <summary>
-    /// An array that is using a different array to store data. This way, we can keep memory pressures at minimum.
-    /// This is intermediate array used during calculations.
+    /// An array where all elements have same value.
     /// </summary>
-    internal class CalculatedArray : Array
-    {
-        private readonly Array _array;
-        private readonly Func<ScalarValue, ScalarValue> _func;
-
-        public CalculatedArray(Array array, Func<ScalarValue, ScalarValue> func)
-        {
-            _array = array;
-            _func = func;
-        }
-
-        public override int Width => _array.Width;
-
-        public override int Height => _array.Height;
-
-        public override ScalarValue this[int y, int x] => _func(_array[y, x]);
-
-        public override IEnumerator<ScalarValue> GetEnumerator() => _array.GetEnumerator();
-    }
-
     internal class ScalarArray : Array
     {
         private readonly ScalarValue _value;

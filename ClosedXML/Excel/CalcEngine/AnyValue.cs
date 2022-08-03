@@ -6,7 +6,7 @@ using CollectionValue = ClosedXML.Excel.CalcEngine.OneOf<ClosedXML.Excel.CalcEng
 namespace ClosedXML.Excel.CalcEngine
 {
     /// <summary>
-    /// A representation of any value that can be passed around in the formula evaluation.
+    /// A discriminated union representing any value that can be passed around in the formula evaluation.
     /// </summary>
     internal readonly struct AnyValue
     {
